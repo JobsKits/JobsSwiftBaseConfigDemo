@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWhenEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:96"]
-  T1["function:ASCATransactionQueueWait<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:57"]
+  S1["method:GestureUnlockView::reset<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:88"]
+  T1["method:UIView::byAlpha<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:54"]
   S1 -->|calls| T1
-  S2["method:ASDisplayNodeImplicitHierarchyTests::testInitialNodeInsertionWhenEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:96"]
-  T2["function:ASInterfaceStateIncludesPreload<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.h:44"]
+  S2["method:GestureUnlockView::showError<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:106"]
+  T2["method:GestureUnlockView::setVisualState<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:293"]
   S2 -->|calls| T2
-  S3["method:ASDisplayNodeImplicitHierarchyTests::testCalculatedLayoutHierarchyTransitions<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:139"]
-  T3["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
+  S3["method:GestureUnlockView::showSelected<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:110"]
+  T3["method:GestureUnlockView::setVisualState<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:293"]
   S3 -->|calls| T3
-  S4["method:ASDisplayNodeImplicitHierarchyTests::testCalculatedLayoutHierarchyTransitions<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:139"]
-  T4["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
+  S4["method:GestureUnlockView::rebuildNodes<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:116"]
+  T4["method:GestureUnlockView::reset<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:88"]
   S4 -->|calls| T4
-  S5["method:ASDisplayNodeImplicitHierarchyTests::testCalculatedLayoutHierarchyTransitions<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:139"]
-  T5["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
+  S5["method:GestureUnlockView::rebuildNodes<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:116"]
+  T5["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:104"]
   S5 -->|calls| T5
-  S6["method:ASDisplayNodeImplicitHierarchyTests::testCalculatedLayoutHierarchyTransitions<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:139"]
-  T6["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
+  S6["method:GestureUnlockView::rebuildNodes<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:116"]
+  T6["method:GestureNodeView::apply<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureNodeView.swift:58"]
   S6 -->|calls| T6
-  S7["method:ASDisplayNodeImplicitHierarchyTests::testCalculatedLayoutHierarchyTransitions<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:139"]
-  T7["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
+  S7["method:GestureUnlockView::rebuildNodes<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:116"]
+  T7["method:UIView::byAddTo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:61"]
   S7 -->|calls| T7
-  S8["method:ASDisplayNodeImplicitHierarchyTests::testCalculatedLayoutHierarchyTransitions<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:139"]
-  T8["function:ASDisplayNodeSizeToFitSizeRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:51"]
+  S8["method:GestureUnlockView::layoutNodes<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:131"]
+  T8["method:CALayer::byFrame<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CALayer.swift:22"]
   S8 -->|calls| T8
-  S9["method:ASDisplayNodeImplicitHierarchyTests::testCalculatedLayoutHierarchyTransitions<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:139"]
-  T9["method:ASDisplayNode::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASDisplayNode+UIViewBridge.mm:450"]
+  S9["method:GestureUnlockView::layoutNodes<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:131"]
+  T9["field:GestureUnlockView::nodes<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:50"]
   S9 -->|calls| T9
-  S10["method:ASDisplayNodeImplicitHierarchyTests::testLayoutTransitionMeasurementCompletionBlockIsCalledOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:199"]
-  T10["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
+  S10["method:GestureUnlockView::layoutNodes<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:131"]
+  T10["field:GestureUnlockView::nodes<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:50"]
   S10 -->|calls| T10
-  S11["method:ASDisplayNodeImplicitHierarchyTests::testLayoutTransitionMeasurementCompletionBlockIsCalledOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:199"]
-  T11["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
+  S11["method:GestureUnlockView::touchesBegan<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:152"]
+  T11["field:JobsSwiftCommentModel::location<br/>JobsByPods/JobsSwiftComment@Pods/Core/JobsSwiftCommentModel/JobsSwiftCommentModel.swift:19"]
   S11 -->|calls| T11
-  S12["method:ASDisplayNodeImplicitHierarchyTests::testLayoutTransitionMeasurementCompletionBlockIsCalledOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:199"]
-  T12["function:ASDisplayNodeThreadIsMain<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:21"]
+  S12["method:GestureUnlockView::touchesBegan<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:152"]
+  T12["method:GestureUnlockDemoVC::gestureUnlockViewDidBeginInput<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@九宫格手势解锁/Demo@九宫格手势解锁.swift:138"]
   S12 -->|calls| T12
-  S13["method:ASDisplayNodeImplicitHierarchyTests::testMeasurementInBackgroundThreadWithLoadedNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:219"]
-  T13["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
+  S13["method:GestureUnlockView::touchesBegan<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:152"]
+  T13["method:_ASTableViewCell::prepareForReuse<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:155"]
   S13 -->|calls| T13
-  S14["method:ASDisplayNodeImplicitHierarchyTests::testMeasurementInBackgroundThreadWithLoadedNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:219"]
-  T14["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
+  S14["method:GestureUnlockView::touchesBegan<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:152"]
+  T14["method:GestureUnlockView::reset<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:88"]
   S14 -->|calls| T14
-  S15["method:ASDisplayNodeImplicitHierarchyTests::testMeasurementInBackgroundThreadWithLoadedNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:219"]
-  T15["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
+  S15["method:GestureUnlockView::touchesBegan<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:152"]
+  T15["method:GestureUnlockView::trySelectNode<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:191"]
   S15 -->|calls| T15
-  S16["method:ASDisplayNodeImplicitHierarchyTests::testMeasurementInBackgroundThreadWithLoadedNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:219"]
-  T16["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
+  S16["method:GestureUnlockView::touchesBegan<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:152"]
+  T16["method:GestureUnlockView::updateLinePath<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:266"]
   S16 -->|calls| T16
-  S17["method:ASDisplayNodeImplicitHierarchyTests::testMeasurementInBackgroundThreadWithLoadedNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:219"]
-  T17["function:ASDisplayNodeSizeToFitSizeRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:51"]
+  S17["method:GestureUnlockView::touchesMoved<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:163"]
+  T17["field:JobsSwiftCommentModel::location<br/>JobsByPods/JobsSwiftComment@Pods/Core/JobsSwiftCommentModel/JobsSwiftCommentModel.swift:19"]
   S17 -->|calls| T17
-  S18["method:ASDisplayNodeImplicitHierarchyTests::testMeasurementInBackgroundThreadWithLoadedNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:219"]
-  T18["method:ASDisplayNode::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASDisplayNode+UIViewBridge.mm:450"]
+  S18["method:GestureUnlockView::touchesMoved<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:163"]
+  T18["method:GestureUnlockView::trySelectNode<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:191"]
   S18 -->|calls| T18
-  S19["method:ASDisplayNodeImplicitHierarchyTests::testMeasurementInBackgroundThreadWithLoadedNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:219"]
-  T19["method:ASDisplayNode::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASDisplayNode+UIViewBridge.mm:450"]
+  S19["method:GestureUnlockView::touchesMoved<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:163"]
+  T19["method:GestureUnlockView::updateLinePath<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:266"]
   S19 -->|calls| T19
-  S20["method:ASDisplayNodeImplicitHierarchyTests::testMeasurementInBackgroundThreadWithLoadedNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:219"]
-  T20["function:ASDisplayNodeSizeToFitSizeRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:51"]
+  S20["method:GestureUnlockView::touchesEnded<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:170"]
+  T20["method:GestureUnlockView::updateLinePath<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:266"]
   S20 -->|calls| T20
-  S21["method:ASDisplayNodeImplicitHierarchyTests::testTransitionLayoutWithAnimationWithLoadedNodes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:284"]
-  T21["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
+  S21["method:GestureUnlockView::touchesEnded<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:170"]
+  T21["method:GestureUnlockView::isValidPattern<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:100"]
   S21 -->|calls| T21
-  S22["method:ASDisplayNodeImplicitHierarchyTests::testTransitionLayoutWithAnimationWithLoadedNodes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:284"]
-  T22["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
+  S22["method:GestureUnlockView::touchesEnded<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:170"]
+  T22["method:GestureUnlockDemoVC::gestureUnlockView<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@九宫格手势解锁/Demo@九宫格手势解锁.swift:141"]
   S22 -->|calls| T22
-  S23["method:ASDisplayNodeImplicitHierarchyTests::testTransitionLayoutWithAnimationWithLoadedNodes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:284"]
-  T23["method:ASSpecTestDisplayNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:28"]
+  S23["method:GestureUnlockView::touchesEnded<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:170"]
+  T23["field:GestureUnlockView::onComplete<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:31"]
   S23 -->|calls| T23
-  S24["method:ASDisplayNodeImplicitHierarchyTests::testTransitionLayoutWithAnimationWithLoadedNodes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeImplicitHierarchyTests.mm:284"]
-  T24["function:ASDisplayNodeSizeToFitSizeRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:51"]
+  S24["method:GestureUnlockView::touchesCancelled<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:185"]
+  T24["method:GestureUnlockView::reset<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:88"]
   S24 -->|calls| T24
-  S25["method:ASDisplayNodeLayoutTests::testMeasureOnLayoutIfNotHappenedBefore<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeLayoutTests.mm:22"]
-  T25["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S25["method:GestureUnlockView::trySelectNode<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:191"]
+  T25["method:GestureUnlockView::hitNodeIndex<br/>JobsByPods/JobsGestureUnlock@Pods/高仿Android手势开锁🔒/GestureUnlockView.swift:196"]
   S25 -->|calls| T25
 ```
 

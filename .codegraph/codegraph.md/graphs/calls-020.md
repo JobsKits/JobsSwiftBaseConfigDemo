@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASDefaultImageDownloader::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:30"]
-  T1["method:ASPINRemoteImageDownloader::sharedDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASPINRemoteImageDownloader.mm:120"]
+  S1["method:BRSpringAnimation::animateOut<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:53"]
+  T1["method:UIView::byAlpha<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:54"]
   S1 -->|calls| T1
-  S2["method:ASDefaultImageDownloader::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:53"]
-  T2["method:ASDefaultImageDownloader::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:30"]
+  S2["method:BRFadeAnimation::animateIn<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:63"]
+  T2["method:UIListContentConfiguration::byAlpha<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIListContentConfiguration.swift:169"]
   S2 -->|calls| T2
-  S3["method:ASDefaultImageDownloader::defaultDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:83"]
-  T3["method:ASDefaultImageDownloader::defaultDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:83"]
+  S3["method:BRFadeAnimation::animateIn<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:63"]
+  T3["method:UIView::byFrame<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIView/UIView+修改位置大小.swift:111"]
   S3 -->|calls| T3
-  S4["method:ASDefaultImageDownloader::defaultDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:83"]
-  T4["method:ASDefaultImageDownloader::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:53"]
+  S4["method:BRFadeAnimation::animateIn<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:63"]
+  T4["method:UIView::byAlpha<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:54"]
   S4 -->|calls| T4
-  S5["method:ASDefaultImageDownloader::defaultCache<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:88"]
-  T5["method:ASDefaultImageDownloader::defaultCache<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:88"]
+  S5["method:BRFadeAnimation::animateIn<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:63"]
+  T5["method:UIView::byAlpha<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:54"]
   S5 -->|calls| T5
-  S6["method:ASDefaultImageDownloader::defaultCache<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:88"]
-  T6["method:ASDefaultImageDownloader::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:53"]
+  S6["method:BRFadeAnimation::animateIn<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:63"]
+  T6["method:UIView::byAlpha<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:54"]
   S6 -->|calls| T6
-  S7["method:ASDefaultImageDownloader::setDefaultDownloaderProvider:cacheProvider:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:93"]
-  T7["method:ASDefaultImageDownloader::setDefaultDownloaderProvider:cacheProvider:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:93"]
+  S7["method:BRFadeAnimation::animateOut<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:73"]
+  T7["method:UIView::byAlpha<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:54"]
   S7 -->|calls| T7
-  S8["method:ASDefaultImageDownloader::setDefaultDownloaderProvider:cacheProvider:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:93"]
-  T8["method:ASDefaultImageDownloader::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:53"]
+  S8["method:BRFadeAnimation::animateOut<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:73"]
+  T8["method:UIView::byAlpha<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:54"]
   S8 -->|calls| T8
-  S9["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h:1"]
-  T9["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S9["method:BRBasePicker::bind<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:103"]
+  T9["method:BRBasePicker::cancelPendingAwait<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:128"]
   S9 -->|calls| T9
-  S10["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h:1"]
-  T10["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S10["method:BRBasePicker::bind<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:103"]
+  T10["method:BRPickerPanel::applyTheme<br/>JobsByPods/BRPickerViewSwift@Pods/UI/BRPickerPanel.swift:50"]
   S10 -->|calls| T10
-  S11["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h:1"]
-  T11["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S11["method:BRBasePicker::send<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:116"]
+  T11["method:BRPickerAwaitState::finish<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:229"]
   S11 -->|calls| T11
-  S12["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h:1"]
-  T12["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S12["method:BRBasePicker::send<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:116"]
+  T12["field:BRBasePicker::resultHandler<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:19"]
   S12 -->|calls| T12
-  S13["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h:1"]
-  T13["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S13["method:BRBasePicker::dismissPanel<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:123"]
+  T13["method:BRBasePicker::cancelPendingAwait<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:128"]
   S13 -->|calls| T13
-  S14["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Beta.h:1"]
-  T14["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S14["method:BRBasePicker::dismissPanel<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:123"]
+  T14["method:BRPickerPanel::dismiss<br/>JobsByPods/BRPickerViewSwift@Pods/UI/BRPickerPanel.swift:117"]
   S14 -->|calls| T14
-  S15["method:ASDisplayNode::closestViewController<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Convenience.mm:17"]
-  T15["function:ASFindClosestViewOfLayer<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:266"]
+  S15["method:BRBasePicker::cancelPendingAwait<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:128"]
+  T15["method:BRPickerAwaitState::finish<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:229"]
   S15 -->|calls| T15
-  S16["method:ASDisplayNode::closestViewController<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Convenience.mm:17"]
-  T16["method:UIResponder::asdk_responderChainEnumerator<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASResponderChainEnumerator.mm:40"]
+  S16["method:BRBasePicker::awaitResult<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:136"]
+  T16["method:BRPickerAwaitState::install<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:218"]
   S16 -->|calls| T16
-  S17["method:ASDisplayNode::style:propertyDidChange:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:30"]
-  T17["method:_ASDisplayLayer::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:91"]
+  S17["method:BRBasePicker::awaitResult<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:136"]
+  T17["method:BRPickerAwaitState::finish<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:229"]
   S17 -->|calls| T17
-  S18["method:ASDisplayNode::style<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:51"]
-  T18["method:ASDisplayNode::_locked_style<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:57"]
+  S18["method:BRBasePicker::awaitResult<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:136"]
+  T18["method:BRPickerPanel::dismiss<br/>JobsByPods/BRPickerViewSwift@Pods/UI/BRPickerPanel.swift:117"]
   S18 -->|calls| T18
-  S19["method:ASDisplayNode::_locked_style<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:57"]
-  T19["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S19["method:BRBasePicker::awaitResultOrNil<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:161"]
+  T19["method:BRBasePicker::awaitResult<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:136"]
   S19 -->|calls| T19
-  S20["method:ASDisplayNode::layoutThatFits:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:83"]
-  T20["method:ASDisplayNode::layoutThatFits:parentSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:88"]
+  S20["method:BRBasePicker::buildContentView<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:175"]
+  T20["method:JobsNSObjectMaking::jobsMake<br/>JobsByPods/JobsSwiftBlock@Pods/NSObject+Make.swift:17"]
   S20 -->|calls| T20
-  S21["method:ASDisplayNode::layoutThatFits:parentSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:88"]
-  T21["method:ASDisplayNode::_isLayoutTransitionInvalid<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:564"]
+  S21["method:BRBasePicker::byPresent<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:179"]
+  T21["method:BRPickerPanel::dismiss<br/>JobsByPods/BRPickerViewSwift@Pods/UI/BRPickerPanel.swift:117"]
   S21 -->|calls| T21
-  S22["method:ASDisplayNode::layoutThatFits:parentSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:88"]
-  T22["method:ASScrollNode::calculateLayoutThatFits:restrictedToSize:relativeToParentSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASScrollNode.mm:80"]
+  S22["method:BRBasePicker::byPresent<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:179"]
+  T22["method:BRBasePicker::bind<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:103"]
   S22 -->|calls| T22
-  S23["method:ASDisplayNode::layoutThatFits:parentSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:88"]
-  T23["method:ASScrollNode::calculateLayoutThatFits:restrictedToSize:relativeToParentSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASScrollNode.mm:80"]
+  S23["method:BRBasePicker::byPresent<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:179"]
+  T23["method:BRBasePicker::buildContentView<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:175"]
   S23 -->|calls| T23
-  S24["method:ASDisplayNode::layoutThatFits:parentSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:88"]
-  T24["function:ASLayoutLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:33"]
+  S24["method:BRBasePicker::byPresent<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:179"]
+  T24["method:BRPickerPanel::configureToolbar<br/>JobsByPods/BRPickerViewSwift@Pods/UI/BRPickerPanel.swift:67"]
   S24 -->|calls| T24
-  S25["method:ASDisplayNode::setPrimitiveTraitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:132"]
-  T25["function:ASPrimitiveTraitCollectionIsEqualToASPrimitiveTraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:92"]
+  S25["method:BRBasePicker::byPresent<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:179"]
+  T25["method:BRBasePicker::cancelSelection<br/>JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:177"]
   S25 -->|calls| T25
 ```
 

@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h:1"]
-  T1["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S1["method:JobsBluetoothManager::connect<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:274"]
+  T1["method:JobsBluetoothManager::beginConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:304"]
   S1 -->|calls| T1
-  S2["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h:1"]
-  T2["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S2["method:JobsBluetoothManager::beginConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:304"]
+  T2["method:JobsBluetoothManager::transition<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:688"]
   S2 -->|calls| T2
-  S3["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h:1"]
-  T3["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S3["method:JobsBluetoothManager::beginConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:304"]
+  T3["method:JobsBluetoothMockTransport::advertisements<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothMockTransport/JobsBluetoothMockTransport.swift:32"]
   S3 -->|calls| T3
-  S4["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h:1"]
-  T4["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S4["method:JobsBluetoothManager::beginConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:304"]
+  T4["method:JobsBluetoothManager::transition<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:688"]
   S4 -->|calls| T4
-  S5["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h:1"]
-  T5["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S5["method:JobsBluetoothManager::beginConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:304"]
+  T5["method:JobsBluetoothManager::transition<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:688"]
   S5 -->|calls| T5
-  S6["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h:1"]
-  T6["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S6["method:JobsBluetoothManager::beginConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:304"]
+  T6["field:JobsBluetoothManager::nativePeripherals<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:120"]
   S6 -->|calls| T6
-  S7["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h:1"]
-  T7["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S7["method:JobsBluetoothManager::beginConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:304"]
+  T7["method:JobsBluetoothManager::transition<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:688"]
   S7 -->|calls| T7
-  S8["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h:1"]
-  T8["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S8["method:JobsBluetoothManager::beginConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:304"]
+  T8["method:JobsBluetoothManager::failConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:379"]
   S8 -->|calls| T8
-  S9["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.h:1"]
-  T9["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S9["method:JobsBluetoothManager::disconnect<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:342"]
+  T9["method:JobsBluetoothManager::onMain<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:709"]
   S9 -->|calls| T9
-  S10["method:_ASTableViewCell::layoutSubviews<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:86"]
-  T10["method:_ASTableViewCell::layoutSubviews<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:86"]
+  S10["method:JobsBluetoothManager::disconnect<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:342"]
+  T10["method:JobsBluetoothManager::disconnectInternal<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:348"]
   S10 -->|calls| T10
-  S11["method:_ASTableViewCell::didTransitionToState:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:92"]
-  T11["method:_ASDisplayLayer::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:91"]
+  S11["method:JobsBluetoothManager::disconnectInternal<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:348"]
+  T11["method:JobsBluetoothManager::stopScanInternal<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:264"]
   S11 -->|calls| T11
-  S12["method:_ASTableViewCell::didTransitionToState:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:92"]
-  T12["method:ASDisplayNode::layoutIfNeeded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASDisplayNode+UIViewBridge.mm:481"]
+  S12["method:JobsBluetoothManager::disconnectInternal<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:348"]
+  T12["method:JobsBluetoothManager::clearConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:364"]
   S12 -->|calls| T12
-  S13["method:_ASTableViewCell::consumesCellNodeVisibilityEvents<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:134"]
-  T13["function:ASSubclassOverridesSelector<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:98"]
+  S13["method:JobsBluetoothManager::disconnectInternal<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:348"]
+  T13["method:JobsBluetoothManager::transition<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:688"]
   S13 -->|calls| T13
-  S14["method:_ASTableViewCell::setSelected:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:143"]
-  T14["method:_ASTableViewCell::setSelected:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:143"]
+  S14["method:JobsBluetoothManager::clearConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:364"]
+  T14["method:JobsBluetoothManager::failCommands<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:647"]
   S14 -->|calls| T14
-  S15["method:_ASTableViewCell::setHighlighted:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:149"]
-  T15["method:_ASTableViewCell::setHighlighted:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:149"]
+  S15["method:JobsBluetoothManager::failConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:379"]
+  T15["method:JobsBluetoothManager::clearConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:364"]
   S15 -->|calls| T15
-  S16["method:_ASTableViewCell::prepareForReuse<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:155"]
-  T16["method:_ASTableViewCell::prepareForReuse<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:155"]
+  S16["method:JobsBluetoothManager::failConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:379"]
+  T16["method:JobsBluetoothManager::report<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:698"]
   S16 -->|calls| T16
-  S17["method:ASTableView::initWithFrame:style:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:308"]
-  T17["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
+  S17["method:JobsBluetoothManager::failConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:379"]
+  T17["method:JobsBluetoothManager::transition<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:688"]
   S17 -->|calls| T17
-  S18["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
-  T18["method:ASTableView::initWithFrame:style:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:308"]
+  S18["method:JobsBluetoothManager::failConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:379"]
+  T18["method:JobsBluetoothManager::scheduleReconnect<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:392"]
   S18 -->|calls| T18
-  S19["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
-  T19["method:ASTableView::dataControllerClass<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:300"]
+  S19["method:JobsBluetoothManager::scheduleReconnect<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:392"]
+  T19["method:JobsBluetoothManager::transition<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:688"]
   S19 -->|calls| T19
-  S20["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
-  T20["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S20["method:JobsBluetoothManager::scheduleReconnect<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:392"]
+  T20["method:JobsBluetoothManager::beginConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:304"]
   S20 -->|calls| T20
-  S21["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
-  T21["method:ASDataController::initWithDataSource:node:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASDataController.mm:83"]
+  S21["method:JobsBluetoothManager::read<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:411"]
+  T21["method:JobsBluetoothManager::onMain<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:709"]
   S21 -->|calls| T21
-  S22["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
-  T22["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S22["method:JobsBluetoothManager::read<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:411"]
+  T22["method:JobsBluetoothManager::report<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:698"]
   S22 -->|calls| T22
-  S23["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
-  T23["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S23["method:JobsBluetoothManager::setNotifyEnabled<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:423"]
+  T23["method:JobsBluetoothManager::onMain<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:709"]
   S23 -->|calls| T23
-  S24["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
-  T24["method:ASDelegateProxy::initWithTarget:interceptor:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASDelegateProxy.mm:176"]
+  S24["method:JobsBluetoothManager::setNotifyEnabled<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:423"]
+  T24["method:JobsBluetoothManager::report<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:698"]
   S24 -->|calls| T24
-  S25["method:ASTableView::_initWithFrame:style:dataControllerClass:owningNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:313"]
-  T25["method:ASDelegateProxy::initWithTarget:interceptor:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASDelegateProxy.mm:176"]
+  S25["method:JobsBluetoothManager::setNotifyEnabled<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:423"]
+  T25["method:JobsBluetoothManager::failCommands<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:647"]
   S25 -->|calls| T25
 ```
 

@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASCenterLayoutSpecSnapshotTests::testWithSizingOptions<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCenterLayoutSpecSnapshotTests.mm:31"]
-  T1["method:ASCenterLayoutSpecSnapshotTests::testWithCenteringOptions:sizingOptions:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCenterLayoutSpecSnapshotTests.mm:43"]
+  S1["method:JobsDouyinRefreshView::jobs_layoutDots<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:225"]
+  T1["method:CAKeyframeAnimation::byPath<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAKeyframeAnimation.swift:19"]
   S1 -->|calls| T1
-  S2["method:ASCenterLayoutSpecSnapshotTests::testWithSizingOptions<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCenterLayoutSpecSnapshotTests.mm:31"]
-  T2["method:ASCenterLayoutSpecSnapshotTests::testWithCenteringOptions:sizingOptions:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCenterLayoutSpecSnapshotTests.mm:43"]
+  S2["method:JobsDouyinRefreshView::jobs_layoutDots<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:225"]
+  T2["method:EKAttributes::byPosition<br/>JobsByPods/JobsBy3rdTools@Pods/EKAttributes/EKAttributes.swift:20"]
   S2 -->|calls| T2
-  S3["method:ASCenterLayoutSpecSnapshotTests::testWithCenteringOptions:sizingOptions:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCenterLayoutSpecSnapshotTests.mm:43"]
-  T3["function:ASDisplayNodeWithBackgroundColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASLayoutSpecSnapshotTestsHelper.h:31"]
+  S3["method:JobsDouyinRefreshView::jobs_layoutDots<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:225"]
+  T3["method:CALayer::byBounds<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CALayer.swift:16"]
   S3 -->|calls| T3
-  S4["method:ASCenterLayoutSpecSnapshotTests::testWithCenteringOptions:sizingOptions:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCenterLayoutSpecSnapshotTests.mm:43"]
-  T4["function:ASDisplayNodeWithBackgroundColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASLayoutSpecSnapshotTestsHelper.h:31"]
+  S4["method:JobsDouyinRefreshView::jobs_layoutDots<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:225"]
+  T4["method:UIBezierPath::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIBezierPath/UIBezierPath.swift:27"]
   S4 -->|calls| T4
-  S5["method:ASCenterLayoutSpecSnapshotTests::testWithCenteringOptions:sizingOptions:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCenterLayoutSpecSnapshotTests.mm:43"]
-  T5["method:ASLayoutSpecSnapshotTestCase::testLayoutSpec:sizeRange:subnodes:identifier:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASLayoutSpecSnapshotTestsHelper.mm:29"]
+  S5["method:JobsDouyinRefreshView::jobs_installAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:251"]
+  T5["method:JobsDouyinRefreshView::jobs_removeAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:348"]
   S5 -->|calls| T5
-  S6["method:ASCenterLayoutSpecSnapshotTests::testWithCenteringOptions:sizingOptions:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCenterLayoutSpecSnapshotTests.mm:43"]
-  T6["function:ASCenterLayoutSpecSnapshotTests::suffixForCenteringOptions<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCenterLayoutSpecSnapshotTests.mm:64"]
+  S6["method:JobsDouyinRefreshView::jobs_installAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:251"]
+  T6["method:JobsDouyinRefreshView::jobs_layoutDots<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:225"]
   S6 -->|calls| T6
-  S7["function:ASCenterLayoutSpecSnapshotTests::suffixForCenteringOptions<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCenterLayoutSpecSnapshotTests.mm:64"]
-  T7["method:ASMutableAttributedStringBuilder::string<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASMutableAttributedStringBuilder.mm:234"]
+  S7["method:JobsDouyinRefreshView::jobs_installAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:251"]
+  T7["method:JobsDouyinRefreshView::jobs_animationGroup<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:289"]
   S7 -->|calls| T7
-  S8["method:ASCenterLayoutSpecSnapshotTests::testMinimumSizeRangeIsGivenToChildWhenNotCentering<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCenterLayoutSpecSnapshotTests.mm:88"]
-  T8["function:ASDisplayNodeWithBackgroundColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASLayoutSpecSnapshotTestsHelper.h:31"]
+  S8["method:JobsDouyinRefreshView::jobs_installAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:251"]
+  T8["method:JobsDouyinRefreshView::jobs_animationGroup<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:289"]
   S8 -->|calls| T8
-  S9["method:ASCenterLayoutSpecSnapshotTests::testMinimumSizeRangeIsGivenToChildWhenNotCentering<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCenterLayoutSpecSnapshotTests.mm:88"]
-  T9["function:ASDisplayNodeWithBackgroundColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASLayoutSpecSnapshotTestsHelper.h:31"]
+  S9["method:JobsDouyinRefreshView::jobs_animationGroup<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:289"]
+  T9["method:CAKeyframeAnimation::byTimingFunctions<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAKeyframeAnimation.swift:31"]
   S9 -->|calls| T9
-  S10["method:ASCenterLayoutSpecSnapshotTests::testMinimumSizeRangeIsGivenToChildWhenNotCentering<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCenterLayoutSpecSnapshotTests.mm:88"]
-  T10["method:ASLayoutSpecSnapshotTestCase::testLayoutSpec:sizeRange:subnodes:identifier:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASLayoutSpecSnapshotTestsHelper.mm:29"]
+  S10["method:JobsDouyinRefreshView::jobs_animationGroup<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:289"]
+  T10["method:CAKeyframeAnimation::byKeyTimes<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAKeyframeAnimation.swift:25"]
   S10 -->|calls| T10
-  S11["method:ASCollectionModernDataSourceTests::setUp<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:35"]
-  T11["method:ASCollectionModernDataSourceTests::setUp<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:35"]
+  S11["method:JobsDouyinRefreshView::jobs_animationGroup<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:289"]
+  T11["method:CAKeyframeAnimation::byValues<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAKeyframeAnimation.swift:13"]
   S11 -->|calls| T11
-  S12["method:ASCollectionModernDataSourceTests::setUp<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:35"]
-  T12["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S12["method:JobsDouyinRefreshView::jobs_animationGroup<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:289"]
+  T12["method:ASIntegerMap::mapForUpdateWithOldCount:deleted:inserted:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASIntegerMap.mm:53"]
   S12 -->|calls| T12
-  S13["method:ASCollectionModernDataSourceTests::tearDown<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:73"]
-  T13["method:ASCollectionNode::waitUntilAllUpdatesAreProcessed<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:1031"]
+  S13["method:JobsDouyinRefreshView::jobs_animationGroup<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:289"]
+  T13["method:CAKeyframeAnimation::byTimingFunctions<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAKeyframeAnimation.swift:31"]
   S13 -->|calls| T13
-  S14["method:ASCollectionModernDataSourceTests::tearDown<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:73"]
-  T14["method:ASCollectionModernDataSourceTests::tearDown<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:73"]
+  S14["method:JobsDouyinRefreshView::jobs_animationGroup<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:289"]
+  T14["method:CAKeyframeAnimation::byKeyTimes<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAKeyframeAnimation.swift:25"]
   S14 -->|calls| T14
-  S15["method:ASCollectionModernDataSourceTests::testInitialDataLoading<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:81"]
-  T15["method:ASCollectionModernDataSourceTests::loadInitialData<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:153"]
+  S15["method:JobsDouyinRefreshView::jobs_animationGroup<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:289"]
+  T15["method:CAKeyframeAnimation::byValues<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAKeyframeAnimation.swift:13"]
   S15 -->|calls| T15
-  S16["method:ASCollectionModernDataSourceTests::testReloadingAnItem<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:86"]
-  T16["method:ASCollectionModernDataSourceTests::loadInitialData<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:153"]
+  S16["method:JobsDouyinRefreshView::jobs_animationGroup<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:289"]
+  T16["method:CAKeyframeAnimation::byTimingFunctions<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAKeyframeAnimation.swift:31"]
   S16 -->|calls| T16
-  S17["method:ASCollectionModernDataSourceTests::testReloadingAnItem<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:86"]
-  T17["method:ASCollectionModernDataSourceTests::performUpdateReloadingSections:reloadingItems:reloadMappings:insertingItems:deletingItems:skippedReloadIndexPaths:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:269"]
+  S17["method:JobsDouyinRefreshView::jobs_animationGroup<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:289"]
+  T17["method:CAKeyframeAnimation::byKeyTimes<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAKeyframeAnimation.swift:25"]
   S17 -->|calls| T17
-  S18["method:ASCollectionModernDataSourceTests::testInsertingAnItem<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:101"]
-  T18["method:ASCollectionModernDataSourceTests::loadInitialData<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:153"]
+  S18["method:JobsDouyinRefreshView::jobs_animationGroup<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:289"]
+  T18["method:CAKeyframeAnimation::byValues<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAKeyframeAnimation.swift:13"]
   S18 -->|calls| T18
-  S19["method:ASCollectionModernDataSourceTests::testInsertingAnItem<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:101"]
-  T19["method:ASCollectionModernDataSourceTests::performUpdateReloadingSections:reloadingItems:reloadMappings:insertingItems:deletingItems:skippedReloadIndexPaths:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:269"]
+  S19["method:JobsDouyinRefreshView::jobs_animationGroup<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:289"]
+  T19["method:CAKeyframeAnimation::byCalculationMode<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAKeyframeAnimation.swift:37"]
   S19 -->|calls| T19
-  S20["method:ASCollectionModernDataSourceTests::testReloadingAnItemWithACompatibleNodeModel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:116"]
-  T20["method:ASCollectionModernDataSourceTests::loadInitialData<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:153"]
+  S20["method:JobsDouyinRefreshView::jobs_animationGroup<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:289"]
+  T20["method:CAKeyframeAnimation::byKeyTimes<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAKeyframeAnimation.swift:25"]
   S20 -->|calls| T20
-  S21["method:ASCollectionModernDataSourceTests::testReloadingAnItemWithACompatibleNodeModel<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:116"]
-  T21["method:ASCollectionModernDataSourceTests::performUpdateReloadingSections:reloadingItems:reloadMappings:insertingItems:deletingItems:skippedReloadIndexPaths:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:269"]
+  S21["method:JobsDouyinRefreshView::jobs_animationGroup<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:289"]
+  T21["method:CAKeyframeAnimation::byValues<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAKeyframeAnimation.swift:13"]
   S21 -->|calls| T21
-  S22["method:ASCollectionModernDataSourceTests::testReloadingASection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:139"]
-  T22["method:ASCollectionModernDataSourceTests::loadInitialData<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:153"]
+  S22["class:JobsGIFRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsGIFRefreshView/JobsGIFRefreshView.swift:19"]
+  T22["method:JobsNSObjectMaking::jobsMake<br/>JobsByPods/JobsSwiftBlock@Pods/NSObject+Make.swift:17"]
   S22 -->|calls| T22
-  S23["method:ASCollectionModernDataSourceTests::testReloadingASection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:139"]
-  T23["method:ASCollectionModernDataSourceTests::performUpdateReloadingSections:reloadingItems:reloadMappings:insertingItems:deletingItems:skippedReloadIndexPaths:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:269"]
+  S23["class:JobsGIFRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsGIFRefreshView/JobsGIFRefreshView.swift:19"]
+  T23["method:ASTextContainer::setPath:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLayout.mm:248"]
   S23 -->|calls| T23
-  S24["method:ASCollectionModernDataSourceTests::loadInitialData<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:153"]
-  T24["method:ASCollectionModernDataSourceTests::expectDataSourceCountMethods<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:195"]
+  S24["class:JobsGIFRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsGIFRefreshView/JobsGIFRefreshView.swift:19"]
+  T24["method:JobsGIFRefreshView::jobs_setupGIFRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsGIFRefreshView/JobsGIFRefreshView.swift:150"]
   S24 -->|calls| T24
-  S25["method:ASCollectionModernDataSourceTests::loadInitialData<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:153"]
-  T25["method:ASCollectionModernDataSourceTests::expectNodeModelMethodForItemAtIndexPath:nodeModel:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:209"]
+  S25["class:JobsGIFRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsGIFRefreshView/JobsGIFRefreshView.swift:19"]
+  T25["method:JobsGIFRefreshView::jobs_decodeGIF<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsGIFRefreshView/JobsGIFRefreshView.swift:160"]
   S25 -->|calls| T25
 ```
 

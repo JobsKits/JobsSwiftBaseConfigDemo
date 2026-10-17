@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:_ASDisplayLayerTests::checkDelegateDisplay:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:285"]
-  T1["method:_ASDisplayLayer::setNeedsDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:107"]
+  S1["method:JobsChargingAnimationView::jobs_layoutChargingSegments<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:747"]
+  T1["method:BRPickerTheme::byCornerRadius<br/>JobsByPods/BRPickerViewSwift@Pods/Theme/BRPickerTheme.swift:78"]
   S1 -->|calls| T1
-  S2["method:_ASDisplayLayerTests::checkDelegateDisplay:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:285"]
-  T2["method:_ASDisplayLayer::displayQueue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:130"]
+  S2["method:JobsChargingAnimationView::jobs_layoutChargingSegments<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:747"]
+  T2["method:CALayer::byFrame<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CALayer.swift:22"]
   S2 -->|calls| T2
-  S3["method:_ASDisplayLayerTests::checkDelegateDisplay:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:285"]
-  T3["method:_ASDisplayLayerTests::waitForDisplayQueue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:259"]
+  S3["method:JobsChargingAnimationView::jobs_applyChargingColors<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:767"]
+  T3["method:JobsOCCentralLab::beginWithLog:timeout:<br/>SwiftDoc.md/iOS蓝牙开发实战与面试.md/Demo/OC/JobsOCCentralLab.m:23"]
   S3 -->|calls| T3
-  S4["method:_ASDisplayLayerTests::checkDelegateDrawInContext:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:329"]
-  T4["method:_ASDisplayLayer::displayQueue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:130"]
+  S4["method:JobsChargingAnimationView::jobs_applyChargingColors<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:767"]
+  T4["method:CALayer::byBackgroundColor<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CALayer.swift:174"]
   S4 -->|calls| T4
-  S5["method:_ASDisplayLayerTests::checkDelegateDrawInContext:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:329"]
-  T5["method:_ASDisplayLayer::setNeedsDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:107"]
+  S5["method:JobsChargingAnimationView::jobs_applyChargingColors<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:767"]
+  T5["method:CABasicAnimation::byFromValue<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CABasicAnimation.swift:12"]
   S5 -->|calls| T5
-  S6["method:_ASDisplayLayerTests::checkDelegateDrawInContext:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:329"]
-  T6["method:_ASDisplayLayer::displayQueue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:130"]
+  S6["method:JobsChargingAnimationView::jobs_syncChargingTimerState<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:794"]
+  T6["method:JobsTimer::pause<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:170"]
   S6 -->|calls| T6
-  S7["method:_ASDisplayLayerTests::checkDelegateDrawInContext:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:329"]
-  T7["method:_ASDisplayLayerTests::waitForLayer:asyncDisplayCount:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:269"]
+  S7["method:JobsChargingAnimationView::jobs_syncChargingTimerState<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:794"]
+  T7["method:JobsTimer::resume<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:217"]
   S7 -->|calls| T7
-  S8["method:_ASDisplayLayerTests::checkDelegateDisplayAndDrawInContext:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:376"]
-  T8["method:_ASDisplayLayer::displayQueue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:130"]
+  S8["method:JobsChargingAnimationView::jobs_syncChargingTimerState<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:794"]
+  T8["method:JobsChargingAnimationView::byAdvance<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:703"]
   S8 -->|calls| T8
-  S9["method:_ASDisplayLayerTests::checkDelegateDisplayAndDrawInContext:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:376"]
-  T9["method:_ASDisplayLayer::setNeedsDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:107"]
+  S9["method:JobsChargingAnimationView::jobs_stopChargingTimer<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:820"]
+  T9["method:JobsTimer::stop<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:288"]
   S9 -->|calls| T9
-  S10["method:_ASDisplayLayerTests::checkDelegateDisplayAndDrawInContext:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:376"]
-  T10["method:_ASDisplayLayer::displayQueue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:130"]
+  S10["method:UITableViewCell::byChargingAnimationStart<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:848"]
+  T10["method:UIView::byAddTo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:61"]
   S10 -->|calls| T10
-  S11["method:_ASDisplayLayerTests::checkDelegateDisplayAndDrawInContext:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:376"]
-  T11["method:_ASDisplayLayerTests::waitForDisplayQueue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:259"]
+  S11["method:UITableViewCell::byChargingAnimationStart<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:848"]
+  T11["method:UITableViewCell::byImage<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UITableViewCell/UITableViewCell+DSL.swift:291"]
   S11 -->|calls| T11
-  S12["method:_ASDisplayLayerTests::testCancelAsyncDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:423"]
-  T12["method:_ASDisplayLayer::displayQueue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:130"]
+  S12["method:UITableViewCell::byChargingAnimationStart<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:848"]
+  T12["method:JobsChargingAnimationView::byStart<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:664"]
   S12 -->|calls| T12
-  S13["method:_ASDisplayLayerTests::testCancelAsyncDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:423"]
-  T13["method:_ASDisplayLayer::setNeedsDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:107"]
+  S13["method:UITableViewCell::byChargingAnimationPause<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:880"]
+  T13["method:JobsChargingAnimationView::byPause<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:676"]
   S13 -->|calls| T13
-  S14["method:_ASDisplayLayerTests::testCancelAsyncDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:423"]
-  T14["method:_ASDisplayLayer::cancelAsyncDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:196"]
+  S14["method:UITableViewCell::byChargingAnimationResume<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:887"]
+  T14["method:JobsChargingAnimationView::byResume<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:684"]
   S14 -->|calls| T14
-  S15["method:_ASDisplayLayerTests::testCancelAsyncDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:423"]
-  T15["method:_ASDisplayLayer::displayQueue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:130"]
+  S15["method:UITableViewCell::byChargingAnimationStop<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:894"]
+  T15["method:JobsChargingAnimationView::byStop<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:692"]
   S15 -->|calls| T15
-  S16["method:_ASDisplayLayerTests::testCancelAsyncDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:423"]
-  T16["method:_ASDisplayLayerTests::waitForDisplayQueue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:259"]
+  S16["method:UITableViewCell::jobs_chargingPlaceholderImage<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:903"]
+  T16["method:ASButtonNode::imageForState:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:390"]
   S16 -->|calls| T16
-  S17["method:_ASDisplayLayerTests::DISABLED_testTransaction<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:452"]
-  T17["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S17["class:SlideToUnlockView<br/>JobsByPods/JobsGestureUnlock@Pods/Apple滑动开锁🔒.swift:20"]
+  T17["method:SlideToUnlockView::updateDirectionUI<br/>JobsByPods/JobsGestureUnlock@Pods/Apple滑动开锁🔒.swift:201"]
   S17 -->|calls| T17
-  S18["method:_ASDisplayLayerTests::DISABLED_testTransaction<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:452"]
-  T18["function:bogusImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:20"]
+  S18["class:SlideToUnlockView<br/>JobsByPods/JobsGestureUnlock@Pods/Apple滑动开锁🔒.swift:20"]
+  T18["method:SlideToUnlockView::updateShimmerMask<br/>JobsByPods/JobsGestureUnlock@Pods/Apple滑动开锁🔒.swift:250"]
   S18 -->|calls| T18
-  S19["method:_ASDisplayLayerTests::DISABLED_testTransaction<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:452"]
-  T19["method:_ASDisplayLayer::displayQueue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:130"]
+  S19["class:SlideToUnlockView<br/>JobsByPods/JobsGestureUnlock@Pods/Apple滑动开锁🔒.swift:20"]
+  T19["method:SlideToUnlockView::updateSkeletonState<br/>JobsByPods/JobsGestureUnlock@Pods/Apple滑动开锁🔒.swift:241"]
   S19 -->|calls| T19
-  S20["method:_ASDisplayLayerTests::DISABLED_testTransaction<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:452"]
-  T20["method:_ASDisplayLayer::setNeedsDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:107"]
+  S20["property:SlideToUnlockView::progress<br/>JobsByPods/JobsGestureUnlock@Pods/Apple滑动开锁🔒.swift:51"]
+  T20["method:SlideToUnlockView::updateLayoutForProgress<br/>JobsByPods/JobsGestureUnlock@Pods/Apple滑动开锁🔒.swift:218"]
   S20 -->|calls| T20
-  S21["method:_ASDisplayLayerTests::DISABLED_testTransaction<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:452"]
-  T21["method:_ASDisplayLayer::displayQueue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:130"]
+  S21["class:SlideToUnlockView<br/>JobsByPods/JobsGestureUnlock@Pods/Apple滑动开锁🔒.swift:20"]
+  T21["method:JobsNSObjectMaking::jobsMake<br/>JobsByPods/JobsSwiftBlock@Pods/NSObject+Make.swift:17"]
   S21 -->|calls| T21
-  S22["method:_ASDisplayLayerTests::DISABLED_testTransaction<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:452"]
-  T22["function:ASDisplayNodeRunRunLoopUntilBlockIsTrue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:25"]
+  S22["class:SlideToUnlockView<br/>JobsByPods/JobsGestureUnlock@Pods/Apple滑动开锁🔒.swift:20"]
+  T22["method:JobsNSObjectMaking::jobsMake<br/>JobsByPods/JobsSwiftBlock@Pods/NSObject+Make.swift:17"]
   S22 -->|calls| T22
-  S23["method:_ASDisplayLayerTests::DISABLED_testTransaction<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:452"]
-  T23["method:_ASDisplayLayerTests::waitForLayer:asyncDisplayCount:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:269"]
+  S23["class:SlideToUnlockView<br/>JobsByPods/JobsGestureUnlock@Pods/Apple滑动开锁🔒.swift:20"]
+  T23["method:UIView::byAutoresizingMask<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIView/UIView+DSL.swift:177"]
   S23 -->|calls| T23
-  S24["method:_ASDisplayLayerTests::DISABLED_testTransaction<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:452"]
-  T24["function:ASDisplayNodeRunRunLoopUntilBlockIsTrue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:25"]
+  S24["class:SlideToUnlockView<br/>JobsByPods/JobsGestureUnlock@Pods/Apple滑动开锁🔒.swift:20"]
+  T24["method:CALayer::byFrame<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CALayer.swift:22"]
   S24 -->|calls| T24
-  S25["method:_ASDisplayLayerTests::checkSuspendResume:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:533"]
-  T25["method:_ASDisplayLayer::displayQueue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:130"]
+  S25["class:SlideToUnlockView<br/>JobsByPods/JobsGestureUnlock@Pods/Apple滑动开锁🔒.swift:20"]
+  T25["method:UIView::byAddTo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:61"]
   S25 -->|calls| T25
 ```
 

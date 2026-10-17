@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASCollectionViewTests::testASPrimitiveTraitCollectionToUITraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1249"]
-  T1["function:ASPrimitiveTraitCollectionIsEqualToASPrimitiveTraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:92"]
+  S1["method:JobsTodayNewsRefreshView::jobs_syncAnimationState<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:204"]
+  T1["method:JobsTodayNewsRefreshView::jobs_pauseAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:367"]
   S1 -->|calls| T1
-  S2["method:ASCollectionViewTests::DISABLED_testThatAutomaticallyManagedSubnodesGetPreloadCallBeforeDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1279"]
-  T2["method:ASCollectionViewTestController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:151"]
+  S2["method:JobsTodayNewsRefreshView::jobs_syncAnimationState<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:204"]
+  T2["method:JobsTodayNewsRefreshView::jobs_installAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:269"]
   S2 -->|calls| T2
-  S3["method:ASCollectionViewTests::DISABLED_testThatAutomaticallyManagedSubnodesGetPreloadCallBeforeDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1279"]
-  T3["function:NSStringFromASInterfaceState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.h:54"]
+  S3["method:JobsTodayNewsRefreshView::jobs_syncAnimationState<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:204"]
+  T3["method:JobsTodayNewsRefreshView::jobs_resumeAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:375"]
   S3 -->|calls| T3
-  S4["method:ASCollectionViewTests::DISABLED_testThatAutomaticallyManagedSubnodesGetPreloadCallBeforeDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1279"]
-  T4["function:NSStringFromASInterfaceState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.h:54"]
+  S4["method:JobsTodayNewsRefreshView::jobs_layoutMark<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:225"]
+  T4["method:JobsOCCentralLab::beginWithLog:timeout:<br/>SwiftDoc.md/iOS蓝牙开发实战与面试.md/Demo/OC/JobsOCCentralLab.m:23"]
   S4 -->|calls| T4
-  S5["method:ASCollectionViewTests::testAllPendingStatePropertiesTransferredToView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1302"]
-  T5["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S5["method:JobsTodayNewsRefreshView::jobs_layoutMark<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:225"]
+  T5["method:CALayer::byFrame<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CALayer.swift:22"]
   S5 -->|calls| T5
-  S6["method:ASCollectionViewTests::testAllPendingStatePropertiesTransferredToView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1302"]
-  T6["method:ASCollectionNode::initWithFrame:collectionViewLayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:267"]
+  S6["method:JobsTodayNewsRefreshView::jobs_layoutMark<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:225"]
+  T6["method:CALayer::byOpacity<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CALayer.swift:225"]
   S6 -->|calls| T6
-  S7["method:ASCollectionViewTests::testAllPendingStatePropertiesTransferredToView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1302"]
-  T7["method:ASCollectionViewTestDelegate::initWithNumberOfSections:numberOfItemsInSection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:77"]
+  S7["method:JobsTodayNewsRefreshView::jobs_layoutMark<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:225"]
+  T7["method:CAKeyframeAnimation::byPath<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAKeyframeAnimation.swift:19"]
   S7 -->|calls| T7
-  S8["method:ASCollectionViewTests::testAllPendingStatePropertiesTransferredToView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1302"]
-  T8["method:ASCollectionViewTestDelegate::initWithNumberOfSections:numberOfItemsInSection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:77"]
+  S8["method:JobsTodayNewsRefreshView::jobs_layoutMark<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:225"]
+  T8["method:CAShapeLayer::byLineJoin<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAShapeLayer.swift:88"]
   S8 -->|calls| T8
-  S9["method:ASCollectionViewThrashTests::setUp<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:29"]
-  T9["method:ASCollectionViewThrashTests::setUp<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:29"]
+  S9["method:JobsTodayNewsRefreshView::jobs_layoutMark<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:225"]
+  T9["method:CAShapeLayer::byLineCap<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAShapeLayer.swift:82"]
   S9 -->|calls| T9
-  S10["method:ASCollectionViewThrashTests::tearDown<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:37"]
-  T10["method:ASCollectionViewThrashTests::tearDown<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:37"]
+  S10["method:JobsTodayNewsRefreshView::jobs_layoutMark<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:225"]
+  T10["method:FTDashboardView::byLineWidth<br/>JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift:375"]
   S10 -->|calls| T10
-  S11["method:ASCollectionViewThrashTests::testRecordedThrashCase<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:79"]
-  T11["method:ASCollectionViewThrashTests::applyUpdateUsingBatchUpdates:toDataSource:animated:useXCTestWait:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:176"]
+  S11["method:JobsTodayNewsRefreshView::jobs_layoutMark<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:225"]
+  T11["method:AttributeContainer::byStrokeColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIKitAttributes.swift:89"]
   S11 -->|calls| T11
-  S12["method:ASCollectionViewThrashTests::testThrashingWildly<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:97"]
-  T12["method:ASCollectionViewThrashTests::setUp<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:29"]
+  S12["method:JobsTodayNewsRefreshView::jobs_layoutMark<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:225"]
+  T12["method:CAShapeLayer::byFillColor<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAShapeLayer.swift:22"]
   S12 -->|calls| T12
-  S13["method:ASCollectionViewThrashTests::testThrashingWildly<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:97"]
-  T13["method:ASCollectionViewThrashTests::applyUpdateUsingBatchUpdates:toDataSource:animated:useXCTestWait:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:176"]
+  S13["method:JobsTodayNewsRefreshView::jobs_layoutMark<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:225"]
+  T13["method:JobsTodayNewsRefreshView::jobs_bowtiePath<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:299"]
   S13 -->|calls| T13
-  S14["method:ASCollectionViewThrashTests::testThrashingWildly<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:97"]
-  T14["method:ASThrashDataSource::predicateForDeallocatedHierarchy<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASThrashUtility.m:270"]
+  S14["method:JobsTodayNewsRefreshView::jobs_applyPullProgress<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:252"]
+  T14["method:JobsOCCentralLab::beginWithLog:timeout:<br/>SwiftDoc.md/iOS蓝牙开发实战与面试.md/Demo/OC/JobsOCCentralLab.m:23"]
   S14 -->|calls| T14
-  S15["method:ASCollectionViewThrashTests::testThrashingWildly<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:97"]
-  T15["method:ASCollectionViewThrashTests::tearDown<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:37"]
+  S15["method:JobsTodayNewsRefreshView::jobs_applyPullProgress<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:252"]
+  T15["method:CAShapeLayer::byStrokeEnd<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAShapeLayer.swift:58"]
   S15 -->|calls| T15
-  S16["method:ASCollectionViewThrashTests::testThrashingWildlyOnSameCollectionView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:119"]
-  T16["method:ASCollectionViewThrashTests::setUp<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:29"]
+  S16["method:JobsTodayNewsRefreshView::jobs_applyPullProgress<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:252"]
+  T16["method:CAShapeLayer::byStrokeStart<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAShapeLayer.swift:52"]
   S16 -->|calls| T16
-  S17["method:ASCollectionViewThrashTests::testThrashingWildlyOnSameCollectionView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:119"]
-  T17["method:ASCollectionViewThrashTests::applyUpdateUsingBatchUpdates:toDataSource:animated:useXCTestWait:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:176"]
+  S17["method:JobsTodayNewsRefreshView::jobs_applyPullProgress<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:252"]
+  T17["method:CAShapeLayer::byPath<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAShapeLayer.swift:16"]
   S17 -->|calls| T17
-  S18["method:ASCollectionViewThrashTests::testThrashingWildlyOnSameCollectionView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:119"]
-  T18["method:ASCollectionViewThrashTests::tearDown<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:37"]
+  S18["method:JobsTodayNewsRefreshView::jobs_applyPullProgress<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:252"]
+  T18["method:JobsTodayNewsRefreshView::jobs_bowtiePath<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:299"]
   S18 -->|calls| T18
-  S19["method:ASCollectionViewThrashTests::testThrashingWildlyDispatchWildly<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:146"]
-  T19["method:ASCollectionViewThrashTests::setUp<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:29"]
+  S19["method:JobsTodayNewsRefreshView::jobs_applyPullProgress<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:252"]
+  T19["method:CALayer::byTransform<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CALayer.swift:52"]
   S19 -->|calls| T19
-  S20["method:ASCollectionViewThrashTests::testThrashingWildlyDispatchWildly<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:146"]
-  T20["method:ASCollectionViewThrashTests::applyUpdateUsingBatchUpdates:toDataSource:animated:useXCTestWait:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:176"]
+  S20["method:JobsTodayNewsRefreshView::jobs_applyPullProgress<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:252"]
+  T20["method:CALayer::byTransform<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CALayer.swift:52"]
   S20 -->|calls| T20
-  S21["method:ASCollectionViewThrashTests::testThrashingWildlyDispatchWildly<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:146"]
-  T21["method:ASCollectionViewThrashTests::tearDown<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewThrashTests.mm:37"]
+  S21["method:JobsTodayNewsRefreshView::jobs_applyPullProgress<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:252"]
+  T21["method:UIView::byAlpha<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:54"]
   S21 -->|calls| T21
-  S22["method:ASConfigurationTests::testMappingNamesToFlags<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASConfigurationTests.mm:107"]
-  T22["method:ASConfigurationTests::allFeatures<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASConfigurationTests.mm:62"]
+  S22["method:JobsTodayNewsRefreshView::jobs_installAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:269"]
+  T22["method:JobsTodayNewsRefreshView::jobs_removeAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:386"]
   S22 -->|calls| T22
-  S23["method:ASConfigurationTests::testMappingNamesToFlags<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASConfigurationTests.mm:107"]
-  T23["method:ASConfigurationTests::names<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASConfigurationTests.mm:44"]
+  S23["method:JobsTodayNewsRefreshView::jobs_installAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:269"]
+  T23["method:JobsTodayNewsRefreshView::jobs_layoutMark<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:225"]
   S23 -->|calls| T23
-  S24["method:ASConfigurationTests::testMappingNamesToFlags<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASConfigurationTests.mm:107"]
-  T24["function:ASExperimentalFeaturesGetNames<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASExperimentalFeatures.mm:13"]
+  S24["method:JobsTodayNewsRefreshView::jobs_installAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:269"]
+  T24["method:JobsTodayNewsRefreshView::jobs_applyPullProgress<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:252"]
   S24 -->|calls| T24
-  S25["method:ASConfigurationTests::testMappingFlagsFromNames<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASConfigurationTests.mm:116"]
-  T25["method:ASConfigurationTests::names<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASConfigurationTests.mm:44"]
+  S25["method:JobsTodayNewsRefreshView::jobs_installAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:269"]
+  T25["method:JobsTodayNewsRefreshView::jobs_bowtiePath<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:299"]
   S25 -->|calls| T25
 ```
 

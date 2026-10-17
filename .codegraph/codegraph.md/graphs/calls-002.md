@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["function:Win32Window::Create<br/>my_flutter/windows/runner/win32_window.cpp:123"]
-  T1["function:Scale<br/>my_flutter/windows/runner/win32_window.cpp:36"]
+  S1["method:JobsBlockStorageRegression::verifyRelease<br/>.github/tests/JobsPodsUpgrade/Core/JobsBlockStorageRegression.swift:69"]
+  T1["method:JobsCallbackable::jobsBy<br/>JobsByPods/JobsSwiftBlock@Pods/JobsCallbackable.swift:55"]
   S1 -->|calls| T1
-  S2["function:Win32Window::Create<br/>my_flutter/windows/runner/win32_window.cpp:123"]
-  T2["function:Scale<br/>my_flutter/windows/runner/win32_window.cpp:36"]
+  S2["method:JobsBlockStorageRegression::verifyRelease<br/>.github/tests/JobsPodsUpgrade/Core/JobsBlockStorageRegression.swift:69"]
+  T2["method:JobsCallbackable::jobsBy<br/>JobsByPods/JobsSwiftBlock@Pods/JobsCallbackable.swift:55"]
   S2 -->|calls| T2
-  S3["function:Win32Window::Create<br/>my_flutter/windows/runner/win32_window.cpp:123"]
-  T3["function:Scale<br/>my_flutter/windows/runner/win32_window.cpp:36"]
+  S3["method:JobsBlockStorageRegression::verifyRelease<br/>.github/tests/JobsPodsUpgrade/Core/JobsBlockStorageRegression.swift:69"]
+  T3["method:JobsCallbackable::jobs_callback<br/>JobsByPods/JobsSwiftBlock@Pods/JobsCallbackable.swift:61"]
   S3 -->|calls| T3
-  S4["function:CALLBACK Win32Window::WndProc<br/>my_flutter/windows/runner/win32_window.cpp:157"]
-  T4["function:EnableFullDpiSupportIfAvailable<br/>my_flutter/windows/runner/win32_window.cpp:42"]
+  S4["class:ReleaseCapture<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:20"]
+  T4["field:ReleaseCapture::onRelease<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:21"]
   S4 -->|calls| T4
-  S5["function:Win32Window::Destroy<br/>my_flutter/windows/runner/win32_window.cpp:224"]
-  T5["method:WindowClassRegistrar::GetInstance<br/>my_flutter/windows/runner/win32_window.cpp:64"]
+  S5["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T5["method:JobsL10nRegression::verifyProviderAndReleaseReentry<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:109"]
   S5 -->|calls| T5
-  S6["function:ASButtonNodeResolveHorizontalAlignmentForStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode+Yoga.mm:16"]
-  T6["method:ASLayoutElementStyle::justifyContent<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:804"]
+  S6["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T6["method:Bundle::enableLanguageOverride<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/Bundle+多语言国际化.swift:31"]
   S6 -->|calls| T6
-  S7["function:ASButtonNodeResolveHorizontalAlignmentForStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode+Yoga.mm:16"]
-  T7["function:alignment<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackLayoutSpecUtilities.h:58"]
+  S7["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T7["method:Bundle::setLanguageBundle<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/Bundle+多语言国际化.swift:39"]
   S7 -->|calls| T7
-  S8["function:ASButtonNodeResolveVerticalAlignmentForStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode+Yoga.mm:24"]
-  T8["function:alignment<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackLayoutSpecUtilities.h:58"]
+  S8["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T8["method:JobsLanguageOverrideBundle::localizedString<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/Bundle+多语言国际化.swift:16"]
   S8 -->|calls| T8
-  S9["function:ASButtonNodeResolveVerticalAlignmentForStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode+Yoga.mm:24"]
-  T9["method:ASLayoutElementStyle::justifyContent<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:804"]
+  S9["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T9["method:LanguageManager::switchTo<br/>JobsByPods/Jobsl10n@Pods/LanguageManager.swift:58"]
   S9 -->|calls| T9
-  S10["method:ASButtonNode::updateYogaLayoutIfNeeded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode+Yoga.mm:34"]
-  T10["method:ASDisplayNode::_locked_style<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:57"]
+  S10["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T10["method:JobsLanguageOverrideBundle::localizedString<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/Bundle+多语言国际化.swift:16"]
   S10 -->|calls| T10
-  S11["method:ASButtonNode::updateYogaLayoutIfNeeded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode+Yoga.mm:34"]
-  T11["method:ASLayoutElementStyle::yogaNodeCreateIfNeeded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:778"]
+  S11["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T11["method:LanguageManager::followSystemLanguage<br/>JobsByPods/Jobsl10n@Pods/LanguageManager.swift:68"]
   S11 -->|calls| T11
-  S12["method:ASButtonNode::updateYogaLayoutIfNeeded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode+Yoga.mm:34"]
-  T12["function:ASButtonNodeResolveHorizontalAlignmentForStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode+Yoga.mm:16"]
+  S12["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T12["method:UserDefaults::string<br/>JobsByPods/JobsSwiftFoundation@Pods/UserDefaults.swift:48"]
   S12 -->|calls| T12
-  S13["method:ASButtonNode::updateYogaLayoutIfNeeded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode+Yoga.mm:34"]
-  T13["function:ASButtonNodeResolveVerticalAlignmentForStyle<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode+Yoga.mm:24"]
+  S13["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T13["method:UserDefaults::string<br/>JobsByPods/JobsSwiftFoundation@Pods/UserDefaults.swift:48"]
   S13 -->|calls| T13
-  S14["method:ASButtonNode::updateYogaLayoutIfNeeded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode+Yoga.mm:34"]
-  T14["function:ASEdgeInsetsMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:114"]
+  S14["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T14["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:194"]
   S14 -->|calls| T14
-  S15["method:ASButtonNode::updateYogaLayoutIfNeeded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode+Yoga.mm:34"]
-  T15["function:ASEdgeInsetsMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:114"]
+  S15["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T15["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:194"]
   S15 -->|calls| T15
-  S16["method:ASButtonNode::updateYogaLayoutIfNeeded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode+Yoga.mm:34"]
-  T16["function:ASEdgeInsetsMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:114"]
+  S16["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T16["method:TRAutoRefresh::refreshAll<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:137"]
   S16 -->|calls| T16
-  S17["method:ASButtonNode::updateYogaLayoutIfNeeded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode+Yoga.mm:34"]
-  T17["function:ASEdgeInsetsMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:114"]
+  S17["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T17["method:TRAutoRefresh::Marker::pack<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:24"]
   S17 -->|calls| T17
-  S18["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
-  T18["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S18["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T18["method:TRBind::bind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:194"]
   S18 -->|calls| T18
-  S19["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
-  T19["method:ASButtonNode::updateYogaLayoutIfNeeded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode+Yoga.mm:34"]
+  S19["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T19["method:TRAutoRefresh::refreshAll<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:137"]
   S19 -->|calls| T19
-  S20["method:ASButtonNode::titleNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:50"]
-  T20["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S20["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T20["method:TRAutoRefresh::unbind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:171"]
   S20 -->|calls| T20
-  S21["method:ASButtonNode::imageNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:70"]
-  T21["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S21["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T21["method:TRAutoRefresh::register<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:109"]
   S21 -->|calls| T21
-  S22["method:ASButtonNode::backgroundImageNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:80"]
-  T22["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S22["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T22["method:TRAutoRefresh::register<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:109"]
   S22 -->|calls| T22
-  S23["method:ASButtonNode::setEnabled:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:97"]
-  T23["method:ASButtonNode::updateButtonContent<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:122"]
+  S23["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T23["method:TRAutoRefresh::refreshAll<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:137"]
   S23 -->|calls| T23
-  S24["method:ASButtonNode::setHighlighted:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:106"]
-  T24["method:ASButtonNode::updateButtonContent<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:122"]
+  S24["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T24["method:TRAutoRefresh::unbind<br/>JobsByPods/Jobsl10n@Pods/TRAutoRefresh.swift:171"]
   S24 -->|calls| T24
-  S25["method:ASButtonNode::setSelected:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:114"]
-  T25["method:ASButtonNode::updateButtonContent<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:122"]
+  S25["method:JobsL10nRegression::main<br/>.github/tests/JobsPodsUpgrade/Core/JobsL10nRegression.swift:39"]
+  T25["method:Bundle::clearLanguageBundle<br/>JobsByPods/Jobsl10n@Pods/Foundation&UIKit/Bundle+多语言国际化.swift:45"]
   S25 -->|calls| T25
 ```
 

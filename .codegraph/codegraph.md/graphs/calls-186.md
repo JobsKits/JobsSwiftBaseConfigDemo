@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASDisplayNodeSnapshotTests::testBackgroundDynamicColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeSnapshotTests.mm:105"]
-  T1["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S1["function:jobsGetMainWindowBefore13<br/>JobsByPods/JobsGetWindow@Pods/Inlines.swift:25"]
+  T1["method:AlamofireClient::perform<br/>JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:79"]
   S1 -->|calls| T1
-  S2["method:ASDisplayNodeSnapshotTests::testBackgroundDynamicColorLayerBacked<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeSnapshotTests.mm:122"]
-  T2["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S2["method:UIApplication::jobsKeyWindow<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:33"]
+  T2["method:UIApplication::bestWindowScene<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:126"]
   S2 -->|calls| T2
-  S3["method:ASTestDisplayNode::setInterfaceState:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:125"]
-  T3["function:ASCATransactionQueueWait<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:57"]
+  S3["method:UIApplication::jobsKeyWindow<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:33"]
+  T3["method:UIApplication::bestWindow<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:144"]
   S3 -->|calls| T3
-  S4["method:ASTestDisplayNode::didEnterDisplayState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:136"]
-  T4["method:ASTestDisplayNode::didEnterDisplayState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:136"]
+  S4["method:UIApplication::jobsKeyWindow<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:41"]
+  T4["method:UIApplication::bestWindowScene<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:126"]
   S4 -->|calls| T4
-  S5["method:ASTestDisplayNode::didExitDisplayState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:142"]
-  T5["method:ASTestDisplayNode::didExitDisplayState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:142"]
+  S5["method:UIApplication::jobsKeyWindow<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:41"]
+  T5["method:UIApplication::bestWindow<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:144"]
   S5 -->|calls| T5
-  S6["method:ASTestDisplayNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:148"]
-  T6["method:ASTestDisplayNode::didEnterPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:148"]
+  S6["method:UIApplication::jobsTopMostVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:53"]
+  T6["method:UIApplication::bestWindowScene<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:126"]
   S6 -->|calls| T6
-  S7["method:ASTestDisplayNode::didExitPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:155"]
-  T7["method:ASTestDisplayNode::didExitPreloadState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:155"]
+  S7["method:UIApplication::jobsTopMostVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:53"]
+  T7["method:UIApplication::bestRootViewController<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:165"]
   S7 -->|calls| T7
-  S8["method:ASTestDisplayNode::displayDidFinish<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:168"]
-  T8["method:ASTestDisplayNode::displayDidFinish<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:168"]
+  S8["method:UIApplication::jobsTopMostVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:53"]
+  T8["method:UIApplication::_jobsVisibleVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:82"]
   S8 -->|calls| T8
-  S9["method:UIResponderNodeTestView::resignFirstResponder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:258"]
-  T9["method:UIResponderNodeTestView::resignFirstResponder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:258"]
+  S9["method:UIApplication::jobsTopMostVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:68"]
+  T9["method:UIApplication::bestWindowScene<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:126"]
   S9 -->|calls| T9
-  S10["method:UIResponderNodeTestDisplayViewCallingSuper::becomeFirstResponder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:287"]
-  T10["method:UIResponderNodeTestDisplayViewCallingSuper::becomeFirstResponder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:287"]
+  S10["method:UIApplication::jobsTopMostVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:68"]
+  T10["method:UIApplication::bestRootViewController<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:165"]
   S10 -->|calls| T10
-  S11["method:UIResponderNodeTestViewCallingSuper::becomeFirstResponder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:294"]
-  T11["method:UIResponderNodeTestViewCallingSuper::becomeFirstResponder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:294"]
+  S11["method:UIApplication::jobsTopMostVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:68"]
+  T11["method:UIApplication::_jobsVisibleVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:82"]
   S11 -->|calls| T11
-  S12["method:ASDisplayNodeTests::testOverriddenNodeFirstResponderBehavior<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:305"]
-  T12["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S12["method:UIApplication::_jobsVisibleVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:82"]
+  T12["method:UIApplication::_jobsVisibleVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:82"]
   S12 -->|calls| T12
-  S13["method:ASDisplayNodeTests::testOverriddenNodeFirstResponderBehavior<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:305"]
-  T13["method:ASEditableTextNode::canBecomeFirstResponder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASEditableTextNode.mm:495"]
+  S13["method:UIApplication::_jobsVisibleVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:82"]
+  T13["method:UIApplication::_jobsVisibleVC<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:82"]
   S13 -->|calls| T13
-  S14["method:ASDisplayNodeTests::testOverriddenNodeFirstResponderBehavior<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:305"]
-  T14["method:ASEditableTextNode::becomeFirstResponder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASEditableTextNode.mm:500"]
+  S14["property:UIApplication::jobsSafeAreaInsets<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:108"]
+  T14["method:UIApplication::jobsKeyWindow<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:33"]
   S14 -->|calls| T14
-  S15["method:ASDisplayNodeTests::testOverriddenDisplayViewFirstResponderBehavior<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:312"]
-  T15["method:ASEditableTextNode::canBecomeFirstResponder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASEditableTextNode.mm:495"]
+  S15["method:UIApplication::bestWindowScene<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:126"]
+  T15["function:UIApplication::bestWindowScene::rank<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:127"]
   S15 -->|calls| T15
-  S16["method:ASDisplayNodeTests::testOverriddenDisplayViewFirstResponderBehavior<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:312"]
-  T16["method:ASEditableTextNode::becomeFirstResponder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASEditableTextNode.mm:500"]
+  S16["method:UIApplication::bestWindowScene<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:126"]
+  T16["function:UIApplication::bestWindowScene::rank<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:127"]
   S16 -->|calls| T16
-  S17["method:ASDisplayNodeTests::testOverriddenViewFirstResponderBehavior<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:326"]
-  T17["method:ASEditableTextNode::canBecomeFirstResponder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASEditableTextNode.mm:495"]
+  S17["method:UIApplication::bestWindow<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:144"]
+  T17["method:JobsTaskExecutionSequence::first<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:110"]
   S17 -->|calls| T17
-  S18["method:ASDisplayNodeTests::testOverriddenViewFirstResponderBehavior<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:326"]
-  T18["method:ASEditableTextNode::becomeFirstResponder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASEditableTextNode.mm:500"]
+  S18["method:UIApplication::bestWindow<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:144"]
+  T18["method:OrderedDictionary::sorted<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/examples_extra/ASDKgram-Swift/ASDKgram-Swift/OrderedDictionary/OrderedDictionary.swift:468"]
   S18 -->|calls| T18
-  S19["method:ASDisplayNodeTests::testDefaultFirstResponderBehavior<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:340"]
-  T19["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S19["method:UIApplication::bestWindow<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:144"]
+  T19["function:UIApplication::bestWindow::windowRank<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:152"]
   S19 -->|calls| T19
-  S20["method:ASDisplayNodeTests::testDefaultFirstResponderBehavior<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:340"]
-  T20["method:ASEditableTextNode::canBecomeFirstResponder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASEditableTextNode.mm:495"]
+  S20["method:UIApplication::bestWindow<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:144"]
+  T20["function:UIApplication::bestWindow::windowRank<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:152"]
   S20 -->|calls| T20
-  S21["method:ASDisplayNodeTests::testDefaultFirstResponderBehavior<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:340"]
-  T21["method:ASEditableTextNode::becomeFirstResponder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASEditableTextNode.mm:500"]
+  S21["method:UIApplication::bestRootViewController<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:165"]
+  T21["method:UIApplication::bestWindow<br/>JobsByPods/JobsGetWindow@Pods/UIApplication.swift:144"]
   S21 -->|calls| T21
-  S22["method:ASDisplayNodeTests::testResponderMethodsBehavior<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:347"]
-  T22["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S22["method:JobsIconfontLoadToken::cancel<br/>JobsByPods/JobsIconfont@Pods/Core/JobsIconfont.swift:81"]
+  T22["method:ASDisplayNode::lockToRootIfNeededForLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Yoga.mm:443"]
   S22 -->|calls| T22
-  S23["method:ASDisplayNodeTests::testResponderMethodsBehavior<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:347"]
-  T23["method:ASEditableTextNode::canBecomeFirstResponder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASEditableTextNode.mm:495"]
+  S23["method:JobsIconfontLoadToken::cancel<br/>JobsByPods/JobsIconfont@Pods/Core/JobsIconfont.swift:81"]
+  T23["field:JobsIconfontLoadToken::onCancel<br/>JobsByPods/JobsIconfont@Pods/Core/JobsIconfont.swift:73"]
   S23 -->|calls| T23
-  S24["method:ASDisplayNodeTests::testResponderMethodsBehavior<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:347"]
-  T24["method:ASEditableTextNode::becomeFirstResponder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASEditableTextNode.mm:500"]
+  S24["class:JobsIconfontLoadToken<br/>JobsByPods/JobsIconfont@Pods/Core/JobsIconfont.swift:72"]
+  T24["method:JobsIconfontLoadToken::cancel<br/>JobsByPods/JobsIconfont@Pods/Core/JobsIconfont.swift:81"]
   S24 -->|calls| T24
-  S25["method:ASDisplayNodeTests::testResponderMethodsBehavior<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:347"]
-  T25["method:ASTestWindow::firstResponder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:229"]
+  S25["class:JobsIconfont<br/>JobsByPods/JobsIconfont@Pods/Core/JobsIconfont.swift:97"]
+  T25["method:JobsNSObjectMaking::jobsMake<br/>JobsByPods/JobsSwiftBlock@Pods/NSObject+Make.swift:17"]
   S25 -->|calls| T25
 ```
 

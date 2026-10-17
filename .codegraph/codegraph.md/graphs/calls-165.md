@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASBridgedPropertiesTests::testThatCallingSetNeedsDisplayFromBackgroundCausesItToHappenLater<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:231"]
-  T1["method:ASBridgedPropertiesTests::waitForMainDispatchQueueToFlush<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:247"]
+  S1["class:JobsDouyinRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:18"]
+  T1["method:JobsDouyinRefreshView::byConfig<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:69"]
   S1 -->|calls| T1
-  S2["method:ASButtonNodeSnapshotTests::setUp<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:19"]
-  T2["method:ASButtonNodeSnapshotTests::setUp<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:19"]
+  S2["class:JobsDouyinRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:18"]
+  T2["method:JobsDouyinRefreshView::jobs_setupDouyinRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:167"]
   S2 -->|calls| T2
-  S3["method:ASButtonNodeSnapshotTests::testTintColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:33"]
-  T3["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S3["method:JobsDouyinRefreshView::layoutSubviews<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:53"]
+  T3["method:JobsDouyinRefreshView::jobs_layoutDots<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:225"]
   S3 -->|calls| T3
-  S4["method:ASButtonNodeSnapshotTests::testTintColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:33"]
-  T4["method:ASButtonNodeSnapshotTests::testImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:25"]
+  S4["method:JobsDouyinRefreshView::layoutSubviews<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:53"]
+  T4["method:JobsDouyinRefreshView::jobs_installAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:251"]
   S4 -->|calls| T4
-  S5["method:ASButtonNodeSnapshotTests::testTintColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:33"]
-  T5["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
+  S5["method:JobsDouyinRefreshView::didMoveToWindow<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:63"]
+  T5["method:JobsDouyinRefreshView::jobs_syncAnimationState<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:203"]
   S5 -->|calls| T5
-  S6["method:ASButtonNodeSnapshotTests::testTintColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:33"]
-  T6["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
+  S6["method:JobsDouyinRefreshView::byConfig<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:69"]
+  T6["method:JobsDouyinRefreshView::jobs_removeAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:348"]
   S6 -->|calls| T6
-  S7["method:ASButtonNodeSnapshotTests::testTintColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:33"]
-  T7["function:ASDisplayNodeSizeToFitSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:45"]
+  S7["method:JobsDouyinRefreshView::byConfig<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:69"]
+  T7["method:JobsDouyinRefreshView::jobs_syncAnimationState<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:203"]
   S7 -->|calls| T7
-  S8["method:ASButtonNodeSnapshotTests::testChangingTintColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:49"]
-  T8["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S8["method:JobsDouyinRefreshView::byStart<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:90"]
+  T8["method:JobsDouyinRefreshView::jobs_syncAnimationState<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:203"]
   S8 -->|calls| T8
-  S9["method:ASButtonNodeSnapshotTests::testChangingTintColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:49"]
-  T9["method:ASButtonNodeSnapshotTests::testImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:25"]
+  S9["method:JobsDouyinRefreshView::byPause<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:98"]
+  T9["method:JobsDouyinRefreshView::jobs_pauseAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:325"]
   S9 -->|calls| T9
-  S10["method:ASButtonNodeSnapshotTests::testChangingTintColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:49"]
-  T10["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
+  S10["method:JobsDouyinRefreshView::byResume<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:106"]
+  T10["method:JobsDouyinRefreshView::jobs_syncAnimationState<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:203"]
   S10 -->|calls| T10
-  S11["method:ASButtonNodeSnapshotTests::testChangingTintColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:49"]
-  T11["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
+  S11["method:JobsDouyinRefreshView::byStop<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:114"]
+  T11["method:JobsDouyinRefreshView::jobs_removeAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:348"]
   S11 -->|calls| T11
-  S12["method:ASButtonNodeSnapshotTests::testChangingTintColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:49"]
-  T12["function:ASDisplayNodeSizeToFitSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:45"]
+  S12["method:JobsDouyinRefreshView::byStop<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:114"]
+  T12["method:JobsDouyinRefreshView::jobs_layoutDots<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:225"]
   S12 -->|calls| T12
-  S13["method:ASButtonNodeSnapshotTests::testTintColorWithForegroundColorSet<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:68"]
-  T13["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S13["method:JobsDouyinRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:130"]
+  T13["method:UIView::byHidden<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:48"]
   S13 -->|calls| T13
-  S14["method:ASButtonNodeSnapshotTests::testTintColorWithForegroundColorSet<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:68"]
-  T14["method:ASButtonNodeSnapshotTests::testImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:25"]
+  S14["method:JobsDouyinRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:130"]
+  T14["method:CALayer::byTransform<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CALayer.swift:52"]
   S14 -->|calls| T14
-  S15["method:ASButtonNodeSnapshotTests::testTintColorWithForegroundColorSet<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:68"]
-  T15["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
+  S15["method:JobsDouyinRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:130"]
+  T15["method:UIListContentConfiguration::byAlpha<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIListContentConfiguration.swift:169"]
   S15 -->|calls| T15
-  S16["method:ASButtonNodeSnapshotTests::testTintColorWithForegroundColorSet<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:68"]
-  T16["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
+  S16["method:JobsDouyinRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:130"]
+  T16["method:JobsDouyinRefreshView::byStop<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:114"]
   S16 -->|calls| T16
-  S17["method:ASButtonNodeSnapshotTests::testTintColorWithForegroundColorSet<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:68"]
-  T17["function:ASDisplayNodeSizeToFitSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:45"]
+  S17["method:JobsDouyinRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:130"]
+  T17["method:UIView::byHidden<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:48"]
   S17 -->|calls| T17
-  S18["method:ASButtonNodeSnapshotTests::testTintColorWithInheritedTintColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:83"]
-  T18["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S18["method:JobsDouyinRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:130"]
+  T18["method:CALayer::byTransform<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CALayer.swift:52"]
   S18 -->|calls| T18
-  S19["method:ASButtonNodeSnapshotTests::testTintColorWithInheritedTintColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:83"]
-  T19["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S19["method:JobsDouyinRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:130"]
+  T19["method:UIListContentConfiguration::byAlpha<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIListContentConfiguration.swift:169"]
   S19 -->|calls| T19
-  S20["method:ASButtonNodeSnapshotTests::testTintColorWithInheritedTintColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:83"]
-  T20["method:ASButtonNodeSnapshotTests::testImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:25"]
+  S20["method:JobsDouyinRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:130"]
+  T20["method:JobsDouyinRefreshView::byStop<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:114"]
   S20 -->|calls| T20
-  S21["method:ASButtonNodeSnapshotTests::testTintColorWithInheritedTintColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:83"]
-  T21["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
+  S21["method:JobsDouyinRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:130"]
+  T21["method:CALayer::byTransform<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CALayer.swift:52"]
   S21 -->|calls| T21
-  S22["method:ASButtonNodeSnapshotTests::testTintColorWithInheritedTintColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:83"]
-  T22["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
+  S22["method:JobsDouyinRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:130"]
+  T22["method:UIListContentConfiguration::byAlpha<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIListContentConfiguration.swift:169"]
   S22 -->|calls| T22
-  S23["method:ASButtonNodeSnapshotTests::testTintColorWithInheritedTintColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:83"]
-  T23["function:ASDisplayNodeSizeToFitSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:45"]
+  S23["method:JobsDouyinRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:130"]
+  T23["method:UIView::byHidden<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:48"]
   S23 -->|calls| T23
-  S24["method:ASButtonNodeSnapshotTests::testTintColorWithInheritedTintColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:83"]
-  T24["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S24["method:JobsDouyinRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:130"]
+  T24["method:JobsDouyinRefreshView::byStart<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:90"]
   S24 -->|calls| T24
-  S25["method:ASButtonNodeSnapshotTests::testTintColorWithInheritedTintColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASButtonNodeSnapshotTests.mm:83"]
-  T25["function:ASDisplayNodeSizeToFitSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:45"]
+  S25["method:JobsDouyinRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:130"]
+  T25["method:UIView::byHidden<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:48"]
   S25 -->|calls| T25
 ```
 

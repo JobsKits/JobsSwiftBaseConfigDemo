@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASTextKitShadower::outsetRectWithInsetRect:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:144"]
-  T1["method:ASTextKitShadower::shadowPadding<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:106"]
+  S1["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:170"]
+  T1["method:UITestVC::viewDidAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:70"]
   S1 -->|calls| T1
-  S2["method:ASTextKitShadower::offsetPointWithInternalPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:157"]
-  T2["method:ASTextKitShadower::shadowPadding<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:106"]
+  S2["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:170"]
+  T2["method:UIViewController::__probe_viewDidAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:225"]
   S2 -->|calls| T2
-  S3["method:ASTextKitShadower::offsetPointWithExternalPoint:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:166"]
-  T3["method:ASTextKitShadower::shadowPadding<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitShadower.mm:106"]
+  S3["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:170"]
+  T3["method:VCLifecycleSwizzler::swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:203"]
   S3 -->|calls| T3
-  S4["method:ASTextKitTailTruncater::initWithContext:truncationAttributedString:avoidTailTruncationSet:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitTailTruncater.mm:24"]
-  T4["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S4["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:170"]
+  T4["method:UITestVC::viewWillDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:75"]
   S4 -->|calls| T4
-  S5["method:ASTextKitTailTruncater::_calculateCharacterIndexBeforeTruncationMessage:textStorage:textContainer:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitTailTruncater.mm:39"]
-  T5["method:ASTextKitContext::initWithAttributedString:tintColor:lineBreakMode:maximumNumberOfLines:exclusionPaths:constrainedSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitContext.mm:27"]
+  S5["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:170"]
+  T5["method:UIViewController::__probe_viewWillDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:229"]
   S5 -->|calls| T5
-  S6["method:ASTextKitTailTruncater::_calculateCharacterIndexBeforeTruncationMessage:textStorage:textContainer:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitTailTruncater.mm:39"]
-  T6["method:ASTextKitTailTruncater::_findTruncationInsertionPointAtOrBeforeCharacterIndex:layoutManager:textStorage:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitTailTruncater.mm:116"]
+  S6["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:170"]
+  T6["method:VCLifecycleSwizzler::swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:203"]
   S6 -->|calls| T6
-  S7["method:ASTextKitTailTruncater::truncate<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitTailTruncater.mm:151"]
-  T7["method:ASTextKitTailTruncater::_calculateCharacterIndexBeforeTruncationMessage:textStorage:textContainer:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextKitTailTruncater.mm:39"]
+  S7["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:170"]
+  T7["method:JobsManagedFlutterViewController::viewDidDisappear<br/>JobsByPods/JobsSwiftTools@Pods/FlutterBridge.swift:260"]
   S7 -->|calls| T7
-  S8["method:ASTextNodeWordKerner::layoutManager:boundingBoxForControlGlyphAtIndex:forTextContainer:proposedLineFragment:glyphPosition:characterIndex:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextNodeWordKerner.mm:77"]
-  T8["method:ASTextNodeWordKerner::_wordKernedSpaceWidthForCharacterAtIndex:atGlyphPosition:forTextContainer:layoutManager:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextKit/ASTextNodeWordKerner.mm:83"]
+  S8["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:170"]
+  T8["method:UIViewController::__probe_viewDidDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:233"]
   S8 -->|calls| T8
-  S9["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.h:1"]
-  T9["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S9["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:170"]
+  T9["method:VCLifecycleSwizzler::swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:203"]
   S9 -->|calls| T9
-  S10["function:UIImage::cachedImageNamed<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:17"]
-  T10["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S10["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:170"]
+  T10["method:VCLifecycleSwizzler::swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:203"]
   S10 -->|calls| T10
-  S11["function:UIImage::cachedImageNamed<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:17"]
-  T11["method:ASMutableAttributedStringBuilder::length<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASMutableAttributedStringBuilder.mm:223"]
+  S11["method:VCLifecycleSwizzler::installIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:170"]
+  T11["method:VCLifecycleSwizzler::swizzle<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:203"]
   S11 -->|calls| T11
-  S12["method:UIImage::as_imageNamed:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:48"]
-  T12["function:UIImage::cachedImageNamed<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:17"]
+  S12["method:UIViewController::__probe_loadView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:213"]
+  T12["method:UIViewController::__probe_loadView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:213"]
   S12 -->|calls| T12
-  S13["method:UIImage::as_imageNamed:compatibleWithTraitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:53"]
-  T13["function:UIImage::cachedImageNamed<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:17"]
+  S13["method:UIViewController::__probe_loadView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:213"]
+  T13["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:104"]
   S13 -->|calls| T13
-  S14["method:UIImage::as_resizableRoundedImageWithCornerRadius:cornerColor:fillColor:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:64"]
-  T14["method:UIImage::as_resizableRoundedImageWithCornerRadius:cornerColor:fillColor:borderColor:borderWidth:roundedCorners:scale:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:124"]
+  S14["method:UIViewController::__probe_viewDidLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:217"]
+  T14["method:UIViewController::__probe_viewDidLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:217"]
   S14 -->|calls| T14
-  S15["method:UIImage::as_resizableRoundedImageWithCornerRadius:cornerColor:fillColor:traitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:77"]
-  T15["method:UIImage::as_resizableRoundedImageWithCornerRadius:cornerColor:fillColor:borderColor:borderWidth:roundedCorners:scale:traitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:143"]
+  S15["method:UIViewController::__probe_viewDidLoad<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:217"]
+  T15["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:104"]
   S15 -->|calls| T15
-  S16["method:UIImage::as_resizableRoundedImageWithCornerRadius:cornerColor:fillColor:borderColor:borderWidth:traitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:92"]
-  T16["method:UIImage::as_resizableRoundedImageWithCornerRadius:cornerColor:fillColor:borderColor:borderWidth:roundedCorners:scale:traitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:143"]
+  S16["method:UIViewController::__probe_viewWillAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:221"]
+  T16["method:UIViewController::__probe_viewWillAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:221"]
   S16 -->|calls| T16
-  S17["method:UIImage::as_resizableRoundedImageWithCornerRadius:cornerColor:fillColor:borderColor:borderWidth:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:109"]
-  T17["method:UIImage::as_resizableRoundedImageWithCornerRadius:cornerColor:fillColor:borderColor:borderWidth:roundedCorners:scale:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:124"]
+  S17["method:UIViewController::__probe_viewWillAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:221"]
+  T17["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:104"]
   S17 -->|calls| T17
-  S18["method:UIImage::as_resizableRoundedImageWithCornerRadius:cornerColor:fillColor:borderColor:borderWidth:roundedCorners:scale:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:124"]
-  T18["method:UIImage::as_resizableRoundedImageWithCornerRadius:cornerColor:fillColor:borderColor:borderWidth:roundedCorners:scale:traitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:143"]
+  S18["method:UIViewController::__probe_viewDidAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:225"]
+  T18["method:UIViewController::__probe_viewDidAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:225"]
   S18 -->|calls| T18
-  S19["method:UIImage::as_resizableRoundedImageWithCornerRadius:cornerColor:fillColor:borderColor:borderWidth:roundedCorners:scale:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:124"]
-  T19["function:ASPrimitiveTraitCollectionMakeDefault<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:28"]
+  S19["method:UIViewController::__probe_viewDidAppear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:225"]
+  T19["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:104"]
   S19 -->|calls| T19
-  S20["method:UIImage::as_resizableRoundedImageWithCornerRadius:cornerColor:fillColor:borderColor:borderWidth:roundedCorners:scale:traitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:143"]
-  T20["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S20["method:UIViewController::__probe_viewWillDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:229"]
+  T20["method:UIViewController::__probe_viewWillDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:229"]
   S20 -->|calls| T20
-  S21["method:UIImage::as_resizableRoundedImageWithCornerRadius:cornerColor:fillColor:borderColor:borderWidth:roundedCorners:scale:traitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIImage+ASConvenience.mm:143"]
-  T21["function:ASGraphicsCreateImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASGraphicsContext.mm:35"]
+  S21["method:UIViewController::__probe_viewWillDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:229"]
+  T21["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:104"]
   S21 -->|calls| T21
-  S22["method:UIResponder::asdk_associatedViewController<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/UIResponder+AsyncDisplayKit.mm:17"]
-  T22["method:UIResponder::asdk_responderChainEnumerator<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASResponderChainEnumerator.mm:40"]
+  S22["method:UIViewController::__probe_viewDidDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:233"]
+  T22["method:UIViewController::__probe_viewDidDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:233"]
   S22 -->|calls| T22
-  S23["method:_ASTransitionContext::initWithAnimation:layoutDelegate:completionDelegate:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/_ASTransitionContext.mm:27"]
-  T23["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S23["method:UIViewController::__probe_viewDidDisappear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:233"]
+  T23["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:104"]
   S23 -->|calls| T23
-  S24["method:_ASTransitionContext::subnodesForKey:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/_ASTransitionContext.mm:62"]
-  T24["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S24["method:UIViewController::__probe_viewWillLayoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:237"]
+  T24["method:UIViewController::__probe_viewWillLayoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:237"]
   S24 -->|calls| T24
-  S25["method:_ASAnimatedTransitionContext::contextForNode:alpha:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/_ASTransitionContext.mm:96"]
-  T25["method:ASButtonNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASButtonNode.mm:32"]
+  S25["method:UIViewController::__probe_viewWillLayoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+生命周期探针.swift:237"]
+  T25["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:104"]
   S25 -->|calls| T25
 ```
 

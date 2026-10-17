@@ -66,6 +66,8 @@
 
 - [Podfile](./Podfile) 使用独立的 [CocoaPods 源自动选择模块](<./ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/README.md>)，在 `pod install` / `pod update` 解析依赖前同步测试官方 CDN 与 GitHub Specs，按真实 podspec 请求结果、耗时与 Git 仓库连接决定公共源；两条线路接近时优先 CDN。模块与其它安装脚本统一放在 `ScriptsByPods`，失败时告警并保留缓存或默认源使用机会。迁移时携带完整脚本包与 Podfile 加载代码，保留 `Podfile.lock`；Specs 测试通过仍不保证后续源码下载成功。
 
+- 受限网络下的源码下载由 [CocoaPods 网络适配包](<./ScriptsByPods/【MacOS】🌐CocoaPods网络适配.command/README.md>)补齐：先验证当前 Git 链路，必要时测试并临时继承机器上已经启用的系统代理；只影响本次安装进程。`AMPopTip 4.12.0` 的已核验官方源码在 Git 网络下载失败后，可回退官方 `codeload.github.com` 归档；其它依赖仍需各自源码地址可达。不修改依赖版本或全局网络配置，未通过探测或下载失败不视为安装成功。
+
 - Flutter SDK 与当前 module 的生成配置均健康、需要只安装原生依赖时，在工程根目录执行：
 
   ```shell
@@ -1747,6 +1749,10 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
 
 **安装前后：入口与行为**
 
+源码网络适配由 [CocoaPods 网络适配包](<./ScriptsByPods/【MacOS】🌐CocoaPods网络适配.command/README.md>)管理。Podfile 先同步运行 `JobsCocoaPodsNetwork.apply!`，用 `AMPopTip 4.12.0` 的真实 Git tag 查询测试显式代理、原链路及已启用系统代理；默认每轮最多 6 秒，系统候选并发。验证过的代理仅写入当前进程环境，后续 Git / curl / CocoaPods 继承，退出恢复；不执行 PAC、不猜代理端口、不改系统代理、Git 配置文件或 shell profile。
+
+随后注册 `JobsCocoaPodsDownloadFallback.install!`，仅对已核验白名单中的 `AMPopTip 4.12.0` 发布版源码请求，在原 Git 下载出现网络失败时尝试官方归档。保留原 source、tag / commit、版本和锁对象；分支、子模块、依赖 Git 元数据的准备脚本、其它版本 / 仓库及非网络错误不回退。设置 `JOBS_POD_NETWORK_ADAPT=0` 可关闭代理适配，`JOBS_POD_GITHUB_ARCHIVE_FALLBACK=0` 可关闭归档回退；两者独立于原公共 Specs 选源。完整边界与隔离测试入口见脚本包 README。
+
 公共 Specs 由 [CocoaPods 源自动选择模块](<./ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/README.md>)单独管理。Podfile 顶部同步加载 `jobs_cocoapods_source.rb` 并在 `source` 声明前完成真实 podspec GET 与 Git 连接测试；`pod install` / `pod update` 均按当前网络选源。可用 `JOBS_SPECS_SOURCE=cdn` / `git` 固定本次来源，默认 `auto`；每条候选线路完整测试默认最多 8 秒，可用 `JOBS_SPECS_PROBE_TIMEOUT` 调整。
 
 适配器只在当前进程映射锁文件公共源，保留锁定版本、校验和及私有源；不删除 Pods / 锁文件，不自动升级或二次安装。两条线路均失败时尝试锁文件源、已有缓存或默认 CDN，脚本异常时告警并继续 CocoaPods 自身流程，不能保证离线安装成功。迁移时保留 `ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/` 整包与 Podfile 的加载代码。
@@ -1755,6 +1761,7 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
 
 | 时机                                      | 挂载脚本 / 入口                                              | 实际行为与产物                                               |
 | ----------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `pod install` / `pod update` 读取 Podfile 时，公共源测试前 | [CocoaPods 网络适配](<./ScriptsByPods/【MacOS】🌐CocoaPods网络适配.command/README.md>)同步执行 | 测试实际 Git 链路、临时继承可用的已有代理，并注册已核验源码的官方归档回退；摘要保留在安装输出，失败继续原流程 |
 | `pod install` / `pod update` 读取 Podfile 时，`source` 声明前 | [CocoaPods 源自动选择](<./ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/README.md>)同步测速 | 测试当前网络并决定本次公共 Specs 源；结果与理由写入系统临时日志 |
 | `pod install` 读取 Podfile 时，依赖解析前 | Ruby 入口异步启动 `--preflight`                              | 不等待依赖下载；下面的报告与索引任务独立运行，不阻塞安装主流程 |
 | 前置任务                                  | [查询工程依赖关系](<./ScriptsByPods/【MacOS】🔍查询Xcode工程依赖关系.command/README.md>) | 扫描本地 podspec，生成 `./PodspecDependencyReport/` 下的依赖报告与关系图 |
@@ -1784,15 +1791,15 @@ Podfile 通过 `JOBS_SKIP_README=1` 跳过子脚本重复回车等待，子脚�
 
 Flutter 的健康检查同时核对 `Generated.xcconfig` 的 SDK / module 路径、SDK 根 `podhelper.rb`，以及 `flutter_export_environment.sh` 中的两条对应路径；不执行旧电脑带来的导出脚本。默认配置健康才跳过资源准备。第一次 `flutter pub get` 成功但配置仍过期时，将两份配置备份移到系统临时目录后再执行一次；失败时尝试恢复原配置，成功和失败均保留原配置备份。辅助任务失败只告警，默认配置仍不健康时由 Podfile 的占位机制跳过 Flutter 集成。脚本不手动删除 Pods、锁文件或整个 `.ios`，不嵌套执行 `pod install`；Flutter 官方 `pub get` 仍可能根据工具或 pubspec 变更重生成 `.ios`。完整行为与两项隔离验证入口见[资源准备与换机恢复](./ScriptsByPods/拉取Flutter侧三方资源.sh/README.md)。
 
-迁移电脑时同时携带最新 Podfile 与 `ScriptsByPods` 中选源、Flutter 配置和资源准备的完整脚本包。只复制新脚本，旧 Podfile 仍可能保留旧挂载或仅检查 helper 是否存在的逻辑。在工程根目录确认入口：
+迁移电脑时同时携带最新 Podfile 与 `ScriptsByPods` 中网络适配、选源、Flutter 配置和资源准备的完整脚本包。只复制新脚本，旧 Podfile 仍可能保留旧挂载或仅检查 helper 是否存在的逻辑。在工程根目录确认入口：
 
 ```shell
 /usr/bin/grep \
-  -nE 'JobsCocoaPodsSource|Prepare Flutter environment' \
+  -nE 'JobsCocoaPodsNetwork|JobsCocoaPodsDownloadFallback|JobsCocoaPodsSource|Prepare Flutter environment' \
   ./Podfile
 ```
 
-输出应同时包含 `JobsCocoaPodsSource.apply!` 和 `Prepare Flutter environment (FVM with official fallback + flutter pub get)`。脚本隔离回归不代表其它电脑的实际依赖下载、`pod install` 或构建已经成功。
+输出应包含 `JobsCocoaPodsNetwork.apply!`、`JobsCocoaPodsDownloadFallback.install!`、`JobsCocoaPodsSource.apply!` 和 `Prepare Flutter environment (FVM with official fallback + flutter pub get)`。脚本隔离回归不代表其它电脑的实际依赖下载、`pod install` 或构建已经成功。
 
 **构建阶段与构建后动作**
 

@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASCollectionViewTests::testThatIssuingAnUpdateBeforeInitialReloadIsAcceptable<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:897"]
-  T1["method:ASCollectionViewTestDelegate::initWithNumberOfSections:numberOfItemsInSection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:77"]
+  S1["method:JobsTodayNewsRefreshView::byStop<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:116"]
+  T1["method:JobsTodayNewsRefreshView::jobs_removeAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:386"]
   S1 -->|calls| T1
-  S2["method:ASCollectionViewTests::testThatNodeAtIndexPathIsCorrectImmediatelyAfterSubmittingUpdate<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:912"]
-  T2["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
+  S2["method:JobsTodayNewsRefreshView::byStop<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:116"]
+  T2["method:JobsTodayNewsRefreshView::jobs_layoutMark<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:225"]
   S2 -->|calls| T2
-  S3["method:ASCollectionViewTests::testThatNodeAtIndexPathIsCorrectImmediatelyAfterSubmittingUpdate<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:912"]
-  T3["method:ASTextDebugOption::clear<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextDebugOption.mm:103"]
+  S3["method:JobsTodayNewsRefreshView::byStop<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:116"]
+  T3["method:JobsTodayNewsRefreshView::jobs_applyPullProgress<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:252"]
   S3 -->|calls| T3
-  S4["method:ASCollectionViewTests::testThatNilBatchUpdatesCanBeSubmitted<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:947"]
-  T4["method:ASCollectionViewTestController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:151"]
+  S4["method:JobsTodayNewsRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:133"]
+  T4["method:UIView::byHidden<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:48"]
   S4 -->|calls| T4
-  S5["method:ASCollectionViewTests::testThatDeletedItemsAreMarkedInvisible<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:957"]
-  T5["method:ASCollectionViewTestController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:151"]
+  S5["method:JobsTodayNewsRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:133"]
+  T5["method:JobsTodayNewsRefreshView::jobs_removeAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:386"]
   S5 -->|calls| T5
-  S6["method:ASCollectionViewTests::testThatDeletedItemsAreMarkedInvisible<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:957"]
-  T6["function:ASCATransactionQueueWait<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:57"]
+  S6["method:JobsTodayNewsRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:133"]
+  T6["method:JobsTodayNewsRefreshView::jobs_applyPullProgress<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:252"]
   S6 -->|calls| T6
-  S7["method:ASCollectionViewTests::disabled_testThatMultipleBatchFetchesDontHappenUnnecessarily<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:980"]
-  T7["method:ASCollectionViewTestController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:151"]
+  S7["method:JobsTodayNewsRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:133"]
+  T7["method:UIView::byHidden<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:48"]
   S7 -->|calls| T7
-  S8["method:ASCollectionViewTests::testThatBatchFetchHappensForEmptyCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1028"]
-  T8["method:ASCollectionViewTestController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:151"]
+  S8["method:JobsTodayNewsRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:133"]
+  T8["method:JobsTodayNewsRefreshView::jobs_removeAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:386"]
   S8 -->|calls| T8
-  S9["method:ASCollectionViewTests::testThatWeBatchFetchUntilContentRequirementIsMet_Animated<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1055"]
-  T9["method:ASCollectionViewTests::_primitiveBatchFetchingFillTestAnimated:visible:controller:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1080"]
+  S9["method:JobsTodayNewsRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:133"]
+  T9["method:JobsTodayNewsRefreshView::jobs_applyPullProgress<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:252"]
   S9 -->|calls| T9
-  S10["method:ASCollectionViewTests::testThatWeBatchFetchUntilContentRequirementIsMet_Nonanimated<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1060"]
-  T10["method:ASCollectionViewTests::_primitiveBatchFetchingFillTestAnimated:visible:controller:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1080"]
+  S10["method:JobsTodayNewsRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:133"]
+  T10["method:CALayer::byTransform<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CALayer.swift:52"]
   S10 -->|calls| T10
-  S11["method:ASCollectionViewTests::testThatWeBatchFetchUntilContentRequirementIsMet_Invisible<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1065"]
-  T11["method:ASCollectionViewTests::_primitiveBatchFetchingFillTestAnimated:visible:controller:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1080"]
+  S11["method:JobsTodayNewsRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:133"]
+  T11["method:UIListContentConfiguration::byAlpha<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIListContentConfiguration.swift:169"]
   S11 -->|calls| T11
-  S12["method:ASCollectionViewTests::testThatWhenWeBecomeVisibleWeWillFetchAdditionalContent<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1070"]
-  T12["method:ASCollectionViewTestController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:151"]
+  S12["method:JobsTodayNewsRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:133"]
+  T12["method:UIView::byHidden<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:48"]
   S12 -->|calls| T12
-  S13["method:ASCollectionViewTests::testThatWhenWeBecomeVisibleWeWillFetchAdditionalContent<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1070"]
-  T13["method:ASCollectionViewTests::_primitiveBatchFetchingFillTestAnimated:visible:controller:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1080"]
+  S13["method:JobsTodayNewsRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:133"]
+  T13["method:JobsTodayNewsRefreshView::byStart<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:92"]
   S13 -->|calls| T13
-  S14["method:ASCollectionViewTests::testThatWhenWeBecomeVisibleWeWillFetchAdditionalContent<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1070"]
-  T14["method:ASCollectionViewTests::_primitiveBatchFetchingFillTestAnimated:visible:controller:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1080"]
+  S14["method:JobsTodayNewsRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:133"]
+  T14["method:UIView::byHidden<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:48"]
   S14 -->|calls| T14
-  S15["method:ASCollectionViewTests::_primitiveBatchFetchingFillTestAnimated:visible:controller:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1080"]
-  T15["method:ASCollectionViewTestController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:151"]
+  S15["method:JobsTodayNewsRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:133"]
+  T15["method:JobsTodayNewsRefreshView::byStop<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:116"]
   S15 -->|calls| T15
-  S16["method:ASCollectionViewTests::testInitialRangeBounds<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1151"]
-  T16["method:ASCollectionViewTests::testInitialRangeBoundsWithCellLayoutMode:shouldWaitUntilAllUpdatesAreProcessed:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1163"]
+  S16["method:JobsTodayNewsRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:133"]
+  T16["method:UIBarButtonItem::byHidden<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIBarButtonItem/UIBarButtonItem.swift:117"]
   S16 -->|calls| T16
-  S17["method:ASCollectionViewTests::testInitialRangeBoundsCellLayoutModeAlwaysAsync<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1157"]
-  T17["method:ASCollectionViewTests::testInitialRangeBoundsWithCellLayoutMode:shouldWaitUntilAllUpdatesAreProcessed:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1163"]
+  S17["method:JobsTodayNewsRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:133"]
+  T17["method:UIListContentConfiguration::byAlpha<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIListContentConfiguration.swift:169"]
   S17 -->|calls| T17
-  S18["method:ASCollectionViewTests::testInitialRangeBoundsWithCellLayoutMode:shouldWaitUntilAllUpdatesAreProcessed:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1163"]
-  T18["method:ASCollectionViewTestController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:151"]
+  S18["method:JobsTodayNewsRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:133"]
+  T18["method:JobsTodayNewsRefreshView::byStop<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:116"]
   S18 -->|calls| T18
-  S19["method:ASCollectionViewTests::testInitialRangeBoundsWithCellLayoutMode:shouldWaitUntilAllUpdatesAreProcessed:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1163"]
-  T19["function:ASCATransactionQueueWait<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:57"]
+  S19["method:JobsTodayNewsRefreshView::jobs_setupTodayNewsRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:167"]
+  T19["method:UIView::byUserInteractionEnabled<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIView/UIView+DSL.swift:223"]
   S19 -->|calls| T19
-  S20["method:ASCollectionViewTests::testTraitCollectionChangesMidUpdate<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1217"]
-  T20["method:ASCollectionViewTestController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:151"]
+  S20["method:JobsTodayNewsRefreshView::jobs_setupTodayNewsRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:167"]
+  T20["method:JobsTodayNewsRefreshView::jobs_layoutMark<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:225"]
   S20 -->|calls| T20
-  S21["method:ASCollectionViewTests::testTraitCollectionChangesMidUpdate<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1217"]
-  T21["function:ASPrimitiveTraitCollectionMakeDefault<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:28"]
+  S21["method:JobsTodayNewsRefreshView::jobs_setupTodayNewsRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:167"]
+  T21["method:JobsTodayNewsRefreshView::jobs_applyPullProgress<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:252"]
   S21 -->|calls| T21
-  S22["method:ASCollectionViewTests::testTraitCollectionChangesMidUpdate<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1217"]
-  T22["function:ASPrimitiveTraitCollectionIsEqualToASPrimitiveTraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:92"]
+  S22["method:JobsTodayNewsRefreshView::jobs_environmentDidChange<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:195"]
+  T22["method:JobsTodayNewsRefreshView::jobs_syncAnimationState<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:204"]
   S22 -->|calls| T22
-  S23["method:ASCollectionViewTests::testASPrimitiveTraitCollectionToUITraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1249"]
-  T23["function:ASPrimitiveTraitCollectionMakeDefault<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:28"]
+  S23["method:JobsTodayNewsRefreshView::jobs_applicationDidEnterBackground<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:199"]
+  T23["method:JobsTodayNewsRefreshView::jobs_pauseAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:367"]
   S23 -->|calls| T23
-  S24["method:ASCollectionViewTests::testASPrimitiveTraitCollectionToUITraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1249"]
-  T24["function:ASPrimitiveTraitCollectionToUITraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:74"]
+  S24["method:JobsTodayNewsRefreshView::jobs_syncAnimationState<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:204"]
+  T24["method:JobsTodayNewsRefreshView::jobs_removeAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:386"]
   S24 -->|calls| T24
-  S25["method:ASCollectionViewTests::testASPrimitiveTraitCollectionToUITraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:1249"]
-  T25["function:ASPrimitiveTraitCollectionFromUITraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:51"]
+  S25["method:JobsTodayNewsRefreshView::jobs_syncAnimationState<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:204"]
+  T25["method:JobsTodayNewsRefreshView::jobs_applyPullProgress<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:252"]
   S25 -->|calls| T25
 ```
 

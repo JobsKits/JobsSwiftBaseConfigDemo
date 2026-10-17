@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASBridgedPropertiesTests::testThatReadingABridgedLayerPropertyInBackgroundThrowsAnException<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:139"]
-  T1["function:ASCollectionViewTests::testThatDeletingAndReloadingTheSameItemThrowsAnException::XCTAssertThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:473"]
+  S1["method:JobsDebugPanel::refreshWindows<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:263"]
+  T1["method:JobsDebugOverlayWindow::make<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugOverlayWindow/JobsDebugOverlayWindow.swift:14"]
   S1 -->|calls| T1
-  S2["method:ASBridgedPropertiesTests::testThatSettingTintColorSetNeedsDisplayOnView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:148"]
-  T2["method:ASPendingStateController::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASPendingStateController.mm:40"]
+  S2["method:JobsDebugPanel::refreshWindows<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:263"]
+  T2["field:JobsDebugPanel::overlayWindows<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:26"]
   S2 -->|calls| T2
-  S3["method:ASBridgedPropertiesTests::testThatSettingTintColorSetNeedsDisplayOnView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:148"]
-  T3["function:ASDispatchSyncOnOtherThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:61"]
+  S3["method:JobsDebugPanel::refreshWindows<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:263"]
+  T3["field:JobsDebugPanel::overlayWindows<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:26"]
   S3 -->|calls| T3
-  S4["method:ASBridgedPropertiesTests::testThatSettingTintColorSetNeedsDisplayOnView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:148"]
-  T4["method:ASPendingStateController::flush<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASPendingStateController.mm:61"]
+  S4["method:JobsDebugPanel::refreshWindows<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:263"]
+  T4["method:UIBarButtonItem::byHidden<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIBarButtonItem/UIBarButtonItem.swift:117"]
   S4 -->|calls| T4
-  S5["method:ASBridgedPropertiesTests::testThatManuallyFlushingTheSyncControllerImmediatelyAppliesChanges<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:168"]
-  T5["method:ASPendingStateController::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASPendingStateController.mm:40"]
+  S5["method:JobsDebugPanel::refreshWindows<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:263"]
+  T5["method:JobsDebugOverlayWindow::byHostWindow<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugOverlayWindow/JobsDebugOverlayWindow.swift:23"]
   S5 -->|calls| T5
-  S6["method:ASBridgedPropertiesTests::testThatManuallyFlushingTheSyncControllerImmediatelyAppliesChanges<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:168"]
-  T6["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
+  S6["method:JobsDebugPanel::refreshWindows<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:263"]
+  T6["field:JobsDebugPanel::overlayWindows<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:26"]
   S6 -->|calls| T6
-  S7["method:ASBridgedPropertiesTests::testThatManuallyFlushingTheSyncControllerImmediatelyAppliesChanges<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:168"]
-  T7["function:ASDispatchSyncOnOtherThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:61"]
+  S7["method:JobsDebugPanel::refreshWindows<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:263"]
+  T7["method:UIWindow::byRootViewController<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIWindow/UIWindow+DSL.swift:38"]
   S7 -->|calls| T7
-  S8["method:ASBridgedPropertiesTests::testThatManuallyFlushingTheSyncControllerImmediatelyAppliesChanges<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:168"]
-  T8["method:ASPendingStateController::flush<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASPendingStateController.mm:61"]
+  S8["method:JobsDebugPanel::refreshWindows<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:263"]
+  T8["method:JobsDebugOverlayWindow::make<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugOverlayWindow/JobsDebugOverlayWindow.swift:19"]
   S8 -->|calls| T8
-  S9["method:ASBridgedPropertiesTests::testThatFlushingTheControllerInBackgroundThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:183"]
-  T9["method:ASPendingStateController::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASPendingStateController.mm:40"]
+  S9["method:JobsDebugPanel::refreshWindows<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:263"]
+  T9["method:JobsDebugPanel::refreshFloatingButtonAccessibility<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:151"]
   S9 -->|calls| T9
-  S10["method:ASBridgedPropertiesTests::testThatFlushingTheControllerInBackgroundThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:183"]
-  T10["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
+  S10["method:JobsDebugPanel::topController<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:313"]
+  T10["method:JobsDebugPanel::topController<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:313"]
   S10 -->|calls| T10
-  S11["method:ASBridgedPropertiesTests::testThatFlushingTheControllerInBackgroundThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:183"]
-  T11["function:ASDispatchSyncOnOtherThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:61"]
+  S11["method:JobsDebugPanel::topController<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:313"]
+  T11["method:JobsDebugPanel::topController<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:313"]
   S11 -->|calls| T11
-  S12["method:ASBridgedPropertiesTests::testThatFlushingTheControllerInBackgroundThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:183"]
-  T12["function:ASCollectionViewTests::testThatDeletingAndReloadingTheSameItemThrowsAnException::XCTAssertThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:473"]
+  S12["method:JobsDebugPanel::topController<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:313"]
+  T12["method:JobsDebugPanel::topController<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:313"]
   S12 -->|calls| T12
-  S13["method:ASBridgedPropertiesTests::testThatFlushingTheControllerInBackgroundThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:183"]
-  T13["method:ASPendingStateController::flush<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASPendingStateController.mm:61"]
+  S13["method:JobsDebugPanel::topController<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:313"]
+  T13["method:JobsDebugPanel::topController<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift:313"]
   S13 -->|calls| T13
-  S14["method:ASBridgedPropertiesTests::testThatSettingABridgedPropertyOnMainThreadPassesDirectlyToView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:195"]
-  T14["method:ASPendingStateController::sharedInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASPendingStateController.mm:40"]
+  S14["enum:JobsDebugPanelResource<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanelResource/JobsDebugPanelResource.swift:12"]
+  T14["method:ASPhotosFrameworkImageRequestTests::urlForExampleImageRequest<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASPhotosFrameworkImageRequestTests.mm:37"]
   S14 -->|calls| T14
-  S15["method:ASBridgedPropertiesTests::testThatSettingABridgedPropertyOnMainThreadPassesDirectlyToView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:195"]
-  T15["function:ASDisplayNodeGetPendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode.mm:81"]
+  S15["enum:JobsDebugPanelResource<br/>JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanelResource/JobsDebugPanelResource.swift:12"]
+  T15["method:UIImage::make<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImage/UIImage.swift:27"]
   S15 -->|calls| T15
-  S16["method:ASBridgedPropertiesTests::testThatSettingABridgedPropertyOnMainThreadPassesDirectlyToView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:195"]
-  T16["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
+  S16["class:JobsEmptyView<br/>JobsByPods/JobsEmptyView@Pods/JobsEmptyView.swift:20"]
+  T16["method:UIGestureRecognizer::byConfig<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIGestureRecognizer/UIGestureRecognizer+Block.swift:26"]
   S16 -->|calls| T16
-  S17["method:ASBridgedPropertiesTests::testThatSettingABridgedPropertyOnMainThreadPassesDirectlyToView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:195"]
-  T17["function:ASDisplayNodeGetPendingState<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode.mm:81"]
+  S17["class:JobsEmptyView<br/>JobsByPods/JobsEmptyView@Pods/JobsEmptyView.swift:20"]
+  T17["method:NSObject::jobsValueVoidCallback<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+万物回调.swift:47"]
   S17 -->|calls| T17
-  S18["method:ASBridgedPropertiesTests::testThatCallingSetNeedsLayoutFromBackgroundCausesItToHappenLater<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:209"]
-  T18["function:ASDispatchSyncOnOtherThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:61"]
+  S18["class:JobsEmptyView<br/>JobsByPods/JobsEmptyView@Pods/JobsEmptyView.swift:20"]
+  T18["method:JobsNSObjectMaking::jobsMake<br/>JobsByPods/JobsSwiftBlock@Pods/NSObject+Make.swift:17"]
   S18 -->|calls| T18
-  S19["method:ASBridgedPropertiesTests::testThatCallingSetNeedsLayoutFromBackgroundCausesItToHappenLater<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:209"]
-  T19["method:ASDisplayNode::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASDisplayNode+UIViewBridge.mm:450"]
+  S19["class:JobsEmptyView<br/>JobsByPods/JobsEmptyView@Pods/JobsEmptyView.swift:20"]
+  T19["method:JobsFont::preferredFont<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseFont.swift:44"]
   S19 -->|calls| T19
-  S20["method:ASBridgedPropertiesTests::testThatCallingSetNeedsLayoutFromBackgroundCausesItToHappenLater<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:209"]
-  T20["method:ASBridgedPropertiesTests::waitForMainDispatchQueueToFlush<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:247"]
+  S20["class:JobsEmptyView<br/>JobsByPods/JobsEmptyView@Pods/JobsEmptyView.swift:20"]
+  T20["field:JobsFuseConfig::inset<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:32"]
   S20 -->|calls| T20
-  S21["method:ASBridgedPropertiesTests::testThatCallingSetNeedsLayoutOnACellNodeFromBackgroundIsSafe<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:222"]
-  T21["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
+  S21["class:JobsEmptyView<br/>JobsByPods/JobsEmptyView@Pods/JobsEmptyView.swift:20"]
+  T21["method:UIView::byBackgroundColor<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIView/UIView+DSL.swift:733"]
   S21 -->|calls| T21
-  S22["method:ASBridgedPropertiesTests::testThatCallingSetNeedsLayoutOnACellNodeFromBackgroundIsSafe<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:222"]
-  T22["function:ASDispatchSyncOnOtherThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:61"]
+  S22["class:JobsEmptyView<br/>JobsByPods/JobsEmptyView@Pods/JobsEmptyView.swift:20"]
+  T22["method:UIView::jobs_addGesture<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIView/UIView+DSL.swift:624"]
   S22 -->|calls| T22
-  S23["method:ASBridgedPropertiesTests::testThatCallingSetNeedsLayoutOnACellNodeFromBackgroundIsSafe<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:222"]
-  T23["method:ASDisplayNode::setNeedsLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASDisplayNode+UIViewBridge.mm:450"]
+  S23["method:JobsEmptyView::accessibilityActivate<br/>JobsByPods/JobsEmptyView@Pods/JobsEmptyView.swift:57"]
+  T23["method:NSObject::jobsValueVoidCallback<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+万物回调.swift:47"]
   S23 -->|calls| T23
-  S24["method:ASBridgedPropertiesTests::testThatCallingSetNeedsDisplayFromBackgroundCausesItToHappenLater<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:231"]
-  T24["function:ASDispatchSyncOnOtherThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:61"]
+  S24["method:JobsEmptyView::byOnTapRetry<br/>JobsByPods/JobsEmptyView@Pods/JobsEmptyView.swift:64"]
+  T24["method:NSObject::jobsByVoidCallback<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+万物回调.swift:37"]
   S24 -->|calls| T24
-  S25["method:ASBridgedPropertiesTests::testThatCallingSetNeedsDisplayFromBackgroundCausesItToHappenLater<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASBridgedPropertiesTests.mm:231"]
-  T25["method:ASDisplayNode::setNeedsDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASDisplayNode+UIViewBridge.mm:406"]
+  S25["class:JobsDouyinRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:18"]
+  T25["method:JobsDouyinRefreshView::jobs_setupDouyinRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsDouyinRefreshView/JobsDouyinRefreshView.swift:167"]
   S25 -->|calls| T25
 ```
 

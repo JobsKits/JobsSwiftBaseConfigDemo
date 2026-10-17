@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASTableView::tableView:moveRowAtIndexPath:toIndexPath:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:995"]
-  T1["method:ASTableView::moveRowAtIndexPath:toIndexPath:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:846"]
+  S1["method:JobsBluetoothManager::centralManager<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:763"]
+  T1["method:JobsBluetoothManager::callback<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:705"]
   S1 -->|calls| T1
-  S2["method:ASTableView::tableView:moveRowAtIndexPath:toIndexPath:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:995"]
-  T2["method:ASTableView::waitUntilAllUpdatesAreCommitted<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:739"]
+  S2["method:JobsBluetoothManager::centralManager<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:787"]
+  T2["method:JobsBluetoothManager::transition<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:688"]
   S2 -->|calls| T2
-  S3["method:ASTableView::tableView:willDisplayCell:forRowAtIndexPath:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1014"]
-  T3["method:ASRangeController::setNeedsUpdate<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASRangeController.mm:132"]
+  S3["method:JobsBluetoothManager::centralManager<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:795"]
+  T3["method:JobsBluetoothManager::connectionEnded<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:805"]
   S3 -->|calls| T3
-  S4["method:ASTableView::tableView:willDisplayCell:forRowAtIndexPath:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1014"]
-  T4["method:_ASTableViewCell::consumesCellNodeVisibilityEvents<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:134"]
+  S4["method:JobsBluetoothManager::centralManager<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:799"]
+  T4["method:JobsBluetoothManager::connectionEnded<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:805"]
   S4 -->|calls| T4
-  S5["method:ASTableView::tableView:didEndDisplayingCell:forRowAtIndexPath:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1049"]
-  T5["method:ASRangeController::setNeedsUpdate<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASRangeController.mm:132"]
+  S5["method:JobsBluetoothManager::connectionEnded<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:805"]
+  T5["method:JobsBluetoothManager::beginConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:304"]
   S5 -->|calls| T5
-  S6["method:ASTableView::tableView:willSelectRowAtIndexPath:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1081"]
-  T6["method:ASTableView::convertIndexPathFromTableNode:waitingIfNeeded:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:599"]
+  S6["method:JobsBluetoothManager::connectionEnded<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:805"]
+  T6["method:JobsBluetoothManager::scheduleReconnect<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:392"]
   S6 -->|calls| T6
-  S7["method:ASTableView::tableView:willDeselectRowAtIndexPath:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1120"]
-  T7["method:ASTableView::convertIndexPathFromTableNode:waitingIfNeeded:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:599"]
+  S7["method:JobsBluetoothManager::connectionEnded<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:805"]
+  T7["method:JobsBluetoothManager::clearConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:364"]
   S7 -->|calls| T7
-  S8["method:ASTableView::scrollViewDidScroll:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1257"]
-  T8["function:ASInterfaceStateIncludesVisible<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.h:34"]
+  S8["method:JobsBluetoothManager::connectionEnded<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:805"]
+  T8["method:JobsBluetoothManager::transition<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:688"]
   S8 -->|calls| T8
-  S9["method:ASTableView::scrollViewDidScroll:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1257"]
-  T9["method:ASTableView::_checkForBatchFetching<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1480"]
+  S9["method:JobsBluetoothManager::connectionEnded<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:805"]
+  T9["method:JobsBluetoothManager::scheduleReconnect<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:392"]
   S9 -->|calls| T9
-  S10["method:ASTableView::scrollViewDidScroll:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1257"]
-  T10["method:ASCellNode::cellNodeVisibilityEvent:inScrollView:withCellFrame:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:261"]
+  S10["method:JobsBluetoothManager::peripheral<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:825"]
+  T10["method:JobsBluetoothManager::failConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:379"]
   S10 -->|calls| T10
-  S11["method:ASTableView::scrollViewDidScroll:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1257"]
-  T11["method:_ASTableViewCell::node<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:99"]
+  S11["method:JobsBluetoothManager::peripheral<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:825"]
+  T11["method:ASIntegerMap::mapForUpdateWithOldCount:deleted:inserted:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASIntegerMap.mm:53"]
   S11 -->|calls| T11
-  S12["method:ASTableView::scrollViewWillEndDragging:withVelocity:targetContentOffset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1277"]
-  T12["method:ASTableView::scrollViewWillEndDragging:withVelocity:targetContentOffset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1277"]
+  S12["method:JobsBluetoothManager::peripheral<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:825"]
+  T12["method:JobsBluetoothManager::failConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:379"]
   S12 -->|calls| T12
-  S13["method:ASTableView::scrollViewWillEndDragging:withVelocity:targetContentOffset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1277"]
-  T13["method:ASTableView::_beginBatchFetchingIfNeededWithContentOffset:velocity:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1490"]
+  S13["method:JobsBluetoothManager::peripheral<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:825"]
+  T13["method:ASIntegerMap::mapForUpdateWithOldCount:deleted:inserted:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASIntegerMap.mm:53"]
   S13 -->|calls| T13
-  S14["method:ASTableView::scrollViewDidEndDecelerating:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1299"]
-  T14["method:ASCellNode::cellNodeVisibilityEvent:inScrollView:withCellFrame:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:261"]
+  S14["method:JobsBluetoothManager::peripheral<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:850"]
+  T14["method:JobsBluetoothManager::failConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:379"]
   S14 -->|calls| T14
-  S15["method:ASTableView::scrollViewDidEndDecelerating:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1299"]
-  T15["method:_ASTableViewCell::node<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:99"]
+  S15["method:JobsBluetoothManager::peripheral<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:850"]
+  T15["method:JobsBluetoothManager::readyIfComplete<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:663"]
   S15 -->|calls| T15
-  S16["method:ASTableView::scrollViewWillBeginDragging:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1317"]
-  T16["method:ASCellNode::cellNodeVisibilityEvent:inScrollView:withCellFrame:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:261"]
+  S16["method:JobsBluetoothManager::peripheral<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:880"]
+  T16["method:JobsBluetoothManager::failConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:379"]
   S16 -->|calls| T16
-  S17["method:ASTableView::scrollViewWillBeginDragging:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1317"]
-  T17["method:_ASTableViewCell::node<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:99"]
+  S17["method:JobsBluetoothManager::peripheral<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:880"]
+  T17["method:JobsBluetoothManager::failConnection<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:379"]
   S17 -->|calls| T17
-  S18["method:ASTableView::scrollViewDidEndDragging:willDecelerate:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1337"]
-  T18["method:ASTableView::scrollViewDidEndDragging:willDecelerate:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1337"]
+  S18["method:JobsBluetoothManager::peripheral<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:880"]
+  T18["method:JobsBluetoothManager::readyIfComplete<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:663"]
   S18 -->|calls| T18
-  S19["method:ASTableView::scrollViewDidEndDragging:willDecelerate:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1337"]
-  T19["method:ASCellNode::cellNodeVisibilityEvent:inScrollView:withCellFrame:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:261"]
+  S19["method:JobsBluetoothManager::peripheral<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:897"]
+  T19["method:JobsBluetoothManager::report<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:698"]
   S19 -->|calls| T19
-  S20["method:ASTableView::scrollViewDidEndDragging:willDecelerate:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1337"]
-  T20["method:_ASTableViewCell::node<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:99"]
+  S20["method:JobsBluetoothManager::peripheral<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:897"]
+  T20["method:JobsBluetoothManager::receive<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:585"]
   S20 -->|calls| T20
-  S21["method:ASTableView::setLeadingScreensForBatching:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1370"]
-  T21["function:ASPerformBlockOnMainThread<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.mm:133"]
+  S21["method:JobsBluetoothManager::peripheral<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:914"]
+  T21["method:JobsBluetoothManager::retryOrFinish<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:622"]
   S21 -->|calls| T21
-  S22["method:ASTableView::setLeadingScreensForBatching:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1370"]
-  T22["method:ASTableView::_checkForBatchFetching<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1480"]
+  S22["method:JobsBluetoothManager::peripheral<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:914"]
+  T22["method:JobsBluetoothManager::pumpWrites<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:558"]
   S22 -->|calls| T22
-  S23["method:ASTableView::scrollDirection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1392"]
-  T23["function:ASScrollDirectionApplyTransform<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASScrollDirection.mm:57"]
+  S23["method:JobsBluetoothManager::peripheralIsReady<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:929"]
+  T23["method:JobsBluetoothManager::pumpWrites<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:558"]
   S23 -->|calls| T23
-  S24["method:ASTableView::_scrollDirectionForVelocity:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1405"]
-  T24["method:ASTableView::scrollableDirections<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1421"]
+  S24["method:JobsBluetoothMockTransport::echo<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothMockTransport/JobsBluetoothMockTransport.swift:40"]
+  T24["field:JobsBluetoothMockTransport::responseTransform<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothMockTransport/JobsBluetoothMockTransport.swift:15"]
   S24 -->|calls| T24
-  S25["method:ASTableView::_scrollDirectionForVelocity:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:1405"]
-  T25["function:ASScrollDirectionContainsVerticalDirection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASScrollDirection.mm:15"]
+  S25["method:JobsBluetoothProfile::byServiceUUIDStrings<br/>JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothProfile/JobsBluetoothProfile.swift:33"]
+  T25["method:ASIntegerMap::mapForUpdateWithOldCount:deleted:inserted:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASIntegerMap.mm:53"]
   S25 -->|calls| T25
 ```
 

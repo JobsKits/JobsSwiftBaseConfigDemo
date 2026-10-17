@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["function:ASDisplayNodeUIContentModeFromNSString<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCoreAnimationExtras.mm:121"]
-  T1["function:UIContentModeDescriptionLUT<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCoreAnimationExtras.mm:86"]
+  S1["method:UITextFieldDelegateProxy::responds<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+监听.swift:75"]
+  T1["method:ASDelegateProxy::respondsToSelector:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASDelegateProxy.mm:196"]
   S1 -->|calls| T1
-  S2["function:ASDisplayNodeCAContentsGravityFromUIContentMode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCoreAnimationExtras.mm:133"]
-  T2["function:UIContentModeCAGravityLUT<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCoreAnimationExtras.mm:64"]
+  S2["method:UITextFieldDelegateProxy::responds<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+监听.swift:75"]
+  T2["method:ASDelegateProxy::respondsToSelector:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASDelegateProxy.mm:196"]
   S2 -->|calls| T2
-  S3["function:ASDisplayNodeUIContentModeFromCAContentsGravity<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCoreAnimationExtras.mm:148"]
-  T3["function:UIContentModeCAGravityLUT<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCoreAnimationExtras.mm:64"]
+  S3["method:UITextFieldDelegateProxy::textFieldShouldClear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+监听.swift:81"]
+  T3["field:UITextFieldDelegateProxy::shouldClear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+监听.swift:69"]
   S3 -->|calls| T3
-  S4["function:initWithOldData:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:136"]
-  T4["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
+  S4["method:UITextField::onShouldClear<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+监听.swift:109"]
+  T4["method:UITextField::installDelegateProxyIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+监听.swift:99"]
   S4 -->|calls| T4
-  S5["function:initWithOldData:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:136"]
-  T5["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
+  S5["method:UITextView::byPlaceHolder<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:24"]
+  T5["method:UIListContentConfiguration::byText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIListContentConfiguration.swift:99"]
   S5 -->|calls| T5
-  S6["function:initWithOldData:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:136"]
-  T6["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
+  S6["method:UITextView::byPlaceHolder<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:24"]
+  T6["method:UILabel::byAttributedString<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:21"]
   S6 -->|calls| T6
-  S7["function:initWithOldData:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:136"]
-  T7["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
+  S7["method:UITextView::byPlaceHolder<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:24"]
+  T7["method:UITextView::by_updatePlaceholderVisibility<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:89"]
   S7 -->|calls| T7
-  S8["function:initWithOldData:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:136"]
-  T8["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
+  S8["method:UITextView::byPlaceHolderCor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:31"]
+  T8["method:UILabel::byTextColor<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UILabel/UILabel+DSL.swift:39"]
   S8 -->|calls| T8
-  S9["function:initWithOldData:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:136"]
-  T9["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
+  S9["method:UITextView::byPlaceHolderFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:37"]
+  T9["method:UILabel::byFont<br/>JobsByPods/JobsProgressBar@Pods/JobsProgressBarByUIKit.swift:81"]
   S9 -->|calls| T9
-  S10["function:initWithOldData:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:136"]
-  T10["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
+  S10["method:UITextView::byPlaceHolderAttributedText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:43"]
+  T10["method:UILabel::byAttributedString<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:21"]
   S10 -->|calls| T10
-  S11["function:initWithOldData:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:136"]
-  T11["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
+  S11["method:UITextView::byPlaceHolderAttributedText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:43"]
+  T11["method:UILabel::byText<br/>JobsByPods/JobsProgressBar@Pods/JobsProgressBarByUIKit.swift:93"]
   S11 -->|calls| T11
-  S12["function:initWithOldData:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:136"]
-  T12["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
+  S12["method:UITextView::byPlaceHolderAttributedText<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:43"]
+  T12["method:UITextView::by_updatePlaceholderVisibility<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:89"]
   S12 -->|calls| T12
-  S13["function:initWithOldData:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:136"]
-  T13["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
+  S13["property:UITextView::by_placeholderLabel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:50"]
+  T13["method:UITextView::by_swizzleLayoutSubviewsOnce<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:104"]
   S13 -->|calls| T13
-  S14["function:initWithOldData:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:136"]
-  T14["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
+  S14["property:UITextView::by_placeholderLabel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:50"]
+  T14["method:UILabel::byNumberOfLines<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:26"]
   S14 -->|calls| T14
-  S15["function:addCompletionHandler:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:164"]
-  T15["variable:completion<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode+Beta.h:73"]
+  S15["property:UITextView::by_placeholderLabel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:50"]
+  T15["method:UITextView::by_makeOrUpdatePlaceholderConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:94"]
   S15 -->|calls| T15
-  S16["function:indexesForItemChangesOfType:inSection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:237"]
-  T16["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
+  S16["property:UITextView::by_placeholderLabel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:50"]
+  T16["method:UITextView::by_updatePlaceholderVisibility<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:89"]
   S16 -->|calls| T16
-  S17["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
-  T17["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
+  S17["property:UITextView::by_placeholderLabel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:50"]
+  T17["method:UITextView::by_updatePlaceholderVisibility<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:89"]
   S17 -->|calls| T17
-  S18["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
-  T18["function:if<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:346"]
+  S18["method:UITextView::by_makeOrUpdatePlaceholderConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:94"]
+  T18["method:UIView::byRemakeConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:112"]
   S18 -->|calls| T18
-  S19["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
-  T19["function:init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:130"]
+  S19["method:UITextView::by_makeOrUpdatePlaceholderConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:94"]
+  T19["field:JobsFuseConfig::inset<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:32"]
   S19 -->|calls| T19
-  S20["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
-  T20["method:ASIntegerMap::inverseMap<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASIntegerMap.mm:114"]
+  S20["method:UITextView::by_makeOrUpdatePlaceholderConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:94"]
+  T20["field:JobsFuseConfig::inset<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:32"]
   S20 -->|calls| T20
-  S21["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
-  T21["function:ASObjectDescriptionMakeWithoutObject<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASObjectDescriptionHelpers.mm:66"]
+  S21["method:UITextView::by_makeOrUpdatePlaceholderConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:94"]
+  T21["field:JobsFuseConfig::inset<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:32"]
   S21 -->|calls| T21
-  S22["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
-  T22["method:ASTextNode::propertiesForDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:312"]
+  S22["method:UITextView::by_makeOrUpdatePlaceholderConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:94"]
+  T22["field:JobsFuseConfig::inset<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:32"]
   S22 -->|calls| T22
-  S23["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
-  T23["function:ASObjectDescriptionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASObjectDescriptionHelpers.mm:71"]
+  S23["method:UITextView::by_layoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:120"]
+  T23["method:UITextView::by_layoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:120"]
   S23 -->|calls| T23
-  S24["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
-  T24["method:ASCellNode::propertiesForDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCellNode.mm:324"]
+  S24["method:UITextView::by_layoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:120"]
+  T24["method:UITextView::by_makeOrUpdatePlaceholderConstraints<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:94"]
   S24 -->|calls| T24
-  S25["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASHierarchyChangeSet.mm:1"]
-  T25["method:ASTextNode::propertiesForDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:312"]
+  S25["method:UITextView::by_layoutSubviews<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:120"]
+  T25["method:UITextView::by_updatePlaceholderVisibility<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextView/UITextView+Placeholder.swift:89"]
   S25 -->|calls| T25
 ```
 

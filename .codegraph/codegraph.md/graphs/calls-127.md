@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["function:layoutItemsAlongUnconstrainedStackDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:674"]
-  T1["function:crossDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackLayoutSpecUtilities.h:25"]
+  S1["method:JobsTableViewBlocksProxy::tableView<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITableView/UITableView.swift:393"]
+  T1["field:JobsTableViewBlocksProxy::accessoryButtonTappedForRowWith<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITableView/UITableView.swift:306"]
   S1 -->|calls| T1
-  S2["function:layoutItemsAlongUnconstrainedStackDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:674"]
-  T2["function:dispatchApplyIfNeeded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:70"]
+  S2["method:JobsTableViewDelegateMux::responds<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITableView/UITableView.swift:403"]
+  T2["method:ASDelegateProxy::respondsToSelector:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASDelegateProxy.mm:196"]
   S2 -->|calls| T2
-  S3["function:layoutItemsAlongUnconstrainedStackDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:674"]
-  T3["function:crossChildLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:48"]
+  S3["method:JobsTableViewDelegateMux::responds<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITableView/UITableView.swift:403"]
+  T3["method:ASDelegateProxy::respondsToSelector:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASDelegateProxy.mm:196"]
   S3 -->|calls| T3
-  S4["function:layoutItemsAlongUnconstrainedStackDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:674"]
-  T4["function:ASDimensionResolve<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:162"]
+  S4["method:JobsTableViewDelegateMux::forwardingTarget<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITableView/UITableView.swift:409"]
+  T4["method:JobsTableViewDelegateMux::responds<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITableView/UITableView.swift:403"]
   S4 -->|calls| T4
-  S5["function:layoutItemsAlongUnconstrainedStackDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:674"]
-  T5["function:stackDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackLayoutSpecUtilities.h:20"]
+  S5["method:JobsTableViewDelegateMux::forwardingTarget<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITableView/UITableView.swift:409"]
+  T5["method:JobsTableViewDelegateMux::responds<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITableView/UITableView.swift:403"]
   S5 -->|calls| T5
-  S6["function:layoutItemsAlongUnconstrainedStackDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:674"]
-  T6["function:ASDimensionResolve<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:162"]
+  S6["method:JobsTableViewDelegateMux::forwardingTarget<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITableView/UITableView.swift:409"]
+  T6["method:ASDelegateProxy::forwardingTargetForSelector:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASDelegateProxy.mm:206"]
   S6 -->|calls| T6
-  S7["function:layoutItemsAlongUnconstrainedStackDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:674"]
-  T7["function:stackDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackLayoutSpecUtilities.h:20"]
+  S7["method:ViewDataProtocol::byData<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITableViewCell/UITableViewCell+数据渲染.swift:19"]
+  T7["method:NSTextAttachment::byImage<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/NSTextAttachment.swift:39"]
   S7 -->|calls| T7
-  S8["function:compute<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:700"]
-  T8["function:useOptimizedFlexing<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:538"]
+  S8["method:ViewDataProtocol::byData<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITableViewCell/UITableViewCell+数据渲染.swift:19"]
+  T8["method:UITableViewCell::bySecondaryJobsText<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UITableViewCell/UITableViewCell+DSL.swift:239"]
   S8 -->|calls| T8
-  S9["function:compute<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:700"]
-  T9["variable:map<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASElementMap.h:74"]
+  S9["method:ViewDataProtocol::byData<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITableViewCell/UITableViewCell+数据渲染.swift:19"]
+  T9["method:UILabel::byJobsText<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UILabel/UILabel+DSL.swift:26"]
   S9 -->|calls| T9
-  S10["function:compute<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:700"]
-  T10["function:layoutItemsAlongUnconstrainedStackDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:674"]
+  S10["method:ViewDataProtocol::byData<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITableViewCell/UITableViewCell+数据渲染.swift:19"]
+  T10["method:UILabel::byJobsAttributedText<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UILabel/UILabel+DSL.swift:19"]
   S10 -->|calls| T10
-  S11["function:compute<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:700"]
-  T11["function:collectChildrenIntoLines<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:631"]
+  S11["method:ViewDataProtocol::byData<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITableViewCell/UITableViewCell+数据渲染.swift:19"]
+  T11["method:UILabel::byJobsAttributedText<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UILabel/UILabel+DSL.swift:19"]
   S11 -->|calls| T11
-  S12["function:compute<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:700"]
-  T12["function:flexLinesAlongStackDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:561"]
+  S12["method:ViewDataProtocol::byData<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITableViewCell/UITableViewCell+数据渲染.swift:19"]
+  T12["method:JXSegmentedIndicatorImageView::byImage<br/>JobsByPods/JobsBy3rdTools@Pods/JXSegmentedView/JXSegmentedIndicator/JXSegmentedIndicatorImageView.swift:18"]
   S12 -->|calls| T12
-  S13["function:compute<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:700"]
-  T13["function:stretchLinesAlongCrossDimension::computeLinesCrossSizeAndBaseline<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:278"]
+  S13["method:UITextField::byPlaceholderColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+Placeholder.swift:21"]
+  T13["method:UITextField::jobs_placeholderLabel_byRuntime<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+Placeholder.swift:39"]
   S13 -->|calls| T13
-  S14["function:compute<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:700"]
-  T14["function:stretchLinesAlongCrossDimension<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:226"]
+  S14["method:UITextField::byPlaceholderColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+Placeholder.swift:21"]
+  T14["method:UILabel::byTextColor<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UILabel/UILabel+DSL.swift:39"]
   S14 -->|calls| T14
-  S15["function:compute<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:700"]
-  T15["function:computeItemsStackDimensionSum<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:468"]
+  S15["method:UITextField::byPlaceholderColor<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+Placeholder.swift:21"]
+  T15["method:UITextField::jobs_applyAttributedPlaceholder<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+Placeholder.swift:47"]
   S15 -->|calls| T15
-  S16["function:compute<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:700"]
-  T16["function:computeLinesCrossDimensionSum<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/Layout/ASStackUnpositionedLayout.mm:108"]
+  S16["method:UITextField::byPlaceholderFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+Placeholder.swift:30"]
+  T16["method:UITextField::jobs_placeholderLabel_byRuntime<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+Placeholder.swift:39"]
   S16 -->|calls| T16
-  S17["method:_ASCollectionGalleryLayoutInfo::initWithItemSize:minimumLineSpacing:minimumInteritemSpacing:sectionInset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCollectionGalleryLayoutInfo.mm:14"]
-  T17["method:ASCollectionLayoutCache::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASCollectionLayoutCache.mm:35"]
+  S17["method:UITextField::byPlaceholderFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+Placeholder.swift:30"]
+  T17["method:UILabel::byFont<br/>JobsByPods/JobsProgressBar@Pods/JobsProgressBarByUIKit.swift:81"]
   S17 -->|calls| T17
-  S18["method:_ASCollectionGalleryLayoutInfo::hash<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCollectionGalleryLayoutInfo.mm:52"]
-  T18["function:ASHashBytes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASHashing.mm:17"]
+  S18["method:UITextField::byPlaceholderFont<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+Placeholder.swift:30"]
+  T18["method:UITextField::jobs_applyAttributedPlaceholder<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+Placeholder.swift:47"]
   S18 -->|calls| T18
-  S19["method:_ASGalleryLayoutItem::initWithItemSize:collectionElement:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCollectionGalleryLayoutItem.mm:25"]
-  T19["method:ASCollectionLayoutCache::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASCollectionLayoutCache.mm:35"]
+  S19["method:UITextField::jobs_applyAttributedPlaceholder<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+Placeholder.swift:47"]
+  T19["method:ASMutableAttributedStringBuilder::attributesAtIndex:effectiveRange:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASMutableAttributedStringBuilder.mm:229"]
   S19 -->|calls| T19
-  S20["method:_ASGalleryLayoutItem::calculateLayoutThatFits:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCollectionGalleryLayoutItem.mm:63"]
-  T20["function:ASSizeRangeClamp<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:275"]
+  S20["method:UITextField::richTextBy<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+富文本.swift:18"]
+  T20["method:JobsRichText::make<br/>JobsByPods/JobsTextTools@Pods/JobsRichText.swift:65"]
   S20 -->|calls| T20
-  S21["method:_ASGalleryLayoutItem::calculateLayoutThatFits:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCollectionGalleryLayoutItem.mm:63"]
-  T21["function:NSStringFromASSizeRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:95"]
+  S21["method:UITextField::byOnInput<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+监听.swift:22"]
+  T21["method:UITextField::installDelegateProxyIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+监听.swift:99"]
   S21 -->|calls| T21
-  S22["method:_ASGalleryLayoutItem::asciiArtString<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCollectionGalleryLayoutItem.mm:72"]
-  T22["method:_ASGalleryLayoutItem::asciiArtName<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCollectionGalleryLayoutItem.mm:77"]
+  S22["method:UITextField::byBeginEditing<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+监听.swift:42"]
+  T22["method:UITextField::installDelegateProxyIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+监听.swift:99"]
   S22 -->|calls| T22
-  S23["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCoreAnimationExtras.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCoreAnimationExtras.h:1"]
-  T23["function:ASDisplayNodeUIContentModeFromNSString<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCoreAnimationExtras.mm:121"]
+  S23["method:UITextField::byEndEditing<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+监听.swift:52"]
+  T23["method:UITextField::installDelegateProxyIfNeeded<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+监听.swift:99"]
   S23 -->|calls| T23
-  S24["function:ASDisplayNodeSetupLayerContentsWithResizableImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCoreAnimationExtras.mm:13"]
-  T24["function:ASDisplayNodeSetResizableContents<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCoreAnimationExtras.mm:18"]
+  S24["method:UITextFieldDelegateProxy::forwardingTarget<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+监听.swift:71"]
+  T24["method:ASDelegateProxy::respondsToSelector:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASDelegateProxy.mm:196"]
   S24 -->|calls| T24
-  S25["function:ASDisplayNodeNSStringFromUIContentMode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCoreAnimationExtras.mm:109"]
-  T25["function:UIContentModeDescriptionLUT<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASCoreAnimationExtras.mm:86"]
+  S25["method:UITextFieldDelegateProxy::forwardingTarget<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UITextField/UITextField+监听.swift:71"]
+  T25["method:ASDelegateProxy::forwardingTargetForSelector:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASDelegateProxy.mm:206"]
   S25 -->|calls| T25
 ```
 

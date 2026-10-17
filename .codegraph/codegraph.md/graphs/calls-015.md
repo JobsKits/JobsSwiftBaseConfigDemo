@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASCollectionView::nodesDidRelayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2370"]
-  T1["function:ASDisplayNodeFindFirstNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:226"]
+  S1["method:NetworkRegression::cancellationAndIdentity<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:127"]
+  T1["method:ControlledClient::complete<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:322"]
   S1 -->|calls| T1
-  S2["method:ASCollectionView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2423"]
-  T2["method:ASRangeController::updateRanges<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASRangeController.mm:151"]
+  S2["method:NetworkRegression::cancellationAndIdentity<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:127"]
+  T2["method:NetworkRegression::agent<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:121"]
   S2 -->|calls| T2
-  S3["method:ASCollectionView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2423"]
-  T3["method:ASControlNode::__exitHierarchy<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASControlNode.mm:114"]
+  S3["method:NetworkRegression::cancellationAndIdentity<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:127"]
+  T3["method:NetworkRegression::waitForCallback<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:258"]
   S3 -->|calls| T3
-  S4["method:ASCollectionView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2423"]
-  T4["method:ASRangeController::updateRanges<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASRangeController.mm:151"]
+  S4["method:NetworkRegression::cancellationAndIdentity<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:127"]
+  T4["method:JobsDefaultAgent::send<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:45"]
   S4 -->|calls| T4
-  S5["method:ASCollectionView::didMoveToWindow<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2423"]
-  T5["method:ASCollectionView::_checkForBatchFetching<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:1864"]
+  S5["method:NetworkRegression::cancellationAndIdentity<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:127"]
+  T5["method:JobsAnyNotificationToken::cancel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:92"]
   S5 -->|calls| T5
-  S6["method:ASCollectionView::layer:didChangeBoundsWithOldValue:newValue:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2486"]
-  T6["function:ASScrollDirectionContainsVerticalDirection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASScrollDirection.mm:15"]
+  S6["method:NetworkRegression::cancellationAndIdentity<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:127"]
+  T6["method:NetworkRegression::checkpoint<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:273"]
   S6 -->|calls| T6
-  S7["method:ASCollectionView::layer:didChangeBoundsWithOldValue:newValue:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2486"]
-  T7["function:ASScrollDirectionContainsHorizontalDirection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASScrollDirection.mm:19"]
+  S7["method:NetworkRegression::cancellationAndIdentity<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:127"]
+  T7["method:NetworkRegression::agent<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:121"]
   S7 -->|calls| T7
-  S8["method:ASCollectionView::layer:didChangeBoundsWithOldValue:newValue:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2486"]
-  T8["method:ASCollectionView::relayoutItems<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:372"]
+  S8["method:NetworkRegression::cancellationAndIdentity<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:127"]
+  T8["method:JobsDefaultAgent::send<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:45"]
   S8 -->|calls| T8
-  S9["method:ASCollectionView::accessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2531"]
-  T9["method:ASCollectionView::waitUntilAllUpdatesAreCommitted<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:390"]
+  S9["method:NetworkRegression::parametersAndFiles<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:183"]
+  T9["method:NetworkRegression::agent<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:121"]
   S9 -->|calls| T9
-  S10["method:ASCollectionView::accessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2531"]
-  T10["method:ASCollectionView::accessibilityElements<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:2531"]
+  S10["method:NetworkRegression::parametersAndFiles<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:183"]
+  T10["method:JobsDefaultAgent::send<br/>JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:45"]
   S10 -->|calls| T10
-  S11["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
-  T11["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S11["method:NetworkRegression::parametersAndFiles<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:183"]
+  T11["method:JobsAnyNotificationToken::cancel<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+通知.swift:92"]
   S11 -->|calls| T11
-  S12["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
-  T12["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S12["method:NetworkRegression::parametersAndFiles<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:183"]
+  T12["method:JobsDefaultAgent::upload<br/>JobsByPods/JobsNetworking@Pods/Upload/JobsDefaultAgent+Upload.swift:12"]
   S12 -->|calls| T12
-  S13["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
-  T13["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S13["method:NetworkRegression::parametersAndFiles<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:183"]
+  T13["method:JobsDefaultAgent::download<br/>JobsByPods/JobsNetworking@Pods/Download/JobsDefaultAgent+Download.swift:12"]
   S13 -->|calls| T13
-  S14["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
-  T14["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S14["method:NetworkRegression::parametersAndFiles<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:183"]
+  T14["method:NetworkRegression::check<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:22"]
   S14 -->|calls| T14
-  S15["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
-  T15["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S15["method:NetworkRegression::parametersAndFiles<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:183"]
+  T15["method:JobsDefaultAgent::download<br/>JobsByPods/JobsNetworking@Pods/Download/JobsDefaultAgent+Download.swift:12"]
   S15 -->|calls| T15
-  S16["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
-  T16["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S16["method:NetworkRegression::parametersAndFiles<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:183"]
+  T16["method:NetworkRegression::check<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:22"]
   S16 -->|calls| T16
-  S17["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
-  T17["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S17["method:NetworkRegression::parametersAndFiles<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:183"]
+  T17["method:JobsDefaultAgent::download<br/>JobsByPods/JobsNetworking@Pods/Download/JobsDefaultAgent+Download.swift:12"]
   S17 -->|calls| T17
-  S18["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
-  T18["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S18["method:NetworkRegression::parametersAndFiles<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:183"]
+  T18["method:NetworkRegression::check<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:22"]
   S18 -->|calls| T18
-  S19["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
-  T19["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S19["method:NetworkRegression::waitForCallback<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:258"]
+  T19["method:NetworkCallbackGate::complete<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:294"]
   S19 -->|calls| T19
-  S20["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
-  T20["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S20["method:NetworkRegression::checkpoint<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:273"]
+  T20["method:NetworkRegression::waitForCallback<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:258"]
   S20 -->|calls| T20
-  S21["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
-  T21["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S21["method:NetworkRegression::checkpoint<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:273"]
+  T21["method:NetworkRegression::check<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:22"]
   S21 -->|calls| T21
-  S22["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
-  T22["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S22["property:NetworkCallbackGate::isCompleted<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:288"]
+  T22["method:ASDisplayNode::lockToRootIfNeededForLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Yoga.mm:443"]
   S22 -->|calls| T22
-  S23["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
-  T23["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S23["method:NetworkCallbackGate::complete<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:294"]
+  T23["method:ASDisplayNode::lockToRootIfNeededForLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Yoga.mm:443"]
   S23 -->|calls| T23
-  S24["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
-  T24["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S24["method:ControlledClient::perform<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:314"]
+  T24["field:ControlledClient::prepared<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:306"]
   S24 -->|calls| T24
-  S25["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionViewProtocols.h:1"]
-  T25["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S25["method:ControlledClient::perform<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:314"]
+  T25["field:ControlledClient::callbacks<br/>.github/tests/JobsPodsUpgrade/Network/NetworkRegression.swift:307"]
   S25 -->|calls| T25
 ```
 

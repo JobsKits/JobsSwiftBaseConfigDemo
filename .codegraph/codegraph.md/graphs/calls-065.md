@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h:1"]
-  T1["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S1["method:JobsClockView::updateHands<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:254"]
+  T1["method:JobsOCCentralLab::beginWithLog:timeout:<br/>SwiftDoc.md/iOS蓝牙开发实战与面试.md/Demo/OC/JobsOCCentralLab.m:23"]
   S1 -->|calls| T1
-  S2["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.h:1"]
-  T2["property:ASNetworkImageNode::ASDISPLAYNODE_DEPRECATED_MSG<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNetworkImageNode.h:91"]
+  S2["method:JobsClockView::updateHands<br/>JobsByPods/JobsBy3rdTools@Pods/JobsClock.swift:254"]
+  T2["method:_ASPendingState::applyToLayer:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/_ASPendingState.mm:932"]
   S2 -->|calls| T2
-  S3["method:ASTextNodeRendererKey::initWithTextKitAttributes:constrainedSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:62"]
-  T3["method:ASTextNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:252"]
+  S3["method:JobsDialogBoxBuilder::byShowDialogBox<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:96"]
+  T3["method:JobsDialogBoxBuilder::byCornerRadius<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:71"]
   S3 -->|calls| T3
-  S4["method:ASTextNodeRendererKey::hash<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:71"]
-  T4["function:ASHashBytes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASHashing.mm:17"]
+  S4["method:JobsDialogBoxBuilder::byShowDialogBox<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:96"]
+  T4["method:RTBadgeConfig::byShadowOffset<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+右上角角标.swift:110"]
   S4 -->|calls| T4
-  S5["function:sharedRendererCache<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:101"]
-  T5["method:ASTextNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:252"]
+  S5["method:JobsDialogBoxBuilder::byShowDialogBox<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:96"]
+  T5["method:RTBadgeConfig::byShadowRadius<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+右上角角标.swift:100"]
   S5 -->|calls| T5
-  S6["function:_rendererForAttributes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:118"]
-  T6["function:sharedRendererCache<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:101"]
+  S6["method:JobsDialogBoxBuilder::byShowDialogBox<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:96"]
+  T6["method:RTBadgeConfig::byShadowOpacity<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+右上角角标.swift:105"]
   S6 -->|calls| T6
-  S7["function:_rendererForAttributes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:118"]
-  T7["method:ASTextNodeRendererKey::initWithTextKitAttributes:constrainedSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:62"]
+  S7["method:JobsDialogBoxBuilder::byShowDialogBox<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:96"]
+  T7["method:JobsDirection::resolved<br/>JobsByPods/JobsSwiftBaseDefines@Pods/JobsBaseEnumDefs.swift:373"]
   S7 -->|calls| T7
-  S8["function:_rendererForAttributes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:118"]
-  T8["method:ASTextNodeRendererKey::initWithTextKitAttributes:constrainedSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:62"]
+  S8["method:JobsDialogBoxBuilder::byShowDialogBox<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:96"]
+  T8["method:JobsDialogBoxView::installOutsideTapDismiss<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:340"]
   S8 -->|calls| T8
-  S9["function:rendererForAttributes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:135"]
-  T9["method:ASTextNodeRendererKey::initWithTextKitAttributes:constrainedSize:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:62"]
+  S9["method:JobsDialogBoxBuilder::byShowDialogBox<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:96"]
+  T9["method:CALayer::byTransform<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CALayer.swift:52"]
   S9 -->|calls| T9
-  S10["function:rendererForAttributes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:135"]
-  T10["function:_rendererForAttributes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:118"]
+  S10["method:JobsDialogBoxBuilder::byShowDialogBox<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:96"]
+  T10["method:CALayer::byTransform<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CALayer.swift:52"]
   S10 -->|calls| T10
-  S11["function:rendererForAttributes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:135"]
-  T11["function:_rendererForAttributes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:118"]
+  S11["method:JobsDialogBoxBuilder::computeArrowRatio<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:187"]
+  T11["function:JobsDialogBoxBuilder::computeArrowRatio::clamp<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:193"]
   S11 -->|calls| T11
-  S12["method:ASTextNodeDrawParameter::initWithRendererAttributes:backgroundColor:textContainerInsets:contentScale:opaque:bounds:traitCollection:willDisplayNodeContentWithRenderingContext:didDisplayNodeContentWithRenderingContext:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:168"]
-  T12["method:ASTextNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:252"]
+  S12["method:JobsDialogBoxBuilder::computeArrowRatio<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:187"]
+  T12["function:JobsDialogBoxBuilder::computeArrowRatio::clamp<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:193"]
   S12 -->|calls| T12
-  S13["method:ASTextNodeDrawParameter::rendererForBounds:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:193"]
-  T13["function:rendererForAttributes<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:135"]
+  S13["method:UIView::byDialogBoxContent<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:218"]
+  T13["method:UIView::byDialogBox<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:214"]
   S13 -->|calls| T13
-  S14["method:ASTextNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:252"]
-  T14["method:ASTextNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:252"]
+  S14["class:JobsDialogBoxView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:223"]
+  T14["method:JobsNSObjectMaking::jobsMake<br/>JobsByPods/JobsSwiftBlock@Pods/NSObject+Make.swift:17"]
   S14 -->|calls| T14
-  S15["method:ASTextNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:252"]
-  T15["method:ASTextNode::shadowOffset<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:1264"]
+  S15["class:JobsDialogBoxView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:223"]
+  T15["method:UIView::byBackgroundColor<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIView/UIView+DSL.swift:733"]
   S15 -->|calls| T15
-  S16["method:ASTextNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:252"]
-  T16["method:ASTextNode::shadowColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:1242"]
+  S16["class:JobsDialogBoxView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:223"]
+  T16["method:CAShapeLayer::byFillColor<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAShapeLayer.swift:22"]
   S16 -->|calls| T16
-  S17["method:ASTextNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:252"]
-  T17["method:ASTextNode::shadowOpacity<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:1276"]
+  S17["class:JobsDialogBoxView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:223"]
+  T17["method:UIView::byAddTo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:61"]
   S17 -->|calls| T17
-  S18["method:ASTextNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:252"]
-  T18["method:ASTextNode::shadowRadius<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:1288"]
+  S18["class:JobsDialogBoxView<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:223"]
+  T18["method:PDFThumbnailView::byBackgroundColor<br/>JobsByPods/JobsSwiftDSL@Pods/PDFKit/PDFThumbnailView.swift:32"]
   S18 -->|calls| T18
-  S19["method:ASTextNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:252"]
-  T19["function:ASTextNode::DefaultLinkAttributeNames<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:243"]
+  S19["method:JobsDialogBoxView::layoutSubviews<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:247"]
+  T19["method:JobsDialogBoxView::updateShape<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:253"]
   S19 -->|calls| T19
-  S20["method:ASTextNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:252"]
-  T20["function:ASDisplayNodeDefaultPlaceholderColor<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNodeExtras.mm:305"]
+  S20["method:JobsDialogBoxView::layoutSubviews<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:247"]
+  T20["method:JobsDialogBoxView::layoutContent<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:260"]
   S20 -->|calls| T20
-  S21["method:ASTextNode::propertiesForDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:312"]
-  T21["method:ASTextNode::propertiesForDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:312"]
+  S21["method:JobsDialogBoxView::updateShape<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:253"]
+  T21["method:CAKeyframeAnimation::byPath<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAKeyframeAnimation.swift:19"]
   S21 -->|calls| T21
-  S22["method:ASTextNode::propertiesForDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:312"]
-  T22["method:ASTextNode::_plainStringForDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:303"]
+  S22["method:JobsDialogBoxView::updateShape<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:253"]
+  T22["method:CALayer::byFrame<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CALayer.swift:22"]
   S22 -->|calls| T22
-  S23["method:ASTextNode::propertiesForDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:312"]
-  T23["function:ASStringWithQuotesIfMultiword<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASObjectDescriptionHelpers.mm:94"]
+  S23["method:JobsDialogBoxView::updateShape<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:253"]
+  T23["method:CAShapeLayer::byFillColor<br/>JobsByPods/JobsSwiftDSL@Pods/QuartzCore/CAShapeLayer.swift:22"]
   S23 -->|calls| T23
-  S24["method:ASTextNode::propertiesForDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:322"]
-  T24["method:ASTextNode::propertiesForDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:322"]
+  S24["method:JobsDialogBoxView::updateShape<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:253"]
+  T24["method:JobsDialogBoxView::makePath<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:287"]
   S24 -->|calls| T24
-  S25["method:ASTextNode::propertiesForDebugDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:322"]
-  T25["method:ASTextNode::_plainStringForDescription<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTextNode.mm:303"]
+  S25["method:JobsDialogBoxView::layoutContent<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:260"]
+  T25["method:JobsDialogBoxView::bubbleRect<br/>JobsByPods/JobsBy3rdTools@Pods/JobsDialogBox.swift:266"]
   S25 -->|calls| T25
 ```
 

@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASDisplayNodeTests::testThatRasterizingWrapperNodesIsNotAllowed<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2260"]
-  T1["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S1["property:JobsTextField::insetLeft<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:36"]
+  T1["method:JobsTextField::updateTextInsets<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:59"]
   S1 -->|calls| T1
-  S2["method:ASDisplayNodeTests::testThatRasterizingWrapperNodesIsNotAllowed<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2260"]
-  T2["function:ASCollectionViewTests::testThatDeletingAndReloadingTheSameItemThrowsAnException::XCTAssertThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:473"]
+  S2["property:JobsTextField::insetBottom<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:37"]
+  T2["method:JobsTextField::updateTextInsets<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:59"]
   S2 -->|calls| T2
-  S3["method:ASDisplayNodeTests::testThatSubnodesGetDisplayUpdatesIfRasterized<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2271"]
-  T3["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S3["property:JobsTextField::insetRight<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:38"]
+  T3["method:JobsTextField::updateTextInsets<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:59"]
   S3 -->|calls| T3
-  S4["method:ASDisplayNodeTests::testThatSubnodesGetDisplayUpdatesIfRasterized<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2271"]
-  T4["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S4["class:JobsTextField<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:19"]
+  T4["method:JobsTextField::setup<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:50"]
   S4 -->|calls| T4
-  S5["method:ASDisplayNodeTests::testThatSubnodesGetDisplayUpdatesIfRasterized<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2271"]
-  T5["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S5["class:JobsTextField<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:19"]
+  T5["method:JobsTextField::setup<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:50"]
   S5 -->|calls| T5
-  S6["method:ASDisplayNodeTests::testThatSubnodesGetDisplayUpdatesIfRasterized<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2271"]
-  T6["function:ASDisplayNodeRunRunLoopUntilBlockIsTrue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:25"]
+  S6["method:JobsTextField::updateTextInsets<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:59"]
+  T6["method:PhotoTableViewCell::updateConstraints<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/examples/ASDKgram/Sample/PhotoTableViewCell.m:307"]
   S6 -->|calls| T6
-  S7["method:ASDisplayNodeTests::testThatSubnodesGetDisplayUpdatesIfRasterized<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2271"]
-  T7["function:ASDisplayNodeRunRunLoopUntilBlockIsTrue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:25"]
+  S7["method:JobsTextField::updateTextInsets<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:59"]
+  T7["field:JobsFuseConfig::inset<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+外圈Layer导火索倒计时效果.swift:32"]
   S7 -->|calls| T7
-  S8["method:ASDisplayNodeTests::testThatSubnodesGetDisplayUpdatesIfRasterized<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2271"]
-  T8["function:ASDisplayNodeRunRunLoopUntilBlockIsTrue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:25"]
+  S8["property:JobsTextField::text<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:73"]
+  T8["method:UITextField::byText<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UITextField/UITextField+DSL.swift:38"]
   S8 -->|calls| T8
-  S9["method:ASDisplayNodeTests::testThatSubnodesGetDisplayUpdatesIfRasterized<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2271"]
-  T9["function:ASDisplayNodeRunRunLoopUntilBlockIsTrue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:25"]
+  S9["property:JobsTextField::placeholder<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:78"]
+  T9["method:UITextField::byPlaceholder<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UITextField/UITextField+DSL.swift:20"]
   S9 -->|calls| T9
-  S10["method:ASDisplayNodeTests::testThatLayerBackedSubnodesAreMarkedInvisibleBeforeDeallocWhenSupernodesViewIsRemovedFromHierarchyWhileBeingRetained<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2305"]
-  T10["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S10["property:JobsTextField::delegate<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:83"]
+  T10["method:UITextField::byDelegate<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UITextField/UITextField+DSL.swift:270"]
   S10 -->|calls| T10
-  S11["method:ASDisplayNodeTests::testThatLayerBackedSubnodesAreMarkedInvisibleBeforeDeallocWhenSupernodesViewIsRemovedFromHierarchyWhileBeingRetained<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2305"]
-  T11["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S11["method:JobsTextField::byInsetTop<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:115"]
+  T11["method:UIEdgeInsets::byTop<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIEdgeInsets.swift:15"]
   S11 -->|calls| T11
-  S12["method:ASDisplayNodeTests::testThatLayerDelegateDoesntDangleAndCauseCrash<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2333"]
-  T12["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S12["method:JobsTextField::byInsetTop<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:115"]
+  T12["method:JobsTextField::updateTextInsets<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:59"]
   S12 -->|calls| T12
-  S13["method:ASDisplayNodeTests::testThatLayerDelegateDoesntDangleAndCauseCrash<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2333"]
-  T13["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S13["method:JobsTextField::byInsetLeft<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:122"]
+  T13["method:UIEdgeInsets::byLeft<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIEdgeInsets.swift:21"]
   S13 -->|calls| T13
-  S14["method:ASDisplayNodeTests::testThatSubnodeGetsInterfaceStateSetIfRasterized<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2347"]
-  T14["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S14["method:JobsTextField::byInsetLeft<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:122"]
+  T14["method:JobsTextField::updateTextInsets<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:59"]
   S14 -->|calls| T14
-  S15["method:ASDisplayNodeTests::testThatSubnodeGetsInterfaceStateSetIfRasterized<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2347"]
-  T15["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S15["method:JobsTextField::byInsetBottom<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:129"]
+  T15["method:UIEdgeInsets::byBottom<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIEdgeInsets.swift:27"]
   S15 -->|calls| T15
-  S16["method:ASDisplayNodeTests::testThatSubnodeGetsInterfaceStateSetIfRasterized<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2347"]
-  T16["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
+  S16["method:JobsTextField::byInsetBottom<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:129"]
+  T16["method:JobsTextField::updateTextInsets<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:59"]
   S16 -->|calls| T16
-  S17["method:ASDisplayNodeTests::testThatItsSafeToAutomeasureANodeMidTransition<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2369"]
-  T17["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S17["method:JobsTextField::byInsetRight<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:136"]
+  T17["method:UIEdgeInsets::byRight<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIEdgeInsets.swift:33"]
   S17 -->|calls| T17
-  S18["method:ASDisplayNodeTests::testThatItsSafeToAutomeasureANodeMidTransition<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2369"]
-  T18["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S18["method:JobsTextField::byInsetRight<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:136"]
+  T18["method:JobsTextField::updateTextInsets<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:59"]
   S18 -->|calls| T18
-  S19["method:ASDisplayNodeTests::testThatOnDidLoadThrowsIfCalledOnLoadedOffMain<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2385"]
-  T19["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S19["method:JobsTextField::byInsetHorizontal<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:143"]
+  T19["method:UIEdgeInsets::byHorizontal<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIEdgeInsets.swift:39"]
   S19 -->|calls| T19
-  S20["method:ASDisplayNodeTests::testThatOnDidLoadThrowsIfCalledOnLoadedOffMain<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2385"]
-  T20["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
+  S20["method:JobsTextField::byInsetHorizontal<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:143"]
+  T20["method:JobsTextField::updateTextInsets<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:59"]
   S20 -->|calls| T20
-  S21["method:ASDisplayNodeTests::testThatOnDidLoadThrowsIfCalledOnLoadedOffMain<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2385"]
-  T21["function:ASCollectionViewTests::testThatDeletingAndReloadingTheSameItemThrowsAnException::XCTAssertThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:473"]
+  S21["method:JobsTextField::byInsetVertical<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:150"]
+  T21["method:UIEdgeInsets::byVertical<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIEdgeInsets.swift:46"]
   S21 -->|calls| T21
-  S22["method:ASDisplayNodeTests::testThatOnDidLoadWorks<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2394"]
-  T22["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S22["method:JobsTextField::byInsetVertical<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:150"]
+  T22["method:JobsTextField::updateTextInsets<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:59"]
   S22 -->|calls| T22
-  S23["method:ASDisplayNodeTests::testThatOnDidLoadWorks<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2394"]
-  T23["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
+  S23["method:JobsTextField::byInsetAll<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:157"]
+  T23["method:JobsTextField::updateTextInsets<br/>JobsByPods/JobsInheritance@Pods/UITextField/JobsTextField.swift:59"]
   S23 -->|calls| T23
-  S24["method:ASDisplayNodeTests::testSettingPropertiesViaStyllableProtocol<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2412"]
-  T24["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S24["method:BaseVC::viewDidLoad<br/>JobsByPods/JobsInheritance@Pods/UIViewController/BaseVC.swift:28"]
+  T24["method:PDFThumbnailView::byBackgroundColor<br/>JobsByPods/JobsSwiftDSL@Pods/PDFKit/PDFThumbnailView.swift:32"]
   S24 -->|calls| T24
-  S25["method:ASDisplayNodeTests::testSettingPropertiesViaStyllableProtocol<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTests.mm:2412"]
-  T25["function:ASDimensionMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:18"]
+  S25["method:BaseVC::viewWillAppear<br/>JobsByPods/JobsInheritance@Pods/UIViewController/BaseVC.swift:34"]
+  T25["method:ASDKViewController::viewWillAppear:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:182"]
   S25 -->|calls| T25
 ```
 

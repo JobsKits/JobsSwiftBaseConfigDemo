@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASDimensionTests::testIntersectingSizeRangeWithRangeContainedWithinItReturnsContainedRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDimensionTests.mm:67"]
-  T1["function:NSStringFromASSizeRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:95"]
+  S1["class:JobsChargingAnimationView<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:593"]
+  T1["method:JobsChargingAnimationView::jobs_setupChargingAnimation<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:719"]
   S1 -->|calls| T1
-  S2["method:ASDimensionTests::testIntersectingSizeRangeWithNonOverlappingRangeToRightReturnsSinglePointNearestOtherRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDimensionTests.mm:80"]
-  T2["function:ASSizeRangeIntersect<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:88"]
+  S2["class:JobsChargingAnimationView<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:593"]
+  T2["method:JobsTimer::stop<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:288"]
   S2 -->|calls| T2
-  S3["method:ASDimensionTests::testIntersectingSizeRangeWithNonOverlappingRangeToRightReturnsSinglePointNearestOtherRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDimensionTests.mm:80"]
-  T3["function:ASSizeRangeEqualToSizeRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:290"]
+  S3["method:JobsChargingAnimationView::layoutSubviews<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:625"]
+  T3["method:JobsChargingAnimationView::jobs_layoutChargingSegments<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:747"]
   S3 -->|calls| T3
-  S4["method:ASDimensionTests::testIntersectingSizeRangeWithNonOverlappingRangeToRightReturnsSinglePointNearestOtherRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDimensionTests.mm:80"]
-  T4["function:NSStringFromASSizeRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:95"]
+  S4["method:JobsChargingAnimationView::didMoveToWindow<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:630"]
+  T4["method:JobsChargingAnimationView::jobs_syncChargingTimerState<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:794"]
   S4 -->|calls| T4
-  S5["method:ASDimensionTests::testIntersectingSizeRangeWithNonOverlappingRangeToRightReturnsSinglePointNearestOtherRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDimensionTests.mm:80"]
-  T5["function:NSStringFromASSizeRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:95"]
+  S5["method:JobsChargingAnimationView::traitCollectionDidChange<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:635"]
+  T5["method:ASDKViewController::traitCollectionDidChange:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:324"]
   S5 -->|calls| T5
-  S6["method:ASDimensionTests::testIntersectingSizeRangeWithNonOverlappingRangeToLeftReturnsSinglePointNearestOtherRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDimensionTests.mm:93"]
-  T6["function:ASSizeRangeIntersect<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:88"]
+  S6["method:JobsChargingAnimationView::traitCollectionDidChange<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:635"]
+  T6["method:JobsChargingAnimationView::jobs_applyChargingColors<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:767"]
   S6 -->|calls| T6
-  S7["method:ASDimensionTests::testIntersectingSizeRangeWithNonOverlappingRangeToLeftReturnsSinglePointNearestOtherRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDimensionTests.mm:93"]
-  T7["function:ASSizeRangeEqualToSizeRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:290"]
+  S7["method:JobsChargingAnimationView::byConfig<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:641"]
+  T7["method:JobsChargingAnimationView::jobs_stopChargingTimer<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:820"]
   S7 -->|calls| T7
-  S8["method:ASDimensionTests::testIntersectingSizeRangeWithNonOverlappingRangeToLeftReturnsSinglePointNearestOtherRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDimensionTests.mm:93"]
-  T8["function:NSStringFromASSizeRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:95"]
+  S8["method:JobsChargingAnimationView::byConfig<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:641"]
+  T8["method:JobsChargingAnimationView::jobs_rebuildChargingSegments<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:735"]
   S8 -->|calls| T8
-  S9["method:ASDimensionTests::testIntersectingSizeRangeWithNonOverlappingRangeToLeftReturnsSinglePointNearestOtherRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDimensionTests.mm:93"]
-  T9["function:NSStringFromASSizeRange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.mm:95"]
+  S9["method:JobsChargingAnimationView::byConfig<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:641"]
+  T9["method:JobsChargingAnimationView::jobs_syncChargingTimerState<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:794"]
   S9 -->|calls| T9
-  S10["method:ASDispatchTests::testDispatchApply<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDispatchTests.mm:19"]
-  T10["function:ASDispatchApply<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASDispatch.mm:15"]
+  S10["method:JobsChargingAnimationView::byStart<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:664"]
+  T10["method:JobsChargingAnimationView::jobs_applyChargingColors<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:767"]
   S10 -->|calls| T10
-  S11["method:ASDispatchTests::testDispatchApply<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDispatchTests.mm:19"]
-  T11["method:ASNodeController::lock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNodeController+Beta.mm:112"]
+  S11["method:JobsChargingAnimationView::byStart<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:664"]
+  T11["method:JobsChargingAnimationView::jobs_syncChargingTimerState<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:794"]
   S11 -->|calls| T11
-  S12["method:ASDispatchTests::testDispatchApply<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDispatchTests.mm:19"]
-  T12["method:ASNodeController::unlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNodeController+Beta.mm:117"]
+  S12["method:JobsChargingAnimationView::byPause<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:676"]
+  T12["method:JobsTimer::pause<br/>JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.swift:170"]
   S12 -->|calls| T12
-  S13["method:ASDispatchTests::testDispatchAsync<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDispatchTests.mm:39"]
-  T13["function:ASDispatchAsync<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASDispatch.mm:33"]
+  S13["method:JobsChargingAnimationView::byResume<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:684"]
+  T13["method:JobsChargingAnimationView::jobs_syncChargingTimerState<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:794"]
   S13 -->|calls| T13
-  S14["method:ASDispatchTests::testDispatchAsync<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDispatchTests.mm:39"]
-  T14["method:ASNodeController::lock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNodeController+Beta.mm:112"]
+  S14["method:JobsChargingAnimationView::byStop<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:692"]
+  T14["method:JobsChargingAnimationView::jobs_stopChargingTimer<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:820"]
   S14 -->|calls| T14
-  S15["method:ASDispatchTests::testDispatchAsync<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDispatchTests.mm:39"]
-  T15["method:ASNodeController::unlock<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASNodeController+Beta.mm:117"]
+  S15["method:JobsChargingAnimationView::byStop<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:692"]
+  T15["method:JobsChargingAnimationView::jobs_applyChargingColors<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:767"]
   S15 -->|calls| T15
-  S16["method:_ASDisplayLayerTestLayer::display<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:97"]
-  T16["method:_ASDisplayLayerTestLayer::display<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:97"]
+  S16["method:JobsChargingAnimationView::byAdvance<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:703"]
+  T16["method:JobsChargingAnimationView::jobs_applyChargingColors<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:767"]
   S16 -->|calls| T16
-  S17["method:_ASDisplayLayerTestLayer::cancelAsyncDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:105"]
-  T17["method:_ASDisplayLayerTestLayer::cancelAsyncDisplay<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:105"]
+  S17["method:JobsChargingAnimationView::jobs_setupChargingAnimation<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:719"]
+  T17["method:UIView::byBackgroundColor<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIView/UIView+DSL.swift:733"]
   S17 -->|calls| T17
-  S18["method:_ASDisplayLayerTestDelegate::displayWithParameters:isCancelled:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:212"]
-  T18["function:bogusImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:20"]
+  S18["method:JobsChargingAnimationView::jobs_setupChargingAnimation<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:719"]
+  T18["method:JobsChargingAnimationView::jobs_rebuildChargingSegments<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:735"]
   S18 -->|calls| T18
-  S19["method:_ASDisplayLayerTests::setUp<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:240"]
-  T19["method:_ASDisplayLayerTests::setUp<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:240"]
+  S19["method:JobsChargingAnimationView::jobs_reduceMotionStatusDidChange<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:731"]
+  T19["method:JobsChargingAnimationView::jobs_syncChargingTimerState<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:794"]
   S19 -->|calls| T19
-  S20["method:_ASDisplayLayerTests::setUp<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:240"]
-  T20["function:bogusImage<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:20"]
+  S20["method:JobsChargingAnimationView::jobs_rebuildChargingSegments<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:735"]
+  T20["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:104"]
   S20 -->|calls| T20
-  S21["method:_ASDisplayLayerTests::waitForDisplayQueue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:259"]
-  T21["method:_ASDisplayLayer::displayQueue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:130"]
+  S21["method:JobsChargingAnimationView::jobs_rebuildChargingSegments<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:735"]
+  T21["method:ASIntegerMap::mapForUpdateWithOldCount:deleted:inserted:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASIntegerMap.mm:53"]
   S21 -->|calls| T21
-  S22["method:_ASDisplayLayerTests::waitForDisplayQueue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:259"]
-  T22["function:ASDisplayNodeRunRunLoopUntilBlockIsTrue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:25"]
+  S22["method:JobsChargingAnimationView::jobs_rebuildChargingSegments<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:735"]
+  T22["method:JobsTaskExecutionSequence::forEach<br/>JobsByPods/JobsSwiftTaskCenter@Pods/JobsTaskExecutionSequence.swift:104"]
   S22 -->|calls| T22
-  S23["method:_ASDisplayLayerTests::waitForLayer:asyncDisplayCount:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:269"]
-  T23["function:ASDisplayNodeRunRunLoopUntilBlockIsTrue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:25"]
+  S23["method:JobsChargingAnimationView::jobs_rebuildChargingSegments<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:735"]
+  T23["method:JobsChargingAnimationView::jobs_layoutChargingSegments<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:747"]
   S23 -->|calls| T23
-  S24["method:_ASDisplayLayerTests::waitForAsyncDelegate:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:278"]
-  T24["function:ASDisplayNodeRunRunLoopUntilBlockIsTrue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayNodeTestsHelper.mm:25"]
+  S24["method:JobsChargingAnimationView::jobs_rebuildChargingSegments<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:735"]
+  T24["method:JobsChargingAnimationView::jobs_applyChargingColors<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:767"]
   S24 -->|calls| T24
-  S25["method:_ASDisplayLayerTests::checkDelegateDisplay:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASDisplayLayerTests.mm:285"]
-  T25["method:_ASDisplayLayer::displayQueue<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/_ASDisplayLayer.mm:130"]
+  S25["method:JobsChargingAnimationView::jobs_layoutChargingSegments<br/>JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.swift:747"]
+  T25["method:JobsOCCentralLab::beginWithLog:timeout:<br/>SwiftDoc.md/iOS蓝牙开发实战与面试.md/Demo/OC/JobsOCCentralLab.m:23"]
   S25 -->|calls| T25
 ```
 

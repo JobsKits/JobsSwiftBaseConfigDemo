@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASPagerFlowLayout::prepareLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerFlowLayout.mm:29"]
-  T1["method:ASPagerFlowLayout::prepareLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerFlowLayout.mm:29"]
+  S1["method:JobsAppIconRibbonGenerator::run<br/>JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbonGenerator.swift:158"]
+  T1["method:JobsAppIconRibbonGenerator::render<br/>JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbonGenerator.swift:191"]
   S1 -->|calls| T1
-  S2["method:ASPagerFlowLayout::prepareLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerFlowLayout.mm:29"]
-  T2["method:ASPagerFlowLayout::_updateCurrentNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerFlowLayout.mm:72"]
+  S2["method:JobsAppIconRibbonGenerator::run<br/>JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbonGenerator.swift:158"]
+  T2["method:ASCollectionNode::moveItemAtIndexPath:toIndexPath:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:1163"]
   S2 -->|calls| T2
-  S3["method:ASPagerFlowLayout::targetContentOffsetForProposedContentOffset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerFlowLayout.mm:37"]
-  T3["method:ASPagerFlowLayout::_targetContentOffsetForItemAtIndexPath:proposedContentOffset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerFlowLayout.mm:51"]
+  S3["method:JobsAppIconRibbonGenerator::render<br/>JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbonGenerator.swift:191"]
+  T3["method:ASHighlightOverlayLayer::drawInContext:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASHighlightOverlayLayer.mm:70"]
   S3 -->|calls| T3
-  S4["method:ASPagerFlowLayout::_targetContentOffsetForItemAtIndexPath:proposedContentOffset:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerFlowLayout.mm:51"]
-  T4["method:ASPagerFlowLayout::_dataSourceIsEmpty<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerFlowLayout.mm:66"]
+  S4["method:JobsAppIconRibbonGenerator::render<br/>JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbonGenerator.swift:191"]
+  T4["method:JobsAppIconRibbonGenerator::drawRibbon<br/>JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbonGenerator.swift:243"]
   S4 -->|calls| T4
-  S5["method:ASPagerFlowLayout::shouldInvalidateLayoutForBoundsChange:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerFlowLayout.mm:96"]
-  T5["method:ASPagerFlowLayout::_updateCurrentNode<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerFlowLayout.mm:72"]
+  S5["method:JobsAppIconRibbonGenerator::drawRibbon<br/>JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbonGenerator.swift:243"]
+  T5["method:ASTextLine::lineWithCTLine:position:vertical:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLine.mm:17"]
   S5 -->|calls| T5
-  S6["method:ASPagerNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:44"]
-  T6["method:ASPagerNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:44"]
+  S6["method:JobsAppIconRibbonGenerator::drawRibbon<br/>JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbonGenerator.swift:243"]
+  T6["method:ASTextLine::lineWithCTLine:position:vertical:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLine.mm:17"]
   S6 -->|calls| T6
-  S7["method:ASPagerNode::initUsingAsyncCollectionLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:62"]
-  T7["method:ASCollectionNode::initWithLayoutDelegate:layoutFacilitator:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:272"]
+  S7["method:JobsAppIconRibbonGenerator::drawRibbon<br/>JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbonGenerator.swift:243"]
+  T7["method:ASTextLine::lineWithCTLine:position:vertical:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextLine.mm:17"]
   S7 -->|calls| T7
-  S8["method:ASPagerNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:74"]
-  T8["method:ASPagerNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:74"]
+  S8["method:JobsAppIconRibbonGenerator::drawRibbon<br/>JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbonGenerator.swift:243"]
+  T8["method:ASCollectionView::sizeForElement:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionView.mm:679"]
   S8 -->|calls| T8
-  S9["method:ASPagerNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:74"]
-  T9["method:_ASCollectionPendingState::setTuningParameters:forRangeMode:rangeType:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:224"]
+  S9["method:JobsAppIconRibbonGenerator::drawRibbon<br/>JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbonGenerator.swift:243"]
+  T9["method:JobsCoreTextScrollLayer::draw<br/>JobsByPods/JobsSwiftUILabelScrolling@Pods/Core/JobsCoreTextScrollLayer/JobsCoreTextScrollLayer.swift:86"]
   S9 -->|calls| T9
-  S10["method:ASPagerNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:74"]
-  T10["method:_ASCollectionPendingState::setTuningParameters:forRangeMode:rangeType:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:224"]
+  S10["file:JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbonGenerator.swift<br/>JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbonGenerator.swift:1"]
+  T10["method:JobsAppIconRibbonGenerator::run<br/>JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbonGenerator.swift:158"]
   S10 -->|calls| T10
-  S11["method:ASPagerNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:74"]
-  T11["method:_ASCollectionPendingState::setTuningParameters:forRangeMode:rangeType:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:224"]
+  S11["property:JobsAudioPlayerEngine::playingURL<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:13"]
+  T11["function:jobsAudioOnMain<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioSessionCoordinator.swift:11"]
   S11 -->|calls| T11
-  S12["method:ASPagerNode::didLoad<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:74"]
-  T12["method:_ASCollectionPendingState::setTuningParameters:forRangeMode:rangeType:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:224"]
+  S12["property:JobsAudioPlayerEngine::onError<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:15"]
+  T12["function:jobsAudioOnMain<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioSessionCoordinator.swift:11"]
   S12 -->|calls| T12
-  S13["method:ASPagerNode::currentPageIndex<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:102"]
-  T13["method:ASPagerNode::pageSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:107"]
+  S13["property:JobsAudioPlayerEngine::onError<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:15"]
+  T13["function:jobsAudioOnMain<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioSessionCoordinator.swift:11"]
   S13 -->|calls| T13
-  S14["method:ASPagerNode::scrollToPageAtIndex:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:117"]
-  T14["method:ASCollectionNode::scrollToItemAtIndexPath:atScrollPosition:animated:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:869"]
+  S14["class:JobsAudioPlayerEngine<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:10"]
+  T14["method:JobsAudioPlayerEngine::stop<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:66"]
   S14 -->|calls| T14
-  S15["method:ASPagerNode::galleryLayoutDelegate:sizeForElements:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:139"]
-  T15["method:ASPagerNode::pageSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:107"]
+  S15["class:JobsAudioPlayerEngine<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:10"]
+  T15["property:JobsAudioPlayerEngine::onError<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:15"]
   S15 -->|calls| T15
-  S16["method:ASPagerNode::collectionNode:nodeBlockForItemAtIndexPath:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:147"]
-  T16["method:ASPagerNode::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:44"]
+  S16["class:JobsAudioPlayerEngine<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:10"]
+  T16["type_alias:NSError<br/>Unity/xcode_effectTest/Classes/Unity/UnityForwardDecls.h:34"]
   S16 -->|calls| T16
-  S17["method:ASPagerNode::collectionNode:constrainedSizeForItemAtIndexPath:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:170"]
-  T17["function:ASSizeRangeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:248"]
+  S17["method:JobsAudioPlayerEngine::toggle<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:39"]
+  T17["function:jobsAudioOnMain<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioSessionCoordinator.swift:11"]
   S17 -->|calls| T17
-  S18["method:ASPagerNode::collectionNode:constrainedSizeForItemAtIndexPath:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:170"]
-  T18["method:ASPagerNode::pageSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:107"]
+  S18["method:JobsAudioPlayerEngine::toggle<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:39"]
+  T18["method:JobsAudioPlayerEngine::stop<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:66"]
   S18 -->|calls| T18
-  S19["method:ASPagerNode::setDataSource:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:182"]
-  T19["method:ASDelegateProxy::initWithTarget:interceptor:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASDelegateProxy.mm:176"]
+  S19["method:JobsAudioPlayerEngine::toggle<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:39"]
+  T19["method:JobsAudioPlayerEngine::stop<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:66"]
   S19 -->|calls| T19
-  S20["method:ASPagerNode::setDelegate:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:200"]
-  T20["method:ASDelegateProxy::initWithTarget:interceptor:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASDelegateProxy.mm:176"]
+  S20["method:JobsAudioPlayerEngine::toggle<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:39"]
+  T20["method:JobsAudioSessionCoordinator::acquire<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioSessionCoordinator.swift:24"]
   S20 -->|calls| T20
-  S21["method:ASPagerNode::didEnterHierarchy<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:215"]
-  T21["method:ASPagerNode::didEnterHierarchy<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerNode.mm:215"]
+  S21["method:JobsAudioPlayerEngine::toggle<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:39"]
+  T21["method:PlayerCenterImpl::play<br/>JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@BMPlayer/Model/PlayerCenter.swift:37"]
   S21 -->|calls| T21
-  S22["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASRunLoopQueue.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASRunLoopQueue.h:1"]
-  T22["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S22["method:JobsAudioPlayerEngine::toggle<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:39"]
+  T22["method:JobsAudioPlayerEngine::stop<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:66"]
   S22 -->|calls| T22
-  S23["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASRunLoopQueue.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASRunLoopQueue.h:1"]
-  T23["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S23["method:JobsAudioPlayerEngine::toggle<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:39"]
+  T23["type_alias:NSError<br/>Unity/xcode_effectTest/Classes/Unity/UnityForwardDecls.h:34"]
   S23 -->|calls| T23
-  S24["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASRunLoopQueue.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASRunLoopQueue.h:1"]
-  T24["method:ASTextRange::end<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Component/ASTextInput.mm:74"]
+  S24["method:JobsAudioPlayerEngine::toggle<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:39"]
+  T24["method:JobsAudioSessionCoordinator::release<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioSessionCoordinator.swift:46"]
   S24 -->|calls| T24
-  S25["file:JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASRunLoopQueue.h<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASRunLoopQueue.h:1"]
-  T25["variable:property<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/TextExperiment/Utility/NSAttributedString+ASText.h:60"]
+  S25["method:JobsAudioPlayerEngine::stop<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:66"]
+  T25["function:jobsAudioOnMain<br/>JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioSessionCoordinator.swift:11"]
   S25 -->|calls| T25
 ```
 

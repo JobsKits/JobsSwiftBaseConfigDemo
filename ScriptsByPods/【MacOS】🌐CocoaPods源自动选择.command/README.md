@@ -12,6 +12,8 @@
 
 测速只决定本次安装使用哪个公共 Specs 源；后续规格获取、源码下载和安装结果仍由 CocoaPods 处理。
 
+本工程的 Podfile 会先调用独立的 [CocoaPods 网络适配包](<../【MacOS】🌐CocoaPods网络适配.command/README.md>)，测试当前链路及机器上已启用的系统代理，再进入本包的 Specs 测试；本包继承同一安装进程的环境。网络适配包还针对已核验的 `AMPopTip 4.12.0` 提供官方源码归档回退。SwiftUI、OC 新旧及其它 Jobs 自维护工程采用同样的完整挂载顺序，分别携带自己的脚本包；源码回退与 Specs 选源分开处理，不会添加或升级工程依赖。
+
 ## 一、目录与挂载 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 文件 | 职责 |

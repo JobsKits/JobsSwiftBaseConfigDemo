@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASDKViewController::initWithNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:55"]
-  T1["method:ASDKViewController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:31"]
+  S1["method:JobsSwiftBlockRegression::verifyCallbacks<br/>.github/tests/JobsSwiftBlockRegression.swift:68"]
+  T1["method:JobsCallbackable::jobs_callback<br/>JobsByPods/JobsSwiftBlock@Pods/JobsCallbackable.swift:61"]
   S1 -->|calls| T1
-  S2["method:ASDKViewController::initWithNode:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:55"]
-  T2["method:ASDKViewController::_initializeInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:78"]
+  S2["method:JobsSwiftBlockRegression::verifyCallbacks<br/>.github/tests/JobsSwiftBlockRegression.swift:68"]
+  T2["method:JobsCallbackable::jobsBy<br/>JobsByPods/JobsSwiftBlock@Pods/JobsCallbackable.swift:55"]
   S2 -->|calls| T2
-  S3["method:ASDKViewController::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:67"]
-  T3["method:ASDKViewController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:31"]
+  S3["method:JobsSwiftBlockRegression::verifyCallbacks<br/>.github/tests/JobsSwiftBlockRegression.swift:68"]
+  T3["method:JobsCallbackable::jobsBy<br/>JobsByPods/JobsSwiftBlock@Pods/JobsCallbackable.swift:55"]
   S3 -->|calls| T3
-  S4["method:ASDKViewController::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:67"]
-  T4["method:ASDKViewController::_initializeInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:78"]
+  S4["method:JobsSwiftBlockRegression::verifyPureSwiftCallbacks<br/>.github/tests/JobsSwiftBlockRegression.swift:99"]
+  T4["method:JobsCallbackable::jobsBy<br/>JobsByPods/JobsSwiftBlock@Pods/JobsCallbackable.swift:55"]
   S4 -->|calls| T4
-  S5["method:ASDKViewController::_initializeInstance<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:78"]
-  T5["method:ASCollectionNode::view<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:371"]
+  S5["method:JobsSwiftBlockRegression::verifyPureSwiftCallbacks<br/>.github/tests/JobsSwiftBlockRegression.swift:99"]
+  T5["method:JobsCallbackable::jobsCall<br/>JobsByPods/JobsSwiftBlock@Pods/JobsCallbackable.swift:77"]
   S5 -->|calls| T5
-  S6["method:ASDKViewController::loadView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:108"]
-  T6["method:ASDKViewController::loadView<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:108"]
+  S6["method:JobsSimulatorSelection::select<br/>.github/tests/SimulatorRuntime/select_simulator.rb:18"]
+  T6["method:JobsSimulatorSelection::version<br/>.github/tests/SimulatorRuntime/select_simulator.rb:11"]
   S6 -->|calls| T6
-  S7["method:ASDKViewController::viewWillLayoutSubviews<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:138"]
-  T7["method:ASDKViewController::viewWillLayoutSubviews<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:138"]
+  S7["method:JobsSimulatorSelection::select<br/>.github/tests/SimulatorRuntime/select_simulator.rb:18"]
+  T7["method:JobsSimulatorSelection::version<br/>.github/tests/SimulatorRuntime/select_simulator.rb:11"]
   S7 -->|calls| T7
-  S8["method:ASDKViewController::viewWillLayoutSubviews<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:138"]
-  T8["method:ASDKViewController::nodeConstrainedSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:273"]
+  S8["class:Human<br/>Generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift:19"]
+  T8["type_alias:Human::EntityBindingType<br/>Generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift:20"]
   S8 -->|calls| T8
-  S9["method:ASDKViewController::viewDidLayoutSubviews<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:161"]
-  T9["method:ASDKViewController::viewDidLayoutSubviews<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:161"]
+  S9["method:HumanBinding::collect<br/>Generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift:107"]
+  T9["method:_ASTableViewCell::prepareForReuse<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASTableView.mm:155"]
   S9 -->|calls| T9
-  S10["method:ASDKViewController::_updateNodeFallbackSafeArea<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:170"]
-  T10["function:ASConcatInsets<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASInternalHelpers.h:90"]
+  S10["method:HumanBinding::createEntity<br/>Generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift:116"]
+  T10["method:UnityWebRequestUploadStream::read:maxLength:<br/>Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:317"]
   S10 -->|calls| T10
-  S11["method:ASDKViewController::viewWillAppear:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:182"]
-  T11["function:ASNodeLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:29"]
+  S11["method:HumanBinding::createEntity<br/>Generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift:116"]
+  T11["method:UnityWebRequestUploadStream::read:maxLength:<br/>Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:317"]
   S11 -->|calls| T11
-  S12["method:ASDKViewController::visibilityDepthDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:207"]
-  T12["function:ASLayoutRangeModeForVisibilityDepth<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASVisibilityProtocols.mm:12"]
+  S12["method:HumanBinding::createEntity<br/>Generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift:116"]
+  T12["method:UnityWebRequestUploadStream::read:maxLength:<br/>Unity/xcode_effectTest/Classes/Unity/UnityWebRequest.mm:317"]
   S12 -->|calls| T12
-  S13["method:ASDKViewController::visibilityDepthDidChange<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:207"]
-  T13["function:ASNodeLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:29"]
+  S13["function:cModel<br/>Generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift:136"]
+  T13["method:Human::buildEntity<br/>Generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift:27"]
   S13 -->|calls| T13
-  S14["method:ASDKViewController::nodeConstrainedSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:273"]
-  T14["function:ASSizeRangeMake<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASDimension.h:248"]
+  S14["class:Store<br/>Generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift:143"]
+  T14["function:cModel<br/>Generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift:136"]
   S14 -->|calls| T14
-  S15["method:ASDKViewController::primitiveTraitCollectionForUITraitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:295"]
-  T15["method:ASDisplayNode::primitiveTraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDisplayNode+Layout.mm:126"]
+  S15["method:BRSlideAnimation::animateIn<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:23"]
+  T15["method:UIView::byFrame<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIView/UIView+修改位置大小.swift:111"]
   S15 -->|calls| T15
-  S16["method:ASDKViewController::primitiveTraitCollectionForUITraitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:295"]
-  T16["function:ASPrimitiveTraitCollectionFromUITraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:51"]
+  S16["method:BRSlideAnimation::animateIn<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:23"]
+  T16["method:UIView::byAlpha<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:54"]
   S16 -->|calls| T16
-  S17["method:ASDKViewController::propagateNewTraitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:308"]
-  T17["function:ASPrimitiveTraitCollectionIsEqualToASPrimitiveTraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:92"]
+  S17["method:BRSlideAnimation::animateIn<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:23"]
+  T17["method:UIView::byFrame<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIView/UIView+修改位置大小.swift:111"]
   S17 -->|calls| T17
-  S18["method:ASDKViewController::propagateNewTraitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:308"]
-  T18["function:ASNodeLog<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Base/ASLog.mm:29"]
+  S18["method:BRSlideAnimation::animateIn<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:23"]
+  T18["method:UIView::byAlpha<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:54"]
   S18 -->|calls| T18
-  S19["method:ASDKViewController::propagateNewTraitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:308"]
-  T19["function:NSStringFromASPrimitiveTraitCollection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:218"]
+  S19["method:BRSlideAnimation::animateOut<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:31"]
+  T19["method:UIView::byFrame<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIView/UIView+修改位置大小.swift:111"]
   S19 -->|calls| T19
-  S20["method:ASDKViewController::propagateNewTraitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:308"]
-  T20["function:ASTraitCollectionPropagateDown<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASTraitCollection.mm:18"]
+  S20["method:BRSlideAnimation::animateOut<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:31"]
+  T20["method:UIView::byAlpha<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:54"]
   S20 -->|calls| T20
-  S21["method:ASDKViewController::propagateNewTraitCollection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:308"]
-  T21["method:ASDKViewController::nodeConstrainedSize<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDKViewController.mm:273"]
+  S21["method:BRSpringAnimation::animateIn<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:41"]
+  T21["method:UIView::byFrame<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIView/UIView+修改位置大小.swift:111"]
   S21 -->|calls| T21
-  S22["method:ASDefaultImageDownloader::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:30"]
-  T22["method:ASDefaultImageDownloader::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:30"]
+  S22["method:BRSpringAnimation::animateIn<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:41"]
+  T22["method:UIView::byAlpha<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:54"]
   S22 -->|calls| T22
-  S23["method:ASDefaultImageDownloader::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:30"]
-  T23["method:Mutex::Mutex<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASThread.h:118"]
+  S23["method:BRSpringAnimation::animateIn<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:41"]
+  T23["method:UIView::byFrame<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIView/UIView+修改位置大小.swift:111"]
   S23 -->|calls| T23
-  S24["method:ASDefaultImageDownloader::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:30"]
-  T24["method:ASPINRemoteImageDownloader::sharedDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASPINRemoteImageDownloader.mm:120"]
+  S24["method:BRSpringAnimation::animateIn<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:41"]
+  T24["method:UIView::byAlpha<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:54"]
   S24 -->|calls| T24
-  S25["method:ASDefaultImageDownloader::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASDefaultImageDownloader.mm:30"]
-  T25["method:ASBasicImageDownloader::sharedImageDownloader<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Details/ASBasicImageDownloader.mm:227"]
+  S25["method:BRSpringAnimation::animateOut<br/>JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift:53"]
+  T25["method:UIView::byFrame<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIView/UIView+修改位置大小.swift:111"]
   S25 -->|calls| T25
 ```
 

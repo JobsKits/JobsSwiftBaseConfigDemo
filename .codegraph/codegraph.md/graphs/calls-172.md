@@ -12,80 +12,80 @@
 
 ```mermaid
 flowchart LR
-  S1["method:ASCollectionViewTests::testThatSubmittingAValidReloadDoesNotThrowAnException<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:447"]
-  T1["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
+  S1["method:JobsLottieRefreshView::jobs_setupLottieRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsLottieRefreshView/JobsLottieRefreshView.swift:155"]
+  T1["method:UIView::byUserInteractionEnabled<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIView/UIView+DSL.swift:223"]
   S1 -->|calls| T1
-  S2["method:ASCollectionViewTests::testThatSubmittingAnInvalidInsertThrowsAnException<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:455"]
-  T2["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
+  S2["method:JobsLottieRefreshView::jobs_setupLottieRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsLottieRefreshView/JobsLottieRefreshView.swift:155"]
+  T2["method:UIView::byAddTo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:61"]
   S2 -->|calls| T2
-  S3["method:ASCollectionViewTests::testThatSubmittingAnInvalidInsertThrowsAnException<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:455"]
-  T3["function:ASCollectionViewTests::testThatDeletingAndReloadingTheSameItemThrowsAnException::XCTAssertThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:473"]
+  S3["method:JobsLottieRefreshView::jobs_setupLottieRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsLottieRefreshView/JobsLottieRefreshView.swift:155"]
+  T3["method:UIView::byUserInteractionEnabled<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIView/UIView+DSL.swift:223"]
   S3 -->|calls| T3
-  S4["method:ASCollectionViewTests::testThatSubmittingAnInvalidDeleteThrowsAnException<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:463"]
-  T4["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
+  S4["method:JobsLottieRefreshView::jobs_setupLottieRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsLottieRefreshView/JobsLottieRefreshView.swift:155"]
+  T4["method:UIView::byContentMode<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIView/UIView+DSL.swift:211"]
   S4 -->|calls| T4
-  S5["method:ASCollectionViewTests::testThatSubmittingAnInvalidDeleteThrowsAnException<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:463"]
-  T5["function:ASCollectionViewTests::testThatDeletingAndReloadingTheSameItemThrowsAnException::XCTAssertThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:473"]
+  S5["method:JobsLottieRefreshView::jobs_setupLottieRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsLottieRefreshView/JobsLottieRefreshView.swift:155"]
+  T5["method:LottieAnimationView::byBackgroundBehavior<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+Lottie.swift:153"]
   S5 -->|calls| T5
-  S6["method:ASCollectionViewTests::testThatInsertingAnInvalidSectionThrowsAnException<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:505"]
-  T6["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
+  S6["class:JobsSystemRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsSystemRefreshView/JobsSystemRefreshView.swift:18"]
+  T6["method:UIActivityIndicatorView::byHidesWhenStopped<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIActivityIndicatorView/UIActivityIndicatorView+DSL.swift:28"]
   S6 -->|calls| T6
-  S7["method:ASCollectionViewTests::testThatInsertingAnInvalidSectionThrowsAnException<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:505"]
-  T7["function:ASCollectionViewTests::testThatHavingAnIncorrectItemCountWithNoUpdatesThrowsAnException::XCTAssertThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:498"]
+  S7["class:JobsSystemRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsSystemRefreshView/JobsSystemRefreshView.swift:18"]
+  T7["method:UIView::byUserInteractionEnabled<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIView/UIView+DSL.swift:223"]
   S7 -->|calls| T7
-  S8["method:ASCollectionViewTests::testThatDeletingAndReloadingASectionThrowsAnException<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:516"]
-  T8["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
+  S8["class:JobsSystemRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsSystemRefreshView/JobsSystemRefreshView.swift:18"]
+  T8["method:UIView::byAddTo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:61"]
   S8 -->|calls| T8
-  S9["method:ASCollectionViewTests::testThatDeletingAndReloadingASectionThrowsAnException<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:516"]
-  T9["function:ASCollectionViewTests::testThatHavingAnIncorrectItemCountWithNoUpdatesThrowsAnException::XCTAssertThrows<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:498"]
+  S9["class:JobsSystemRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsSystemRefreshView/JobsSystemRefreshView.swift:18"]
+  T9["method:UIView::byUserInteractionEnabled<br/>JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/UIView/UIView+DSL.swift:223"]
   S9 -->|calls| T9
-  S10["method:ASCollectionViewTests::testItemsInsertedIntoThePreloadRangeGetPreloaded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:529"]
-  T10["method:ASCollectionNode::indexPathsForVisibleItems<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:927"]
+  S10["class:JobsSystemRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsSystemRefreshView/JobsSystemRefreshView.swift:18"]
+  T10["method:UIView::byAddTo<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SnapKit.swift:61"]
   S10 -->|calls| T10
-  S11["method:ASCollectionViewTests::testItemsInsertedIntoThePreloadRangeGetPreloaded<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:529"]
-  T11["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
+  S11["method:JobsSystemRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsSystemRefreshView/JobsSystemRefreshView.swift:69"]
+  T11["method:UIListContentConfiguration::byAlpha<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIListContentConfiguration.swift:169"]
   S11 -->|calls| T11
-  S12["method:ASCollectionViewTests::testCellNodeIndexPathConsistency<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:653"]
-  T12["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
+  S12["method:JobsSystemRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsSystemRefreshView/JobsSystemRefreshView.swift:69"]
+  T12["method:UIView::byHidden<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:48"]
   S12 -->|calls| T12
-  S13["method:ASCollectionViewTests::testThatDisappearingSupplementariesWithLayerBackedNodesDontFailAssert<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:697"]
-  T13["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S13["method:JobsSystemRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsSystemRefreshView/JobsSystemRefreshView.swift:69"]
+  T13["method:UIBarButtonItem::byHidden<br/>JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIBarButtonItem/UIBarButtonItem.swift:117"]
   S13 -->|calls| T13
-  S14["method:ASCollectionViewTests::testThatDisappearingSupplementariesWithLayerBackedNodesDontFailAssert<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:697"]
-  T14["method:ASCollectionNode::initWithFrame:collectionViewLayout:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASCollectionNode.mm:267"]
+  S14["method:JobsSystemRefreshView::refreshAnimatorApply<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsSystemRefreshView/JobsSystemRefreshView.swift:69"]
+  T14["method:UIView::byAlpha<br/>JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift:54"]
   S14 -->|calls| T14
-  S15["method:ASCollectionViewTests::testThatDisappearingSupplementariesWithLayerBackedNodesDontFailAssert<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:697"]
-  T15["method:ASCollectionViewTestDelegate::collectionNode:nodeForSupplementaryElementOfKind:atIndexPath:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:125"]
+  S15["class:JobsTodayNewsRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:19"]
+  T15["method:JobsTodayNewsRefreshView::jobs_setupTodayNewsRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:167"]
   S15 -->|calls| T15
-  S16["method:ASCollectionViewTests::testThatDisappearingSupplementariesWithLayerBackedNodesDontFailAssert<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:697"]
-  T16["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S16["class:JobsTodayNewsRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:19"]
+  T16["method:JobsTodayNewsRefreshView::byConfig<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:70"]
   S16 -->|calls| T16
-  S17["method:ASCollectionViewTests::testThatDisappearingSupplementariesWithLayerBackedNodesDontFailAssert<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:697"]
-  T17["method:ASTestSection::init<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionModernDataSourceTests.mm:360"]
+  S17["class:JobsTodayNewsRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:19"]
+  T17["method:JobsTodayNewsRefreshView::jobs_setupTodayNewsRefreshView<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:167"]
   S17 -->|calls| T17
-  S18["method:ASCollectionViewTests::testThatDisappearingSupplementariesWithLayerBackedNodesDontFailAssert<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:697"]
-  T18["method:ASCollectionViewTestDelegate::collectionView:layout:referenceSizeForHeaderInSection:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:120"]
+  S18["method:JobsTodayNewsRefreshView::layoutSubviews<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:54"]
+  T18["method:JobsTodayNewsRefreshView::jobs_layoutMark<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:225"]
   S18 -->|calls| T18
-  S19["method:ASCollectionViewTests::testThatNodeCalculatedSizesAreUpdatedBeforeFirstPrepareLayoutAfterRotation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:743"]
-  T19["method:ASPagerFlowLayout::prepareLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/ASPagerFlowLayout.mm:29"]
+  S19["method:JobsTodayNewsRefreshView::layoutSubviews<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:54"]
+  T19["method:JobsTodayNewsRefreshView::jobs_installAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:269"]
   S19 -->|calls| T19
-  S20["method:ASCollectionViewTests::testThatNodeCalculatedSizesAreUpdatedBeforeFirstPrepareLayoutAfterRotation<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:743"]
-  T20["method:ASDisplayNode::bounds<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Private/ASDisplayNode+UIViewBridge.mm:299"]
+  S20["method:JobsTodayNewsRefreshView::didMoveToWindow<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:64"]
+  T20["method:JobsTodayNewsRefreshView::jobs_syncAnimationState<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:204"]
   S20 -->|calls| T20
-  S21["method:ASCollectionViewTests::testThatNestedBatchCompletionsAreCalledInOrder<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:784"]
-  T21["method:ASCollectionViewTestController::initWithNibName:bundle:<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:151"]
+  S21["method:JobsTodayNewsRefreshView::byConfig<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:70"]
+  T21["method:JobsTodayNewsRefreshView::jobs_removeAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:386"]
   S21 -->|calls| T21
-  S22["method:ASCollectionViewTests::testThatSectionContextsAreCorrectAfterTheInitialLayout<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:820"]
-  T22["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
+  S22["method:JobsTodayNewsRefreshView::byConfig<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:70"]
+  T22["method:JobsTodayNewsRefreshView::jobs_syncAnimationState<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:204"]
   S22 -->|calls| T22
-  S23["method:ASCollectionViewTests::testThatSectionContextsAreCorrectAfterSectionMove<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:832"]
-  T23["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
+  S23["method:JobsTodayNewsRefreshView::byStart<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:92"]
+  T23["method:JobsTodayNewsRefreshView::jobs_syncAnimationState<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:204"]
   S23 -->|calls| T23
-  S24["method:ASCollectionViewTests::testThatSectionContextsAreCorrectAfterReloadData<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:861"]
-  T24["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
+  S24["method:JobsTodayNewsRefreshView::byPause<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:100"]
+  T24["method:JobsTodayNewsRefreshView::jobs_pauseAnimations<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:367"]
   S24 -->|calls| T24
-  S25["method:ASCollectionViewTests::testThatSectionContextsAreCorrectAfterReloadASection<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Tests/ASCollectionViewTests.mm:878"]
-  T25["method:ASLayoutElementStyle::size<br/>JobsByPods/ManualBySwiftPods@Pods/Texture/Source/Layout/ASLayoutElement.mm:224"]
+  S25["method:JobsTodayNewsRefreshView::byResume<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:108"]
+  T25["method:JobsTodayNewsRefreshView::jobs_syncAnimationState<br/>JobsByPods/JobsFuseAnimation@Pods/Core/JobsTodayNewsRefreshView/JobsTodayNewsRefreshView.swift:204"]
   S25 -->|calls| T25
 ```
 
