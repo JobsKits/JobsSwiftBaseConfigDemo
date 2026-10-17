@@ -64,6 +64,35 @@ jobs:
           xcode-select -p
           pod --version
 
+      - name: Prepare test Simulator
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          set -euo pipefail
+          ruby .github/tests/SimulatorRuntime/selection_regression.rb
+          xcrun --sdk iphonesimulator --show-sdk-version | tee "${RUNNER_TEMP}/simulator-sdk-version.txt"
+          xcrun simctl list runtimes -j > "${RUNNER_TEMP}/simulator-runtimes.json"
+          xcrun simctl list devices available -j > "${RUNNER_TEMP}/simulator-devices.json"
+          ruby .github/tests/SimulatorRuntime/select_simulator.rb \
+            "$(cat "${RUNNER_TEMP}/simulator-sdk-version.txt")" \
+            "${RUNNER_TEMP}/simulator-runtimes.json" \
+            "${RUNNER_TEMP}/simulator-devices.json" \
+            > "${RUNNER_TEMP}/simulator-selection.env"
+          cat "${RUNNER_TEMP}/simulator-selection.env" >> "${GITHUB_ENV}"
+          simulator_id="$(sed -n 's/^SIMULATOR_ID=//p' "${RUNNER_TEMP}/simulator-selection.env")"
+          xcrun simctl bootstatus "${simulator_id}" -b
+
+          simulator_sdk_path="$(xcrun --sdk iphonesimulator --show-sdk-path)"
+          probe_path="${RUNNER_TEMP}/WebKitRuntimeProbe"
+          xcrun --sdk iphonesimulator swiftc -swift-version 5 -Onone \
+            -target arm64-apple-ios15.6-simulator -sdk "${simulator_sdk_path}" \
+            -framework WebKit \
+            .github/tests/SimulatorRuntime/WebKitRuntimeProbe.swift -o "${probe_path}" \
+            2>&1 | tee "${RUNNER_TEMP}/webkit-runtime-probe.log"
+          xcrun otool -L "${probe_path}" | tee "${RUNNER_TEMP}/webkit-runtime-probe-dependencies.log"
+          xcrun simctl spawn "${simulator_id}" "${probe_path}" \
+            2>&1 | tee -a "${RUNNER_TEMP}/webkit-runtime-probe.log"
+
       - name: Verify JobsSwiftBlock factory and callback regressions
         timeout-minutes: 5
         shell: bash
@@ -134,18 +163,6 @@ jobs:
             --skip-host --output-dir "${RUNNER_TEMP}/JobsPodsUnitBuilds" \
             --derived-data "${RUNNER_TEMP}/DerivedData"
 
-      - name: Prepare test Simulator
-        timeout-minutes: 5
-        shell: bash
-        run: |
-          set -euo pipefail
-          xcrun simctl list devices available -j > "${RUNNER_TEMP}/simulator-devices.json"
-          simulator_id="$(ruby -rjson -e \
-            'devices = JSON.parse(File.read(ARGV.fetch(0))).fetch("devices").select { |runtime, _| runtime.include?(".iOS-") }.values.flatten.select { |d| d["isAvailable"] && d.fetch("name").start_with?("iPhone") }; device = devices.find { |d| d.fetch("state") == "Booted" } || devices.first; abort "No available iPhone Simulator" unless device; puts device.fetch("udid")' \
-            "${RUNNER_TEMP}/simulator-devices.json")"
-          echo "SIMULATOR_ID=${simulator_id}" >> "${GITHUB_ENV}"
-          xcrun simctl bootstatus "${simulator_id}" -b
-
       - name: Build Simulator app and test bundle
         id: build
         timeout-minutes: 45
@@ -159,7 +176,7 @@ jobs:
             -scheme "${SCHEME}" \
             -configuration "${CONFIGURATION}" \
             -sdk "${SDK}" \
-            -destination "platform=iOS Simulator,id=${SIMULATOR_ID}" \
+            -destination "${SIMULATOR_DESTINATION}" \
             -jobs 2 \
             -derivedDataPath "${derived_data_path}" \
             SYMROOT="${derived_data_path}/Build/Products" \
@@ -181,7 +198,7 @@ jobs:
           set -euo pipefail
           xcodebuild -workspace "${WORKSPACE}" -scheme "${SCHEME}" \
             -configuration Debug -sdk iphonesimulator \
-            -destination "platform=iOS Simulator,id=${SIMULATOR_ID}" \
+            -destination "${SIMULATOR_DESTINATION}" \
             -jobs 2 \
             -derivedDataPath "${RUNNER_TEMP}/DerivedData" \
             SYMROOT="${RUNNER_TEMP}/DerivedData/Build/Products" \
@@ -202,7 +219,12 @@ jobs:
           name: Simulator-Build-Diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             ${{ runner.temp }}/pod-install.log
+            ${{ runner.temp }}/simulator-sdk-version.txt
+            ${{ runner.temp }}/simulator-runtimes.json
             ${{ runner.temp }}/simulator-devices.json
+            ${{ runner.temp }}/simulator-selection.env
+            ${{ runner.temp }}/webkit-runtime-probe.log
+            ${{ runner.temp }}/webkit-runtime-probe-dependencies.log
             ${{ runner.temp }}/simulator-build.log
             ${{ runner.temp }}/SimulatorBuild.xcresult
             ${{ runner.temp }}/JobsPodsUnitBuilds

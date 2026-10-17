@@ -225,23 +225,40 @@ def jobs_flutter_module_podhelper_path(flutter_application_path)
   File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')
 end
 
-def jobs_flutter_root_from_generated_xcconfig(flutter_application_path)
+# 只读取配置值，不能执行其它电脑带来的生成脚本。
+def jobs_flutter_generated_setting(flutter_application_path, setting_name)
   generated_xcconfig = jobs_flutter_generated_xcconfig_path(flutter_application_path)
   return nil unless File.file?(generated_xcconfig)
 
+  values = []
   File.foreach(generated_xcconfig) do |line|
-    match = line.match(/\A\s*FLUTTER_ROOT\s*=\s*(.+?)\s*\z/)
+    match = line.match(/\A\s*#{Regexp.escape(setting_name)}\s*=\s*(.*?)\s*\z/)
     next unless match
 
-    flutter_root = match[1].to_s.strip
-    return nil if flutter_root.empty?
-    return File.expand_path(flutter_root, File.dirname(generated_xcconfig))
+    values << match[1].to_s.strip
   end
+  return nil unless values.length == 1 && !values.first.empty?
 
-  nil
+  File.expand_path(values.first, File.dirname(generated_xcconfig))
 rescue => e
   puts "⚠️  [Podfile] 读取 Flutter Generated.xcconfig 失败：#{e}"
   nil
+end
+
+# 规范化符号链接，避免同一 Flutter module 的路径别名被误判为迁移。
+def jobs_flutter_same_path?(left, right)
+  return false unless left && right
+
+  left = File.exist?(left) ? File.realpath(left) : File.expand_path(left)
+  right = File.exist?(right) ? File.realpath(right) : File.expand_path(right)
+  left == right
+rescue StandardError
+  false
+end
+
+# 从当前 module 的生成配置中定位实际 Flutter SDK。
+def jobs_flutter_root_from_generated_xcconfig(flutter_application_path)
+  jobs_flutter_generated_setting(flutter_application_path, 'FLUTTER_ROOT')
 end
 
 def jobs_flutter_root_podhelper_path(flutter_root)
@@ -262,9 +279,39 @@ def jobs_flutter_podhelper_ready?(flutter_application_path)
   end
 
   root_podhelper = jobs_flutter_root_podhelper_path(flutter_root)
-  return true if File.file?(root_podhelper)
+  unless File.file?(root_podhelper)
+    puts "⚠️  [Podfile] Flutter 根 podhelper 不存在：#{root_podhelper}"
+    return false
+  end
 
-  puts "⚠️  [Podfile] Flutter 根 podhelper 不存在：#{root_podhelper}"
+  generated_application = jobs_flutter_generated_setting(flutter_application_path, 'FLUTTER_APPLICATION_PATH')
+  unless jobs_flutter_same_path?(generated_application, flutter_application_path)
+    puts "⚠️  [Podfile] Flutter module 路径已迁移，需重新生成当前电脑的 iOS 配置：#{generated_application}"
+    return false
+  end
+
+  export_path = File.join(flutter_application_path, '.ios', 'Flutter', 'flutter_export_environment.sh')
+  unless File.file?(export_path)
+    puts "⚠️  [Podfile] Flutter 导出环境脚本缺失：#{export_path}"
+    return false
+  end
+  exported = {}
+  exported_counts = Hash.new(0)
+  File.foreach(export_path) do |line|
+    match = line.match(/\A\s*export\s+"(FLUTTER_ROOT|FLUTTER_APPLICATION_PATH)=(.*)"\s*\z/)
+    next unless match
+
+    exported_counts[match[1]] += 1
+    exported[match[1]] = match[2]
+  end
+  return true if exported_counts.values == [1, 1] &&
+    jobs_flutter_same_path?(exported['FLUTTER_ROOT'], flutter_root) &&
+    jobs_flutter_same_path?(exported['FLUTTER_APPLICATION_PATH'], flutter_application_path)
+
+  puts '⚠️  [Podfile] Flutter 导出环境与当前 SDK / module 路径不一致，需重新生成 iOS 配置。'
+  false
+rescue StandardError => error
+  puts "⚠️  [Podfile] Flutter 生成文件健康检查失败：#{error.message}"
   false
 end
 

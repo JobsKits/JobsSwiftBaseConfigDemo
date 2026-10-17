@@ -1,7 +1,8 @@
 #!/bin/zsh
+# shell: zsh
 # 脚本自述：
 # - 脚本名称：拉取Flutter侧三方资源.sh。
-# - 核心用途：查找可用 Flutter / FVM，为工程内 Flutter module 拉取依赖并补齐 podhelper。
+# - 核心用途：查找可用 Flutter / FVM，拉取依赖并验证或重生成当前电脑可用的 iOS 配置。
 # - 影响范围：可能更新 Flutter 工程依赖与生成目录；失败不阻断 pod install。
 # - 运行提示：先展示内置自述；终端回车确认，Podfile 已确认入口传 JOBS_SKIP_README=1。
 
@@ -13,6 +14,7 @@ ROOT_DIR=""
 DEFAULT_FLUTTER_DIR=""
 DEFAULT_PODHELPER=""
 FLUTTER_CMD=()
+FLUTTER_HEALTH_REASON=""
 
 # 同步输出业务日志到终端和固定日志文件。
 log() {
@@ -51,8 +53,9 @@ underline_echo() { log "\033[4m$1\033[0m"; }
 # 展示固定内置自述，并按明确的 Podfile 开关决定是否等待确认。
 show_script_intro_and_wait() {
   print -r -- "======================= 拉取 Flutter 侧三方资源 ======================="
-  print -r -- "核心用途：查找可用 Flutter / FVM，为工程内 Flutter module 执行 flutter pub get。"
-  print -r -- "影响范围：可能更新 Flutter 依赖和 .ios 生成目录；已有默认 podhelper 时直接跳过。"
+  print -r -- "核心用途：查找可用 Flutter / FVM，为工程内 Flutter module 拉取依赖并修复跨电脑残留路径。"
+  print -r -- "影响范围：仅完整健康的 iOS 配置直接跳过；必要时备份两份过期配置后重试官方 pub get。"
+  print -r -- "修复边界：不手改生成源码，不手动删除 .ios、Pods 或锁文件；重生成失败恢复原配置，不声称已修复。"
   print -r -- "运行策略：失败告警后继续；Podfile 统一确认后可传 JOBS_SKIP_README=1 跳过重复确认。"
   print -r -- "取消方式：按 Ctrl+C 终止；独立运行需按回车继续。"
   print -r -- "日志文件：/tmp/拉取Flutter侧三方资源.log"
@@ -259,17 +262,204 @@ run_flutter_pub_get() {
 
   if [[ $rc -ne 0 ]]; then
     warn_echo "flutter pub get 失败：${project_dir}，退出码：${rc}。继续处理下一个候选目录。"
+    (( rc >= 128 )) && return "$rc"
     return 1
   fi
 
   success_echo "依赖拉取完成：${project_dir}"
   return 0
 }
-# 补齐缺失 podhelper，保持辅助任务不阻断主安装流程。
+# 只读提取官方生成配置中的唯一键值，不执行 export 脚本或展开其中的 Shell 表达式。
+read_flutter_generated_value() {
+  local config_path="$1"
+  local config_key="$2"
+  local config_style="${3:-xcconfig}"
+  [[ -f "$config_path" && -r "$config_path" ]] || return 1
+  /usr/bin/awk -v key="$config_key" -v style="$config_style" '
+    {
+      line = $0
+      sub(/\r$/, "", line)
+      sub(/^[[:space:]]+/, "", line)
+      sub(/[[:space:]]+$/, "", line)
+      if (style == "export") {
+        if (line !~ /^export[[:space:]]+/) next
+        sub(/^export[[:space:]]+/, "", line)
+        first = substr(line, 1, 1)
+        last = substr(line, length(line), 1)
+        if ((first == "\"" || first == sprintf("%c", 39)) && last == first)
+          line = substr(line, 2, length(line) - 2)
+      }
+      assignment = index(line, "=")
+      if (!assignment || substr(line, 1, assignment - 1) != key) next
+      value = substr(line, assignment + 1)
+      first = substr(value, 1, 1)
+      last = substr(value, length(value), 1)
+      if ((first == "\"" || first == sprintf("%c", 39)) && last == first)
+        value = substr(value, 2, length(value) - 2)
+      count++
+      result = value
+    }
+    END {
+      if (count != 1 || result == "") exit 1
+      print result
+    }
+  ' "$config_path"
+}
+# 校验 module helper、SDK helper 与两份生成配置的真实路径，识别旧用户名及旧工程目录。
+flutter_module_is_ready() {
+  local project_dir="$1"
+  local flutter_dir="${project_dir}/.ios/Flutter"
+  local generated_config="${flutter_dir}/Generated.xcconfig"
+  local export_script="${flutter_dir}/flutter_export_environment.sh"
+  local sdk_root="" application_path="" export_root="" export_application=""
+  FLUTTER_HEALTH_REASON=""
+  if [[ ! -f "${flutter_dir}/podhelper.rb" || ! -r "${flutter_dir}/podhelper.rb" ]]; then
+    FLUTTER_HEALTH_REASON="module podhelper 缺失或不可读：${flutter_dir}/podhelper.rb"
+    return 1
+  fi
+  sdk_root="$(read_flutter_generated_value "$generated_config" FLUTTER_ROOT)" || {
+    FLUTTER_HEALTH_REASON="Generated.xcconfig 缺少唯一有效的 FLUTTER_ROOT：${generated_config}"
+    return 1
+  }
+  if [[ "$sdk_root" != /* || ! -d "$sdk_root" || ! -f "${sdk_root}/packages/flutter_tools/bin/podhelper.rb" || ! -r "${sdk_root}/packages/flutter_tools/bin/podhelper.rb" ]]; then
+    FLUTTER_HEALTH_REASON="Generated.xcconfig 的 FLUTTER_ROOT 无可用 SDK podhelper：${sdk_root}"
+    return 1
+  fi
+  application_path="$(read_flutter_generated_value "$generated_config" FLUTTER_APPLICATION_PATH)" || {
+    FLUTTER_HEALTH_REASON="Generated.xcconfig 缺少唯一有效的 FLUTTER_APPLICATION_PATH。"
+    return 1
+  }
+  if [[ "$application_path" != /* || ! -d "$application_path" || "${application_path:A}" != "${project_dir:A}" ]]; then
+    FLUTTER_HEALTH_REASON="Generated.xcconfig 的 FLUTTER_APPLICATION_PATH 不是当前 module：${application_path}"
+    return 1
+  fi
+  export_root="$(read_flutter_generated_value "$export_script" FLUTTER_ROOT export)" || {
+    FLUTTER_HEALTH_REASON="export 环境脚本缺失或 FLUTTER_ROOT 无效：${export_script}"
+    return 1
+  }
+  export_application="$(read_flutter_generated_value "$export_script" FLUTTER_APPLICATION_PATH export)" || {
+    FLUTTER_HEALTH_REASON="export 环境脚本的 FLUTTER_APPLICATION_PATH 无效。"
+    return 1
+  }
+  if [[ "$export_root" != /* || ! -d "$export_root" || "${export_root:A}" != "${sdk_root:A}" ]]; then
+    FLUTTER_HEALTH_REASON="export 环境脚本的 FLUTTER_ROOT 与当前 SDK 不一致：${export_root}"
+    return 1
+  fi
+  if [[ "$export_application" != /* || ! -d "$export_application" || "${export_application:A}" != "${project_dir:A}" ]]; then
+    FLUTTER_HEALTH_REASON="export 环境脚本的 FLUTTER_APPLICATION_PATH 不是当前 module：${export_application}"
+    return 1
+  fi
+  return 0
+}
+# 恢复已移出的原配置，并把失败生成的新文件保留在备份目录供排查。
+restore_flutter_generated_configs() {
+  local project_dir="$1"
+  local backup_dir="$2"
+  local restore_missing="${3:-0}"
+  local config_name="" config_path="" restore_rc=0
+  for config_name in Generated.xcconfig flutter_export_environment.sh; do
+    config_path="${project_dir}/.ios/Flutter/${config_name}"
+    if [[ ! -f "${backup_dir}/${config_name}" && ! -L "${backup_dir}/${config_name}" && "$restore_missing" != 1 ]]; then
+      continue
+    fi
+    if [[ -e "$config_path" || -L "$config_path" ]]; then
+      if [[ -d "$config_path" ]] || ! /bin/mv -- "$config_path" "${backup_dir}/attempted.${config_name}"; then
+        error_echo "无法移走失败生成的配置，原文件仍在备份：${backup_dir}/${config_name}"
+        restore_rc=1
+        continue
+      fi
+    fi
+    if [[ -f "${backup_dir}/${config_name}" || -L "${backup_dir}/${config_name}" ]]; then
+      if ! /bin/cp -pP -- "${backup_dir}/${config_name}" "$config_path"; then
+        error_echo "无法恢复原配置，请从备份手动恢复：${backup_dir}/${config_name}"
+        restore_rc=1
+      fi
+    fi
+  done
+  return "$restore_rc"
+}
+# 将两份过期配置移入本次独立备份，留下缺失的 Generated.xcconfig 触发官方重生成。
+backup_flutter_generated_configs() {
+  local project_dir="$1"
+  local backup_dir="$2"
+  local config_name="" config_path=""
+  for config_name in Generated.xcconfig flutter_export_environment.sh; do
+    config_path="${project_dir}/.ios/Flutter/${config_name}"
+    if [[ -e "$config_path" && ! -f "$config_path" && ! -L "$config_path" ]]; then
+      warn_echo "配置路径不是普通文件，保留原状：${config_path}"
+      return 1
+    fi
+  done
+  for config_name in Generated.xcconfig flutter_export_environment.sh; do
+    config_path="${project_dir}/.ios/Flutter/${config_name}"
+    if [[ -f "$config_path" || -L "$config_path" ]]; then
+      if ! /bin/mv -- "$config_path" "${backup_dir}/${config_name}"; then
+        warn_echo "无法备份配置：${config_path}"
+        return 1
+      fi
+    fi
+  done
+}
+# 通过缺失配置后的第二次 pub get 强制官方重生成，失败或中断时恢复原配置。
+regenerate_flutter_generated_configs() {
+  setopt LOCAL_TRAPS
+  local project_dir="$1"
+  local backup_dir="" regenerated=0 backup_complete=0 regeneration_rc=0
+  backup_dir="$(/usr/bin/mktemp -d "${TMPDIR:-/tmp}/jobs-flutter-config-backup.XXXXXXXX")" || {
+    warn_echo "无法创建旧配置备份目录，停止重生成：${project_dir}"
+    return 1
+  }
+  warn_echo "pub get 后配置仍不健康：${FLUTTER_HEALTH_REASON}"
+  note_echo "原配置备份目录：${backup_dir}；仅移出两份生成配置，不删除 .ios、Pods 或锁文件。"
+  trap 'return 130' INT
+  trap 'return 143' TERM
+  {
+    if backup_flutter_generated_configs "$project_dir" "$backup_dir"; then
+      backup_complete=1
+      if run_flutter_pub_get "$project_dir"; then
+        if flutter_module_is_ready "$project_dir"; then
+          regenerated=1
+          success_echo "官方 pub get 已重生成并通过完整配置复检：${project_dir}"
+        else
+          warn_echo "官方重生成后配置仍未通过复检：${FLUTTER_HEALTH_REASON}"
+        fi
+      else
+        regeneration_rc=$?
+        warn_echo "官方配置重生成命令失败：${project_dir}"
+        (( regeneration_rc >= 128 )) && return "$regeneration_rc"
+      fi
+    else
+      warn_echo "原配置备份未完成，停止本次重生成：${project_dir}"
+    fi
+  } always {
+    if (( regenerated == 0 )); then
+      restore_flutter_generated_configs "$project_dir" "$backup_dir" "$backup_complete"
+      warn_echo "重生成未完成，已尝试恢复原配置；备份及失败产物：${backup_dir}"
+    fi
+  }
+  (( regenerated == 1 ))
+}
+# 拉取后必须复检，只有命令成功但旧配置仍在时才启动一次有备份的重生成。
+prepare_flutter_module() {
+  local project_dir="$1"
+  if flutter_module_is_ready "$project_dir"; then
+    success_echo "Flutter iOS 配置完整健康，跳过：${project_dir}"
+    return 0
+  fi
+  warn_echo "Flutter iOS 配置需要修复：${FLUTTER_HEALTH_REASON}"
+  run_flutter_pub_get "$project_dir" || return $?
+  if flutter_module_is_ready "$project_dir"; then
+    success_echo "Flutter iOS 配置已通过完整复检：${project_dir}"
+    return 0
+  fi
+  regenerate_flutter_generated_configs "$project_dir"
+}
+# 校验并修复可用的 module 配置；失败返回给 Podfile 辅助任务，由宿主保持非阻断。
 run_flutter_resource_pull() {
   local -a candidates=()
   local project_dir=""
   local generated=0
+  local prepare_rc=0
 
   bold_echo "🚀 开始拉取 Flutter 侧三方资源"
   info_echo "工程根目录：${ROOT_DIR}"
@@ -277,8 +467,8 @@ run_flutter_resource_pull() {
   info_echo "默认 podhelper：${DEFAULT_PODHELPER}"
   info_echo "日志文件：${LOG_FILE}"
 
-  if [[ -f "$DEFAULT_PODHELPER" ]]; then
-    success_echo "podhelper.rb 已存在，跳过。"
+  if flutter_module_is_ready "$DEFAULT_FLUTTER_DIR"; then
+    success_echo "默认 Flutter iOS 配置完整健康，跳过。"
     return 0
   fi
 
@@ -302,30 +492,41 @@ run_flutter_resource_pull() {
   done
 
   for project_dir in "${candidates[@]}"; do
-    run_flutter_pub_get "$project_dir" || continue
+    prepare_flutter_module "$project_dir"
+    prepare_rc=$?
+    if (( prepare_rc >= 128 )); then
+      return "$prepare_rc"
+    fi
+    (( prepare_rc != 0 )) && continue
 
-    if [[ -f "$DEFAULT_PODHELPER" ]]; then
-      success_echo "已生成默认 podhelper：${DEFAULT_PODHELPER}"
+    if flutter_module_is_ready "$DEFAULT_FLUTTER_DIR"; then
+      success_echo "默认 Flutter iOS 配置已通过完整复检：${DEFAULT_FLUTTER_DIR}"
       generated=1
       break
     fi
 
-    if [[ -f "${project_dir}/.ios/Flutter/podhelper.rb" ]]; then
-      success_echo "已在候选目录生成 podhelper：${project_dir}/.ios/Flutter/podhelper.rb"
+    if flutter_module_is_ready "$project_dir"; then
+      success_echo "候选 Flutter iOS 配置已通过完整复检：${project_dir}"
       note_echo "如果 Podfile 固定引用 my_flutter，请确认 my_flutter 指向真实 Flutter module。"
       generated=1
     fi
   done
 
   if [[ $generated -eq 0 ]]; then
-    warn_echo "执行后仍未发现 podhelper.rb，当前脚本保持 non-blocking，不阻断主流程。"
+    warn_echo "执行后仍未获得健康 Flutter iOS 配置；返回失败供 Podfile 告警，宿主保持 non-blocking。"
+    return 1
   fi
+  if [[ -f "${DEFAULT_FLUTTER_DIR}/pubspec.yaml" ]] && ! flutter_module_is_ready "$DEFAULT_FLUTTER_DIR"; then
+    warn_echo "其它候选不能替代默认 module；默认 Flutter 配置仍不可用：${FLUTTER_HEALTH_REASON}"
+    return 1
+  fi
+  return 0
 }
 # 编排自述确认、运行时初始化和依赖拉取。
 main() {
   show_script_intro_and_wait # 先说明用途与影响，并完成独立运行的回车确认。
   initialize_runtime # 确认后初始化路径、Shell 选项和固定日志。
-  run_flutter_resource_pull # 使用健康的 Flutter / FVM 拉取资源，业务失败只告警。
+  run_flutter_resource_pull # 拉取并复检真实配置，失败交由 Podfile 辅助任务告警。
 }
 
 main "$@"
