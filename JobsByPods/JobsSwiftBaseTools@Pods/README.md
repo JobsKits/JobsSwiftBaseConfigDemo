@@ -2,38 +2,53 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [Jobs DSL 调用约定](#jobs-toc-heading-1)
+- [一、架构脉络与关键设计](#jobs-toc-heading-2)
+  - [1.1、设计目的与职责划分](#jobs-toc-heading-3)
+  - [1.2、运行脉络](#jobs-toc-heading-4)
+  - [1.3、关键设计与边界](#jobs-toc-heading-5)
+  - [1.4、阅读与重建顺序](#jobs-toc-heading-6)
+- [二、使用合同与边界](#jobs-toc-heading-7)
+- [三、生产交付与全量门禁](#jobs-toc-heading-8)
+
+</details>
+<!-- jobs-toc:end -->
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
 
 
 
-## Jobs DSL 调用约定 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">Jobs DSL 调用约定 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
 
 <a id="jobs-architecture"></a>
 
-## 一、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-3" data-jobs-toc="v2">1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 聚合可复用的基础行为工具，包括窗口与手势便利入口、导航防重、键盘观察、容错解码、输入策略、弱引用及雪花标识等。各文件围绕自己的状态和职责工作，并非一个统一服务对象。
 
-### 1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-4" data-jobs-toc="v2">1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 选择对应工具 → 配置输入或安装观察 → 完成转换或事件处理 → 由调用方管理结果与释放
 
-### 1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-5" data-jobs-toc="v2">1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 导航防重通过一次性安装的运行时交换与转场闸门工作，具有全局影响，不能在每次 push 前重复安装。
 - SafeCodable 的兜底策略可能隐藏后端字段异常，阅读时应区分容错默认值和真正合法的业务值。
 - 键盘与输入策略处理的是 UI 事件，不应与网络流量统计或 ID 生成混成同一生命周期。
 - Snowflake 的时间、节点和序列规则需要保持一致，不能仅凭类名保证跨机器唯一。
 
-### 1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-6" data-jobs-toc="v2">1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 先按需要选择文件，优先读公开配置与状态变量，再看安装、观察、销毁和错误处理。
 
@@ -47,7 +62,7 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 
 依赖与编译入口：[JobsSwiftBaseTools.podspec](<./JobsSwiftBaseTools.podspec>)。其中显式依赖声明包括 `RxSwift`、`RxCocoa`、`NSObject+Rx`、`SnapKit`、`Alamofire`、`JobsSwiftBaseDefines`、`JobsSwiftBlock`、`JobsByUIKit`、`JobsSwiftDSL`、`JobsGetWindow`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
-## 二、使用合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-7" data-jobs-toc="v2">二、使用合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 定时器能力由独立的 [JobsSwiftTimer](<../JobsSwiftTimer@Pods/README.md>) 提供；本 Pod 仅保留真实存在的 `🛜网络流量监控` 子规格。原 `JobsSwiftBaseTools/JobsSwiftTimer` 无源码子规格已移除，显式依赖它的消费方改为独立 `JobsSwiftTimer`，并重新解析依赖。
 - 全局 `jobsGetMainWindow`、`jobsGetMainWindowBefore13`、`jobsGetMainWindowAfter13` 统一定义于 [JobsGetWindow](<../JobsGetWindow@Pods/README.md>)，本模块直接依赖并再导出，手势创建函数继续由本模块承接。重编后的源码调用保持；符号定义模块迁移不承诺预编译 ABI，使用窗口函数的二进制客户端需要重新编译。
@@ -61,7 +76,7 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 - 网络计数器回退时该次增量按零处理，速度使用真实单调时间间隔计算。无效采样间隔回退默认值，合法间隔限制在 `0.05...86_400` 秒。网卡统计包含其它 App 的流量，只能作为设备层观察信号。
 
 
-## 三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-8" data-jobs-toc="v2">三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 每个显式 subspec 同步继承生产排除集合，避免只消费子模块时带入测试/示例源码。
 

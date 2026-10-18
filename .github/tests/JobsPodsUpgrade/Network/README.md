@@ -2,9 +2,19 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
 
-## 一、运行 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+- [一、运行](#jobs-toc-heading-1)
+- [二、真实源码与覆盖边界](#jobs-toc-heading-2)
+- [三、编译门禁](#jobs-toc-heading-3)
+
+</details>
+<!-- jobs-toc:end -->
+
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">一、运行 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
 在工程根目录使用所选 [Xcode](https://developer.apple.com/xcode/) 的 [Swift](https://www.swift.org/) 工具链运行：
 
@@ -17,7 +27,7 @@ ruby .github/tests/JobsPodsUpgrade/Network/run_regressions.rb \
 
 每一步保留独立日志，最终写入 `results.json`。子进程失败时同时记录退出码或终止信号，并在 CI 控制台展示末尾 40 行日志，方便直接定位断言。普通 Core / 网络回归不替代真实 iOS Pod target 和宿主构建。
 
-## 二、真实源码与覆盖边界 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">二、真实源码与覆盖边界 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
 | 组 | 被测实现与重点 | 边界 |
 | --- | --- | --- |
@@ -35,7 +45,7 @@ ruby .github/tests/JobsPodsUpgrade/Network/run_regressions.rb \
 
 `NativeDSLFactoryFixture.swift` 只承接两个 Foundation 工厂（JSONDecoder、URLSessionConfiguration）的 CLI 环境。iOS 工程使用实际 JobsSwiftDSL；网络传输与密码算法不使用 fixture 替代。
 
-## 三、编译门禁 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">三、编译门禁 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
 整个自建 Pod 门禁使用 `.github/tests/JobsPodsUpgrade/validate_builds.rb`。默认请求 2 个 Xcode 构建任务，并向 Swift 传递 `-j1`（Xcode SwiftDriver 仍可生成其它任务参数），支持 `--jobs` / `--swift-jobs`，减少多个工程同时构建时的内存压力。完整升级结果与运行限制见工程根目录 [升级与编译验收报告](../../../../JobsByPods升级与编译验收报告.md)。
 

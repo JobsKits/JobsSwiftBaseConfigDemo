@@ -2,7 +2,22 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [明暗主题契约](#%E5%89%8D%E8%A8%80)
+- [一、架构脉络与关键设计](#jobs-toc-heading-2)
+  - [1.1、设计目的与职责划分](#jobs-toc-heading-3)
+  - [1.2、运行脉络](#jobs-toc-heading-4)
+  - [1.3、关键设计与边界](#jobs-toc-heading-5)
+  - [1.4、阅读与重建顺序](#jobs-toc-heading-6)
+- [二、运行合同与边界](#jobs-toc-heading-7)
+- [三、生产交付与全量门禁](#jobs-toc-heading-8)
+
+</details>
+<!-- jobs-toc:end -->
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
 
@@ -16,25 +31,25 @@
 
 <a id="jobs-architecture"></a>
 
-## 一、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-3" data-jobs-toc="v2">1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 提供可点击重试的最小空态视图：一个居中的提示标签和一个点击手势，通过 Jobs 回调扩展把重试意图交给宿主。
 
-### 1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-4" data-jobs-toc="v2">1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 宿主决定展示空态 → 用户点击视图 → 回调宿主重试 → 宿主根据结果移除或保留空态
 
-### 1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-5" data-jobs-toc="v2">1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 当前实现重点是文字提示与点击重试，没有独立的网络请求、图片配置或多状态管理引擎。
 - byOnTapRetry 绑定的是动作回调，是否发请求、节流及加载过程展示由宿主决定。
 - 标签与背景使用主题颜色，提示文案经过本地化入口；重建时应保留这些接入点。
 
-### 1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-6" data-jobs-toc="v2">1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 直接读 JobsEmptyView.swift 的标签、手势与 byOnTapRetry，再看宿主何时添加和移除视图。
 
@@ -44,12 +59,12 @@
 
 依赖与编译入口：[JobsEmptyView.podspec](<./JobsEmptyView.podspec>)。其中显式依赖声明包括 `SnapKit`、`JobsByUIKit`、`JobsSwiftBlock`、`JobsSwiftBaseDefines`、`JobsSwiftDSL`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
-## 二、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-7" data-jobs-toc="v2">二、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 默认文案“暂无数据，点击重试”，点击与 VoiceOver 激活共用 `byOnTapRetry` 回调；整个空态作为一个 button 无障碍元素，正文采用 Dynamic Type body 字体。回调在 UI 主线程处理，宿主用它发起重新加载。动态表格/集合列表优先使用 JobsByUIKit 的 JobsEmptyAuto 按钮提供器，避免与手动 backgroundView 空态叠加。
 
 
-## 三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-8" data-jobs-toc="v2">三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
 

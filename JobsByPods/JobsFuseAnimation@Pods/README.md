@@ -2,7 +2,29 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [刷新动画插件协议](#jobs-toc-heading-1)
+- [抖音风格双球刷新动画](#jobs-toc-heading-2)
+- [分格充电动画](#jobs-toc-heading-3)
+- [冒泡动画](#jobs-toc-heading-4)
+- [v3 关键修复](#jobs-toc-heading-5)
+- [用法](#jobs-toc-heading-6)
+- [v4](#jobs-toc-heading-7)
+- [Jobs DSL 调用约定](#jobs-toc-heading-8)
+- [一、架构脉络与关键设计](#jobs-toc-heading-9)
+  - [1.1、设计目的与职责划分](#jobs-toc-heading-10)
+  - [1.2、运行脉络](#jobs-toc-heading-11)
+  - [1.3、关键设计与边界](#jobs-toc-heading-12)
+  - [1.4、阅读与重建顺序](#jobs-toc-heading-13)
+- [二、运行合同与边界](#jobs-toc-heading-14)
+- [三、生产交付与全量门禁](#jobs-toc-heading-15)
+
+</details>
+<!-- jobs-toc:end -->
 
 # <span id="前言">JobsFuseAnimation</span>
 
@@ -12,7 +34,7 @@
 
 组件内所有 Auto Layout 约束统一使用 `SnapKit`，不直接创建或激活系统 `NSLayoutConstraint`。
 
-## 刷新动画插件协议 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">刷新动画插件协议 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - `JobsRefreshAnimatorProtocol` 统一消费下拉进度和刷新阶段，动画框架不依赖具体刷新状态机。
 - `JobsSystemRefreshView` 把系统菊花也纳入同一插件协议。
@@ -42,7 +64,7 @@ let lottie = JobsLottieRefreshView(animationNamed: "LottieLogo1")
 let system = JobsSystemRefreshView()
 ```
 
-## 抖音风格双球刷新动画 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">抖音风格双球刷新动画 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - `JobsDouyinRefreshView` 使用红、绿双球交叉换位、上下错峰跳跃和尺度切换表达刷新状态。
 - `JobsDouyinRefreshConfig` 可配置颜色、球径、水平行程、跳跃高度和单轮时长。
@@ -63,7 +85,7 @@ refreshView.byResume()
 refreshView.byStop()
 ```
 
-## 分格充电动画 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">分格充电动画 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 默认 3 格，已充格使用 `JobsCor.systemGreen`，未充格使用 `JobsCor.systemGray3`。
 - 每次 Timer tick 只前进 1 格，满格后的下一次 tick 回到 0 格。
@@ -85,7 +107,7 @@ cell.byChargingAnimationResume()
 cell.byChargingAnimationStop()
 ```
 
-## 冒泡动画 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-4" data-jobs-toc="v2">冒泡动画 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - `JobsFuseBubbleConfig` 管理发射间隔、上浮距离、水平漂移、缩放和并发上限。
 - `byFuseBubbleStart` 只管动画，`bubbleProvider` 由外层提供任意 `UIView`。
@@ -102,7 +124,7 @@ sourceView.byFuseBubbleStart(in: hostView) {
 sourceView.byFuseBubbleStop()
 ```
 
-## v3 关键修复 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-5" data-jobs-toc="v2">v3 关键修复 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 外圈 `CAShapeLayer` 画在按钮自身 `bounds` 内侧。
 - 即使按钮设置了 `byMasksToBounds(true)`，导火索外圈也不会被裁剪。
@@ -113,7 +135,7 @@ sourceView.byFuseBubbleStop()
 - 引火索路径通过 `JobsByUIKit.UIBezierPath.make(...)` 创建。
 - UIKit 基础色通过 `JobsSwiftBaseDefines.JobsCor` 统一提供。
 
-## 用法 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-6" data-jobs-toc="v2">用法 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 ```swift
 btn.byFusePressStart(
@@ -134,36 +156,36 @@ btn.byFusePlaySound("Sound.wav")
 ```
 
 
-## v4 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-7" data-jobs-toc="v2">v4 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 松手时不再直接淡出，而是用 JobsSwiftTimer 驱动 `strokeEnd` 从当前进度倒退到 0，形成“退潮”效果。可通过 `retreatDuration` 控制回退时间，`fadeOutDuration` 仅作为回退完成后的短暂清理淡出。
 
-## Jobs DSL 调用约定 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-8" data-jobs-toc="v2">Jobs DSL 调用约定 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
 
 <a id="jobs-architecture"></a>
 
-## 一、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-9" data-jobs-toc="v2">一、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-10" data-jobs-toc="v2">1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 将刷新动画和视图表现抽成可替换的动画组件：配置描述颜色、尺寸与节奏，具体视图实现系统、双球、图片、GIF、Lottie 等效果，协议接收外部刷新阶段和进度。
 
-### 1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-11" data-jobs-toc="v2">1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 选择动画与配置 → 挂载表现视图 → 接收阶段和进度 → 播放或暂停 → 结束、替换并清理
 
-### 1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-12" data-jobs-toc="v2">1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 刷新状态机由 Refresher 管理，本库只映射表现，不决定业务刷新是否完成。
 - 重复开始不能叠加动画，暂停需保留可恢复状态，停止则恢复静态初始表现。
 - 回退收尾与最后淡出是不同时间段；不能用一个淡出替代既有回退动作。
 - Lottie、GIF 等资源型效果还依赖资源文件与对应运行库，几何图层效果则以路径和时间参数重建。
 
-### 1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-13" data-jobs-toc="v2">1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 先读 JobsRefreshAnimatorProtocol，再选一个配置和对应视图追踪阶段映射，最后看 UIView 的气泡动画扩展。
 
@@ -177,12 +199,12 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 
 依赖与编译入口：[JobsFuseAnimation.podspec](<./JobsFuseAnimation.podspec>)。其中显式依赖声明包括 `SnapKit`、`JobsSwiftTimer`、`JobsByUIKit`、`JobsSwiftDSL`、`JobsSwiftBaseDefines`、`lottie-ios`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
-## 二、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-14" data-jobs-toc="v2">二、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 气泡 runner 不强持有源视图或宿主；二者释放时定时器停止，runner 销毁也会 invalidate。interval 必须有限，最小按 16 毫秒处理，非法值使用 0.16 秒。页面可暂时离开窗口再回来，宿主应按所用动画 API 的 stop 入口结束长期任务；停止与短暂离屏不是同一生命周期。控件长按反馈继续保留原行为，手势取消和页面退出均需正常收尾。
 
 
-## 三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-15" data-jobs-toc="v2">三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
 

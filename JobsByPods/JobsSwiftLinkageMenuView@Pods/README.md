@@ -2,7 +2,24 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [能力](#jobs-toc-heading-1)
+- [验证](#jobs-toc-heading-2)
+- [Jobs DSL 调用约定](#jobs-toc-heading-3)
+- [一、架构脉络与关键设计](#jobs-toc-heading-4)
+  - [1.1、设计目的与职责划分](#jobs-toc-heading-5)
+  - [1.2、运行脉络](#jobs-toc-heading-6)
+  - [1.3、关键设计与边界](#jobs-toc-heading-7)
+  - [1.4、阅读与重建顺序](#jobs-toc-heading-8)
+- [二、运行合同与边界](#jobs-toc-heading-9)
+- [三、生产交付与全量门禁](#jobs-toc-heading-10)
+
+</details>
+<!-- jobs-toc:end -->
 
 # <span id="前言">JobsSwiftLinkageMenuView</span>
 
@@ -12,7 +29,7 @@ Swift 本地 Pod，用于把左侧纵向滚动菜单和右侧 UIView 内容区�
 
 本 Pod 直接依赖 `JobsSwiftBaseDefines`、`JobsSwiftDSL`；内部动态/基础/system 色统一使用 `JobsCor`，自定义 RGB 使用 `UIColor(r:g:b:a:)`，UIKit 配置和视图装配统一使用 Jobs 链式 API。
 
-## 能力 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">能力 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 左侧菜单由 `JobsSwiftLinkageMenuItem` 数组配置。
 - 右侧内容由 `[UIView?]` 数组配置，选中菜单后自动加入内容区。
@@ -20,38 +37,38 @@ Swift 本地 Pod，用于把左侧纵向滚动菜单和右侧 UIView 内容区�
 - 支持固定菜单宽度、固定内容宽度、菜单比例宽度三种布局。
 - 支持统一菜单高度，也支持数组或字典按下标覆盖单项高度。
 
-## 验证 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">验证 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 ```shell
 pod lib lint JobsSwiftLinkageMenuView.podspec --allow-warnings --verbose
 ```
 
-## Jobs DSL 调用约定 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">Jobs DSL 调用约定 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
 
 <a id="jobs-architecture"></a>
 
-## 一、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-4" data-jobs-toc="v2">一、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-5" data-jobs-toc="v2">1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 将菜单项、菜单对应内容及布局配置组合成联动菜单。控件管理菜单按钮、选中指示器和内容容器，根据下标切换对应内容视图。
 
-### 1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-6" data-jobs-toc="v2">1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 提供菜单和内容 → 按宽度策略布局 → 选择菜单 → 移动指示器 → 切换对应内容并回调
 
-### 1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-7" data-jobs-toc="v2">1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 菜单和内容的对应关系必须稳定，下标越界或数量不匹配不能直接强制取值。
 - 固定菜单宽度、固定内容宽度、比例宽度是不同布局策略，不能同时互相覆盖。
 - 单项高度可由数组或字典覆盖统一高度，布局时要逐项累计，不能假设所有行等高。
 - 控件切换的是宿主提供的内容视图，业务数据请求不自动由菜单代办。
 
-### 1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-8" data-jobs-toc="v2">1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 先读 Item、Payload 和 Config，再看 reload、selectMenu、指示器定位与内容挂载。
 
@@ -61,14 +78,14 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 
 依赖与编译入口：[JobsSwiftLinkageMenuView.podspec](<./JobsSwiftLinkageMenuView.podspec>)。其中显式依赖声明包括 `JobsSwiftBaseDefines`、`JobsSwiftDSL`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
-## 二、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-9" data-jobs-toc="v2">二、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 菜单为空时清除旧内容与指示器并显示 JobsEmptyAuto；缺失内容且 `clearsContentWhenMissing = true` 时同样显示空态。点击空态触发 `config.reloadBlock`，宿主据此重试请求并 reload 新数据。关闭清除策略时保留当前内容，由业务自定义缺失内容反馈。
 
 单项高度必须为有限正数，非法值回退到默认高度，最大 10000 点。菜单与内容数组可以数量不同，缺失项以 nil 内容处理，不能越界读取。加载、数据替换和选中动作在主线程执行。
 
 
-## 三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-10" data-jobs-toc="v2">三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
 

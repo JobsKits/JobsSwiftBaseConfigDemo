@@ -2,7 +2,23 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [明暗主题契约](#%E5%89%8D%E8%A8%80)
+- [Jobs DSL 调用约定](#jobs-toc-heading-2)
+- [一、架构脉络与关键设计](#jobs-toc-heading-3)
+  - [1.1、设计目的与职责划分](#jobs-toc-heading-4)
+  - [1.2、运行脉络](#jobs-toc-heading-5)
+  - [1.3、关键设计与边界](#jobs-toc-heading-6)
+  - [1.4、阅读与重建顺序](#jobs-toc-heading-7)
+- [二、输入与配置合同](#jobs-toc-heading-8)
+- [三、生产交付与全量门禁](#jobs-toc-heading-9)
+
+</details>
+<!-- jobs-toc:end -->
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
 
@@ -14,32 +30,32 @@
 - 品牌色、媒体画布、二维码、相机、视频、手写和马赛克内容保留业务色；颜色写入 `CGColor`、`CALayer` 或自绘上下文时，需要在主题 Trait 变化后重新解析和绘制。
 - 验证时从 Demo 全局主题入口分别切换白天和黑夜，检查组件的背景、文字、禁用态、占位态与弹出层对比度。
 
-## Jobs DSL 调用约定 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">Jobs DSL 调用约定 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
 
 <a id="jobs-architecture"></a>
 
-## 一、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">一、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-4" data-jobs-toc="v2">1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 包含滑动解锁与九宫格手势两类交互。滑动视图按方向计算进度及终点判定；手势视图通过节点、图案模型和配置组织选择轨迹，再把结果交给宿主。
 
-### 1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-5" data-jobs-toc="v2">1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 配置交互形态 → 跟踪触摸并更新进度或节点序列 → 判断是否完成 → 回调宿主 → 重置或展示结果
 
-### 1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-6" data-jobs-toc="v2">1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 滑动支持双向，0 到 1 表示从指定起点到终点的完成度，不能仅以屏幕 x 坐标判断。
 - 轨道闪动和遮罩属于视觉层，不能影响真正的解锁完成条件。
 - 九宫格图案与账号鉴权是不同层次；本组件不自动安全保存密码或决定登录授权。
 - 取消、失败和未到终点都需要正确复位，成功回调不能在连续触摸中重复触发。
 
-### 1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-7" data-jobs-toc="v2">1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 分别读 SlideToUnlockView 的方向与手势处理、GesturePattern 与 GestureUnlockView 的节点规则，再接业务验证。
 
@@ -53,7 +69,7 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 
 依赖与编译入口：[JobsGestureUnlock.podspec](<./JobsGestureUnlock.podspec>)。其中显式依赖声明包括 `SnapKit`、`JobsByUIKit`、`JobsSwiftBlock`、`JobsSwiftBaseDefines`、`JobsSwiftDSL`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
-## 二、输入与配置合同 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-8" data-jobs-toc="v2">二、输入与配置合同 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 两种 UIKit 视图在主线程配置和使用。滑动只有 `.ended` 且进度 >0.85 才调用 onUnlock；取消/失败复位。成功到自动复位的 0.6 秒内不再接受第二次成功，延迟任务弱捕获视图。`reset(animated:)` 为公开复用入口，调用会撤销旧的延迟复位。
 
@@ -64,7 +80,7 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 设备回归应覆盖选中旧九宫格末节点后切为 2×2 并 showError/layout、越界网格配置、取消超过阈值滑动、短图案、完成回调中重配、重复成功及视图释放；这些 UIKit 行为尚未实跑，原生 Parse 或模块编译不能替代运行验收。密码持久化需业务实现受保护存储、尝试限制和身份验证策略。
 
 
-## 三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-9" data-jobs-toc="v2">三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
 

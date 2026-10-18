@@ -2,7 +2,22 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [Jobs DSL 调用约定](#jobs-toc-heading-1)
+- [一、架构脉络与关键设计](#jobs-toc-heading-2)
+  - [1.1、设计目的与职责划分](#jobs-toc-heading-3)
+  - [1.2、运行脉络](#jobs-toc-heading-4)
+  - [1.3、关键设计与边界](#jobs-toc-heading-5)
+  - [1.4、阅读与重建顺序](#jobs-toc-heading-6)
+- [二、运行合同与边界](#jobs-toc-heading-7)
+- [三、生产交付与全量门禁](#jobs-toc-heading-8)
+
+</details>
+<!-- jobs-toc:end -->
 
 <a id="前言"></a>
 
@@ -152,32 +167,32 @@
   }()
   ```
 
-## Jobs DSL 调用约定
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">Jobs DSL 调用约定</span><!-- jobs-toc:heading-end -->
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
 
 <a id="jobs-architecture"></a>
 
-## 一、架构脉络与关键设计
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、架构脉络与关键设计</span><!-- jobs-toc:heading-end -->
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 1.1、设计目的与职责划分
+### <span id="jobs-toc-heading-3" data-jobs-toc="v2">1.1、设计目的与职责划分</span><!-- jobs-toc:heading-end -->
 
 为 UIButton 挂接独立倒计时控制器，Config 描述增减方向、时间间隔、渲染方式和回调，Binder 提供便捷绑定，底层由 JobsSwiftTimer 驱动。
 
-### 1.2、运行脉络
+### <span id="jobs-toc-heading-4" data-jobs-toc="v2">1.2、运行脉络</span><!-- jobs-toc:heading-end -->
 
 记录按钮原状态 → 按配置启动计时 → 渲染当前秒数 → 完成或停止 → 恢复按钮状态并通知
 
-### 1.3、关键设计与边界
+### <span id="jobs-toc-heading-5" data-jobs-toc="v2">1.3、关键设计与边界</span><!-- jobs-toc:heading-end -->
 
 - 支持倒数和正向计数，回调中的秒数含义要随模式解释。
 - iOS 15 的 UIButton.Configuration 与旧系统标题、图片等状态采用不同渲染路径，恢复状态也需分别保存。
 - 计时中能否点击、是否立即渲染初始值、是否重置 UI 都是独立策略。
 - 按钮不负责验证码请求，也不保证后台精确流逝；业务有效期应有独立的时间依据。
 
-### 1.4、阅读与重建顺序
+### <span id="jobs-toc-heading-6" data-jobs-toc="v2">1.4、阅读与重建顺序</span><!-- jobs-toc:heading-end -->
 
 先读 Config，再看 Ctrl 的快照、tick 与结束路径，最后看 UIButton 扩展和 Binder 的持有关系。
 
@@ -190,14 +205,14 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 
 依赖与编译入口：[JobsCountdownButton.podspec](<./JobsCountdownButton.podspec>)。其中显式依赖声明包括 `JobsByUIKit`、`JobsSwiftTimer`、`JobsSwiftBaseDefines`、`JobsSwiftDSL`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
-## 二、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-7" data-jobs-toc="v2">二、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 控制器 API 在 MainActor 调用。每次 start / stop 推进计时代次；已排入主线程的旧 tick 会被丢弃，`onTick` 内重启倒计时也不会被旧 finish 结束。`stop(resetUI: true)` 恢复创建控制器时的 enabled 状态及 Configuration / legacy 快照，因此原本禁用的按钮不会被意外启用。Binder 也按代次丢弃停止后的旧回调。
 
 按钮秒数用于界面反馈，后台停顿、主线程拥堵与 App 重启的业务过期时间仍应由宿主时间戳或服务端时间决定。初始化和重启行为由 `renderOnInit` 配置；不要同时绑定多个控制器驱动同一按钮。
 
 
-## 三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-8" data-jobs-toc="v2">三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
 

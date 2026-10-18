@@ -2,17 +2,36 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [🔥 前言](#jobs-toc-heading-1)
+- [一、Pod 定位](#jobs-toc-heading-2)
+- [二、适用场景](#jobs-toc-heading-3)
+- [三、公开能力](#jobs-toc-heading-4)
+- [四、风险说明](#jobs-toc-heading-5)
+- [五、架构脉络与关键设计](#jobs-toc-heading-6)
+  - [5.1、设计目的与职责划分](#jobs-toc-heading-7)
+  - [5.2、运行脉络](#jobs-toc-heading-8)
+  - [5.3、关键设计与边界](#jobs-toc-heading-9)
+  - [5.4、阅读与重建顺序](#jobs-toc-heading-10)
+- [六、使用合同与边界](#jobs-toc-heading-11)
+- [七、生产交付与全量门禁](#jobs-toc-heading-12)
+
+</details>
+<!-- jobs-toc:end -->
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
 
 ---
 
-## 🔥 <font id=前言>前言</font>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">🔥 <font id=前言>前言</font></span><!-- jobs-toc:heading-end -->
 
 > `JobsSwiftPatch` 是 Jobs Swift 工程里的本地 Runtime Patch Pod。第一版只支持把 Objective-C runtime 可见的方法临时替换为本地 payload 返回方法，并提供 rollback 能力。
 
-## 一、Pod 定位 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、Pod 定位 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 | 项目 | 内容 |
 | ---- | ---- |
@@ -22,18 +41,18 @@
 | 平台 | `ios 12.0` |
 | podspec | `JobsByPods/JobsSwiftPatch@Pods/JobsSwiftPatch.podspec` |
 
-## 二、适用场景 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、适用场景 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - Swift Demo 演示 Runtime 热更新思想。
 - 页面级临时 patch：进入页面安装，离开页面 rollback。
 - 后续可扩展网络补丁、签名校验、白名单 selector 和脚本解释层。
 
-## 三、公开能力 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、公开能力 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - `JobsSwiftPatchModel`：描述 patch 的 identifier、target class、selector 和 payload。
 - `JobsSwiftPatchMgr`：安装、回滚、查询 patch。
 
-## 四、风险说明 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-5" data-jobs-toc="v2">四、风险说明 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 当前能力属于高风险 Runtime 演示能力，不建议提交 App Store。
 - 第一版只支持 payload provider，不支持任意 Swift/ObjC 消息派发或 JS 脚本执行。
@@ -41,26 +60,26 @@
 
 <a id="jobs-architecture"></a>
 
-## 五、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-6" data-jobs-toc="v2">五、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 5.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-7" data-jobs-toc="v2">5.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 以 PatchModel 描述目标与 payload，由管理器保存原始实现、安装受限方法替换并按标识查询和回滚。当前是 Runtime 演示，不是通用脚本热更新系统。
 
-### 5.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-8" data-jobs-toc="v2">5.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 配置补丁模型 → 核对目标方法 → 保存原实现并安装 → 调用取得 payload → 回滚恢复
 
-### 5.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-9" data-jobs-toc="v2">5.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 目标方法必须暴露给 [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) runtime，纯 [**Swift**](https://www.swift.org/) 静态派发方法不能按同样方式替换。
 - 返回值与 payload block 签名必须匹配，当前不支持任意消息派发或 JS 脚本执行。
 - 标识、目标方法和原始 IMP 的对应关系决定回滚是否正确，不应覆盖后丢失原记录。
 - 保留原文的高风险演示边界，不将这一能力扩大成生产热更新承诺。
 
-### 5.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-10" data-jobs-toc="v2">5.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 先读 Model 与支持的签名，再看 installPayloadPatch 的记录、查询和 rollback。
 
@@ -70,7 +89,7 @@
 
 依赖与编译入口：[JobsSwiftPatch.podspec](<./JobsSwiftPatch.podspec>)。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
-## 六、使用合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-11" data-jobs-toc="v2">六、使用合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 仅接受无业务参数、Objective-C runtime 可见、对象返回编码为 `@` 或 NSDictionary 的 payload provider。调用方须保证对象返回在业务上可由 NSDictionary 替代，`@` 编码本身不提供具体对象类型证明。标量、额外参数、Block 返回以及 ARC retained-return 方法族 `alloc/new/copy/mutableCopy/init` 拒绝安装。
 - payload 必须能转换为不可变 Foundation 快照：字符串键的字典、数组、字符串、有限 NSNumber、NSNull、Data 和有限 Date；任意自定义可变对象与过深结构拒绝安装。安装期间不得并发修改输入 payload；安装成功后外部修改原容器不改变补丁快照。
@@ -79,7 +98,7 @@
 - 此模块仍是受限 Runtime 演示能力；不会因为加锁和 ABI 校验而扩展成任意生产热更新承诺。
 
 
-## 七、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-12" data-jobs-toc="v2">七、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
 

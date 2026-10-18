@@ -2,15 +2,29 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [🔥 前言](#jobs-toc-heading-1)
+- [一、接入与配置](#jobs-toc-heading-2)
+- [二、环境与窗口行为](#jobs-toc-heading-3)
+- [三、Demo 与离线预览](#jobs-toc-heading-4)
+- [四、弱网边界与资源来源](#jobs-toc-heading-5)
+- [五、运行合同与边界](#jobs-toc-heading-6)
+- [六、生产交付与全量门禁](#jobs-toc-heading-7)
+
+</details>
+<!-- jobs-toc:end -->
 
 ---
 
-## 🔥 <font id=前言>前言</font>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">🔥 <font id=前言>前言</font></span><!-- jobs-toc:heading-end -->
 
 <u>[**Swift**](https://www.swift.org/)</u> 调试工具：屏幕前方的圆形按钮 push 出功能列表，再次点击退出本次调试页面并返回打开前的宿主页面，默认功能为 App 网络环境切换。长按按钮只隐藏到本进程结束，下次启动自动恢复。
 
-## 一、接入与配置 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、接入与配置 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - [**CocoaPods**](https://cocoapods.org/) 仅在 Debug 依赖，并且所有源码均有 `#if DEBUG`；Release 不初始化、不链接此 Pod，也不展示 Demo 入口。
 
@@ -52,7 +66,7 @@
   #endif
   ```
 
-## 二、环境与窗口行为 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、环境与窗口行为 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 环境只接受带有效 host 的 HTTP / HTTPS URL。无效条目自动过滤；保存的 URL 不在当前配置中时回退到首个有效环境。持久化键为 `JobsDebugPanel.Debug.SelectedEnvironmentURL`，只由 Debug 代码读取与写入。
 - 切换后立即调用 `byEnvironmentDidChange`，并发出 `environmentDidChangeNotification`。`JobsNetworkingDebugEnvironment` 作用于既有 agent 的后续相对路径请求与上传；已发出的请求、重试和明确的绝对 URL 保持原目标，缓存仍按最终 URL 隔离。其它网络栈需在该回调中更新各自配置。
@@ -64,26 +78,26 @@
 - 圆按钮可单指拖动，位置限定在当前窗口安全区域内；旋转或窗口尺寸变化时重新限制位置。拖动不会打开菜单或触发长按隐藏，拖动后仍可点击打开；位置仅在当前 Scene 的本次启动内保留。
 - 圆按钮的长按隐藏状态只存在内存中，不写入持久化配置。背景图来自打包资源，无文字、无运行时网络图片。
 
-## 三、Demo 与离线预览 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、Demo 与离线预览 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 宿主的“实用工具集”中有 `JobsDebugPanel Demo`；`AppDelegate+JobsDebugPanel.swift` 展示完整配置与两个自定义入口。
 - 默认三环境是 `http://127.0.0.1:18080` 本地 Mock、`https://httpbin.org` 公共测试和 `https://postman-echo.com` 联调测试。
 - Demo 每次进入、切换环境或点击重新请求都会通过 `JobsNetworking` 请求当前环境的 `/get`，超时为 3 秒且不自动重试。请求成功后展示解析后的真实响应，失败、超时或无法解析则保留本地演示说明；接口恢复后下一次成功响应自动替换。
 - 未启动本地服务时直接以 Debug 运行即可预览；切到公共测试环境可验证真实网络请求。环境列表未配置数据时显示 `JobsEmptyAuto` 按钮空态与重新加载入口。
 
-## 四、弱网边界与资源来源 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-5" data-jobs-toc="v2">四、弱网边界与资源来源 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 不提供“全 App 弱网”开关：普通 [**iOS**](https://developer.apple.com/ios/) App 无法通过公开 API 全局控制系统网络带宽、延迟和丢包；只延迟某个请求回调无法覆盖 WebSocket、媒体流和其它请求栈。需要真实弱网测试时，开发者可手动使用系统 [**Network Link Conditioner**](https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/On_Demand_Resources_Guide/TestingPerformance.html)。[**URLProtocol**](https://developer.apple.com/documentation/foundation/urlsessionconfiguration/protocolclasses) 的局部拦截也不适用于后台 URLSession，不能据此宣称完整弱网覆盖。
 - 素材先检索 [**iconfont**](https://www.iconfont.cn/)，未能确认匹配图标的作者许可，改用 [**Ant Design Icons**](https://github.com/ant-design/ant-design-icons) 官方 `filled/bug.svg`，MIT 许可。
 - `Resource/JobsDebugPanelButton.svg` 使用官方图形路径配合圆底本地渲染为 `Resource/JobsDebugPanelButton.png`；PNG 是实际打包背景图，SVG 为可追溯源文件。许可证为 `Resource/AntDesignIcons-LICENSE`。宿主 Debug Demo 入口通过只读 `JobsDebugPanel.buttonImage` 复用 Pod 图片，无宿主 Asset Catalog 副本，Release 不打包该图标。
 - 官方源：[bug.svg](https://github.com/ant-design/ant-design-icons/blob/master/packages/icons-svg/svg/filled/bug.svg)。
 
-## 五、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-6" data-jobs-toc="v2">五、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 所有调试面板实现由 DEBUG 条件控制，Release 不暴露调试窗口。面板按当前 UIWindowScene 创建独立 overlay；关闭后恢复原窗口，后台或 scene 断开时由宿主隐藏/释放。回归包含多 Scene、主题、面板打开后切页及 Release 构建；调试环境选择不应泄露凭据。
 
 
-## 六、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-7" data-jobs-toc="v2">六、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
 

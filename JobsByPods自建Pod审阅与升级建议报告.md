@@ -2,11 +2,66 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [🔥 前言](#jobs-toc-heading-1)
+- [一、先做什么与保留什么](#jobs-toc-heading-2)
+- [二、范围、方法和验证结果](#jobs-toc-heading-3)
+  - [2.1、覆盖口径](#jobs-toc-heading-4)
+  - [2.2、证据等级与优先级](#jobs-toc-heading-5)
+  - [2.3、已执行与尚未执行](#jobs-toc-heading-6)
+- [三、具体问题与最小升级方案](#jobs-toc-heading-7)
+  - [3.1、P1｜JobsNetworking：错误下载可以覆盖已有有效文件](#jobs-toc-heading-8)
+  - [3.2、P1｜JobsNetworking：取消没有覆盖重试等待与令牌注册](#jobs-toc-heading-9)
+  - [3.3、P2｜JobsNetworking：请求准备会静默丢弃参数或附件](#jobs-toc-heading-10)
+  - [3.4、P2｜JobsNetworking：缓存身份会碰撞，长键让磁盘缓存失效](#jobs-toc-heading-11)
+  - [3.5、P2｜JobsNetworking：同一请求并发发送时取消登记错配](#jobs-toc-heading-12)
+  - [3.6、P1｜JobsGetWindow：空容器造成无限递归](#jobs-toc-heading-13)
+  - [3.7、P1/P2｜JobsInheritance：JS 合法 nil 会崩，初始化配置未生效](#jobs-toc-heading-14)
+  - [3.8、P1/P2｜JobsSwiftDSL：颜色转换与 HEX 构造存在崩溃边界](#jobs-toc-heading-15)
+  - [3.9、P1/P2｜JobsSwiftBaseTools：容错解码可崩，日期解码规则不统一](#jobs-toc-heading-16)
+  - [3.10、P2｜JobsSwiftFoundation：uint32 安全读取仍可越界崩溃](#jobs-toc-heading-17)
+  - [3.11、P1｜JobsSwiftMarkdown：正常锚点调用产生系统异常](#jobs-toc-heading-18)
+  - [3.12、P1｜JobsSwiftPatch：子类补丁改变父类，签名与回滚需要收口](#jobs-toc-heading-19)
+  - [3.13、P1/P2｜JobsSwiftTaskCenter：等待不收尾，最后事件先于终态的合同被颠倒](#jobs-toc-heading-20)
+  - [3.14、P2｜JobsSwiftWorker：派生订阅保留、once 重入及调度替换缺少闭环](#jobs-toc-heading-21)
+  - [3.15、P2｜JobsSwiftBaseTools：Snowflake 并发重复 ID，节点 32 与 0 别名](#jobs-toc-heading-22)
+  - [3.16、P2｜Jobsl10n：资源回退会自指，重绑控件累积旧注册](#jobs-toc-heading-23)
+  - [3.17、P2｜JobsSwiftStandardLibrary：安全 Builder 包装了可逃逸临时指针](#jobs-toc-heading-24)
+  - [3.18、P2｜BRPickerViewSwift：取消后的 awaitResult 永久悬挂](#jobs-toc-heading-25)
+  - [3.19、P1/P2｜JobsSwiftTools：多选结果写入无隔离，权限与代理生命周期过宽](#jobs-toc-heading-26)
+  - [3.20、P2｜JobsCountdownButton：旧主线程 Task 跨越停止与重启](#jobs-toc-heading-27)
+  - [3.21、P2｜JobsSwiftRefresher：noMore、移除和替换没有完整撤销 inset](#jobs-toc-heading-28)
+  - [3.22、P2｜JobsToast：旧消失回调清新引用，ASSIGN 不是真正弱引用](#jobs-toc-heading-29)
+  - [3.23、P2｜JobsFuseAnimation：气泡源释放后重复 Timer 仍空转](#jobs-toc-heading-30)
+  - [3.24、P2｜JobsImageTools 与 JobsSwiftSplash：派生图混用及坏缓存不自愈](#jobs-toc-heading-31)
+  - [3.25、P2｜JobsBluetooth：连接与扫描代际、传输确认尚未形成可靠层](#jobs-toc-heading-32)
+  - [3.26、条件 P1/P2｜JobsCryptoKit：安全入口与 legacy CBC 必须分开](#jobs-toc-heading-33)
+  - [3.27、P2｜JobsLocalNotification：重复时间会异常，公开配置和错误返回不足](#jobs-toc-heading-34)
+  - [3.28、P2｜JobsAudioRecorder：启动回报没有反映系统真实结果](#jobs-toc-heading-35)
+  - [3.29、P2｜JobsSwiftCalendar：week 模式仍按月份生成和翻页](#jobs-toc-heading-36)
+  - [3.30、条件 P2｜JobsInheritance Native Bridge：消息来源与字符串编码缺口](#jobs-toc-heading-37)
+  - [3.31、条件 P2｜JobsScreenCapture：找到内部子视图不等于保护已经有效](#jobs-toc-heading-38)
+  - [3.32、其它已定位的边界与条件性加固](#jobs-toc-heading-39)
+- [四、逐 Pod 升级必要性与覆盖清单](#jobs-toc-heading-40)
+- [五、值得安排的工程升级](#jobs-toc-heading-41)
+  - [5.1、把异步操作的契约统一下来](#jobs-toc-heading-42)
+  - [5.2、渐进完善并发检查，保留可用的旧调用](#jobs-toc-heading-43)
+  - [5.3、收窄基础库的依赖和交付范围](#jobs-toc-heading-44)
+  - [5.4、将已有测试转化为持续有效的门禁](#jobs-toc-heading-45)
+  - [5.5、独立发布前补齐资源和隐私声明](#jobs-toc-heading-46)
+- [六、实施顺序与验收路线](#jobs-toc-heading-47)
+- [七、报告的使用边界](#jobs-toc-heading-48)
+
+</details>
+<!-- jobs-toc:end -->
 
 ---
 
-## 🔥 <font id=前言>前言</font>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">🔥 <font id=前言>前言</font></span><!-- jobs-toc:heading-end -->
 
 > 本报告保留升级前审阅快照，原行号对应当时源码。后续实际实施和构建结论见[升级与编译验收报告](./JobsByPods升级与编译验收报告.md)。2026-10-16 的模块清理和当前空壳情况见[双端空壳排查报告](./OC新工程与Swift空壳排查报告.md)。
 
@@ -16,7 +71,7 @@
 
 本报告由 [**Codex**](https://openai.com/codex) 对实际实现、依赖定义、宿主测试和使用入口进行审阅，结合独立探针复核部分问题。语言与构建基础涉及 <u>[**Swift**](https://www.swift.org/)</u>、[**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html)、[**CocoaPods**](https://cocoapods.org/) 和 [**Xcode**](https://developer.apple.com/xcode/)。报告中的建议尚未应用到 Pod 源码。
 
-## 一、先做什么与保留什么 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、先做什么与保留什么 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 | 安排 | 重点对象 | 目标 |
 | --- | --- | --- |
@@ -35,9 +90,9 @@
 - `JobsSwiftDSL` 与系统创建工厂已经分离；显式 podspec 依赖图未发现自建模块循环。中文 README 普遍已经说明架构和能力边界。
 - 薄桥接 README 已说明 DSL 迁移，蓝牙 README 已说明未消费的命令参数；这些诚实的边界声明应继续保留。
 
-## 二、范围、方法和验证结果 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、范围、方法和验证结果 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-### 2.1、覆盖口径 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-4" data-jobs-toc="v2">2.1、覆盖口径 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 | 项目 | 结果 |
 | --- | --- |
@@ -54,7 +109,7 @@
 
 排除 `ManualBySwiftPods@Pods/`、根 `Pods/` 的第三方实现、供应商及生成代码；必要时只读上游声明核对 API 类型。发布脚本未执行，也未进行完整 Shell 行为审计。现有未提交源码、Podfile、锁文件、工程和 README 的改动未被本任务改写。
 
-### 2.2、证据等级与优先级 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-5" data-jobs-toc="v2">2.2、证据等级与优先级 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 | 标识 | 含义 |
 | --- | --- |
@@ -67,15 +122,15 @@
 
 优先级不是已上线事故数量，也不是利用难度评级。对可选入口，只有真实启用后才产生对应影响；不能把每个库都视为必须立刻重写。
 
-### 2.3、已执行与尚未执行 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-6" data-jobs-toc="v2">2.3、已执行与尚未执行 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 实际执行：65 份 podspec 的 Ruby 语法检查、源文件/资源/依赖存在性清点、`JobsSwiftBlock` 的既有 macOS Foundation 回归，以及第三章注明的独立边界探针。探针产物均在系统临时目录，不加入工程或发布包。
 
 未执行：`pod install` / `pod lib lint`、整工程 `xcodebuild`、宿主 XCTest / UI 测试、模拟器双架构回归 IR、真机蓝牙/相机/录音/多 Scene 验证、App Store 上传及最终隐私报告。**不能将语法通过、独立探针或源码确认写成整个 App 已通过验证。**
 
-## 三、具体问题与最小升级方案 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-7" data-jobs-toc="v2">三、具体问题与最小升级方案 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-### 3.1、P1｜JobsNetworking：错误下载可以覆盖已有有效文件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-8" data-jobs-toc="v2">3.1、P1｜JobsNetworking：错误下载可以覆盖已有有效文件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：源码确认，未发真实下载请求。** [JobsNetworking / HTTPClient.swift L135](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:135>) 使用最终目标与 `.removePreviousFile`，下载没有状态校验；[JobsNetworking / JobsDefaultAgent+Download.swift L39](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNetworking@Pods/Download/JobsDefaultAgent+Download.swift:39>) 只要存在文件和 response 就回报成功。
 
@@ -85,7 +140,7 @@
 
 **验收**：回显服务覆盖 200/404/500/断流/取消；只有有效成功可改变旧文件，所有结果恰好一次。底层 [**Alamofire**](https://github.com/Alamofire/Alamofire) 提供 [响应校验机制](https://github.com/Alamofire/Alamofire/blob/master/Documentation/Usage.md)，需显式接入。
 
-### 3.2、P1｜JobsNetworking：取消没有覆盖重试等待与令牌注册 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-9" data-jobs-toc="v2">3.2、P1｜JobsNetworking：取消没有覆盖重试等待与令牌注册 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：部分实测，其余源码确认。** [JobsNetworking / JobsDefaultAgent.swift L181](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:181>) 在退避后直接再发请求，发请求前没有检查取消，直到响应才检查；[JobsNetworking / JobsDefaultAgent+Upload.swift L99](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNetworking@Pods/Upload/JobsDefaultAgent+Upload.swift:99>) 上传重试也如此。取消退避中的 PUT/DELETE 等请求后仍可能发送下一次写操作。
 
@@ -97,7 +152,7 @@
 
 **验收**：预先取消、绑定中取消、退避取消、上传取消、完成与取消并发；取消后新增请求数为 0，等待/回调按约定返回且只有一次。
 
-### 3.3、P2｜JobsNetworking：请求准备会静默丢弃参数或附件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-10" data-jobs-toc="v2">3.3、P2｜JobsNetworking：请求准备会静默丢弃参数或附件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：源码确认。** [JobsNetworking / JobsPreparedRequest.swift L51](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNetworking@Pods/Agent/JobsPreparedRequest.swift:51>) 允许 query 与 JSON/Form body 并存，但 [JobsNetworking / JobsDefaultAgent.swift L223](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:223>) 相关分支仅消费 body。POST/PATCH 的租户等 query 没到服务端，缓存却仍按 query 区分。
 
@@ -107,7 +162,7 @@
 
 **验收**：回显服务核对 query 和 body 各出现一次，包含中文、`&/=`、数组及 URL 原有 query；“有效文件 + 不存在文件”不得发包。大文件流式上传可另在体量测试后安排。
 
-### 3.4、P2｜JobsNetworking：缓存身份会碰撞，长键让磁盘缓存失效 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-11" data-jobs-toc="v2">3.4、P2｜JobsNetworking：缓存身份会碰撞，长键让磁盘缓存失效 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：碰撞与长文件名已实测；rawData 缺失由源码确认。** [JobsNetworking / JobsCacheKey.swift L31](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNetworking@Pods/Cache/JobsCacheKey.swift:31>) 未转义拼接 `key=value&...`：`["a":"x&b=y"]` 和 `["a":"x","b":"y"]` 得到同 key，输出 `cache_key_collision=true`。[JobsNetworking / JobsDefaultAgent.swift L266](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNetworking@Pods/Agent/JobsDefaultAgent.swift:266>) 未把实际 rawData 字节纳入身份。
 
@@ -117,7 +172,7 @@
 
 **验收**：碰撞对必须不同；同嵌套对象不同插入次序必须相同；不同 raw body/userScope 不复用；长 URL/emoji 查询跨 cache 实例可读且文件名固定长度。
 
-### 3.5、P2｜JobsNetworking：同一请求并发发送时取消登记错配 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-12" data-jobs-toc="v2">3.5、P2｜JobsNetworking：同一请求并发发送时取消登记错配 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：源码确认。** [JobsNetworking / HTTPClient.swift L230](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift:230>) 按 trace.requestId 只保存一个 Request，完成时无条件删除；值类型 JobsRequest 的 trace 在构造时产生。
 
@@ -127,7 +182,7 @@
 
 **验收**：同 request 并发两次，独立取消一条不影响另一条；先完成者不删除后者登记。
 
-### 3.6、P1｜JobsGetWindow：空容器造成无限递归 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-13" data-jobs-toc="v2">3.6、P1｜JobsGetWindow：空容器造成无限递归 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：源码确认，未跑 UIKit。** [JobsGetWindow / UIApplication.swift L87](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsGetWindow@Pods/UIApplication.swift:87>) 对空 Nav/Tab/Split 回退容器自身，再次递归同一对象，没有终止条件。启动装配或空容器下 `jobsTopMostVC(from:)` 可递归至栈溢出。
 
@@ -135,7 +190,7 @@
 
 **验收**：三种空容器快速返回；容器直接 present 返回真正前台页面；普通子页与忽略 Alert 的既有合同保持一致。
 
-### 3.7、P1/P2｜JobsInheritance：JS 合法 nil 会崩，初始化配置未生效 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-14" data-jobs-toc="v2">3.7、P1/P2｜JobsInheritance：JS 合法 nil 会崩，初始化配置未生效 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **P1，源码确认**：[JobsInheritance / BaseWebView.swift L363](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView.swift:363>) 的 TaskGroup 元素为 `Any?`，`group.next()` 为 `Any??`，`group.next()!!` 同时强解包两层。`evalAsyncRaw("void 0")` 的正常 nil 被当成非法值。仅校验外层有结果，保留内部 nil；验收数字/字符串/对象/undefined、抛错、超时与调用取消。JS 无返回值为 nil 的合同可核对 [WebKit 官方声明](https://github.com/WebKit/WebKit/blob/main/Source/WebKit/UIProcess/API/Cocoa/WKWebView.h)。
 
@@ -145,7 +200,7 @@
 
 **验收**：hook 恰好执行一次且早于构造；persistent/nonpersistent 的 Cookie 行为正确，inspectable 关闭生效；不能用已存在网页会话假装构造测试通过。
 
-### 3.8、P1/P2｜JobsSwiftDSL：颜色转换与 HEX 构造存在崩溃边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-15" data-jobs-toc="v2">3.8、P1/P2｜JobsSwiftDSL：颜色转换与 HEX 构造存在崩溃边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：源码确认；CoreGraphics 边界实测。** [JobsSwiftDSL / UIColor.swift L266](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftDSL@Pods/UIKit/iOS.SDK/Others@SDK/UIColor.swift:266>) 只检查 components 非 nil 就访问 `[0]/[1]/[2]`。独立 `CGColor(gray:0.5,alpha:1)` 探针确认数组仅 2 项，不能据此读取第三项。灰度 UIColor 进入该 API 或 getRGBDelta 会越界；尚未跑 UIKit 调用。
 
@@ -155,7 +210,7 @@
 
 **验收**：灰度/RGB/P3/pattern/动态色在两种主题下都不崩，转换成功或失败有明确语义；HEX 短串/非法字符返回 nil，`0x` 格式和非1 alpha 按声明生效。
 
-### 3.9、P1/P2｜JobsSwiftBaseTools：容错解码可崩，日期解码规则不统一 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-16" data-jobs-toc="v2">3.9、P1/P2｜JobsSwiftBaseTools：容错解码可崩，日期解码规则不统一 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **P1，实测**：[JobsSwiftBaseTools / SafeCodable.swift L212](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftBaseTools@Pods/SafeCodable.swift:212>) 在 Int 解码失败后从 Double 直接 `Int(d)`。真实源码加只承接 Foundation 工厂的小 stub，解码 JSON `1e100` 为 `SafeCodable<Int>` 得到 SIGTRAP；`try?`/catch 不能捕获数值 trap。
 
@@ -165,7 +220,7 @@
 
 **验收**：Int 边界、超大正负数、小数均不崩；明确支持的 decoder 日期策略矩阵，对比同值 number/string 及原生/回退路径。优先提供字段级显式单位，启发式保留为兼容回退。
 
-### 3.10、P2｜JobsSwiftFoundation：uint32 安全读取仍可越界崩溃 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-17" data-jobs-toc="v2">3.10、P2｜JobsSwiftFoundation：uint32 安全读取仍可越界崩溃 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：真实源码独立实测。** [JobsSwiftFoundation / UserDefaults.swift L67](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftFoundation@Pods/UserDefaults.swift:67>) 只检查非负后 `UInt32(i)`。只读 ProbeDefaults 返回 `UInt32.max+1`，产生 SIGTRAP；没有写用户设置。
 
@@ -173,7 +228,7 @@
 
 **验收**：负数、0、max、max+1、Int.max 和已有合法值 round-trip；异常数据不终止进程。
 
-### 3.11、P1｜JobsSwiftMarkdown：正常锚点调用产生系统异常 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-18" data-jobs-toc="v2">3.11、P1｜JobsSwiftMarkdown：正常锚点调用产生系统异常 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：表达式实测，未跑 WKWebView。** [JobsSwiftMarkdown / JobsMarkdownView.swift L153](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftMarkdown@Pods/Core/JobsMarkdownView.swift:153>) 直接把 anchor String 交给 `JSONSerialization.data(withJSONObject:)`，未允许 fragment。普通 `"section"` 产生 SIGABRT / NSInvalidArgumentException；`try?` 不能捕获 Objective-C 异常。
 
@@ -181,7 +236,7 @@
 
 **验收**：英文、中文、引号、反斜线、换行和空锚点均不崩；真实渲染后能定位 heading，无匹配时按合同处理。
 
-### 3.12、P1｜JobsSwiftPatch：子类补丁改变父类，签名与回滚需要收口 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-19" data-jobs-toc="v2">3.12、P1｜JobsSwiftPatch：子类补丁改变父类，签名与回滚需要收口 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：继承污染实测；其它路径源码确认。** [JobsSwiftPatch / JobsSwiftPatch.swift L44](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftPatch@Pods/JobsSwiftPatch.swift:44>) 取继承 Method 后直接替换。只给 Child 安装补丁，真实源码探针中 Base.payload 也从 base 变为 patched。[class_getInstanceMethod](https://developer.apple.com/documentation/objectivec/class_getinstancemethod(_:_:)) 会搜索父类。
 
@@ -191,7 +246,7 @@
 
 **验收**：父类/兄弟类不变；不兼容签名被拒；重装、乱序回滚、并发安装回滚始终得到有效原实现。未执行危险的释放 IMP 调用探针。
 
-### 3.13、P1/P2｜JobsSwiftTaskCenter：等待不收尾，最后事件先于终态的合同被颠倒 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-20" data-jobs-toc="v2">3.13、P1/P2｜JobsSwiftTaskCenter：等待不收尾，最后事件先于终态的合同被颠倒 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **P1，源码确认**：[JobsSwiftTaskCenter / JobsTask.swift L359](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftTaskCenter@Pods/JobsTask.swift:359>) 的执行次数/下次执行等待只注册 action，之后取消或提前结束可无人恢复 continuation；waitUntilFinished 也未响应 waiter 自身取消。waitAny 拿到首条结果后 cancelAll，但未结束的等待子任务仍挂住。[TaskGroup](https://developer.apple.com/documentation/swift/taskgroup) 必须等待子任务退出，取消是协作信号。
 
@@ -201,7 +256,7 @@
 
 **验收**：取消 waiter/JobsTask、计划提前结束、waitAny(有限+无限) 在短期限返回；一次任务有 1 条、N 次有 N 条事件；完成等待后最后副作用已结束，取消能传到异步 action。
 
-### 3.14、P2｜JobsSwiftWorker：派生订阅保留、once 重入及调度替换缺少闭环 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-21" data-jobs-toc="v2">3.14、P2｜JobsSwiftWorker：派生订阅保留、once 重入及调度替换缺少闭环 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **保留问题已实测**：[JobsSwiftWorker / JobsObservable+Transform.swift L13](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Transform.swift:13>) 丢订阅 token，上游 closure 强持派生值；[JobsSwiftWorker / JobsObservable+Combine.swift L14](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Combine.swift:14>) 双源 closure 互持。真实原语加只提供 JobsPeriod 的 stub：释放后 `mapped-released=false`、combine 输入/输出全部未释放。
 
@@ -213,7 +268,7 @@
 
 **验收**：释放 weak probes、反复构造 1000 条派生链、回调 accept/自取消、并发同 key、旧完成不删新任务；恰好一次、观察器数和任务数回归基线。
 
-### 3.15、P2｜JobsSwiftBaseTools：Snowflake 并发重复 ID，节点 32 与 0 别名 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-22" data-jobs-toc="v2">3.15、P2｜JobsSwiftBaseTools：Snowflake 并发重复 ID，节点 32 与 0 别名 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：真实源码实测。** [JobsSwiftBaseTools / SnowflakeSwift.swift L33](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftBaseTools@Pods/SnowflakeSwift.swift:33>) 接受 32，但 5 bit 节点只能表示 0…31，传 IDCID/machineID=32 解码为 0。nextID 对 sequence/last timestamp 无同步，同实例 20,000 次并发实测有 904 个重复；重复数随调度变化。
 
@@ -223,7 +278,7 @@
 
 **验收**：多队列大批次无重复；31 成功、32 被拒；同毫秒耗尽/回拨均可复现且无死锁。
 
-### 3.16、P2｜Jobsl10n：资源回退会自指，重绑控件累积旧注册 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-23" data-jobs-toc="v2">3.16、P2｜Jobsl10n：资源回退会自指，重绑控件累积旧注册 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：源码确认，未在宿主启用 override 实跑。** 已调用 `enableLanguageOverride()` 后，选择缺失 lproj 的语言，[Jobsl10n / LanguageManager.swift L33](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/Jobsl10n@Pods/LanguageManager.swift:33>) 回退 Bundle.main，[Jobsl10n / Bundle+多语言国际化.swift L17](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/Jobsl10n@Pods/Foundation&UIKit/Bundle+多语言国际化.swift:17>) 的 main override 又可关联自身，localizedString 再调用自身递归。followSystemLanguage 改语言码/通知，却没有同步清理或更新 override。
 
@@ -233,7 +288,7 @@
 
 **验收**：缺失/地区语言码不递归，系统与自定义往返一致；同槽重绑 1000 次只应用最后一次，不同按钮状态独立，释放回收。
 
-### 3.17、P2｜JobsSwiftStandardLibrary：安全 Builder 包装了可逃逸临时指针 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-24" data-jobs-toc="v2">3.17、P2｜JobsSwiftStandardLibrary：安全 Builder 包装了可逃逸临时指针 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：源码确认，未执行悬空写入。** [JobsSwiftStandardLibrary / Array.swift L41](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftStandardLibrary@Pods/容器/Array.swift:41>) 的 public Builder 持有临时 `UnsafeMutablePointer<[Element]>`；闭包可以把 Builder 保存到外部，退出作用域后普通 addBy 仍可调用，却访问无效内存。[指针文档](https://developer.apple.com/documentation/swift/withunsafemutablepointer(to:_:)) 仅保证闭包期间有效。
 
@@ -243,7 +298,7 @@
 
 **验收**：正常链式构造不变，Builder 逃逸不写返回数组/已释放栈；整数最大值不崩，Address Sanitizer 专项通过。
 
-### 3.18、P2｜BRPickerViewSwift：取消后的 awaitResult 永久悬挂 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-25" data-jobs-toc="v2">3.18、P2｜BRPickerViewSwift：取消后的 awaitResult 永久悬挂 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：源码确认。** [BRPickerViewSwift / BRBasePicker.swift L118](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/BRPickerViewSwift@Pods/Core/BRBasePicker.swift:118>) 只在成功结果 resume，cancelSelection 为空；[BRPickerViewSwift / BRPickerPanel.swift L152](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/BRPickerViewSwift@Pods/UI/BRPickerPanel.swift:152>) 遮罩直接 dismiss。Task 取消没有处理，连续 await 还会覆盖旧 handler。
 
@@ -251,7 +306,7 @@
 
 **验收**：上述每个出口在期限内返回，双点完成不重复 resume，重复等待有明确拒绝或独立会话。
 
-### 3.19、P1/P2｜JobsSwiftTools：多选结果写入无隔离，权限与代理生命周期过宽 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-26" data-jobs-toc="v2">3.19、P1/P2｜JobsSwiftTools：多选结果写入无隔离，权限与代理生命周期过宽 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **P1 风险路径源码确认，竞争频率待运行**：[JobsSwiftTools / MediaPickerService.swift L174](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftTools@Pods/MediaPickerService.swift:174>) 多个 NSItemProvider 异步回调同时 append 一个 Array，DispatchGroup 只等待，不串行化写入；结果也按完成顺序排列。本机 SDK 明确 item provider completion 使用内部队列，不能假设多个 provider 共享有序 UI 队列。
 
@@ -265,7 +320,7 @@
 
 **验收**：乱序完成保持选择顺序、TSan 无竞争；拒绝 PhotoKit 仍可用 PHPicker；成功/取消后宿主和 proxy 可释放；无窗口调用不崩且可获知失败。
 
-### 3.20、P2｜JobsCountdownButton：旧主线程 Task 跨越停止与重启 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-27" data-jobs-toc="v2">3.20、P2｜JobsCountdownButton：旧主线程 Task 跨越停止与重启 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：源码确认。** [JobsCountdownButton / JobsCountdownBtnCtrl.swift L148](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsCountdownButton@Pods/JobsCountdownBtnCtrl.swift:148>) tick 通过 onMainAsync 再投递，[JobsCountdownButton / JobsCountdownBtnCtrl.swift L188](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsCountdownButton@Pods/JobsCountdownBtnCtrl.swift:188>) 到 UI 后只检查 button，没有运行 generation/isRunning。底层 Timer 的保护无法覆盖后来新建的 Task。
 
@@ -275,7 +330,7 @@
 
 **验收**：排队后 stop 不改 UI；重启首值不被旧回调扣减；onTick 内 stop/start 安全，finish 一次；原 disabled 状态恢复。
 
-### 3.21、P2｜JobsSwiftRefresher：noMore、移除和替换没有完整撤销 inset <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-28" data-jobs-toc="v2">3.21、P2｜JobsSwiftRefresher：noMore、移除和替换没有完整撤销 inset <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：源码确认。** [JobsSwiftRefresher / JobsRefreshProxy.swift L357](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftRefresher@Pods/JobsRefreshProxy.swift:357>) 正在 refreshing 时直接改 noMore，[JobsSwiftRefresher / JobsRefreshProxy.swift L137](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftRefresher@Pods/JobsRefreshProxy.swift:137>) detach 只移除 view；begin 加的 inset 没有撤销。重配 slot 也未先清旧实例，可能留白累积。
 
@@ -283,7 +338,7 @@
 
 **验收**：normal/noMore/removed/替换路径 inset 回原值且保留宿主自定义值；刷新中换高度、快速重启不受旧 completion 影响，只有一个刷新器。
 
-### 3.22、P2｜JobsToast：旧消失回调清新引用，ASSIGN 不是真正弱引用 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-29" data-jobs-toc="v2">3.22、P2｜JobsToast：旧消失回调清新引用，ASSIGN 不是真正弱引用 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：源码确认。** [JobsToast / JobsToast.swift L156](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsToast@Pods/JobsToast.swift:156>) 使用 `.OBJC_ASSOCIATION_ASSIGN`，对象外部移除后不保证清零；[JobsToast / JobsToast.swift L179](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsToast@Pods/JobsToast.swift:179>) 的旧动画 completion 无条件清 currentToast。
 
@@ -293,7 +348,7 @@
 
 **验收**：快速 A/B/C 每窗只一条，外部移除后再 show 不崩，两个窗口独立，旧 completion 不清新对象。
 
-### 3.23、P2｜JobsFuseAnimation：气泡源释放后重复 Timer 仍空转 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-30" data-jobs-toc="v2">3.23、P2｜JobsFuseAnimation：气泡源释放后重复 Timer 仍空转 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：源码确认。** [JobsFuseAnimation / UIView+JobsFuseBubbleAnimation.swift L44](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsFuseAnimation@Pods/Core/UIView+JobsFuseBubbleAnimation/UIView+JobsFuseBubbleAnimation.swift:44>) Timer 加主 RunLoop，closure 弱持 runner，runner 无 deinit invalidate。源 view/runner 释放后 timer 被 RunLoop 保留，默认每 0.16 秒，或按配置的发射间隔继续唤醒。此问题针对气泡，不涉及已有充能长按回归。
 
@@ -301,7 +356,7 @@
 
 **验收**：创建销毁 100 次活跃计时器回基线；stop 不再发射，离屏无无用周期唤醒。
 
-### 3.24、P2｜JobsImageTools 与 JobsSwiftSplash：派生图混用及坏缓存不自愈 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-31" data-jobs-toc="v2">3.24、P2｜JobsImageTools 与 JobsSwiftSplash：派生图混用及坏缓存不自愈 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **源码确认，内存峰值待测。** [JobsImageTools / JobsSimpleImageLoader.swift L312](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsImageTools@Pods/JobsSimpleImageLoader.swift:312>) 的 URLSession fallback 缓存仅按 URL，忽略 targetSize/scale；小头像先缓存后大预览可复用低分辨率图。第 328 行按压缩 data.count 记成本，80MB 上限不是实际解码像素预算。
 
@@ -311,7 +366,7 @@
 
 **验收**：同 URL 小/大尺寸正逆序结果正确；高压缩大图实测内存；坏文件/404恢复自愈、并发不互删、离线回退正常；重试符合已确认产品合同且不无界消耗。
 
-### 3.25、P2｜JobsBluetooth：连接与扫描代际、传输确认尚未形成可靠层 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-32" data-jobs-toc="v2">3.25、P2｜JobsBluetooth：连接与扫描代际、传输确认尚未形成可靠层 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：源码确认，真设备行为待验。** [JobsBluetooth / JobsBluetoothManager.swift L122](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsBluetooth@Pods/Core/JobsBluetoothManager/JobsBluetoothManager.swift:122>) 任一服务发现特征就 ready，断连/新连接未清全部旧 characteristic，也未筛当前 peripheral 的晚到回调。A→B 可组合 B 与 A 的旧特征。
 
@@ -321,7 +376,7 @@
 
 **验收**：旧设备晚到事件不改新连接，扫描重启不受旧 timer 影响；缺 UUID、拒写、大包、拥塞、无应答可观察且一次终结。写入语义核对 [CoreBluetooth 官方 API](https://developer.apple.com/documentation/corebluetooth/cbperipheral/writevalue(_:for:type:))。
 
-### 3.26、条件 P1/P2｜JobsCryptoKit：安全入口与 legacy CBC 必须分开 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-33" data-jobs-toc="v2">3.26、条件 P1/P2｜JobsCryptoKit：安全入口与 legacy CBC 必须分开 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **完整性差异已实测**：[JobsCryptoKit / AESGCM.swift L62](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsCryptoKit@Pods/JobsCryptoKit@对称加解密/AESGCM.swift:62>) 的统一 decrypt 也接受无认证 0x02 CBC；自己的合成密文只改 IV，仍成功返回改变的明文，输出 `legacy_CBC_modified_IV_accepted=true`。README 已承认 CBC 不提供完整性，不是隐瞒。
 
@@ -333,7 +388,7 @@
 
 **验收**：篡改认证密文必失败，legacy 仅显式兼容；存量迁移/错key/截断/空明文；PBKDF2 合法测试向量和非法参数均返回明确结果。
 
-### 3.27、P2｜JobsLocalNotification：重复时间会异常，公开配置和错误返回不足 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-34" data-jobs-toc="v2">3.27、P2｜JobsLocalNotification：重复时间会异常，公开配置和错误返回不足 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **源码确认 + macOS 同框架系统 API 实测，未提交通知。** [JobsLocalNotification / JobsMakeLocalNotification.swift L21](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsLocalNotification@Pods/JobsMakeLocalNotification.swift:21>) 仅 max 到1，repeats=true 且小于60会触发 NSInternalInconsistencyException。探针用 Objective-C @try/@catch 捕获；[Apple 约束](https://developer.apple.com/documentation/usernotifications/untimeintervalnotificationtrigger/init(timeinterval:repeats:)) 要求重复至少60秒。默认 repeats=false，不能说默认 Demo 按钮必崩。
 
@@ -343,7 +398,7 @@
 
 **验收**：独立 target 可配置两条通知并拿到失败；0/1/59/60/NaN/infinity 不向系统送非法参数，标识覆盖行为明确。
 
-### 3.28、P2｜JobsAudioRecorder：启动回报没有反映系统真实结果 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-35" data-jobs-toc="v2">3.28、P2｜JobsAudioRecorder：启动回报没有反映系统真实结果 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **源码确认，设备失败场景待验。** [JobsAudioRecorder / JobsAudioRecorderEngine.swift L52](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioRecorderEngine.swift:52>) 忽略 record 返回值后总发 didStart，[JobsAudioRecorder / JobsAudioPlayerEngine.swift L23](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioPlayerEngine.swift:23>) 忽略 play 返回值后总返回 true。
 
@@ -351,7 +406,7 @@
 
 **验收**：prepare/record/play 失败注入，回调状态真实且资源释放；正常短录音、取消、时长结束、快速重录与中断。返回值合同见 [Apple record API](https://developer.apple.com/documentation/avfaudio/avaudiorecorder/record())。
 
-### 3.29、P2｜JobsSwiftCalendar：week 模式仍按月份生成和翻页 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-36" data-jobs-toc="v2">3.29、P2｜JobsSwiftCalendar：week 模式仍按月份生成和翻页 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **证据：源码确认，视觉待跑。** [JobsSwiftCalendar / JobsSwiftCalendar.swift L84](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftCalendar@Pods/Core/JobsSwiftCalendar/JobsSwiftCalendar.swift:84>) week 只隐藏后五行，[JobsSwiftCalendar / JobsSwiftCalendar.swift L311](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsSwiftCalendar@Pods/Core/JobsSwiftCalendar/JobsSwiftCalendar.swift:311>) 日期仍从当月1日所在周生成，currentPage 归月初、swipe 加减月。月中切 week 看不到目标周。
 
@@ -359,7 +414,7 @@
 
 **验收**：月中、跨月/跨年、firstWeekday1/2、DST、日期上下限，切 scope 保留选择，周翻页恰好7日历天。
 
-### 3.30、条件 P2｜JobsInheritance Native Bridge：消息来源与字符串编码缺口 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-37" data-jobs-toc="v2">3.30、条件 P2｜JobsInheritance Native Bridge：消息来源与字符串编码缺口 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **来源闸门缺失由源码确认，实际敏感动作暴露依宿主配置。** [JobsInheritance / BaseWebView+Bridge.swift L20](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsInheritance@Pods/UIWebView/BaseWebView/BaseWebView+Bridge.swift:20>) 仅把 channel/body 交给处理器，未保留 frameInfo/securityOrigin；导航 allowedHosts 不等于 native action 消息授权。第122行 token 直接放单引号，特殊字符可破坏 JS。
 
@@ -367,7 +422,7 @@
 
 **验收**：可信页成功、非授权 origin/iframe 明确拒绝；引号/反斜线/换行原样回传；导航变化后旧来源消息不进入新会话。没有声称已发生 Token 泄漏。
 
-### 3.31、条件 P2｜JobsScreenCapture：找到内部子视图不等于保护已经有效 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-38" data-jobs-toc="v2">3.31、条件 P2｜JobsScreenCapture：找到内部子视图不等于保护已经有效 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **代码判定确认，设备保护效果待验证。** [JobsScreenCapture / JobsScreenshotProtectionView.swift L61](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/JobsScreenCapture@Pods/Core/JobsScreenshotProtectionView/JobsScreenshotProtectionView.swift:61>) 找不到指定 CanvasView 时回退任意 subviews.first，并将 available=true。业务依赖此标志时可能把普通内部视图当作有效截图保护；实现依赖未公开视图结构。
 
@@ -375,7 +430,7 @@
 
 **验收**：支持系统的真机截图/录屏/镜像，触摸/键盘/布局正常；缺内部容器明确不可用并回退。若仅普通截图保存，可保留现有 typed error/addOnly 授权设计。
 
-### 3.32、其它已定位的边界与条件性加固 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-39" data-jobs-toc="v2">3.32、其它已定位的边界与条件性加固 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 | 位置 | 级别/证据 | 缺口 | 最小升级与验收 |
 | --- | --- | --- | --- |
@@ -398,7 +453,7 @@
 另有按规模安排的方向：录音中断/旧 delegate 身份、磁盘缓存容量与 stale grace、GIF 解码预算、Markdown 渲染版本/进程失败与主线程 I/O、Open 浏览器加载失败、列表空态/重试、Auth submitting 状态、图标生成原子发布和图像重下载复用保护。具体模块见第四章，未统一定成已发生事故。
 
 
-## 四、逐 Pod 升级必要性与覆盖清单 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-40" data-jobs-toc="v2">四、逐 Pod 升级必要性与覆盖清单 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 “深入”表示已阅读核心状态/错误/生命周期路径，“抽查”表示关键公开实现和典型调用，“概览”表示实现结构和接口边界，“桥接/空目录”按实际状态记录。表中 P2/P3 的建议不自动等于已确认缺陷；具体证据见第三章。源码数是物理清点，用于估计范围，不用于评价质量。
 
@@ -472,9 +527,9 @@
 | `Jobsl10n@Pods` | 8 / 658 | 深入 | P2必要 | Bundle回退/系统模式、slot去重与同步；保留弱target刷新方向 |
 | `MetalKit@Pods` | 1 / 8 | 8行桥接 | P3按需 | 真实Pod名JobsSwiftMetalKit，DSL迁移兼容；无需扩成重复渲染层 |
 
-## 五、值得安排的工程升级 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-41" data-jobs-toc="v2">五、值得安排的工程升级 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-### 5.1、把异步操作的契约统一下来 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-42" data-jobs-toc="v2">5.1、把异步操作的契约统一下来 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 网络、任务中心、事件流、计时回调、Picker 和 Flutter 会话共享同一组需要明确的行为：
 
@@ -486,7 +541,7 @@
 
 优先抽取**共同测试场景与小型终态工具**。不要一开始造一个覆盖所有异步库的庞大统一框架。
 
-### 5.2、渐进完善并发检查，保留可用的旧调用 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-43" data-jobs-toc="v2">5.2、渐进完善并发检查，保留可用的旧调用 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 当前主工程 `SWIFT_VERSION = 5.0` 是语言模式设置；不能据此推断本机编译器陈旧。podspec 中也存在 `5.9` 及多个兼容版本声明。
 
@@ -496,7 +551,7 @@
 
 首批建议为 `JobsSwiftFoundation`、`JobsSwiftWorker`、`JobsNetworking` 的非 UI 核心，再推进 UI 封装。完整模式下发现的编译错误应写入迁移清单；本报告不将尚未切换模式的工程描述为当前无法编译。
 
-### 5.3、收窄基础库的依赖和交付范围 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-44" data-jobs-toc="v2">5.3、收窄基础库的依赖和交付范围 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 | 入口 | 显式直接依赖去重数 | 去重可达依赖数 | 值得处理的边界 |
 | --- | --- | --- | --- |
@@ -513,13 +568,13 @@
 
 宿主 [Podfile](/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/Podfile:24) 已统一最低系统为 iOS 15，许多独立 podspec 仍声明 iOS 12。应明确每个库是否继续单独支持低系统，并在干净消费工程验证；不能仅因宿主能构建就宣称独立 Pod 的低版本承诺成立，也不应在未确认使用者需求时统一抬高最低版本。
 
-### 5.4、将已有测试转化为持续有效的门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-45" data-jobs-toc="v2">5.4、将已有测试转化为持续有效的门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 宿主已有 [14 个 XCTest 方法](/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsSwiftBaseConfigDemoTests/JobsSwiftBaseConfigDemoTests.swift:57)，包括计时器归一化、四内核、单次结束、背压、时间真值、管理器替换及精准取消等。现有 [GitHub Actions 构建流程](/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/.github/workflows/build_simulator_app.yml:64) 运行 Block 独立回归，主工程阶段在第 118–130 行执行 `build`，未执行宿主 `test`。
 
 建议保留构建与产物流程，增加明确模拟器目的地的核心 XCTest 门禁。针对网络/Worker/TaskCenter 使用注入时钟、假客户端和有限等待；避免测试依赖真实服务器、蓝牙设备或长时间 sleep。UI 测试集中到 Scene、取消、重入、页面销毁等真实风险，测试每个简单属性 setter 的收益较低。**验收标准是恢复旧缺陷时门禁会失败。**
 
-### 5.5、独立发布前补齐资源和隐私声明 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-46" data-jobs-toc="v2">5.5、独立发布前补齐资源和隐私声明 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 目前自建目录中只发现 `JobsBluetooth/Resource/PrivacyInfo.xcprivacy`，并通过 podspec 资源 bundle 声明。需要逐个核对**真实使用需要理由的 API 的模块**：例如 `JobsSwiftFoundation` 的 UserDefaults、`JobsSwiftTools` 的退出标记及文件时间、`JobsSwiftTimer` 的系统运行时间、`JobsSwiftDebugTools` 的持久开关。没有这些使用的薄桥接不因此自动需要一份清单。
 
@@ -527,7 +582,7 @@
 
 独立分发再检查实际资源 bundle、公开头、依赖版本、source glob、最低系统、Debug/Release、静态/动态集成和最小消费 App。`ruby -c` 的成功不代替 podspec 语义加载或实际链接。
 
-## 六、实施顺序与验收路线 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-47" data-jobs-toc="v2">六、实施顺序与验收路线 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 | 波次 | 改造内容 | 可交付的验收结果 |
 | --- | --- | --- |
@@ -544,7 +599,7 @@
 
 底层公开 API 一旦变化，按既有规约同步核对实现、相关 Pod README、宿主 Demo、工程框架文档和公共 CodeSnippets；存在对应 OC 语义时核对两侧。每次升级报告验证范围及未跑项目，不能用文档同步替代运行验证。
 
-## 七、报告的使用边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-48" data-jobs-toc="v2">七、报告的使用边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 本报告反映审阅日期的工作区。文件位置和行号随后续编辑可能变化；已修复后应复核结论。第三章给出触发条件、证据等级、最小改法与验收建议，优先沿这些条件建立回归，再判断是否扩大设计调整。
 

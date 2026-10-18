@@ -2,7 +2,24 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [🔥 前言](#%E5%89%8D%E8%A8%80)
+- [一、验收结论与环境](#jobs-toc-heading-2)
+- [二、已经落实的主要改造](#jobs-toc-heading-3)
+  - [2.1、正确性与异步终态](#jobs-toc-heading-4)
+  - [2.2、系统、设备与资源边界](#jobs-toc-heading-5)
+  - [2.3、模块交付与维护门禁](#jobs-toc-heading-6)
+- [三、兼容迁移说明](#jobs-toc-heading-7)
+- [四、逐 Pod 实施与编译清单](#jobs-toc-heading-8)
+- [五、回归证据和复现方式](#jobs-toc-heading-9)
+- [六、仍需对应场景验证的事项](#jobs-toc-heading-10)
+
+</details>
+<!-- jobs-toc:end -->
 
 ---
 
@@ -16,7 +33,7 @@
 
 每个实际 Pod 都同步了 README 和生产交付规则。有确认缺陷的模块修复行为；成熟组件保留设计并补充使用合同。构建顺序是 **真实 Pod target → 宿主完整工程 → 宿主 XCTest**，语法检查和 Mock 不替代工程编译。
 
-## 一、验收结论与环境 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、验收结论与环境 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
 <!-- ACCEPTANCE_START -->
 | 门禁 | 当前实际结果 | 证据 |
@@ -47,9 +64,9 @@
 
 Podspec 中较低的最低系统版本没有因为本机 SDK 限制而批量抬高。上述编译证明当前消费环境可构建；旧系统、动态链接、发布 lint、真机签名及 Unity 真机分发需要对应环境另验。
 
-## 二、已经落实的主要改造 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、已经落实的主要改造 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
-### 2.1、正确性与异步终态 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+### <span id="jobs-toc-heading-4" data-jobs-toc="v2">2.1、正确性与异步终态 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
 网络每次执行都有独立身份，令牌登记、取消、重试和异步 continuation 共用一次终态规则。URL query 与 JSON/Form body 独立发送，附件预检失败明确返回错误；文件 URL multipart 不再整文件预读。下载先写同目录临时文件，验证 HTTP 状态、可适用长度和可选 SHA256，再领取提交终态并替换目标，错误响应和错误摘要保留原好文件。缓存键使用实际请求的规范化摘要，磁盘文件名固定；容量、过期、LRU、预算缩小、损坏项和符号链接均有边界处理。
 
@@ -61,7 +78,7 @@ TaskCenter 补齐等待取消、最后事件、异步 action 句柄和终态回�
 
 运行时 Patch 按 Class + SEL 管理稳定 trampoline，继承方法先形成类自身覆盖，安装和回滚串行，拒绝不支持的 ABI/ARC 方法族。Array Builder 移除逃逸的 inout 指针；整数、日期单位、UInt32、Snowflake、Timer 和 Excel 冻结参数在转换与运算前检查边界。Text 去掉不能证明安全的 Sendable 承诺；任意属性对象不因为复制 NSAttributedString 就自动变成可跨 actor 的不可变对象。[Swift Sendable](https://docs.swift.org/latest/documentation/swift/sendable/)、[Swift 并发迁移说明](https://www.swift.org/migration/documentation/swift-6-concurrency-migration-guide/dataracesafety/)
 
-### 2.2、系统、设备与资源边界 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+### <span id="jobs-toc-heading-5" data-jobs-toc="v2">2.2、系统、设备与资源边界 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
 BLE 加入完整 ready 条件、有界队列、优先级、超时与有限重试、MTU、无响应背压、明确的分块选择及确认等级。用户 decoder/matcher 可以重入，因此回调前后复核连接、命令和 attempt 身份，旧应答不能完成新命令。音频检查系统 prepare/record/play 的真实结果，收口会话所有权、弱委托、中断与媒体重置、结束回调和文件错误。通知模型支持外部配置，提交前验证重复间隔与标识，结果在主队列交付。
 
@@ -75,7 +92,7 @@ WebView 配置在首文档之前真正生效；JS 的 nil、取消和超时有�
 
 PNPlayer 将 GPU、shader、纹理及播放失败暴露为错误，取消资源就绪的强制解包和 fatal 路径；观察者、播放器与 DisplayLink 按代次/弱目标清理，渲染器与实际 MTKView 配置一致，球面网格约束 UInt16 上限。宿主 Demo 同步使用可失败初始化与错误出口。
 
-### 2.3、模块交付与维护门禁 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+### <span id="jobs-toc-heading-6" data-jobs-toc="v2">2.3、模块交付与维护门禁 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
 65 份 podspec 及显式 subspec 排除 Test/Tests、Demo/Examples、build、DerivedData 和临时源文件。16 个模块新增所用 required reason API 的 PrivacyInfo.xcprivacy，保留 BLE 原有清单；业务采集和跟踪仍由实际应用声明。理由按模块中真实用途记录，空采集数组不代表整 App 没有采集，更不代表已经获得发布审核。[Apple required reason API 说明](https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api)
 
@@ -87,7 +104,7 @@ JobsOCDSL 原交付缺少 helper 和引用的实现目录，本次规范为可�
 
 新增 `.github/tests/JobsPodsUpgrade/` 的原生回归和逐 Pod 编译 runner，并将门禁接入现有 CI：原生回归、逐 Pod、完整宿主、hosted XCTest、失败证据上传。CI 配置本地校验通过，本次没有提交或触发远程流水线。
 
-## 三、兼容迁移说明 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+## <span id="jobs-toc-heading-7" data-jobs-toc="v2">三、兼容迁移说明 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
 | 入口 | 调用方需要知道的变化 |
 | --- | --- |
@@ -108,7 +125,7 @@ JobsOCDSL 原交付缺少 helper 和引用的实现目录，本次规范为可�
 | Patch payload | 拒绝任意自定义对象；普通 `@` 返回编码不能证明具体类型，调用方需保证 NSDictionary 替代与原调用兼容 |
 | Host 最低系统 | 15.0 → 15.6，以满足现有 LiveChat 依赖；Podspec 的各模块最低版本另按实际兼容验证 |
 
-## 四、逐 Pod 实施与编译清单 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+## <span id="jobs-toc-heading-8" data-jobs-toc="v2">四、逐 Pod 实施与编译清单 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
 每一行均同步本模块 README、生产源码排除规则及编译命令；表中的“保留”表示未为增加改动量而重写成熟架构。编译状态以最终日志为准。
 
@@ -184,7 +201,7 @@ JobsOCDSL 原交付缺少 helper 和引用的实现目录，本次规范为可�
 | `JobsSwiftMetalKit` | 保留系统薄桥接，明确实际 Pod 名和 DSL 迁移 | [README.md](</Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo/JobsByPods/MetalKit@Pods/README.md>) | [通过](</private/tmp/jobs-pods-upgrade-build/FinalDebug/JobsSwiftMetalKit.log>) |
 <!-- POD_MATRIX_END -->
 
-## 五、回归证据和复现方式 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+## <span id="jobs-toc-heading-9" data-jobs-toc="v2">五、回归证据和复现方式 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
 | 验证 | 实际覆盖 | 证据与边界 |
 | --- | --- | --- |
@@ -218,7 +235,7 @@ runner 默认请求 2 个 Xcode 构建任务，并通过 `OTHER_SWIFT_FLAGS` 向
 
 逐项重编支持 `--pods JobsBluetooth,JobsSwiftGraphicCaptcha --skip-host`。`--host-only` 用于已完成 Pod 门禁后的宿主重验。Release Simulator 复验使用 `--configuration Release --host-only`，自动按上文 Flutter 限制选择内嵌模式。完整首次复现需已有可用的 CocoaPods 安装产物；独立 OCDSL 消费者会自动执行无仓库更新的安装。
 
-## 六、仍需对应场景验证的事项 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+## <span id="jobs-toc-heading-10" data-jobs-toc="v2">六、仍需对应场景验证的事项 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
 本次编译和回归不替代真实 BLE 外设 ACK/拥塞、录音权限/中断、通知展示、iCloud 相册、大型 HEIC 解码峰值、多 Scene、真实截图/录屏、Flutter 插件会话、视频跨启动网络恢复和服务器验证码/登录限流验收。没有伪造服务端认证、设备确认或 OS 截图保证。
 

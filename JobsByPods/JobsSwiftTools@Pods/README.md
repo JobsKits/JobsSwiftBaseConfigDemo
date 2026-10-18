@@ -2,7 +2,22 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [Jobs DSL 调用约定](#%E5%89%8D%E8%A8%80)
+- [一、架构脉络与关键设计](#jobs-toc-heading-2)
+  - [1.1、设计目的与职责划分](#jobs-toc-heading-3)
+  - [1.2、运行脉络](#jobs-toc-heading-4)
+  - [1.3、关键设计与边界](#jobs-toc-heading-5)
+  - [1.4、阅读与重建顺序](#jobs-toc-heading-6)
+- [二、运行合同与边界](#jobs-toc-heading-7)
+- [三、生产交付与全量门禁](#jobs-toc-heading-8)
+
+</details>
+<!-- jobs-toc:end -->
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
 
@@ -14,26 +29,26 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 
 <a id="jobs-architecture"></a>
 
-## 一、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-3" data-jobs-toc="v2">1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 面向应用集成提供权限、媒体选择、崩溃记录和跨引擎桥接等服务。每个服务单独承接系统或外部运行时，JobsSwiftTools.swift 作为通用入口集合，不能按一个单纯工具类理解全部行为。
 
-### 1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-4" data-jobs-toc="v2">1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 宿主选择服务并初始化 → 处理权限或外部运行时 → 执行动作 → 交付结果并释放或保存状态
 
-### 1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-5" data-jobs-toc="v2">1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - CrashLogCenter 持久化退出标记与日志，未到安全退出点只能表示疑似异常退出，不能精确证明崩溃原因。
 - SIGKILL/Jetsam 无回调，signal handler 内使用 Swift/ObjC/IO 也有明确限制；不可宣称完整可靠捕获所有崩溃。
 - 媒体选择与权限申请分层，选择结果还可能需要异步加载，不能把展示选择器当作取得文件。
 - [**Flutter**](https://flutter.dev/) 和 Unity 桥接依赖外部引擎与宿主生命周期，重建某个小服务时应明确是否需要这些集成。
 
-### 1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-6" data-jobs-toc="v2">1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 按任务先读 PermissionCenter、MediaPickerService 或 CrashLogCenter，再看 FlutterBridge/UnityManager 与应用生命周期接入点。
 
@@ -47,7 +62,7 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 
 依赖与编译入口：[JobsSwiftTools.podspec](<./JobsSwiftTools.podspec>)。其中显式依赖声明包括 `Flutter`、`FlutterPluginRegistrant`、`JobsSwiftBaseDefines`、`JobsSwiftBlock`、`JobsByPhotosUI`、`JobsByUIKit`、`JobsToast`、`JobsSwiftDSL`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
-## 二、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-7" data-jobs-toc="v2">二、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 `MediaPickerService` 和 NSObject 便利入口在 MainActor 调用，可用 `onFailure` 接收 noPresenter、permissionDenied、unavailable、presenterBusy、timedOut、cancelled、decodingFailed 和 decodedMemoryBudgetExceeded。传入 presenter 必须在窗口中且没有正在展示的页面/未交付媒体会话。代理在完成或取消时释放，晚到的旧代理不会清理新会话。PHPicker 使用用户所选内容授权，不预先请求全相册读写权限；旧相册入口仍检查权限。多图按选择顺序逐张加载，系统 item provider 返回 UIImage 后检查累计解码预算 64 MiB，任一解码失败终止本批。该预算限制本批保留的图片，不限制系统加载单张原图时的瞬时解码峰值；本入口保留原图尺寸，超大素材需由宿主采用文件导入和按目标尺寸采样的流程。`loadTimeout` 默认 30 秒（最大 300 秒），从用户选择完成开始计算，超时取消 item provider 的加载并结束本批；浏览选择器期间不计时。取消相册继续保留旧 onImages([]) 语义；成功图片回调不会被伪造为权限成功。
 
@@ -64,7 +79,7 @@ pod 'JobsSwiftTools/Core', :path => './JobsByPods/JobsSwiftTools@Pods'
 需要跨 Flutter 页面时接入 `JobsSwiftTools` 或 `JobsSwiftTools/Flutter`，Flutter 子规格声明 Flutter 和 FlutterPluginRegistrant。Core 排除 FlutterBridge / UnityManager；此入口减少外部引擎集成，不承诺 Jobs UIKit 底层依赖全部轻量。Unity 集成由宿主按实际引擎版本接入。
 
 
-## 三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-8" data-jobs-toc="v2">三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 每个显式 subspec 同步继承生产排除集合，避免只消费子模块时带入测试/示例源码。
 

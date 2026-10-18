@@ -2,9 +2,18 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
 
-## 一、运行 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+- [一、运行](#jobs-toc-heading-1)
+- [二、证据范围](#jobs-toc-heading-2)
+
+</details>
+<!-- jobs-toc:end -->
+
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">一、运行 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
 在工程根目录使用所选 [Xcode](https://developer.apple.com/xcode/) 工具链运行，无须执行 CocoaPods 安装或 xcodebuild：
 
@@ -28,7 +37,7 @@ ruby .github/tests/JobsPodsUpgrade/Core/run_regressions.rb --webkit
 
 默认运行 6 组回归、6 次执行与 18 条编译/执行命令；启用 WebKit 后为 7 组、8 次执行、21 条命令，包含禁止和允许两次 HTTP 对照。
 
-## 二、证据范围 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">二、证据范围 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
 | 回归 | 实际验证 | 明确边界 |
 | ---- | ---- | ---- |

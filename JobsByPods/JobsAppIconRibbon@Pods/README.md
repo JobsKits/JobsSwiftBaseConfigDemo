@@ -2,19 +2,50 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [🔥 前言](#jobs-toc-heading-1)
+- [一、功能特点](#jobs-toc-heading-2)
+- [二、目录结构](#jobs-toc-heading-3)
+- [三、接入方式](#jobs-toc-heading-4)
+  - [3.1、引入本地 Pod](#jobs-toc-heading-5)
+  - [3.2、创建项目配置](#jobs-toc-heading-6)
+  - [3.3、切换 AppIcon 名称](#jobs-toc-heading-7)
+- [四、配置项](#jobs-toc-heading-8)
+- [五、自定义环境](#jobs-toc-heading-9)
+- [六、工作流程](#jobs-toc-heading-10)
+- [七、手动验证](#jobs-toc-heading-11)
+- [八、常见问题](#jobs-toc-heading-12)
+  - [8.1、提示找不到配置文件](#jobs-toc-heading-13)
+  - [8.2、提示找不到源 AppIcon](#jobs-toc-heading-14)
+  - [8.3、构建后仍显示原始 AppIcon](#jobs-toc-heading-15)
+  - [8.4、字体没有生效](#jobs-toc-heading-16)
+- [九、风险边界](#jobs-toc-heading-17)
+- [十、架构脉络与关键设计](#jobs-toc-heading-18)
+  - [10.1、设计目的与职责划分](#jobs-toc-heading-19)
+  - [10.2、运行脉络](#jobs-toc-heading-20)
+  - [10.3、关键设计与边界](#jobs-toc-heading-21)
+  - [10.4、阅读与重建顺序](#jobs-toc-heading-22)
+- [十一、运行合同与边界](#jobs-toc-heading-23)
+- [十二、生产交付与全量门禁](#jobs-toc-heading-24)
+
+</details>
+<!-- jobs-toc:end -->
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
 
 ---
 
-## 🔥 <font id=前言>前言</font>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">🔥 <font id=前言>前言</font></span><!-- jobs-toc:heading-end -->
 
 > `JobsAppIconRibbon` 是一个构建期 App 图标环境绶带生成器。它会在原始 AppIcon 的右上角绘制 `DEBUG`、`RELEASE` 或自定义文案，方便从桌面图标直接识别安装包环境。
 
 该模块没有运行时代码，不需要在 [**Swift**](https://www.swift.org/) 或 [**Objective-C**](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html) 中 `import`。它由 [**CocoaPods**](https://cocoapods.org/) 注册到 [**Xcode**](https://developer.apple.com/xcode) Build Phase，并在资源编译前生成派生 AppIcon。
 
-## 一、功能特点 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、功能特点 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 原始 `.appiconset` 始终只读，不覆盖设计源图。
 - Debug 默认显示 `DEBUG`，Release 默认显示 `RELEASE`。
@@ -23,7 +54,7 @@
 - 支持自定义构建环境及对应文案，例如 `UAT`、`TEST`、`PRE`。
 - 每次构建仅重建当前 Configuration 对应的派生 `.appiconset`。
 
-## 二、目录结构 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、目录结构 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 ```text
 JobsAppIconRibbon@Pods/
@@ -39,9 +70,9 @@ JobsAppIconRibbon@Pods/
 - `Scripts/JobsAppIconRibbonGenerator.swift`：读取 AppIcon、绘制绶带并输出派生图标集。
 - 项目根目录的 `../../JobsAppIconRibbon.config`：调用方配置入口。
 
-## 三、接入方式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、接入方式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-### 3.1、引入本地 Pod <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-5" data-jobs-toc="v2">3.1、引入本地 Pod <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 在项目的 `Podfile` 或依赖拆分文件中加入：
 
@@ -55,7 +86,7 @@ pod 'JobsAppIconRibbon', :path => './JobsByPods/JobsAppIconRibbon@Pods'
 pod install --no-repo-update
 ```
 
-### 3.2、创建项目配置 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-6" data-jobs-toc="v2">3.2、创建项目配置 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 在项目根目录创建 `JobsAppIconRibbon.config`：
 
@@ -75,7 +106,7 @@ FONT_SIZE_RATIO=0.105
 
 `SOURCE_APPICONSET` 必须相对于项目根目录，且必须指向包含 `Contents.json` 的原始 `.appiconset`。
 
-### 3.3、切换 AppIcon 名称 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-7" data-jobs-toc="v2">3.3、切换 AppIcon 名称 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 在 App Target 的 Build Settings 中配置 `Asset Catalog App Icon Set Name`：
 
@@ -92,7 +123,7 @@ ASSETCATALOG_COMPILER_APPICON_NAME
 
 完成后直接构建 App 即可，不需要添加任何业务层调用代码。
 
-## 四、配置项 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-8" data-jobs-toc="v2">四、配置项 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 | 配置项 | 默认值 | 说明 |
 | --- | --- | --- |
@@ -106,7 +137,7 @@ ASSETCATALOG_COMPILER_APPICON_NAME
 | `FONT_NAME` | `HelveticaNeue-Bold` | macOS 字体名称，不存在时回退到系统粗体 |
 | `FONT_SIZE_RATIO` | `0.105` | 字号占图标边长的比例 |
 
-## 五、自定义环境 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-9" data-jobs-toc="v2">五、自定义环境 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 例如新增名为 `UAT` 的 Build Configuration：
 
@@ -124,7 +155,7 @@ ASSETCATALOG_COMPILER_APPICON_NAME
 
 自定义 Configuration 会转换为大写配置键；非字母数字字符转换为下划线。例如 `Pre-Release` 对应 `TEXT_PRE_RELEASE`，生成的图标集名称为 `JobsAppIconRibbon-Pre-Release`。
 
-## 六、工作流程 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-10" data-jobs-toc="v2">六、工作流程 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 流程图见[架构脉络与关键设计](#jobs-architecture-diagram-1)。
 
@@ -140,7 +171,7 @@ ASSETCATALOG_COMPILER_APPICON_NAME
 **/JobsAppIconRibbon-*.appiconset/
 ```
 
-## 七、手动验证 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-11" data-jobs-toc="v2">七、手动验证 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 正常使用时直接通过 [**Xcode**](https://developer.apple.com/xcode) 构建。需要单独验证脚本时，在项目根目录执行：
 
@@ -153,25 +184,25 @@ zsh './JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbon.sh'
 
 日志写入系统临时目录中的 `JobsAppIconRibbon.log`。
 
-## 八、常见问题 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-12" data-jobs-toc="v2">八、常见问题 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-### 8.1、提示找不到配置文件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-13" data-jobs-toc="v2">8.1、提示找不到配置文件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 确认 `JobsAppIconRibbon.config` 位于项目根目录；多工程目录还要确认 `PODS_PODFILE_DIR_PATH` 指向正确项目。
 
-### 8.2、提示找不到源 AppIcon <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-14" data-jobs-toc="v2">8.2、提示找不到源 AppIcon <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 确认 `SOURCE_APPICONSET` 是项目根目录下的相对路径，并检查目录名大小写及 `Contents.json` 是否存在。
 
-### 8.3、构建后仍显示原始 AppIcon <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-15" data-jobs-toc="v2">8.3、构建后仍显示原始 AppIcon <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 确认当前 Configuration 的 `ASSETCATALOG_COMPILER_APPICON_NAME` 已切换到派生名称，并重新构建 App。
 
-### 8.4、字体没有生效 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-16" data-jobs-toc="v2">8.4、字体没有生效 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 `FONT_NAME` 使用 macOS PostScript 字体名称。找不到指定字体时会自动使用系统粗体，构建不会因此中断。
 
-## 九、风险边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-17" data-jobs-toc="v2">九、风险边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 模块只替换当前环境对应的完整派生 `.appiconset`，不会删除或覆盖 `SOURCE_APPICONSET`；生成失败保留上一次成品。
 - 不要把 `SOURCE_APPICONSET` 指向 `JobsAppIconRibbon-*` 派生目录，否则会重复叠加绶带。
@@ -180,15 +211,15 @@ zsh './JobsByPods/JobsAppIconRibbon@Pods/Scripts/JobsAppIconRibbon.sh'
 
 <a id="jobs-architecture"></a>
 
-## 十、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-18" data-jobs-toc="v2">十、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 10.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-19" data-jobs-toc="v2">10.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 构建期读取原始 AppIcon 与构建环境参数，通过 [**Swift**](https://www.swift.org/) 生成器绘制环境绶带，输出派生 appiconset 供构建使用。它不是运行时页面，也不负责 App 内切换网络环境。
 
-### 10.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-20" data-jobs-toc="v2">10.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 读取配置与原始图标 → 解析文案和绘制参数 → 生成带绶带图标集 → 构建使用派生资源名
 
@@ -205,14 +236,14 @@ flowchart LR
     E --> F[Xcode 编译派生 AppIcon]
 ```
 
-### 10.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-21" data-jobs-toc="v2">10.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 源图标与派生图标分开，不能把 SOURCE_APPICONSET 指向上一次生成结果造成绶带重复叠加。
 - 构建参数改变后需重新构建；运行时修改变量不会改变已经安装的桌面图标。
 - 生成器使用 macOS 图形环境，重建应保留脚本调用、配置文件和输出资源的关系。
 - 字体回退和正式包是否展示绶带属于配置边界，不能在生成器里写死所有环境。
 
-### 10.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-22" data-jobs-toc="v2">10.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 先读构建入口与参数说明，再看生成器的配置解析、render 和输出路径。
 
@@ -222,14 +253,14 @@ flowchart LR
 
 依赖与编译入口：[JobsAppIconRibbon.podspec](<./JobsAppIconRibbon.podspec>)。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
-## 十一、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-23" data-jobs-toc="v2">十一、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 生成器先在与源图标集同目录的独立临时 appiconset 中完成所有文件，校验后才替换当前环境的派生产物；任何读取或渲染失败均保留上一次完整产物。输出前缀不能含路径分隔符，输出解析后的路径不得等于源目录；Contents 中 filename 必须是图标集内的单一文件名，不能越出源目录或经符号链接引用外部文件。
 
 `FONT_SIZE_RATIO` 必须有限且大于零，非法值使用 0.105，最大 1。多构建任务应使用各自 Configuration 的派生名称；源目录仍只读。
 
 
-## 十二、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-24" data-jobs-toc="v2">十二、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
 

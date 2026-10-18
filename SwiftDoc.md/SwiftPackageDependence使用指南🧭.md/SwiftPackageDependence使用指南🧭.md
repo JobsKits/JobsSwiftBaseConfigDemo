@@ -2,15 +2,29 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [🔥 前言](#jobs-toc-heading-1)
+- [一、Demo 能力](#jobs-toc-heading-2)
+- [二、目录结构](#jobs-toc-heading-3)
+- [三、Xcode 集成](#jobs-toc-heading-4)
+- [四、命令行验证](#jobs-toc-heading-5)
+- [五、与 CocoaPods 的集成](#jobs-toc-heading-6)
+- [六、移除与排错](#jobs-toc-heading-7)
+
+</details>
+<!-- jobs-toc:end -->
 
 ---
 
-## 🔥 <font id=前言>前言</font>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">🔥 <font id=前言>前言</font></span><!-- jobs-toc:heading-end -->
 
 本文以 `JobsBySwiftPackageManager/JobsSPMDemoPackage` 为样例，展示 [**Swift Package Manager**](https://www.swift.org/package-manager/) 的本地包、资源、宏、并发、命令行程序与测试。App 只链接没有远程依赖的基础 Library Package；Macro、Client 和宏测试收口到嵌套的独立 Package。
 
-## 一、Demo 能力 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、Demo 能力 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 | 能力 | 对应实现 | App 演示 |
 | --- | --- | --- |
@@ -23,7 +37,7 @@
 | Swift Testing | `JobsSPMDemoTests` | 验证资源、actor 与宏 |
 | 外部依赖 | `swift-syntax 603.0.2` | 只由独立 Macro Demo 精确锁定 |
 
-## 二、目录结构 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、目录结构 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 ```text
 JobsBySwiftPackageManager/
@@ -46,7 +60,7 @@ JobsBySwiftPackageManager/
 
 Product 是宿主工程可以链接的模块，Target 是 Package 内部编译单元。iOS App 只链接根 Package 的 `JobsSPMDemoKit`，因此 Clean / Build 不会解析 `swift-syntax`；嵌套 `MacroDemo` 的宏 Product 只由命令行 Client 和宏测试执行。
 
-## 三、Xcode 集成 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、Xcode 集成 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 当前工程已经使用相对路径集成本地 Package：
 
@@ -63,7 +77,7 @@ let results = await repository.search("resource")
 
 交互页面位于 `JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@SwiftPackageManager/SwiftPackageManagerDemoVC.swift`。
 
-## 四、命令行验证 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-5" data-jobs-toc="v2">四、命令行验证 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 执行完整门禁：
 
@@ -82,7 +96,7 @@ let results = await repository.search("resource")
 
 `swift-syntax` 由嵌套 `MacroDemo` 通过 SwiftPM 下载官方精确版本，不再维护容易失配的源码副本，也不再进入 iOS App 的 Package 依赖图。
 
-## 五、与 CocoaPods 的集成 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-6" data-jobs-toc="v2">五、与 CocoaPods 的集成 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 `【MacOS】🧠编译通过方可集成进SPM.command` 同时支持两种入口：
 
@@ -91,7 +105,7 @@ let results = await repository.search("resource")
 
 Podfile 会先检查脚本是否存在，缺失时只告警并继续；调用时设置 `JOBS_SKIP_README=1` 避免二次交互。一旦选择执行，脚本授权、编译或测试失败会终止集成，符合“编译通过方可集成”。非交互环境按默认选项执行。
 
-## 六、移除与排错 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-7" data-jobs-toc="v2">六、移除与排错 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 移除时先删除业务中的 `import JobsSPMDemoKit`，再从 PROJECT 的 Package Dependencies 与 App Target 的 Frameworks 中移除 Product。
 

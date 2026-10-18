@@ -2,11 +2,36 @@
 
 ![Jobs倾情奉献](https://picsum.photos/1500/400 "Jobs出品，必属精品")
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [一、简介](#jobs-toc-heading-1)
+- [二、相关配置属性](#jobs-toc-heading-2)
+  - [1、滚动方向](#jobs-toc-heading-3)
+  - [2、滚动模式](#jobs-toc-heading-4)
+  - [3、item 尺寸模式](#jobs-toc-heading-5)
+  - [4、数据源配置](#jobs-toc-heading-6)
+  - [5、内容可视化区域配置](#jobs-toc-heading-7)
+- [三、初始化方案](#jobs-toc-heading-8)
+  - [1、跑马灯](#jobs-toc-heading-9)
+  - [2、轮播图](#jobs-toc-heading-10)
+- [Jobs DSL 调用约定](#jobs-toc-heading-11)
+- [四、架构脉络与关键设计](#jobs-toc-heading-12)
+  - [4.1、设计目的与职责划分](#jobs-toc-heading-13)
+  - [4.2、运行脉络](#jobs-toc-heading-14)
+  - [4.3、关键设计与边界](#jobs-toc-heading-15)
+  - [4.4、阅读与重建顺序](#jobs-toc-heading-16)
+- [五、运行合同与边界](#jobs-toc-heading-17)
+- [六、生产交付与全量门禁](#jobs-toc-heading-18)
+
+</details>
+<!-- jobs-toc:end -->
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
 
-## 一、简介 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">一、简介 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 * 定时器核心依托于 [<font size=5>**`JobsSwiftTimer`**</font>](https://github.com/JobsKits/JobsSwiftTimer)
 * 显示的UI为**UIButton** ➤ 充分利用**UIButton**自带的：
@@ -21,9 +46,9 @@
   * 【当前 / 其他】背景图支持2种获取模式 ➤ 本地图片 / 网络图片（[**Kingfisher**](https://github.com/onevcat/Kingfisher) / [**SDWebImage**](https://github.com/SDWebImage/SDWebImage)）
   * 支持定义**`UIPageControl`**与**`JobsMarqueeView`**的位置 ➤ 左下/底部/右下
 
-## 二、相关配置属性 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">二、相关配置属性 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-### 1、滚动方向 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-3" data-jobs-toc="v2">1、滚动方向 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 ```swift
 .byDirection(.bottom)
@@ -51,7 +76,7 @@ public enum JobsDirection: UInt {
 }
 ```
 
-### 2、滚动模式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-4" data-jobs-toc="v2">2、滚动模式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 ```swift
 .byScrollMode(.frequency(interval: 1.0))
@@ -67,7 +92,7 @@ public enum ScrollMode {
 }
 ```
 
-### 3、**item** 尺寸模式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-5" data-jobs-toc="v2">3、**item** 尺寸模式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 ```swift
 .byItemSizeMode(.fillBounds)
@@ -83,20 +108,20 @@ public enum ItemSizeMode {
 }
 ```
 
-### 4、数据源配置 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-6" data-jobs-toc="v2">4、数据源配置 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 ```swift
 .byDataSourceButtons([ 
   UIButton.sys()...]
 ```
 
-### 5、<font color=red>内容可视化区域配置</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-7" data-jobs-toc="v2">5、<font color=red>内容可视化区域配置</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 * 执行**`UIButton`**方面的配置即可
 
-## 三、初始化方案 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-8" data-jobs-toc="v2">三、初始化方案 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-### 1、跑马灯 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-9" data-jobs-toc="v2">1、跑马灯 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 * 连续滚动（**向上**）
 
@@ -296,7 +321,7 @@ public enum ItemSizeMode {
       }()
   ```
 
-### 2、轮播图 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-10" data-jobs-toc="v2">2、轮播图 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 * 本地@背景图
 
@@ -614,32 +639,32 @@ public enum ItemSizeMode {
       }()
   ```
 
-## Jobs DSL 调用约定
+## <span id="jobs-toc-heading-11" data-jobs-toc="v2">Jobs DSL 调用约定</span><!-- jobs-toc:heading-end -->
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
 
 <a id="jobs-architecture"></a>
 
-## 四、架构脉络与关键设计
+## <span id="jobs-toc-heading-12" data-jobs-toc="v2">四、架构脉络与关键设计</span><!-- jobs-toc:heading-end -->
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 4.1、设计目的与职责划分
+### <span id="jobs-toc-heading-13" data-jobs-toc="v2">4.1、设计目的与职责划分</span><!-- jobs-toc:heading-end -->
 
 以可配置内容单元组织跑马灯和轮播，方向、模式及单元尺寸策略决定布局和滚动，页面指示器独立配置，计时驱动与用户拖动需要协调。
 
-### 4.2、运行脉络
+### <span id="jobs-toc-heading-14" data-jobs-toc="v2">4.2、运行脉络</span><!-- jobs-toc:heading-end -->
 
 提供内容与尺寸策略 → 布局单元 → 自动滚动或用户拖动 → 校正循环位置 → 更新页码
 
-### 4.3、关键设计与边界
+### <span id="jobs-toc-heading-15" data-jobs-toc="v2">4.3、关键设计与边界</span><!-- jobs-toc:heading-end -->
 
 - fillBounds 模式会开启分页，不能把它和连续滚动视为同一种速度模型。
 - 页面指示器默认不开启，内置位置与外部 [**SnapKit**](https://github.com/SnapKit/SnapKit) 约束闭包属于不同配置路径。
 - 内容不足一屏、空内容、数据数量变化及 bounds 变化都会影响循环边界。
 - 更新配置时应保留是否正在运行的含义，不能每次改方向都叠加一个计时器。
 
-### 4.4、阅读与重建顺序
+### <span id="jobs-toc-heading-16" data-jobs-toc="v2">4.4、阅读与重建顺序</span><!-- jobs-toc:heading-end -->
 
 先读方向、模式和 itemSizeMode，再看单元布局、滚动校正与 PageControl 更新。
 
@@ -649,12 +674,12 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 
 依赖与编译入口：[JobsMarqueeView.podspec](<./JobsMarqueeView.podspec>)。其中显式依赖声明包括 `JobsByUIKit`、`JobsSwiftTimer`、`JobsSwiftBaseDefines`、`JobsSwiftDSL`、`Kingfisher`、`SDWebImage`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
-## 五、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-17" data-jobs-toc="v2">五、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 跑马灯的开始、暂停和停止由页面生命周期控制；离开页面时停止长期动画，恢复时避免重复驱动。短文字不应强行滚动，文字/字体/宽度变化后重新计算布局。动态字体、横竖屏及 Reduce Motion 场景需由宿主选择合适的静态展示策略。
 
 
-## 六、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-18" data-jobs-toc="v2">六、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
 

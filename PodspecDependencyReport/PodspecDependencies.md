@@ -1,8 +1,94 @@
 # Podspec 依赖分析报告
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
 
-## 🔥 <font id=前言>前言</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+- [🔥 前言](#jobs-toc-heading-1)
+  - [使用静态兜底解析的文件](#jobs-toc-heading-2)
+- [一、总览](#jobs-toc-heading-3)
+- [二、0 下游依赖 Pod](#jobs-toc-heading-4)
+- [三、已过滤的同 Pod 内部 subspec 依赖](#jobs-toc-heading-5)
+- [四、Pod 间循环依赖检测](#jobs-toc-heading-6)
+- [五、仓库内 Pod 相互依赖图 Mermaid](#jobs-toc-heading-7)
+- [六、全部依赖图 Mermaid](#jobs-toc-heading-8)
+- [七、外部依赖引用关系](#jobs-toc-heading-9)
+- [八、明细](#jobs-toc-heading-10)
+  - [1、BRPickerViewSwift](#jobs-toc-heading-11)
+  - [2、Flutter](#jobs-toc-heading-12)
+  - [3、FlutterPluginRegistrant](#jobs-toc-heading-13)
+  - [4、JobsAppDoor](#jobs-toc-heading-14)
+  - [5、JobsAppIconRibbon](#jobs-toc-heading-15)
+  - [6、JobsAudioRecorder](#jobs-toc-heading-16)
+  - [7、JobsBluetooth](#jobs-toc-heading-17)
+  - [8、JobsBy3rdTools](#jobs-toc-heading-18)
+  - [9、JobsByPDFKit](#jobs-toc-heading-19)
+  - [10、JobsByPhotosUI](#jobs-toc-heading-20)
+  - [11、JobsByQuartzCore](#jobs-toc-heading-21)
+  - [12、JobsByUIKit](#jobs-toc-heading-22)
+  - [13、JobsByWebKit](#jobs-toc-heading-23)
+  - [14、JobsCountdownButton](#jobs-toc-heading-24)
+  - [15、JobsCryptoKit](#jobs-toc-heading-25)
+  - [16、JobsDebugPanel](#jobs-toc-heading-26)
+  - [17、JobsEmptyView](#jobs-toc-heading-27)
+  - [18、JobsFuseAnimation](#jobs-toc-heading-28)
+  - [19、JobsGestureUnlock](#jobs-toc-heading-29)
+  - [20、JobsGetWindow](#jobs-toc-heading-30)
+  - [21、JobsIconfont](#jobs-toc-heading-31)
+  - [22、JobsImageRotation](#jobs-toc-heading-32)
+  - [23、JobsImageTools](#jobs-toc-heading-33)
+  - [24、JobsInheritance](#jobs-toc-heading-34)
+  - [25、JobsLocalNotification](#jobs-toc-heading-35)
+  - [26、JobsLuckyEnvelopeRain](#jobs-toc-heading-36)
+  - [27、JobsMarqueeView](#jobs-toc-heading-37)
+  - [28、JobsNavBar](#jobs-toc-heading-38)
+  - [29、JobsNetworking](#jobs-toc-heading-39)
+  - [30、JobsProgressBar](#jobs-toc-heading-40)
+  - [31、JobsScale](#jobs-toc-heading-41)
+  - [32、JobsScreenCapture](#jobs-toc-heading-42)
+  - [33、JobsSwiftAppTools](#jobs-toc-heading-43)
+  - [34、JobsSwiftBaseDefines](#jobs-toc-heading-44)
+  - [35、JobsSwiftBaseTools](#jobs-toc-heading-45)
+  - [36、JobsSwiftBlock](#jobs-toc-heading-46)
+  - [37、JobsSwiftCalendar](#jobs-toc-heading-47)
+  - [38、JobsSwiftComment](#jobs-toc-heading-48)
+  - [39、JobsSwiftCountryCodeCtrl](#jobs-toc-heading-49)
+  - [40、JobsSwiftDSL](#jobs-toc-heading-50)
+  - [41、JobsSwiftDebugTools](#jobs-toc-heading-51)
+  - [42、JobsSwiftExcel](#jobs-toc-heading-52)
+  - [43、JobsSwiftFoundation](#jobs-toc-heading-53)
+  - [44、JobsSwiftGraphicCaptcha](#jobs-toc-heading-54)
+  - [45、JobsSwiftLinkageMenuView](#jobs-toc-heading-55)
+  - [46、JobsSwiftMarkdown](#jobs-toc-heading-56)
+  - [47、JobsSwiftMetalKit](#jobs-toc-heading-57)
+  - [48、JobsSwiftNumberStepper](#jobs-toc-heading-58)
+  - [49、JobsSwiftOpen](#jobs-toc-heading-59)
+  - [50、JobsSwiftPatch](#jobs-toc-heading-60)
+  - [51、JobsSwiftRefresher](#jobs-toc-heading-61)
+  - [52、JobsSwiftSearcher](#jobs-toc-heading-62)
+  - [53、JobsSwiftSplash](#jobs-toc-heading-63)
+  - [54、JobsSwiftStandardLibrary](#jobs-toc-heading-64)
+  - [55、JobsSwiftTaskCenter](#jobs-toc-heading-65)
+  - [56、JobsSwiftTimer](#jobs-toc-heading-66)
+  - [57、JobsSwiftTimerMgr](#jobs-toc-heading-67)
+  - [58、JobsSwiftTools](#jobs-toc-heading-68)
+  - [59、JobsSwiftUILabelScrolling](#jobs-toc-heading-69)
+  - [60、JobsSwiftWebSocket](#jobs-toc-heading-70)
+  - [61、JobsSwiftWorker](#jobs-toc-heading-71)
+  - [62、JobsTextTools](#jobs-toc-heading-72)
+  - [63、JobsToast](#jobs-toc-heading-73)
+  - [64、JobsViewPush](#jobs-toc-heading-74)
+  - [65、JobsWalletCard](#jobs-toc-heading-75)
+  - [66、Jobsl10n](#jobs-toc-heading-76)
+  - [67、Texture](#jobs-toc-heading-77)
+  - [68、TextureSwiftSupport](#jobs-toc-heading-78)
+- [九、生成的文件](#jobs-toc-heading-79)
+
+</details>
+<!-- jobs-toc:end -->
+
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">🔥 <font id=前言>前言</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 此文件由脚本自动运行分析得出
 - 分析目录：`/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo`
@@ -20,7 +106,7 @@
 
 > 更易读的动态关系图见：`PodspecDependencies_interactive.html`，其中默认保留 2D 关系图，并新增可拖动旋转的 3D 空间图。
 
-#### 使用静态兜底解析的文件
+#### <span id="jobs-toc-heading-2" data-jobs-toc="v2">使用静态兜底解析的文件</span><!-- jobs-toc:heading-end -->
 
 这些文件无法通过 DSL 执行式解析完整展开，已自动回退到正则静态解析；若其中使用数组、lambda、helper 方法声明依赖，仍可能需要人工确认。
 
@@ -91,7 +177,7 @@
 | [**JobsWalletCard**](#JobsWalletCard) | `JobsByPods/JobsWalletCard@Pods/JobsWalletCard.podspec` | can't convert PodspecDependencyFakeValue to Array (PodspecDependencyFakeValue#to_ary gives PodspecDependencyFakeValue) |
 | [**Jobsl10n**](#Jobsl10n) | `JobsByPods/Jobsl10n@Pods/Jobsl10n.podspec` | can't convert PodspecDependencyFakeValue to Array (PodspecDependencyFakeValue#to_ary gives PodspecDependencyFakeValue) |
 
-## 一、总览 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">一、总览 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 | Pod | Podspec | 下游依赖数量 | 下游依赖 | 上游依赖数量 | 上游依赖方 |
 |---|---|---:|---|---:|---|
@@ -164,7 +250,7 @@
 | [**Texture**](#Texture) | `JobsByPods/ManualBySwiftPods@Pods/Texture/Texture.podspec` | 4 | IGListDiffKit, IGListKit, PINRemoteImage, Yoga | 1 | [**TextureSwiftSupport**](#TextureSwiftSupport) |
 | [**TextureSwiftSupport**](#TextureSwiftSupport) | `JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/TextureSwiftSupport.podspec` | 2 | Descriptors, [Texture](#Texture) | 0 |  |
 
-## 二、0 下游依赖 Pod <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-4" data-jobs-toc="v2">二、0 下游依赖 Pod <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 | Pod | Podspec |
 |---|---|
@@ -179,7 +265,7 @@
 | [**JobsTextTools**](#JobsTextTools) | `JobsByPods/JobsTextTools@Pods/JobsTextTools.podspec` |
 | [**Jobsl10n**](#Jobsl10n) | `JobsByPods/Jobsl10n@Pods/Jobsl10n.podspec` |
 
-## 三、已过滤的同 Pod 内部 subspec 依赖 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-5" data-jobs-toc="v2">三、已过滤的同 Pod 内部 subspec 依赖 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 这些依赖只表达同一个 Pod 内部 subspec 的包含关系，不参与 Pod 与 Pod 之间的循环依赖判断。
 
@@ -202,11 +288,11 @@
 | [**Texture**](#Texture) | `Texture/Yoga` | `Texture/Core` | `69` |
 | [**TextureSwiftSupport**](#TextureSwiftSupport) | `TextureSwiftSupport/Components` | `TextureSwiftSupport/LayoutSpecBuilders` | `23` |
 
-## 四、Pod 间循环依赖检测 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-6" data-jobs-toc="v2">四、Pod 间循环依赖检测 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 > 未发现仓库内 Pod 间循环依赖。
 
-## 五、仓库内 Pod 相互依赖图 Mermaid <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-7" data-jobs-toc="v2">五、仓库内 Pod 相互依赖图 Mermaid <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 只展示依赖目标也在本次扫描到的 `.podspec` 里存在的关系；同 Pod 内部 subspec 依赖已过滤，不计入 Pod 级依赖/循环分析；跨 Pod subspec 依赖显示为主 Pod 名；仓库内 Pod 匹配只采用精确名称，避免把 MJRefresh 误判为 MJRefreshExtra。
 
@@ -411,7 +497,7 @@ flowchart LR
   N4b8597aa9c62["TextureSwiftSupport"] --> Na3e8ae43188a["Texture"]
 ```
 
-## 六、全部依赖图 Mermaid <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-8" data-jobs-toc="v2">六、全部依赖图 Mermaid <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 ```mermaid
 flowchart LR
@@ -692,7 +778,7 @@ flowchart LR
   N4b8597aa9c62["TextureSwiftSupport"] --> Na3e8ae43188a["Texture"]
 ```
 
-## 七、外部依赖引用关系 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-9" data-jobs-toc="v2">七、外部依赖引用关系 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 这里统计本次扫描到的 `.podspec` 对外部 Pod 的引用；同 Pod 内部 subspec 依赖已过滤；跨 Pod subspec 依赖显示为主 Pod 名；仓库内 Pod 匹配只采用精确名称，避免把 MJRefresh 误判为 MJRefreshExtra。外部来源链接匹配规则已放宽为：完全匹配 → base 名匹配 → 字符串包含匹配。
 
@@ -726,9 +812,9 @@ flowchart LR
 | Yoga | 1 | [**Texture**](#Texture) | Yoga |
 | [lottie-ios](https://github.com/airbnb/lottie-ios) | 3 | [**JobsByUIKit**](#JobsByUIKit), [**JobsFuseAnimation**](#JobsFuseAnimation), [**JobsSwiftRefresher**](#JobsSwiftRefresher) | [lottie-ios](https://github.com/airbnb/lottie-ios) |
 
-## 八、明细 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-10" data-jobs-toc="v2">八、明细 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-### 1、<font id="BRPickerViewSwift">BRPickerViewSwift</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-11" data-jobs-toc="v2">1、<font id="BRPickerViewSwift">BRPickerViewSwift</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/BRPickerViewSwift@Pods/BRPickerViewSwift.podspec`
 
@@ -739,7 +825,7 @@ Podspec：`JobsByPods/BRPickerViewSwift@Pods/BRPickerViewSwift.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 2、<font id="Flutter">Flutter</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-12" data-jobs-toc="v2">2、<font id="Flutter">Flutter</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`my_flutter/.ios/Flutter/Flutter.podspec`
 
@@ -749,7 +835,7 @@ Podspec：`my_flutter/.ios/Flutter/Flutter.podspec`
   - [**JobsSwiftTools**](#JobsSwiftTools)
 
 
-### 3、<font id="FlutterPluginRegistrant">FlutterPluginRegistrant</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-13" data-jobs-toc="v2">3、<font id="FlutterPluginRegistrant">FlutterPluginRegistrant</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`my_flutter/.ios/Flutter/FlutterPluginRegistrant/FlutterPluginRegistrant.podspec`
 
@@ -762,7 +848,7 @@ Podspec：`my_flutter/.ios/Flutter/FlutterPluginRegistrant/FlutterPluginRegistra
   - [**Flutter**](#Flutter)
 
 
-### 4、<font id="JobsAppDoor">JobsAppDoor</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-14" data-jobs-toc="v2">4、<font id="JobsAppDoor">JobsAppDoor</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsAppDoor@Pods/JobsAppDoor.podspec`
 
@@ -778,12 +864,12 @@ Podspec：`JobsByPods/JobsAppDoor@Pods/JobsAppDoor.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 5、<font id="JobsAppIconRibbon">JobsAppIconRibbon</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-15" data-jobs-toc="v2">5、<font id="JobsAppIconRibbon">JobsAppIconRibbon</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsAppIconRibbon@Pods/JobsAppIconRibbon.podspec`
 
 
-### 6、<font id="JobsAudioRecorder">JobsAudioRecorder</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-16" data-jobs-toc="v2">6、<font id="JobsAudioRecorder">JobsAudioRecorder</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsAudioRecorder@Pods/JobsAudioRecorder.podspec`
 
@@ -796,12 +882,12 @@ Podspec：`JobsByPods/JobsAudioRecorder@Pods/JobsAudioRecorder.podspec`
   - [**JobsSwiftTimer**](#JobsSwiftTimer)
 
 
-### 7、<font id="JobsBluetooth">JobsBluetooth</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-17" data-jobs-toc="v2">7、<font id="JobsBluetooth">JobsBluetooth</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsBluetooth@Pods/JobsBluetooth.podspec`
 
 
-### 8、<font id="JobsBy3rdTools">JobsBy3rdTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-18" data-jobs-toc="v2">8、<font id="JobsBy3rdTools">JobsBy3rdTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsBy3rdTools@Pods/JobsBy3rdTools.podspec`
 
@@ -832,7 +918,7 @@ Podspec：`JobsByPods/JobsBy3rdTools@Pods/JobsBy3rdTools.podspec`
   - [**YTKNetwork**](https://github.com/kanyun-inc/YTKNetwork)
 
 
-### 9、<font id="JobsByPDFKit">JobsByPDFKit</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-19" data-jobs-toc="v2">9、<font id="JobsByPDFKit">JobsByPDFKit</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsByPDFKit@Pods/JobsByPDFKit.podspec`
 
@@ -841,7 +927,7 @@ Podspec：`JobsByPods/JobsByPDFKit@Pods/JobsByPDFKit.podspec`
   - [**JobsSwiftDSL**](#JobsSwiftDSL)
 
 
-### 10、<font id="JobsByPhotosUI">JobsByPhotosUI</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-20" data-jobs-toc="v2">10、<font id="JobsByPhotosUI">JobsByPhotosUI</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsByPhotosUI@Pods/JobsByPhotosUI.podspec`
 
@@ -854,7 +940,7 @@ Podspec：`JobsByPods/JobsByPhotosUI@Pods/JobsByPhotosUI.podspec`
   - [**JobsSwiftDSL**](#JobsSwiftDSL)
 
 
-### 11、<font id="JobsByQuartzCore">JobsByQuartzCore</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-21" data-jobs-toc="v2">11、<font id="JobsByQuartzCore">JobsByQuartzCore</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsByQuartzCore@Pods/JobsByQuartzCore.podspec`
 
@@ -869,7 +955,7 @@ Podspec：`JobsByPods/JobsByQuartzCore@Pods/JobsByQuartzCore.podspec`
   - [**JobsSwiftDSL**](#JobsSwiftDSL)
 
 
-### 12、<font id="JobsByUIKit">JobsByUIKit</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-22" data-jobs-toc="v2">12、<font id="JobsByUIKit">JobsByUIKit</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsByUIKit@Pods/JobsByUIKit.podspec`
 
@@ -935,7 +1021,7 @@ Podspec：`JobsByPods/JobsByUIKit@Pods/JobsByUIKit.podspec`
   - [**lottie-ios**](https://github.com/airbnb/lottie-ios)
 
 
-### 13、<font id="JobsByWebKit">JobsByWebKit</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-23" data-jobs-toc="v2">13、<font id="JobsByWebKit">JobsByWebKit</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsByWebKit@Pods/JobsByWebKit.podspec`
 
@@ -949,7 +1035,7 @@ Podspec：`JobsByPods/JobsByWebKit@Pods/JobsByWebKit.podspec`
   - [**JobsSwiftDSL**](#JobsSwiftDSL)
 
 
-### 14、<font id="JobsCountdownButton">JobsCountdownButton</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-24" data-jobs-toc="v2">14、<font id="JobsCountdownButton">JobsCountdownButton</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsCountdownButton@Pods/JobsCountdownButton.podspec`
 
@@ -966,12 +1052,12 @@ Podspec：`JobsByPods/JobsCountdownButton@Pods/JobsCountdownButton.podspec`
   - [**JobsSwiftTimer**](#JobsSwiftTimer)
 
 
-### 15、<font id="JobsCryptoKit">JobsCryptoKit</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-25" data-jobs-toc="v2">15、<font id="JobsCryptoKit">JobsCryptoKit</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsCryptoKit@Pods/JobsCryptoKit.podspec`
 
 
-### 16、<font id="JobsDebugPanel">JobsDebugPanel</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-26" data-jobs-toc="v2">16、<font id="JobsDebugPanel">JobsDebugPanel</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsDebugPanel@Pods/JobsDebugPanel.podspec`
 
@@ -984,7 +1070,7 @@ Podspec：`JobsByPods/JobsDebugPanel@Pods/JobsDebugPanel.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 17、<font id="JobsEmptyView">JobsEmptyView</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-27" data-jobs-toc="v2">17、<font id="JobsEmptyView">JobsEmptyView</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsEmptyView@Pods/JobsEmptyView.podspec`
 
@@ -997,7 +1083,7 @@ Podspec：`JobsByPods/JobsEmptyView@Pods/JobsEmptyView.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 18、<font id="JobsFuseAnimation">JobsFuseAnimation</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-28" data-jobs-toc="v2">18、<font id="JobsFuseAnimation">JobsFuseAnimation</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.podspec`
 
@@ -1016,7 +1102,7 @@ Podspec：`JobsByPods/JobsFuseAnimation@Pods/JobsFuseAnimation.podspec`
   - [**lottie-ios**](https://github.com/airbnb/lottie-ios)
 
 
-### 19、<font id="JobsGestureUnlock">JobsGestureUnlock</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-29" data-jobs-toc="v2">19、<font id="JobsGestureUnlock">JobsGestureUnlock</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsGestureUnlock@Pods/JobsGestureUnlock.podspec`
 
@@ -1029,7 +1115,7 @@ Podspec：`JobsByPods/JobsGestureUnlock@Pods/JobsGestureUnlock.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 20、<font id="JobsGetWindow">JobsGetWindow</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-30" data-jobs-toc="v2">20、<font id="JobsGetWindow">JobsGetWindow</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsGetWindow@Pods/JobsGetWindow.podspec`
 
@@ -1041,7 +1127,7 @@ Podspec：`JobsByPods/JobsGetWindow@Pods/JobsGetWindow.podspec`
   - [**JobsSwiftDSL**](#JobsSwiftDSL)
 
 
-### 21、<font id="JobsIconfont">JobsIconfont</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-31" data-jobs-toc="v2">21、<font id="JobsIconfont">JobsIconfont</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsIconfont@Pods/JobsIconfont.podspec`
 
@@ -1051,7 +1137,7 @@ Podspec：`JobsByPods/JobsIconfont@Pods/JobsIconfont.podspec`
   - [**JobsSwiftDSL**](#JobsSwiftDSL)
 
 
-### 22、<font id="JobsImageRotation">JobsImageRotation</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-32" data-jobs-toc="v2">22、<font id="JobsImageRotation">JobsImageRotation</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsImageRotation@Pods/JobsImageRotation.podspec`
 
@@ -1061,7 +1147,7 @@ Podspec：`JobsByPods/JobsImageRotation@Pods/JobsImageRotation.podspec`
   - [**JobsSwiftTimer**](#JobsSwiftTimer)
 
 
-### 23、<font id="JobsImageTools">JobsImageTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-33" data-jobs-toc="v2">23、<font id="JobsImageTools">JobsImageTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsImageTools@Pods/JobsImageTools.podspec`
 
@@ -1079,7 +1165,7 @@ Podspec：`JobsByPods/JobsImageTools@Pods/JobsImageTools.podspec`
   - [**SDWebImage**](https://github.com/SDWebImage/SDWebImage)
 
 
-### 24、<font id="JobsInheritance">JobsInheritance</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-34" data-jobs-toc="v2">24、<font id="JobsInheritance">JobsInheritance</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsInheritance@Pods/JobsInheritance.podspec`
 
@@ -1108,7 +1194,7 @@ Podspec：`JobsByPods/JobsInheritance@Pods/JobsInheritance.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 25、<font id="JobsLocalNotification">JobsLocalNotification</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-35" data-jobs-toc="v2">25、<font id="JobsLocalNotification">JobsLocalNotification</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsLocalNotification@Pods/JobsLocalNotification.podspec`
 
@@ -1118,7 +1204,7 @@ Podspec：`JobsByPods/JobsLocalNotification@Pods/JobsLocalNotification.podspec`
   - [**JobsSwiftTools**](#JobsSwiftTools)
 
 
-### 26、<font id="JobsLuckyEnvelopeRain">JobsLuckyEnvelopeRain</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-36" data-jobs-toc="v2">26、<font id="JobsLuckyEnvelopeRain">JobsLuckyEnvelopeRain</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsLuckyEnvelopeRain@Pods/JobsLuckyEnvelopeRain.podspec`
 
@@ -1131,7 +1217,7 @@ Podspec：`JobsByPods/JobsLuckyEnvelopeRain@Pods/JobsLuckyEnvelopeRain.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 27、<font id="JobsMarqueeView">JobsMarqueeView</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-37" data-jobs-toc="v2">27、<font id="JobsMarqueeView">JobsMarqueeView</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.podspec`
 
@@ -1145,7 +1231,7 @@ Podspec：`JobsByPods/JobsMarqueeView@Pods/JobsMarqueeView.podspec`
   - [**SDWebImage**](https://github.com/SDWebImage/SDWebImage)
 
 
-### 28、<font id="JobsNavBar">JobsNavBar</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-38" data-jobs-toc="v2">28、<font id="JobsNavBar">JobsNavBar</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsNavBar@Pods/JobsNavBar.podspec`
 
@@ -1163,7 +1249,7 @@ Podspec：`JobsByPods/JobsNavBar@Pods/JobsNavBar.podspec`
   - [**SwiftMessages**](https://github.com/SwiftKickMobile/SwiftMessages)
 
 
-### 29、<font id="JobsNetworking">JobsNetworking</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-39" data-jobs-toc="v2">29、<font id="JobsNetworking">JobsNetworking</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsNetworking@Pods/JobsNetworking.podspec`
 
@@ -1174,7 +1260,7 @@ Podspec：`JobsByPods/JobsNetworking@Pods/JobsNetworking.podspec`
   - [**PromiseKit**](https://github.com/mxcl/PromiseKit)
 
 
-### 30、<font id="JobsProgressBar">JobsProgressBar</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-40" data-jobs-toc="v2">30、<font id="JobsProgressBar">JobsProgressBar</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsProgressBar@Pods/JobsProgressBar.podspec`
 
@@ -1187,7 +1273,7 @@ Podspec：`JobsByPods/JobsProgressBar@Pods/JobsProgressBar.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 31、<font id="JobsScale">JobsScale</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-41" data-jobs-toc="v2">31、<font id="JobsScale">JobsScale</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsScale@Pods/JobsScale.podspec`
 
@@ -1202,7 +1288,7 @@ Podspec：`JobsByPods/JobsScale@Pods/JobsScale.podspec`
   - [**JobsGetWindow**](#JobsGetWindow)
 
 
-### 32、<font id="JobsScreenCapture">JobsScreenCapture</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-42" data-jobs-toc="v2">32、<font id="JobsScreenCapture">JobsScreenCapture</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsScreenCapture@Pods/JobsScreenCapture.podspec`
 
@@ -1212,7 +1298,7 @@ Podspec：`JobsByPods/JobsScreenCapture@Pods/JobsScreenCapture.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 33、<font id="JobsSwiftAppTools">JobsSwiftAppTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-43" data-jobs-toc="v2">33、<font id="JobsSwiftAppTools">JobsSwiftAppTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftAppTools@Pods/JobsSwiftAppTools.podspec`
 
@@ -1232,7 +1318,7 @@ Podspec：`JobsByPods/JobsSwiftAppTools@Pods/JobsSwiftAppTools.podspec`
   - [**SwiftEntryKit**](https://github.com/huri000/SwiftEntryKit)
 
 
-### 34、<font id="JobsSwiftBaseDefines">JobsSwiftBaseDefines</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-44" data-jobs-toc="v2">34、<font id="JobsSwiftBaseDefines">JobsSwiftBaseDefines</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftBaseDefines@Pods/JobsSwiftBaseDefines.podspec`
 
@@ -1282,7 +1368,7 @@ Podspec：`JobsByPods/JobsSwiftBaseDefines@Pods/JobsSwiftBaseDefines.podspec`
   - [**JobsTextTools**](#JobsTextTools)
 
 
-### 35、<font id="JobsSwiftBaseTools">JobsSwiftBaseTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-45" data-jobs-toc="v2">35、<font id="JobsSwiftBaseTools">JobsSwiftBaseTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftBaseTools@Pods/JobsSwiftBaseTools.podspec`
 
@@ -1305,7 +1391,7 @@ Podspec：`JobsByPods/JobsSwiftBaseTools@Pods/JobsSwiftBaseTools.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 36、<font id="JobsSwiftBlock">JobsSwiftBlock</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-46" data-jobs-toc="v2">36、<font id="JobsSwiftBlock">JobsSwiftBlock</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftBlock@Pods/JobsSwiftBlock.podspec`
 
@@ -1334,7 +1420,7 @@ Podspec：`JobsByPods/JobsSwiftBlock@Pods/JobsSwiftBlock.podspec`
   - [**YTKNetwork**](https://github.com/kanyun-inc/YTKNetwork)
 
 
-### 37、<font id="JobsSwiftCalendar">JobsSwiftCalendar</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-47" data-jobs-toc="v2">37、<font id="JobsSwiftCalendar">JobsSwiftCalendar</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftCalendar@Pods/JobsSwiftCalendar.podspec`
 
@@ -1344,7 +1430,7 @@ Podspec：`JobsByPods/JobsSwiftCalendar@Pods/JobsSwiftCalendar.podspec`
   - [**JobsSwiftDSL**](#JobsSwiftDSL)
 
 
-### 38、<font id="JobsSwiftComment">JobsSwiftComment</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-48" data-jobs-toc="v2">38、<font id="JobsSwiftComment">JobsSwiftComment</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftComment@Pods/JobsSwiftComment.podspec`
 
@@ -1356,7 +1442,7 @@ Podspec：`JobsByPods/JobsSwiftComment@Pods/JobsSwiftComment.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 39、<font id="JobsSwiftCountryCodeCtrl">JobsSwiftCountryCodeCtrl</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-49" data-jobs-toc="v2">39、<font id="JobsSwiftCountryCodeCtrl">JobsSwiftCountryCodeCtrl</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftCountryCodeCtrl@Pods/JobsSwiftCountryCodeCtrl.podspec`
 
@@ -1373,7 +1459,7 @@ Podspec：`JobsByPods/JobsSwiftCountryCodeCtrl@Pods/JobsSwiftCountryCodeCtrl.pod
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 40、<font id="JobsSwiftDSL">JobsSwiftDSL</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-50" data-jobs-toc="v2">40、<font id="JobsSwiftDSL">JobsSwiftDSL</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftDSL@Pods/JobsSwiftDSL.podspec`
 
@@ -1439,7 +1525,7 @@ Podspec：`JobsByPods/JobsSwiftDSL@Pods/JobsSwiftDSL.podspec`
   - [**YTKNetwork**](https://github.com/kanyun-inc/YTKNetwork)
 
 
-### 41、<font id="JobsSwiftDebugTools">JobsSwiftDebugTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-51" data-jobs-toc="v2">41、<font id="JobsSwiftDebugTools">JobsSwiftDebugTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftDebugTools@Pods/JobsSwiftDebugTools.podspec`
 
@@ -1454,7 +1540,7 @@ Podspec：`JobsByPods/JobsSwiftDebugTools@Pods/JobsSwiftDebugTools.podspec`
   - [**JobsToast**](#JobsToast)
 
 
-### 42、<font id="JobsSwiftExcel">JobsSwiftExcel</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-52" data-jobs-toc="v2">42、<font id="JobsSwiftExcel">JobsSwiftExcel</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftExcel@Pods/JobsSwiftExcel.podspec`
 
@@ -1467,7 +1553,7 @@ Podspec：`JobsByPods/JobsSwiftExcel@Pods/JobsSwiftExcel.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 43、<font id="JobsSwiftFoundation">JobsSwiftFoundation</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-53" data-jobs-toc="v2">43、<font id="JobsSwiftFoundation">JobsSwiftFoundation</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftFoundation@Pods/JobsSwiftFoundation.podspec`
 
@@ -1481,7 +1567,7 @@ Podspec：`JobsByPods/JobsSwiftFoundation@Pods/JobsSwiftFoundation.podspec`
   - [**JobsSwiftDSL**](#JobsSwiftDSL)
 
 
-### 44、<font id="JobsSwiftGraphicCaptcha">JobsSwiftGraphicCaptcha</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-54" data-jobs-toc="v2">44、<font id="JobsSwiftGraphicCaptcha">JobsSwiftGraphicCaptcha</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftGraphicCaptcha@Pods/JobsSwiftGraphicCaptcha.podspec`
 
@@ -1495,7 +1581,7 @@ Podspec：`JobsByPods/JobsSwiftGraphicCaptcha@Pods/JobsSwiftGraphicCaptcha.podsp
   - [**JobsSwiftDSL**](#JobsSwiftDSL)
 
 
-### 45、<font id="JobsSwiftLinkageMenuView">JobsSwiftLinkageMenuView</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-55" data-jobs-toc="v2">45、<font id="JobsSwiftLinkageMenuView">JobsSwiftLinkageMenuView</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftLinkageMenuView@Pods/JobsSwiftLinkageMenuView.podspec`
 
@@ -1506,7 +1592,7 @@ Podspec：`JobsByPods/JobsSwiftLinkageMenuView@Pods/JobsSwiftLinkageMenuView.pod
   - [**JobsSwiftDSL**](#JobsSwiftDSL)
 
 
-### 46、<font id="JobsSwiftMarkdown">JobsSwiftMarkdown</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-56" data-jobs-toc="v2">46、<font id="JobsSwiftMarkdown">JobsSwiftMarkdown</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftMarkdown@Pods/JobsSwiftMarkdown.podspec`
 
@@ -1517,7 +1603,7 @@ Podspec：`JobsByPods/JobsSwiftMarkdown@Pods/JobsSwiftMarkdown.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 47、<font id="JobsSwiftMetalKit">JobsSwiftMetalKit</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-57" data-jobs-toc="v2">47、<font id="JobsSwiftMetalKit">JobsSwiftMetalKit</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/MetalKit@Pods/JobsSwiftMetalKit.podspec`
 
@@ -1530,7 +1616,7 @@ Podspec：`JobsByPods/MetalKit@Pods/JobsSwiftMetalKit.podspec`
   - [**JobsSwiftDSL**](#JobsSwiftDSL)
 
 
-### 48、<font id="JobsSwiftNumberStepper">JobsSwiftNumberStepper</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-58" data-jobs-toc="v2">48、<font id="JobsSwiftNumberStepper">JobsSwiftNumberStepper</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftNumberStepper@Pods/JobsSwiftNumberStepper.podspec`
 
@@ -1542,7 +1628,7 @@ Podspec：`JobsByPods/JobsSwiftNumberStepper@Pods/JobsSwiftNumberStepper.podspec
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 49、<font id="JobsSwiftOpen">JobsSwiftOpen</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-59" data-jobs-toc="v2">49、<font id="JobsSwiftOpen">JobsSwiftOpen</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftOpen@Pods/JobsSwiftOpen.podspec`
 
@@ -1558,12 +1644,12 @@ Podspec：`JobsByPods/JobsSwiftOpen@Pods/JobsSwiftOpen.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 50、<font id="JobsSwiftPatch">JobsSwiftPatch</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-60" data-jobs-toc="v2">50、<font id="JobsSwiftPatch">JobsSwiftPatch</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftPatch@Pods/JobsSwiftPatch.podspec`
 
 
-### 51、<font id="JobsSwiftRefresher">JobsSwiftRefresher</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-61" data-jobs-toc="v2">51、<font id="JobsSwiftRefresher">JobsSwiftRefresher</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftRefresher@Pods/JobsSwiftRefresher.podspec`
 
@@ -1583,7 +1669,7 @@ Podspec：`JobsByPods/JobsSwiftRefresher@Pods/JobsSwiftRefresher.podspec`
   - [**lottie-ios**](https://github.com/airbnb/lottie-ios)
 
 
-### 52、<font id="JobsSwiftSearcher">JobsSwiftSearcher</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-62" data-jobs-toc="v2">52、<font id="JobsSwiftSearcher">JobsSwiftSearcher</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftSearcher@Pods/JobsSwiftSearcher.podspec`
 
@@ -1596,7 +1682,7 @@ Podspec：`JobsByPods/JobsSwiftSearcher@Pods/JobsSwiftSearcher.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 53、<font id="JobsSwiftSplash">JobsSwiftSplash</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-63" data-jobs-toc="v2">53、<font id="JobsSwiftSplash">JobsSwiftSplash</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftSplash@Pods/JobsSwiftSplash.podspec`
 
@@ -1611,7 +1697,7 @@ Podspec：`JobsByPods/JobsSwiftSplash@Pods/JobsSwiftSplash.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 54、<font id="JobsSwiftStandardLibrary">JobsSwiftStandardLibrary</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-64" data-jobs-toc="v2">54、<font id="JobsSwiftStandardLibrary">JobsSwiftStandardLibrary</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftStandardLibrary@Pods/JobsSwiftStandardLibrary.podspec`
 
@@ -1625,7 +1711,7 @@ Podspec：`JobsByPods/JobsSwiftStandardLibrary@Pods/JobsSwiftStandardLibrary.pod
   - [**JobsSwiftBaseDefines**](#JobsSwiftBaseDefines)
 
 
-### 55、<font id="JobsSwiftTaskCenter">JobsSwiftTaskCenter</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-65" data-jobs-toc="v2">55、<font id="JobsSwiftTaskCenter">JobsSwiftTaskCenter</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftTaskCenter@Pods/JobsSwiftTaskCenter.podspec`
 
@@ -1638,7 +1724,7 @@ Podspec：`JobsByPods/JobsSwiftTaskCenter@Pods/JobsSwiftTaskCenter.podspec`
   - [**JobsSwiftTimer**](#JobsSwiftTimer)
 
 
-### 56、<font id="JobsSwiftTimer">JobsSwiftTimer</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-66" data-jobs-toc="v2">56、<font id="JobsSwiftTimer">JobsSwiftTimer</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.podspec`
 
@@ -1658,7 +1744,7 @@ Podspec：`JobsByPods/JobsSwiftTimer@Pods/JobsSwiftTimer.podspec`
   - [**JobsSwiftWorker**](#JobsSwiftWorker)
 
 
-### 57、<font id="JobsSwiftTimerMgr">JobsSwiftTimerMgr</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-67" data-jobs-toc="v2">57、<font id="JobsSwiftTimerMgr">JobsSwiftTimerMgr</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftTimerMgr@Pods/JobsSwiftTimerMgr.podspec`
 
@@ -1667,7 +1753,7 @@ Podspec：`JobsByPods/JobsSwiftTimerMgr@Pods/JobsSwiftTimerMgr.podspec`
   - [**JobsSwiftTimer**](#JobsSwiftTimer)
 
 
-### 58、<font id="JobsSwiftTools">JobsSwiftTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-68" data-jobs-toc="v2">58、<font id="JobsSwiftTools">JobsSwiftTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.podspec`
 
@@ -1689,7 +1775,7 @@ Podspec：`JobsByPods/JobsSwiftTools@Pods/JobsSwiftTools.podspec`
   - [**JobsToast**](#JobsToast)
 
 
-### 59、<font id="JobsSwiftUILabelScrolling">JobsSwiftUILabelScrolling</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-69" data-jobs-toc="v2">59、<font id="JobsSwiftUILabelScrolling">JobsSwiftUILabelScrolling</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftUILabelScrolling@Pods/JobsSwiftUILabelScrolling.podspec`
 
@@ -1703,12 +1789,12 @@ Podspec：`JobsByPods/JobsSwiftUILabelScrolling@Pods/JobsSwiftUILabelScrolling.p
   - [**JobsSwiftTimer**](#JobsSwiftTimer)
 
 
-### 60、<font id="JobsSwiftWebSocket">JobsSwiftWebSocket</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-70" data-jobs-toc="v2">60、<font id="JobsSwiftWebSocket">JobsSwiftWebSocket</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftWebSocket@Pods/JobsSwiftWebSocket.podspec`
 
 
-### 61、<font id="JobsSwiftWorker">JobsSwiftWorker</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-71" data-jobs-toc="v2">61、<font id="JobsSwiftWorker">JobsSwiftWorker</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsSwiftWorker@Pods/JobsSwiftWorker.podspec`
 
@@ -1723,7 +1809,7 @@ Podspec：`JobsByPods/JobsSwiftWorker@Pods/JobsSwiftWorker.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 62、<font id="JobsTextTools">JobsTextTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-72" data-jobs-toc="v2">62、<font id="JobsTextTools">JobsTextTools</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsTextTools@Pods/JobsTextTools.podspec`
 
@@ -1736,7 +1822,7 @@ Podspec：`JobsByPods/JobsTextTools@Pods/JobsTextTools.podspec`
   - [**JobsSwiftDSL**](#JobsSwiftDSL)
 
 
-### 63、<font id="JobsToast">JobsToast</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-73" data-jobs-toc="v2">63、<font id="JobsToast">JobsToast</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsToast@Pods/JobsToast.podspec`
 
@@ -1755,7 +1841,7 @@ Podspec：`JobsByPods/JobsToast@Pods/JobsToast.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 64、<font id="JobsViewPush">JobsViewPush</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-74" data-jobs-toc="v2">64、<font id="JobsViewPush">JobsViewPush</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsViewPush@Pods/JobsViewPush.podspec`
 
@@ -1769,7 +1855,7 @@ Podspec：`JobsByPods/JobsViewPush@Pods/JobsViewPush.podspec`
   - [**JobsSwiftDSL**](#JobsSwiftDSL)
 
 
-### 65、<font id="JobsWalletCard">JobsWalletCard</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-75" data-jobs-toc="v2">65、<font id="JobsWalletCard">JobsWalletCard</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/JobsWalletCard@Pods/JobsWalletCard.podspec`
 
@@ -1781,7 +1867,7 @@ Podspec：`JobsByPods/JobsWalletCard@Pods/JobsWalletCard.podspec`
   - [**SnapKit**](https://github.com/SnapKit/SnapKit)
 
 
-### 66、<font id="Jobsl10n">Jobsl10n</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-76" data-jobs-toc="v2">66、<font id="Jobsl10n">Jobsl10n</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/Jobsl10n@Pods/Jobsl10n.podspec`
 
@@ -1793,7 +1879,7 @@ Podspec：`JobsByPods/Jobsl10n@Pods/Jobsl10n.podspec`
   - [**JobsSwiftWorker**](#JobsSwiftWorker)
 
 
-### 67、<font id="Texture">Texture</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-77" data-jobs-toc="v2">67、<font id="Texture">Texture</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/ManualBySwiftPods@Pods/Texture/Texture.podspec`
 
@@ -1809,7 +1895,7 @@ Podspec：`JobsByPods/ManualBySwiftPods@Pods/Texture/Texture.podspec`
   - **Yoga**
 
 
-### 68、<font id="TextureSwiftSupport">TextureSwiftSupport</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-78" data-jobs-toc="v2">68、<font id="TextureSwiftSupport">TextureSwiftSupport</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Podspec：`JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/TextureSwiftSupport.podspec`
 
@@ -1819,7 +1905,7 @@ Podspec：`JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport/TextureSwiftSup
   - [**Texture**](#Texture)
 
 
-## 九、生成的文件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-79" data-jobs-toc="v2">九、生成的文件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - `PodspecDependencies_interactive.html`：可搜索、可拖拽、可缩放动态图，内置 `2D 关系图` / `3D 空间图` 切换
 - `PodspecDependencies.md`：本报告

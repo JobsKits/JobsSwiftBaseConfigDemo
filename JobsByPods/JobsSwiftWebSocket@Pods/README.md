@@ -2,17 +2,34 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [🔥 前言](#jobs-toc-heading-1)
+- [一、默认策略](#jobs-toc-heading-2)
+- [二、接入示例](#jobs-toc-heading-3)
+- [三、架构脉络与关键设计](#jobs-toc-heading-4)
+  - [3.1、设计目的与职责划分](#jobs-toc-heading-5)
+  - [3.2、运行脉络](#jobs-toc-heading-6)
+  - [3.3、关键设计与边界](#jobs-toc-heading-7)
+  - [3.4、阅读与重建顺序](#jobs-toc-heading-8)
+- [四、线程、资源与参数合同](#jobs-toc-heading-9)
+- [五、生产交付与全量门禁](#jobs-toc-heading-10)
+
+</details>
+<!-- jobs-toc:end -->
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
 
 ---
 
-## 🔥 <font id=前言>前言</font>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">🔥 <font id=前言>前言</font></span><!-- jobs-toc:heading-end -->
 
 > `JobsSwiftWebSocket` 是基于 [**URLSessionWebSocketTask**](https://developer.apple.com/documentation/foundation/urlsessionwebsockettask) 的轻量 WebSocket Pod，只封装连接生命周期、收包循环、线程切换、心跳、退避重连和状态回调，不介入业务协议、鉴权或消息模型。
 
-## 一、默认策略 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、默认策略 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 心跳间隔：30 秒；`pongTimeout` 默认 10 秒，超时进入断线恢复。
 - 自动重连：默认开启。
@@ -20,7 +37,7 @@
 - 最大重连次数：5 次。
 - 状态、消息和发送完成回调统一切回主线程。
 
-## 二、接入示例 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、接入示例 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 ```swift
 import JobsSwiftWebSocket
@@ -45,15 +62,15 @@ webSocketClient.send(text: "Hello WebSocket") { result in
 
 <a id="jobs-architecture"></a>
 
-## 三、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 3.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-5" data-jobs-toc="v2">3.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 基于 URLSessionWebSocketTask 封装连接、持续接收、心跳、退避重连与状态回调。业务消息模型、认证和协议解释留给宿主，客户端只管理传输生命周期。
 
-### 3.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-6" data-jobs-toc="v2">3.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 发起连接 → 握手成功 → 接收消息并继续下一次接收 → 心跳检查 → 失败退避重连或主动断开
 
@@ -72,7 +89,7 @@ flowchart TD
     H["主动 disconnect"] --> I["停止心跳并取消重连"]
 ```
 
-### 3.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-7" data-jobs-toc="v2">3.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 接收 API 每次返回一条消息，需要继续安排下一轮，不能收到一条后就停止监听。
 - 主动 disconnect 会停止心跳并取消待重连任务，与异常断线后的自动恢复不同。
@@ -80,7 +97,7 @@ flowchart TD
 - 状态、消息与发送完成回调统一回到主线程，业务不应在这些回调里执行耗时解析。
 - 旧 task 的回调与新连接要区分，避免旧连接失败误触发新连接重连。
 
-### 3.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-8" data-jobs-toc="v2">3.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 先读 State 和 connect/disconnect，再看 receiveNextMessage、心跳、scheduleReconnect 与 delegate。
 
@@ -90,7 +107,7 @@ flowchart TD
 
 依赖与编译入口：[JobsSwiftWebSocket.podspec](<./JobsSwiftWebSocket.podspec>)。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
-## 四、线程、资源与参数合同 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-9" data-jobs-toc="v2">四、线程、资源与参数合同 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 连接、接收、重连和心跳状态在私有串行队列管理，公开配置/回调/state 读写由锁保护，所有业务回调在主队列。heartbeatInterval 在下一次建立连接时生效，pongTimeout 在下一轮 ping 生效；重连参数在下一次重连计算生效。URL 只接受含主机的 ws/wss。每个回调比对当前 task，旧连接不能关闭新连接。
 
@@ -99,7 +116,7 @@ URLSession 使用弱 owner 代理，释放客户端会取消连接/心跳/待重
 [弱代理](./Core/JobsSwiftWebSocketClient/JobsWebSocketDelegateProxy.swift) 与客户端共同管理资源。原生 Swift 编译和本机 WebSocket loopback 回归已通过：真实 URLSessionWebSocketTask 连接/回显/pong、活跃连接释放、无 pong 截止失败及重连等待中的 owner 释放。工程根执行 `ruby .github/tests/JobsPodsUpgrade/Network/run_regressions.rb --output-dir /tmp/JobsPodsUpgradeNetwork` 可复现；旧 task 迟到、复杂连续重连、TLS 与真机后台切换仍应按宿主场景验收。发送成功表示传输 API 接受消息，不保证应用层 ACK、消息重放、离线队列或登录鉴权。
 
 
-## 五、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-10" data-jobs-toc="v2">五、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
 

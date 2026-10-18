@@ -2,7 +2,20 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [🔥 前言](#%E5%89%8D%E8%A8%80)
+- [一、范围与当前结构](#jobs-toc-heading-2)
+- [二、Swift 清理结果](#jobs-toc-heading-3)
+- [三、OC 清理结果](#jobs-toc-heading-4)
+- [四、保留的有效模块](#jobs-toc-heading-5)
+- [五、集成与验证](#jobs-toc-heading-6)
+
+</details>
+<!-- jobs-toc:end -->
 
 ---
 
@@ -12,7 +25,7 @@
 
 **已清理报告列出的空壳；完整 OC JobsOCDSL、真实功能模块、协议、重导出桥接和抽象扩展点保留。** 删除的是未交付的接口和配置，没有把这些功能替换成模拟成功实现。源代码、调用方、公共头、相关 README 与公共代码块一起同步。
 
-## 一、范围与当前结构 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、范围与当前结构 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
 | 工程 | 清理范围 | 当前自建 Pod 数 |
 | --- | --- | --- |
@@ -24,7 +37,7 @@ Swift 根目录为 `/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@J
 
 先用已有 [**CodeGraph**](https://github.com/colbymchenry/codegraph) 索引定位，再检查真实实现、调用和集成引用。源码候选均核对 Jobs 作者头或已确认维护范围。根 `Pods/`、`ManualBy*Pods@Pods/`、`PodsManual`、手工第三方、供应商、生成代码和所有权不明源码继续按维护边界处理；生成的工程和锁文件通过正常工具刷新。
 
-## 二、Swift 清理结果 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、Swift 清理结果 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
 | 对象 | 实际处理 |
 | --- | --- |
@@ -62,7 +75,7 @@ Swift 两组无源码、无 podspec 的预留目录已逐层通过 `rmdir` 移�
 
 相关 Pod README 已同步说明有效能力和迁移入口；Swift 当前目录只保留 64 个有真实规格的一级自建模块。
 
-## 三、OC 清理结果 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、OC 清理结果 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
 | 对象 | 实际处理 |
 | --- | --- |
@@ -79,14 +92,14 @@ OC 新工程三组未跟踪空目录已逐层通过 `rmdir` 移除：
 
 旧工程的 `JobsOCBaseConfigDemo/🔨Manual_Add_ThirdParty（按需引入）/VPN/JobsVPN.{h,m}` 位于明确排除的手工第三方区，本轮未删除；自维护的 JobsOCTools 公开头已撤销其导出。该位置不属于原报告的 OC 新工程待删除源码范围。
 
-## 四、保留的有效模块 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+## <span id="jobs-toc-heading-5" data-jobs-toc="v2">四、保留的有效模块 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
 - **OC JobsOCDSL**：有完整分类实现，保留；不能因为与 Swift 空兼容入口同名就一起删除。
 - **Swift PDFKit / QuartzCore / WebKit / MetalKit 桥接**：真实重导出 JobsSwiftDSL，宿主仍使用相关模块。
 - **OC FSCalendarExtra、This、JobsGetWindow、JobsOCProtocols**：分别承载 inline 工厂、分类基类、头文件工具和协议，符合自身职责。
 - **默认委托、抽象基类钩子、平台条件回退**：空实现有明确合同，不属于此次未交付功能。
 
-## 五、集成与验证 <a href="#前言">🔼</a> <a href="#🔚">🔽</a>
+## <span id="jobs-toc-heading-6" data-jobs-toc="v2">五、集成与验证 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
 - Swift 5 个修改源码的 `swiftc -frontend -parse`、规格的 `ruby -c`、公共代码块的 `plutil -lint` 通过；相关 README 本地链接检查通过。
 - Swift 已使用现有 [**CocoaPods**](https://cocoapods.org/) 纯模式离线刷新：锁文件中的旧 Timer 子规格移除，14 个已删除文件的 Sources 引用清理，真实 Pods 工程重新可读；锁文件与 Manifest 一致。

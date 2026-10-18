@@ -2,7 +2,23 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [Jobs DSL 调用约定](#jobs-toc-heading-1)
+- [一、架构脉络与关键设计](#jobs-toc-heading-2)
+  - [1.1、设计目的与职责划分](#jobs-toc-heading-3)
+  - [1.2、运行脉络](#jobs-toc-heading-4)
+  - [1.3、关键设计与边界](#jobs-toc-heading-5)
+  - [1.4、阅读与重建顺序](#jobs-toc-heading-6)
+- [二、音频会话与结束合同](#jobs-toc-heading-7)
+- [三、文件、按钮与回归](#jobs-toc-heading-8)
+- [四、生产交付与全量门禁](#jobs-toc-heading-9)
+
+</details>
+<!-- jobs-toc:end -->
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
 
@@ -11,21 +27,21 @@
 - `JobsAudioRecordButton.minimumValidDuration` 默认 `3` 秒；不足时先走 `onCancel` 删除临时录音，再走 `onTooShort` 交给业务层提示。
 - 导火索复用 `JobsFuseAnimation.byFusePressStart(...)` / `byFusePressStop(...)`；门槛位置按 `minimumValidDuration / duration` 自动换算。
 
-## Jobs DSL 调用约定 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">Jobs DSL 调用约定 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义的主对象只作为链起点出现一次；子对象通过宿主级 `byXxx` 或配置闭包继续收口。缺少链式入口时，先在低层补齐返回 `Self` 的 DSL，再改调用端。
 
 <a id="jobs-architecture"></a>
 
-## 一、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-3" data-jobs-toc="v2">1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 由录音引擎、录音按钮、录音模型与存储、播放引擎分层组成。引擎对接系统音频录制和权限，按钮组织操作与视觉进度，存储层管理成品，播放层负责试听。
 
-### 1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-4" data-jobs-toc="v2">1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 获取麦克风权限 → 启动录音 → 用户结束、取消或到达上限 → 保存有效录音 → 按需试听或管理文件
 
@@ -43,14 +59,14 @@ flowchart TD
     F --> I["存储管理或试听"]
 ```
 
-### 1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-5" data-jobs-toc="v2">1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 结束保存与取消丢弃是不同出口，错误或中断也必须回报，不能都当成录音成功。
 - minimumValidDuration 与最大时长是两个约束，进度上的门槛位置按最小时长与总时长比例表达。
 - 按钮动效依赖 JobsFuseAnimation，节拍依赖 JobsSwiftTimer；视觉倒计时不应取代录音引擎的实际结果。
 - 宿主负责用途说明及业务上传，录音文件生成不等于已发送。
 
-### 1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-6" data-jobs-toc="v2">1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 先读 Recording 模型与 RecorderEngine，再看 RecordButton 如何协调结果、时长和动效，最后看 Store 与 PlayerEngine。
 
@@ -64,7 +80,7 @@ flowchart TD
 
 依赖与编译入口：[JobsAudioRecorder.podspec](<./JobsAudioRecorder.podspec>)。其中显式依赖声明包括 `JobsFuseAnimation`、`JobsByUIKit`、`JobsSwiftBaseDefines`、`JobsSwiftDSL`、`JobsSwiftTimer`。圆形路径使用 JobsByUIKit 的 `UIBezierPath.make(ovalIn:)`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
-## 二、音频会话与结束合同 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-7" data-jobs-toc="v2">二、音频会话与结束合同 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Recorder/Player 公开操作与状态读取统一到主线程执行；后台同步调用会等待主线程，宿主不要让主线程同步等待这些调用者。delegate、权限回调和播放器 onError 在主线程。修改 delegate/onError 也应在主线程。
 
@@ -72,7 +88,7 @@ Recorder/Player 公开操作与状态读取统一到主线程执行；后台同�
 
 start 验证 prepareToRecord 与 record 的 Bool；toggle 验证 prepareToPlay/play。启动失败清理文件与会话并抛错。maximumDuration 省略表示不限时，显式值必须为有限正数。结束处理未完成时不能再开始录音；delegate 只接受当前 recorder/player 身份，旧实例回调不能清空新会话。取消立即清理并回调一次，编码错误/中断/媒体服务重置通过错误出口结束，不自动恢复麦克风录制。stopAndSave 等待当前录音器完成后返回成品；文件完成不等于已经上传。
 
-## 三、文件、按钮与回归 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-8" data-jobs-toc="v2">三、文件、按钮与回归 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 文件名包含时间与 UUID，避免同毫秒碰撞。`preparedURL(mode:)` 创建目录并抛出存储错误；兼容 `makeURL` 只生成路径。Store 保留注入的 FileManager，`recordingsThrowing()` 区分空列表与读取失败，旧 recordings() 保留空列表回退；delete 只允许当前录音目录。海量文件列表仍应在后台读取，宿主可分页呈现。
 
@@ -81,7 +97,7 @@ start 验证 prepareToRecord 与 record 的 Bool；toggle 验证 prepareToPlay/p
 设备验收覆盖拒绝麦克风权限、prepare/record/play false、连续 stop/start、旧 sender 迟到、取消、来电中断/媒体重置、录音期间试听、目录不可写和同毫秒 URL。使用 Xcode 的 Thread Sanitizer 检查并发调用，设备确认最终文件可播放。后台录音还要求宿主用途说明、后台能力和页面生命周期策略。
 
 
-## 四、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-9" data-jobs-toc="v2">四、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
 

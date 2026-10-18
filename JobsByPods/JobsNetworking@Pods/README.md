@@ -2,7 +2,26 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [Jobs DSL 调用约定](#%E5%89%8D%E8%A8%80)
+- [一、架构脉络与关键设计](#jobs-toc-heading-2)
+  - [1.1、设计目的与职责划分](#jobs-toc-heading-3)
+  - [1.2、运行脉络](#jobs-toc-heading-4)
+  - [1.3、关键设计与边界](#jobs-toc-heading-5)
+  - [1.4、阅读与重建顺序](#jobs-toc-heading-6)
+- [二、请求与参数合同](#jobs-toc-heading-7)
+- [三、执行、取消与回调](#jobs-toc-heading-8)
+- [四、缓存身份与容量](#jobs-toc-heading-9)
+- [五、上传与下载](#jobs-toc-heading-10)
+- [六、回归入口与证据边界](#jobs-toc-heading-11)
+- [七、生产交付与全量门禁](#jobs-toc-heading-12)
+
+</details>
+<!-- jobs-toc:end -->
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
 
@@ -16,15 +35,15 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 
 <a id="jobs-architecture"></a>
 
-## 一、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-3" data-jobs-toc="v2">1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 以 JobsRequest 描述请求，JobsAgent 定义发送与观察接口，JobsDefaultAgent 负责准备参数、缓存、重试及解码，HTTPClient 适配 Alamofire。上传下载、异步调用、批量和工作流在外层组合，PromiseKit 是可选适配。
 
-### 1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-4" data-jobs-toc="v2">1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 构造请求 → 准备 URL/编码/头 → 按缓存策略选择来源 → 网络执行或重试 → 校验并解码 → 事件流或最终结果
 
@@ -46,7 +65,7 @@ flowchart TD
     H --> K["网络事件与最终结果"]
 ```
 
-### 1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-5" data-jobs-toc="v2">1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - observe 的事件可能先来自缓存再来自网络，不能把第一次事件一律当最终结果；send 与观察模式的用途需要区分。
 - cacheElseLoad 与 staleWhileRevalidate 不同：前者可直接消费缓存，后者还会继续网络刷新；旧别名应按当前映射解释。
@@ -54,7 +73,7 @@ flowchart TD
 - 业务 Envelope 解码与 HTTP 传输成功是两层校验，错误要保留来源。
 - AF4/AF5 目录保留兼容占位，实际网络实现位于 Core 所包含的文件；不能据目录名生成两套并行网络引擎。
 
-### 1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-6" data-jobs-toc="v2">1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 先读 JobsRequest、JobsAgent 与 JobsCachePolicy，再跟踪 JobsDefaultAgent 的 perform/fetchNetwork/decode，最后看 HTTPClient、Async 和可选适配。
 
@@ -68,13 +87,13 @@ flowchart TD
 
 依赖与编译入口：[JobsNetworking.podspec](<./JobsNetworking.podspec>)。其中显式依赖声明包括 `Alamofire`、`JobsSwiftDSL`、`PromiseKit`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
-## 二、请求与参数合同 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-7" data-jobs-toc="v2">二、请求与参数合同 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Core 最低 iOS 12，Async 入口最低 iOS 13，传输使用 [**Alamofire**](https://github.com/Alamofire/Alamofire)。path 支持相对 BaseURL 或完整 HTTP/HTTPS URL，必须有主机。timeout 必须为有限正数。JSON/Form/Raw 请求把 query 编码到 URL 的独立通道，JSON/Form 的 body 保留自己的编码，不静默吞掉 query。URL 已有查询项继续保留；query 中数组/布尔遵循 Alamofire URLEncoding。urlQuery 拒绝第二个 body，rawData 拒绝额外结构化 body，multipart 使用 upload。
 
 `JobsValue(Any?)` 保留构造签名，但创建时快照为不可变、可发送的 JSON 树：null、Bool、数字、String、数组、字符串键字典；URL/Date/Data 转成字符串/ISO8601/Base64。raw 返回规范化值（null 保持 nil），不再持有任意外部可变对象。非有限数字、超过 64 层嵌套和不支持对象在请求准备时返回 invalidRequest；validationError 可提前检查。修改原 NSMutableArray/Dictionary 不改变已创建值。JobsEnvelope 仅在 Payload: Sendable 时符合 Sendable；同步 Decodable 调用保留。
 
-## 三、执行、取消与回调 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-8" data-jobs-toc="v2">三、执行、取消与回调 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 每次发送有独立内部 operationID，与业务 trace.requestId 分开；复用同一个 JobsRequest 并发发送也各自取消和登记。取消令牌受锁保护、幂等，先取消后注册 handler 仍执行；完成与取消争抢一个终态。每个待重试 work item 有独立 generation，替换/取消/完成会使旧登记失效，旧 item 不清空新 item；取消撤销待重试任务、取消已注册 transport，禁止取消后的后续重试发包，最终 completion 恰好一次。成功终态提交后再取消是无操作。执行链持有必要 agent 直到完成，避免调用方释放 agent 后静默丢失 completion。
 
@@ -84,7 +103,7 @@ Async 桥接使用受锁保护的 continuation/token box，锁只保护终态/to
 
 重试 maxRetries 收口 0...100，取消绝不重试；默认只重试 GET/HEAD/PUT/DELETE 的 transport/5xx。初始延迟、增长、jitter 与 customDecider 的延迟做有限数/非负规范，最长一天；customDecider 同样服从最大次数。PUT/DELETE 重试可能重复业务副作用，接口必须明确幂等性。
 
-## 四、缓存身份与容量 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-9" data-jobs-toc="v2">四、缓存身份与容量 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 缓存键采用带类型的规范 JSON、递归排序与 SHA256，纳入实际 URL、query/body、rawBody、编码、非追踪请求头、version、userScope。String/数字、null/空字符串与不同原始字节不会复用；正文中 &/= 不影响身份。认证/租户仍应通过显式 userScope 隔离。业务追踪头不作为缓存身份。键不把 token/正文原文写进磁盘文件名。
 
@@ -94,7 +113,7 @@ Async 桥接使用受锁保护的 continuation/token box，锁只保护终态/to
 
 Memory 字节预算只计正文 `data.count`；Disk 字节预算计 JSON/base64 及元数据编码后的文件长度。Disk 每次成功 set 后按 namespace 总数/总文件字节淘汰，get 校验并删除当前超预算项；新建小预算实例不会立即清理其他未读取的旧项。锁只保护同一个 store 实例，不提供同 namespace 多实例或跨进程的全局事务硬上限；共享 namespace 时应统一 store 与预算。预算限制缓存容量，不限制请求/响应总量或所有临时内存。
 
-## 五、上传与下载 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-10" data-jobs-toc="v2">五、上传与下载 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 上传先校验所有指定文件为可打开的可读普通文件；任何必需文件缺失时返回 invalidRequest，网络请求数为 0。fileURL multipart 交给 Alamofire 按其内存阈值/临时文件编码，不把所有附件提前读成 Data；Data 附件保持兼容。请求生命周期内宿主应保留附件，若预检后被移除，底层编码返回失败。结构化 form 用 JSON 编码，String 保留 UTF-8 文本；不发送 Swift 字典描述。
 
@@ -115,7 +134,7 @@ agent.download(request) { result in
 
 默认日志不输出响应正文，错误对象仍携带原 Data 供业务按需诊断；日志路径不含 query。业务自定义日志仍需自行控制敏感字段。
 
-## 六、回归入口与证据边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-11" data-jobs-toc="v2">六、回归入口与证据边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 在工程根执行：
 
@@ -130,7 +149,7 @@ ruby .github/tests/JobsPodsUpgrade/Network/run_regressions.rb --output-dir /tmp/
 NativeDSLFactoryFixture 仅在原生 CLI 测试替代 JSONDecoder.make/byDateDecodingStrategy 两个无业务逻辑入口，避免 UIKit DSL 的 macOS 边界；网络逻辑与 Alamofire未被替换。iOS Pod/宿主构建使用真实 JobsSwiftDSL，不能把原生 CLI 回归当成完整 iOS 模块构建。BLE 回归使用真实 Core 和 Mock，不是真外设；Crypto 回归直接编译原生算法源码。真机音频/BLE/WebSocket/TLS pinning 与 Thread Sanitizer 另行验收。
 
 
-## 七、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-12" data-jobs-toc="v2">七、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 每个显式 subspec 同步继承生产排除集合，避免只消费子模块时带入测试/示例源码。
 

@@ -2,17 +2,33 @@
 
 ![Jobs出品，必属精品](https://picsum.photos/1500/400)
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [🔥 前言](#jobs-toc-heading-1)
+- [一、适用场景](#jobs-toc-heading-2)
+- [二、运行方式](#jobs-toc-heading-3)
+- [三、执行前检查](#jobs-toc-heading-4)
+- [四、健康检查与修复流程](#jobs-toc-heading-5)
+- [五、风险说明](#jobs-toc-heading-6)
+- [六、日志文件](#jobs-toc-heading-7)
+- [七、验证与限制](#jobs-toc-heading-8)
+- [八、换电脑排查](#machine-migration)
+
+</details>
+<!-- jobs-toc:end -->
 
 ---
 
-## 🔥 <font id=前言>前言</font>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">🔥 <font id=前言>前言</font></span><!-- jobs-toc:heading-end -->
 
 - 本目录包含同名脚本 `拉取Flutter侧三方资源.sh` 和当前 `README.md`。
 - 用途：当 Flutter iOS 生成配置缺失、路径已迁移或 SDK 根 helper 不可用时，复用健康 [**Flutter**](https://flutter.dev/) 或 [**fvm**](https://fvm.app)，扫描工程并执行 `flutter pub get`，复检后按需重建过期的本机路径配置。
 - 本脚本只发现并复用工具；FVM 的安装及 Homebrew 到官方来源的回退由[配置 Flutter 环境脚本](../配置Flutter环境.sh/README.md)负责。
 
-## 一、适用场景 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、适用场景 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - Flutter module 的 `.ios/Flutter/podhelper.rb`、`Generated.xcconfig` 或 `flutter_export_environment.sh` 缺失时。
 - 从其它电脑复制工程后，生成配置仍指向原电脑的 Flutter SDK 或 module 路径时。
@@ -20,7 +36,7 @@
 - 工程根目录下存在 `my_flutter` 或其它包含 `pubspec.yaml` 的 Flutter 工程时。
 - 希望依赖拉取失败时只提示、不阻断外层流程时。
 
-## 二、运行方式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、运行方式 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 在当前目录执行：
 
@@ -31,7 +47,7 @@
 - 独立运行先打印固定内置自述，按回车继续，按 `Ctrl+C` 取消；没有可交互输入时退出并提示改用终端。
 - [工程 Podfile](../../Podfile) 在默认 Flutter 生成配置未通过完整健康检查时同步调用本脚本，统一确认后传入 `JOBS_SKIP_README=1`，只跳过子脚本重复回车等待；内置自述仍会打印。
 
-## 三、执行前检查 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、执行前检查 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 确认脚本目录位于工程根目录的 `ScriptsByPods` 下：
 
@@ -53,7 +69,7 @@
 - Flutter 候选依次是当前 `PATH`、用户 `fvm/versions/stable` 和 `.fvm/versions/stable` 下的 SDK；随后检查 `PATH` 中的 FVM、`FVM_INSTALL_DIR` 指定的官方目录、默认用户 `fvm/bin`、Pub 缓存及 Apple Silicon / Intel 的 Homebrew 常见位置。每个候选执行 `--version` 检查，失败后继续其它来源。
 - 配置脚本对子进程 `PATH` 的刷新不会传回 Podfile；这里独立探测官方 FVM 路径，确保同一次 `pod install` 后续仍能找到新安装工具。
 
-## 四、健康检查与修复流程 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-5" data-jobs-toc="v2">四、健康检查与修复流程 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 默认 `my_flutter` 只有同时满足以下条件才跳过工具探测和依赖拉取：
 
@@ -89,19 +105,19 @@
     W --> Z
   ```
 
-## 五、风险说明 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-6" data-jobs-toc="v2">五、风险说明 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 脚本会执行 `flutter pub get`，可能改动 Flutter 依赖缓存和生成目录。它不安装或升级 FVM，也不修改 shell profile。
 - 默认配置完整健康时直接结束；仅有 module helper 文件不足以证明环境可用。没有可用工具或候选工程时告警并跳过，不声称完成修复。
 - 修复失败返回失败状态，由 Podfile 的 `required: false` 调用记录警告并继续主安装流程；默认 module 仍不健康时，Podfile 使用已有占位 helper 跳过 Flutter Pods 集成，不把其它候选的成功当成默认 module 已修好。
 - 脚本不手动删除 `Pods`、`Podfile.lock` 或整个 `.ios` 目录，不递归启动 `pod install`；修复分支仅移出指定的两份配置文件并保留备份。Flutter 官方 `pub get` 仍可能依据工具或 `pubspec.yaml` 的变更重新生成 `.ios`，正常生成行为由 Flutter 控制。
 
-## 六、日志文件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-7" data-jobs-toc="v2">六、日志文件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 日志同步写入系统临时目录中的 `拉取Flutter侧三方资源.log`；每次确认运行后覆盖上次日志。
 - 需要重生成时，独立备份目录位于系统临时目录的 `jobs-flutter-config-backup.<随机后缀>`；目录位置与恢复结果写在同一日志中。成功和失败均保留原配置备份，失败尝试产物使用 `attempted.<原文件名>` 留存，不静默丢弃原配置。
 
-## 七、验证与限制 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-8" data-jobs-toc="v2">七、验证与限制 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - [隔离回归脚本](./Tests/run_regression.zsh)覆盖候选优先级、损坏工具回退、官方 / Pub / Homebrew 路径、交互防误触，以及生成配置健康、换机残留路径、重生成与失败恢复边界。测试使用假 Flutter / FVM 与临时工程；复跑命令：
 

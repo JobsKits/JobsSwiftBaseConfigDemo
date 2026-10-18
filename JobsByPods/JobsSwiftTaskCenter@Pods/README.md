@@ -5,11 +5,32 @@
 
 ![Jobs倾情奉献](https://picsum.photos/1500/400 "Jobs出品，必属精品")
 
-[toc]
+<!-- jobs-toc:start -->
+<!-- jobs-toc:source {"v":2,"token":"[toc]"} -->
+<details>
+<summary>📚 目录（点击展开 / 收起）</summary>
+
+- [一、简介](#jobs-toc-heading-1)
+- [二、✨ 特性](#jobs-toc-heading-2)
+  - [1、完整任务生命周期](#jobs-toc-heading-3)
+  - [2、Swift Concurrency 原生支持](#jobs-toc-heading-4)
+  - [3、灵活调度策略](#jobs-toc-heading-5)
+- [三、🚀 快速开始](#jobs-toc-heading-6)
+- [四、📄 License](#jobs-toc-heading-7)
+- [五、架构脉络与关键设计](#jobs-toc-heading-8)
+  - [5.1、设计目的与职责划分](#jobs-toc-heading-9)
+  - [5.2、运行脉络](#jobs-toc-heading-10)
+  - [5.3、关键设计与边界](#jobs-toc-heading-11)
+  - [5.4、阅读与重建顺序](#jobs-toc-heading-12)
+- [六、使用合同与边界](#jobs-toc-heading-13)
+- [七、生产交付与全量门禁](#jobs-toc-heading-14)
+
+</details>
+<!-- jobs-toc:end -->
 
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
 
-## 一、简介 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-1" data-jobs-toc="v2">一、简介 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 * **`JobsSwiftTaskCenter`** 提供一套完整的 **任务调度模型 (Task Scheduling
   Model)**，用于在应用中统一管理：
@@ -22,9 +43,9 @@
 
 * 底层使用 [**JobsSwiftTimer**]() 提供高精度定时能力，上层负责**任务调度、生命周期管理与执行观察**
 
-## 二、✨ 特性 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-2" data-jobs-toc="v2">二、✨ 特性 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-### 1、完整任务生命周期 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-3" data-jobs-toc="v2">1、完整任务生命周期 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 * 任务拥有清晰的生命周期：`idle → running → suspended → cancelled / finished`
 * 支持：
@@ -34,7 +55,7 @@
   * **executeNow**
   * 生命周期观察
 
-### 2、`Swift Concurrency` 原生支持 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-4" data-jobs-toc="v2">2、`Swift Concurrency` 原生支持 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 * 完全支持 `Swift Concurrency`
 
@@ -53,7 +74,7 @@
   }
   ```
 
-### 3、灵活调度策略 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-5" data-jobs-toc="v2">3、灵活调度策略 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 **`JobsSwiftTaskCenter`** 支持多种任务调度策略：
 
@@ -67,7 +88,7 @@
 | **初始延迟** | `initialDelay` |
 | **立即执行一次** | `fireImmediately` |
 
-## 三、🚀 快速开始 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-6" data-jobs-toc="v2">三、🚀 快速开始 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 ``` swift
 import JobsSwiftTaskCenter
@@ -79,21 +100,21 @@ let task = JobsPlan.after(.second * 2).do {
 
 ------------------------------------------------------------------------
 
-## 四、📄 License <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-7" data-jobs-toc="v2">四、📄 License <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 MIT
 
 <a id="jobs-architecture"></a>
 
-## 五、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-8" data-jobs-toc="v2">五、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 本节用于用中文快速理解组件，并为按框架重建提供入口；关注职责、运行关系和关键边界，不要求逐行复刻。
 
-### 5.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-9" data-jobs-toc="v2">5.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 在计时器之上建立任务计划与集中治理。JobsPeriod/JobsPlan 描述执行间隔，JobsTask 执行动作并维护生命周期，Center 与 Manager 管理实例和标签，执行及状态通过 AsyncSequence 向外观察。
 
-### 5.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-10" data-jobs-toc="v2">5.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 建立计划 → 创建并登记任务 → 按计划执行 → 产出执行或状态事件 → 暂停、取消或自然结束 → 移除观察与任务
 
@@ -109,7 +130,7 @@ flowchart LR
     D --> G["取消任务与清理观察"]
 ```
 
-### 5.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-11" data-jobs-toc="v2">5.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 任务计划、一次执行和整体任务生命周期不同，重复次数结束不能只停止 UI 观察而留下底层计时。
 - Center 可给同一实例多个标签，Manager 按任务项和标签提供治理，不能把两者的数据关系混为一个字典。
@@ -117,7 +138,7 @@ flowchart LR
 - filter、map、prefix、window、merge 等执行流组合不等于重新执行原任务，停止订阅与取消任务需要区分。
 - 前后台状态接入不代表系统保证后台持续运行，计划时间仍需考虑应用挂起。
 
-### 5.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+### <span id="jobs-toc-heading-12" data-jobs-toc="v2">5.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 先读 Period/Plan 与 TaskLifecycle，再看 JobsTask 的调度和取消，随后读 Manager/Center，最后读执行流组合。
 
@@ -131,7 +152,7 @@ flowchart LR
 
 依赖与编译入口：[JobsSwiftTaskCenter.podspec](<./JobsSwiftTaskCenter.podspec>)。其中显式依赖声明包括 `JobsSwiftTimer`。源码范围、资源及可选 subspec 以这里的声明为准；辅助脚本动态补充的依赖不在上述摘录中展开。
 
-## 六、使用合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-13" data-jobs-toc="v2">六、使用合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 等待执行次数返回实际发生的次数；任务提前结束或等待者被取消时，不会把目标次数当作已执行次数。等待者取消会及时退出，并且不会取消底层 `JobsTask`。
 - `waitAny` 选出首个终态任务后撤销其余等待者；其余底层任务继续按自身生命周期运行。所有 continuation 只恢复一次。
@@ -143,7 +164,7 @@ flowchart LR
 - `JobsPeriod` 接受有限的 `0...1_000_000_000` 秒；非法时间归零。异步执行序列默认保留完整事件，长期高速流的消费与内存预算由调用方评估。
 
 
-## 七、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## <span id="jobs-toc-heading-14" data-jobs-toc="v2">七、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
 
