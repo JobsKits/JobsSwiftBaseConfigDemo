@@ -1,5 +1,13 @@
 # **iOS**@[**Swift**](https://developer.apple.com/swift/)<font color=red>靶场项目</font>蓝皮书📘
 
+> **项目定位：** `JobsSwiftBaseConfigDemo`，面向 iOS 开发者的 Swift UIKit 基础工程、可复用本地 Pod 与原生 / 跨端能力实验集，用于快速验证组件和工程方案。
+>
+> **状态与维护：** 维护中（本地提交历史见统计章节）；负责人 Jobs，未登记独立维护团队。运行 / 硬件 / 生产功能须按对应证据验收。
+>
+> **统计基线：** 2026-10-19（Asia/Shanghai）；[项目规模、依赖与接手指南](#project-statistics)，页面、源码和提交分别采用明确口径，原有教程与历史记录继续保留。
+>
+> **版本说明：** 下方版本徽章保留为历史展示；当前最低系统、SDK 与锁文件以[工具链基线](#statistics-toolchain)为准。
+
 
 <p align="left">
   <a><img src="https://img.shields.io/badge/Swift-red" alt="Swift"/></a>
@@ -383,6 +391,16 @@
 - [七、自建 Pod 稳定性与编译门禁](#jobs-toc-heading-358)
   - [稳定性接口与迁移](#jobs-toc-heading-359)
   - [编译与回归入口](#jobs-toc-heading-360)
+- [八、项目统计与接手指南](#project-statistics)
+  - [8.1、SDK、工具链与锁文件](#statistics-toolchain)
+  - [8.2、Git 历史与统计边界](#statistics-history)
+  - [8.3、页面、子页面与路由](#statistics-pages)
+  - [8.4、后端规模适用边界](#statistics-backend)
+  - [8.5、模块依赖与核心流程](#statistics-flows)
+  - [8.6、功能实现与证据](#statistics-features)
+  - [8.7、业务代码占比与复核命令](#statistics-code-share)
+  - [8.8、直接依赖清单与风险](#statistics-dependencies)
+  - [8.9、运行、构建、测试与常见问题](#statistics-run)
 
 </details>
 <!-- jobs-toc:end -->
@@ -13124,5 +13142,401 @@ ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --host-only --configuratio
 核心数值、任务、Worker、Patch、加密回归与 UIKit / WebView / Picker 的 XCTest 位于 [.github/tests/JobsPodsUpgrade](<./.github/tests/JobsPodsUpgrade/>)（从工程根目录定位）。Timer fixture 仅验证上层状态机，实际 Timer 仍由 iOS 模块编译与宿主 XCTest 检查。单元编译、App 编译、模拟器测试与真机行为分别记录，不互相代替。
 
 升级与编译的历史证据见工程根目录《JobsByPods升级与编译验收报告.md》。当前自建模块的空壳排查与清理范围见[双端空壳排查报告](./OC新工程与Swift空壳排查报告.md)；历史验收数量不代表当前模块数量。
+
+## 八、<span id="project-statistics">项目统计与接手指南</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+本节记录当前源码与配置基线。数量随代码变化，应在影响统计的提交中重新计算；超出一个迭代周期应视为待复核。锁文件、页面清单、依赖声明或入口改变时，同时更新表格与流程图。依赖用途依据静态引用，不将“已声明”混同于“已实际执行”。
+
+### 8.1、<span id="statistics-toolchain">SDK、工具链与锁文件</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+| 类别 | 名称 | 当前配置 / 依据 | 锁文件入库状态 |
+| --- | --- | --- | --- |
+| 语言 | <u>[**Swift**](https://www.swift.org/)</u> | 主 target 的 `SWIFT_VERSION = 5.0` 表示语言模式；本地 SPM 示例 `swift-tools-version: 6.0`，不等于整工程固定 Swift 编译器版本 | 编译器具体小版本未锁定 |
+| 构建工具 | [**Xcode**](https://developer.apple.com/xcode) / iOS SDK | `.github/workflows/build_simulator_app.yml` 选择 Xcode `26` 系列；工程 `LastUpgradeCheck=2620` 只是迁移标记。本机安装版本未执行命令核验 | 未固定 Xcode 小版本或 SDK build |
+| 包管理器 | [**CocoaPods**](https://cocoapods.org/) | `Podfile.lock` 记录 `1.17.0`；未以 Gemfile / Bundler 锁住 CocoaPods 可执行文件 | `Podfile.lock` 已入库；无根 Gemfile.lock |
+| 最低系统 | iOS | 主 App、测试与 Widget target 的 Debug / Release 显式为 `15.6`；project 默认 `26.2` 由 target 覆盖，不能当主 App 最低系统 | `project.pbxproj` / `Podfile` 已入库 |
+| 内嵌引擎 | Flutter / Unity | `my_flutter/` 由 Pod helper 条件接入，`Unity/xcode_effectTest/` 为真机桥接；引擎版本未在本节核实，不能用旧教程版本代替 | Flutter `my_flutter/pubspec.lock` 是否可用见实际受控文件；Unity 导出工程不是通用工具链锁 |
+| Swift Package | 本地 JobsSPMDemoPackage / 独立 MacroDemo | 主 App 使用本地包；MacroDemo 单独精确依赖 `swift-syntax 603.0.2` | `MacroDemo/Package.resolved` 已入库，非主 App 全局锁 |
+
+原文顶部 Xcode / iOS / Pod 徽章保留为历史展示，不代表当前最低系统及 CI 工具链；取当前值时以本节和对应工程配置为准。
+
+统计 / 核对时间：**2026-10-19**。锁文件“已入库”由 `git ls-files` 精确查询确认，不代表包管理器工具本体已被锁定，也不代表刚完成依赖安装。
+
+### 8.2、<span id="statistics-history">Git 历史与统计边界</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+所有数字采集于 **2026-10-19（Asia/Shanghai）**。历史范围为当前本地 `HEAD` 可达提交；贡献者范围为本地所有 refs，按作者身份字符串计数，没有合并同一人的不同邮箱 / 大小写，也没有查询托管平台后台。
+
+| 指标 | 当前值 | 口径与依据 |
+| --- | --- | --- |
+| 托管平台首次建库时间 | 未知 | 本地 Git 不保存服务端建库时间，不能拿首次提交时间代替 |
+| 首次提交 | `2025-12-27T11:21:24+07:00 bfd3a1ed266472e6f9b9b10193d8b9be46144a53 Jobs` | `git log --reverse --format='%aI %H %an' HEAD` 的首条 |
+| 最近提交 | `2026-10-18T23:51:17+08:00 5de0569dd45ab2bc4035b735d3f338b9aa382e93` | `git log -1 --format='%aI %H'` |
+| 总提交数 | 303 | `git rev-list --count HEAD`，含合并提交 |
+| 作者身份数 | 3 | `git shortlog -sn --all` 的非空行数，不等于自然人数 |
+
+工作区与提交历史是不同口径：以下源码规模按当前工作区中 **Git 已跟踪文件** 计量；Git 表格记录的是提交历史，不包含尚未提交的 README 内容。
+
+### 8.3、<span id="statistics-pages">页面、子页面与路由</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+计数时间：**2026-10-19**；单位选用 **ViewController 类型声明**，范围限定 Git 已跟踪的 `JobsSwiftBaseConfigDemo/主业务流程/VC/**/*.swift`，递归追踪 `BaseVC` / `UIViewController` 子类，每个不同类名算一个页面组件。这里是源码页面存量，包含条件编译与尚未从入口逐项验收的组件，不承诺所有页面均可在同一构建中到达。
+
+| 端 | 页面数（含子页面） | 子页面数 | 路由条目数 | 口径与交叉核对 |
+| --- | ---: | ---: | ---: | --- |
+| iOS UIKit | 184 | 54 | 127 | 页面排除 3 个中间基类；主入口集合为 RootListVC / RootListSettingsVC / JobsMeCenterVC 加根列表 127 个去重目标，共 130 个，余下 54 个归子页面存量 |
+| 内嵌 Flutter / Unity | 不另加 | 不另加 | 包含在对应原生入口中 | `FlutterDemoVC` / `UnityDemoVC` 各已计一个容器页；不把第三方或生成工程的内部界面加进 UIKit 页面数 |
+
+`JobsNetworkingDemoBaseVC`、`JobsNetworkingMethodDemoVC`、`MosaicBaseDemoVC` 作为复用基类排除；导航 / Tab / 侧滑容器在统计目录外，亦排除。半屏、浮层、提示控件不另增页面；目录内真实 `BaseVC` 子类即使以模态或半屏方式展示，仍按一个类型计入，不能重复计数。子页面数字只表达“未列在主入口集合”，并非已完成运行时可达性审计。
+
+路由采用根功能列表 `("标题", Xxx.self)` 的去重控制器目标，未把 push / present 调用数当路由。`FMDBDemoVC` 与 `WCDBDemoVC` 是互斥编译项，`UnityDemoVC` 仅真机，`JobsDebugPanelDemoVC` 仅 Debug；127 是所有条件分支的静态并集。当前 WCDB 依赖下，Debug 模拟器的根列表候选为 125，Release 模拟器为 124，Debug 真机为 126，Release 真机为 125；这些是按编译条件推导的候选值，未逐项运行。来源为 `Demo@功能列表根目录.swift` 的 `#if`，不能把静态并集当作每种构建都展示的数量。
+
+只读复核页面与根路由：
+
+```shell
+python3 - <<'PY_PAGES'
+from pathlib import Path
+import re, subprocess
+root = 'JobsSwiftBaseConfigDemo/主业务流程/VC/'
+classes = {}
+for name in subprocess.check_output(['git','ls-files','-z']).decode().split('\0'):
+    if name.startswith(root) and name.endswith('.swift'):
+        for match in re.finditer(r'\bclass\s+(\w+)(?:<[^>]*>)?\s*:\s*([^\{\n]+)', Path(name).read_text()):
+            classes[match[1]] = match[2].strip().split(',')[0].strip()
+known = {'UIViewController', 'BaseVC'}
+while True:
+    added = {name for name, base in classes.items() if base in known} - known
+    if not added:
+        break
+    known |= added
+pages = known - {'UIViewController','BaseVC','JobsNetworkingDemoBaseVC',
+                 'JobsNetworkingMethodDemoVC','MosaicBaseDemoVC'}
+registry = Path(root + 'Demo@功能列表根目录/Demo@功能列表根目录.swift').read_text()
+routes = set(re.findall(r'\(\s*"[^"\n]*"\s*,\s*([\w]+)\.self\s*\)', registry))
+primary = routes | {'RootListVC','RootListSettingsVC','JobsMeCenterVC'}
+print('pages', len(pages), 'secondary', len(pages - primary), 'root_routes', len(routes))
+print('unresolved_routes', sorted(routes - pages))
+PY_PAGES
+```
+
+### 8.4、<span id="statistics-backend">后端规模适用边界</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+本仓是客户端演示 / 基础工程，未交付独立后端，不能把客户端请求样例或本地 URLProtocol / Mock 算成对外服务接口。以下边界均按 **2026-10-19** 本仓源码与配置核对，不覆盖远端服务部署。
+
+| 后端统计项 | 本仓结论与依据 |
+| --- | --- |
+| HTTP / RPC / MQ 对外接口 | 不适用；未发现本仓维护的后端服务入口及 OpenAPI / RPC 服务注册定义。客户端 HTTP / WebSocket / MQTT 演示不计入 |
+| 服务模块 / 部署单元 | 不适用；客户端 target、Pod 或 Pub 包不等于后端部署单元 |
+| 业务主表 | 不适用；本地数据库示例不等于后端业务表 |
+| 业务状态机 | 未建立后端订单、审批或结算对象；UI 状态与定时器状态不计入 |
+| 外部系统集成 | 仅按功能表报告客户端示例，生产服务合同与数量未知 |
+| 定时任务 / 批处理 / 异步消费者 | 客户端 Timer 与 MQTT 订阅示例不计为已部署后端任务 |
+| 中间件依赖 | 没有本仓后端部署清单；Redis、消息队列、对象存储规模不适用 |
+| QPS / 日增 / 存储量 | 未采集生产监控，未知；不从源码行数或页面数推算 |
+
+因此不计算“页面 : 后端接口”的比例，也不把不适用项填成已核验的线上零规模。
+
+### 8.5、<span id="statistics-flows">模块依赖与核心流程</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+```mermaid
+flowchart LR
+    A["启动入口/AppDelegate.swift 与 SceneDelegate.swift"] --> B["RootListSettingsVC.swift / RootListPreferences"]
+    B --> C["Demo@功能列表根目录.swift / RootListVC"]
+    C --> D["主业务流程/VC/SubVC 中的 Demo"]
+    D --> E["JobsByPods：JobsByUIKit / JobsSwiftDSL"]
+    D --> F["JobsNetworking / JobsSwiftTimer 等自有模块"]
+    F --> G["公共 CocoaPods：Alamofire / YTKNetwork 等"]
+    D --> H["FlutterDemoVC / UnityDemoVC 桥接边界"]
+    G --> X[["外部 HTTP 服务 / WebSocket 服务"]]
+    D --> Y["本地数据库 / 文件 / UserDefaults"]
+    Z["JobsBySwiftPackageManager/JobsSPMDemoPackage/Package.swift"] --> D
+```
+
+```mermaid
+flowchart TD
+    A["SceneDelegate.swift scene willConnect"] --> B["配置场景与启动展示"]
+    B --> C["RootListPreferences.makeAppRootViewController"]
+    C --> D{"保存的根容器设置"}
+    D -->|列表或侧滑| E["RootListVC / JobsSideDrawerVC"]
+    D -->|Tab| F["Demo / 消息 / 我的"]
+    F --> E
+    E --> G["根列表分组 / 搜索 / 置顶"]
+    G --> H["选择 DemoItem.vcType"]
+    H --> I["创建目标 UIViewController 并导航展示"]
+    I --> J["自有 Pod 与平台能力 / 外部服务"]
+    J --> K["成功结果或该 Demo 的本地 / 错误处理"]
+```
+
+流程优先参考已有 `.codegraph/` 查询，并逐项回到入口与根列表源码核对。CodeGraph 包含供应商符号，图中的自有 / 公共依赖边界以真实目录与 `Podfile.deps` 为准；请求失败回退按各 Demo 核实，不能从框架设计推导全部 Demo 都已统一实现。
+
+### 8.6、<span id="statistics-features">功能实现与证据</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+以下“未核实”表示未完成该项实现 / 配置 / 运行的端到端核查，不表示系统 API 或依赖包本身没有能力。核对日期：**2026-10-19**。
+
+| 类目 | 是否涉及 | 实现方式与证据 / 边界 |
+| --- | --- | --- |
+| 网络与安全 | 已有封装与 Demo | `JobsByPods/JobsNetworking@Pods` 和 `JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking共用网络接口/`；YTKNetwork、Alamofire、Moya 演示分开存在。JobsCryptoKit 与 KeychainAccess 提供加密 / Keychain 能力，不等于所有接口已加密、统一 OAuth / JWT / Session 或全部证书绑定；各业务配置需单独核验 |
+| 持久化 / 数据库 / 缓存 | 已有示例 | WCDB `2.1.16` 固定声明，ObjectBox、Cache、图片缓存等锁版见直接依赖表。FMDB 与 WCDB 的互斥条件在根列表明确；不要把备用 FMDB 页面算成当前已装配依赖。生产数据库迁移与持久化容量未验收 |
+| 蓝牙 / 录音 / 相机相册 / 推送 | 已有原生演示 | `Demo@JobsBluetooth`、JobsAudioRecorder、本地录制到相册、PhotoAlbumDemoVC、LocalNotificationDemoVC；推送注册在 AppDelegate，远端推送生产链未由源码统计验收 |
+| 扫码 / 生物识别 / 定位 / NFC / 分享支付 | 部分涉及，按组件确认 | QRCodeDemoVC、JobsOpen 与系统能力封装可定位；扫码生成 / 识别、权限、真机硬件和支付渠道不能互相替代。NFC、生物识别、支付生产接入状态待核实 |
+| 国际化 / 主题 / 崩溃 / 日志 | 已有组件 | Jobsl10n、RootListPreferences、CrashLogDemoVC、CocoaLumberjack / JobsSwiftDebugTools；本地日志与 CrashLog 不等于已接入远端崩溃平台或生产链路追踪 |
+| 热更新 / CI / 多环境 | 已有实验或工具 | JobsSwiftPatch、JobsDebugPanel 与 `.github/workflows/build_simulator_app.yml`；Patch Demo 的实验能力不能等同于商店可用远程热更新。Debug 环境入口不进入 Release；具体测试结果须对应提交 |
+| API 回退 / 空态 | 有独立演示与控件 | JobsNetworking 本地模拟 Demo、JobsEmptyView 和各列表刷新组件；是否对每个动态列表 / 请求统一覆盖仍需逐 Demo 验收 |
+| 后端 | 不适用 | 没有本仓维护的服务端幂等、限流、分布式锁、事务、灰度或对账部署 |
+| 隐私 / 脱敏 | 配置与权限入口存在，完整性待验 | `JobsSwiftBaseConfigDemo` 下 Info.plist / 权限申请代码；未在文档统计中完成全部隐私清单、日志脱敏与商业发布许可审计 |
+
+### 8.7、<span id="statistics-code-share">业务代码占比与复核命令</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+统计时间：**2026-10-19（Asia/Shanghai）**。统计单位为物理文本行：`read_text().splitlines()`，包含空行与注释，末尾没有换行的非空尾行仍计一行；不是去注释后的有效代码行。分母只含业务、测试、配置与脚本三类。第三方和生成物只展示排除规模，未扫描的未跟踪依赖缓存不填入排除规模。
+
+| 类别 | 文件数 | 物理行数 | 分母内占比 |
+| --- | ---: | ---: | ---: |
+| 业务代码（含自有基础模块 / 平台胶水） | 938 | 148,265 | 59.87% |
+| 测试代码与回归脚本 | 39 | 34,603 | 13.97% |
+| 配置与脚本 | 196 | 64,792 | 26.16% |
+| 已跟踪第三方源码 / 配置（排除） | 1,495 | 175,717 | 不入分母 |
+| 已跟踪生成 / 缓存 / 构建文本（排除） | 1,959 | 1,687,427 | 不入分母 |
+
+```mermaid
+pie showData
+    title 自维护文本物理行占比（2026-10-19）
+    "业务代码" : 148265
+    "测试代码" : 34603
+    "配置与脚本" : 64792
+```
+
+只读复核时在仓库根运行下列脚本。它只读取 `git ls-files` 返回的文件；路径排除先于测试分类，资源与文档不计入代码，供应商测试不会混进自有测试。`Data.3rd` / `UI.3rd` 下的自维护使用示例属于业务，实际第三方实现按供应商路径与文件头排除。
+
+```shell
+python3 - <<'PY_STATS'
+from pathlib import Path
+from collections import defaultdict
+import re, subprocess
+source = {'.swift','.m','.mm','.h','.c','.cpp','.cc','.hpp','.dart','.kt','.java'}
+config = {'.command','.sh','.rb','.podspec','.py','.bat','.ps1','.yml','.yaml',
+          '.json','.xml','.plist','.pbxproj','.xcconfig','.gradle','.kts',
+          '.properties','.cmake','.entitlements','.mjs','.toml',
+          '.xcworkspacedata','.xcscheme'}
+names = {'Podfile','Podfile.deps','Gemfile','CMakeLists.txt','gradlew','.fvmrc'}
+excluded = {'.git','.dart_tool','build','DerivedData','.build','.ios','.macos',
+            '.fvm','.codegraph','Unity','Flutter','ephemeral','gen','l10n','Generated','generated'}
+totals = defaultdict(lambda: [0, 0])
+for name in subprocess.check_output(['git','ls-files','-z']).decode().split('\0'):
+    if not name:
+        continue
+    path = Path(name)
+    parts, ext = path.parts, path.suffix.lower()
+    if ext not in source | config and path.name not in names:
+        continue
+    if any(x in {'Pods','node_modules'} or x.startswith(('ManualBy','PodsManual')) for x in parts):
+        category = 'thirdparty'
+    elif any(x in excluded for x in parts) or re.search(
+        r'(?:\.generated\.swift|\.g\.dart|\.freezed\.dart|\.gr\.dart|GeneratedPluginRegistrant\.\w+|'
+        r'generated_plugin_registrant\.\w+|generated_plugins\.cmake)$', name):
+        category = 'generated'
+    elif any(x.lower() in {'assets','assets.xcassets','resource','resources','res'}
+             or x.endswith('.xcassets') for x in parts) or any(x.endswith('.md') for x in parts):
+        continue
+    else:
+        try:
+            text = path.read_text()
+        except (UnicodeError, OSError):
+            continue
+        author = re.search(r'Created by ([^\n]+?) on ', text[:2000])
+        if author and not re.search(r'\b[Jj]obs\b|J0bs', author[1]):
+            category = 'thirdparty'
+        elif any(re.search(r'(?i)(?:^test$|^tests$|tests$|^integration_test$)', x)
+                 for x in parts) or '.github/tests/' in name:
+            category = 'tests'
+        else:
+            category = 'business' if ext in source else 'config'
+    try:
+        lines = len(path.read_text().splitlines())
+    except (UnicodeError, OSError):
+        continue
+    totals[category][0] += 1
+    totals[category][1] += lines
+for category, (files, lines) in sorted(totals.items()):
+    print(category, files, lines)
+PY_STATS
+```
+
+### 8.8、<span id="statistics-dependencies">直接依赖清单与风险</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+统计时间：**2026-10-19**。根 `Podfile.deps` 未注释的 `pod` 语句共 **119 条**，将同一 Pod 的 subspec 合并为根名后为 **117 个直接 Pod**：64 个自有 path、2 个本地供应商镜像、50 个公共 Specs Pod、1 个公共 Git Pod。所有声明所在函数均被主 target 调用；Debug 专用依赖仍算直接声明，注明配置边界。版本取 `Podfile.lock`，许可证优先取本地 podspec 声明，其余取已安装 Pods acknowledgement 的正文识别，不能视为完整许可证审计。版本与来源的进一步交叉核对入口为 `DEPENDENCIES`、`EXTERNAL SOURCES`、`CHECKOUT OPTIONS`。
+
+此总数不包含 Flutter helper 自动展开的平台插件 / 引擎依赖；它们虽然出现在 CocoaPods 锁文件的 DEPENDENCIES 中，来源是 `my_flutter/pubspec.yaml` 与生成 helper，不属于手写 Podfile 的 117 个根声明。主 App 另有 1 个直接本地 SPM 包 `JobsSPMDemoPackage`（`JobsBySwiftPackageManager/JobsSPMDemoPackage`，版本为本仓源码、许可证未发现独立声明待核实、产品 JobsSPMDemoKit 已在 project.pbxproj 引用）；独立 MacroDemo 另直接引用父包和公共 `https://github.com/swiftlang/swift-syntax.git` 精确 `603.0.2`，Package.resolved 已入库，许可证待核实，该独立工具依赖不加进主 App Pod 总数。
+
+表中“本仓供应商镜像”不属于 Jobs 原创源码；“本仓自维护 path”不代表存在独立可访问的私有 Git 仓库。`import` 命中仅证明静态引用；未命中者可能被聚合模块或底层依赖使用，需要结合 podspec 与运行路径审计，不能据此自动删除。
+
+| 依赖名 | 锁定版本 / 声明 | 来源 | 地址 / 本地位置 | 许可证 | 关系 | 用途模块 | 使用证据 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| SDWebImage | 5.21.5 | 公库 CocoaPods | [来源](https://github.com/SDWebImage/SDWebImage) | MIT | 直接 | SDWebImage 模块（引用位置见右栏） | import `SDWebImage`（`JobsByPods/JobsBy3rdTools@Pods/SDWebImage/SDWebImage.swift`） |
+| SDWebImageWebPCoder | 0.15.0 | 公库 CocoaPods | [来源](https://github.com/SDWebImage/SDWebImageWebPCoder) | MIT | 直接 | SDWebImageWebPCoder 模块（引用位置见右栏） | 已声明；未命中显式 import，传递使用待核实 |
+| MJRefresh | 3.7.9 | 公库 CocoaPods | [来源](https://github.com/CoderMJLee/MJRefresh) | MIT | 直接 | MJRefresh 模块（引用位置见右栏） | import `MJRefresh`（`JobsByPods/JobsBy3rdTools@Pods/MJRefresh/MJRefreshAutoNormalFooter.swift`） |
+| HTMLReader | 2.2.1 | 公库 CocoaPods | [来源](https://github.com/nolanw/HTMLReader) | Public Domain（本地 LICENSE） | 直接 | HTMLReader 模块（引用位置见右栏） | 已声明；未命中显式 import，传递使用待核实 |
+| GKPhotoBrowser | 3.2.8 | 公库 CocoaPods | [来源](https://github.com/QuintGao/GKPhotoBrowser) | MIT | 直接 | 图片浏览器（仿微信、今日头条） | import `GKPhotoBrowser`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@TextureSwiftSupport朋友圈ByGKPhotoBrowser/Demo@TextureSwiftSupport朋友圈ByGKPhotoBrowser.swift`） |
+| GKNavigationBarSwift | 1.7.3 | 公库 CocoaPods | [来源](https://github.com/QuintGao/GKNavigationBarSwift) | MIT | 直接 | GKNavigationBarSwift 模块（引用位置见右栏） | import `GKNavigationBarSwift`（`JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+GKNavigationBarSwift.swift`） |
+| YTKNetwork | 3.0.6 | 公库 CocoaPods | [来源](https://github.com/kanyun-inc/YTKNetwork) | MIT | 直接 | 猿题库出品的网络请求框架@Objc | import `YTKNetwork`（`JobsByPods/JobsSwiftBlock@Pods/JobsSwift3rdPodsBlock.swift`） |
+| WCDB | 2.1.16 | 公库 CocoaPods | [来源](https://github.com/Tencent/wcdb) | Apache-2.0 | 直接 | 腾讯出品的数据库。FMDB 和 WCDB 如果没有做兼容性配置，则无法共存 | import `WCDB`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@WCDB/DemoDB.swift`） |
+| ObjectBox | 5.2.0 | 公库 CocoaPods | [来源](https://github.com/objectbox/objectbox-swift) | Apache-2.0 | 直接 | 高性能的本地嵌入式NoSQL数据库,比 SQLite 更快、更简单、面向对象的本地数据库。 | import `ObjectBox`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@ObjectBox/Human.swift`） |
+| Then | 3.0.0 | 公库 CocoaPods | [来源](https://github.com/devxoul/Then) | MIT | 直接 | Then 模块（引用位置见右栏） | import `Then`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@其他/Demo@跑马灯轮播图.swift`） |
+| SVGKit | 3.0.0 | 公库 CocoaPods | [来源](https://github.com/SVGKit/SVGKit) | MIT | 直接 | iOS原生没有解码SVG格式图片的能力，SVG可以不需要N倍图 | import `SVGKit`（`JobsByPods/JobsByUIKit@Pods/iOS.SDK/String/String+SVG.swift`） |
+| CocoaLumberjack/Swift | 3.9.0 | 公库 CocoaPods | [来源](https://github.com/CocoaLumberjack/CocoaLumberjack) | BSD（条款版本待核实） | 直接 | 日志框架 | 已声明；未命中显式 import，传递使用待核实 |
+| KeychainAccess | 4.2.2 | 公库 CocoaPods | [来源](https://github.com/kishikawakatsumi/KeychainAccess) | MIT | 直接 | 钥匙串友好API | 已声明；未命中显式 import，传递使用待核实 |
+| FingerprintJS | 1.6.0 | 公库 CocoaPods | [来源](https://github.com/fingerprintjs/fingerprintjs) | MIT | 直接 | 浏览器指纹识别库：通过收集浏览器和设备的一些特征（浏览器类型、操作系统、屏幕分辨率、字体、Canvas/音频特征等），生成一个唯一的标识符（fingerprint/visitorId）。这个标识符可以在没有 cookie 或本地存储的情况下识别同一个访客/设备。 | 已声明；未命中显式 import，传递使用待核实 |
+| RxSwift | 6.9.0 | 公库 CocoaPods | [来源](https://github.com/ReactiveX/RxSwift) | MIT | 直接 | 核心 | import `RxSwift`（`JobsByPods/JobsByUIKit@Pods/iOS.SDK/NSObject/NSObject+Rx.swift`） |
+| RxCocoa | 6.9.0 | 公库 CocoaPods | [来源](https://github.com/ReactiveX/RxSwift) | MIT | 直接 | UI 绑定扩展 | import `RxCocoa`（`JobsByPods/JobsByUIKit@Pods/iOS.SDK/Others@SDK/UIAlertController.swift`） |
+| RxRelay | 6.9.0 | 公库 CocoaPods | [来源](https://cocoapods.org/pods/RxRelay) | MIT | 直接 | 替代 Variable | 已声明；未命中显式 import，传递使用待核实 |
+| RxDataSources | 5.0.0 | 公库 CocoaPods | [来源](https://github.com/RxSwiftCommunity/RxDataSources) | MIT | 直接 | RxDataSources 模块（引用位置见右栏） | import `RxDataSources`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@RxDataSources/VC/Demo@RxDataSources.swift`） |
+| NSObject+Rx | 未解析 | 公库 CocoaPods | [来源](https://github.com/RxSwiftCommunity/NSObject-Rx) | MIT | 直接 | NSObject+Rx 模块（引用位置见右栏） | 已声明；未命中显式 import，传递使用待核实 |
+| PromiseKit | 8.2.0 | 公库 CocoaPods | [来源](https://github.com/mxcl/PromiseKit) | MIT | 直接 | PromiseKit 模块（引用位置见右栏） | import `PromiseKit`（`JobsByPods/JobsNetworking@Pods/Adapters/PromiseKit/JobsAgent+PromiseKit.swift`） |
+| Cache | 7.4.0 | 公共 Git | [源码](https://github.com/hyperoslo/Cache.git) | MIT | 直接 | ,:tag => '2.3.4' # pod没更新只能指向源码 | 已声明；未命中显式 import，传递使用待核实 |
+| DeviceKit | 5.7.0 | 公库 CocoaPods | [来源](https://github.com/devicekit/DeviceKit) | MIT | 直接 | 设备信息/设备系列/模拟器设备识别/电池状态/低功耗模式状态/当前是否为引导式访问会话/调整屏幕亮度/可用磁盘空间 | 已声明；未命中显式 import，传递使用待核实 |
+| Alamofire | 5.11.0 | 公库 CocoaPods | [来源](https://github.com/Alamofire/Alamofire) | MIT | 直接 | Alamofire 模块（引用位置见右栏） | import `Alamofire`（`JobsByPods/JobsNetworking@Pods/Agent/HTTPClient.swift`） |
+| SwiftMessages | 10.0.2 | 公库 CocoaPods | [来源](https://github.com/SwiftKickMobile/SwiftMessages) | MIT | 直接 | 非常灵活的 UIKit 和 SwiftUI 视图和视图控制器展示库 | import `SwiftMessages`（`JobsByPods/JobsNavBar@Pods/JobsNavBarByUIKit.swift`） |
+| SwiftProtobuf | 1.33.3 | 公库 CocoaPods | [来源](https://github.com/apple/swift-protobuf) | Apache-2.0 | 直接 | 多端统一协议（iOS + Android + 后端一个 .proto）。数据量比较大、性能敏感（IM、实时流、离线缓存等）。 | 已声明；未命中显式 import，传递使用待核实 |
+| ScreenProtectorKit | 1.4.5 | 公库 CocoaPods | [来源](https://github.com/prongbang/ScreenProtectorKit) | MIT | 直接 | 防止屏幕截图并保护后台应用程序快照 | 已声明；未命中显式 import，传递使用待核实 |
+| PhoneNumberKit | 4.2.3 | 公库 CocoaPods | [来源](https://github.com/marmelroy/PhoneNumberKit) | MIT | 直接 | 电话号码工具包：用于解析、格式化和验证国际电话号码。灵感来源:Google.libphonenumber | 已声明；未命中显式 import，传递使用待核实 |
+| Moya | 15.0.0 | 公库 CocoaPods | [来源](https://github.com/Moya/Moya) | MIT | 直接 | Moya 模块（引用位置见右栏） | import `Moya`（`JobsByPods/JobsSwiftBlock@Pods/JobsSwift3rdPodsBlock.swift`） |
+| Kingfisher | 8.6.2 | 公库 CocoaPods | [来源](https://github.com/onevcat/Kingfisher) | MIT | 直接 | Swift 平台上的 SDWebImage 平替 | import `Kingfisher`（`JobsByPods/JobsBy3rdTools@Pods/Kingfisher/Kingfisher.swift`） |
+| ReactiveSwift | 7.2.1 | 公库 CocoaPods | [来源](https://github.com/ReactiveCocoa/ReactiveSwift) | MIT | 直接 | 新版本支持 arm64 模拟器 | 已声明；未命中显式 import，传递使用待核实 |
+| lottie-ios | 4.6.0 | 公库 CocoaPods | [来源](https://github.com/airbnb/lottie-ios) | Apache-2.0 | 直接 | lottie 动画 | import `Lottie`（`JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+Lottie.swift`） |
+| SnapKit | 5.0.1 | 公库 CocoaPods | [来源](https://github.com/SnapKit/SnapKit) | MIT | 直接 | Swift 平台上的 Masonry 平替（arm64 模拟器 OK） | import `SnapKit`（`JobsByPods/BRPickerViewSwift@Pods/UI/BRPickerPanel.swift`） |
+| JXSegmentedView | 1.4.1 | 公库 CocoaPods | [来源](https://github.com/pujiaxin33/JXSegmentedView) | MIT | 直接 | 子控制器切换 | import `JXSegmentedView`（`JobsByPods/JobsBy3rdTools@Pods/JXSegmentedView/JXSegmentedDataSource/JXSegmentedBaseDataSource.swift`） |
+| JXBanner | 0.3.6 | 公库 CocoaPods | [来源](https://github.com/Coder-TanJX/JXBanner) | MIT | 直接 | 轮播图 | 已声明；未命中显式 import，传递使用待核实 |
+| KakaJSON | 1.1.2 | 公库 CocoaPods | [来源](https://github.com/kakaopensource/KakaJSON) | MIT | 直接 | KakaJSON 模块（引用位置见右栏） | 已声明；未命中显式 import，传递使用待核实 |
+| ESPullToRefresh | 2.9.3 | 公库 CocoaPods | [来源](https://github.com/eggswift/pull-to-refresh) | MIT | 直接 | Swift 平台 MJRefresh 平替 | import `ESPullToRefresh`（`JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIScrollView/UIScrollView+ESPullToRefresh.swift`） |
+| BMPlayer | 1.3.2 | 公库 CocoaPods | [来源](https://github.com/BrikerMan/BMPlayer) | MIT | 直接 | 播放器（参照 ZFPlayer） | import `BMPlayer`（`JobsByPods/JobsBy3rdTools@Pods/JobsLiveFloatPlayer.swift`） |
+| LiveChat | 2.0.26 | 公库 CocoaPods | [来源](https://github.com/livechat/chat-window-ios) | MIT | 直接 | 第三方的聊天工具 | import `LiveChat`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@其他/Demo@LiveChat.swift`） |
+| LunarSwift | 1.1.8 | 公库 CocoaPods | [来源](https://github.com/6tail/lunar-swift) | MIT | 直接 | 无第三方依赖的日历工具 | import `LunarSwift`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@其他/Demo@Lunar.swift`） |
+| CoreXLSX | 0.14.1 | 公库 CocoaPods | [来源](https://github.com/3973770/SwiftXLSX) | Apache-2.0 | 直接 | Excel | import `CoreXLSX`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@XLSX/Demo@XLSX.swift`） |
+| KRPresentationKit | 0.13.0 | 公库 CocoaPods | [来源](https://github.com/funct7/KRPresentationKit) | MIT | 直接 | 自定义弹层/模态展示 ➤ UIViewController@UIKit转场 | 已声明；未命中显式 import，传递使用待核实 |
+| SwiftEntryKit | 2.0.0 | 公库 CocoaPods | [来源](https://github.com/huri000/SwiftEntryKit) | MIT | 直接 | 自定义弹层/模态展示 ➤ UIView@悬浮层配置entry | import `SwiftEntryKit`（`JobsByPods/JobsBy3rdTools@Pods/EKAttributes/EKAttributes.swift`） |
+| KRTimingFunction | 1.0.0 | 公库 CocoaPods | [来源](https://github.com/funct7/KRTimingFunction) | MIT | 直接 | 把经典的 jQuery easing（缓动/时间函数） 迁移到 Swift 里，给出一堆现成的“动画曲线函数”，用来在任意时间点算出动画属性的插值 | 已声明；未命中显式 import，传递使用待核实 |
+| FSPopoverView | 3.1.6 | 公库 CocoaPods | [来源](https://github.com/lifution/FSPopoverView) | MIT | 直接 | 下拉三角小菜单 | import `FSPopoverView`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@其他/Demo@FSPopoverView.swift`） |
+| AMPopTip | 4.12.0 | 公库 CocoaPods | [来源](https://github.com/andreamazz/AMPopTip) | MIT | 直接 | 动画弹出框@轻松自定义：弹出弹出方向以及指向其原点的箭头、颜色、边框半径和字体 | 已声明；未命中显式 import，传递使用待核实 |
+| SkeletonView | 1.30.4 | 公库 CocoaPods | [来源](https://github.com/Juanpe/SkeletonView) | MIT | 直接 | 骨架屏/闪动占位 | import `SkeletonView`（`JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+SkeletonView.swift`） |
+| swift-collections | 1.1.1 | 公库 CocoaPods | [来源](https://github.com/apple/swift-collections) | Apache-2.0 | 直接 | 有序字典 | import `Collections`（`JobsSwiftBaseConfigDemo/启动入口/AppDelegate.swift`） |
+| IQKeyboardManagerSwift | 8.0.1 | 公库 CocoaPods | [来源](https://github.com/hackiftekhar/IQKeyboardManager) | MIT | 直接 | IQKeyboardManagerSwift 模块（引用位置见右栏） | import `IQKeyboardManagerSwift`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@其他/Demo@键盘.swift`） |
+| HaishinKit | 2.0.9 | 公库 CocoaPods | [来源](https://github.com/HaishinKit/HaishinKit.swift) | BSD（条款版本待核实） | 直接 | 音视频采集编码 | import `HaishinKit`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@HaishinKit/HaishinKit@本地录制到系统相册.swift`） |
+| Texture/Core | 3.2.0 | 本仓供应商镜像 | `./JobsByPods/ManualBySwiftPods@Pods/Texture` | Apache 2（podspec 声明） | 直接 | 本地化 Texture 主体，沿用 JobsOCBaseConfigDemo 的 Manual Pod | import `AsyncDisplayKit`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@Texture/Demo@ASDisplayNode.swift`） |
+| TextureSwiftSupport | 3.19.0 | 本仓供应商镜像 | `./JobsByPods/ManualBySwiftPods@Pods/TextureSwiftSupport` | MIT | 直接 | 本地化 Swift 扩展层，统一锁到本仓库管理 | import `TextureSwiftSupport`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@TextureSwiftSupport朋友圈ByGKPhotoBrowser/Demo@TextureSwiftSupport朋友圈ByGKPhotoBrowser.swift`） |
+| Plan | 0.2.1 | 公库 CocoaPods | [来源](https://github.com/KyoheiG3/Plan) | MIT | 直接 | 用于改善 iOS 应用架构清晰度的框架 | 已声明；未命中显式 import，传递使用待核实 |
+| JobsDebugPanel | 1.0.0 | 本仓自维护 path | `./JobsByPods/JobsDebugPanel@Pods` | MIT（podspec 声明） | 直接 | Debug-only floating menu and environment switching for Jobs apps. | import `JobsDebugPanel`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsDebugPanel/JobsDebugPanelDemoVC/JobsDebugPanelDemoVC.swift`） |
+| LookinServer | 1.2.8 | 公库 CocoaPods | [来源](https://lookin.work/get/) | GPL-3.0（podspec） / MIT（LICENSE / 安装 ack），存在冲突 | 直接 | LookinServer 模块（引用位置见右栏） | 仅 Debug 声明；最终 Release 链接产物待核 |
+| JobsAppIconRibbon | 1.0.0 | 本仓自维护 path | `./JobsByPods/JobsAppIconRibbon@Pods` | MIT（podspec 声明） | 直接 | Build-time AppIcon environment ribbon generator. | 已声明；未命中显式 import，传递使用待核实 |
+| JobsSwiftWorker | 0.1.0 | 本仓自维护 path | `./JobsByPods/JobsSwiftWorker@Pods` | MIT（podspec 声明） | 直接 | Jobs 系列的 Worker / Observable / GetX-like watcher 层，基于 JobsSwiftTaskCenter 与 JobsSwiftTimer | import `JobsSwiftWorker`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@节流防抖/JobsWorkerDemoVC.swift`） |
+| JobsSwiftDebugTools | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsSwiftDebugTools@Pods` | MIT（podspec 声明） | 直接 | Swift中，对UIKit进行的拓展（持续更新中） | import `JobsSwiftDebugTools`（`JobsByPods/JobsInheritance@Pods/UIViewController/BaseVC.swift`） |
+| JobsNetworking/Async / JobsNetworking/AF5 | 1.0.1 | 本仓自维护 path | `./JobsByPods/JobsNetworking@Pods` | MIT（podspec 声明） | 直接 | A domain-oriented networking layer built on Alamofire with iOS12 Core, iOS13+ Async, and compatibility subspecs. | import `JobsNetworking`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsDebugPanel/JobsDebugPanelDemoVC/JobsDebugPanelDemoVC.swift`） |
+| JobsSwiftDSL | 0.1.0 | 本仓自维护 path | `./JobsByPods/JobsSwiftDSL@Pods` | MIT（podspec 声明） | 直接 | Swift DSL wrappers for Jobs local Pods. | import `JobsSwiftDSL`（`JobsByPods/BRPickerViewSwift@Pods/Animation/BRPanelAnimation.swift`） |
+| BRPickerViewSwift | 0.0.1 | 本仓自维护 path | `./JobsByPods/BRPickerViewSwift@Pods` | MIT（podspec 声明） | 直接 | Swift中，对UIKit进行的拓展（持续更新中） | import `BRPickerViewSwift`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@其他/Demo@BRPickerViewSwift.swift`） |
+| JobsBy3rdTools | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsBy3rdTools@Pods` | MIT（podspec 声明） | 直接 | Swift中的一些手搓工具（持续更新） | import `JobsBy3rdTools`（`JobsByPods/JobsSwiftAppTools@Pods/JobsSwiftAppTools.swift`） |
+| JobsByPhotosUI | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsByPhotosUI@Pods` | MIT（podspec 声明） | 直接 | Swift中，对PhotosUI进行的拓展（持续更新中） | import `JobsByPhotosUI`（`JobsByPods/JobsSwiftTools@Pods/MediaPickerService.swift`） |
+| JobsByUIKit | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsByUIKit@Pods` | MIT（podspec 声明） | 直接 | Swift中，对UIKit进行的拓展（持续更新中） | import `JobsByUIKit`（`JobsByPods/JobsAppDoor@Pods/Core/JobsAppDoorStyle1/JobsAppDoorVC.swift`） |
+| JobsByWebKit | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsByWebKit@Pods` | MIT（podspec 声明） | 直接 | Swift中，对UIKit进行的拓展（持续更新中） | import `JobsByWebKit`（`JobsByPods/JobsInheritance@Pods/UIViewController/BaseWebVC.swift`） |
+| JobsSwiftMarkdown | 1.0.0 | 本仓自维护 path | `./JobsByPods/JobsSwiftMarkdown@Pods` | MIT（podspec 声明） | 直接 | Full local Markdown rendering for Jobs Swift projects. | import `JobsSwiftMarkdown`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsSwiftMarkdown/JobsMarkdownDocumentsDemoVC.swift`） |
+| JobsByPDFKit | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsByPDFKit@Pods` | MIT（podspec 声明） | 直接 | Swift中，对UIKit进行的拓展（持续更新中） | import `JobsByPDFKit`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@其他/Demo@PDF.swift`） |
+| JobsByQuartzCore | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsByQuartzCore@Pods` | MIT（podspec 声明） | 直接 | Swift中，对PhotosUI进行的拓展（持续更新中） | import `JobsByQuartzCore`（`JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+字体颜色渐变.swift`） |
+| JobsInheritance | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsInheritance@Pods` | MIT（podspec 声明） | 直接 | Swift中的一些手搓工具（持续更新） | import `JobsInheritance`（`JobsByPods/JobsAppDoor@Pods/Core/登录注册模块公共件/Controller/JobsAppDoorBaseVC/JobsAppDoorBaseVC.swift`） |
+| JobsSwiftOpen | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsSwiftOpen@Pods` | MIT（podspec 声明） | 直接 | Jobs Swift URL opening component. | import `JobsSwiftOpen`（`JobsByPods/JobsSwiftSplash@Pods/Core/JobsSplashConfiguration.swift`） |
+| JobsSwiftSplash | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsSwiftSplash@Pods` | MIT（podspec 声明） | 直接 | Jobs Swift splash screen component. | import `JobsSwiftSplash`（`JobsSwiftBaseConfigDemo/主业务流程/VC/Demo@功能列表根目录/Demo@功能列表根目录.swift`） |
+| JobsSwiftWebSocket | 1.0.0 | 本仓自维护 path | `./JobsByPods/JobsSwiftWebSocket@Pods` | MIT（podspec 声明） | 直接 | Lightweight WebSocket lifecycle client for Jobs Swift projects. | import `JobsSwiftWebSocket`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@WebSocket/JobsWebSocketDemoVC/JobsWebSocketDemoVC.swift`） |
+| JobsAppDoor | 1.0.0 | 本仓自维护 path | `./JobsByPods/JobsAppDoor@Pods` | MIT（podspec 声明） | 直接 | Jobs Swift authentication templates with two motion styles. | import `JobsAppDoor`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@注册登陆（JobsAppDoor）/Demo@注册登陆（JobsAppDoor）.swift`） |
+| JobsFuseAnimation | 0.2.0 | 本仓自维护 path | `./JobsByPods/JobsFuseAnimation@Pods` | MIT（podspec 声明） | 直接 | Reusable UIView animations and pluggable refresh renderers for Swift. | import `JobsFuseAnimation`（`JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioRecordButton.swift`） |
+| Jobsl10n | 0.1.14 | 本仓自维护 path | `./JobsByPods/Jobsl10n@Pods` | MIT（podspec 声明） | 直接 | Swift@多语言国际化 | import `Jobsl10n`（`JobsByPods/JobsByUIKit@Pods/iOS.SDK/Bundle/Bundle+language.swift`） |
+| JobsSwiftTimer | 0.1.0 | 本仓自维护 path | `./JobsByPods/JobsSwiftTimer@Pods` | MIT（podspec 声明） | 直接 | TODO | import `JobsSwiftTimer`（`JobsByPods/JobsAudioRecorder@Pods/Core/JobsAudioRecordButton.swift`） |
+| JobsImageRotation | 1.0.0 | 本仓自维护 path | `./JobsByPods/JobsImageRotation@Pods` | MIT（podspec 声明） | 直接 | Timer-driven view rotation and minimal animated clock icons for Jobs projects. | import `JobsImageRotation`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsImageRotation/JobsImageRotationDemoVC.swift`） |
+| JobsAudioRecorder | 0.1.0 | 本仓自维护 path | `./JobsByPods/JobsAudioRecorder@Pods` | MIT（podspec 声明） | 直接 | Decoupled audio recording and local audio management. | import `JobsAudioRecorder`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsAudioRecorder/JobsAudioRecorderDemoVC.swift`） |
+| JobsSwiftTimerMgr | 0.1.0 | 本仓自维护 path | `./JobsByPods/JobsSwiftTimerMgr@Pods` | MIT（podspec 声明） | 直接 | Jobs timer manager for multiple JobsSwiftTimer instances. | import `JobsSwiftTimerMgr`（`JobsSwiftBaseConfigDemo/主业务流程/VC/Demo@功能列表根目录/Demo@功能列表根目录.swift`） |
+| JobsSwiftPatch | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsSwiftPatch@Pods` | MIT（podspec 声明） | 直接 | Swift runtime payload patch engine for Jobs projects. | import `JobsSwiftPatch`（`JobsSwiftBaseConfigDemo/主业务流程/VC/Demo@功能列表根目录/Demo@功能列表根目录.swift`） |
+| JobsSwiftTaskCenter | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsSwiftTaskCenter@Pods` | MIT（podspec 声明） | 直接 | Swift中，对JobsSwiftTimer进行的拓展（计划任务） | import `JobsSwiftTaskCenter`（`JobsByPods/JobsSwiftWorker@Pods/JobsObservable+Workers.swift`） |
+| JobsProgressBar | 0.1.14 | 本仓自维护 path | `./JobsByPods/JobsProgressBar@Pods` | MIT（podspec 声明） | 直接 | Swift@基础工具集 | import `JobsProgressBar`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@倒计时倒计时Layer/Demo@系统进度条+倒计时JobsTimer+进度（方向）模式/JobsSysProgressDemoVC.swift`） |
+| JobsViewPush | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsViewPush@Pods` | MIT（podspec 声明） | 直接 | 支持 UIView 从上下左右推入并原路交互退出。 | import `JobsViewPush`（`JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+自定义进入方向.swift`） |
+| JobsSwiftLinkageMenuView | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsSwiftLinkageMenuView@Pods` | MIT（podspec 声明） | 直接 | Swift linkage menu view component for Jobs projects. | import `JobsSwiftLinkageMenuView`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@首页联动切换子页面/JobsSwiftLinkageMenuViewDemoVC.swift`） |
+| JobsSwiftComment | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsSwiftComment@Pods` | MIT（podspec 声明） | 直接 | Swift comment list component for Jobs projects. | import `JobsSwiftComment`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsSwiftComment/JobsSwiftCommentDemoVC.swift`） |
+| JobsSwiftSearcher | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsSwiftSearcher@Pods` | MIT（podspec 声明） | 直接 | Swift search component for Jobs projects. | import `JobsSwiftSearcher`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsSwiftSearcher/JobsSwiftSearcherDemoVC.swift`） |
+| JobsSwiftCountryCodeCtrl | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsSwiftCountryCodeCtrl@Pods` | MIT（podspec 声明） | 直接 | Swift country code selector controller for Jobs projects. | import `JobsSwiftCountryCodeCtrl`（`JobsByPods/JobsAppDoor@Pods/Core/登录注册模块公共件/Controller/JobsAppDoorBaseVC/JobsAppDoorBaseVC.swift`） |
+| JobsSwiftCalendar | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsSwiftCalendar@Pods` | MIT（podspec 声明） | 直接 | Standalone Swift calendar view for Jobs projects. | import `JobsSwiftCalendar`（`JobsSwiftBaseConfigDemo/主业务流程/VC/Demo@功能列表根目录/Demo@功能列表根目录.swift`） |
+| JobsSwiftExcel | 1.0.0 | 本仓自维护 path | `./JobsByPods/JobsSwiftExcel@Pods` | MIT（podspec 声明） | 直接 | Reusable spreadsheet UI with arbitrary frozen columns for Jobs Swift projects. | import `JobsSwiftExcel`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsSwiftExcel/JobsSwiftExcelDemoCell.swift`） |
+| JobsWalletCard | 1.0.0 | 本仓自维护 path | `./JobsByPods/JobsWalletCard@Pods` | MIT（podspec 声明） | 直接 | Reusable wallet card stack with individual and all-card expansion modes. | import `JobsWalletCard`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@钱包卡片效果/Demo@钱包卡片效果.swift`） |
+| JobsNavBar | 0.1.14 | 本仓自维护 path | `./JobsByPods/JobsNavBar@Pods` | MIT（podspec 声明） | 直接 | TODO | import `JobsNavBar`（`JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+JobsNavBar.swift`） |
+| JobsToast | 0.1.14 | 本仓自维护 path | `./JobsByPods/JobsToast@Pods` | MIT（podspec 声明） | 直接 | Swift@基础工具集 | import `JobsToast`（`JobsByPods/JobsInheritance@Pods/UIViewController/JobsTabBarCtrl.swift`） |
+| JobsTextTools | 0.1.14 | 本仓自维护 path | `./JobsByPods/JobsTextTools@Pods` | MIT（podspec 声明） | 直接 | Swift@多语言国际化 | import `JobsTextTools`（`JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIButton/UIButton+倒计时.swift`） |
+| JobsImageTools | 0.1.14 | 本仓自维护 path | `./JobsByPods/JobsImageTools@Pods` | MIT（podspec 声明） | 直接 | TODO | import `JobsImageTools`（`JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIImageView/UIImageView+自研骨架屏呼吸占位效果Shimmer.swift`） |
+| JobsIconfont | 1.0.0 | 本仓自维护 path | `./JobsByPods/JobsIconfont@Pods` | MIT（podspec 声明） | 直接 | A typed iOS facade for iconfont image, icon-font and text-font assets. | import `JobsIconfont`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsIconfont/JobsIconfontCacheDemoVC.swift`） |
+| JobsScale | 0.1.14 | 本仓自维护 path | `./JobsByPods/JobsScale@Pods` | MIT（podspec 声明） | 直接 | Swift@全局比例尺 | import `JobsScale`（`JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIViewController/UIViewController+GKNavigationBarSwift.swift`） |
+| JobsGetWindow | 0.1.14 | 本仓自维护 path | `./JobsByPods/JobsGetWindow@Pods` | MIT（podspec 声明） | 直接 | 获取系统关键变量 ➤ Window | import `JobsGetWindow`（`JobsByPods/JobsScale@Pods/JobsScale.swift`） |
+| JobsSwiftRefresher/Lottie / JobsSwiftRefresher/SDWebImage | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsSwiftRefresher@Pods` | MIT（podspec 声明） | 直接 | Swift中，对UIKit进行的拓展（持续更新中） | import `JobsSwiftRefresher`（`JobsSwiftBaseConfigDemo/主业务流程/VC/Demo@功能列表根目录/Demo@功能列表根目录.swift`） |
+| JobsSwiftTools | 0.1.1 | 本仓自维护 path | `./JobsByPods/JobsSwiftTools@Pods` | MIT（podspec 声明） | 直接 | Swift中关于Foundation的拓展 | import `JobsSwiftTools`（`JobsByPods/JobsLocalNotification@Pods/JobsMakeLocalNotification.swift`） |
+| JobsCountdownButton | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsCountdownButton@Pods` | MIT（podspec 声明） | 直接 | Swift中，对UIKit进行的拓展（持续更新中） | import `JobsCountdownButton`（`JobsByPods/JobsAppDoor@Pods/Core/登录注册模块公共件/View/JobsAppDoorInputView/JobsAppDoorInputView.swift`） |
+| JobsMarqueeView | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsMarqueeView@Pods` | MIT（podspec 声明） | 直接 | Swift中，对UIKit进行的拓展（持续更新中） | import `JobsMarqueeView`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@其他/Demo@跑马灯轮播图.swift`） |
+| JobsSwiftUILabelScrolling | 1.0.0 | 本仓自维护 path | `./JobsByPods/JobsSwiftUILabelScrolling@Pods` | MIT（podspec 声明） | 直接 | Four fixed-size text display strategies for UILabel. | import `JobsSwiftUILabelScrolling`（`JobsByPods/JobsSwiftExcel@Pods/Core/JobsSwiftExcelCell/JobsSwiftExcelCell.swift`） |
+| JobsEmptyView | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsEmptyView@Pods` | MIT（podspec 声明） | 直接 | Swift中，对UIKit进行的拓展（持续更新中） | import `JobsEmptyView`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsNetworking本地模拟数据/VCs/JobsNetworkingDemoVC.swift`） |
+| JobsGestureUnlock | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsGestureUnlock@Pods` | MIT（podspec 声明） | 直接 | Swift中，对UIKit进行的拓展（持续更新中） | import `JobsGestureUnlock`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@九宫格手势解锁/Demo@九宫格手势解锁.swift`） |
+| JobsCryptoKit | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsCryptoKit@Pods` | MIT（podspec 声明） | 直接 | Swift中，对UIKit进行的拓展（持续更新中） | 已声明；未命中显式 import，传递使用待核实 |
+| JobsLocalNotification | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsLocalNotification@Pods` | MIT（podspec 声明） | 直接 | Swift中，对UIKit进行的拓展（持续更新中） | import `JobsLocalNotification`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@本地通知/LocalNotificationDemoVC.swift`） |
+| JobsScreenCapture | 1.0.0 | 本仓自维护 path | `./JobsByPods/JobsScreenCapture@Pods` | MIT（podspec 声明） | 直接 | Screenshot capture, observation, saving, and sensitive-content protection for Jobs projects. | import `JobsScreenCapture`（`JobsSwiftBaseConfigDemo/主业务流程/VC/Demo@功能列表根目录/Demo@功能列表根目录.swift`） |
+| JobsSwiftNumberStepper | 1.0.0 | 本仓自维护 path | `./JobsByPods/JobsSwiftNumberStepper@Pods` | MIT（podspec 声明） | 直接 | Reusable bounded integer stepper input for Jobs Swift projects. | import `JobsSwiftNumberStepper`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsSwiftGraphicCaptcha/JobsSwiftGraphicCaptchaDemoVC.swift`） |
+| JobsSwiftGraphicCaptcha | 1.0.0 | 本仓自维护 path | `./JobsByPods/JobsSwiftGraphicCaptcha@Pods` | MIT（podspec 声明） | 直接 | Swift graphic captcha generator and view for Jobs projects. | import `JobsSwiftGraphicCaptcha`（`JobsByPods/JobsAppDoor@Pods/Core/登录注册模块公共件/Controller/JobsAppDoorBaseVC/JobsAppDoorBaseVC.swift`） |
+| JobsSwiftAppTools | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsSwiftAppTools@Pods` | MIT（podspec 声明） | 直接 | Swift中，对UIKit进行的拓展（持续更新中） | import `JobsSwiftAppTools`（`JobsSwiftBaseConfigDemo/主业务流程/VC/Demo@功能列表根目录/Demo@功能列表根目录.swift`） |
+| JobsLuckyEnvelopeRain | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsLuckyEnvelopeRain@Pods` | MIT（podspec 声明） | 直接 | Swift中的一些手搓工具（持续更新） | import `JobsLuckyEnvelopeRain`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@红包雨/Demo@红包雨.swift`） |
+| JobsSwiftStandardLibrary | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsSwiftStandardLibrary@Pods` | MIT（podspec 声明） | 直接 | Swift中的一些手搓工具（持续更新） | import `JobsSwiftStandardLibrary`（`JobsByPods/JobsBy3rdTools@Pods/JobsInstrumentPanelView.swift`） |
+| JobsBluetooth | 1.0.0 | 本仓自维护 path | `./JobsByPods/JobsBluetooth@Pods` | MIT（podspec 声明） | 直接 | 面向多设备、多协议并支持 DSL 的通用 BLE 基础设施。 | import `JobsBluetooth`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsBluetooth/JobsBluetoothDemoVC.swift`） |
+| JobsSwiftFoundation | 0.1.1 | 本仓自维护 path | `./JobsByPods/JobsSwiftFoundation@Pods` | MIT（podspec 声明） | 直接 | Swift中关于Foundation的拓展 | import `JobsSwiftFoundation`（`JobsByPods/JobsInheritance@Pods/UIViewController/BaseWebVC.swift`） |
+| JobsSwiftMetalKit | 0.1.0 | 本仓自维护 path | `./JobsByPods/MetalKit@Pods` | MIT（podspec 声明） | 直接 | Swift中关于MetalKit的拓展 | import `JobsSwiftMetalKit`（`JobsByPods/JobsBy3rdTools@Pods/PNPlayer/MetalRenderer.swift`） |
+| JobsSwiftBlock | 0.1.0 | 本仓自维护 path | `./JobsByPods/JobsSwiftBlock@Pods` | MIT（podspec 声明） | 直接 | Swift@基础工具集 | import `JobsSwiftBlock`（`JobsByPods/JobsByUIKit@Pods/iOS.SDK/DateFormatter/DateFormatter+预置.swift`） |
+| JobsSwiftBaseDefines | 0.1.6 | 本仓自维护 path | `./JobsByPods/JobsSwiftBaseDefines@Pods` | MIT（podspec 声明） | 直接 | 一些全局的基础定义 | import `JobsSwiftBaseDefines`（`JobsByPods/JobsAppDoor@Pods/Core/JobsAppDoorStyle1/JobsAppDoorVC.swift`） |
+| JobsSwiftBaseTools | 0.1.14 | 本仓自维护 path | `./JobsByPods/JobsSwiftBaseTools@Pods` | MIT（podspec 声明） | 直接 | Swift@基础工具集 | import `JobsSwiftBaseTools`（`JobsByPods/JobsBy3rdTools@Pods/HUDHelper.swift`） |
+
+风险与处置：除 WCDB 精确版本与 Alamofire 范围外，多数公共 Pod 不在 Podfile 固定版本；Cache Git 声明没有 tag / commit，当前 lock 的 checkout 才是本地可复现依据。path Pod 修改不会被版本号或锁文件完整冻结；Texture / TextureSwiftSupport 是供应商边界，不按自有源码修改。HTMLReader 按本地 LICENSE 的 Public Domain 声明记录，BSD 精确条款、其余许可证的文件与传递组件仍需发布前复核。依赖上游维护状态、归档状态与安全公告没有逐项联网核验，均待核实；没有证据时不宣称全依赖安全或无传染性许可。
+
+**LookinServer 1.2.8 许可证冲突：** 本机 trunk 精确版本 podspec 与[官方同 tag podspec](https://raw.githubusercontent.com/QMUI/LookinServer/1.2.8/LookinServer.podspec) 写 `GPL-3.0`，但[官方同 tag LICENSE](https://raw.githubusercontent.com/QMUI/LookinServer/1.2.8/LICENSE) 和本地安装 acknowledgement 写 MIT（核对日期 2026-10-19）。两者不一致，不能只选择 MIT 报告为已明确许可；发布前须向上游澄清并核验最终打包内容。Podfile.deps 限定 Debug 只是配置证据，最终 Release 是否链接 / 打包该组件仍待产物核验，不能用 Debug 标记替代许可结论。
+
+### 8.9、<span id="statistics-run">运行、构建、测试与常见问题</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+从仓库根准备可用 Xcode、对应 iOS SDK / Simulator 与 CocoaPods，保留已提交锁文件后安装依赖。安装会联网、写 Pods / workspace / 锁文件，并触发现有 post_integrate 任务；这属于实际运行步骤，文档统计没有执行。
+
+```shell
+pod --version
+pod install
+open ./JobsSwiftBaseConfigDemo.xcworkspace
+xcodebuild \
+  -workspace ./JobsSwiftBaseConfigDemo.xcworkspace \
+  -scheme JobsSwiftBaseConfigDemo \
+  -configuration Debug \
+  -sdk iphonesimulator \
+  -destination 'generic/platform=iOS Simulator' \
+  -derivedDataPath ./DerivedData \
+  CODE_SIGNING_ALLOWED=NO \
+  build
+```
+
+测试时先用 `xcrun simctl list devices available` 选择与当前 SDK 兼容的可用模拟器，然后执行：
+
+```shell
+xcodebuild \
+  -workspace ./JobsSwiftBaseConfigDemo.xcworkspace \
+  -scheme JobsSwiftBaseConfigDemo \
+  -configuration Debug \
+  -destination 'platform=iOS Simulator,id=<已选择设备的 UDID>' \
+  -derivedDataPath ./DerivedData \
+  CODE_SIGNING_ALLOWED=NO \
+  test
+```
+
+共享 Scheme / CI 已有 hosted UIKit / Timer 与独立组件回归入口，具体见 `.github/workflows/build_simulator_app.yml` 和各 Pod README；历史绿灯不代表当前工作区重新验收。当前 Git 跟踪列表与磁盘测试目录可能不同，规模表只取已跟踪文件。
+
+| 环境 / 问题 | 配置位置与处理 |
+| --- | --- |
+| dev / test / prod | Debug 的 `启动入口/AppDelegate+JobsDebugPanel.swift` 及 JobsNetworking 调试环境负责切换；各 Demo 的远端地址仍需单独核对，Release 不应包含调试 Pod。未定义统一生产发布地址矩阵 |
+| pod 下载失败 | 先看 ScriptsByPods 的网络适配与 Specs 选源说明；已有代理仅在本次安装进程验证继承。不要为网络问题删除 Podfile.lock、Pods 或改第三方源码 |
+| Swift 编译模式 / SPM 不匹配 | App 为 Swift 5 模式，本地包 manifest 要求 Swift tools 6；使用工作流声明的 Xcode 26 系列后再核验具体小版本 |
+| Simulator 看不到 Unity | 真机条件才加载 Unity；模拟器跳过是当前设计。Flutter helper 缺失时 Podfile 会跳过对应集成，原生 App 可用性与跨端 Demo 可用性分开验收 |
+| 构建产物目录 | 主 App Build Phase 会调用 `ScriptsByDevTools/save_device_ipa_after_build.command/`；输出目录是可丢弃产物，操作前阅读其 README，不把文档或源码放进输出目录 |
+| 数据库示例冲突 | FMDB 与 WCDB 条件互斥，当前声明 WCDB；不要同时启用后忽略兼容配置 |
+| 离线演示 | 本地 UI / 模拟数据 Demo 可供演示；公共 HTTP、WebSocket、LiveChat 等需对应外部服务，失败行为以各 Demo 为准 |
+
+目录职责：`JobsSwiftBaseConfigDemo/` 管宿主业务与启动，`JobsByPods/` 管自有组件，`JobsByPods/ManualBySwiftPods@Pods/` 为只读供应商边界，`JobsBySwiftPackageManager/` 为本地包示例，`JobsWidgetExtension/` 为 Widget，`my_flutter/` 与 `Unity/` 为跨端桥接工程，`ScriptsByPods/` / `ScriptsByDevTools/` 管安装与开发工具，`SwiftDoc.md/` 和原文主体保留学习资料。
+
+本节验证范围：读取已跟踪文件清单、入口源码、依赖声明与锁文件，复算静态数量，保留原有文档正文并检查新增相对路径 / 围栏 / 目录转换。不执行实际依赖安装、构建、测试、业务脚本、提交或推送；本地 Mermaid 发布形态与真实平台渲染是不同验收层，不能把静态语法检查写成真机功能通过。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>
