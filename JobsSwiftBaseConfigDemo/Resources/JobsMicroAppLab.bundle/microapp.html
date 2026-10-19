@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Jobs 教学微应用</title>
+<style>:root{color-scheme:light;--bg:#f2f2f7;--fg:#15151a;--card:#fff;--muted:#45454e}html[data-theme=dark]{color-scheme:dark;--bg:#1c1c1e;--fg:#f4f4f7;--card:#2c2c2e;--muted:#c8c8d0}body{font:15px -apple-system,sans-serif;margin:14px;background:var(--bg);color:var(--fg)}h2{font-size:19px;margin:0 0 8px}p{margin:6px 0;color:var(--muted)}input,button{font:inherit;border:1px solid #888;border-radius:7px;padding:8px;background:var(--card);color:var(--fg)}input{width:55%}button{cursor:pointer}#result{white-space:pre-wrap;font-size:13px;margin-top:8px}</style></head>
+<body><h2>教学微应用 · v1</h2><p>网页渲染 UI，Swift 提供白名单能力。</p><input id="draft" maxlength="140" value="来自微应用的草稿" aria-label="微应用草稿"><button onclick="callHost('saveDraft',{text:document.getElementById('draft').value})">保存草稿</button><div id="result" role="status">等待宿主调用</div>
+<script>
+// Bridge 是消息契约，不拼接原生方法名；生产端由宿主再校验来源、权限和参数。
+window.callHost=(action,payload)=>{
+  if(!window.webkit?.messageHandlers?.jobsLab){document.getElementById('result').textContent='需要 Jobs iOS 宿主';return;}
+  window.webkit.messageHandlers.jobsLab.postMessage({action,payload:payload??{}});
+};
+window.receiveNative=result=>{document.getElementById('result').textContent=result.message;};
+</script></body></html>

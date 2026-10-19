@@ -1,0 +1,7 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>独立会话</title><style>:root{--bg:#f2f2f7;--fg:#17171b;--muted:#45454e;color-scheme:light}html[data-theme=dark]{--bg:#1c1c1e;--fg:#f6f6f8;--muted:#c8c8d0;color-scheme:dark}body{font:16px -apple-system,sans-serif;background:var(--bg);color:var(--fg);margin:18px}h2{font-size:21px}p{color:var(--muted);line-height:1.5}pre{white-space:pre-wrap}</style></head><body><h2 id="account">独立账号容器</h2><p>每个账号使用自己的 WKWebsiteDataStore。请通过原生按钮写入/读取。</p><pre id="draft">当前 Web Store 暂无草稿</pre>
+<script>
+window.setAccount=account=>{document.getElementById('account').textContent='当前账号 '+account;window.inspectSession();};
+window.writeSession=account=>{try{localStorage.setItem('draft','账号 '+account+' 的 Web 草稿 @ '+new Date().toLocaleTimeString());return window.inspectSession();}catch(e){return 'Web 草稿写入失败: '+e;}};
+window.inspectSession=()=>{let text;try{text=localStorage.getItem('draft')||'暂无 Web 草稿';}catch(e){text='此来源不允许 localStorage: '+e;}document.getElementById('draft').textContent=text;return text;};
+</script></body></html>

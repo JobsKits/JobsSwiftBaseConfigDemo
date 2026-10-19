@@ -1,0 +1,11 @@
+{
+  "id": "./",
+  "name": "Jobs 离线学习包",
+  "short_name": "Jobs PWA",
+  "lang": "zh-CN",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f2f2f7",
+  "theme_color": "#f2f2f7"
+}

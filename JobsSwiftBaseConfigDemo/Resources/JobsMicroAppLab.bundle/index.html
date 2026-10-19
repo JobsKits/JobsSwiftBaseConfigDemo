@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="manifest" href="./manifest.webmanifest"><meta name="theme-color" content="#f2f2f7"><title>Jobs 离线学习包</title><style>:root{--bg:#f2f2f7;--fg:#17171b;--muted:#45454e;color-scheme:light}html[data-theme=dark]{--bg:#1c1c1e;--fg:#f6f6f8;--muted:#c8c8d0;color-scheme:dark}body{font:15px -apple-system,sans-serif;background:var(--bg);color:var(--fg);margin:16px}h2{font-size:20px;margin:0 0 8px}p{color:var(--muted);line-height:1.5}button{font:inherit;color:var(--fg);background:var(--bg);border:1px solid #888;border-radius:8px;padding:9px}#status{white-space:pre-wrap;font-size:13px}</style></head>
+<body><h2>Jobs 离线学习包 · v1</h2><p>这段文字与按钮来自本地 HTML。Native bundle 模式断网可用；部署到 HTTPS/localhost 后才尝试注册真正的 Service Worker。</p><button onclick="increment()">离线交互 +1</button><span id="count">0</span><p id="status" role="status">正在检查运行来源…</p>
+<script>
+let count=0;
+window.increment=()=>{document.getElementById('count').textContent=String(++count);};
+// file:// 不支持 Service Worker；同一资源包也可部署到自有 HTTPS 或开发 localhost。
+async function boot(){
+  const status=document.getElementById('status');
+  if(!/^https?:$/.test(location.protocol)){status.textContent='Native bundled 离线包\nfile:// 不注册 Service Worker';return;}
+  if(!('serviceWorker' in navigator)){status.textContent='当前浏览器/容器未开放 Service Worker API';return;}
+  try{
+    const registration=await navigator.serviceWorker.register('./sw.js',{scope:'./'});
+    await navigator.serviceWorker.ready;
+    status.textContent='SW 已注册：'+registration.scope+'\n'+(navigator.serviceWorker.controller?'已受 SW 控制，可断网刷新':'首次安装完成，等待 controllerchange 或再次刷新');
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{status.textContent='SW controller 已生效，可断网普通刷新验证缓存';});
+  }catch(error){status.textContent='SW 注册失败：'+error.message;}
+}
+boot();
+</script></body></html>

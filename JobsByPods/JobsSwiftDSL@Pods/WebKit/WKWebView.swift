@@ -16,6 +16,32 @@ import JobsSwiftBlock
 import JobsSwiftBaseDefines
 
 extension WKWebView {
+    /// 带配置的创建入口；WebsiteDataStore 必须在 WebView 创建前注入。
+    public static func make(configuration: WKWebViewConfiguration,
+                            configure: (WKWebView) -> Void = { _ in }) -> WKWebView {
+        let webView = WKWebView(frame: .zero, configuration: configuration)
+        configure(webView)
+        return webView
+    }
+
+    @discardableResult
+    public func byLoadFileURL(_ url: URL, allowingReadAccessTo directory: URL) -> Self {
+        loadFileURL(url, allowingReadAccessTo: directory)
+        return self
+    }
+
+    @discardableResult
+    public func byReload() -> Self {
+        reload()
+        return self
+    }
+
+    @discardableResult
+    public func byStopLoading() -> Self {
+        stopLoading()
+        return self
+    }
+
     @discardableResult
     public func byScrollView(_ block: (UIScrollView) -> Void) -> Self {
         block(self.scrollView)

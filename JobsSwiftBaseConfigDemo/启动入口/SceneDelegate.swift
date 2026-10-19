@@ -47,8 +47,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             session: session
         )
         let opensSceneDemo = restorationActivity != nil
+        let learningDemo = JobsMicroAppLabRoute.debugLaunchController()
         let homeViewController: UIViewController
-        if let restorationActivity {
+        if let learningDemo {
+            homeViewController = learningDemo.jobsNav.jobsNavContainer
+        } else if let restorationActivity {
             homeViewController = JobsSceneDelegateDemoVC(restorationActivity: restorationActivity)
                 .jobsNav
                 .jobsNavContainer
@@ -60,7 +63,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         sceneLifeCycleDelegate.scene(scene, willConnectTo: session, options: connectionOptions)
         #endif
         JobsSceneCoordinator.record("willConnect：创建独立 UIWindow", for: session)
-        guard !opensSceneDemo else {
+        guard !opensSceneDemo, learningDemo == nil else {
             return
         }
         JobsSplashMediaCache.shared.resumePendingVideoPreloads()

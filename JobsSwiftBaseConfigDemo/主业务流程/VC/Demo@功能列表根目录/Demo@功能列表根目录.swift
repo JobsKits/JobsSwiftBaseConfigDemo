@@ -169,6 +169,13 @@ final class RootListVC: BaseVC {
 
     private func makeDemo2D() -> [DemoGroup] {
         return [
+            (title: "微应用与容器技术学习".tr, items: [
+                ("微应用 / 微程序：JS 与 Native 白名单桥接", JobsMicroApplicationDemoVC.self),
+                ("应用多开：宿主内独立账号会话", JobsMultiSessionDemoVC.self),
+                ("mPaaS：平台能力协议与本地适配器", JobsMPaaSDemoVC.self),
+                ("沙箱环境：命名空间文件与越界拒绝", JobsSandboxDemoVC.self),
+                ("PWA：原生离线包与 Service Worker", JobsPWADemoVC.self)
+            ]),
             (title: "系统能力与硬件通信".tr, items: [
                 ("本地录音与音频管理", JobsAudioRecorderDemoVC.self),
                 ("📶 JobsBluetooth 全能力 Demo", JobsBluetoothDemoVC.self),

@@ -724,6 +724,21 @@ extension RootFoldTableCell{
 
     private static func demoIconImage(for item: DemoItem) -> UIImage {
         let vcName = String(describing: item.vcType).split(separator: ".").last.map(String.init) ?? ""
+        // 复用已打包的 iconfont：移动容器、切换会话、组件平台、隔离校验和资源运行方向。
+        let learningGlyphs: [String: JobsIconfontGlyph] = [
+            "JobsMicroApplicationDemoVC": .iPhone,
+            "JobsMultiSessionDemoVC": .switcher,
+            "JobsMPaaSDemoVC": .component,
+            "JobsSandboxDemoVC": .verified,
+            "JobsPWADemoVC": .direction
+        ]
+        if let glyph = learningGlyphs[vcName] {
+            return JobsIconfont.shared.iconImage(
+                glyph,
+                size: CGSize(width: 30, height: 30),
+                color: JobsCor.systemBlue
+            ).withRenderingMode(.alwaysOriginal)
+        }
         #if DEBUG
         if vcName == "JobsDebugPanelDemoVC", let image = JobsDebugPanel.buttonImage {
             return image.withRenderingMode(.alwaysOriginal)
