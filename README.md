@@ -445,7 +445,7 @@
 
 ## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、👥 项目配置支持 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-- 自建 Pod 使用 [.github/tests/JobsPodsUpgrade/validate_builds.rb](<./.github/tests/JobsPodsUpgrade/validate_builds.rb>) 顺序验证小工程，再验证 workspace 主工程。按模块保存 JSON / 编译日志；失败时阻止宿主验收。最低宿主系统已对齐 iOS 15.6。验证入口与行为迁移见本文“自建 Pod 稳定性与编译门禁”。
+- 自建 Pod 使用 [.github/tests/JobsPodsUpgrade/validate_builds.rb](<./.github/tests/JobsPodsUpgrade/validate_builds.rb>) 验证小工程，再验证 workspace 主工程。默认逐 Pod 排查；CI 用 `--batch-pods` 将全部自建根 target 放入同一依赖图构建，减少重复构图。保存 JSON / 编译日志；失败时阻止宿主验收。最低宿主系统已对齐 iOS 15.6。验证入口与行为迁移见本文“自建 Pod 稳定性与编译门禁”。
 - [JobsDebugPanel](./JobsByPods/JobsDebugPanel@Pods/README.md) 是仅 Debug 集成的本地调试 Pod：前台可拖动圆形按钮、push 功能列表与 URL 环境二级列表、自定义功能 Model DSL、长按隐藏至下次启动。圆按钮再次点击会退出菜单及本次工具页面，返回打开前的宿主页面；面板各层、Demo 与已打开页面跟随 JobsThemeCenter 的有效主题，App 与系统外观错配时保持一致；拖动限制在安全区域且不会误触点击或长按。`AppDelegate+JobsDebugPanel.swift` 配置三环境并接入 `JobsNetworking` 的后续相对路径请求；Demo 使用 3 秒超时与本地失败兜底，可无服务器直接预览。Release 不展示调试入口，弱网测试使用系统 [**Network Link Conditioner**](https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/On_Demand_Resources_Guide/TestingPerformance.html)。
 - 本工程已有 [**Flutter**](https://docs.flutter.dev/testing/build-modes) 内嵌模块，其 Release / Profile 不支持 iOS 模拟器。验证 Swift 宿主的 Release 宏、符号与资源隔离时，`xcodebuild -configuration Release` 可额外传 `FLUTTER_BUILD_MODE=debug`：仅内嵌 Flutter 使用 Debug，原生宿主仍为 Release；该产物不是完整 Flutter Release 包。完整真机 Release 还需现有 Unity 真机依赖及有效代码签名，工程最后的 IPA 保存阶段会拒绝无签名真机包。
 
@@ -2228,17 +2228,19 @@ XBT 是仓库外的本机依赖，当前共享 Scheme 使用固定用户绝对�
 
 **GitHub Actions 模拟器构建**
 
-[模拟器工作流](./.github/workflows/build_simulator_app.yml)在推送 / 拉取请求到 `main` 或手动触发时运行，使用 `macos-15` 的 arm64 runner，按版本选择已安装的 Xcode 26；缺少该版本时明确失败。CI 保留 Flutter 安装准备、SwiftBlock 双架构编译检查、核心 / 网络回归和逐个自建 Pod 编译。
+[模拟器工作流](./.github/workflows/build_simulator_app.yml)在推送 / 拉取请求到 `main` 或手动触发时运行，使用 `macos-15` 的 arm64 runner，按版本选择已安装的 Xcode 26；缺少该版本时明确失败。CI 保留 Flutter 安装准备、SwiftBlock 双架构编译检查、构建验证器回归、核心 / 网络回归和全部自建 Pod 编译。
 
 依赖安装前，[模拟器选择器](./.github/tests/SimulatorRuntime/select_simulator.rb)读取当前 Xcode 的 Simulator SDK 版本，只从同主版本、可用且支持 arm64 的 iOS runtime 中选择 iPhone，按数字版本选最新可用候选；已启动的旧系统设备不会抢占。缺少匹配设备时立即失败并展示 runtime 清单，不自动下载数 GB 的运行时。随后以最低 iOS 15.6 编译并实际运行 [WebKit 加载探针](./.github/tests/SimulatorRuntime/WebKitRuntimeProbe.swift)，在正式构建前确认所选模拟器能加载 Swift WebKit overlay。该检查覆盖 [iOS 18.5 模拟器缺少 WebKit 兼容链接的问题](https://bugs.webkit.org/show_bug.cgi?id=293831)，不提高 App 的最低系统版本，也不修改系统运行时或弱化链接。
 
-逐 Pod 编译、宿主与测试统一使用 arm64、iOS 15.6 和同一份 DerivedData。宿主通过 `build-for-testing` 一次生成 App 与测试包，随后对同一台已启动的 iPhone 模拟器执行 `test-without-building`，运行 UIKit / Timer 宿主测试。测试全部通过后才打包并上传模拟器 App；纯 SwiftBlock 的双架构检查继续覆盖 arm64 / x86_64，上传的 App 供 Apple Silicon 模拟器使用。
+自建 Pod 以 `--batch-pods` 生成临时 workspace / 聚合 Scheme，精确引用每个自建根 target（包括 aggregate target），由一次 `xcodebuild` 统一构建及复用依赖；不改写 `Pods.xcodeproj`。图标生成器仍单独编译验证。批次真实成功退出后，成员才记录为通过，并引用同一批次日志，不伪造逐模块耗时；批次失败或中断不能视为成员通过。
+
+Pod 编译、宿主与测试统一使用 arm64、iOS 15.6 和同一份 DerivedData。宿主通过 `build-for-testing` 一次生成 App 与测试包，随后对同一台已启动的 iPhone 模拟器执行 `test-without-building`，运行 UIKit / Timer 宿主测试。测试全部通过后才打包并上传模拟器 App；纯 SwiftBlock 的双架构检查继续覆盖 arm64 / x86_64，上传的 App 供 Apple Silicon 模拟器使用。
 
 共享 Scheme 的 Test action 独立注入 `JOBS_HOSTED_TESTS=1`，通知中心仍配置 delegate，但不在测试启动时弹出首次通知授权窗口；普通 Run / Archive 保持原有授权流程。计时器测试在执行前最多等待 10 秒确认宿主进入真实 `active` 状态，超时直接失败，再执行自动暂停、恢复和倒计时的原有断言。手动更换测试 Scheme 时需保留该环境变量；仅发送前台通知不会改变 `UIApplication.applicationState`，不能解除系统弹窗造成的 `inactive`。
 
 打包仅选择产品目录中的 `JobsSwiftBaseConfigDemo.app`，并校验 Info.plist 的 Bundle ID、主可执行文件名称及文件存在；主 App 缺失或身份不符时直接失败，不能用同目录的 `UITests-Runner.app` 或其它测试宿主替代。日志输出实际打包路径和 Bundle ID，方便与下载产物核对。
 
-任务总时限 180 分钟，模拟器准备、依赖安装、逐 Pod 编译、宿主编译与测试分别限时 10 / 20 / 60 / 45 / 20 分钟，为首次启动 runtime 和失败诊断预留时间。失败或取消时上传安装日志、SDK 版本、模拟器 runtime / 设备清单与选择结果、WebKit 探针及其链接依赖日志、逐 Pod / 回归结果、构建 / 测试日志及 `.xcresult`，保存 7 天；成功 App 保存 14 天，并替换该分支先前的模拟器 App artifact。源码或回归失败仍会阻断产物发布；runner 排队提示不代表编译错误。
+任务总时限 180 分钟，模拟器准备、依赖安装、自建 Pod 批量编译、宿主编译与测试分别限时 10 / 20 / 60 / 45 / 20 分钟，为首次启动 runtime 和失败诊断预留时间。失败或取消时上传安装日志、SDK 版本、模拟器 runtime / 设备清单与选择结果、WebKit 探针及其链接依赖日志、Pod 批次 / 成员结果、回归结果、构建 / 测试日志及 `.xcresult`，保存 7 天；成功 App 保存 14 天，并替换该分支先前的模拟器 App artifact。源码或回归失败仍会阻断产物发布；runner 排队提示不代表编译错误。
 
 CocoaPods 生成的 `[CP] Check Pods Manifest.lock`、`[CP] Embed Pods Frameworks`、`[CP] Copy Pods Resources` 仍负责锁文件一致性、framework 嵌入和资源复制，属于构建内阶段。
 
@@ -13134,10 +13136,11 @@ static let demoHTML = """
 ```shell
 JOBS_POD_INSTALL_PURE=1 pod install --no-repo-update
 ruby .github/tests/JobsPodsUpgrade/validate_builds.rb
+ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --batch-pods
 ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --host-only --configuration Release
 ```
 
-全量验证器先逐个编译自建 Pod；每个 Pod 必须存在对应的集成 scheme，全部单元成功才构建 workspace 主 App。`--pods JobsNetworking --skip-host` 可用于定向修复，不能替代最终全量验收。JSON 结果与逐模块日志可追溯；DerivedData 位于临时目录，避开主工程成功打包阶段会重新整理的 `build/`。
+全量验证器默认先逐个编译自建 Pod；每个 Pod 必须存在对应的集成 scheme，全部单元成功才构建 workspace 主 App。`--batch-pods` 使用系统 `plutil` 读取已安装的 Pods 工程，以 Ruby 标准库动态核对根 Pod 名称、target UUID / 类型及构建配置，在日志目录生成临时 workspace / Scheme，全部根 target 及依赖一次构建。`results.json` 保存批次、成员与图标生成器结果，批量成员共享批次日志，独立耗时为空。`--pods JobsNetworking --skip-host` 可用于定向修复，也可组合批量参数，但子集不能替代最终全量验收；构建验证器的隔离回归入口为 `ruby .github/tests/JobsPodsUpgrade/validate_builds_test.rb`。DerivedData 位于临时目录，避开主工程成功打包阶段会重新整理的 `build/`。
 
 核心数值、任务、Worker、Patch、加密回归与 UIKit / WebView / Picker 的 XCTest 位于 [.github/tests/JobsPodsUpgrade](<./.github/tests/JobsPodsUpgrade/>)（从工程根目录定位）。Timer fixture 仅验证上层状态机，实际 Timer 仍由 iOS 模块编译与宿主 XCTest 检查。单元编译、App 编译、模拟器测试与真机行为分别记录，不互相代替。
 

@@ -139,6 +139,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          ruby .github/tests/JobsPodsUpgrade/validate_builds_test.rb
           ruby .github/tests/JobsPodsUpgrade/Core/run_regressions.rb \
             --output "${RUNNER_TEMP}/JobsPodsCoreRegression"
           ruby .github/tests/JobsPodsUpgrade/Network/run_regressions.rb \
@@ -160,7 +161,7 @@ jobs:
         run: |
           set -euo pipefail
           ruby .github/tests/JobsPodsUpgrade/validate_builds.rb \
-            --skip-host --output-dir "${RUNNER_TEMP}/JobsPodsUnitBuilds" \
+            --batch-pods --skip-host --output-dir "${RUNNER_TEMP}/JobsPodsUnitBuilds" \
             --derived-data "${RUNNER_TEMP}/DerivedData"
 
       - name: Build Simulator app and test bundle
