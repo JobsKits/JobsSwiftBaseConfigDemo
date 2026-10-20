@@ -116,6 +116,8 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC, WKNavigationDelegate {
             record("请输入有效 HTTPS PWA 地址；不接受账号密码、file 或自定义 scheme。")
             return
         }
+        // URL 键盘没有完成键；开始加载时退出输入，避免遮住回退后的网页按钮。
+        addressField.jobsDismissKeyboard()
         navigationGeneration += 1
         showingBundled = false
         useScrollableWebViewport(webView)
