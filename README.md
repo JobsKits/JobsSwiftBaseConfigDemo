@@ -462,7 +462,7 @@
       --no-repo-update
   ```
 
-  `Podfile` 跳过 Flutter 环境准备、SPM 验证、Unity 缓存清理、第三方兼容源码补丁和安装后 PIF 恢复；依赖解析、正常 Flutter Pod 配置与 Xcode 工程集成仍执行。报告与索引前置辅助脚本仅作只读检查，无后台索引和报告写入；公共 Specs 选源仍同步测速。日志保留 CocoaPods 输出与系统临时目录中的前置检查、选源日志。`--no-repo-update` 跳过安装前的源更新，仍可能创建缺失的源并获取需要的规格，不保证完全离线。
+  `Podfile` 跳过 Flutter 环境准备、SPM 验证、Unity 缓存清理、第三方兼容源码补丁和安装后 PIF 恢复；依赖解析、正常 Flutter Pod 配置与 Xcode 工程集成仍执行。前置依赖报告与集成后 CodeGraph 均只作工具链检查，无后台索引和报告写入；公共 Specs 选源仍同步测速。日志保留 CocoaPods 输出与系统临时目录中的前置检查、选源日志。`--no-repo-update` 跳过安装前的源更新，仍可能创建缺失的源并获取需要的规格，不保证完全离线。
 
   换电脑后若 `Generated.xcconfig` / `flutter_export_environment.sh` 仍指向旧 SDK 或 module，先按[换电脑排查](./ScriptsByPods/拉取Flutter侧三方资源.sh/README.md#machine-migration)正常运行准备流程；`JOBS_POD_INSTALL_PURE=1` 会跳过配置修复，不能用于恢复失效的 Flutter 路径。
 
@@ -2148,12 +2148,18 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
 | ----------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | `pod install` / `pod update` 读取 Podfile 时，公共源测试前 | [CocoaPods 网络适配](<./ScriptsByPods/【MacOS】🌐CocoaPods网络适配.command/README.md>)同步执行 | 测试实际 Git 链路、临时继承可用的已有代理，并注册已核验源码的官方归档回退；摘要保留在安装输出，失败继续原流程 |
 | `pod install` / `pod update` 读取 Podfile 时，`source` 声明前 | [CocoaPods 源自动选择](<./ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/README.md>)同步测速 | 测试当前网络并决定本次公共 Specs 源；结果与理由写入系统临时日志 |
-| `pod install` 读取 Podfile 时，依赖解析前 | Ruby 入口异步启动 `--preflight`                              | 不等待依赖下载；下面的报告与索引任务独立运行，不阻塞安装主流程 |
+| `pod install` 读取 Podfile 时，依赖解析前 | Ruby 入口异步启动 `--preflight`                              | 不等待依赖下载；仅依赖报告独立运行，不阻塞安装主流程 |
 | 前置任务                                  | [查询工程依赖关系](<./ScriptsByPods/【MacOS】🔍查询Xcode工程依赖关系.command/README.md>) | 扫描本地 podspec，生成 `./PodspecDependencyReport/` 下的依赖报告与关系图 |
-| 前置任务                                  | [CodeGraph 初始化脚本](./ScriptsByPods/codegraph_init.command/codegraph_init.command) | 本机工具可用时后台建立 / 更新 [**CodeGraph**](https://github.com/colbymchenry/codegraph) 索引并导出 Markdown；通过 PID 避免重复启动 |
+| 工程集成完成后，`post_integrate` | [CodeGraph 初始化脚本](./ScriptsByPods/codegraph_init.command/codegraph_init.command) | 成功集成后后台完成完整工具链体检、按需安装、建立 / 更新 [**CodeGraph**](https://github.com/colbymchenry/codegraph) 索引并导出 Markdown；工程锁避免并发更新 |
 | 工程集成完成后，`post_integrate`          | 统一入口 `--post-integrate` → [恢复 PIF 构建会话](<./ScriptsByPods/【MacOS】🧹恢复Xcode PIF构建会话.command/README.md>) | 有活动构建则跳过；无活动构建时结束当前用户的空闲构建服务，再通过工作空间列表命令重建会话 |
 
-报告与索引前置任务强制离线，只复用已有工具，不自动安装工具链；失败不覆盖 CocoaPods 自身结果。公共 Specs 选源单独同步执行网络测试，不加入这些异步任务。PIF 收尾脚本缺失、失败或异常时记录警告，不把已完成的依赖安装改判为失败。该恢复流程不删除 `Pods`、锁文件、工作空间或 `DerivedData`。
+前置依赖报告强制离线，只复用已有工具。CodeGraph 在成功集成后的后台进程完成完整工具链体检：系统 Shell / curl / Git / CLT、Brew 版本 / 配置 / doctor、Node.js 实际执行与 npm 配置、SQLite 查询、CLI 子命令和隔离样例建图，并核对目标状态 JSON 的工程路径与完整性；失败不覆盖 CocoaPods 自身结果。
+
+Homebrew 没有该官方 CodeGraph 对应 formula；缺失或损坏的 Node/npm 优先通过 Brew 的 `node@24` 补齐，再从官方 npm 包 `@colbymchenry/codegraph` 安装到用户独立前缀，已有健康 CLI 复用且不升级，操作前展示来源。
+
+`JOBS_SKIP_CODEGRAPH=1` 跳过地图；显式 `JOBS_POD_INSTALL_OFFLINE=1`、`CODEGRAPH_ALLOW_INSTALL=0` 或调度器 `--offline` 禁止工具安装，前置默认离线不会传染给收尾。产物更新到 `./.codegraph/codegraph.db` 与 `./.codegraph/codegraph.md/`，安装主流程只输出后台 PID 和日志，不等待建图完成；PID 仅供观察，以 `.codegraph/.jobs-update.lock` 判断并发。
+
+公共 Specs 选源单独同步执行网络测试，不加入这些异步任务。PIF 收尾脚本缺失、失败或异常时记录警告，不把已完成的依赖安装改判为失败。该恢复流程不删除 `Pods`、锁文件、工作空间或 `DerivedData`。
 
 `post_install` 还会执行 Podfile 内的构建配置与兼容性修补；`post_integrate` 同时维护 Pods 工程中的 `Podfile` / `Podfile.deps` 引用。这些是 Podfile 内联逻辑，外置收尾脚本的实际调用点是 `post_integrate`。
 

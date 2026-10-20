@@ -20,6 +20,8 @@
 
 * 自动脚本以 `Podfile` 中的实际调用配置为准；手动入口在 Xcode Behaviors 中按需运行，终端回车确认后执行，不加入安装钩子或构建流程。
 
+* [Pod Install 本地脚本保护](<./【MacOS】📦Pod Install离线保护.command/README.md>)在前置阶段只离线生成依赖报告；成功进入 `post_integrate` 后检查 PIF，再后台调用 [CodeGraph 初始化脚本](./codegraph_init.command/README.md)，完整体检工具链并更新 `.codegraph` 索引和 Markdown。Homebrew 没有该官方 CodeGraph 对应 formula，缺失 / 损坏的 Node/npm 优先通过 Brew 的 `node@24` 补齐，CLI 使用官方 npm 包 `@colbymchenry/codegraph` 与用户独立前缀；已有健康 CLI 不升级。`JOBS_SKIP_CODEGRAPH=1` 跳过，显式离线或 `CODEGRAPH_ALLOW_INSTALL=0` 禁止工具安装。日志为系统临时目录中按工程摘要隔离的 `codegraph_init.<工程摘要>.async.log`；工程锁控制并发，失败不阻断安装，主流程不等待索引和导出。
+
   ```ruby
   # ================================== pre_install：修 Unity Bee/Tundra 缓存路径问题 ==================================
   pre_install do |installer|
