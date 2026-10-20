@@ -64,13 +64,13 @@ final class JobsMicroApplicationDemoVC: JobsMicroAppLabBaseVC, WKNavigationDeleg
         guard let self else {
             return
         }
-        self.displayBundledPage("microapp.html", in: self.webView)
+        self.displayBundledPage("microapp.html", in: self.webView, fittingContent: true)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         bridge.webView = webView
-        displayBundledPage("microapp.html", in: webView)
+        displayBundledPage("microapp.html", in: webView, fittingContent: true)
         record("等待本地微应用加载；允许 getHostInfo / saveDraft 两项能力。")
     }
 

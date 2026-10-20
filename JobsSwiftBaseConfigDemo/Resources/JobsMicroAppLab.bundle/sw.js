@@ -1,6 +1,6 @@
 // HTTPS/localhost 模式才执行；仅管理本学习包的缓存前缀，不清理同源其它应用缓存。
 const PREFIX = 'jobs-micro-lab-';
-const CACHE = PREFIX + 'v1';
+const CACHE = PREFIX + 'v2';
 const ASSETS = ['./', './index.html', './manifest.webmanifest'];
 const SHELL = ASSETS.map(path => new URL(path, self.registration.scope).href);
 self.addEventListener('install', event => {

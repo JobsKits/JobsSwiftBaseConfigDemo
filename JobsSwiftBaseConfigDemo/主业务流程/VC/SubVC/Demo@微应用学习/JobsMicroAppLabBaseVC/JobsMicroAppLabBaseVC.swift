@@ -25,10 +25,20 @@ class JobsMicroAppLabBaseVC: BaseVC {
         return []
     }
     private var history: [String] = []
+    private var stageHeightConstraint: Constraint?
+    private var stageHeight: CGFloat = 220
+    private weak var sizingWebView: WKWebView?
+    private var contentSizeObservation: NSKeyValueObservation?
+    private var localPageURL: URL?
+    private var measuredWidth: CGFloat = 0
+    private var measurementGeneration = 0
+    private var isMeasuringContent = false
+    private var needsContentMeasurement = false
 
     private lazy var scrollView: UIScrollView = {
         UIScrollView.jobsMake { scroll in
             scroll.byAlwaysBounceVertical(true)
+                .byKeyboardDismissMode(.interactive)
                 .byAddTo(view) { [unowned self] make in
                     make.top.equalTo(gk_navigationBar.snp.bottom)
                     make.left.right.bottom.equalTo(view.safeAreaLayoutGuide)
@@ -82,6 +92,18 @@ class JobsMicroAppLabBaseVC: BaseVC {
         jobsSetupGKNav(title: lessonTitle)
         bindTheme()
         assembleLesson()
+        NotificationCenter.default.addObserver(self, selector: #selector(contentSizeCategoryDidChange),
+                                               name: UIContentSizeCategory.didChangeNotification, object: nil)
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        guard view.window != nil, let webView = sizingWebView,
+              abs(webView.bounds.width - measuredWidth) > 0.5 else {
+            return
+        }
+        measuredWidth = webView.bounds.width
+        refreshLocalWebHeight()
     }
 
     private func bindTheme() {
@@ -108,7 +130,7 @@ class JobsMicroAppLabBaseVC: BaseVC {
         contentStack.byAddArrangedSubview(stageView)
             .byAddArrangedSubview(statusView)
         stageView.snp.makeConstraints { make in
-            make.height.equalTo(220)
+            stageHeightConstraint = make.height.equalTo(stageHeight).constraint
         }
         statusView.snp.makeConstraints { make in
             make.height.equalTo(180)
@@ -119,6 +141,7 @@ class JobsMicroAppLabBaseVC: BaseVC {
         history.insert(message, at: 0)
         history = Array(history.prefix(24))
         statusView.byText(history.joined(separator: "\n\n"))
+        refreshLocalWebHeight()
     }
 
     /// 返回按钮交给所属 VC 的 lazy 属性持有；创建、外观和事件保持同一条 DSL。
@@ -128,6 +151,7 @@ class JobsMicroAppLabBaseVC: BaseVC {
             .byConfiguration(UIButton.Configuration.gray())
             .byTitle(title)
             .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+            .byNumberOfLines(0)
             .byAccessibilityIdentifier(identifier)
             .onTap { _ in
                 action()
@@ -157,16 +181,106 @@ class JobsMicroAppLabBaseVC: BaseVC {
             .appendingPathComponent(name)
     }
 
-    func displayBundledPage(_ name: String, in webView: WKWebView) {
+    func displayBundledPage(_ name: String, in webView: WKWebView, fittingContent: Bool = false) {
         guard let url = Self.resourceURL(name),
               FileManager.default.fileExists(atPath: url.path) else {
             record("资源缺失：\(name)。请重新构建主 App 资源。")
             return
         }
+        if fittingContent {
+            configureLocalWebSizing(webView, entry: url)
+        }
         webView.byLoadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
     }
 
+    @objc private func contentSizeCategoryDidChange() {
+        // 字号调小可能不改变 WK 的 contentSize，也要重新测量正文以收回留白。
+        DispatchQueue.main.async { [weak self] in
+            self?.refreshLocalWebHeight()
+        }
+    }
+
     func applyWebTheme(_ webView: WKWebView, isDark: Bool) {
-        webView.jobsEval("document.documentElement.dataset.theme='\(isDark ? "dark" : "light")'")
+        webView.jobsEval("document.documentElement.dataset.theme='\(isDark ? "dark" : "light")'") { [weak self] _, _ in
+            self?.refreshLocalWebHeight()
+        }
+    }
+
+    /// 本地文档按正文撑高，只保留外层滚动；远程网页使用独立、可滚动的视口。
+    func useScrollableWebViewport(_ webView: WKWebView) {
+        localPageURL = nil
+        measurementGeneration += 1
+        webView.byScrollView { scroll in
+            scroll.byScrollEnabled(true)
+                .byBounces(true)
+        }
+        updateStageHeight(220)
+    }
+
+    private func configureLocalWebSizing(_ webView: WKWebView, entry: URL) {
+        measurementGeneration += 1
+        localPageURL = entry.standardizedFileURL
+        if sizingWebView !== webView {
+            sizingWebView = webView
+            contentSizeObservation = webView.scrollView.observe(\.contentSize, options: [.new]) { [weak self] _, _ in
+                DispatchQueue.main.async { [weak self] in
+                    self?.refreshLocalWebHeight()
+                }
+            }
+        }
+        webView.byScrollView { scroll in
+            scroll.byScrollEnabled(false)
+                .byBounces(false)
+                .byContentInsetAdjustmentBehavior(.never)
+        }
+    }
+
+    private func updateStageHeight(_ height: CGFloat) {
+        let height = max(220, ceil(height))
+        guard height.isFinite, abs(height - stageHeight) > 0.5 else {
+            return
+        }
+        stageHeight = height
+        stageHeightConstraint?.update(offset: height)
+    }
+
+    private func refreshLocalWebHeight() {
+        guard let webView = sizingWebView, let entry = localPageURL,
+              webView.url?.standardizedFileURL == entry, !webView.isLoading,
+              webView.bounds.width > 0 else {
+            return
+        }
+        guard !isMeasuringContent else {
+            needsContentMeasurement = true
+            return
+        }
+        isMeasuringContent = true
+        let generation = measurementGeneration
+        // contentSize 至少等于视口高；测 body 的自然高度，缩短正文或旋转后也能收回留白。
+        let script = """
+        (() => {
+            const body = document.body;
+            if (!body) return 0;
+            const style = getComputedStyle(body);
+            return Math.ceil(body.getBoundingClientRect().height
+                + (parseFloat(style.marginTop) || 0) + (parseFloat(style.marginBottom) || 0)) + 1;
+        })()
+        """
+        webView.jobsEval(script) { [weak self, weak webView] value, error in
+            guard let self else {
+                return
+            }
+            self.isMeasuringContent = false
+            if error == nil, generation == self.measurementGeneration,
+               let webView, self.sizingWebView === webView, self.localPageURL == entry,
+               webView.url?.standardizedFileURL == entry,
+               let height = value as? NSNumber, height.doubleValue.isFinite, height.doubleValue > 0 {
+                self.updateStageHeight(CGFloat(height.doubleValue) + max(0, webView.frame.minY))
+            }
+            if self.needsContentMeasurement {
+                self.needsContentMeasurement = false
+                self.refreshLocalWebHeight()
+            }
+        }
     }
 }

@@ -105,7 +105,7 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC, WKNavigationDelegate {
     private func loadOfflinePackage() {
         navigationGeneration += 1
         showingBundled = true
-        displayBundledPage("index.html", in: webView)
+        displayBundledPage("index.html", in: webView, fittingContent: true)
         record("Native 离线包：从 App Bundle 加载，不依赖网络，不注册 Service Worker。")
     }
 
@@ -118,6 +118,7 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC, WKNavigationDelegate {
         }
         navigationGeneration += 1
         showingBundled = false
+        useScrollableWebViewport(webView)
         webView.loadURL(text)
         record("请求 HTTPS PWA：\(url.host ?? "")；加载失败将恢复内置离线包。")
         let generation = navigationGeneration

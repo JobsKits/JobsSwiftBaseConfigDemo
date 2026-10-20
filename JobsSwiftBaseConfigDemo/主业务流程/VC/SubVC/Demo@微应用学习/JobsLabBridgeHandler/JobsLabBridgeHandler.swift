@@ -25,12 +25,15 @@ final class JobsLabBridgeHandler: NSObject, WKScriptMessageHandler {
             return
         }
         let result = handle(message.body)
-        onResult?(result.message)
         guard let data = try? JSONSerialization.data(withJSONObject: ["ok": result.ok, "message": result.message]),
               let json = String(data: data, encoding: .utf8) else {
+            onResult?(result.message)
             return
         }
-        message.webView?.jobsEval("window.receiveNative(\(json))")
+        // 回包落到 DOM 后再通知页面，容器才能按最新正文测量高度。
+        message.webView?.jobsEval("window.receiveNative(\(json))") { [weak self] _, _ in
+            self?.onResult?(result.message)
+        }
     }
 
     /// 纯参数校验方便直接测试；操作名仅命中两项白名单，写入固定命名空间而非由网页指定路径。
