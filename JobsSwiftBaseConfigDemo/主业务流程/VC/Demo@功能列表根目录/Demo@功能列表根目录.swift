@@ -371,7 +371,7 @@ final class RootListVC: BaseVC {
             .bySuspend { cfg in
                 cfg
                     .byContainer(view)
-                    .byStart(.point(CGPoint(x: Screen.width - 60, y: Screen.height - 100)))
+                    .byStart(.point(CGPoint(x: view.bounds.width - 60, y: view.bounds.height - 100)))
                     .byFallbackSize(CGSize(width: 50, height: 50))
                     .byHapticOnDock(true)
             }
@@ -445,7 +445,7 @@ final class RootListVC: BaseVC {
             .bySuspend { cfg in
                 cfg
                     .byContainer(view)
-                    .byStart(.point(CGPoint(x: 15, y: Screen.height - 100)))
+                    .byStart(.point(CGPoint(x: 15, y: view.bounds.height - 100)))
                     .byFallbackSize(CGSize(width: 50, height: 50))
                     .byDocking(.nearestEdge)
                     .byHapticOnDock(true)

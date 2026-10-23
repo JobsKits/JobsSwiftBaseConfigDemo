@@ -35,7 +35,7 @@ final class YTKNetworkDemoVC: BaseVC {
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview().inset(16)
                 make.bottom.equalToSuperview().inset(26)
-                make.height.equalTo(Screen.height / 2)
+                make.height.equalTo(view.safeAreaLayoutGuide).multipliedBy(0.5)
         }
     }()
     /// 单请求按钮：GET /ip

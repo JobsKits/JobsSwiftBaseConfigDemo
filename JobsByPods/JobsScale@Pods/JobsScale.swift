@@ -122,6 +122,31 @@ public enum JobsScale {
         return fontBreakpoints.last?.scale ?? 1
     }
 
+    /// 在布局回调中读取调用方视图尺寸；每条安全区边独立参与计算。
+    public static func screenSize(in view: UIView) -> CGSize {
+        let bounds = view.bounds.size
+        guard useSafeArea else {
+            return bounds
+        }
+        let inset = view.safeAreaInsets
+        return CGSize(width: max(0, bounds.width - inset.left - inset.right),
+                      height: max(0, bounds.height - inset.top - inset.bottom))
+    }
+
+    public static func widthScale(in view: UIView) -> CGFloat {
+        return screenSize(in: view).width / designW
+    }
+
+    public static func heightScale(in view: UIView) -> CGFloat {
+        return screenSize(in: view).height / designH
+    }
+
+    public static func fontScale(in view: UIView) -> CGFloat {
+        let width = screenSize(in: view).width
+        let raw = fontMode == .continuous ? width / designW : scaleFromBreakpoints(width)
+        return clamp(raw, fontMinScale, fontMaxScale)
+    }
+
     /// 多窗口调用传入实际 window，避免改变全局比例上下文。
     public static func screenSize(in window: UIWindow) -> CGSize {
         let bounds = window.bounds.size
@@ -140,9 +165,14 @@ public enum JobsScale {
     }
 
     // MARK: Pixel Align（像素对齐）
+    @available(*, deprecated, message: "Use pixelAlign(_:traitCollection:) with the consumer view traits.")
     public static func pixelAlign(_ value: CGFloat) -> CGFloat {
+        return pixelAlign(value, traitCollection: .current)
+    }
+
+    public static func pixelAlign(_ value: CGFloat, traitCollection: UITraitCollection) -> CGFloat {
         #if os(iOS) || os(tvOS)
-        let s = UIScreen.main.scale
+        let s = max(traitCollection.displayScale, 1)
         return (value * s).rounded() / s
         #else
         return value
@@ -176,6 +206,12 @@ public enum Screen {
     /// 屏幕尺寸（以点为单位）
     /// - 优先 window.bounds.size：天然随横竖屏变化
     /// - 回退 UIScreen.main.bounds.size：在 iOS 8+ 通常是“竖屏坐标系”，但作为兜底足够
+    // TODO: Legacy size/width/height cannot select a consumer scene. Use size(in:) for layout.
+    public static func size(in view: UIView) -> CGSize {
+        return view.bounds.size
+    }
+
+    @available(*, deprecated, message: "Use Screen.size(in:) with the consumer view.")
     public static var size: CGSize {
         #if os(iOS) || os(tvOS)
         if let window = UIApplication.jobsKeyWindow(preferMainScreen: true),

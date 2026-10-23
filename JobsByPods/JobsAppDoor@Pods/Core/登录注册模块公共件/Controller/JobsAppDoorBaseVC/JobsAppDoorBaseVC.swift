@@ -206,6 +206,19 @@ open class JobsAppDoorBaseVC: BaseVC {
 
     func handleKeyboardOffset(_ offset: CGFloat, keyboardVisible: Bool) { }
 
+    func formLayoutFrame(preferredY: CGFloat,
+                         preferredHeight: CGFloat,
+                         keyboardLift: CGFloat,
+                         footerHeight: CGFloat) -> CGRect {
+        let safeFrame = view.bounds.inset(by: view.safeAreaInsets)
+        let keyboardTop = view.keyboardLayoutGuide.layoutFrame.minY
+        let bottom = max(safeFrame.minY, min(safeFrame.maxY, keyboardTop))
+        let height = min(preferredHeight, max(0, bottom - safeFrame.minY - footerHeight))
+        let top = min(max(safeFrame.minY, safeFrame.minY + preferredY - keyboardLift),
+                      max(safeFrame.minY, bottom - height - footerHeight))
+        return CGRect(x: safeFrame.minX, y: top, width: safeFrame.width, height: height)
+    }
+
     final func openCountryCodePicker(for inputView: JobsAppDoorInputView) {
         view.endEditing(true)
         let controller = JobsSwiftCountryCodeCtrl()
@@ -374,9 +387,13 @@ private extension JobsAppDoorBaseVC {
             queue: .main
         ) { [weak self] notification in
             guard let self,
-                  let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
-            let frameInView = view.convert(frame, from: nil)
-            let overlap = max(0, view.bounds.maxY - frameInView.minY)
+                  let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+                  let scene = view.window?.windowScene else {
+                return
+            }
+            let frameInView = view.convert(frame, from: scene.screen.coordinateSpace)
+            let intersection = view.bounds.intersection(frameInView)
+            let overlap = intersection.isNull ? 0 : intersection.height
             handleKeyboardOffset(overlap, keyboardVisible: overlap > 0)
         }
         let hideObserver = center.addObserver(

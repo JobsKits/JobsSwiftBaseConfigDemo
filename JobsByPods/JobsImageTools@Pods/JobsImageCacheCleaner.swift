@@ -77,9 +77,9 @@ public enum JobsImageCacheCleaner {
     ) {
         let group = DispatchGroup()
         // MARK: - helpers
-        func _pointToPixel(_ point: CGSize) -> CGSize {
+        func _pointToPixel(_ point: CGSize, traitCollection: UITraitCollection) -> CGSize {
             #if canImport(UIKit)
-            let scale = UIScreen.main.scale
+            let scale = traitCollection.displayScale
             return CGSize(width: max(1, point.width * scale), height: max(1, point.height * scale))
             #else
             return point
@@ -114,7 +114,7 @@ public enum JobsImageCacheCleaner {
             let opts: KingfisherOptionsInfo = [
                 .forceRefresh,
                 .processor(DownsamplingImageProcessor(size: target)),
-                .scaleFactor(UIScreen.main.scale)
+                .scaleFactor(iv.traitCollection.displayScale)
             ]
             iv.kf.setImage(with: url, placeholder: placeholder, options: opts) { _ in
                 group.leave()
@@ -127,7 +127,7 @@ public enum JobsImageCacheCleaner {
             let opts: KingfisherOptionsInfo = [
                 .forceRefresh,
                 .processor(DownsamplingImageProcessor(size: target)),
-                .scaleFactor(UIScreen.main.scale)
+                .scaleFactor(btn.traitCollection.displayScale)
             ]
             btn.kf.setImage(with: url,
                             for: state,
@@ -156,7 +156,7 @@ public enum JobsImageCacheCleaner {
             let opts: KingfisherOptionsInfo = [
                 .forceRefresh,
                 .processor(DownsamplingImageProcessor(size: target)),
-                .scaleFactor(UIScreen.main.scale)
+                .scaleFactor(btn.traitCollection.displayScale)
             ]
             btn.kf.setBackgroundImage(with: url,
                                       for: state,
@@ -184,8 +184,8 @@ public enum JobsImageCacheCleaner {
             let target = _guessImageViewTargetSize(iv)
             group.enter()
             var ctx: [SDWebImageContextOption: Any] = [:]
-            ctx[.imageScaleFactor] = UIScreen.main.scale
-            ctx[.imageThumbnailPixelSize] = _pointToPixel(target)
+            ctx[.imageScaleFactor] = iv.traitCollection.displayScale
+            ctx[.imageThumbnailPixelSize] = _pointToPixel(target, traitCollection: iv.traitCollection)
             let opts: SDWebImageOptions = [.refreshCached, .retryFailed, .highPriority, .scaleDownLargeImages]
             iv.sd_setImage(with: url,
                           placeholderImage: placeholder,
@@ -200,8 +200,8 @@ public enum JobsImageCacheCleaner {
             let generation = btn.jobs_remoteBindingGeneration
             group.enter()
             var ctx: [SDWebImageContextOption: Any] = [:]
-            ctx[.imageScaleFactor] = UIScreen.main.scale
-            ctx[.imageThumbnailPixelSize] = _pointToPixel(target)
+            ctx[.imageScaleFactor] = btn.traitCollection.displayScale
+            ctx[.imageThumbnailPixelSize] = _pointToPixel(target, traitCollection: btn.traitCollection)
             let opts: SDWebImageOptions = [.refreshCached, .retryFailed, .highPriority, .scaleDownLargeImages, .avoidAutoSetImage]
             btn.sd_setImage(with: url,
                             for: state,
@@ -224,8 +224,8 @@ public enum JobsImageCacheCleaner {
             let generation = btn.jobs_bgBindingGeneration
             group.enter()
             var ctx: [SDWebImageContextOption: Any] = [:]
-            ctx[.imageScaleFactor] = UIScreen.main.scale
-            ctx[.imageThumbnailPixelSize] = _pointToPixel(target)
+            ctx[.imageScaleFactor] = btn.traitCollection.displayScale
+            ctx[.imageThumbnailPixelSize] = _pointToPixel(target, traitCollection: btn.traitCollection)
             let opts: SDWebImageOptions = [.refreshCached, .retryFailed, .highPriority, .scaleDownLargeImages, .avoidAutoSetImage]
             btn.sd_setBackgroundImage(with: url,
                                       for: state,
@@ -252,6 +252,7 @@ public enum JobsImageCacheCleaner {
                 .remote(url),
                 options: .init(preferredLoader: .urlSession,
                                targetSize: target,
+                               scale: iv.traitCollection.displayScale,
                                forceRefresh: true)
             ) { result in
                 guard iv.jobs_remoteURL == url, iv.jobs_remoteBindingGeneration == generation else {

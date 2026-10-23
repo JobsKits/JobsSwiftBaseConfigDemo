@@ -21,7 +21,6 @@ final class JobsCoreTextScrollLayer: CALayer {
 
     override init() {
         super.init()
-        contentsScale = UIScreen.main.scale
         drawsAsynchronously = true
         needsDisplayOnBoundsChange = true
         anchorPoint = .zero
@@ -41,7 +40,6 @@ final class JobsCoreTextScrollLayer: CALayer {
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        contentsScale = UIScreen.main.scale
         drawsAsynchronously = true
         needsDisplayOnBoundsChange = true
         anchorPoint = .zero

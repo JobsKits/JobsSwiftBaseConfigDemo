@@ -96,7 +96,7 @@ public class JobsNavBar: UIView {
     private var _leftContainerH: Constraint?
     public private(set) lazy var leftContainer: UIView = {
         UIView.jobsMake { _ in }.byAddTo(self) { [unowned self] v, make in
-            make.left.equalToSuperview().offset(8)
+            make.left.equalTo(safeAreaLayoutGuide.snp.left).offset(8)
             make.bottom.equalToSuperview() // 贴底
             _leftContainerH = make.height.equalTo(self.style.contentHeight).constraint // 固定“内容区”高
             make.width.greaterThanOrEqualTo(36)
@@ -203,13 +203,14 @@ public class JobsNavBar: UIView {
     @MainActor
     private func relayoutTitleConstraints() {
         titleLabel.snp.remakeConstraints { make in
+            make.centerY.equalTo(leftContainer)
             if style.titleAlignmentCenter {
-                make.center.equalToSuperview()
+                make.centerX.equalTo(safeAreaLayoutGuide)
                 make.left.greaterThanOrEqualTo(leftContainer.snp.right).offset(8)
-                make.right.lessThanOrEqualToSuperview().inset(12)
+                make.right.lessThanOrEqualTo(safeAreaLayoutGuide.snp.right).inset(12)
             } else {
                 make.left.equalTo(leftContainer.snp.right).offset(8)
-                make.right.lessThanOrEqualToSuperview().inset(12)
+                make.right.lessThanOrEqualTo(safeAreaLayoutGuide.snp.right).inset(12)
             }
         }
     }
@@ -277,6 +278,7 @@ public class JobsNavBar: UIView {
     public override func safeAreaInsetsDidChange() {
         super.safeAreaInsetsDidChange()
         if style.usesSafeAreaTopInset { invalidateIntrinsicContentSize() }
+        setNeedsLayout()
     }
 }
 @MainActor

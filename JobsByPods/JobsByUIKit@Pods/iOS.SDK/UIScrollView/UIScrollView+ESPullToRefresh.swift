@@ -172,7 +172,7 @@ public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
             .byAddTo(self) { [unowned self] make in
                 make.centerX.equalToSuperview()                  // ✅ 中心对齐（不从 0,0 起）
                 make.centerY.equalToSuperview()
-                self.canvasWidthConstraint = make.width.equalTo(UIScreen.main.bounds.width).constraint
+                self.canvasWidthConstraint = make.width.equalTo(bounds.width).constraint
                 make.height.greaterThanOrEqualTo(executeIncremental)
             }
     }()
@@ -211,7 +211,7 @@ public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
     // 跟随窗口宽度（适配横竖屏 / iPad 分屏）
     public override func layoutSubviews() {
         super.layoutSubviews()
-        let w = (self.window?.bounds.width).map { CGFloat($0) } ?? UIScreen.main.bounds.width
+        let w = bounds.width
         canvasWidthConstraint?.update(offset: 0)
         canvas.snp.updateConstraints { make in
             make.width.equalTo(w)
@@ -262,7 +262,7 @@ public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
             .byAddTo(self) { [unowned self] make in
                 make.centerX.equalToSuperview()                 // ✅ 居中对齐父视图
                 make.centerY.equalToSuperview()
-                self.canvasWidthConstraint = make.width.equalTo(UIScreen.main.bounds.width).constraint
+                self.canvasWidthConstraint = make.width.equalTo(bounds.width).constraint
                 make.height.greaterThanOrEqualTo(executeIncremental)
             }
     }()
@@ -291,9 +291,7 @@ public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
             }
     }()
 
-    private lazy var w: CGFloat = {
-        (self.window?.bounds.width).map { CGFloat($0) } ?? UIScreen.main.bounds.width
-    }()
+    private var w: CGFloat { bounds.width }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     public override init(frame: CGRect) {

@@ -64,6 +64,11 @@ final class JobsSwiftCommentModeDetailVC: BaseVC {
         commentView.byVisible(true)
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updatePreferredContentSizeIfNeeded()
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updatePreferredContentSizeIfNeeded()
@@ -181,10 +186,13 @@ private extension JobsSwiftCommentModeDetailVC {
 
     func updatePreferredContentSizeIfNeeded() {
         guard popupStyle else { return }
-        if popUpHeight <= 0 {
-            popUpHeight = UIScreen.main.bounds.height * 0.62
+        let available = presentingViewController?.view.bounds.size ?? view.bounds.size
+        guard available.width > 0, available.height > 0 else {
             return
         }
-        preferredContentSize = CGSize(width: UIScreen.main.bounds.width, height: popUpHeight)
+        let size = CGSize(width: available.width, height: available.height * 0.62)
+        if preferredContentSize != size {
+            preferredContentSize = size
+        }
     }
 }

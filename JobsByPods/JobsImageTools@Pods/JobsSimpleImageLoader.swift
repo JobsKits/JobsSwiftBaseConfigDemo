@@ -99,14 +99,19 @@ public final class JobsImageLoadToken {
 
 public final class JobsImageLoader {
     public static let shared = JobsImageLoader()
+    @available(*, deprecated, message: "Use defaultScale(in:) with the rendering view traitCollection or pass scale in load options.")
     public static var defaultScale: CGFloat {
         #if os(iOS) || os(tvOS)
-        return UIScreen.main.scale
+        return defaultScale(in: .current)
         #elseif os(OSX)
         return NSScreen.main?.backingScaleFactor ?? 2
         #else
         return 2
         #endif
+    }
+
+    public static func defaultScale(in traitCollection: UITraitCollection) -> CGFloat {
+        return max(traitCollection.displayScale, 1)
     }
 
     private let fallbackCache = NSCache<NSString, UIImage>()

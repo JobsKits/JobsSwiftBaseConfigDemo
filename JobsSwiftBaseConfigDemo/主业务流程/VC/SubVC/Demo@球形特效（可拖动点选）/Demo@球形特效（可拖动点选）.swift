@@ -27,7 +27,6 @@ final class SphereDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 0
     private lazy var sphereView: SphereTagCloudView = {
         SphereTagCloudView()
-            .byRadius(ScreenWidth() * (2/3))             // 球半径（如果为 nil，会在 layoutSubviews 里用 bounds 自动计算）
             .byPerspective(2.2)                          // 透视强度：越大越“扁”，越小越“立体”（建议 1.5~3）
             .byScaleRange(min: 0.35, max: 1.0)           // 深度映射到缩放的范围
             .byAlphaRange(min: 0.35, max: 1.0)           // 深度映射到透明度的范围

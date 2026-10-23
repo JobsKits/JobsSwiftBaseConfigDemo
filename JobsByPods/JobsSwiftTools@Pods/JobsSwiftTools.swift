@@ -463,11 +463,17 @@ extension CATextLayerAlignmentMode {
 }
 // MARK: -
 @inline(__always)
+@available(*, deprecated, message: "Pass the rendering view traitCollection to jobsCTTextWidth(_:font:traitCollection:).")
 public func jobsCTTextWidth(_ text: String, font: UIFont) -> CGFloat {
+    return jobsCTTextWidth(text, font: font, traitCollection: .current)
+}
+
+@inline(__always)
+public func jobsCTTextWidth(_ text: String, font: UIFont, traitCollection: UITraitCollection) -> CGFloat {
     let attr = [NSAttributedString.Key.font: font]
     let asr  = NSAttributedString(string: text, attributes: attr)
     let line = CTLineCreateWithAttributedString(asr)
     let w    = CGFloat(CTLineGetTypographicBounds(line, nil, nil, nil))
-    let s    = UIScreen.main.scale
+    let s    = max(traitCollection.displayScale, 1)
     return ceil(w * s) / s   // 像素对齐
 }

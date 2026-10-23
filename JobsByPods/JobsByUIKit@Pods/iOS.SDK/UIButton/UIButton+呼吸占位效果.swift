@@ -13,6 +13,7 @@ import UIKit
 
 import ObjectiveC
 import JobsSwiftBaseDefines
+import JobsImageTools
 /// 用于区分不同图片加载器的 token 空间，避免互相干扰。
 
 internal enum JobsButtonImageLoader: UInt8 {
@@ -25,6 +26,8 @@ internal enum JobsButtonTokenChannel: UInt8 {
     case background = 2
 }
 private enum _JobsButtonTokenAOKey { static var tokenMap: UInt8 = 0 }
+private var jobsImageScaleObservationKey: UInt8 = 0
+
 extension UIButton {
     // MARK: - Main thread helper
     /// ✅ 统一主线程执行：避免占位/回调乱序覆盖
@@ -141,15 +144,21 @@ extension UIButton {
     // MARK: - Loading placeholder
     /// 用于撑开 imageView frame，便于 overlay 精准覆盖
     internal func _jobs_loadingPlaceholderImage(targetPointSize: CGSize, fallback: UIImage?) -> UIImage? {
+        if #available(iOS 17.0, *), objc_getAssociatedObject(self, &jobsImageScaleObservationKey) == nil {
+            objc_setAssociatedObject(self, &jobsImageScaleObservationKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            registerForTraitChanges([UITraitDisplayScale.self]) { (button: UIButton, _: UITraitCollection) in
+                JobsImageCacheCleaner.forceRedownloadImages(in: button)
+            }
+        }
         guard let fallback else {
-            return UIImage._jobs_transparentPlaceholder(size: targetPointSize)
+            return UIImage._jobs_transparentPlaceholder(size: targetPointSize, scale: traitCollection.displayScale)
         };return fallback
     }
 }
 // MARK: - Transparent placeholder (internal)
 extension UIImage {
     static func _jobs_transparentPlaceholder(size: CGSize,
-                                             scale: CGFloat = UIScreen.main.scale) -> UIImage {
+                                             scale: CGFloat) -> UIImage {
         let w = max(1, size.width)
         let h = max(1, size.height)
         let format = UIGraphicsImageRendererFormat()

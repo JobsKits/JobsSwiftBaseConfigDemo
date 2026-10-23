@@ -30,6 +30,7 @@ public final class JobsGIFRefreshView: UIView, JobsRefreshAnimatorProtocol {
     private let imageView = UIImageView.jobsMake { _ in }
     private var animatedImage: UIImage?
     private var firstFrame: UIImage?
+    private var gifData: Data?
     private var wantsAnimating = false
 
     public convenience init(gifNamed name: String,
@@ -148,6 +149,17 @@ public final class JobsGIFRefreshView: UIView, JobsRefreshAnimatorProtocol {
     }
 
     private func jobs_setupGIFRefreshView() {
+        if #available(iOS 17.0, *) {
+            registerForTraitChanges([UITraitDisplayScale.self]) { (view: JobsGIFRefreshView, _: UITraitCollection) in
+                guard let data = view.gifData else {
+                    return
+                }
+                view.jobs_decodeGIF(data)
+                if view.wantsAnimating {
+                    view.byStart()
+                }
+            }
+        }
         byUserInteractionEnabled(false)
         imageView
             .byContentMode(.scaleAspectFit)
@@ -158,6 +170,7 @@ public final class JobsGIFRefreshView: UIView, JobsRefreshAnimatorProtocol {
     }
 
     private func jobs_decodeGIF(_ data: Data) {
+        gifData = data
         guard !data.isEmpty,
               let source = CGImageSourceCreateWithData(data as CFData, nil) else { return }
         var frames: [UIImage] = []
@@ -167,7 +180,7 @@ public final class JobsGIFRefreshView: UIView, JobsRefreshAnimatorProtocol {
             guard let imageRef = CGImageSourceCreateImageAtIndex(source, index, nil) else { continue }
             frames.append(UIImage(
                 cgImage: imageRef,
-                scale: UIScreen.main.scale,
+                scale: traitCollection.displayScale,
                 orientation: .up
             ))
             duration += jobs_delay(at: index, source: source)

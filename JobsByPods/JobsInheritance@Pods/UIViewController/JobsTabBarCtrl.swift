@@ -74,6 +74,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
     /// 满足 `JobsTabBarCtrl().TabBar.byAlpha(1)` 的链式风格
     public lazy var TabBar: UIScrollView = {
         UIScrollView.jobsMake { _ in }
+            .byContentInsetAdjustmentBehavior(.never)
             .byShowsHorizontalScrollIndicator(NO)
             .byAlwaysBounceHorizontal(YES)
             .byClipsToBounds(NO)
@@ -82,6 +83,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
 
     private lazy var contentScrollView: UIScrollView = {
         UIScrollView.jobsMake { _ in }
+            .byContentInsetAdjustmentBehavior(.never)
             .byPagingEnabled(YES)
             .byBounces(NO)
             .byShowsHorizontalScrollIndicator(NO)
@@ -173,7 +175,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
 
     private func layoutUI() {
         let safeBottom = view.safeAreaInsets.bottom
-        let barH = (customBarHeight ?? (49 + safeBottom))
+        let barH = min(view.bounds.height, max(0, customBarHeight ?? (49 + safeBottom)))
         TabBar.byFrame(CGRect(
             x: 0,
             y: view.bounds.height - barH - barBottomOffset,
@@ -185,7 +187,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
             x: 0,
             y: 0,
             width: view.bounds.width,
-            height: view.bounds.height - barH - barBottomOffset
+            height: max(0, view.bounds.height - barH - barBottomOffset)
         ))
         // 按钮布局
         if autoRelayoutForBoundsChange || !builtOnce {
@@ -205,8 +207,15 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
         }
         let total = buttons.count
         let bounds = TabBar.bounds
-        let availableW = max(0, bounds.width - contentInset.left - contentInset.right)
-        let h = max(0, bounds.height - contentInset.top - contentInset.bottom)
+        let safeFrame = view.safeAreaLayoutGuide.layoutFrame.intersection(TabBar.frame)
+        guard !safeFrame.isNull else {
+            return
+        }
+        let left = contentInset.left + max(0, safeFrame.minX - TabBar.frame.minX)
+        let right = contentInset.right + max(0, TabBar.frame.maxX - safeFrame.maxX)
+        let top = contentInset.top + max(0, safeFrame.minY - TabBar.frame.minY)
+        let availableW = max(0, bounds.width - left - right)
+        let h = max(0, safeFrame.height - contentInset.top - contentInset.bottom)
         var frames: [CGRect] = .init(repeating: .zero, count: total)
         if total == 1 {
             // 居中：宽度取 intrinsic + padding 与 availableW 的夹取
@@ -216,24 +225,24 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
             let n2 = max(equalVisibleRange.lowerBound, 2)
             let refW = (availableW - CGFloat(n2 - 1) * equalSpacing) / CGFloat(n2)
             let w = max(minItemWidth, min(ideal + 2 * 16, refW))
-            let x = contentInset.left + (availableW - w) * 0.5
-            frames[0] = CGRect(x: x, y: contentInset.top, width: w, height: h)
+            let x = left + (availableW - w) * 0.5
+            frames[0] = CGRect(x: x, y: top, width: w, height: h)
         } else if equalVisibleRange.contains(total) {
             // 2~5 等分
             let n = total
             let w = (availableW - CGFloat(n - 1) * equalSpacing) / CGFloat(n)
-            var curX = contentInset.left
+            var curX = left
             for i in 0..<total {
-                frames[i] = CGRect(x: curX, y: contentInset.top, width: w, height: h)
+                frames[i] = CGRect(x: curX, y: top, width: w, height: h)
                 curX += w + equalSpacing
             }
         } else {
             // >5：用“max 等分数”（默认 5）来确定单元宽度与间距
             let nRef = max(equalVisibleRange.upperBound, 2)
             let unitW = (availableW - CGFloat(nRef - 1) * equalSpacing) / CGFloat(nRef)
-            var curX = contentInset.left
+            var curX = left
             for i in 0..<total {
-                frames[i] = CGRect(x: curX, y: contentInset.top, width: unitW, height: h)
+                frames[i] = CGRect(x: curX, y: top, width: unitW, height: h)
                 curX += unitW + equalSpacing
             }
         }
@@ -246,7 +255,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
         if buttons.count <= equalVisibleRange.upperBound {
             widthSum = bounds.width // 不需要滚动
         } else {
-            widthSum = (buttons.last!.frame.maxX) + contentInset.right
+            widthSum = (buttons.last!.frame.maxX) + right
         }
         TabBar.contentSize = CGSize(width: widthSum, height: bounds.height)
     }

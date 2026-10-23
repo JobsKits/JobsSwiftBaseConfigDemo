@@ -75,7 +75,12 @@ public final class JobsSideDrawerVC: UIViewController {
     private static let progressEpsilon: CGFloat = 0.001
     private static let minimumSettlementDuration: TimeInterval = 0.12
 
+    // TODO: Legacy static width has no container. Use defaultMenuWidth(in:) for new callers.
     public static var defaultMenuWidth: CGFloat { UIScreen.main.bounds.width * 0.5 }
+    public static func defaultMenuWidth(in view: UIView) -> CGFloat {
+        return view.bounds.width * 0.5
+    }
+    private var requestedMenuWidth: CGFloat?
     public private(set) var isOpen = false
     public let configuration: JobsSideDrawerConfiguration
 
@@ -143,11 +148,11 @@ public final class JobsSideDrawerVC: UIViewController {
 
     public convenience init(menuVC: UIViewController,
                             mainVC: UIViewController,
-                            menuWidth: CGFloat = JobsSideDrawerVC.defaultMenuWidth) {
-        let ratio = menuWidth / max(UIScreen.main.bounds.width, 1)
+                            menuWidth: CGFloat = .nan) {
         self.init(drawerViewController: menuVC,
                   mainViewController: mainVC,
-                  configuration: .init(presentedRatio: ratio))
+                  configuration: .init(presentedRatio: 0.5))
+        requestedMenuWidth = menuWidth.isFinite ? max(0, menuWidth) : nil
     }
 
     public init(drawerView: UIView,
@@ -177,6 +182,9 @@ public final class JobsSideDrawerVC: UIViewController {
 
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        if let requestedMenuWidth, view.bounds.width > 0 {
+            configuration.presentedRatio = min(1, max(0, requestedMenuWidth / view.bounds.width))
+        }
         let progress = interactionStartProgress == nil ? (isOpen ? 1 : 0) : currentProgress
         layoutDrawer(progress: progress)
         installContentViewsIfNeeded()

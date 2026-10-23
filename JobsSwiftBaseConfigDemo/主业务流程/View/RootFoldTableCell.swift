@@ -202,7 +202,7 @@ final class RootFoldTableCell: UITableViewCell,
         shadow.byVisible(YES)
         innerTableView.addGestureRecognizer(innerCellLongPressGesture)
         if #available(iOS 17.0, tvOS 17.0, *) {
-            _ = registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (cell: RootFoldTableCell, _) in
+            _ = registerForTraitChanges([UITraitUserInterfaceStyle.self, UITraitDisplayScale.self]) { (cell: RootFoldTableCell, _) in
                 cell.refreshTheme()
             }
         }
@@ -722,7 +722,7 @@ extension RootFoldTableCell{
         };return symbolName
     }
 
-    private static func demoIconImage(for item: DemoItem) -> UIImage {
+    private static func demoIconImage(for item: DemoItem, traitCollection: UITraitCollection) -> UIImage {
         let vcName = String(describing: item.vcType).split(separator: ".").last.map(String.init) ?? ""
         // 复用已打包的 iconfont：移动容器、切换会话、组件平台、隔离校验和资源运行方向。
         let learningGlyphs: [String: JobsIconfontGlyph] = [
@@ -736,7 +736,8 @@ extension RootFoldTableCell{
             return JobsIconfont.shared.iconImage(
                 glyph,
                 size: CGSize(width: 30, height: 30),
-                color: JobsCor.systemBlue
+                color: JobsCor.systemBlue,
+                traitCollection: traitCollection
             ).withRenderingMode(.alwaysOriginal)
         }
         #if DEBUG
@@ -748,13 +749,15 @@ extension RootFoldTableCell{
             return JobsIconfont.shared.iconImage(
                 .component,
                 size: CGSize(width: 30, height: 30),
-                color: JobsCor.systemBlue
+                color: JobsCor.systemBlue,
+                traitCollection: traitCollection
             ).withRenderingMode(.alwaysOriginal)
         } else if vcName == "JobsSceneDelegateDemoVC" {
             return JobsIconfont.shared.iconImage(
                 .switcher,
                 size: CGSize(width: 30, height: 30),
-                color: JobsCor.systemBlue
+                color: JobsCor.systemBlue,
+                traitCollection: traitCollection
             ).withRenderingMode(.alwaysOriginal)
         };return demoIconSymbolName(for: item).sysImg.withRenderingMode(.alwaysTemplate)
     }
@@ -816,7 +819,7 @@ extension RootFoldTableCell: UITableViewDataSource, UITableViewDelegate {
             .byDetailTitleCor(RootListPreferences.foldSecondaryTextColor)
             .byTextLabel { applyTextDisplayStrategy(to: $0) }
             .byDetailTextLabel { applyTextDisplayStrategy(to: $0) }
-            .byImage(Self.demoIconImage(for: item))
+            .byImage(Self.demoIconImage(for: item, traitCollection: traitCollection))
             .bySelectionStyle(.default)
             .bySelectedBackgroundView(
                 UIView.jobsMake { _ in }.byBackgroundColor(JobsCor.tertiarySystemBackground)

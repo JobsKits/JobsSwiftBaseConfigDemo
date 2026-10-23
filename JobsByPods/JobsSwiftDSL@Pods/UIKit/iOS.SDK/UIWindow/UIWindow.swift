@@ -17,6 +17,7 @@ extension UIWindow {
     /// 返回一个“保证非空”的 UIWindow
     /// - 优先 jobsKeyWindow（真实窗口）
     /// - 取不到时兜底创建一个离屏窗口，避免 unwrap 报错
+    // TODO: Static compatibility access cannot select a scene; prefer the consumer's own window.
     public static var wd: UIWindow {
         if let real = UIApplication.jobsKeyWindow() {
             return real
@@ -26,7 +27,7 @@ extension UIWindow {
         }
     }
     /// 实例访问也保持一致
-    public var wd: UIWindow { Self.wd }
+    public var wd: UIWindow { self }
     // ================================== 跨版本入口：iOS 12+ 可编译 ==================================
     @discardableResult
     public static func jobsMake(root: UIViewController? = nil,
@@ -63,6 +64,7 @@ extension UIWindow {
             win = UIWindow(windowScene: s)
         } else {
             // 极端兜底：没拿到 scene 时也能创建（理论上很少见）
+            // TODO: A scene-less legacy caller must pass its own UIWindowScene to jobsMake(scene:).
             win = UIWindow(frame: UIScreen.main.bounds)
         };return win
             .byRootViewController(root)

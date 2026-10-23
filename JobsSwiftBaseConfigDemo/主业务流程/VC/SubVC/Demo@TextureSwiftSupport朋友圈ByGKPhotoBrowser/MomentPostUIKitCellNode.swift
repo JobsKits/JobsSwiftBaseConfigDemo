@@ -157,7 +157,7 @@ final class MomentPostUIKitCellNode: ASCellNode {
         if isUsable(maxW) { return maxW }
         if isUsable(minW) { return minW }
         #if os(iOS) || os(tvOS)
-        return UIScreen.main.bounds.width
+        return max(0, cachedWidth)
         #else
         return 375
         #endif

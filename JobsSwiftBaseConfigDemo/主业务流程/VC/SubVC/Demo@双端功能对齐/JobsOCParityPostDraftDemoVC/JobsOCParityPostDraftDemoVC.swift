@@ -37,6 +37,7 @@ final class JobsPostDraftDemoVC: BaseVC {
     private var videoURL: URL?
     private var imageButtons: [UIButton] = []
     private var gridHeightConstraint: Constraint?
+    private var lastMediaGridWidth: CGFloat = 0
     private var snapshot = Draft(text: "", images: [], videoPath: nil)
     private var previousInteractivePopEnabled = true
 
@@ -171,6 +172,16 @@ final class JobsPostDraftDemoVC: BaseVC {
             }
     }()
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let width = mediaGridView.bounds.width
+        guard width > 0, width != lastMediaGridWidth else {
+            return
+        }
+        lastMediaGridWidth = width
+        reloadMediaGrid()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
@@ -280,7 +291,7 @@ final class JobsPostDraftDemoVC: BaseVC {
         } else {
             addImageButton.removeFromSuperview()
         }
-        let side = (UIScreen.main.bounds.width - 48 - 16) / 3
+        let side = max(0, (mediaGridView.bounds.width - 16) / 3)
         let allViews: [UIView] = imageButtons + (showsAddButton ? [addImageButton] : [])
         allViews.enumerated().forEach { index, cellView in
             let row = index / 3

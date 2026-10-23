@@ -15,6 +15,8 @@ public final class JobsAppDoorStyle2VC: JobsAppDoorBaseVC {
 
     private var hasRunEntranceAnimation = false
     private var keyboardVisible = false
+    private var keyboardLift: CGFloat = 0
+    private var heightConstraints: [JobsAppDoorMode: Constraint] = [:]
     private var centerXConstraints: [JobsAppDoorMode: Constraint] = [:]
     private var topConstraints: [JobsAppDoorMode: Constraint] = [:]
 
@@ -33,6 +35,17 @@ public final class JobsAppDoorStyle2VC: JobsAppDoorBaseVC {
         setupLayout()
     }
 
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        for mode in [JobsAppDoorMode.login, .register, .forgotPassword] {
+            topConstraints[mode]?.update(offset: cardTop(for: mode))
+            heightConstraints[mode]?.update(offset: cardHeight(for: mode))
+            if mode != currentMode, form(for: mode).isHidden {
+                centerXConstraints[mode]?.update(offset: offscreenOffset)
+            }
+        }
+    }
+
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         guard !hasRunEntranceAnimation else { return }
@@ -42,10 +55,8 @@ public final class JobsAppDoorStyle2VC: JobsAppDoorBaseVC {
 
     override func handleKeyboardOffset(_ offset: CGFloat, keyboardVisible: Bool) {
         self.keyboardVisible = keyboardVisible
-        let top = cardTop(for: currentMode)
-        topConstraints[currentMode]?.update(
-            offset: keyboardVisible ? top - min(112, offset * 0.34) : top
-        )
+        keyboardLift = keyboardVisible ? min(112, offset * 0.34) : 0
+        topConstraints[currentMode]?.update(offset: cardTop(for: currentMode))
         updateLogoVisibility(animated: true)
         UIView.jobsAnimateWithOptions(
             0.25,
@@ -64,7 +75,7 @@ private extension JobsAppDoorStyle2VC {
         install(form: forgotPasswordForm, mode: .forgotPassword, initialOffset: offscreenOffset)
         logoView.configure(style: .square)
         logoView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
+            make.centerX.equalTo(view.safeAreaLayoutGuide)
             make.bottom.equalTo(loginForm.snp.top).offset(-50)
             make.size.equalTo(CGSize(width: 82, height: 82))
         }
@@ -78,10 +89,10 @@ private extension JobsAppDoorStyle2VC {
 
     func install(form: JobsAppDoorFormView, mode: JobsAppDoorMode, initialOffset: CGFloat) {
         form.byAddTo(view) { make in
-            self.centerXConstraints[mode] = make.centerX.equalToSuperview().offset(initialOffset).constraint
+            self.centerXConstraints[mode] = make.centerX.equalTo(view.safeAreaLayoutGuide).offset(initialOffset).constraint
             self.topConstraints[mode] = make.top.equalToSuperview().offset(self.cardTop(for: mode)).constraint
-            make.width.equalToSuperview().offset(-40)
-            make.height.equalTo(self.cardHeight(for: mode))
+            make.width.equalTo(view.safeAreaLayoutGuide).offset(-40)
+            self.heightConstraints[mode] = make.height.equalTo(self.cardHeight(for: mode)).constraint
         }
     }
 
@@ -115,6 +126,7 @@ private extension JobsAppDoorStyle2VC {
         cancelSubmission()
         view.endEditing(true)
         keyboardVisible = false
+        keyboardLift = 0
         view.layoutIfNeeded()
 
         let previousMode = currentMode
@@ -158,7 +170,7 @@ private extension JobsAppDoorStyle2VC {
     func installCustomerServiceConstraint(below form: JobsAppDoorFormView) {
         customerServiceButton.snp.remakeConstraints { make in
             make.top.equalTo(form.snp.bottom).offset(8)
-            make.centerX.equalToSuperview()
+            make.centerX.equalTo(view.safeAreaLayoutGuide)
             make.width.equalTo(118)
             make.height.equalTo(38)
         }
@@ -192,34 +204,35 @@ private extension JobsAppDoorStyle2VC {
     }
 
     var offscreenOffset: CGFloat {
-        max(UIScreen.main.bounds.width, view.bounds.width)
+        view.bounds.width
     }
 
     func cardTop(for mode: JobsAppDoorMode) -> CGFloat {
-        switch mode {
-        /// 登录卡片使用屏幕四分之一位置
-        case .login:
-            return configuration.loginContentY
-        /// 注册卡片随字段数量垂直居中
-        case .register:
-            return configuration.registerContentY
-        /// 找回密码卡片使用屏幕四分之一位置
-        case .forgotPassword:
-            return configuration.forgotPasswordContentY
-        }
+        return cardFrame(for: mode).minY
     }
 
     func cardHeight(for mode: JobsAppDoorMode) -> CGFloat {
+        return cardFrame(for: mode).height
+    }
+
+    func cardFrame(for mode: JobsAppDoorMode) -> CGRect {
+        let layout = configuration.contentLayout(in: view.bounds.inset(by: view.safeAreaInsets))
+        let preferredY: CGFloat
+        let preferredHeight: CGFloat
         switch mode {
-        /// 登录卡片沿用 OC 侧屏幕比例
         case .login:
-            return configuration.loginContentHeight
-        /// 注册卡片高度跟随字段数量
+            preferredY = layout.loginY
+            preferredHeight = layout.loginHeight
         case .register:
-            return configuration.registerContentHeight
-        /// 找回密码卡片沿用 OC 侧屏幕比例
+            preferredY = layout.registerY
+            preferredHeight = configuration.registerContentHeight
         case .forgotPassword:
-            return configuration.forgotPasswordContentHeight
+            preferredY = layout.forgotY
+            preferredHeight = layout.forgotHeight
         }
+        return formLayoutFrame(preferredY: preferredY,
+                               preferredHeight: preferredHeight,
+                               keyboardLift: mode == currentMode ? keyboardLift : 0,
+                               footerHeight: 58)
     }
 }

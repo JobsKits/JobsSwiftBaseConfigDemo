@@ -104,9 +104,9 @@ private extension JobsSwiftCommentDemoVC {
         popupDetailViewController?.mode = mode
         popupDetailViewController?.popupStyle = true
         popupDetailViewController?.commentArr = commentArr
-        popupDetailViewController?.popUpHeight = UIScreen.main.bounds.height * 0.62
+        popupDetailViewController?.popUpHeight = view.bounds.height * 0.62
         popupDetailViewController?.preferredContentSize = CGSize(
-            width: UIScreen.main.bounds.width,
+            width: view.bounds.width,
             height: popupDetailViewController?.popUpHeight ?? 0
         )
         popupDetailViewController?.modalPresentationStyle = .pageSheet

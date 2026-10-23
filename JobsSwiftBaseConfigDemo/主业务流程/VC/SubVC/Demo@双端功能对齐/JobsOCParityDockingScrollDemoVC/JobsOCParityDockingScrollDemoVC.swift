@@ -20,10 +20,11 @@ import SnapKit
 final class JobsDockingScrollDemoVC: BaseVC {
 
     private var panelTopConstraint: Constraint?
+    private var topRegionHeightConstraint: Constraint?
     private var panStartOffset: CGFloat = 0
     private var panelOffset: CGFloat = 0
     private var bottomOffset: CGFloat {
-        max(240, UIScreen.main.bounds.height / 2 - 100)
+        max(240, view.bounds.height / 2 - 100)
     }
 
     private lazy var topRegionView: UIView = {
@@ -32,7 +33,7 @@ final class JobsDockingScrollDemoVC: BaseVC {
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom)
                 make.left.right.equalToSuperview()
-                make.height.equalTo(bottomOffset)
+                topRegionHeightConstraint = make.height.equalTo(bottomOffset).constraint
             }
     }()
 
@@ -139,6 +140,13 @@ final class JobsDockingScrollDemoVC: BaseVC {
                 make.edges.equalToSuperview().inset(12)
             }
     }()
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        topRegionHeightConstraint?.update(offset: bottomOffset)
+        panelOffset = min(max(0, panelOffset), bottomOffset)
+        panelTopConstraint?.update(offset: panelOffset)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

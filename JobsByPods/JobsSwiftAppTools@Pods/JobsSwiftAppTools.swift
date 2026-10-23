@@ -329,8 +329,8 @@ public extension UIView {
             .bySuspend { cfg in
                 cfg
                     .byContainer(container)
-                    .byStart(.point(CGPoint(x: Screen.width - 140,
-                                            y: Screen.height - 250))) // 起始点（可用区域坐标）
+                    .byStart(.point(CGPoint(x: container.bounds.width - 140,
+                                            y: container.bounds.height - 250))) // 起始点（可用区域坐标）
                     .byFallbackSize(CGSize(width: 140, height: 48))
                     .byDocking(.nearestEdge)
                     .byHapticOnDock(true)

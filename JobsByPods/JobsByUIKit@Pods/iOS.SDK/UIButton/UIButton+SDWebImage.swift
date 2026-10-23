@@ -253,13 +253,13 @@ extension UIButton {
     private func _jobs_sdBuildContext(base: [SDWebImageContextOption: Any]?, targetPointSize: CGSize?) -> [SDWebImageContextOption: Any] {
         var ctx = base ?? [:]
         if ctx[.imageScaleFactor] == nil {
-            ctx[.imageScaleFactor] = UIScreen.main.scale
+            ctx[.imageScaleFactor] = traitCollection.displayScale
         }
         // ✅ 核心：强制缩略图像素尺寸（避免 image.size 过大导致 UIButton intrinsicContentSize 被撑开）
         if ctx[.imageThumbnailPixelSize] == nil {
             let point = targetPointSize
             if let point, point.width > 1, point.height > 1 {
-                let scale = UIScreen.main.scale
+                let scale = traitCollection.displayScale
                 ctx[.imageThumbnailPixelSize] = CGSize(width: max(1, point.width * scale), height: max(1, point.height * scale))
             }
         };return ctx

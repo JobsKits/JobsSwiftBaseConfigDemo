@@ -105,6 +105,11 @@ public extension UIApplication {
         return _jobsVisibleVC(from: child, ignoreAlert: ignoreAlert)
     }
     /// ③ 全局安全区 Insets（不依赖当前 VC）
+    static func jobsSafeAreaInsets(in view: UIView) -> UIEdgeInsets {
+        return view.safeAreaInsets
+    }
+
+    // TODO: Legacy global insets cannot identify the consumer. Use jobsSafeAreaInsets(in:) for layout.
     static var jobsSafeAreaInsets: UIEdgeInsets {
         return jobsKeyWindow()?.safeAreaInsets ?? .zero
     }
@@ -115,6 +120,7 @@ public extension UIApplication {
     static var jobsSafeRightInset: CGFloat { jobsSafeAreaInsets.right }
     /// ⑤ 是否“刘海/全面屏 iPhone”（本质：是否存在 Home Indicator 的底部安全区）
     /// ✅ 模拟器同样有效（取决于你选的机型）
+    // TODO: Hardware inference from insets is retained for source compatibility; layout applies every edge directly.
     static var jobsIsNotchPhone: Bool {
         UIDevice.current.userInterfaceIdiom == .phone && jobsSafeBottomInset > 0
     }
@@ -146,7 +152,9 @@ private extension UIApplication {
         guard !windows.isEmpty else { return nil }
         // 1) keyWindow 优先（iOS15 有 scene.keyWindow，但这里统一从 windows 里找）
         if let key = windows.first(where: \.isKeyWindow) {
-            if !preferMainScreen || key.screen == UIScreen.main { return key }
+            if !preferMainScreen || key.screen == ws.screen {
+                return key
+            }
         }
         // 2) 可见窗口优先：normal level > 非 normal
         func windowRank(_ w: UIWindow) -> (Int, Int, Int) {
@@ -155,7 +163,7 @@ private extension UIApplication {
                 guard !w.isHidden, w.alpha > 0.01 else { return 2 };return (w.windowLevel == .normal) ? 0 : 1
             }()
             // 主屏优先
-            let screenGroup = (preferMainScreen && w.screen != UIScreen.main) ? 1 : 0
+            let screenGroup = (preferMainScreen && w.screen != ws.screen) ? 1 : 0
             // 与 normal 的距离越小越好
             let levelDistance = Int(abs(w.windowLevel.rawValue - UIWindow.Level.normal.rawValue))
             return (visibilityGroup, screenGroup, levelDistance)

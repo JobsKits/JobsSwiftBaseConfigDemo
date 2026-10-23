@@ -42,9 +42,12 @@ public extension UIView {
                 return 0
             }
             // 键盘是屏幕坐标，这里转到当前视图的坐标系，计算遮挡
-            let window = UIApplication.jobsKeyWindow()
+            let window = self.window
             let endInView: CGRect = {
                 if let win = window {
+                    if let scene = win.windowScene {
+                        return self.convert(frame, from: scene.screen.coordinateSpace)
+                    }
                     let rInWin = win.convert(frame, from: nil)
                     return self.convert(rInWin, from: win)
                 } else {
@@ -53,7 +56,8 @@ public extension UIView {
                 }
             }()
             // 视图底部到键盘顶部的重叠高度
-            let overlap = max(0, self.bounds.maxY - endInView.minY)
+            let intersection = self.bounds.intersection(endInView)
+            let overlap = intersection.isNull ? 0 : intersection.height
             // 扣除底部安全区，得到真正需要上移/留白的高度
             let adjusted = max(0, overlap - self.safeAreaInsets.bottom)
             return adjusted.rounded(.towardZero) // 避免细微浮点波动

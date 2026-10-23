@@ -99,6 +99,10 @@ public final class JobsIconfont {
 
     private static var representedAssetKey: UInt8 = 0
     private static var loadTokenKey: UInt8 = 0
+    private static var scaleObservationKey: UInt8 = 0
+    private static var reloadForScaleKey: UInt8 = 0
+    fileprivate static var glyphScaleObservationKey: UInt8 = 0
+    fileprivate static var glyphReloadKey: UInt8 = 0
     private let iconFontPostScriptName = "iconfontyyy"
     private let textFontPostScriptName = "AlimamaShuZhiTiVF-Regular"
     private let fontLock = NSLock.jobsMake { _ in }
@@ -118,17 +122,34 @@ public final class JobsIconfont {
             ?? UIFont.systemFont(ofSize: size)
     }
 
+    @available(*, deprecated, message: "Use iconImage(_:size:color:backgroundColor:traitCollection:) with the rendering view traits.")
     public func iconImage(
         _ glyph: JobsIconfontGlyph,
         size: CGSize,
         color: UIColor,
         backgroundColor: UIColor = .clear
     ) -> UIImage {
+        return iconImage(glyph,
+                         size: size,
+                         color: color,
+                         backgroundColor: backgroundColor,
+                         traitCollection: .current)
+    }
+
+    public func iconImage(
+        _ glyph: JobsIconfontGlyph,
+        size: CGSize,
+        color: UIColor,
+        backgroundColor: UIColor = .clear,
+        traitCollection: UITraitCollection
+    ) -> UIImage {
         let size = CGSize(width: size.width.isFinite && size.width > 0 ? min(size.width, 1_024) : 96,
                           height: size.height.isFinite && size.height > 0 ? min(size.height, 1_024) : 96)
+        let backgroundColor = backgroundColor.resolvedColor(with: traitCollection)
+        let color = color.resolvedColor(with: traitCollection)
         let format = UIGraphicsImageRendererFormat.default()
         format.opaque = backgroundColor.cgColor.alpha >= 1
-        format.scale = UIScreen.main.scale
+        format.scale = max(traitCollection.displayScale, 1)
         let renderer = UIGraphicsImageRenderer(size: size, format: format)
         return renderer.image { context in
             backgroundColor.setFill()
@@ -164,6 +185,7 @@ public final class JobsIconfont {
     }
 
     @discardableResult
+    @MainActor
     public func load(
         _ asset: JobsIconfontRemoteAsset,
         into imageView: UIImageView,
@@ -171,12 +193,25 @@ public final class JobsIconfont {
         forceRefresh: Bool = false,
         event: ((JobsIconfontLoadEvent) -> Void)? = nil
     ) -> JobsIconfontLoadToken {
+        let reloadForScale: () -> Void = { [weak imageView, weak self] in
+            guard let imageView, let self else {
+                return
+            }
+            self.load(asset, into: imageView, targetSize: targetSize, forceRefresh: forceRefresh, event: event)
+        }
+        objc_setAssociatedObject(imageView, &Self.reloadForScaleKey, reloadForScale, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        if #available(iOS 17.0, *), objc_getAssociatedObject(imageView, &Self.scaleObservationKey) == nil {
+            objc_setAssociatedObject(imageView, &Self.scaleObservationKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            imageView.registerForTraitChanges([UITraitDisplayScale.self]) { (view: UIImageView, _: UITraitCollection) in
+                (objc_getAssociatedObject(view, &Self.reloadForScaleKey) as? () -> Void)?()
+            }
+        }
         let representedAsset = asset.identifier + "#" + UUID().uuidString
         let resolvedSize = targetSize.flatMap {
             $0.width.isFinite && $0.height.isFinite && $0.width > 1 && $0.height > 1
                 ? CGSize(width: min($0.width, 1_024), height: min($0.height, 1_024)) : nil
         } ?? CGSize(width: 96, height: 96)
-        let placeholder = placeholderImage(for: asset, size: resolvedSize)
+        let placeholder = iconImage(asset.fallbackGlyph, size: resolvedSize, color: .systemGray3, traitCollection: imageView.traitCollection)
 
         (objc_getAssociatedObject(imageView, &Self.loadTokenKey) as? JobsIconfontLoadToken)?.cancel()
         objc_setAssociatedObject(
@@ -193,6 +228,7 @@ public final class JobsIconfont {
             options: .init(
                 preferredLoader: .automatic,
                 targetSize: resolvedSize,
+                scale: imageView.traitCollection.displayScale,
                 forceRefresh: forceRefresh
             )
         ) { [weak imageView] result in
@@ -223,10 +259,12 @@ public final class JobsIconfont {
         return token
     }
 
+    @MainActor
     public func cancelLoad(in imageView: UIImageView) {
         (objc_getAssociatedObject(imageView, &Self.loadTokenKey) as? JobsIconfontLoadToken)?.cancel()
         objc_setAssociatedObject(imageView, &Self.loadTokenKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         objc_setAssociatedObject(imageView, &Self.representedAssetKey, nil, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        objc_setAssociatedObject(imageView, &Self.reloadForScaleKey, nil, .OBJC_ASSOCIATION_COPY_NONATOMIC)
     }
 
     public func clearImageCache(_ completion: (() -> Void)? = nil) {
@@ -295,7 +333,25 @@ public extension UIButton {
         color: UIColor,
         for state: UIControl.State = .normal
     ) -> Self {
-        let image = JobsIconfont.shared.iconImage(glyph, size: size, color: color)
+        var reloads = objc_getAssociatedObject(self, &JobsIconfont.glyphReloadKey) as? [UInt: (UIButton) -> Void] ?? [:]
+        reloads[state.rawValue] = { button in
+            let image = JobsIconfont.shared.iconImage(glyph,
+                                                      size: size,
+                                                      color: color,
+                                                      traitCollection: button.traitCollection)
+            button.setImage(image, for: state)
+        }
+        objc_setAssociatedObject(self, &JobsIconfont.glyphReloadKey, reloads, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        if #available(iOS 17.0, *), objc_getAssociatedObject(self, &JobsIconfont.glyphScaleObservationKey) == nil {
+            objc_setAssociatedObject(self, &JobsIconfont.glyphScaleObservationKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            registerForTraitChanges([UITraitDisplayScale.self, UITraitUserInterfaceStyle.self]) { (button: UIButton, _: UITraitCollection) in
+                let reloads = objc_getAssociatedObject(button, &JobsIconfont.glyphReloadKey) as? [UInt: (UIButton) -> Void] ?? [:]
+                reloads.values.forEach { reload in
+                    reload(button)
+                }
+            }
+        }
+        let image = JobsIconfont.shared.iconImage(glyph, size: size, color: color, traitCollection: traitCollection)
         setImage(image, for: state)
         return self
     }

@@ -44,12 +44,18 @@ final class JobsLabelScrollController: @unchecked Sendable {
         isOverflowing && timer?.isRunning == true
     }
 
+    @MainActor
     init(label: UILabel) {
         self.label = label
         viewportLayer
             .byMasksToBounds(true)
-            .byContentsScale(UIScreen.main.scale)
+            .byContentsScale(label.traitCollection.displayScale)
         viewportLayer.addSublayer(textLayer)
+        if #available(iOS 17.0, *) {
+            label.registerForTraitChanges([UITraitDisplayScale.self]) { [weak self] (_: UILabel, _: UITraitCollection) in
+                self?.reload()
+            }
+        }
     }
 
     deinit {
@@ -122,6 +128,9 @@ private extension JobsLabelScrollController {
             stopTimer()
             return
         }
+        let displayScale = max(label.traitCollection.displayScale, 1)
+        viewportLayer.byContentsScale(displayScale)
+        textLayer.contentsScale = displayScale
         let size = label.bounds.size
         guard size.width > 0, size.height > 0 else {
             needsRebuild = true

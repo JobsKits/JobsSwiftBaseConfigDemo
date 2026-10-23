@@ -19,6 +19,7 @@ import SnapKit
 
 // MARK: - Associated Object Keys (NO WARNING)
 private enum _JobsBtnGradientKey {
+    static var scaleObservation: UInt8 = 0
     /// 使用静态 UInt8 做 key，避免 “UnsafeRawPointer + String” 的黄色警告
     static var subtitleLabel: UInt8 = 0
     static var mainLayer: UInt8 = 0
@@ -236,6 +237,12 @@ extension UIButton {
         direction: JobsGradientDirection,
         layerKey: UnsafeRawPointer
     ) {
+        if #available(iOS 17.0, *), objc_getAssociatedObject(self, &_JobsBtnGradientKey.scaleObservation) == nil {
+            objc_setAssociatedObject(self, &_JobsBtnGradientKey.scaleObservation, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            registerForTraitChanges([UITraitDisplayScale.self]) { (button: UIButton, _: UITraitCollection) in
+                button.jobs_updateGradientTitlesLayout()
+            }
+        }
         guard let text, !text.isEmpty else { return }
         let b = label.bounds
         guard b.width > 0, b.height > 0 else { return }
@@ -253,7 +260,7 @@ extension UIButton {
                     .byFont(label.font)
                     .byFontSize(label.font.pointSize)
                     .byAlignmentMode(.center)
-                    .byContentsScale(UIScreen.main.scale)
+                    .byContentsScale(traitCollection.displayScale)
                     .byFrame(b))
         label.byTextColor(JobsCor.clear).byAddSublayer(g)
         objc_setAssociatedObject(

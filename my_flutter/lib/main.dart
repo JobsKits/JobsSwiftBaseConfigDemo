@@ -149,18 +149,14 @@ class _FlutterPageState extends State<FlutterPage> {
           onPressed: _finish, // 关闭也回传
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: SafeArea(
+        top: false,
+        child: ListView(
+          padding: const EdgeInsets.all(16),
           children: [
             const Text('收到的参数：'),
             const SizedBox(height: 8),
-            Expanded(
-              child: SingleChildScrollView(
-                child: SelectableText(prettyArgs),
-              ),
-            ),
+            SelectableText(prettyArgs),
             const SizedBox(height: 12),
             TextField(
               controller: _controller,
@@ -170,10 +166,7 @@ class _FlutterPageState extends State<FlutterPage> {
               ),
             ),
             const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: _finish,
-              child: const Text('返回并回传给 iOS'),
-            ),
+            ElevatedButton(onPressed: _finish, child: const Text('返回并回传给 iOS')),
           ],
         ),
       ),

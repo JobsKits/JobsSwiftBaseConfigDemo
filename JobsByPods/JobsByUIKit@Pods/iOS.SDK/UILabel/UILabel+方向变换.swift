@@ -12,12 +12,23 @@ import UIKit
 #endif
 
 import JobsSwiftDSL
+import ObjectiveC
 import JobsSwiftBaseDefines
+
+private var jobsRotatedTextScaleKey: UInt8 = 0
 
 extension UILabel {
     // MARK: 方向变换（使用 CATextLayer，避免富文本/对齐丢失）
     @discardableResult
     public func transformLayer(_ direction: TransformLayerDirectionType) -> Self {
+        if #available(iOS 17.0, *), objc_getAssociatedObject(self, &jobsRotatedTextScaleKey) == nil {
+            objc_setAssociatedObject(self, &jobsRotatedTextScaleKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            registerForTraitChanges([UITraitDisplayScale.self]) { (label: UILabel, _: UITraitCollection) in
+                for layer in label.layer.sublayers?.compactMap({ $0 as? CATextLayer }).filter({ $0.name == "JobsTextLayer" }) ?? [] {
+                    layer.contentsScale = label.traitCollection.displayScale
+                }
+            }
+        }
         superview?.layoutIfNeeded()
         let oldTextLayers = layer.sublayers?
             .compactMap { $0 as? CATextLayer }
@@ -30,7 +41,7 @@ extension UILabel {
         oldTextLayers.forEach { $0.removeFromSuperlayer() }
         let textLayer = CATextLayer()
             .byName("JobsTextLayer")
-            .byContentsScale(UIScreen.main.scale)
+            .byContentsScale(traitCollection.displayScale)
             .byAlignmentMode(._jobs_fromNSTextAlignment(textAlignment))
             .byTruncationMode((lineBreakMode == .byTruncatingHead) ? .start :
                                 (lineBreakMode == .byTruncatingMiddle) ? .middle :

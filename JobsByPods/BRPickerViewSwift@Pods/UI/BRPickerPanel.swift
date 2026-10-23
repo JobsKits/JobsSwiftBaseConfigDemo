@@ -98,17 +98,8 @@ public final class BRPickerPanel: UIView {
         host.addSubview(self)
         frame = host.bounds
         dimmingControl.byFrame(bounds)
-        // Height adaptive
-        let safeBottom = host.safeAreaInsets.bottom
-        let desired = theme.toolBarHeight + theme.pickerHeight + safeBottom + theme.panelBottomOffset
-        let maxH = theme.maxPanelHeight ?? min(bounds.height * 0.75, 560)
-        panelHeight = min(max(desired, theme.toolBarHeight + 140), maxH)
-        let finalFrame = CGRect(
-            x: 0,
-            y: bounds.height - panelHeight + theme.panelBottomOffset,
-            width: bounds.width,
-            height: panelHeight
-        )
+        autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        let finalFrame = finalPanelFrame()
         panelView.byFrame(finalFrame)
         layoutPanelSubviews()
         animator.animateIn(panel: panelView, dimming: dimmingControl, finalFrame: finalFrame)
@@ -119,21 +110,12 @@ public final class BRPickerPanel: UIView {
         isDismissing = true
         onDismiss?()
         onDismiss = nil
-        guard let host = hostView else {
+        guard hostView != nil else {
             strongOwner = nil
             removeFromSuperview()
             return
         }
-        let safeBottom = host.safeAreaInsets.bottom
-        let desired = theme.toolBarHeight + theme.pickerHeight + safeBottom + theme.panelBottomOffset
-        let maxH = theme.maxPanelHeight ?? min(bounds.height * 0.75, 560)
-        panelHeight = min(max(desired, theme.toolBarHeight + 140), maxH)
-        let finalFrame = CGRect(
-            x: 0,
-            y: bounds.height - panelHeight + theme.panelBottomOffset,
-            width: bounds.width,
-            height: panelHeight
-        )
+        let finalFrame = finalPanelFrame()
         animator.animateOut(panel: panelView, dimming: dimmingControl, finalFrame: finalFrame) { [weak self] in
             guard let self else { return }
             self.strongOwner = nil
@@ -172,24 +154,41 @@ public final class BRPickerPanel: UIView {
         }
     }
 
+    private func finalPanelFrame() -> CGRect {
+        let desired = theme.toolBarHeight + theme.pickerHeight + safeAreaInsets.bottom + theme.panelBottomOffset
+        let maxH = theme.maxPanelHeight ?? min(bounds.height * 0.75, 560)
+        panelHeight = min(max(desired, theme.toolBarHeight + 140), maxH)
+        return CGRect(x: 0,
+                      y: bounds.height - panelHeight + theme.panelBottomOffset,
+                      width: bounds.width,
+                      height: panelHeight)
+    }
+
     private func layoutPanelSubviews() {
-        toolbar.byFrame(CGRect(x: 0, y: 0, width: panelView.bounds.width, height: theme.toolBarHeight))
-        contentContainer.frame = CGRect(
-            x: 0,
+        let safe = panelView.safeAreaInsets
+        let width = max(0, panelView.bounds.width - safe.left - safe.right)
+        toolbar.byFrame(CGRect(x: safe.left, y: 0, width: width, height: theme.toolBarHeight))
+        contentContainer.byFrame(CGRect(
+            x: safe.left,
             y: theme.toolBarHeight,
-            width: panelView.bounds.width,
-            height: panelView.bounds.height - theme.toolBarHeight
-        )
+            width: width,
+            height: max(0, panelView.bounds.height - theme.toolBarHeight - safe.bottom)
+        ))
+    }
+
+    public override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        setNeedsLayout()
     }
 
     public override func layoutSubviews() {
         super.layoutSubviews()
         dimmingControl.byFrame(bounds)
-        // Keep panel pinned to bottom on rotations
-        if !isDismissing, panelView.superview != nil, panelView.frame.width != bounds.width {
-            // recompute
-            present(in: hostView)
+        guard !isDismissing, panelView.superview != nil else {
+            return
         }
+        panelView.byFrame(finalPanelFrame())
+        layoutPanelSubviews()
     }
 
     @objc private func tapMask() {

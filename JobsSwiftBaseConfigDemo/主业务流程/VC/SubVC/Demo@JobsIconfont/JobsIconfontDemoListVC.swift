@@ -83,6 +83,11 @@ final class JobsIconfontDemoListVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        if #available(iOS 17.0, *) {
+            registerForTraitChanges([UITraitDisplayScale.self]) { (controller: JobsIconfontDemoListVC, _: UITraitCollection) in
+                controller.tableView.byReloadData()
+            }
+        }
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "JobsIconfont 全功能封装".tr)
         tableView.byVisible(true)
@@ -107,7 +112,8 @@ extension JobsIconfontDemoListVC: UITableViewDataSource, UITableViewDelegate {
                     JobsIconfont.shared.iconImage(
                         row.glyph,
                         size: CGSize(width: 34, height: 34),
-                        color: JobsCor.systemBlue
+                        color: JobsCor.systemBlue,
+                        traitCollection: tableView.traitCollection
                     )
                 )
                 .byText(row.title)

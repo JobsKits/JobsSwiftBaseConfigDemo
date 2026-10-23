@@ -45,9 +45,7 @@ final class MessageListDemoVC: BaseVC {
     /// ✅ 刘海机：加 safeBottomInset；非刘海机：不加
     /// - 这里用 view.safeAreaInsets.bottom 更稳（VC 在屏幕上时一定正确）
     private var bottomBarShownHeight: CGFloat {
-        let safeBottom = view.safeAreaInsets.bottom
-        let extra = safeBottom > 0 ? safeBottom : 0
-        return bottomBarBaseH + extra
+        return bottomBarBaseH + view.safeAreaInsets.bottom
     }
     // MARK: - Nav Buttons
     private lazy var rightEditButton: UIButton = {

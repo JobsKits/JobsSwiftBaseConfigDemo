@@ -40,10 +40,18 @@ public final class JobsAppDoorFormView: UIView {
     private var remembersPassword = true
     public private(set) var isSubmitting = false
 
+    private lazy var scrollView: UIScrollView = {
+        UIScrollView.jobsMake { _ in }
+            .byContentInsetAdjustmentBehavior(.never)
+            .byAlwaysBounceVertical(false)
+            .byKeyboardDismissMode(.interactive)
+            .byAddTo(self)
+    }()
+
     private lazy var contentView: UIView = {
         UIView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
-            .byAddTo(self)
+            .byAddTo(scrollView)
     }()
 
     private lazy var titleLabel: UILabel = {
@@ -196,16 +204,18 @@ public final class JobsAppDoorFormView: UIView {
     }
 
     public var preferredHeight: CGFloat {
+        let layoutBounds = superview?.safeAreaLayoutGuide.layoutFrame ?? bounds
+        let layout = configuration.contentLayout(in: layoutBounds)
         switch mode {
         /// 登录卡片沿用 OC 侧屏幕比例
         case .login:
-            return configuration.loginContentHeight
+            return layout.loginHeight
         /// 注册卡片高度跟随启用的字段数量
         case .register:
             return configuration.registerContentHeight
         /// 找回密码卡片沿用 OC 侧屏幕比例
         case .forgotPassword:
-            return configuration.forgotPasswordContentHeight
+            return layout.forgotHeight
         }
     }
 
@@ -296,7 +306,7 @@ private extension JobsAppDoorFormView {
                 }
             }
         }
-        contentView.snp.remakeConstraints { make in
+        scrollView.snp.remakeConstraints { make in
             make.top.bottom.equalToSuperview()
             guard showsModeSwitcher else {
                 make.left.right.equalToSuperview()
@@ -312,6 +322,12 @@ private extension JobsAppDoorFormView {
                 make.left.equalTo(modeButton.snp.right)
                 make.right.equalToSuperview()
             }
+        }
+        contentView.snp.remakeConstraints { make in
+            make.edges.equalTo(scrollView.contentLayoutGuide)
+            make.width.equalTo(scrollView.frameLayoutGuide)
+            make.height.greaterThanOrEqualTo(minimumContentHeight)
+            make.height.equalTo(scrollView.frameLayoutGuide).priority(.low)
         }
         titleLabel.snp.remakeConstraints { make in
             make.top.equalToSuperview().offset(mode == .login ? 20 : 14)
@@ -345,6 +361,14 @@ private extension JobsAppDoorFormView {
             make.bottom.equalTo(submitButton.snp.top).offset(-2)
             make.height.equalTo(14)
         }
+    }
+
+    var minimumContentHeight: CGFloat {
+        if mode == .login {
+            return 360
+        }
+        let count = CGFloat(orderedFields.count)
+        return max(394, 166 + count * 50 + max(0, count - 1) * 12)
     }
 
     func rebuildFields() {

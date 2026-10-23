@@ -21,7 +21,6 @@ import SnapKit
 
 final class TransparentRegionVC: BaseVC {
     private let horizontalInset: CGFloat = 16
-    private var didInitHoleRect = false
     private lazy var titleLabel: UILabel = {
         UILabel.jobsMake { _ in }
             .byText("iOS-UIView设置阴影效果".tr)
@@ -62,13 +61,10 @@ final class TransparentRegionVC: BaseVC {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if !didInitHoleRect {
-            didInitHoleRect = true
-            let size: CGFloat = 200
-            let x = (view.bounds.width - size) * 0.5
-            let y = view.safeAreaInsets.top + 60
-            overlayView.holeRect = CGRect(x: x, y: y, width: size, height: size)
-        }
+        let size: CGFloat = min(200, view.safeAreaLayoutGuide.layoutFrame.width)
+        let x = view.safeAreaLayoutGuide.layoutFrame.midX - size * 0.5
+        let y = view.safeAreaInsets.top + 60
+        overlayView.holeRect = CGRect(x: x, y: y, width: size, height: size)
         titleLabel.layer.shadowPath = UIBezierPath.make(
             roundedRect: titleLabel.bounds,
             cornerRadius: 9

@@ -28,6 +28,7 @@ final class GKPhotoBrowserByUIKitDemoVC: BaseVC {
     private var rows: Int = 20
     private var posts: [MomentPost] = []
     private var heightCache: [Int: CGFloat] = [:] // key = row
+    private var lastTableWidth: CGFloat = 0
     private var browser: GKPhotoBrowser?
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero, style: .insetGrouped)
@@ -107,6 +108,17 @@ final class GKPhotoBrowserByUIKitDemoVC: BaseVC {
         tableView.byReloadData()
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let width = tableView.bounds.width
+        guard width > 0, width != lastTableWidth else {
+            return
+        }
+        lastTableWidth = width
+        heightCache.removeAll()
+        tableView.byReloadData()
+    }
+
     private func applyLayoutMode() {
         switch layoutMode {
         /// 处理 .noEstimated_manualHeight 分支
@@ -156,14 +168,14 @@ extension GKPhotoBrowserByUIKitDemoVC: UITableViewDataSource, UITableViewDelegat
     }
     // ✅ 开 estimated 时：给“更准的预估高度”
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        let w = tableView.bounds.width > 0 ? tableView.bounds.width : UIScreen.main.bounds.width
+        let w = tableView.bounds.width > 0 ? tableView.bounds.width : view.bounds.width
         return MomentPostCell.heightFormula(for: posts[indexPath.row], tableWidth: w)
     }
     // ✅ 不开 estimated 时：走“手动高度 + 缓存”
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard layoutMode == .noEstimated_manualHeight else { return UITableView.automaticDimension }
         if let h = heightCache[indexPath.row] { return h }
-        let w = tableView.bounds.width > 0 ? tableView.bounds.width : UIScreen.main.bounds.width
+        let w = tableView.bounds.width > 0 ? tableView.bounds.width : view.bounds.width
         let h = MomentPostCell.heightFormula(for: posts[indexPath.row], tableWidth: w)
         heightCache[indexPath.row] = h
         return h

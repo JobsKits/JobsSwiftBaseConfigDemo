@@ -34,8 +34,20 @@ public extension Double {
 }
 // MARK: 获取屏幕相对宽高
 public extension Double {
-    static let screenWidth: CGFloat = min(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height)
-    static let screenHeight: CGFloat = max(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height)
+    // TODO: Legacy scalar properties have no scene context; use w(in:) / h(in:) in layout.
+    static var screenWidth: CGFloat {
+        return min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+    }
+    static var screenHeight: CGFloat {
+        return max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+    }
+
+    func w(in view: UIView) -> CGFloat {
+        return CGFloat(self) * view.bounds.width / 375
+    }
+    func h(in view: UIView) -> CGFloat {
+        return CGFloat(self) * view.bounds.height / 812
+    }
 
     private var py_scaleW: CGFloat { Self.screenWidth / 375 }
     private var py_scaleH: CGFloat { Self.screenHeight / 812 }

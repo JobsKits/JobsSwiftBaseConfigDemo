@@ -174,7 +174,7 @@ extension UIView {
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC
         )
         // 2) 容器
-        let container: UIView = config.container ?? (UIApplication.jobsKeyWindow() ?? Self._fallbackWindow())
+        let container: UIView = config.container ?? window ?? superview ?? Self._fallbackWindow()
         container.layoutIfNeeded()
         // 3) 添加
         if superview == nil { container.addSubview(self) }
@@ -425,6 +425,7 @@ extension UIView {
                 win.byRootViewController(UIViewController())
             };return win
         } else {
+            // TODO: No scene is available for legacy callers; supply SuspendConfig.container from the caller view.
             let win = UIWindow(frame: UIScreen.main.bounds)
                 .byWindowLevel(.alert + 1)
                 .byHidden(false)

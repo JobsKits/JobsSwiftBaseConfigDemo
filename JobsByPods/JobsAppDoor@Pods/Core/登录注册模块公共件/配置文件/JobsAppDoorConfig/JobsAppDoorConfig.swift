@@ -59,29 +59,41 @@ public struct JobsAppDoorConfig {
         return max(394, 166 + fieldsHeight + spacingHeight)
     }
 
+    // TODO: Compatibility properties have no view context. Multi-scene callers use contentLayout(in:).
+    @available(*, deprecated, message: "Use contentLayout(in:) with the caller view bounds.")
     public var registerContentY: CGFloat {
-        max(80, (UIScreen.main.bounds.height - registerContentHeight) / 2)
+        return max(80, contentLayout(in: UIScreen.main.bounds).registerY)
     }
-
+    @available(*, deprecated, message: "Use contentLayout(in:) with the caller view bounds.")
     public var loginContentHeight: CGFloat {
-        let screen = UIScreen.main.bounds
-        let usesNotchLayout = screen.height / max(screen.width, 1) > 2
-        return screen.height / (usesNotchLayout ? 2.3 : 2)
+        return contentLayout(in: UIScreen.main.bounds).loginHeight
     }
-
+    @available(*, deprecated, message: "Use contentLayout(in:) with the caller view bounds.")
     public var loginContentY: CGFloat {
-        let screen = UIScreen.main.bounds
-        let usesNotchLayout = screen.height / max(screen.width, 1) > 2
-        return screen.height / (usesNotchLayout ? 4 : 5)
+        return contentLayout(in: UIScreen.main.bounds).loginY
     }
-
+    @available(*, deprecated, message: "Use contentLayout(in:) with the caller view bounds.")
     public var forgotPasswordContentHeight: CGFloat {
-        let screen = UIScreen.main.bounds
-        let usesNotchLayout = screen.height / max(screen.width, 1) > 2
-        return screen.height / (usesNotchLayout ? 1.6 : 1.3)
+        return contentLayout(in: UIScreen.main.bounds).forgotHeight
+    }
+    @available(*, deprecated, message: "Use contentLayout(in:) with the caller view bounds.")
+    public var forgotPasswordContentY: CGFloat {
+        return contentLayout(in: UIScreen.main.bounds).forgotY
     }
 
-    public var forgotPasswordContentY: CGFloat {
-        UIScreen.main.bounds.height / 4
+    public func contentLayout(in bounds: CGRect) -> (registerY: CGFloat,
+                                                    loginHeight: CGFloat,
+                                                    loginY: CGFloat,
+                                                    forgotHeight: CGFloat,
+                                                    forgotY: CGFloat) {
+        let height = max(0, bounds.height)
+        let tall = height / max(bounds.width, 1) > 2
+        return (
+            registerY: max(0, (height - registerContentHeight) / 2),
+            loginHeight: height / (tall ? 2.3 : 2),
+            loginY: height / (tall ? 4 : 5),
+            forgotHeight: height / (tall ? 1.6 : 1.3),
+            forgotY: height / 4
+        )
     }
 }

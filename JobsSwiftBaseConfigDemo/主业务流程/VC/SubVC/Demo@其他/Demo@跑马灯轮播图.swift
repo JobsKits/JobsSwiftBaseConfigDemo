@@ -1079,7 +1079,6 @@ final class JobsMarqueeDemoVC: BaseVC {
                     .kf_placeholderImage("唐老鸭".img)
                     .kf_options([
                         .processor(DownsamplingImageProcessor(size: CGSize(width: 500, height: 200))),
-                        .scaleFactor(UIScreen.main.scale),
                         .cacheOriginalImage,
                         .transition(.fade(0.25)),
                         .retryStrategy(DelayRetryStrategy(maxRetryCount: 2, retryInterval: .seconds(1)))
@@ -1106,7 +1105,6 @@ final class JobsMarqueeDemoVC: BaseVC {
                     .kf_placeholderImage("唐老鸭".img)
                     .kf_options([
                         .processor(DownsamplingImageProcessor(size: CGSize(width: 500, height: 200))),
-                        .scaleFactor(UIScreen.main.scale),
                         .cacheOriginalImage,
                         .transition(.fade(0.25)),
                         .retryStrategy(DelayRetryStrategy(maxRetryCount: 2, retryInterval: .seconds(1)))
@@ -1133,7 +1131,6 @@ final class JobsMarqueeDemoVC: BaseVC {
                     .kf_placeholderImage("唐老鸭".img)
                     .kf_options([
                         .processor(DownsamplingImageProcessor(size: CGSize(width: 500, height: 200))),
-                        .scaleFactor(UIScreen.main.scale),
                         .cacheOriginalImage,
                         .transition(.fade(0.25)),
                         .retryStrategy(DelayRetryStrategy(maxRetryCount: 2, retryInterval: .seconds(1)))

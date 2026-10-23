@@ -193,7 +193,7 @@ public final class JobsSplashVC: BaseVC {
             skipButton.byFrame(customFrame)
         } else {
             skipButton.byFrame(CGRect(
-                x: view.bounds.width - configuration.skipButtonInsets.right - skipButtonDynamicWidth,
+                x: max(view.safeAreaInsets.left, view.bounds.width - view.safeAreaInsets.right - configuration.skipButtonInsets.right - skipButtonDynamicWidth),
                 y: view.safeAreaInsets.top + configuration.skipButtonInsets.top,
                 width: skipButtonDynamicWidth,
                 height: 36

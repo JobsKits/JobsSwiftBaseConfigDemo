@@ -16,6 +16,7 @@ public final class JobsAppDoorVC: JobsAppDoorBaseVC {
 
     private var hasRunEntranceAnimation = false
     private var keyboardVisible = false
+    private var keyboardLift: CGFloat = 0
     private var startsInRegisterMode = false
     private var panelTopConstraint: Constraint?
     private var panelHeightConstraint: Constraint?
@@ -26,10 +27,10 @@ public final class JobsAppDoorVC: JobsAppDoorBaseVC {
             .byCornerRadius(8)
             .byClipsToBounds(true)
             .byAddTo(view) { [unowned self] make in
-                make.left.equalToSuperview().offset(20)
-                make.right.equalToSuperview().inset(20)
-                panelTopConstraint = make.top.equalToSuperview().offset(configuration.loginContentY).constraint
-                panelHeightConstraint = make.height.equalTo(configuration.loginContentHeight).constraint
+                make.left.equalTo(view.safeAreaLayoutGuide.snp.left).offset(20)
+                make.right.equalTo(view.safeAreaLayoutGuide.snp.right).inset(20)
+                panelTopConstraint = make.top.equalToSuperview().offset(panelTop(for: .login)).constraint
+                panelHeightConstraint = make.height.equalTo(panelHeight(for: .login)).constraint
             }
     }()
 
@@ -76,6 +77,12 @@ public final class JobsAppDoorVC: JobsAppDoorBaseVC {
         }
     }
 
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        panelTopConstraint?.update(offset: panelTop(for: currentMode))
+        panelHeightConstraint?.update(offset: panelHeight(for: currentMode))
+    }
+
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         guard !hasRunEntranceAnimation else { return }
@@ -85,8 +92,8 @@ public final class JobsAppDoorVC: JobsAppDoorBaseVC {
 
     override func handleKeyboardOffset(_ offset: CGFloat, keyboardVisible: Bool) {
         self.keyboardVisible = keyboardVisible
-        let top = panelTop(for: currentMode)
-        panelTopConstraint?.update(offset: keyboardVisible ? top - min(108, offset * 0.32) : top)
+        keyboardLift = keyboardVisible ? min(108, offset * 0.32) : 0
+        panelTopConstraint?.update(offset: panelTop(for: currentMode))
         updateLogoVisibility(animated: true)
         UIView.jobsAnimateWithOptions(
             0.25,
@@ -108,14 +115,14 @@ private extension JobsAppDoorVC {
     func setupLayout() {
         logoView.configure(style: .wide)
         logoView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
+            make.centerX.equalTo(view.safeAreaLayoutGuide)
             make.bottom.equalTo(panelView.snp.top).offset(-50)
             make.size.equalTo(CGSize(width: 150, height: 50))
         }
         installPanelLayout(mode: .login)
         customerServiceButton.snp.makeConstraints { make in
             make.top.equalTo(panelView.snp.bottom).offset(12)
-            make.centerX.equalToSuperview()
+            make.centerX.equalTo(view.safeAreaLayoutGuide)
             make.width.equalTo(118)
             make.height.equalTo(38)
         }
@@ -180,6 +187,8 @@ private extension JobsAppDoorVC {
         guard mode != currentMode else { return }
         cancelSubmission()
         view.endEditing(true)
+        keyboardLift = 0
+        keyboardVisible = false
         view.layoutIfNeeded()
         currentMode = mode
         formView.apply(mode: mode)
@@ -242,30 +251,31 @@ private extension JobsAppDoorVC {
     }
 
     func panelTop(for mode: JobsAppDoorMode) -> CGFloat {
-        switch mode {
-        /// 登录面板使用屏幕四分之一附近的基准位置
-        case .login:
-            return configuration.loginContentY
-        /// 注册面板随字段数量垂直居中
-        case .register:
-            return configuration.registerContentY
-        /// 找回密码面板使用屏幕四分之一位置
-        case .forgotPassword:
-            return configuration.forgotPasswordContentY
-        }
+        return panelFrame(for: mode).minY
     }
 
     func panelHeight(for mode: JobsAppDoorMode) -> CGFloat {
+        return panelFrame(for: mode).height
+    }
+
+    func panelFrame(for mode: JobsAppDoorMode) -> CGRect {
+        let layout = configuration.contentLayout(in: view.bounds.inset(by: view.safeAreaInsets))
+        let preferredY: CGFloat
+        let preferredHeight: CGFloat
         switch mode {
-        /// 登录面板沿用 OC 侧屏幕比例
         case .login:
-            return configuration.loginContentHeight
-        /// 注册面板高度跟随字段数量
+            preferredY = layout.loginY
+            preferredHeight = layout.loginHeight
         case .register:
-            return configuration.registerContentHeight
-        /// 找回密码面板沿用 OC 侧屏幕比例
+            preferredY = layout.registerY
+            preferredHeight = configuration.registerContentHeight
         case .forgotPassword:
-            return configuration.forgotPasswordContentHeight
+            preferredY = layout.forgotY
+            preferredHeight = layout.forgotHeight
         }
+        return formLayoutFrame(preferredY: preferredY,
+                               preferredHeight: preferredHeight,
+                               keyboardLift: keyboardLift,
+                               footerHeight: 62)
     }
 }

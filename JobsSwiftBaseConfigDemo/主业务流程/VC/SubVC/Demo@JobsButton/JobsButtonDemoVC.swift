@@ -70,7 +70,7 @@ final class JobsButtonDemoVC: BaseVC {
             .jobs_setImage("https://picsum.photos/600/200?random=11",
                            fallback: "Ani".img,
                            shimmerConfig: nil,
-                           targetSize: CGSize(width: UIScreen.main.bounds.width - horizontalInset * 2, height: itemHeight))
+                           targetSize: nil)
             .addTapActionAppend { _ in
                 print("btn1 tap #1")
                 "点击了悬浮按钮：上图下文（tap #1）".tr.toast
@@ -126,7 +126,7 @@ final class JobsButtonDemoVC: BaseVC {
             .jobs_setImage("https://picsum.photos/600/200?random=22",
                            fallback: "Ani".img,
                            shimmerConfig: nil,
-                           targetSize: CGSize(width: UIScreen.main.bounds.width - horizontalInset * 2, height: itemHeight))
+                           targetSize: nil)
             .addTapActionAppend { _ in
                 print("btn2 tap #1")
                 "点击了悬浮按钮：上文下图（tap #1）".tr.toast
@@ -172,7 +172,7 @@ final class JobsButtonDemoVC: BaseVC {
             .jobs_setImage("https://picsum.photos/600/200?random=33",
                            fallback: "Ani".img,
                            shimmerConfig: nil,
-                           targetSize: CGSize(width: UIScreen.main.bounds.width - horizontalInset * 2, height: itemHeight))
+                           targetSize: nil)
             .addLongPressActionAppend { gr in
                 guard gr.state == .began else { return }
                 print("btn3 longPress #1 began")
@@ -220,7 +220,7 @@ final class JobsButtonDemoVC: BaseVC {
             .jobs_setImage("https://picsum.photos/600/200?random=44",
                            fallback: "Ani".img,
                            shimmerConfig: nil,
-                           targetSize: CGSize(width: UIScreen.main.bounds.width - horizontalInset * 2, height: itemHeight))
+                           targetSize: nil)
             .addTapActionAppend { _ in
                 print("btn4 tap")
                 "点击了悬浮按钮：左文右图".tr.toast

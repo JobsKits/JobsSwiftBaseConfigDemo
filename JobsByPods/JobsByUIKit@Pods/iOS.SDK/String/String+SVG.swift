@@ -17,20 +17,28 @@ extension String {
     private static let _svgCache = NSCache<NSString, UIImage>()
     /// "会员卡".svg  -> UIImage?
     /// 支持自动补 .svg；默认从 main bundle 取资源
+    @available(*, deprecated, message: "Use svg(size:in:traitCollection:) with the rendering view traits.")
     public var svg: UIImage? {
         Self.svgImage(named: self,
                              in: .main,
                              size: nil,
-                             scale: UIScreen.main.scale)
+                             scale: UITraitCollection.current.displayScale)
     }
     /// 可选：指定输出尺寸
+    @available(*, deprecated, message: "Use svg(size:in:traitCollection:) or pass an explicit scale.")
     public func svg(size: CGSize?,
                     in bundle: Bundle = .main,
-                    scale: CGFloat = UIScreen.main.scale) -> UIImage? {
+                    scale: CGFloat = UITraitCollection.current.displayScale) -> UIImage? {
         Self.svgImage(named: self,
                              in:bundle,
                              size: size,
                              scale: scale)
+    }
+
+    public func svg(size: CGSize? = nil,
+                    in bundle: Bundle = .main,
+                    traitCollection: UITraitCollection) -> UIImage? {
+        Self.svgImage(named: self, in: bundle, size: size, scale: traitCollection.displayScale)
     }
 
     private static func svgImage(named name: String,

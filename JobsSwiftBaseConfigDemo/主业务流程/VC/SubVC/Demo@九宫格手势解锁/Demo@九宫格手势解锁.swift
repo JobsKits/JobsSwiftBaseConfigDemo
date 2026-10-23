@@ -84,10 +84,12 @@ final class GestureUnlockDemoVC: BaseVC {
     private lazy var unlockView: GestureUnlockView = {
         GestureUnlockView()
             .byBackgroundColor(JobsCor.clear)
-            .byAddTo(view) { [unowned self] make in
+            .byAddTo(view) { [unowned self] unlock, make in
                 make.top.equalTo(self.hintLabel.snp.bottom).offset(16)
-                make.centerX.equalToSuperview()
-                make.size.equalTo(CGSizeMake(ScreenWidth() - 50.w, ScreenWidth() - 50.w))
+                make.centerX.equalTo(view.safeAreaLayoutGuide)
+                make.width.equalTo(view.safeAreaLayoutGuide).offset(-50).priority(.high)
+                make.height.equalTo(unlock.snp.width)
+                make.bottom.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.bottom).inset(76)
             }
     }()
 

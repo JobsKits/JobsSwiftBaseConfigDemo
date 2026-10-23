@@ -417,7 +417,7 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     }
     // ============================== Utils ==============================
     private func estimatedRightWidth() -> CGFloat {
-        let tableW = UIScreen.main.bounds.width
+        let tableW = contentView.bounds.width
         return max(0, tableW - (24 + 24 + 40 + 10 + 12))
     }
     // ============================== Height Formula ==============================

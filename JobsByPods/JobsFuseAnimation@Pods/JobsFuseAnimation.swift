@@ -200,7 +200,7 @@ extension UIView {
                 let t = CAShapeLayer.jobsMake { _ in }
                 t
                     .byName("jobs.fuse.outerRing.track")
-                    .byContentsScale(UIScreen.main.scale)
+                    .byContentsScale(traitCollection.displayScale)
                     .byFillColor(config.fillColor)
                     .byStrokeColor(trackColor)
                     .byLineWidth(config.lineWidth)
@@ -217,7 +217,7 @@ extension UIView {
             let ring = CAShapeLayer.jobsMake { _ in }
             ring
                 .byName("jobs.fuse.outerRing.progress")
-                .byContentsScale(UIScreen.main.scale)
+                .byContentsScale(traitCollection.displayScale)
                 .byFillColor(config.fillColor)
                 .byStrokeColor(config.strokeColor)
                 .byLineWidth(config.lineWidth)
@@ -233,7 +233,7 @@ extension UIView {
                 let marker = CAShapeLayer.jobsMake { _ in }
                 marker
                     .byName("jobs.fuse.outerRing.threshold")
-                    .byContentsScale(UIScreen.main.scale)
+                    .byContentsScale(traitCollection.displayScale)
                     .byFillColor(config.fillColor)
                     .byStrokeColor(config.thresholdColor)
                     .byLineWidth(config.lineWidth + 3)
@@ -398,11 +398,13 @@ extension UIView {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         for layer in [jobs_fuseTrackLayer, ring].compactMap({ $0 }) {
-            layer.byFrame(bounds)
+            layer.byContentsScale(traitCollection.displayScale)
+                .byFrame(bounds)
             layer.path = path
             layer.lineWidth = config.lineWidth
         }
         jobs_fuseThresholdLayer?
+            .byContentsScale(traitCollection.displayScale)
             .byFrame(bounds)
             .byPath(path)
             .byLineWidth(config.lineWidth + 3)

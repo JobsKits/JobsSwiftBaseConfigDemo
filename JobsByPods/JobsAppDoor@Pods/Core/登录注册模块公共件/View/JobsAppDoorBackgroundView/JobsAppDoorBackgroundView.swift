@@ -30,6 +30,8 @@ final class JobsAppDoorBackgroundView: UIView {
             }
     }()
 
+    private var configuration: JobsAppDoorConfig?
+    private var loadedResourceName: String?
     private var player: AVPlayer?
     private var playerLayer: AVPlayerLayer?
     private var playbackObserver: NSObjectProtocol?
@@ -54,25 +56,37 @@ final class JobsAppDoorBackgroundView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         playerLayer?.frame = bounds
+        if let configuration {
+            updateVideo(configuration)
+        }
     }
 
     func configure(_ configuration: JobsAppDoorConfig) {
+        self.configuration = configuration
         imageView.byImage(JobsAppDoorResource.image(named: configuration.backgroundImageName))
+        updateVideo(configuration)
+    }
+
+    private func updateVideo(_ configuration: JobsAppDoorConfig) {
         switch configuration.backgroundType {
         /// 处理图片背景分支
         case .image:
             stopVideo()
         /// 处理循环视频背景分支
         case .video:
-            let screenRatio = UIScreen.main.bounds.height / max(UIScreen.main.bounds.width, 1)
+            let screenRatio = bounds.height / max(bounds.width, 1)
             let resourceName = screenRatio > 2
                 ? configuration.notchVideoResourceName
                 : configuration.compactVideoResourceName
+            guard bounds.width > 0, bounds.height > 0, resourceName != loadedResourceName else {
+                return
+            }
             guard let url = JobsAppDoorResource.videoURL(named: resourceName) else {
                 stopVideo()
                 return
             }
             prepareVideo(url: url, muted: configuration.videoMuted)
+            loadedResourceName = resourceName
         }
     }
 
@@ -128,5 +142,6 @@ private extension JobsAppDoorBackgroundView {
         player = nil
         playerLayer?.removeFromSuperlayer()
         playerLayer = nil
+        loadedResourceName = nil
     }
 }

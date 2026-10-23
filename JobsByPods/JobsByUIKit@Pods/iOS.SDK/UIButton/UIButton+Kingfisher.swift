@@ -233,7 +233,7 @@ extension UIButton {
         opts.append(.processor(DownsamplingImageProcessor(size: targetPointSize)))
         // 2) 确保 scaleFactor 一致
         if !opts.contains(where: { if case .scaleFactor = $0 { return true } else { return false } }) {
-            opts.append(.scaleFactor(UIScreen.main.scale))
+            opts.append(.scaleFactor(traitCollection.displayScale))
         };return opts
     }
 }

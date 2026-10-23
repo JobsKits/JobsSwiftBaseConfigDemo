@@ -37,7 +37,7 @@ final class CashbackRootVC: BaseVC {
             .byTitleColorGradientEnabled(true)
             // 推荐：用 CoreText 测宽，规避 NSString/AttributedString 在少数环境下的崩
             .byWidthForTitle { [unowned self] title in
-                jobsCTTextWidth(title, font: segmentedDataSource.titleNormalFont)
+                jobsCTTextWidth(title, font: segmentedDataSource.titleNormalFont, traitCollection: traitCollection)
             }
     }()
     // MARK: - Indicator（懒加载 + 链式）

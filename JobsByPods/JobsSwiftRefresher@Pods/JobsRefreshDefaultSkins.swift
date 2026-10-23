@@ -121,6 +121,11 @@ final class JobsLoadingIndicator: UIView {
         spinner.byAddTo(self)
         imageView.byAddTo(self)
         spinner.stopAnimating()
+        if #available(iOS 17.0, *) {
+            registerForTraitChanges([UITraitDisplayScale.self]) { (view: JobsLoadingIndicator, _: UITraitCollection) in
+                view.rebuildIfNeeded()
+            }
+        }
     }
     // MARK: - State
     func showRefreshing() {
@@ -313,7 +318,7 @@ final class JobsLoadingIndicator: UIView {
         for index in 0..<count {
             guard let cgImage = CGImageSourceCreateImageAtIndex(source, index, nil) else { continue }
             duration += gifDelay(source: source, index: index)
-            images.append(UIImage(cgImage: cgImage, scale: UIScreen.main.scale, orientation: .up))
+            images.append(UIImage(cgImage: cgImage, scale: traitCollection.displayScale, orientation: .up))
         }
         guard !images.isEmpty else { return nil };return UIImage.animatedImage(with: images, duration: max(duration, 0.08 * Double(images.count)))
     }
