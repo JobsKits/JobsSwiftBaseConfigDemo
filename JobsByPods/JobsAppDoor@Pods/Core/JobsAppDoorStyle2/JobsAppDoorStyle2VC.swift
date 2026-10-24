@@ -89,9 +89,9 @@ private extension JobsAppDoorStyle2VC {
 
     func install(form: JobsAppDoorFormView, mode: JobsAppDoorMode, initialOffset: CGFloat) {
         form.byAddTo(view) { make in
-            self.centerXConstraints[mode] = make.centerX.equalTo(view.safeAreaLayoutGuide).offset(initialOffset).constraint
+            self.centerXConstraints[mode] = make.centerX.equalTo(self.view.safeAreaLayoutGuide).offset(initialOffset).constraint
             self.topConstraints[mode] = make.top.equalToSuperview().offset(self.cardTop(for: mode)).constraint
-            make.width.equalTo(view.safeAreaLayoutGuide).offset(-40)
+            make.width.equalTo(self.view.safeAreaLayoutGuide).offset(-40)
             self.heightConstraints[mode] = make.height.equalTo(self.cardHeight(for: mode)).constraint
         }
     }

@@ -2235,7 +2235,7 @@ XBT 是仓库外的本机依赖，当前共享 Scheme 使用固定用户绝对�
 
 **GitHub Actions 模拟器构建**
 
-[模拟器工作流](./.github/workflows/build_simulator_app.yml)在推送 / 拉取请求到 `main` 或手动触发时运行，使用 `macos-15` 的 arm64 runner，按版本选择已安装的 Xcode 26；缺少该版本时明确失败。CI 保留 Flutter 安装准备、SwiftBlock 双架构编译检查、构建验证器回归、核心 / 网络回归和全部自建 Pod 编译。
+[模拟器工作流](./.github/workflows/build_simulator_app.yml)在推送 / 拉取请求到 `main` 或手动触发时运行，使用官方 `xcode-27` 的 arm64 runner，选择镜像内的 Xcode 27.1；Xcode、iOS 真机 SDK 或模拟器 SDK 低于 27.1 时明确失败。`JOBS_XCODE_DEVELOPER_DIR` 可指定其它满足同一版本门禁的开发目录，实际版本与路径写入诊断日志。CI 保留 Flutter 安装准备、SwiftBlock 双架构编译检查、构建验证器回归、核心 / 网络回归和全部自建 Pod 编译。
 
 依赖安装前，[模拟器选择器](./.github/tests/SimulatorRuntime/select_simulator.rb)读取当前 Xcode 的 Simulator SDK 版本，只从同主版本、可用且支持 arm64 的 iOS runtime 中选择 iPhone，按数字版本选最新可用候选；已启动的旧系统设备不会抢占。缺少匹配设备时立即失败并展示 runtime 清单，不自动下载数 GB 的运行时。随后以最低 iOS 15.6 编译并实际运行 [WebKit 加载探针](./.github/tests/SimulatorRuntime/WebKitRuntimeProbe.swift)，在正式构建前确认所选模拟器能加载 Swift WebKit overlay。该检查覆盖 [iOS 18.5 模拟器缺少 WebKit 兼容链接的问题](https://bugs.webkit.org/show_bug.cgi?id=293831)，不提高 App 的最低系统版本，也不修改系统运行时或弱化链接。
 
@@ -13187,7 +13187,7 @@ ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --host-only --configuratio
 | 类别 | 名称 | 当前配置 / 依据 | 锁文件入库状态 |
 | --- | --- | --- | --- |
 | 语言 | <u>[**Swift**](https://www.swift.org/)</u> | 主 target 的 `SWIFT_VERSION = 5.0` 表示语言模式；本地 SPM 示例 `swift-tools-version: 6.0`，不等于整工程固定 Swift 编译器版本 | 编译器具体小版本未锁定 |
-| 构建工具 | [**Xcode**](https://developer.apple.com/xcode) / iOS SDK | `.github/workflows/build_simulator_app.yml` 选择 Xcode `26` 系列；工程 `LastUpgradeCheck=2620` 只是迁移标记。本机安装版本未执行命令核验 | 未固定 Xcode 小版本或 SDK build |
+| 构建工具 | [**Xcode**](https://developer.apple.com/xcode) / iOS SDK | CI 基线（2026-10-24）为 `xcode-27` runner / Xcode `27.1`，Xcode 与两种 iOS SDK 均须至少 `27.1`；工程 `LastUpgradeCheck=2620` 只是迁移标记。本机命令已核验 Xcode `27.1`（`27A9275`）及模拟器 SDK `27.1` | 选择镜像内 `27.1` 路径；SDK build 随镜像更新 |
 | 包管理器 | [**CocoaPods**](https://cocoapods.org/) | `Podfile.lock` 记录 `1.17.0`；未以 Gemfile / Bundler 锁住 CocoaPods 可执行文件 | `Podfile.lock` 已入库；无根 Gemfile.lock |
 | 最低系统 | iOS | 主 App、测试与 Widget target 的 Debug / Release 显式为 `15.6`；project 默认 `26.2` 由 target 覆盖，不能当主 App 最低系统 | `project.pbxproj` / `Podfile` 已入库 |
 | 内嵌引擎 | Flutter / Unity | `my_flutter/` 由 Pod helper 条件接入，`Unity/xcode_effectTest/` 为真机桥接；引擎版本未在本节核实，不能用旧教程版本代替 | Flutter `my_flutter/pubspec.lock` 是否可用见实际受控文件；Unity 导出工程不是通用工具链锁 |
@@ -13564,7 +13564,7 @@ xcodebuild \
 | --- | --- |
 | dev / test / prod | Debug 的 `启动入口/AppDelegate+JobsDebugPanel.swift` 及 JobsNetworking 调试环境负责切换；各 Demo 的远端地址仍需单独核对，Release 不应包含调试 Pod。未定义统一生产发布地址矩阵 |
 | pod 下载失败 | 先看 ScriptsByPods 的网络适配与 Specs 选源说明；已有代理仅在本次安装进程验证继承。不要为网络问题删除 Podfile.lock、Pods 或改第三方源码 |
-| Swift 编译模式 / SPM 不匹配 | App 为 Swift 5 模式，本地包 manifest 要求 Swift tools 6；使用工作流声明的 Xcode 26 系列后再核验具体小版本 |
+| Swift 编译模式 / SPM 不匹配 | App 为 Swift 5 模式，本地包 manifest 要求 Swift tools 6；使用工作流声明的 Xcode 27.1 或更新版本，并核验实际 SDK 不低于 27.1 |
 | Simulator 看不到 Unity | 真机条件才加载 Unity；模拟器跳过是当前设计。Flutter helper 缺失时 Podfile 会跳过对应集成，原生 App 可用性与跨端 Demo 可用性分开验收 |
 | 构建产物目录 | 主 App Build Phase 会调用 `ScriptsByDevTools/save_device_ipa_after_build.command/`；输出目录是可丢弃产物，操作前阅读其 README，不把文档或源码放进输出目录 |
 | 数据库示例冲突 | FMDB 与 WCDB 条件互斥，当前声明 WCDB；不要同时启用后忽略兼容配置 |

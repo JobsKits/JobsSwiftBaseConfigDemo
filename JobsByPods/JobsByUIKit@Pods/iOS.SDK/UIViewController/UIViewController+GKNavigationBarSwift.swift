@@ -568,7 +568,7 @@ extension UIViewController {
             .byAddTo(rowButton) { make in
                 make.left.equalToSuperview().inset(12)
                 make.right.bottom.equalToSuperview()
-                make.height.equalTo(1 / traitCollection.displayScale)
+                make.height.equalTo(1 / self.traitCollection.displayScale)
             }
     }
     // MARK: - 内置：默认“< 返回”按钮（SF Symbol: chevron.left）

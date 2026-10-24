@@ -13,7 +13,7 @@ import UIKit
 
 import ObjectiveC
 import JobsSwiftBaseDefines
-import JobsImageTools
+import enum JobsImageTools.JobsImageCacheCleaner
 /// 用于区分不同图片加载器的 token 空间，避免互相干扰。
 
 internal enum JobsButtonImageLoader: UInt8 {

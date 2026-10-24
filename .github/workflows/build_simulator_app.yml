@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   build-simulator-app:
-    runs-on: macos-15
+    runs-on: xcode-27
     timeout-minutes: 180
     permissions:
       actions: write
@@ -31,31 +31,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Select Xcode 26 SDK
+      - name: Select Xcode and SDKs for iPhone Duo
+        shell: bash
         run: |
-          selected_developer_dir=""
-
-          if [[ -n "${XCODE_26_DEVELOPER_DIR:-}" && -d "${XCODE_26_DEVELOPER_DIR}" ]]; then
-            selected_developer_dir="${XCODE_26_DEVELOPER_DIR}"
-          else
-            latest_xcode="$(ruby -e 'puts Dir.glob("/Applications/Xcode_26*.app").max_by { |path| Gem::Version.new(File.basename(path)[/\d+(?:\.\d+)*/, 0]) }')"
-            if [[ -n "${latest_xcode}" ]]; then
-              selected_developer_dir="${latest_xcode}/Contents/Developer"
-            fi
-          fi
-
-          if [[ -n "${selected_developer_dir}" ]]; then
-            export DEVELOPER_DIR="${selected_developer_dir}"
-            echo "DEVELOPER_DIR=${DEVELOPER_DIR}" >> "${GITHUB_ENV}"
-          else
-            echo "::error::Xcode 26 is required but is not installed on this runner."
+          set -euo pipefail
+          selected_developer_dir="${JOBS_XCODE_DEVELOPER_DIR:-/Applications/Xcode_27.1.app/Contents/Developer}"
+          if [[ ! -d "${selected_developer_dir}" ]]; then
+            echo "::error::Xcode 27.1 or newer is required; developer directory not found: ${selected_developer_dir}"
             exit 1
           fi
 
-          xcode_version="$(xcodebuild -version)"
-          echo "${xcode_version}"
-          grep -Eq '^Xcode 26([.]|$)' <<< "${xcode_version}"
-          xcode-select -p
+          export DEVELOPER_DIR="${selected_developer_dir}"
+          echo "DEVELOPER_DIR=${DEVELOPER_DIR}" >> "${GITHUB_ENV}"
+          xcodebuild -version | tee "${RUNNER_TEMP}/xcode-toolchain.log"
+          xcode_version="$(xcodebuild -version | sed -n 's/^Xcode //p')"
+          device_sdk="$(xcrun --sdk iphoneos --show-sdk-version)"
+          simulator_sdk="$(xcrun --sdk iphonesimulator --show-sdk-version)"
+          printf 'Selected developer directory: %s\niOS SDK: %s\nSimulator SDK: %s\n' \
+            "${DEVELOPER_DIR}" "${device_sdk}" "${simulator_sdk}" \
+            | tee -a "${RUNNER_TEMP}/xcode-toolchain.log"
+          ruby -e 'require "rubygems"; minimum = Gem::Version.new("27.1"); ARGV.each { |version| abort "::error::Xcode and both iOS SDKs must be >= #{minimum}; found #{version}" if version.empty? || Gem::Version.new(version) < minimum }' \
+            "${xcode_version}" "${device_sdk}" "${simulator_sdk}"
 
       - name: Show build environment
         run: |
@@ -220,6 +216,7 @@ jobs:
           name: Simulator-Build-Diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             ${{ runner.temp }}/pod-install.log
+            ${{ runner.temp }}/xcode-toolchain.log
             ${{ runner.temp }}/simulator-sdk-version.txt
             ${{ runner.temp }}/simulator-runtimes.json
             ${{ runner.temp }}/simulator-devices.json
