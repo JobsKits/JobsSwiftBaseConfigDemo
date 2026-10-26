@@ -1,8 +1,9 @@
 #!/bin/zsh
+# shell: zsh
 # 脚本自述：
 # - 检查 FVM、Flutter stable 与 iOS 缓存；Homebrew 安装失败时回退 FVM 官方安装器。
 # - 会安装工具、更新 Flutter 缓存及 my_flutter 生成文件；官方安装器可能迁移旧 FVM。
-# - 独立运行先回车确认；Podfile 已统一确认时使用 JOBS_SKIP_README=1。
+# - 每次交互运行先回车确认；check-only / skip 不执行，显式自动配置保留原有范围。
 
 SCRIPT_DIR=""
 SCRIPT_PATH=""
@@ -60,7 +61,7 @@ prepare_script_context() {
   MY_FLUTTER_DIR="${ROOT_DIR}/my_flutter"
   OFFICIAL_FVM_DIR="$(resolve_official_fvm_dir)"
 }
-# 打印固定自述；已由 Podfile 确认或显式自动配置时避免重复阻塞。
+# 打印固定自述；模式跳过与显式自动配置分别处理，钩子标记不代替确认。
 show_script_intro_and_wait() {
   prepare_script_context
   local title_style="" body_style="" reset_style=""
@@ -73,7 +74,18 @@ show_script_intro_and_wait() {
   printf '%s%s%s\n' "$body_style" '1、复用可用 FVM；缺失时尝试 Homebrew，失败后自动使用 FVM 官方安装器。' "$reset_style"
   printf '%s%s%s\n' "$body_style" '2、按需准备 Flutter stable、iOS 引擎及 my_flutter 依赖；官方安装器可能迁移旧 FVM。' "$reset_style"
   printf '%s日志：%s；按 Ctrl+C 可取消。%s\n' "$body_style" "$LOG_FILE" "$reset_style"
-  [[ "${JOBS_SKIP_README:-}" == 1 || "${JOBS_FLUTTER_AUTO_SETUP:-}" == 1 ]] && return 0
+  case "${JOBS_POD_INSTALL_INTERACTION:-interactive}" in
+    check-only|skip)
+      printf '%s\n' "模式：${JOBS_POD_INSTALL_INTERACTION}，跳过 Flutter 写入任务。"
+      exit 0
+      ;;
+    interactive) ;;
+    *)
+      printf '%s\n' '无效的 JOBS_POD_INSTALL_INTERACTION；仅支持 interactive、check-only、skip。' >&2
+      exit 2
+      ;;
+  esac
+  [[ "${JOBS_FLUTTER_AUTO_SETUP:-}" == 1 ]] && return 0
   if [[ ! -t 0 ]]; then
     printf '%s\n' '当前无交互输入；请在终端运行，或显式设置 JOBS_FLUTTER_AUTO_SETUP=1。' >&2
     exit 1
@@ -101,7 +113,7 @@ ask_any_to_run() {
   fi
 
   printf "%s（直接回车跳过；输入任意字符后回车执行）：" "$message"
-  IFS= read -r answer || true
+  IFS= read -r answer || return 1
   [[ -n "$answer" ]]
 }
 # 为危险操作保留精确 YES 确认。
@@ -118,7 +130,7 @@ confirm_yes() {
   warn_echo "⚠ ${message}"
   gray_echo "危险操作必须输入 YES 后回车；其它输入一律取消。"
   printf "➤ "
-  IFS= read -r input || true
+  IFS= read -r input || return 1
   [[ "$input" == "YES" ]]
 }
 # 清理拖入路径的外层引号。

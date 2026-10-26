@@ -463,7 +463,7 @@
       --no-repo-update
   ```
 
-  `Podfile` 跳过 Flutter 环境准备、SPM 验证、Unity 缓存清理、第三方兼容源码补丁和安装后 PIF 恢复；依赖解析、正常 Flutter Pod 配置与 Xcode 工程集成仍执行。前置依赖报告与集成后 CodeGraph 均只作工具链检查，无后台索引和报告写入；公共 Specs 选源仍同步测速。日志保留 CocoaPods 输出与系统临时目录中的前置检查、选源日志。`--no-repo-update` 跳过安装前的源更新，仍可能创建缺失的源并获取需要的规格，不保证完全离线。
+  `Podfile` 跳过 Flutter 环境准备、SPM 验证、Unity 缓存清理、第三方兼容源码补丁和安装后 PIF 恢复；依赖解析、正常 Flutter Pod 配置与 Xcode 工程集成仍执行。纯净模式同时跳过前置报告和集成后可选辅助任务，不写报告或索引；公共 Specs 选源仍同步测速。日志保留 CocoaPods 输出与系统临时目录中的选源日志。`--no-repo-update` 跳过安装前的源更新，仍可能创建缺失的源并获取需要的规格，不保证完全离线。
 
   换电脑后若 `Generated.xcconfig` / `flutter_export_environment.sh` 仍指向旧 SDK 或 module，先按[换电脑排查](./ScriptsByPods/拉取Flutter侧三方资源.sh/README.md#machine-migration)正常运行准备流程；`JOBS_POD_INSTALL_PURE=1` 会跳过配置修复，不能用于恢复失效的 Flutter 路径。
 
@@ -2143,26 +2143,35 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
 
 适配器只在当前进程映射锁文件公共源，保留锁定版本、校验和及私有源；不删除 Pods / 锁文件，不自动升级或二次安装。两条线路均失败时尝试锁文件源、已有缓存或默认 CDN，脚本异常时告警并继续 CocoaPods 自身流程，不能保证离线安装成功。迁移时保留 `ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/` 整包与 Podfile 的加载代码。
 
-[Podfile](./Podfile) 顶部加载 `./ScriptsByPods/【MacOS】📦Pod Install离线保护.command/jobs_pod_install_offline_guard.rb`；统一调度入口是同目录的 `【MacOS】📦Pod Install离线保护.command`。详见[本地脚本保护说明](<./ScriptsByPods/【MacOS】📦Pod Install离线保护.command/README.md>)。
+[Podfile](./Podfile) 顶部加载 `./ScriptsByPods/【MacOS】📦Pod Install离线保护.command/jobs_pod_install_offline_guard.rb`，在依赖解析前同步运行同包调度器的 `--preflight`；`post_integrate` 同步运行 `--post-integrate`。两阶段都继承当前终端，依次展示自述、等待确认并显示真实结果。详见[本地脚本保护说明](<./ScriptsByPods/【MacOS】📦Pod Install离线保护.command/README.md>)。
 
-| 时机                                      | 挂载脚本 / 入口                                              | 实际行为与产物                                               |
-| ----------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `pod install` / `pod update` 读取 Podfile 时，公共源测试前 | [CocoaPods 网络适配](<./ScriptsByPods/【MacOS】🌐CocoaPods网络适配.command/README.md>)同步执行 | 测试实际 Git 链路、临时继承可用的已有代理，并注册已核验源码的官方归档回退；摘要保留在安装输出，失败继续原流程 |
+| 时机 | 挂载脚本 / 入口 | 实际行为、交互与产物 |
+| --- | --- | --- |
+| `pod install` / `pod update` 读取 Podfile 时，公共 Specs 选源前 | [CocoaPods 网络适配](<./ScriptsByPods/【MacOS】🌐CocoaPods网络适配.command/README.md>)同步探测并注册归档回退 | 验证当前链路与已有代理，供本次下载继承；只有已审发布请求可在 Git 网络失败后回退官方归档，不写独立持久配置 |
 | `pod install` / `pod update` 读取 Podfile 时，`source` 声明前 | [CocoaPods 源自动选择](<./ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/README.md>)同步测速 | 测试当前网络并决定本次公共 Specs 源；结果与理由写入系统临时日志 |
-| `pod install` 读取 Podfile 时，依赖解析前 | Ruby 入口异步启动 `--preflight`                              | 不等待依赖下载；仅依赖报告独立运行，不阻塞安装主流程 |
-| 前置任务                                  | [查询工程依赖关系](<./ScriptsByPods/【MacOS】🔍查询Xcode工程依赖关系.command/README.md>) | 扫描本地 podspec，生成 `./PodspecDependencyReport/` 下的依赖报告与关系图 |
-| 工程集成完成后，`post_integrate` | [CodeGraph 初始化脚本](./ScriptsByPods/codegraph_init.command/codegraph_init.command) | 成功集成后后台完成完整工具链体检、按需安装、建立 / 更新 [**CodeGraph**](https://github.com/colbymchenry/codegraph) 索引并导出 Markdown；工程锁避免并发更新 |
-| 工程集成完成后，`post_integrate`          | 统一入口 `--post-integrate` → [恢复 PIF 构建会话](<./ScriptsByPods/【MacOS】🧹恢复Xcode PIF构建会话.command/README.md>) | 有活动构建则跳过；无活动构建时结束当前用户的空闲构建服务，再通过工作空间列表命令重建会话 |
+| `pod install` 读取 Podfile 时，依赖解析前 | `--preflight` → [查询工程依赖关系](<./ScriptsByPods/【MacOS】🔍查询Xcode工程依赖关系.command/README.md>) | 自述后回车确认；保留 Homebrew 自检 / 更新和 Graphviz 安装 / 升级选择，回车跳过普通安装或更新、输入任意字符执行；扫描本地 podspec，更新 `./PodspecDependencyReport/` 下的报告与关系图，并选择是否打开产物 |
+| 工程集成完成后，`post_integrate` | `--post-integrate` → [恢复 PIF 构建会话](<./ScriptsByPods/【MacOS】🧹恢复Xcode PIF构建会话.command/README.md>) | 展示影响后输入精确大写 `YES` 才恢复；有活动构建则跳过，无活动构建时结束当前用户的空闲服务，再用工作空间列表命令重建会话 |
+| PIF 流程结束后，同一前台收尾 | [CodeGraph 初始化脚本](./ScriptsByPods/codegraph_init.command/codegraph_init.command) | 完整工具链体检、经确认补齐缺失组件、建立 / 更新代码地图并导出 Markdown；等待结束并显示真实状态，工程锁避免并发更新 |
 
-前置依赖报告强制离线，只复用已有工具。CodeGraph 在成功集成后的后台进程完成完整工具链体检：系统 Shell / curl / Git / CLT、Brew 版本 / 配置 / doctor、Node.js 实际执行与 npm 配置、SQLite 查询、CLI 子命令和隔离样例建图，并核对目标状态 JSON 的工程路径与完整性；失败不覆盖 CocoaPods 自身结果。
+通用辅助脚本由 `JOBS_POD_INSTALL_INTERACTION` 选择模式：
 
-Homebrew 没有该官方 CodeGraph 对应 formula；缺失或损坏的 Node/npm 优先通过 Brew 的 `node@24` 补齐，再从官方 npm 包 `@colbymchenry/codegraph` 安装到用户独立前缀，已有健康 CLI 复用且不升级，操作前展示来源。
+| 值 | 行为 |
+| --- | --- |
+| `interactive`（默认） | 保留终端自述和业务确认；没有 TTY 时明确跳过辅助写任务，管道中的回车 / `YES` 不算授权 |
+| `check-only` | 只读检查，不安装、不生成依赖报告、不恢复 PIF、不建图或导出；兼容 `JOBS_POD_INSTALL_POST_SCRIPTS_CHECK_ONLY=1` |
+| `skip` | 跳过前置和收尾辅助任务 |
 
-`JOBS_SKIP_CODEGRAPH=1` 跳过地图；显式 `JOBS_POD_INSTALL_OFFLINE=1`、`CODEGRAPH_ALLOW_INSTALL=0` 或调度器 `--offline` 禁止工具安装，前置默认离线不会传染给收尾。产物更新到 `./.codegraph/codegraph.db` 与 `./.codegraph/codegraph.md/`，安装主流程只输出后台 PID 和日志，不等待建图完成；PID 仅供观察，以 `.codegraph/.jobs-update.lock` 判断并发。
+`JOBS_POD_INSTALL_HOOK`、`JOBS_SKIP_README` 和 `CODEGRAPH_AUTO_INIT` 只描述调用上下文，不能代替用户确认。自动定位工程省去重复拖入路径，仍需确认后才写入。回车、取消和输入结束按各子脚本的提示处理；PIF 恢复始终要求精确 `YES`。
 
-公共 Specs 选源单独同步执行网络测试，不加入这些异步任务。PIF 收尾脚本缺失、失败或异常时记录警告，不把已完成的依赖安装改判为失败。该恢复流程不删除 `Pods`、锁文件、工作空间或 `DerivedData`。
+CodeGraph 完整体检覆盖系统 Shell / curl / Git / CLT、Brew 版本 / 配置 / doctor、Node.js 实际执行及 npm 配置、SQLite、CLI 子命令、隔离样例建图，以及目标状态 JSON 的工程路径和索引完整性。Homebrew 没有该官方 CodeGraph 对应 formula；缺失或损坏的 Node/npm 优先经确认用 Brew 的 `node@24` 补齐，CLI 从官方 npm 包 `@colbymchenry/codegraph` 安装到用户独立前缀，操作前展示来源。已有健康工具复用，地图更新 / 旧索引重建与导出遵循子脚本提示，产物为 `./.codegraph/codegraph.db` 和 `./.codegraph/codegraph.md/`。
+
+默认不强制离线。显式 `JOBS_POD_INSTALL_OFFLINE=1` 或调度器 `--offline` 才禁止辅助脚本安装 / 升级工具；`CODEGRAPH_ALLOW_INSTALL=0` 单独禁止 CodeGraph 安装。已有工具仍可经确认生成报告或更新地图；这些开关不保证 CocoaPods 本身完全离线。`JOBS_SKIP_CODEGRAPH=1` 跳过地图，重复更新由 `.codegraph/.jobs-update.lock` 工程锁控制。
+
+所有辅助任务在前台完成并汇总。子任务失败会继续其余辅助任务、明确告警并返回调度失败状态，Podfile 保留 CocoaPods 自身的安装结果；不能用安装成功代替报告 / PIF / 地图成功。PIF 不删除 `Pods`、锁文件、工作空间或 `DerivedData`。网络适配与公共 Specs 选源仍按原顺序同步执行，不受辅助脚本交互开关替代。
 
 `post_install` 还会执行 Podfile 内的构建配置与兼容性修补；`post_integrate` 同时维护 Pods 工程中的 `Podfile` / `Podfile.deps` 引用。这些是 Podfile 内联逻辑，外置收尾脚本的实际调用点是 `post_integrate`。
+
+设置 `JOBS_POD_INSTALL_PURE=1` 或 `JOBS_POD_INSTALL_SKIP_EXTERNAL_SCRIPTS=1` 时，前置依赖报告和安装后的可选辅助任务均跳过；Podfile / Podfile.deps 展示引用与正常工程集成仍按各自内联逻辑维护，不另起报告或地图写任务。
 
 **Swift 额外安装准备**
 
@@ -2172,16 +2181,18 @@ Homebrew 没有该官方 CodeGraph 对应 formula；缺失或损坏的 Node/npm 
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [配置 Flutter 环境](./ScriptsByPods/配置Flutter环境.sh/README.md) | 复用健康 [**fvm**](https://fvm.app)，缺失时先尝试已有健康 Homebrew；Homebrew 不可用、安装失败或 FVM 复检失败则自动运行官方 `install.sh`，再按需准备 Flutter SDK、iOS 缓存与模块依赖 |
 | [拉取 Flutter 侧三方资源](./ScriptsByPods/拉取Flutter侧三方资源.sh/README.md) | module helper、SDK 根 helper、生成配置及导出路径未全部健康时执行；独立发现已有 Flutter / FVM，先 `pub get` 并复检，必要时备份过期配置后交由 Flutter 重建 |
-| `./JobsBySwiftPackageManager/【MacOS】🧠编译通过方可集成进SPM.command` | `pre_install` 中可选执行本地 Package 编译、测试与 Client 验证；选择执行后验证失败会中止集成 |
+| [SPM 编译门禁](<./JobsBySwiftPackageManager/【MacOS】🧠编译通过方可集成进SPM.command>) / [详细说明](./JobsBySwiftPackageManager/README.md) | `pre_install` 中可选执行本地 Package 解析、编译、测试与 Client 验证；确认前不写日志，无 TTY、输入结束或 `check-only` / `skip` 不执行业务；选择执行后验证失败会中止集成 |
 | `./ScriptsByPods/清理Unity缓存.sh/清理Unity缓存.sh`、`./ScriptsByPods/解压Unity大资源.sh/解压Unity大资源.sh` | 检测到 Unity 集成时清缓存、还原大资源；Podfile 另会清理 Unity 中间构建目录 |
 
-通用外置准备脚本在交互终端统一询问一次：直接回车执行，输入任意字符后回车跳过；SPM 验证单独询问，规则相同。非交互环境默认执行。Flutter / Unity 外置脚本配置为可选，失败告警；SPM 验证一旦执行则是必过门禁。上述准备动作不受本地前置任务的“强制离线”约束。
+Flutter / Unity 外置准备流程先在真实终端展示总说明：回车继续，输入其它内容或输入结束跳过；各脚本仍保留内置自述与具体安装、升级和清理选择。SPM 编译门禁单独询问，直接回车跳过、输入任意字符后执行；一旦选择执行，验证失败会中止集成。无可交互终端默认跳过辅助写任务；`check-only` / `skip` 不下载、不修改配置或清理缓存。Flutter / Unity 外置脚本仍为可选，失败明确告警；离线安装限制只在用户显式设置时生效。
+
+SPM 脚本确认后才初始化日志；`PIPE_FAIL` 保留 `swift package resolve`、`swift build`、`swift test` 和 Client 的真实失败状态，输出经过 `tee` 不会掩盖失败。Podfile 以 `required: true` 挂载该门禁，已选择执行时任何验证失败均阻断集成。
 
 Flutter 配置脚本不再为 FVM 强制安装或更新 Homebrew。FVM 官方默认安装到用户主目录下的 `fvm/bin`，支持 `FVM_INSTALL_DIR`；安装后检查实际二进制并立即刷新当前子进程 `PATH`，不写 shell profile。官方安装器可能迁移旧 FVM 安装，Flutter `versions` 缓存继续保留；已有官方 FVM 的可选升级直接走官方安装器。详见 [FVM 官方安装文档](https://fvm.app/documentation/getting-started/installation)。
 
-Podfile 通过 `JOBS_SKIP_README=1` 跳过子脚本重复回车等待，子脚本仍打印固定内置自述；设置 `JOBS_FLUTTER_AUTO_SETUP=1` 后，非交互环境可自动补齐缺失项，已有 FVM / Flutter 的可选升级仍默认跳过。FVM 安装或复检失败会停止该脚本后续 Flutter 操作，由 Podfile 记录警告并继续；日志在系统临时目录中的 `配置Flutter环境.log`、`拉取Flutter侧三方资源.log`，配置脚本的终端输出也保留在 CocoaPods 输出中。
+`JOBS_POD_INSTALL_HOOK` 和 `JOBS_SKIP_README` 不会跳过 Flutter / Unity 子脚本的终端确认。保留显式 `JOBS_FLUTTER_AUTO_SETUP=1` 的缺失环境补齐入口：只补齐必需环境与缓存 / module 依赖，已有 FVM / Flutter 的可选升级仍跳过；`check-only` / `skip` 优先，不因自动补齐标记执行写操作。Unity 删除缓存须精确输入 `YES`，Homebrew 清理另行选择。FVM 安装或复检失败会停止该脚本后续 Flutter 操作，由 Podfile 记录警告并继续；日志在系统临时目录中的 `配置Flutter环境.log`、`拉取Flutter侧三方资源.log`，配置脚本输出保留在 CocoaPods 输出中。
 
-Flutter 的健康检查同时核对 `Generated.xcconfig` 的 SDK / module 路径、SDK 根 `podhelper.rb`，以及 `flutter_export_environment.sh` 中的两条对应路径；不执行旧电脑带来的导出脚本。默认配置健康才跳过资源准备。第一次 `flutter pub get` 成功但配置仍过期时，将两份配置备份移到系统临时目录后再执行一次；失败时尝试恢复原配置，成功和失败均保留原配置备份。辅助任务失败只告警，默认配置仍不健康时由 Podfile 的占位机制跳过 Flutter 集成。脚本不手动删除 Pods、锁文件或整个 `.ios`，不嵌套执行 `pod install`；Flutter 官方 `pub get` 仍可能根据工具或 pubspec 变更重生成 `.ios`。完整行为与两项隔离验证入口见[资源准备与换机恢复](./ScriptsByPods/拉取Flutter侧三方资源.sh/README.md)。
+Flutter 的健康检查同时核对 `Generated.xcconfig` 的 SDK / module 路径、SDK 根 `podhelper.rb`，以及 `flutter_export_environment.sh` 中的两条对应路径；不执行旧电脑带来的导出脚本。默认配置健康才跳过资源准备。第一次 `flutter pub get` 成功但配置仍过期时，将两份配置备份移到系统临时目录后再执行一次；失败时尝试恢复原配置，成功和失败均保留原配置备份。辅助任务失败只告警；默认配置仍不健康时，Podfile 只在内存声明 `install_all_flutter_pods` 和 `flutter_post_install` 两个兼容接口来跳过 Flutter 集成，不生成临时占位 helper 文件。脚本不手动删除 Pods、锁文件或整个 `.ios`，不嵌套执行 `pod install`；Flutter 官方 `pub get` 仍可能根据工具或 pubspec 变更重生成 `.ios`。完整行为与两项隔离验证入口见[资源准备与换机恢复](./ScriptsByPods/拉取Flutter侧三方资源.sh/README.md)。
 
 迁移电脑时同时携带最新 Podfile 与 `ScriptsByPods` 中网络适配、选源、Flutter 配置和资源准备的完整脚本包。只复制新脚本，旧 Podfile 仍可能保留旧挂载或仅检查 helper 是否存在的逻辑。在工程根目录确认入口：
 
@@ -2254,8 +2265,8 @@ CocoaPods 生成的 `[CP] Check Pods Manifest.lock`、`[CP] Embed Pods Framework
 **日志与定位**
 
 - 公共 Specs 选源：系统临时目录中的 `jobs-cocoapods-source-<工程路径摘要>.log`，具体路径随安装输出展示；记录网络测试结果、耗时与选择理由。
-- 安装前置总日志：系统临时目录中的 `jobs-pod-install-preflight-<工程摘要>.log`。
-- 调度汇总与索引日志：系统临时目录中的 `【MacOS】📦Pod Install离线保护.<工程摘要>.log`、`codegraph_init.<工程摘要>.async.log`；PIF 与依赖报告脚本另有各自日志。
+- 安装前置输出：直接显示在当前安装终端，手动安装入口还会将其写入该入口的完整日志；不再单独派生后台总日志。
+- 调度汇总与索引日志：系统临时目录中的 `【MacOS】📦Pod Install离线保护.<工程摘要>.log`、`codegraph_init.<工程摘要>.log`；PIF 与依赖报告脚本另有各自日志，前台执行结果与日志同时可见。
 - IPA 留存：Xcode 构建日志与系统临时目录中的 `save_device_ipa_after_build.log`。
 - 排查时先确认触发入口，再检查对应日志；目录中存在脚本，不代表它已被当前 Podfile、target 或 Scheme 挂载。
 

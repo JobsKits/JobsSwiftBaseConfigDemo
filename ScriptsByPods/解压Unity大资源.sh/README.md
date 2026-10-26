@@ -14,7 +14,7 @@
 - [四、流程图](#jobs-toc-heading-5)
 - [五、风险说明](#jobs-toc-heading-6)
 - [六、日志文件](#jobs-toc-heading-7)
-- [七、未执行声明](#jobs-toc-heading-8)
+- [七、验证与限制](#jobs-toc-heading-8)
 
 </details>
 <!-- jobs-toc:end -->
@@ -24,8 +24,8 @@
 ## <span id="jobs-toc-heading-1" data-jobs-toc="v2">🔥 <font id=前言>前言</font></span><!-- jobs-toc:heading-end -->
 
 - 本目录包含同名脚本 `解压Unity大资源.sh` 和当前 `README.md`。
-- 脚本已按 Jobs 的 [**Markdown**](https://markdown.cn) / Shell 约束整理：`zsh` 入口、结构化函数、彩色日志、`README.md` 启动展示、防误触确认、日志落盘。
-- 用途：在工程内查找 Unity 导出资源合并脚本，并按 non-blocking 方式尝试执行。
+- 使用 `zsh` 入口、运行时内置说明、回车确认和日志落盘。
+- 用途：在工程内查找 [**Unity**](https://unity.com) 导出资源合并脚本，并按 non-blocking 方式尝试执行。
 
 ## <span id="jobs-toc-heading-2" data-jobs-toc="v2">一、适用场景 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
@@ -41,25 +41,26 @@
   zsh './解压Unity大资源.sh'
   ```
 
-- 交互环境下，脚本会先展示本 `README.md`，按回车继续，按 `Ctrl+C` 取消。
-- 非交互环境下，脚本会跳过 `README.md` 阻塞展示，避免影响自动化流程。
+- 默认 `interactive`：每次展示固定内置说明并等待回车；`Ctrl+C` 取消，EOF 或无 TTY 在初始化日志和业务前停止。`JOBS_SKIP_README`、`JOBS_POD_INSTALL_HOOK` 不代替确认。
+- `JOBS_POD_INSTALL_INTERACTION=check-only` 或 `skip`：只展示说明并跳过整个任务，不清空日志、不执行资源合并脚本；其它模式值报错退出。
 
 ## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、执行前检查 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-- 确认脚本目录位于工程根目录的下一层：
+- 默认目录布局：
 
   ```text
   工程根目录/
-  └── 解压Unity大资源.sh/
-      ├── 解压Unity大资源.sh
-      └── README.md
+  └── ScriptsByPods/
+      └── 解压Unity大资源.sh/
+          ├── 解压Unity大资源.sh
+          └── README.md
   ```
 
-- 脚本会把 `解压Unity大资源.sh/..` 识别为工程根目录。
-- 如需跳过启动时的 `README.md` 展示，可临时设置：
+- 自动从脚本位置解析工程根目录；保留旧的 `工程根目录/解压Unity大资源.sh/脚本本体` 单层布局兼容，不要求拖入目录。
+- 需要明确跳过写入任务时：
 
   ```shell
-  JOBS_SKIP_README=1 zsh './解压Unity大资源.sh'
+  JOBS_POD_INSTALL_INTERACTION=skip zsh './解压Unity大资源.sh'
   ```
 
 ## <span id="jobs-toc-heading-5" data-jobs-toc="v2">四、流程图 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
@@ -68,8 +69,9 @@
 
   ```mermaid
   flowchart TD
-    A["启动脚本"] --> B["展示 README.md"]
-    B --> C["识别工程根目录"]
+    A["启动脚本"] --> B["内置说明与模式检查"]
+    B -->|"check-only / skip"| X["不写日志、不执行目标"]
+    B -->|"interactive 回车确认"| C["初始化日志与工程根目录"]
     C --> D["检查目标 Unity 合并脚本"]
     D --> D1["目标不存在：提示后结束"]
     D --> D2["目标存在：识别 shebang"]
@@ -90,12 +92,12 @@
 - 日志会同步写入：
 
   ```text
-  $TMPDIR/解压Unity大资源.log
+  /tmp/解压Unity大资源.log
   ```
 
-## <span id="jobs-toc-heading-8" data-jobs-toc="v2">七、未执行声明 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
+## <span id="jobs-toc-heading-8" data-jobs-toc="v2">七、验证与限制 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-- 本次整理只做脚本结构升级、静态语法检查和目录检查；没有在你的 [**MacOS**](https://www.apple.com/macos/) 环境里实际执行脚本。
+- `zsh -n` 静态检查及[四脚本入口隔离回归](../配置Flutter环境.sh/Tests/interaction_regression.rb)通过；伪终端验证回车与 EOF，业务函数替换为临时标记，没有执行真实 Unity 资源合并。
 
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

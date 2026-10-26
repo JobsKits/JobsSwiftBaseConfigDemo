@@ -66,6 +66,42 @@ Dir.mktmpdir('jobs-flutter-podfile-readiness-') do |root|
   write_config.call
   File.open(File.join(flutter_dir, 'flutter_export_environment.sh'), 'a') { |file| file.puts("export \"FLUTTER_ROOT=#{sdk}\"") }
   verify.call('拒绝重复的导出环境键', false)
+
+  fallback_start = source.index('def jobs_write_flutter_placeholder_podhelper')
+  fallback_end = source.index('# 按用户选择执行 SPM 编译门禁', fallback_start)
+  abort '未找到 Podfile 内存占位与加载方法' unless fallback_start && fallback_end
+  checker.instance_eval(source[fallback_start...fallback_end], podfile_path, source[0...fallback_start].count("\n") + 1)
+  write_config.call
+  File.write(helper, '$jobs_fixture_flutter_helper_loaded = true')
+  $jobs_fixture_flutter_helper_loaded = false
+  abort '健康真实 helper 未正常加载' unless checker.jobs_load_flutter_podhelper(module_path) && $jobs_fixture_flutter_helper_loaded
+  checks += 1
+  puts 'PASS 健康真实 helper 仍按路径加载'
+
+  # 阻止任何 File.write，确保缺失配置在查询与跳过模式下只声明内存接口。
+  original_write = File.method(:write)
+  File.define_singleton_method(:write) { |*args| raise '只读占位分支不得写入文件' }
+  begin
+    %w[check-only skip query].each do |mode|
+      if mode == 'query'
+        ENV.delete('JOBS_POD_INSTALL_INTERACTION')
+        $PROGRAM_NAME = 'pod'
+        ARGV.replace(['ipc', 'podfile-json'])
+      else
+        ENV['JOBS_POD_INSTALL_INTERACTION'] = mode
+      end
+      abort "#{mode} 内存占位加载失败" unless checker.jobs_load_flutter_podhelper(File.join(root, 'missing module'))
+      abort '占位 install_all_flutter_pods 接口缺失' unless Object.private_method_defined?(:install_all_flutter_pods)
+      abort '占位 flutter_post_install 接口缺失' unless Object.private_method_defined?(:flutter_post_install)
+      Object.new.send(:install_all_flutter_pods, 'fixture module')
+      Object.new.send(:flutter_post_install, Object.new, skip: true)
+      checks += 1
+      puts "PASS #{mode} 缺失配置只使用内存占位且保留接口"
+    end
+  ensure
+    File.define_singleton_method(:write, original_write)
+    ENV.delete('JOBS_POD_INSTALL_INTERACTION')
+  end
 end
 
 puts "#{checks} checks passed; no Flutter, CocoaPods or project generation executed."

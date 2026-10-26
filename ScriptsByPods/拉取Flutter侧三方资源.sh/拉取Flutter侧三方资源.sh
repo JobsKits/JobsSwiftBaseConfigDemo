@@ -4,7 +4,7 @@
 # - 脚本名称：拉取Flutter侧三方资源.sh。
 # - 核心用途：查找可用 Flutter / FVM，拉取依赖并验证或重生成当前电脑可用的 iOS 配置。
 # - 影响范围：可能更新 Flutter 工程依赖与生成目录；失败不阻断 pod install。
-# - 运行提示：先展示内置自述；终端回车确认，Podfile 已确认入口传 JOBS_SKIP_README=1。
+# - 运行提示：每次交互运行先展示内置自述并回车确认；check-only / skip 不执行写入任务。
 
 SCRIPT_DIR=""
 SCRIPT_PATH=""
@@ -50,23 +50,30 @@ gray_echo()      { log "\033[0;90m$1\033[0m"; }
 bold_echo()      { log "\033[1m$1\033[0m"; }
 # 输出下划线日志。
 underline_echo() { log "\033[4m$1\033[0m"; }
-# 展示固定内置自述，并按明确的 Podfile 开关决定是否等待确认。
+# 展示固定内置自述并确认执行；钩子标记不代替用户确认。
 show_script_intro_and_wait() {
   print -r -- "======================= 拉取 Flutter 侧三方资源 ======================="
   print -r -- "核心用途：查找可用 Flutter / FVM，为工程内 Flutter module 拉取依赖并修复跨电脑残留路径。"
   print -r -- "影响范围：仅完整健康的 iOS 配置直接跳过；必要时备份两份过期配置后重试官方 pub get。"
   print -r -- "修复边界：不手改生成源码，不手动删除 .ios、Pods 或锁文件；重生成失败恢复原配置，不声称已修复。"
-  print -r -- "运行策略：失败告警后继续；Podfile 统一确认后可传 JOBS_SKIP_README=1 跳过重复确认。"
+  print -r -- "运行策略：每次交互运行均需确认；check-only / skip 跳过写入任务，失败由 Podfile 告警。"
   print -r -- "取消方式：按 Ctrl+C 终止；独立运行需按回车继续。"
   print -r -- "日志文件：/tmp/拉取Flutter侧三方资源.log"
   print -r -- "========================================================================"
 
-  if [[ "${JOBS_SKIP_README:-}" == "1" ]]; then
-    return 0
-  fi
-
+  case "${JOBS_POD_INSTALL_INTERACTION:-interactive}" in
+    check-only|skip)
+      print -r -- "模式：${JOBS_POD_INSTALL_INTERACTION}，跳过 Flutter 资源拉取和配置修复。"
+      exit 0
+      ;;
+    interactive) ;;
+    *)
+      print -u2 -r -- "✖ 无效的 JOBS_POD_INSTALL_INTERACTION；仅支持 interactive、check-only、skip。"
+      exit 2
+      ;;
+  esac
   if [[ ! -t 0 ]]; then
-    print -u2 -r -- "✖ 当前没有可交互输入；请在终端运行，或由已确认的 Podfile 入口传 JOBS_SKIP_README=1。"
+    print -u2 -r -- "✖ 当前没有可交互输入；请在终端运行，或明确选择 check-only / skip 跳过。"
     exit 1
   fi
 
@@ -101,7 +108,7 @@ ask_any_to_run() {
   fi
 
   printf "%s（直接回车跳过；输入任意字符后回车执行）：" "$message"
-  IFS= read -r answer || true
+  IFS= read -r answer || return 1
   [[ -n "$answer" ]]
 }
 # 危险操作仅接受明确的大写 YES。
@@ -118,7 +125,7 @@ confirm_yes() {
   warn_echo "⚠ ${message}"
   gray_echo "危险操作必须输入 YES 后回车；其它输入一律取消。"
   printf "➤ "
-  IFS= read -r input || true
+  IFS= read -r input || return 1
   [[ "$input" == "YES" ]]
 }
 # 清理拖入路径的首尾引号和换行。

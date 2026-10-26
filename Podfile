@@ -111,7 +111,16 @@ def jobs_clean_unity_build_artifacts!(ios_dir)
 
   return unless File.directory?(intermediates)
 
-  puts "🧹 [Podfile] Clean Unity intermediates: #{intermediates}"
+  return unless jobs_interactive_auxiliary_scripts?
+  if [derived, File.dirname(intermediates), intermediates].any? { |path| File.symlink?(path) }
+    puts '⚠️  [Podfile] Unity 缓存路径含符号链接，拒绝清理。'
+    return
+  end
+  puts "🧹 [Podfile] 将删除 Unity 编译中间缓存：#{intermediates}"
+  print '👉 精确输入 YES 授权清理；其它输入或输入结束跳过：'
+  input = STDIN.gets
+  return unless input && input.chomp == 'YES'
+
   begin
     FileUtils.rm_rf(intermediates)
     puts "✅ [Podfile] Cleaned: #{intermediates}"
@@ -120,28 +129,31 @@ def jobs_clean_unity_build_artifacts!(ios_dir)
   end
 end
 
-# === [ADD] pod install 挂载脚本统一确认（只问一次） ==========================
+# 终端才允许交互辅助写操作；查询、CI 和明确只读模式不隐式授权。
 $jobs_confirm_pod_install_scripts = nil
 
+def jobs_interactive_auxiliary_scripts?
+  command = ARGV.find { |argument| !argument.start_with?('-') }
+  return false unless File.basename($PROGRAM_NAME) == 'pod' && %w[install update].include?(command)
+  return false if JobsPodInstallOfflineGuard.skip_scripts?
+  return false unless JobsPodInstallOfflineGuard.interaction_mode == 'interactive'
+  return true if STDIN.tty?
+
+  puts 'ℹ️  [Podfile] 当前无可交互终端，跳过辅助脚本；请在终端运行。'
+  false
+end
+
+# 总确认只负责本次辅助流程，子脚本仍保留各自的安装、升级和危险操作选择。
 def jobs_confirm_pod_install_scripts?
+  return false unless jobs_interactive_auxiliary_scripts?
   return $jobs_confirm_pod_install_scripts unless $jobs_confirm_pod_install_scripts.nil?
 
-  # 非交互环境（CI）保持默认行为：执行（避免阻塞）
-  unless STDIN.tty?
-    $jobs_confirm_pod_install_scripts = true
-    return true
-  end
-
   puts
-  puts "🧩 [Podfile] pod install 检测到挂载脚本："
-  puts "    - 直接回车：执行（默认）"
-  puts "    - 输入任意字符后回车：跳过"
-  print "👉 请选择："
+  puts '🧩 [Podfile] 将进入 Flutter / Unity 辅助脚本，各项操作仍分别确认。'
+  print '👉 阅读说明后直接回车继续；输入其它内容跳过：'
   input = STDIN.gets
-
-  $jobs_confirm_pod_install_scripts = (input.nil? || input.strip.empty?)
+  $jobs_confirm_pod_install_scripts = !input.nil? && input.chomp.empty?
 end
-# ============================================================================
 
 # 统一运行外置脚本（chmod +x / 统一输出 / 统一失败提示）
 #
@@ -185,7 +197,7 @@ def jobs_external_script_command(script_path)
 end
 
 def jobs_run_external_script(rel_path, desc:, base_dir: __dir__, log_path: nil, required: false, condition: nil, confirm: true)
-  return false if ENV['JOBS_POD_INSTALL_PURE'] == '1'
+  return false unless jobs_interactive_auxiliary_scripts?
 
   # === [MOD] 在脚本真正执行前统一拦截：回车执行 / 任意字符跳过 ==========
   if confirm && !jobs_confirm_pod_install_scripts?
@@ -217,20 +229,13 @@ def jobs_run_external_script(rel_path, desc:, base_dir: __dir__, log_path: nil, 
   end
 
   puts "🔧 [Podfile] #{desc}"
-  puts "🔧 [Podfile] chmod +x: #{script}"
-  unless system('chmod', '+x', script)
-    msg = "[Podfile] ⚠️ #{desc} chmod 失败，已跳过：#{script}"
-    if required
-      raise msg
-    else
-      puts msg
-      return false
-    end
-  end
-
   command = jobs_external_script_command(script)
-  puts "🔧 [Podfile] Run: JOBS_SKIP_README=1 #{command.join(' ')}"
-  ok = system({ 'JOBS_SKIP_README' => '1' }, *command, chdir: base_dir)
+  puts "🔧 [Podfile] Run: #{command.join(' ')}"
+  ok = system(
+    { 'JOBS_POD_INSTALL_HOOK' => '1', 'JOBS_POD_INSTALL_INTERACTION' => 'interactive' },
+    *command,
+    chdir: base_dir
+  )
 
   if ok
     puts "✅ [Podfile] Done: #{desc}"
@@ -347,23 +352,19 @@ rescue StandardError => error
 end
 
 def jobs_write_flutter_placeholder_podhelper
-  placeholder = File.join(Dir.tmpdir, 'jobs_swift_base_config_demo_flutter_podhelper_placeholder.rb')
-  File.write(
-    placeholder,
-    <<~'RUBY'
-      # Auto-generated placeholder podhelper.rb (non-blocking)
-      def install_all_flutter_pods(flutter_application_path = nil)
-        puts "⚠️  [podhelper.rb] Placeholder: skip install_all_flutter_pods(#{flutter_application_path})"
-      end
+  # 保留旧调用接口；固定占位定义只驻留内存，查询或只读模式不创建辅助文件。
+  TOPLEVEL_BINDING.eval(<<~'RUBY', __FILE__, __LINE__ + 1)
+    def install_all_flutter_pods(flutter_application_path = nil)
+      puts "⚠️  [podhelper.rb] Placeholder: skip install_all_flutter_pods(#{flutter_application_path})"
+    end
 
-      def flutter_post_install(installer, skip: false)
-        puts "⚠️  [podhelper.rb] Placeholder: skip flutter_post_install"
-      end
-    RUBY
-  )
-  placeholder
+    def flutter_post_install(installer, skip: false)
+      puts "⚠️  [podhelper.rb] Placeholder: skip flutter_post_install"
+    end
+  RUBY
+  :jobs_in_memory_flutter_podhelper
 rescue => e
-  puts "⚠️  [Podfile] 创建 Flutter 占位 podhelper 失败：#{e}"
+  puts "⚠️  [Podfile] 声明 Flutter 内存占位 podhelper 失败：#{e}"
   nil
 end
 
@@ -377,6 +378,10 @@ end
 
 def jobs_load_flutter_podhelper(flutter_application_path)
   flutter_podhelper = jobs_resolve_flutter_podhelper(flutter_application_path)
+  if flutter_podhelper == :jobs_in_memory_flutter_podhelper
+    puts 'ℹ️  [Podfile] 已使用内存占位 podhelper，未写入辅助文件。'
+    return true
+  end
   unless flutter_podhelper && File.file?(flutter_podhelper)
     puts "⚠️  [Podfile] 没有可加载的 Flutter podhelper，已跳过"
     return false
@@ -402,16 +407,12 @@ def run_spm_validation_script
     return false
   end
 
-  should_run = true
-  if STDIN.tty?
-    puts
-    puts "🧠 [SPMValidation] 是否执行本地 Swift Package 编译、测试与 Client 验证？"
-    print "👉 直接回车执行；输入任意字符后回车跳过："
-    input = STDIN.gets
-    should_run = input.nil? || input.strip.empty?
-  else
-    puts "ℹ️  [SPMValidation] 当前为非交互环境，按默认选项执行。"
-  end
+  return false unless jobs_interactive_auxiliary_scripts?
+  puts
+  puts '🧠 [SPMValidation] 是否执行本地 Swift Package 编译、测试与 Client 验证？'
+  print '👉 直接回车跳过；输入任意字符后回车执行：'
+  input = STDIN.gets
+  should_run = !input.nil? && !input.chomp.empty?
 
   unless should_run
     puts "⏭️  [SPMValidation] 用户选择跳过，pod install 继续。"
@@ -431,7 +432,7 @@ end
 
 # 统一执行 pod install 后置脚本；子脚本失败只警告，不改变安装结果。
 def run_pod_install_post_scripts
-  return if ENV['JOBS_POD_INSTALL_PURE'] == '1'
+  return if JobsPodInstallOfflineGuard.skip_scripts?
 
   script_path = jobs_resolve_external_script_path(
     File.join('ScriptsByPods', '【MacOS】📦Pod Install离线保护.command'),
@@ -448,7 +449,7 @@ def run_pod_install_post_scripts
     arguments << '--check-only'
   end
   succeeded = system(
-    { 'JOBS_POD_INSTALL_HOOK' => '1', 'JOBS_SKIP_README' => '1' },
+    { 'JOBS_POD_INSTALL_HOOK' => '1', 'JOBS_POD_INSTALL_INTERACTION' => JobsPodInstallOfflineGuard.interaction_mode },
     '/bin/zsh',
     *arguments,
     chdir: __dir__

@@ -476,6 +476,21 @@ class JobsCodeGraphInitWorkflowTest < Minitest::Test
       JOBS_HOMEBREW_BIN="$FIXTURE_HOME/bin/brew"
       ALLOW_INSTALL=1
       CHECK_ONLY=0
+      # 工作流测试只模拟已经取得的用户选择；真实 TTY、回车、YES 分支另由 interaction_test 覆盖。
+      functions[fixture_real_intro]="$functions[show_script_intro_and_wait]"
+      show_script_intro_and_wait() {
+        local argument=""
+        for argument in "$@"; do
+          case "$argument" in --check-only|--help|-h) fixture_real_intro "$@"; return ;; esac
+        done
+        CODEGRAPH_INTERACTION=interactive
+      }
+      codegraph_ask_to_run() {
+        [[ "$1" == *缺失或损坏* || "$1" == *当前工程代码地图* ]]
+      }
+      codegraph_rebuild_index() {
+        codegraph_run_logged "$CODEGRAPH_BIN" index "$PROJECT_ROOT" || codegraph_stop 'CodeGraph 全量重建失败'
+      }
       # 只替换发现与网络安装边界；健康检查、状态校验和下游编排沿用真实实现。
       jobs_brew_find() {
         jobs_brew_candidate_ok "$FIXTURE_HOME/bin/brew" || return 1

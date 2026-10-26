@@ -45,7 +45,8 @@
   ```
 
 - 独立运行先打印固定内置自述，按回车继续，按 `Ctrl+C` 取消；没有可交互输入时退出并提示改用终端。
-- [工程 Podfile](../../Podfile) 在默认 Flutter 生成配置未通过完整健康检查时同步调用本脚本，统一确认后传入 `JOBS_SKIP_README=1`，只跳过子脚本重复回车等待；内置自述仍会打印。
+- [工程 Podfile](../../Podfile) 在默认 Flutter 生成配置未通过完整健康检查时同步调用本脚本。默认 `interactive` 模式每次展示说明并等待本脚本的回车确认；`JOBS_SKIP_README`、`JOBS_POD_INSTALL_HOOK` 不再代替确认，EOF 或无 TTY 均在初始化日志及业务前停止。
+- `JOBS_POD_INSTALL_INTERACTION=check-only` 或 `skip` 只展示说明并跳过本脚本，不初始化日志、不拉取依赖、不备份或重建配置；其它模式值报错退出。
 
 ## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、执行前检查 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
@@ -60,10 +61,10 @@
   ```
 
 - 脚本会兼容包裹目录：当上级目录是 `ScriptsByPods` 时，把 `ScriptsByPods/..` 识别为工程根目录。
-- 已由外层入口确认用途与影响时，可使用：
+- 需要明确跳过本脚本写入任务时：
 
   ```shell
-  JOBS_SKIP_README=1 zsh './拉取Flutter侧三方资源.sh'
+  JOBS_POD_INSTALL_INTERACTION=skip zsh './拉取Flutter侧三方资源.sh'
   ```
 
 - Flutter 候选依次是当前 `PATH`、用户 `fvm/versions/stable` 和 `.fvm/versions/stable` 下的 SDK；随后检查 `PATH` 中的 FVM、`FVM_INSTALL_DIR` 指定的官方目录、默认用户 `fvm/bin`、Pub 缓存及 Apple Silicon / Intel 的 Homebrew 常见位置。每个候选执行 `--version` 检查，失败后继续其它来源。
@@ -110,6 +111,7 @@
 - 脚本会执行 `flutter pub get`，可能改动 Flutter 依赖缓存和生成目录。它不安装或升级 FVM，也不修改 shell profile。
 - 默认配置完整健康时直接结束；仅有 module helper 文件不足以证明环境可用。没有可用工具或候选工程时告警并跳过，不声称完成修复。
 - 修复失败返回失败状态，由 Podfile 的 `required: false` 调用记录警告并继续主安装流程；默认 module 仍不健康时，Podfile 使用已有占位 helper 跳过 Flutter Pods 集成，不把其它候选的成功当成默认 module 已修好。
+- Podfile 的占位 helper 只在内存声明与原 helper 同签名的两个空实现，不创建临时 Ruby 文件；查询、`check-only` 或 `skip` 下也不会写占位文件。健康真实 helper 仍按实际路径加载。
 - 脚本不手动删除 `Pods`、`Podfile.lock` 或整个 `.ios` 目录，不递归启动 `pod install`；修复分支仅移出指定的两份配置文件并保留备份。Flutter 官方 `pub get` 仍可能依据工具或 `pubspec.yaml` 的变更重新生成 `.ios`，正常生成行为由 Flutter 控制。
 
 ## <span id="jobs-toc-heading-7" data-jobs-toc="v2">六、日志文件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
@@ -122,10 +124,10 @@
 - [隔离回归脚本](./Tests/run_regression.zsh)覆盖候选优先级、损坏工具回退、官方 / Pub / Homebrew 路径、交互防误触，以及生成配置健康、换机残留路径、重生成与失败恢复边界。测试使用假 Flutter / FVM 与临时工程；复跑命令：
 
   ```shell
-  JOBS_SKIP_README=1 zsh './Tests/run_regression.zsh'
+  zsh './Tests/run_regression.zsh' --run
   ```
 
-- [Podfile 健康检查回归](./Tests/podfile_readiness.rb)只提取当前 Podfile 的检查方法，在临时工程验证完整配置、旧 SDK / module 路径、导出文件缺失和符号链接；不加载 CocoaPods 或真实 SDK：
+- [Podfile 健康检查回归](./Tests/podfile_readiness.rb)提取当前 Podfile 的检查与加载方法，在临时工程验证完整配置、旧 SDK / module 路径、导出文件缺失、符号链接、健康 helper 加载及查询 / 跳过模式下的内存占位，共 14 项；不加载 CocoaPods 或真实 SDK：
 
   ```shell
   ruby './Tests/podfile_readiness.rb'

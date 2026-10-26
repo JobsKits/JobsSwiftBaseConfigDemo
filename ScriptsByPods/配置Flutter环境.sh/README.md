@@ -43,7 +43,8 @@
 
 - 独立运行先打印脚本内置自述，按回车继续，按 `Ctrl+C` 取消；后续安装 / 更新动作仍按各自提示确认。
 - 非交互独立运行须显式设置 `JOBS_FLUTTER_AUTO_SETUP=1`，否则退出并提示在终端运行。该开关允许自动补齐缺失环境、执行 `flutter precache --ios` 和 `flutter pub get`；已有 FVM / Flutter 的可选升级仍默认跳过。
-- [工程 Podfile](../../Podfile) 在安装准备阶段同步调用本脚本，统一确认后传入 `JOBS_SKIP_README=1`，避免重复自述确认；该变量不代表授权全部安装动作。脚本失败会报告退出码，Podfile 按 `required: false` 记录警告并继续依赖安装。
+- [工程 Podfile](../../Podfile) 在安装准备阶段同步调用本脚本；默认 `interactive` 模式每次展示内置说明并等待本脚本的回车确认，随后安装 / 更新仍逐项选择。`JOBS_SKIP_README`、`JOBS_POD_INSTALL_HOOK` 不再代替确认。脚本失败会报告退出码，Podfile 按 `required: false` 记录警告并继续依赖安装。
+- `JOBS_POD_INSTALL_INTERACTION=check-only` 或 `skip` 只展示说明并跳过本脚本，不初始化日志、不探测安装工具、不下载或改动配置；优先级高于 `JOBS_FLUTTER_AUTO_SETUP=1`。其它模式值报错退出。
 
 ## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、执行前检查 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
@@ -58,16 +59,16 @@
   ```
 
 - 脚本会兼容包裹目录：当上级目录是 `ScriptsByPods` 时，把 `ScriptsByPods/..` 识别为工程根目录。
-- 已由外层入口完成用途与影响确认时，可跳过重复回车等待；内置自述仍会打印：
+- 需要明确跳过写入任务时：
 
   ```shell
-  JOBS_SKIP_README=1 zsh './配置Flutter环境.sh'
+  JOBS_POD_INSTALL_INTERACTION=skip zsh './配置Flutter环境.sh'
   ```
 
 - [**GitHub**](https://github.com) Actions 等非交互环境需要自动补齐 [**Flutter**](https://flutter.dev/) 环境时，可显式设置：
 
   ```shell
-  JOBS_SKIP_README=1 JOBS_FLUTTER_AUTO_SETUP=1 zsh './配置Flutter环境.sh'
+  JOBS_FLUTTER_AUTO_SETUP=1 zsh './配置Flutter环境.sh'
   ```
 
 - FVM 候选路径依次包括当前 `PATH`、官方安装目录、用户 `fvm/bin`、Pub 缓存及两种 Homebrew 前缀；候选必须实际通过 `fvm --version`，残缺 shim 会被跳过。
@@ -117,6 +118,12 @@
 
   ```shell
   zsh './Tests/run_regression.zsh' --run
+  ```
+
+- [辅助脚本隔离回归](./Tests/interaction_regression.rb)用真实伪终端与假业务函数覆盖 Flutter 两脚本、Unity 清理 / 解压及 SPM 验证的回车、EOF、无 TTY、旧钩子标记、模式优先级和既有显式自动配置，并用假 `swift` 验证 SPM 成功及五类失败传播，共 49 项；不运行真实安装、清理、依赖拉取或 SwiftPM 编译：
+
+  ```shell
+  ruby './Tests/interaction_regression.rb' --run
   ```
 
 - 未在真实环境中安装或升级 FVM / Flutter，未执行真实 `pod install`。安装来源与失败处理以脚本日志为排查依据。

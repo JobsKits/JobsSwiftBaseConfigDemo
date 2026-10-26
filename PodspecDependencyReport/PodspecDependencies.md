@@ -92,7 +92,7 @@
 
 - 此文件由脚本自动运行分析得出
 - 分析目录：`/Users/jobs/Documents/Github/JobsBaseConfig/JobsBaseConfig@JobsSwiftBaseConfigDemo`
-- 生成时间：`2026-10-20 23:06:19`
+- 生成时间：`2026-10-24 19:22:16`
 - Podspec 数量：`68`
 - 0 下游依赖 Pod 数量：`10`
 - 全部依赖边数量：`275`

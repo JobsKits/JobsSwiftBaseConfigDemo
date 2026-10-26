@@ -3,7 +3,7 @@
 # 脚本自述：
 # - 核心用途：用临时目录和假 Flutter / FVM 验证工具发现、跨电脑配置重生成、恢复与非阻断边界。
 # - 影响范围：只创建临时夹具，不执行真实安装、Flutter 或 CocoaPods。
-# - 运行提示：终端回车继续；自动验证可传 JOBS_SKIP_README=1，保留夹具可传 JOBS_KEEP_TEST_FIXTURES=1。
+# - 运行提示：终端回车继续；自动验证显式传 --run，保留夹具可传 JOBS_KEEP_TEST_FIXTURES=1。
 
 TEST_ROOT=""
 SOURCE_SCRIPT=""
@@ -12,10 +12,10 @@ TEST_COUNT=0
 # 先说明隔离验证范围，再按入口完成确认。
 show_script_intro_and_wait() {
   print -r -- 'Flutter 资源拉取脚本隔离回归：仅在临时目录运行假命令，不执行真实安装。'
-  print -r -- '独立终端按回车继续，Ctrl+C 取消；JOBS_SKIP_README=1 可供自动验证。'
-  [[ "${JOBS_SKIP_README:-}" == 1 ]] && return 0
+  print -r -- '独立终端按回车继续，Ctrl+C 取消；--run 可供自动隔离验证。'
+  [[ "$#" == 1 && "$1" == --run ]] && return 0
   if [[ ! -t 0 ]]; then
-    print -u2 -r -- '✖ 当前没有可交互输入，请在终端运行或显式传 JOBS_SKIP_README=1。'
+    print -u2 -r -- '✖ 当前没有可交互输入，请在终端运行或显式传 --run。'
     exit 1
   fi
   IFS= read -r _ || exit 1
@@ -186,7 +186,8 @@ verify_runtime_boundaries() {
   print -r -- sentinel > "$TEST_ROOT/intro_guard/log"
   assert_probe intro_guard 1 '当前没有可交互输入' intro
   [[ "$(cat "$TEST_ROOT/intro_guard/log")" == sentinel ]] || exit 1
-  assert_probe intro_skip 0 '核心用途：' intro JOBS_SKIP_README=1
+  assert_probe intro_skip_rejected 1 '当前没有可交互输入' intro JOBS_SKIP_README=1 JOBS_POD_INSTALL_HOOK=1
+  assert_probe intro_check_only 0 '跳过 Flutter 资源拉取和配置修复' intro JOBS_POD_INSTALL_INTERACTION=check-only
   make_fake_tool "$TEST_ROOT/nonblocking_pub/home/fvm/bin/fvm" 0
   mkdir -p "$TEST_ROOT/nonblocking_pub/project/my_flutter" "$TEST_ROOT/nonblocking_pub/project/Pods/ignored"
   print -r -- 'name: fixture' > "$TEST_ROOT/nonblocking_pub/project/my_flutter/pubspec.yaml"
@@ -398,12 +399,12 @@ verify_config_parser_boundaries() {
 }
 # 汇报已完成的隔离用例数。
 report_test_result() {
-  [[ "$TEST_COUNT" == 34 ]] || exit 1
+  [[ "$TEST_COUNT" == 35 ]] || exit 1
   print -r -- "✔ ${TEST_COUNT} 项隔离回归通过；未执行真实 Flutter / FVM / CocoaPods。"
 }
 # 编排自述、隔离环境和两类回归。
 main() {
-  show_script_intro_and_wait # 先说明测试范围，确认后才写入临时夹具。
+  show_script_intro_and_wait "$@" # 先说明测试范围，确认或显式 --run 后才写入临时夹具。
   initialize_test_runtime # 校验源码语法并隔离用户目录、PATH 和业务产物。
   verify_tool_discovery # 验证候选优先级、健康检查和官方安装位置发现。
   verify_runtime_boundaries # 验证交互开关、忽略目录及 pub get 失败边界。
