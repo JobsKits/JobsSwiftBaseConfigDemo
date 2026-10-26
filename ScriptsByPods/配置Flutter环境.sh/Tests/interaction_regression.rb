@@ -81,11 +81,19 @@ Dir.mktmpdir('jobs-pod-script-interaction-') do |fixture_root|
       ['TTY EOF', {}, "\x04", 1, false],
       ['旧标记仍需TTY确认', {'JOBS_POD_INSTALL_HOOK' => '1', 'JOBS_SKIP_README' => '1'}, "\x04", 1, false]
     ]
-    if name == '配置Flutter环境.sh'
+    if ['配置Flutter环境.sh', '拉取Flutter侧三方资源.sh'].include?(name)
       cases += [
-        ['已有显式自动配置', {'JOBS_FLUTTER_AUTO_SETUP' => '1'}, nil, 0, true],
+        ['显式非交互自动配置', {'JOBS_FLUTTER_AUTO_SETUP' => '1'}, nil, 0, true],
         ['check-only优先于显式自动配置', {'JOBS_FLUTTER_AUTO_SETUP' => '1', 'JOBS_POD_INSTALL_INTERACTION' => 'check-only'}, nil, 0, false],
-        ['skip优先于显式自动配置', {'JOBS_FLUTTER_AUTO_SETUP' => '1', 'JOBS_POD_INSTALL_INTERACTION' => 'skip'}, nil, 0, false]
+        ['skip优先于显式自动配置', {'JOBS_FLUTTER_AUTO_SETUP' => '1', 'JOBS_POD_INSTALL_INTERACTION' => 'skip'}, nil, 0, false],
+        ['自动配置不绕过无效模式', {'JOBS_FLUTTER_AUTO_SETUP' => '1', 'JOBS_POD_INSTALL_INTERACTION' => 'invalid'}, nil, 2, false],
+        ['自动配置只接受精确1', {'JOBS_FLUTTER_AUTO_SETUP' => 'true'}, nil, 1, false]
+      ]
+    end
+    if name == '拉取Flutter侧三方资源.sh'
+      cases += [
+        ['自动配置仍需TTY确认', {'JOBS_FLUTTER_AUTO_SETUP' => '1'}, "\x04", 1, false],
+        ['自动配置TTY回车', {'JOBS_FLUTTER_AUTO_SETUP' => '1'}, "\n", 0, true]
       ]
     end
     cases.each do |label, additions, terminal_answer, expected_status, expected_business|

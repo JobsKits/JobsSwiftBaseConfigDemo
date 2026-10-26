@@ -4,7 +4,7 @@
 # - 脚本名称：拉取Flutter侧三方资源.sh。
 # - 核心用途：查找可用 Flutter / FVM，拉取依赖并验证或重生成当前电脑可用的 iOS 配置。
 # - 影响范围：可能更新 Flutter 工程依赖与生成目录；失败不阻断 pod install。
-# - 运行提示：每次交互运行先展示内置自述并回车确认；check-only / skip 不执行写入任务。
+# - 运行提示：交互运行先展示内置自述并回车确认；非交互须显式 JOBS_FLUTTER_AUTO_SETUP=1，check-only / skip 优先跳过。
 
 SCRIPT_DIR=""
 SCRIPT_PATH=""
@@ -56,7 +56,7 @@ show_script_intro_and_wait() {
   print -r -- "核心用途：查找可用 Flutter / FVM，为工程内 Flutter module 拉取依赖并修复跨电脑残留路径。"
   print -r -- "影响范围：仅完整健康的 iOS 配置直接跳过；必要时备份两份过期配置后重试官方 pub get。"
   print -r -- "修复边界：不手改生成源码，不手动删除 .ios、Pods 或锁文件；重生成失败恢复原配置，不声称已修复。"
-  print -r -- "运行策略：每次交互运行均需确认；check-only / skip 跳过写入任务，失败由 Podfile 告警。"
+  print -r -- "运行策略：交互运行均需确认；非交互须显式 JOBS_FLUTTER_AUTO_SETUP=1，check-only / skip 优先跳过。"
   print -r -- "取消方式：按 Ctrl+C 终止；独立运行需按回车继续。"
   print -r -- "日志文件：/tmp/拉取Flutter侧三方资源.log"
   print -r -- "========================================================================"
@@ -73,7 +73,11 @@ show_script_intro_and_wait() {
       ;;
   esac
   if [[ ! -t 0 ]]; then
-    print -u2 -r -- "✖ 当前没有可交互输入；请在终端运行，或明确选择 check-only / skip 跳过。"
+    if [[ "${JOBS_FLUTTER_AUTO_SETUP:-}" == 1 ]]; then
+      print -r -- "已显式允许非交互准备 Flutter module；仅复用现有工具、拉取依赖并按需恢复配置。"
+      return 0
+    fi
+    print -u2 -r -- "✖ 当前没有可交互输入；请在终端运行，或显式设置 JOBS_FLUTTER_AUTO_SETUP=1；check-only / skip 仅跳过。"
     exit 1
   fi
 

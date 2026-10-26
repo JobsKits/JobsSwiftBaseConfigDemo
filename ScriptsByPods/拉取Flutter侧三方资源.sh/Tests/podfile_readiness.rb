@@ -11,6 +11,21 @@ finish = source.index('def jobs_write_flutter_placeholder_podhelper')
 abort '未找到 Podfile 生成配置检查方法' unless start && finish && finish > start
 checker = Object.new
 checker.instance_eval(source[start...finish], podfile_path, source[0...start].count("\n") + 1)
+
+# CI 必须准备真实 Flutter 依赖，不能把内存占位接口当作安装成功。
+if ARGV == ['--verify-project']
+  module_path = File.expand_path('my_flutter', File.dirname(podfile_path))
+  abort 'Flutter module 生成配置未通过当前机器健康检查' unless checker.jobs_flutter_podhelper_ready?(module_path)
+  registrant_spec = File.join(module_path, '.ios', 'Flutter', 'FlutterPluginRegistrant', 'FlutterPluginRegistrant.podspec')
+  abort "FlutterPluginRegistrant podspec 缺失：#{registrant_spec}" unless File.file?(registrant_spec)
+  sdk = checker.jobs_flutter_root_from_generated_xcconfig(module_path)
+  engine = File.join(sdk, 'bin', 'cache', 'artifacts', 'engine', 'ios', 'Flutter.xcframework')
+  abort "Flutter iOS engine 缓存缺失：#{engine}" unless File.file?(File.join(engine, 'Info.plist'))
+  puts 'Flutter Pods ready: current SDK/module paths, plugin registrant and iOS engine verified.'
+  exit
+end
+abort '用法：ruby podfile_readiness.rb [--verify-project]' unless ARGV.empty?
+
 checks = 0
 
 Dir.mktmpdir('jobs-flutter-podfile-readiness-') do |root|

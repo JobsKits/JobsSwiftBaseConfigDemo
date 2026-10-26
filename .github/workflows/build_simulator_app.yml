@@ -60,6 +60,22 @@ jobs:
           xcode-select -p
           pod --version
 
+      - name: Prepare Flutter module for this runner
+        timeout-minutes: 20
+        shell: bash
+        env:
+          JOBS_FLUTTER_AUTO_SETUP: "1"
+          JOBS_POD_INSTALL_INTERACTION: interactive
+        run: |
+          set -euo pipefail
+          (
+            ruby 'ScriptsByPods/拉取Flutter侧三方资源.sh/Tests/podfile_readiness.rb'
+            ruby 'ScriptsByPods/配置Flutter环境.sh/Tests/interaction_regression.rb' --run
+            /bin/zsh 'ScriptsByPods/配置Flutter环境.sh/配置Flutter环境.sh'
+            /bin/zsh 'ScriptsByPods/拉取Flutter侧三方资源.sh/拉取Flutter侧三方资源.sh'
+            ruby 'ScriptsByPods/拉取Flutter侧三方资源.sh/Tests/podfile_readiness.rb' --verify-project
+          ) 2>&1 | tee "${RUNNER_TEMP}/flutter-setup.log"
+
       - name: Prepare test Simulator
         timeout-minutes: 10
         shell: bash
@@ -124,7 +140,7 @@ jobs:
       - name: Install CocoaPods dependencies
         timeout-minutes: 20
         env:
-          JOBS_FLUTTER_AUTO_SETUP: "1"
+          JOBS_SPECS_SOURCE: cdn
         run: |
           set -euo pipefail
           (pod install --no-repo-update || pod install --repo-update) \
@@ -215,6 +231,7 @@ jobs:
         with:
           name: Simulator-Build-Diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
+            ${{ runner.temp }}/flutter-setup.log
             ${{ runner.temp }}/pod-install.log
             ${{ runner.temp }}/xcode-toolchain.log
             ${{ runner.temp }}/simulator-sdk-version.txt

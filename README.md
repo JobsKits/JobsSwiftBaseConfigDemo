@@ -2190,7 +2190,7 @@ SPM 脚本确认后才初始化日志；`PIPE_FAIL` 保留 `swift package resolv
 
 Flutter 配置脚本不再为 FVM 强制安装或更新 Homebrew。FVM 官方默认安装到用户主目录下的 `fvm/bin`，支持 `FVM_INSTALL_DIR`；安装后检查实际二进制并立即刷新当前子进程 `PATH`，不写 shell profile。官方安装器可能迁移旧 FVM 安装，Flutter `versions` 缓存继续保留；已有官方 FVM 的可选升级直接走官方安装器。详见 [FVM 官方安装文档](https://fvm.app/documentation/getting-started/installation)。
 
-`JOBS_POD_INSTALL_HOOK` 和 `JOBS_SKIP_README` 不会跳过 Flutter / Unity 子脚本的终端确认。保留显式 `JOBS_FLUTTER_AUTO_SETUP=1` 的缺失环境补齐入口：只补齐必需环境与缓存 / module 依赖，已有 FVM / Flutter 的可选升级仍跳过；`check-only` / `skip` 优先，不因自动补齐标记执行写操作。Unity 删除缓存须精确输入 `YES`，Homebrew 清理另行选择。FVM 安装或复检失败会停止该脚本后续 Flutter 操作，由 Podfile 记录警告并继续；日志在系统临时目录中的 `配置Flutter环境.log`、`拉取Flutter侧三方资源.log`，配置脚本输出保留在 CocoaPods 输出中。
+`JOBS_POD_INSTALL_HOOK` 和 `JOBS_SKIP_README` 不会跳过 Flutter / Unity 子脚本的终端确认。显式 `JOBS_FLUTTER_AUTO_SETUP=1` 可直接运行 Flutter 配置及资源准备脚本，补齐必需环境、缓存 / module 依赖，并按既有备份恢复流程重建过期路径；已有 FVM / Flutter 的可选升级仍跳过。`check-only` / `skip` 优先，不因自动补齐标记执行写操作；Podfile 的无 TTY 辅助流程仍跳过，CI 必须在独立步骤显式调用这两个入口。Unity 删除缓存须精确输入 `YES`，Homebrew 清理另行选择。FVM 安装或复检失败会停止该脚本后续 Flutter 操作，由 Podfile 记录警告并继续；日志在系统临时目录中的 `配置Flutter环境.log`、`拉取Flutter侧三方资源.log`，配置脚本输出保留在 CocoaPods 输出中。
 
 Flutter 的健康检查同时核对 `Generated.xcconfig` 的 SDK / module 路径、SDK 根 `podhelper.rb`，以及 `flutter_export_environment.sh` 中的两条对应路径；不执行旧电脑带来的导出脚本。默认配置健康才跳过资源准备。第一次 `flutter pub get` 成功但配置仍过期时，将两份配置备份移到系统临时目录后再执行一次；失败时尝试恢复原配置，成功和失败均保留原配置备份。辅助任务失败只告警；默认配置仍不健康时，Podfile 只在内存声明 `install_all_flutter_pods` 和 `flutter_post_install` 两个兼容接口来跳过 Flutter 集成，不生成临时占位 helper 文件。脚本不手动删除 Pods、锁文件或整个 `.ios`，不嵌套执行 `pod install`；Flutter 官方 `pub get` 仍可能根据工具或 pubspec 变更重生成 `.ios`。完整行为与两项隔离验证入口见[资源准备与换机恢复](./ScriptsByPods/拉取Flutter侧三方资源.sh/README.md)。
 
@@ -2248,6 +2248,10 @@ XBT 是仓库外的本机依赖，当前共享 Scheme 使用固定用户绝对�
 
 [模拟器工作流](./.github/workflows/build_simulator_app.yml)在推送 / 拉取请求到 `main` 或手动触发时运行，使用官方 `xcode-27` 的 arm64 runner，选择镜像内的 Xcode 27.1；Xcode、iOS 真机 SDK 或模拟器 SDK 低于 27.1 时明确失败。`JOBS_XCODE_DEVELOPER_DIR` 可指定其它满足同一版本门禁的开发目录，实际版本与路径写入诊断日志。CI 保留 Flutter 安装准备、SwiftBlock 双架构编译检查、构建验证器回归、核心 / 网络回归和全部自建 Pod 编译。
 
+CI 在 `pod install` 前独立运行 [Flutter 环境配置](./ScriptsByPods/配置Flutter环境.sh/README.md)及[资源准备](./ScriptsByPods/拉取Flutter侧三方资源.sh/README.md)，仅在该步骤显式设置 `JOBS_FLUTTER_AUTO_SETUP=1` 与 `JOBS_POD_INSTALL_INTERACTION=interactive`。先执行生成配置和交互边界的隔离回归，再准备 FVM / Flutter stable、iOS 缓存与 module，必要时备份并重建 checkout 带来的旧绝对路径。最后由 `podfile_readiness.rb --verify-project` 只读检查当前 SDK / module 路径、`FlutterPluginRegistrant.podspec` 和 iOS engine 缓存；准备失败立即阻断，不能依赖占位 helper 继续编译。此过程不触发 Unity、SPM 或其它可选辅助写操作。
+
+CocoaPods 安装步骤单独设置 `JOBS_SPECS_SOURCE=cdn`，沿用网络测试和进程内锁源适配，但不因小文件测速略快而冷克隆整个 Specs Git 仓库；本机交互安装仍使用默认自动选源。安装保留 `--no-repo-update` 失败后一次 `--repo-update` 重试，不删除锁文件或主动升级依赖。
+
 依赖安装前，[模拟器选择器](./.github/tests/SimulatorRuntime/select_simulator.rb)读取当前 Xcode 的 Simulator SDK 版本，只从同主版本、可用且支持 arm64 的 iOS runtime 中选择 iPhone，按数字版本选最新可用候选；已启动的旧系统设备不会抢占。缺少匹配设备时立即失败并展示 runtime 清单，不自动下载数 GB 的运行时。随后以最低 iOS 15.6 编译并实际运行 [WebKit 加载探针](./.github/tests/SimulatorRuntime/WebKitRuntimeProbe.swift)，在正式构建前确认所选模拟器能加载 Swift WebKit overlay。该检查覆盖 [iOS 18.5 模拟器缺少 WebKit 兼容链接的问题](https://bugs.webkit.org/show_bug.cgi?id=293831)，不提高 App 的最低系统版本，也不修改系统运行时或弱化链接。
 
 自建 Pod 以 `--batch-pods` 生成临时 workspace / 聚合 Scheme，精确引用每个自建根 target（包括 aggregate target），由一次 `xcodebuild` 统一构建及复用依赖；不改写 `Pods.xcodeproj`。图标生成器仍单独编译验证。批次真实成功退出后，成员才记录为通过，并引用同一批次日志，不伪造逐模块耗时；批次失败或中断不能视为成员通过。
@@ -2258,7 +2262,7 @@ Pod 编译、宿主与测试统一使用 arm64、iOS 15.6 和同一份 DerivedDa
 
 打包仅选择产品目录中的 `JobsSwiftBaseConfigDemo.app`，并校验 Info.plist 的 Bundle ID、主可执行文件名称及文件存在；主 App 缺失或身份不符时直接失败，不能用同目录的 `UITests-Runner.app` 或其它测试宿主替代。日志输出实际打包路径和 Bundle ID，方便与下载产物核对。
 
-任务总时限 180 分钟，模拟器准备、依赖安装、自建 Pod 批量编译、宿主编译与测试分别限时 10 / 20 / 60 / 45 / 20 分钟，为首次启动 runtime 和失败诊断预留时间。失败或取消时上传安装日志、SDK 版本、模拟器 runtime / 设备清单与选择结果、WebKit 探针及其链接依赖日志、Pod 批次 / 成员结果、回归结果、构建 / 测试日志及 `.xcresult`，保存 7 天；成功 App 保存 14 天，并替换该分支先前的模拟器 App artifact。源码或回归失败仍会阻断产物发布；runner 排队提示不代表编译错误。
+任务总时限 180 分钟，Flutter 准备、模拟器准备、依赖安装、自建 Pod 批量编译、宿主编译与测试分别限时 20 / 10 / 20 / 60 / 45 / 20 分钟，为首次启动 runtime 和失败诊断预留时间。失败或取消时上传 `flutter-setup.log`、安装日志、SDK 版本、模拟器 runtime / 设备清单与选择结果、WebKit 探针及其链接依赖日志、Pod 批次 / 成员结果、回归结果、构建 / 测试日志及 `.xcresult`，保存 7 天；成功 App 保存 14 天，并替换该分支先前的模拟器 App artifact。源码或回归失败仍会阻断产物发布；runner 排队提示不代表编译错误。
 
 CocoaPods 生成的 `[CP] Check Pods Manifest.lock`、`[CP] Embed Pods Frameworks`、`[CP] Copy Pods Resources` 仍负责锁文件一致性、framework 嵌入和资源复制，属于构建内阶段。
 

@@ -44,9 +44,26 @@
   zsh './拉取Flutter侧三方资源.sh'
   ```
 
-- 独立运行先打印固定内置自述，按回车继续，按 `Ctrl+C` 取消；没有可交互输入时退出并提示改用终端。
-- [工程 Podfile](../../Podfile) 在默认 Flutter 生成配置未通过完整健康检查时同步调用本脚本。默认 `interactive` 模式每次展示说明并等待本脚本的回车确认；`JOBS_SKIP_README`、`JOBS_POD_INSTALL_HOOK` 不再代替确认，EOF 或无 TTY 均在初始化日志及业务前停止。
-- `JOBS_POD_INSTALL_INTERACTION=check-only` 或 `skip` 只展示说明并跳过本脚本，不初始化日志、不拉取依赖、不备份或重建配置；其它模式值报错退出。
+- 独立运行先打印固定内置自述，按回车继续，按 `Ctrl+C` 取消；默认没有可交互输入时退出并提示改用终端。
+- [工程 Podfile](../../Podfile) 在默认 Flutter 生成配置未通过完整健康检查时同步调用本脚本。默认 `interactive` 模式每次展示说明并等待本脚本的回车确认；`JOBS_SKIP_README`、`JOBS_POD_INSTALL_HOOK` 不代替确认，EOF 或未显式授权的无 TTY 输入在初始化日志及业务前停止。Podfile 自身仍会跳过无 TTY 的辅助调用，自动化须直接运行脚本。
+- [**GitHub Actions**](https://docs.github.com/actions) 等非交互环境可显式设置 `JOBS_FLUTTER_AUTO_SETUP=1`，复用已有健康工具并准备当前 module 的依赖及生成配置；该开关不安装或升级工具，有 TTY 时仍需回车确认：
+
+  ```shell
+  JOBS_FLUTTER_AUTO_SETUP=1 \
+    zsh './拉取Flutter侧三方资源.sh'
+  ```
+
+- `JOBS_POD_INSTALL_INTERACTION=check-only` 或 `skip` 只展示说明并跳过本脚本，不初始化日志、不拉取依赖、不备份或重建配置；优先级高于 `JOBS_FLUTTER_AUTO_SETUP=1`，其它模式值报错退出。
+- CI 在工程根目录直接运行配置和资源准备入口，最后只读校验当前 checkout 的真实接入条件；门禁失败时停止后续 `pod install`：
+
+  ```shell
+  JOBS_FLUTTER_AUTO_SETUP=1 \
+    zsh './ScriptsByPods/配置Flutter环境.sh/配置Flutter环境.sh'
+  JOBS_FLUTTER_AUTO_SETUP=1 \
+    zsh './ScriptsByPods/拉取Flutter侧三方资源.sh/拉取Flutter侧三方资源.sh'
+  ruby './ScriptsByPods/拉取Flutter侧三方资源.sh/Tests/podfile_readiness.rb' \
+    --verify-project
+  ```
 
 ## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、执行前检查 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
@@ -109,6 +126,7 @@
 ## <span id="jobs-toc-heading-6" data-jobs-toc="v2">五、风险说明 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 - 脚本会执行 `flutter pub get`，可能改动 Flutter 依赖缓存和生成目录。它不安装或升级 FVM，也不修改 shell profile。
+- 自动化直接调用时应在后续安装前单独检查默认 module 的配置、SDK 引擎和 `FlutterPluginRegistrant`；本脚本在找不到工具时仍按辅助任务边界告警并跳过，退出码为零不能单独证明 Flutter 已集成。
 - 默认配置完整健康时直接结束；仅有 module helper 文件不足以证明环境可用。没有可用工具或候选工程时告警并跳过，不声称完成修复。
 - 修复失败返回失败状态，由 Podfile 的 `required: false` 调用记录警告并继续主安装流程；默认 module 仍不健康时，Podfile 使用已有占位 helper 跳过 Flutter Pods 集成，不把其它候选的成功当成默认 module 已修好。
 - Podfile 的占位 helper 只在内存声明与原 helper 同签名的两个空实现，不创建临时 Ruby 文件；查询、`check-only` 或 `skip` 下也不会写占位文件。健康真实 helper 仍按实际路径加载。
