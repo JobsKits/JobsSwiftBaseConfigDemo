@@ -106,36 +106,43 @@ jobs:
             2>&1 | tee -a "${RUNNER_TEMP}/webkit-runtime-probe.log"
 
       - name: Verify JobsSwiftBlock factory and callback regressions
-        timeout-minutes: 5
+        # Allow for SDK module compilation and variable hosted-runner performance.
+        timeout-minutes: 15
         shell: bash
         run: |
           set -euo pipefail
-          echo "Validate JobsSwiftBlock factory types, callback storage, and both Simulator architectures."
-          regression_dir="$(mktemp -d "${RUNNER_TEMP}/JobsSwiftBlockRegression.XXXXXX")"
-          block_dir="JobsByPods/JobsSwiftBlock@Pods"
+          (
+            TIMEFORMAT='Elapsed: %3R seconds'
+            echo "Validate JobsSwiftBlock factory types, callback storage, and both Simulator architectures."
+            regression_dir="$(mktemp -d "${RUNNER_TEMP}/JobsSwiftBlockRegression.XXXXXX")"
+            block_dir="JobsByPods/JobsSwiftBlock@Pods"
 
-          xcrun swiftc -swift-version 5 -Onone -emit-library -emit-module \
-            -module-name JobsSwiftBlock \
-            "${block_dir}/NSObject+Make.swift" "${block_dir}/JobsCallbackable.swift" \
-            -emit-module-path "${regression_dir}/JobsSwiftBlock.swiftmodule" \
-            -o "${regression_dir}/libJobsSwiftBlock.dylib"
-          xcrun swiftc -swift-version 5 -Onone -parse-as-library \
-            -I "${regression_dir}" -L "${regression_dir}" -lJobsSwiftBlock \
-            .github/tests/JobsSwiftBlockRegression.swift \
-            -o "${regression_dir}/JobsSwiftBlockRegression"
-          "${regression_dir}/JobsSwiftBlockRegression"
-
-          simulator_sdk="$(xcrun --sdk iphonesimulator --show-sdk-path)"
-          for simulator_arch in arm64 x86_64; do
-            echo "Generate JobsCallbackable IR for ${simulator_arch}."
-            xcrun swiftc -frontend -emit-ir -Onone -swift-version 5 \
-              -profile-generate -profile-coverage-mapping \
-              -target "${simulator_arch}-apple-ios15.0-simulator" -sdk "${simulator_sdk}" \
+            echo "Compile the host JobsSwiftBlock module."
+            time xcrun swiftc -swift-version 5 -Onone -emit-library -emit-module \
               -module-name JobsSwiftBlock \
-              -primary-file "${block_dir}/JobsCallbackable.swift" \
-              "${block_dir}/NSObject+Make.swift" \
-              -o "${regression_dir}/JobsCallbackable-${simulator_arch}.ll"
-          done
+              "${block_dir}/NSObject+Make.swift" "${block_dir}/JobsCallbackable.swift" \
+              -emit-module-path "${regression_dir}/JobsSwiftBlock.swiftmodule" \
+              -o "${regression_dir}/libJobsSwiftBlock.dylib"
+            echo "Compile the factory and callback regressions."
+            time xcrun swiftc -swift-version 5 -Onone -parse-as-library \
+              -I "${regression_dir}" -L "${regression_dir}" -lJobsSwiftBlock \
+              .github/tests/JobsSwiftBlockRegression.swift \
+              -o "${regression_dir}/JobsSwiftBlockRegression"
+            echo "Run the factory and callback regressions."
+            time "${regression_dir}/JobsSwiftBlockRegression"
+
+            simulator_sdk="$(xcrun --sdk iphonesimulator --show-sdk-path)"
+            for simulator_arch in arm64 x86_64; do
+              echo "Generate JobsCallbackable IR for ${simulator_arch}."
+              time xcrun swiftc -frontend -emit-ir -Onone -swift-version 5 \
+                -profile-generate -profile-coverage-mapping \
+                -target "${simulator_arch}-apple-ios15.0-simulator" -sdk "${simulator_sdk}" \
+                -module-name JobsSwiftBlock \
+                -primary-file "${block_dir}/JobsCallbackable.swift" \
+                "${block_dir}/NSObject+Make.swift" \
+                -o "${regression_dir}/JobsCallbackable-${simulator_arch}.ll"
+            done
+          ) 2>&1 | tee "${RUNNER_TEMP}/jobs-swift-block-regression.log"
 
       - name: Install CocoaPods dependencies
         timeout-minutes: 20
@@ -240,6 +247,7 @@ jobs:
             ${{ runner.temp }}/simulator-selection.env
             ${{ runner.temp }}/webkit-runtime-probe.log
             ${{ runner.temp }}/webkit-runtime-probe-dependencies.log
+            ${{ runner.temp }}/jobs-swift-block-regression.log
             ${{ runner.temp }}/simulator-build.log
             ${{ runner.temp }}/SimulatorBuild.xcresult
             ${{ runner.temp }}/JobsPodsUnitBuilds
