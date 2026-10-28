@@ -7,7 +7,9 @@
 
 import Foundation
 
-public enum JobsLocalNotificationError: Error, LocalizedError {
+public enum JobsLocalNotificationError: Error,
+                                        LocalizedError {
+
     case emptyIdentifier
     case invalidInterval
 

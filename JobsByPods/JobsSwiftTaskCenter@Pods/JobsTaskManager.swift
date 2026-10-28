@@ -16,6 +16,7 @@ import UIKit
 /// 线程安全：使用 NSLock 保护内部状态
 
 public final class JobsTaskManager: @unchecked Sendable {
+
     public static let `default` = JobsTaskManager()
     private let lock = NSLock()
     private var tasks: [JobsTaskItem] = []
@@ -24,18 +25,14 @@ public final class JobsTaskManager: @unchecked Sendable {
 
     private init() {
         #if os(iOS) || os(tvOS)
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(backgroundState),
-            name: UIApplication.didEnterBackgroundNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(activeState),
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil
-        )
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(backgroundState),
+                                               name: UIApplication.didEnterBackgroundNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(activeState),
+                                               name: UIApplication.didBecomeActiveNotification,
+                                               object: nil)
         #endif
     }
 
@@ -45,24 +42,36 @@ public final class JobsTaskManager: @unchecked Sendable {
 }
 
 extension JobsTaskManager {
+
     @discardableResult
     public func mergedExecutions(for tags: [String]) -> JobsMergedTaskExecutionSequence {
         let sequences = tags.compactMap { tag -> (String, JobsTaskExecutionSequence)? in
-            guard let item = task(by: tag) else { return nil };return (tag, item.task.executions())
-        };return JobsMergedTaskExecutionSequence(sequences)
+            guard let item = task(by: tag) else {
+                return nil
+            }
+            return (tag, item.task.executions())
+        }
+        return JobsMergedTaskExecutionSequence(sequences)
     }
 
     @discardableResult
     public func task(by tag: String) -> JobsTaskItem? {
         lock.lock()
-        defer { lock.unlock() };return tasks.first { $0.tag == tag }
+        defer {
+            lock.unlock()
+        }
+        return tasks.first {
+            $0.tag == tag
+        }
     }
 
     @discardableResult
     public func addTask(task item: JobsTaskItem) -> JobsTaskManager {
         let didAdd: Bool
         lock.lock()
-        let tagExists = tasks.contains { $0.tag == item.tag }
+        let tagExists = tasks.contains {
+            $0.tag == item.tag
+        }
         if tagExists {
             didAdd = false
         } else {
@@ -70,13 +79,19 @@ extension JobsTaskManager {
             didAdd = true
         }
         lock.unlock()
-        guard didAdd else { return self }
+        guard didAdd else {
+            return self
+        }
         bindLifecycle(for: item)
         InternalTaskCenter.default.add(item.task)
-        InternalTaskCenter.default.addTag(item.tag, to: item.task)
+        InternalTaskCenter.default.addTag(item.tag,
+                                          to: item.task)
         item.task.suspend()
-        let newStatus = status(for: item.task, fallback: item.status)
-        updateStatus(for: item.tag, to: newStatus, emitWhenUnchanged: true)
+        let newStatus = status(for: item.task,
+                               fallback: item.status)
+        updateStatus(for: item.tag,
+                     to: newStatus,
+                     emitWhenUnchanged: true)
         return self
     }
 
@@ -89,15 +104,24 @@ extension JobsTaskManager {
     public func removeTask(by tag: String) -> JobsTaskManager {
         let item: JobsTaskItem?
         lock.lock()
-        let idx = tasks.firstIndex { $0.tag == tag }
-        item = idx.map { tasks.remove(at: $0) }
+        let idx = tasks.firstIndex {
+            $0.tag == tag
+        }
+        item = idx.map {
+            tasks.remove(at: $0)
+        }
         let lifecycleToken = lifecycleObserverTokens.removeValue(forKey: tag)
         lock.unlock()
         if let item {
-            if let lifecycleToken { item.task.removeLifecycleObserver(lifecycleToken) }
+            if let lifecycleToken {
+                item.task.removeLifecycleObserver(lifecycleToken)
+            }
             InternalTaskCenter.default.remove(item.task)
-            notifyStatusChange(tag: tag, oldStatus: item.status, newStatus: nil)
-        };return self
+            notifyStatusChange(tag: tag,
+                               oldStatus: item.status,
+                               newStatus: nil)
+        }
+        return self
     }
 
     @discardableResult
@@ -114,7 +138,9 @@ extension JobsTaskManager {
             if let token = tokens[item.tag] {
                 item.task.removeLifecycleObserver(token)
             }
-            notifyStatusChange(tag: item.tag, oldStatus: item.status, newStatus: nil)
+            notifyStatusChange(tag: item.tag,
+                               oldStatus: item.status,
+                               newStatus: nil)
         }
         InternalTaskCenter.default.removeAll()
         return self
@@ -122,11 +148,16 @@ extension JobsTaskManager {
 
     @discardableResult
     public func resume(by tag: String) -> JobsTaskManager {
-        let matched = tasksSnapshot().filter { $0.tag == tag }
+        let matched = tasksSnapshot().filter {
+            $0.tag == tag
+        }
         matched.forEach { item in
             item.task.resume()
-            updateStatus(for: item.tag, to: status(for: item.task, fallback: .execute))
-        };return self
+            updateStatus(for: item.tag,
+                         to: status(for: item.task,
+                                    fallback: .execute))
+        }
+        return self
     }
 
     @discardableResult
@@ -134,17 +165,25 @@ extension JobsTaskManager {
         let snapshot = tasksSnapshot()
         snapshot.filter(condition).forEach { item in
             item.task.resume()
-            updateStatus(for: item.tag, to: status(for: item.task, fallback: .execute))
-        };return self
+            updateStatus(for: item.tag,
+                         to: status(for: item.task,
+                                    fallback: .execute))
+        }
+        return self
     }
 
     @discardableResult
     public func executeNow(by tag: String) -> JobsTaskManager {
-        let matched = tasksSnapshot().filter { $0.tag == tag }
+        let matched = tasksSnapshot().filter {
+            $0.tag == tag
+        }
         matched.forEach { item in
             item.task.executeNow()
-            updateStatus(for: item.tag, to: status(for: item.task, fallback: .execute))
-        };return self
+            updateStatus(for: item.tag,
+                         to: status(for: item.task,
+                                    fallback: .execute))
+        }
+        return self
     }
 
     @discardableResult
@@ -152,17 +191,25 @@ extension JobsTaskManager {
         let snapshot = tasksSnapshot()
         snapshot.filter(condition).forEach { item in
             item.task.executeNow()
-            updateStatus(for: item.tag, to: status(for: item.task, fallback: .execute))
-        };return self
+            updateStatus(for: item.tag,
+                         to: status(for: item.task,
+                                    fallback: .execute))
+        }
+        return self
     }
 
     @discardableResult
     public func suspend(by tag: String) -> JobsTaskManager {
-        let matched = tasksSnapshot().filter { $0.tag == tag }
+        let matched = tasksSnapshot().filter {
+            $0.tag == tag
+        }
         matched.forEach { item in
             item.task.suspend()
-            updateStatus(for: item.tag, to: status(for: item.task, fallback: .suspend))
-        };return self
+            updateStatus(for: item.tag,
+                         to: status(for: item.task,
+                                    fallback: .suspend))
+        }
+        return self
     }
 
     @discardableResult
@@ -170,8 +217,11 @@ extension JobsTaskManager {
         let snapshot = tasksSnapshot()
         snapshot.forEach { item in
             item.task.suspend()
-            updateStatus(for: item.tag, to: status(for: item.task, fallback: .suspend))
-        };return self
+            updateStatus(for: item.tag,
+                         to: status(for: item.task,
+                                    fallback: .suspend))
+        }
+        return self
     }
 
     @discardableResult
@@ -179,19 +229,26 @@ extension JobsTaskManager {
         let item: JobsTaskItem?
         let lifecycleToken: UUID?
         lock.lock()
-        let idx = tasks.firstIndex { $0.tag == tag }
-        item = idx.map { tasks.remove(at: $0) }
+        let idx = tasks.firstIndex {
+            $0.tag == tag
+        }
+        item = idx.map {
+            tasks.remove(at: $0)
+        }
         lifecycleToken = lifecycleObserverTokens.removeValue(forKey: tag)
         lock.unlock()
         if let item {
-            if let lifecycleToken { item.task.removeLifecycleObserver(lifecycleToken) }
+            if let lifecycleToken {
+                item.task.removeLifecycleObserver(lifecycleToken)
+            }
             item.task.cancel()
             let oldStatus = item.status
             item.status = .ended
             notifyStatusChange(tag: tag,
                                oldStatus: oldStatus,
                                newStatus: .ended)
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -214,7 +271,8 @@ extension JobsTaskManager {
             notifyStatusChange(tag: item.tag,
                                oldStatus: oldStatus,
                                newStatus: .ended)
-        };return self
+        }
+        return self
     }
 
     public var allTasks: [JobsTaskItem] {
@@ -226,17 +284,23 @@ extension JobsTaskManager {
     }
 
     public func tasks(with status: JobsTaskStatus) -> [JobsTaskItem] {
-        tasks(where: { $0.status == status })
+        tasks(where: {
+            $0.status == status
+        })
     }
 
     public var taskCount: Int {
         lock.lock()
-        defer { lock.unlock() };return tasks.count
+        defer {
+            lock.unlock()
+        }
+        return tasks.count
     }
 }
 
 // MARK: - JobsTaskManager Async/Await Support
 extension JobsTaskManager {
+
     @discardableResult
     public func addTaskAsync(_ item: JobsTaskItem) async -> Bool {
         let existedBefore = task(by: item.tag) != nil
@@ -253,7 +317,10 @@ extension JobsTaskManager {
 
     @discardableResult
     public func executeNowAsync(by tag: String) async -> Bool {
-        guard let item = task(by: tag) else { return false };return await item.task.executeAndWait()
+        guard let item = task(by: tag) else {
+            return false
+        }
+        return await item.task.executeAndWait()
     }
 
     public func waitForAllTasks() async {
@@ -268,7 +335,9 @@ extension JobsTaskManager {
     }
 
     public func waitForTask(by tag: String) async {
-        guard let item = task(by: tag) else { return }
+        guard let item = task(by: tag) else {
+            return
+        }
         await item.task.waitUntilFinished()
     }
 
@@ -285,12 +354,14 @@ extension JobsTaskManager {
                 if success {
                     successCount += 1
                 }
-            };return successCount
+            }
+            return successCount
         }
     }
 
     public func executionStream(for tag: String) -> JobsTaskManagerExecutionStream {
-        JobsTaskManagerExecutionStream(manager: self, tag: tag)
+        JobsTaskManagerExecutionStream(manager: self,
+                                       tag: tag)
     }
 
     public func statusChanges() -> JobsTaskManagerStatusStream {
@@ -299,6 +370,7 @@ extension JobsTaskManager {
 }
 // MARK: - JobsTaskManager internals
 extension JobsTaskManager {
+
     @discardableResult
     func addStatusObserver(_ observer: @escaping @Sendable (JobsTaskStatusChange) -> Void) -> UUID {
         let id = UUID()
@@ -316,14 +388,22 @@ extension JobsTaskManager {
 
     private func tasksSnapshot() -> [JobsTaskItem] {
         lock.lock()
-        defer { lock.unlock() };return tasks
+        defer {
+            lock.unlock()
+        }
+        return tasks
     }
 
     private func bindLifecycle(for item: JobsTaskItem) {
         let token = item.task.addLifecycleObserver { [weak self] lifecycle in
-            guard let self else { return }
-            guard let mappedStatus = self.status(for: lifecycle) else { return }
-            self.updateStatus(for: item.tag, to: mappedStatus)
+            guard let self else {
+                return
+            }
+            guard let mappedStatus = self.status(for: lifecycle) else {
+                return
+            }
+            self.updateStatus(for: item.tag,
+                              to: mappedStatus)
         }
         lock.lock()
         lifecycleObserverTokens[item.tag] = token
@@ -336,7 +416,9 @@ extension JobsTaskManager {
         let oldStatus: JobsTaskStatus?
         let shouldEmit: Bool
         lock.lock()
-        if let item = tasks.first(where: { $0.tag == tag }) {
+        if let item = tasks.first(where: {
+            $0.tag == tag
+        }) {
             oldStatus = item.status
             shouldEmit = emitWhenUnchanged || item.status != newStatus
             item.status = newStatus
@@ -346,12 +428,16 @@ extension JobsTaskManager {
         }
         let observers = Array(statusObservers.values)
         lock.unlock()
-        guard shouldEmit else { return }
+        guard shouldEmit else {
+            return
+        }
         let change = JobsTaskStatusChange(tag: tag,
                                           oldStatus: oldStatus,
                                           newStatus: newStatus,
                                           timestamp: Date())
-        observers.forEach { $0(change) }
+        observers.forEach {
+            $0(change)
+        }
     }
 
     private func notifyStatusChange(tag: String,
@@ -364,28 +450,36 @@ extension JobsTaskManager {
                                           oldStatus: oldStatus,
                                           newStatus: newStatus,
                                           timestamp: Date())
-        observers.forEach { $0(change) }
+        observers.forEach {
+            $0(change)
+        }
     }
 
-    private func status(for task: JobsTask, fallback: JobsTaskStatus) -> JobsTaskStatus {
+    private func status(for task: JobsTask,
+                        fallback: JobsTaskStatus) -> JobsTaskStatus {
         status(for: task.lifecycle) ?? fallback
     }
 
     private func status(for lifecycle: JobsTaskLifecycle) -> JobsTaskStatus? {
         switch lifecycle {
         /// 处理 .idle 分支
-        case .idle: return .prepare
+        case .idle:
+            return .prepare
         /// 处理 .running 分支
-        case .running: return .execute
+        case .running:
+            return .execute
         /// 处理 .suspended 分支
-        case .suspended: return .suspend
+        case .suspended:
+            return .suspend
         /// 合并处理 .cancelled、.finished 分支
-        case .cancelled, .finished: return .ended
+        case .cancelled, .finished:
+            return .ended
         }
     }
 }
 // MARK: - JobsTaskManager@DSL
 extension JobsTaskManager {
+
     @discardableResult
     public func byAddTask(_ item: JobsTaskItem) -> Self {
         addTask(task: item)
@@ -478,6 +572,7 @@ extension JobsTaskManager {
 }
 #if os(iOS) || os(tvOS)
 extension JobsTaskManager: TaskForApplicationStatusDelegate {
+
     @objc private func backgroundState() {
         applicationStatusDidChanged(.background)
     }
@@ -491,16 +586,23 @@ extension JobsTaskManager: TaskForApplicationStatusDelegate {
         switch state {
         /// 处理 .active 分支
         case .active:
-            snapshot.filter { $0.status == .background }.forEach {
-                resume(by: $0.tag)
-                executeNow(by: $0.tag)
+            snapshot.filter {
+                $0.status == .background
             }
+                .forEach {
+                    resume(by: $0.tag)
+                    executeNow(by: $0.tag)
+                }
         /// 处理 .background 分支
         case .background:
-            snapshot.filter { $0.status == .execute }.forEach { item in
-                item.task.suspend()
-                updateStatus(for: item.tag, to: .background)
+            snapshot.filter {
+                $0.status == .execute
             }
+                .forEach { item in
+                    item.task.suspend()
+                    updateStatus(for: item.tag,
+                                 to: .background)
+                }
         /// 未匹配已知分支时执行兜底处理
         default:
             break

@@ -10,6 +10,7 @@ import Security
 /// Hex/Base64、Data 转换
 
 public enum CryptoError: Error {
+
     case invalidHex
     case invalidBase64
     case invalidKey
@@ -22,21 +23,34 @@ public enum CryptoError: Error {
 }
 
 public extension Data {
+
     var hexString: String {
-        map { String(format: "%02hhx", $0) }.joined()
+        map {
+            String(format: "%02hhx",
+                   $0)
+        }
+            .joined()
     }
 
     init?(hex: String) {
         let hex = hex.lowercased()
-        guard hex.count % 2 == 0 else { return nil }
+        guard hex.count % 2 == 0 else {
+            return nil
+        }
         var data = Data()
         data.reserveCapacity(hex.count / 2)
         var i = hex.startIndex
         while i < hex.endIndex {
-            let j = hex.index(i, offsetBy: 2)
-            guard j <= hex.endIndex else { return nil }
-            let byteStr = hex[i..<j]
-            guard let byte = UInt8(byteStr, radix: 16) else { return nil }
+            let j = hex.index(i,
+                              offsetBy: 2)
+            guard j <= hex.endIndex else {
+                return nil
+            }
+            let byteStr = hex[i ..< j]
+            guard let byte = UInt8(byteStr,
+                                   radix: 16) else {
+                return nil
+            }
             data.append(byte)
             i = j
         }
@@ -44,25 +58,45 @@ public extension Data {
     }
 
     static func randomBytes(count: Int) throws -> Data {
-        guard (0...1_048_576).contains(count) else { throw CryptoError.invalidData }
-        guard count > 0 else { return Data() }
+        guard (0 ... 1_048_576).contains(count) else {
+            throw CryptoError.invalidData
+        }
+        guard count > 0 else {
+            return Data()
+        }
         var data = Data(count: count)
         let result = data.withUnsafeMutableBytes { ptr in
-            guard let address = ptr.baseAddress else { return errSecParam }
-            return SecRandomCopyBytes(kSecRandomDefault, count, address)
+            guard let address = ptr.baseAddress else {
+                return errSecParam
+            }
+            return SecRandomCopyBytes(kSecRandomDefault,
+                                      count,
+                                      address)
         }
-        guard result == errSecSuccess else { throw CryptoError.keyGenerationFailed }
+        guard result == errSecSuccess else {
+            throw CryptoError.keyGenerationFailed
+        }
         return data
     }
 }
 
 public extension String {
-    var utf8Data: Data { Data(utf8) }
 
-    func base64Encoded() -> String { utf8Data.base64EncodedString() }
+    var utf8Data: Data {
+        Data(utf8)
+    }
+
+    func base64Encoded() -> String {
+        utf8Data.base64EncodedString()
+    }
     func base64DecodedString() throws -> String {
-        guard let data = Data(base64Encoded: self) else { throw CryptoError.invalidBase64 }
-        guard let string = String(data: data, encoding: .utf8) else { throw CryptoError.invalidData }
+        guard let data = Data(base64Encoded: self) else {
+            throw CryptoError.invalidBase64
+        }
+        guard let string = String(data: data,
+                                  encoding: .utf8) else {
+            throw CryptoError.invalidData
+        }
         return string
     }
 }

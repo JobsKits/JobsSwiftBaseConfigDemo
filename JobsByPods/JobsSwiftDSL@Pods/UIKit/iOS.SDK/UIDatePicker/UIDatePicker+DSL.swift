@@ -13,6 +13,7 @@ import UIKit
 
 #if os(iOS) || os(tvOS)
 extension UIDatePicker {
+
     @discardableResult
     public func byDatePickerMode(_ mode: UIDatePicker.Mode) -> Self {
         datePickerMode = mode
@@ -32,7 +33,8 @@ extension UIDatePicker {
     public func byWheelsStyleIfAvailable() -> Self {
         if #available(iOS 13.4, *) {
             preferredDatePickerStyle = .wheels
-        };return self
+        }
+        return self
     }
     #endif
 
@@ -55,14 +57,17 @@ extension UIDatePicker {
     }
 
     @discardableResult
-    public func byDate(_ date: Date, animated: Bool = false) -> Self {
-        setDate(date, animated: animated)
+    public func byDate(_ date: Date,
+                       animated: Bool = false) -> Self {
+        setDate(date,
+                animated: animated)
         return self
     }
 
     @discardableResult
     public func byDateByAnimated(_ date: Date) -> Self {
-        byDate(date, animated: true)
+        byDate(date,
+               animated: true)
     }
 
     @discardableResult

@@ -13,6 +13,7 @@ import JobsByUIKit
 import JobsInheritance
 
 extension AppDelegate {
+
     func setupDebugPanel() {
         JobsDebugPanel.shared
             .byEnvironments([
@@ -33,23 +34,25 @@ extension AppDelegate {
                 JobsNetworkingDebugEnvironment.shared.byBaseURL(environment.baseURL)
             }
             .byAddAction(
-                JobsDebugAction()
-                    .byTitle("调试面板使用示例")
-                    .byAction { source in
-                        source.navigationController?.pushViewControllerByAnimated(JobsDebugPanelDemoVC())
-                    }
-            )
+            JobsDebugAction()
+                .byTitle("调试面板使用示例")
+                .byAction { source in
+                source.navigationController?.pushViewControllerByAnimated(JobsDebugPanelDemoVC())
+            }
+        )
             .byAddAction(
-                JobsDebugAction()
-                    .byTitle("查看当前环境")
-                    .byAction { source in
-                        let environment = JobsDebugPanel.shared.selectedEnvironment
-                        let message = "\(environment?.title ?? "未配置")\n\(environment?.urlString ?? "")"
-                        UIAlertController.makeAlert("当前网络环境", message)
-                            .byAddAction(title: "知道了")
-                            .byPresent(source, animated: true)
-                    }
-            )
+            JobsDebugAction()
+                .byTitle("查看当前环境")
+                .byAction { source in
+                let environment = JobsDebugPanel.shared.selectedEnvironment
+                let message = "\(environment?.title ?? "未配置")\n\(environment?.urlString ?? "")"
+                UIAlertController.makeAlert("当前网络环境",
+                                            message)
+                    .byAddAction(title: "知道了")
+                    .byPresent(source,
+                               animated: true)
+            }
+        )
             .byStart()
     }
 }

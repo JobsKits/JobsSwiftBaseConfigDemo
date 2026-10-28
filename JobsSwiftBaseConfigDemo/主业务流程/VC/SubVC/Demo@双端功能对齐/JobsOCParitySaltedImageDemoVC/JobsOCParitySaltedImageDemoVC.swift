@@ -20,6 +20,7 @@ import GKNavigationBarSwift
 import SnapKit
 
 private enum JobsImageStringCodec: CaseIterable {
+
     case hexadecimal
     case base16
     case base32
@@ -56,7 +57,8 @@ final class JobsSaltedImageStoreDemoVC: BaseVC {
     private let codecs = JobsImageStringCodec.allCases
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .plain)
+        UITableView(frame: .zero,
+                    style: .plain)
             .byDataSource(self)
             .byDelegate(self)
             .byRowHeight(62)
@@ -76,16 +78,20 @@ final class JobsSaltedImageStoreDemoVC: BaseVC {
     }
 }
 
-extension JobsSaltedImageStoreDemoVC: UITableViewDataSource, UITableViewDelegate {
+extension JobsSaltedImageStoreDemoVC: UITableViewDataSource,
+                                      UITableViewDelegate {
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
         codecs.count
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let reuseIdentifier = "JobsSaltedImageCodecCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier)
-            ?? UITableViewCell(style: .default, reuseIdentifier: reuseIdentifier)
+            ?? UITableViewCell(style: .default,
+                               reuseIdentifier: reuseIdentifier)
         return cell
             .byText(codecs[indexPath.row].title)
             .byTitleFont(JobsFont.systemFont(ofSize: 16))
@@ -94,9 +100,12 @@ extension JobsSaltedImageStoreDemoVC: UITableViewDataSource, UITableViewDelegate
             .byBackgroundColor(JobsCor.secondarySystemBackground)
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: YES)
-        JobsSaltedImageCodecDemoVC(codec: codecs[indexPath.row]).byPush(self)
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath,
+                              animated: YES)
+        JobsSaltedImageCodecDemoVC(codec: codecs[indexPath.row])
+            .byPush(self)
     }
 }
 
@@ -109,15 +118,21 @@ private final class JobsSaltedImageCodecDemoVC: BaseVC {
 
     private lazy var chooseButton: UIButton = {
         UIButton.sys()
-            .byTitle("点击按钮".tr, for: .normal)
-            .bySubTitle("选取相册图片".tr, for: .normal)
-            .byImage("plus.circle.fill".sysImg, for: .normal)
+            .byTitle("点击按钮".tr,
+                     for: .normal)
+            .bySubTitle("选取相册图片".tr,
+                        for: .normal)
+            .byImage("plus.circle.fill".sysImg,
+                     for: .normal)
             .byTitleFont(JobsFont.boldSystemFont(ofSize: 19))
             .bySubTitleFont(JobsFont.systemFont(ofSize: 14))
-            .byTitleColor(JobsCor.label, for: .normal)
-            .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+            .byTitleColor(JobsCor.label,
+                          for: .normal)
+            .bySubTitleColor(JobsCor.secondaryLabel,
+                             for: .normal)
             .byTintColor(JobsCor.systemGreen)
-            .byBackgroundColor(JobsCor.secondarySystemBackground, for: .normal)
+            .byBackgroundColor(JobsCor.secondarySystemBackground,
+                               for: .normal)
             .byCornerRadius(12)
             .onTap { [weak self] _ in
                 self?.chooseImage()
@@ -131,15 +146,21 @@ private final class JobsSaltedImageCodecDemoVC: BaseVC {
 
     private lazy var restoreButton: UIButton = {
         UIButton.sys()
-            .byTitle("点击按钮".tr, for: .normal)
-            .bySubTitle("编码转译成图片".tr, for: .normal)
-            .byImage("photo.badge.arrow.down".sysImg, for: .normal)
+            .byTitle("点击按钮".tr,
+                     for: .normal)
+            .bySubTitle("编码转译成图片".tr,
+                        for: .normal)
+            .byImage("photo.badge.arrow.down".sysImg,
+                     for: .normal)
             .byTitleFont(JobsFont.boldSystemFont(ofSize: 19))
             .bySubTitleFont(JobsFont.systemFont(ofSize: 14))
-            .byTitleColor(JobsCor.label, for: .normal)
-            .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
+            .byTitleColor(JobsCor.label,
+                          for: .normal)
+            .bySubTitleColor(JobsCor.secondaryLabel,
+                             for: .normal)
             .byTintColor(JobsCor.systemBlue)
-            .byBackgroundColor(JobsCor.secondarySystemBackground, for: .normal)
+            .byBackgroundColor(JobsCor.secondarySystemBackground,
+                               for: .normal)
             .byCornerRadius(12)
             .onTap { [weak self] _ in
                 self?.restoreImage()
@@ -152,14 +173,19 @@ private final class JobsSaltedImageCodecDemoVC: BaseVC {
     }()
 
     private lazy var encodedTextView: UITextView = {
-        UITextView.jobsMake { _ in }
+        UITextView
+            .jobsMake { _ in }
             .byText("暂无编码数据！！！".tr)
-            .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 12,
+                                                  weight: .regular))
             .byTextColor(JobsCor.label)
             .byEditable(false)
             .byBackgroundColor(JobsCor.systemGray6)
             .byCornerRadius(10)
-            .byTextContainerInset(UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
+            .byTextContainerInset(UIEdgeInsets(top: 10,
+                                               left: 10,
+                                               bottom: 10,
+                                               right: 10))
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(restoreButton.snp.bottom).offset(10)
                 make.left.right.equalToSuperview().inset(12)
@@ -169,7 +195,8 @@ private final class JobsSaltedImageCodecDemoVC: BaseVC {
 
     init(codec: JobsImageStringCodec) {
         self.codec = codec
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil,
+                   bundle: nil)
     }
 
     required init?(coder: NSCoder) {
@@ -186,18 +213,23 @@ private final class JobsSaltedImageCodecDemoVC: BaseVC {
     }
 
     private func chooseImage() {
-        pickFromPhotoLibrary(maxSelection: 1, imagesOnly: true) { [weak self] images in
+        pickFromPhotoLibrary(maxSelection: 1,
+                             imagesOnly: true) { [weak self] images in
             guard let self,
                   let image = images.first,
-                  let data = image.pngData() ?? image.jpegData(compressionQuality: 0.92) else { return }
+                  let data = image.pngData() ?? image.jpegData(compressionQuality: 0.92) else {
+                return
+            }
             guard let payload = encode(data) else {
                 encodedTextView.byText("编码失败".tr)
                 return
             }
             encodedText = prefixSalt + payload + suffixSalt
             chooseButton
-                .byImage(image, for: .normal)
-                .bySubTitle("已选择图片，完成加盐编码".tr, for: .normal)
+                .byImage(image,
+                         for: .normal)
+                .bySubTitle("已选择图片，完成加盐编码".tr,
+                            for: .normal)
             let preview = String(encodedText.prefix(1000))
             let suffix = encodedText.count > preview.count ? "\n\n……仅展示前 1000 个字符" : ""
             encodedTextView.byText(preview + suffix)
@@ -221,8 +253,10 @@ private final class JobsSaltedImageCodecDemoVC: BaseVC {
             return
         }
         restoreButton
-            .byImage(image, for: .normal)
-            .bySubTitle("图片已成功还原".tr, for: .normal)
+            .byImage(image,
+                     for: .normal)
+            .bySubTitle("图片已成功还原".tr,
+                        for: .normal)
         "图片往返成功：\(data.count) B".toast
     }
 
@@ -230,10 +264,18 @@ private final class JobsSaltedImageCodecDemoVC: BaseVC {
         switch codec {
         /// 十六进制字符串编码
         case .hexadecimal:
-            return data.map { String(format: "%02x", $0) }.joined()
+            return data.map {
+                String(format: "%02x",
+                       $0)
+            }
+                .joined()
         /// Base16 大写编码
         case .base16:
-            return data.map { String(format: "%02X", $0) }.joined()
+            return data.map {
+                String(format: "%02X",
+                       $0)
+            }
+                .joined()
         /// Base32 编码
         case .base32:
             return base32Encode(data)
@@ -268,22 +310,32 @@ private final class JobsSaltedImageCodecDemoVC: BaseVC {
             return base85Decode(text)
         /// MIME 数据 URL 解码
         case .mime:
-            guard let commaIndex = text.firstIndex(of: ",") else { return nil };return Data(
+            guard let commaIndex = text.firstIndex(of: ",") else {
+                return nil
+            }
+            return Data(
                 base64Encoded: String(text[text.index(after: commaIndex)...])
             )
         }
     }
 
     private func hexDecode(_ text: String) -> Data? {
-        guard text.count.isMultiple(of: 2) else { return nil }
+        guard text.count.isMultiple(of: 2) else {
+            return nil
+        }
         var data = Data()
         var index = text.startIndex
         while index < text.endIndex {
-            let nextIndex = text.index(index, offsetBy: 2)
-            guard let byte = UInt8(text[index..<nextIndex], radix: 16) else { return nil }
+            let nextIndex = text.index(index,
+                                       offsetBy: 2)
+            guard let byte = UInt8(text[index ..< nextIndex],
+                                   radix: 16) else {
+                return nil
+            }
             data.append(byte)
             index = nextIndex
-        };return data
+        }
+        return data
     }
 
     private func base32Encode(_ data: Data) -> String {
@@ -304,24 +356,30 @@ private final class JobsSaltedImageCodecDemoVC: BaseVC {
         }
         while !output.count.isMultiple(of: 8) {
             output.append("=")
-        };return output
+        }
+        return output
     }
 
     private func base32Decode(_ text: String) -> Data? {
         let alphabet = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567")
-        let lookup = Dictionary(uniqueKeysWithValues: alphabet.enumerated().map { ($0.element, $0.offset) })
+        let lookup = Dictionary(uniqueKeysWithValues: alphabet.enumerated().map {
+            ($0.element, $0.offset)
+        })
         var buffer = 0
         var bitsLeft = 0
         var output = Data()
         for character in text.uppercased() where character != "=" {
-            guard let value = lookup[character] else { return nil }
+            guard let value = lookup[character] else {
+                return nil
+            }
             buffer = (buffer << 5) | value
             bitsLeft += 5
             if bitsLeft >= 8 {
                 output.append(UInt8((buffer >> (bitsLeft - 8)) & 0xFF))
                 bitsLeft -= 8
             }
-        };return output
+        }
+        return output
     }
 
     private func base85Encode(_ data: Data) -> String {
@@ -329,22 +387,27 @@ private final class JobsSaltedImageCodecDemoVC: BaseVC {
         var output = ""
         var index = 0
         while index < bytes.count {
-            let count = min(4, bytes.count - index)
+            let count = min(4,
+                            bytes.count - index)
             var value: UInt32 = 0
-            for offset in 0..<4 {
+            for offset in 0 ..< 4 {
                 value <<= 8
                 if offset < count {
                     value |= UInt32(bytes[index + offset])
                 }
             }
-            var encoded = Array(repeating: Character("!"), count: 5)
-            for position in stride(from: 4, through: 0, by: -1) {
+            var encoded = Array(repeating: Character("!"),
+                                count: 5)
+            for position in stride(from: 4,
+                                   through: 0,
+                                   by: -1) {
                 encoded[position] = Character(UnicodeScalar(Int(value % 85) + 33)!)
                 value /= 85
             }
             output.append(contentsOf: encoded.prefix(count + 1))
             index += count
-        };return output
+        }
+        return output
     }
 
     private func base85Decode(_ text: String) -> Data? {
@@ -352,29 +415,36 @@ private final class JobsSaltedImageCodecDemoVC: BaseVC {
         var output = Data()
         var index = 0
         while index < characters.count {
-            let count = min(5, characters.count - index)
+            let count = min(5,
+                            characters.count - index)
             var value: UInt64 = 0
-            for offset in 0..<5 {
+            for offset in 0 ..< 5 {
                 let scalar: UInt64
                 if offset < count {
                     guard let ascii = characters[index + offset].asciiValue,
                           ascii >= 33,
-                          ascii <= 117 else { return nil }
+                          ascii <= 117 else {
+                        return nil
+                    }
                     scalar = UInt64(ascii - 33)
                 } else {
                     scalar = 84
                 }
                 value = value * 85 + scalar
             }
-            guard value <= UInt32.max else { return nil }
+            guard value <= UInt32.max else {
+                return nil
+            }
             let decoded = [
                 UInt8((value >> 24) & 0xFF),
                 UInt8((value >> 16) & 0xFF),
                 UInt8((value >> 8) & 0xFF),
                 UInt8(value & 0xFF)
             ]
-            output.append(contentsOf: decoded.prefix(max(0, count - 1)))
+            output.append(contentsOf: decoded.prefix(max(0,
+                                                         count - 1)))
             index += count
-        };return output
+        }
+        return output
     }
 }

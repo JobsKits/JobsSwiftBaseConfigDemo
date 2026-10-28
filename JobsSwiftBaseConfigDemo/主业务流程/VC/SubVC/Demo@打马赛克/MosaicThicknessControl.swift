@@ -16,6 +16,7 @@ import JobsSwiftBaseDefines
 import JobsSwiftDSL
 
 final class MosaicThicknessControl: UIControl {
+
     private let minBlockSize: CGFloat = 4
     private let maxBlockSize: CGFloat = 52
 
@@ -29,7 +30,8 @@ final class MosaicThicknessControl: UIControl {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
-        addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:))))
+        addGestureRecognizer(UIPanGestureRecognizer(target: self,
+                                                    action: #selector(handlePan(_:))))
     }
 
     required init?(coder: NSCoder) {
@@ -38,21 +40,19 @@ final class MosaicThicknessControl: UIControl {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        byCornerRadius(min(bounds.width / 2, 22))
+        byCornerRadius(min(bounds.width / 2,
+                           22))
         trackView.byCornerRadius(4)
         thumbView.byCornerRadius(16)
-        trackView.byFrame(CGRect(
-            x: bounds.midX - 4,
-            y: 22,
-            width: 8,
-            height: max(1, bounds.height - 76)
-        ))
-        valueLabel.byFrame(CGRect(
-            x: 0,
-            y: bounds.height - 40,
-            width: bounds.width,
-            height: 28
-        ))
+        trackView.byFrame(CGRect(x: bounds.midX - 4,
+                                 y: 22,
+                                 width: 8,
+                                 height: max(1,
+                                             bounds.height - 76)))
+        valueLabel.byFrame(CGRect(x: 0,
+                                  y: bounds.height - 40,
+                                  width: bounds.width,
+                                  height: 28))
         layoutThumb()
     }
 
@@ -67,7 +67,8 @@ final class MosaicThicknessControl: UIControl {
         layer.shadowColor = JobsCor.black.cgColor
         layer.shadowOpacity = 0.18
         layer.shadowRadius = 8
-        layer.shadowOffset = CGSize(width: 0, height: 3)
+        layer.shadowOffset = CGSize(width: 0,
+                                    height: 3)
         trackView
             .byBackgroundColor(JobsCor.tertiaryLabel)
             .byAddTo(self)
@@ -78,19 +79,18 @@ final class MosaicThicknessControl: UIControl {
             .byText("\(Int(value))")
             .byTextAlignment(.center)
             .byTextColor(JobsCor.label)
-            .byFont(JobsFont.systemFont(ofSize: 12, weight: .bold))
+            .byFont(JobsFont.systemFont(ofSize: 12,
+                                        weight: .bold))
             .byAddTo(self)
     }
 
     private func layoutThumb() {
         let progress = (value - minBlockSize) / (maxBlockSize - minBlockSize)
         let centerY = trackView.frame.maxY - progress * trackView.bounds.height
-        thumbView.byFrame(CGRect(
-            x: bounds.midX - 16,
-            y: centerY - 16,
-            width: 32,
-            height: 32
-        ))
+        thumbView.byFrame(CGRect(x: bounds.midX - 16,
+                                 y: centerY - 16,
+                                 width: 32,
+                                 height: 32))
     }
 
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
@@ -101,8 +101,10 @@ final class MosaicThicknessControl: UIControl {
     private func updateValue(with locationY: CGFloat) {
         let top = trackView.frame.minY
         let bottom = trackView.frame.maxY
-        let clampedY = min(max(locationY, top), bottom)
-        let progress = 1 - ((clampedY - top) / max(1, bottom - top))
+        let clampedY = min(max(locationY,top),
+                           bottom)
+        let progress = 1 - ((clampedY - top) / max(1,
+                                                   bottom - top))
         value = minBlockSize + progress * (maxBlockSize - minBlockSize)
         valueLabel.byText("\(Int(value))")
         layoutThumb()

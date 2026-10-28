@@ -109,6 +109,7 @@ def byJobs
     pod 'JobsSwiftTimerMgr',                  :path => 'JobsByPods/JobsSwiftTimerMgr@Pods'             # https://github.com/JobsKits/JobsSwiftTimerMgr
     pod 'JobsSwiftPatch',                     :path => 'JobsByPods/JobsSwiftPatch@Pods'
     pod 'JobsSwiftTaskCenter',                :path => 'JobsByPods/JobsSwiftTaskCenter@Pods'
+    pod 'JobsSwiftDeviceGuard',               :path => 'JobsByPods/JobsSwiftDeviceGuard@Pods'
     pod 'JobsProgressBar',                    :path => 'JobsByPods/JobsProgressBar@Pods'
     pod 'JobsViewPush',                       :path => 'JobsByPods/JobsViewPush@Pods'
     pod 'JobsSwiftLinkageMenuView',           :path => 'JobsByPods/JobsSwiftLinkageMenuView@Pods'

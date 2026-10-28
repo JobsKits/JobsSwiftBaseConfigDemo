@@ -21,6 +21,7 @@ import GKNavigationBarSwift
 
 // MARK: - 示例子页（简化）
 final class HomeVC: BaseVC {
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
@@ -29,6 +30,7 @@ final class HomeVC: BaseVC {
 }
 
 final class DiscountVC: BaseVC {
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
@@ -37,6 +39,7 @@ final class DiscountVC: BaseVC {
 }
 
 final class WalletVC: BaseVC {
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
@@ -45,22 +48,31 @@ final class WalletVC: BaseVC {
 }
 
 final class FriendsVC: BaseVC {
+
     private lazy var exampleButton: UIButton = {
         UIButton.sys()
-            .byTitle("显示".tr, for: .normal)
-            .byTitle("隐藏".tr, for: .selected)
-            .byTitleColor(JobsCor.systemBlue, for: .normal)
-            .byTitleColor(JobsCor.systemRed, for: .selected)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitle("显示".tr,
+                     for: .normal)
+            .byTitle("隐藏".tr,
+                     for: .selected)
+            .byTitleColor(JobsCor.systemBlue,
+                          for: .normal)
+            .byTitleColor(JobsCor.systemRed,
+                          for: .selected)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
             .onTap { [weak self] sender in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 DemoDetailVC()
-                    .byData(DemoModel(id: 7, title: "详情".tr))
+                    .byData(DemoModel(id: 7,
+                                      title: "详情".tr))
                     .onResult { id in
                         print("回来了 id=\(String(describing: id))")
                     }
                     .byPush(self)
-                    .byCompletion{
+                    .byCompletion {
                         print("❤️结束❤️")
                     }
             }
@@ -81,6 +93,7 @@ final class FriendsVC: BaseVC {
 }
 
 final class ActivityVC: BaseVC {
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
@@ -89,6 +102,7 @@ final class ActivityVC: BaseVC {
 }
 
 final class ServiceVC: BaseVC {
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)

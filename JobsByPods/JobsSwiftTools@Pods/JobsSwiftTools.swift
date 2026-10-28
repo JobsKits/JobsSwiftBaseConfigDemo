@@ -15,39 +15,54 @@ import CoreText
 import JobsSwiftBaseDefines
 
 // MARK: - 扩展 Int 与 JXAuthCode 的比较
-public func ==(lhs: Int?, rhs: JXAuthCode) -> Bool {
-    guard let lhs = lhs else { return false };return lhs == Int(rhs.rawValue)
-}
-
-public func ==(lhs: Int, rhs: JXAuthCode) -> Bool {
+public func ==(lhs: Int?,
+               rhs: JXAuthCode) -> Bool {
+    guard let lhs = lhs else {
+        return false
+    }
     return lhs == Int(rhs.rawValue)
 }
 
-public func ==(lhs: JXAuthCode, rhs: Int?) -> Bool {
-    guard let rhs = rhs else { return false };return Int(lhs.rawValue) == rhs
+public func ==(lhs: Int,
+               rhs: JXAuthCode) -> Bool {
+    return lhs == Int(rhs.rawValue)
 }
 
-public func ==(lhs: JXAuthCode, rhs: Int) -> Bool {
+public func ==(lhs: JXAuthCode,
+               rhs: Int?) -> Bool {
+    guard let rhs = rhs else {
+        return false
+    }
+    return Int(lhs.rawValue) == rhs
+}
+
+public func ==(lhs: JXAuthCode,
+               rhs: Int) -> Bool {
     return Int(lhs.rawValue) == rhs
 }
 // MARK: - 扩展 Int 与 JXAuthCode 的不等于
-public func !=(lhs: Int?, rhs: JXAuthCode) -> Bool {
+public func !=(lhs: Int?,
+               rhs: JXAuthCode) -> Bool {
     !(lhs == rhs)
 }
 
-public func !=(lhs: Int, rhs: JXAuthCode) -> Bool {
+public func !=(lhs: Int,
+               rhs: JXAuthCode) -> Bool {
     !(lhs == rhs)
 }
 
-public func !=(lhs: JXAuthCode, rhs: Int?) -> Bool {
+public func !=(lhs: JXAuthCode,
+               rhs: Int?) -> Bool {
     !(lhs == rhs)
 }
 
-public func !=(lhs: JXAuthCode, rhs: Int) -> Bool {
+public func !=(lhs: JXAuthCode,
+               rhs: Int) -> Bool {
     !(lhs == rhs)
 }
 // MARK: - 工具：常用格式化 & 校验
 public enum JobsFormatters {
+
     /// 仅保留数字与一个小数点，并限制到 scale 位小数（默认 2 位）
     public static func decimal(scale: Int = 2) -> (String) -> String {
         return { s in
@@ -68,7 +83,9 @@ public enum JobsFormatters {
                 } else if ch == "." && !dotSeen {
                     // 第一颗小数点
                     dotSeen = true
-                    if out.isEmpty { out.append("0") } // 形如 ".1" -> "0.1"
+                    if out.isEmpty {
+                        out.append("0")
+                    } // 形如 ".1" -> "0.1"
                     out.append(".")
                 }
             }
@@ -77,9 +94,15 @@ public enum JobsFormatters {
             let str = String(out)
             if str.hasPrefix("00") {
                 // 粗暴去多零
-                let trimmed = str.drop(while: { $0 == "0" })
-                if trimmed.first == "." { return "0" + trimmed };return trimmed.isEmpty ? "0" : String(trimmed)
-            };return str.isEmpty ? "" : str
+                let trimmed = str.drop(while: {
+                    $0 == "0"
+                })
+                if trimmed.first == "." {
+                    return "0" + trimmed
+                }
+                return trimmed.isEmpty ? "0" : String(trimmed)
+            }
+            return str.isEmpty ? "" : str
         }
     }
     /// 中国大陆手机号 3-4-4 分组（仅清洗与分组，不做合法号段校验）
@@ -98,8 +121,11 @@ public enum JobsFormatters {
                 let p1 = String(digits.prefix(3))
                 let p2 = String(digits.dropFirst(3).prefix(4))
                 let p3 = String(digits.dropFirst(7).prefix(4))
-                parts = [p1, p2, p3].filter { !$0.isEmpty }
-            };return parts.joined(separator: " ")
+                parts = [p1, p2, p3].filter {
+                    !$0.isEmpty
+                }
+            }
+            return parts.joined(separator: " ")
         }
     }
 }
@@ -134,23 +160,31 @@ public enum JobsFormatters {
  */
 // MARK: - JobsLog（统一入口）
 public enum JobsLog {
+
     // 全局开关
     public static var enabled: Bool = true
     public static var showThread: Bool = true
     // 等级（可选，默认 .plain）
-    public enum Level: String { case plain = "LOG", info = "INFO", warn = "WARN", error = "ERROR", debug = "DEBUG"
+    public enum Level: String {
+
+        case plain = "LOG", info = "INFO", warn = "WARN", error = "ERROR", debug = "DEBUG"
         var symbol: String {
             switch self {
             /// 处理 .plain 分支
-            case .plain: return "📝"
+            case .plain:
+                return "📝"
             /// 处理 .info 分支
-            case .info:  return "ℹ️"
+            case .info:
+                return "ℹ️"
             /// 处理 .warn 分支
-            case .warn:  return "⚠️"
+            case .warn:
+                return "⚠️"
             /// 处理 .error 分支
-            case .error: return "❌"
+            case .error:
+                return "❌"
             /// 处理 .debug 分支
-            case .debug: return "🐞"
+            case .debug:
+                return "🐞"
             }
         }
     }
@@ -164,68 +198,119 @@ public enum JobsLog {
                            maxDepth: Int = 3,
                            separator: String = " ",
                            terminator: String = "\n",
-                           file: String = #file, line: Int = #line, function: String = #function)
+                           file: String = #file,
+                           line: Int = #line,
+                           function: String = #function)
     {
-        guard enabled else { return }
-        let msg = items.map { render($0, mode: mode, prettyJSON: prettyJSON, maxDepth: maxDepth) }
-                       .joined(separator: separator)
+        guard enabled else {
+            return
+        }
+        let msg = items.map {
+            render($0,
+                   mode: mode,
+                   prettyJSON: prettyJSON,
+                   maxDepth: maxDepth)
+        }
+            .joined(separator: separator)
         let fileName = (file as NSString).lastPathComponent
         let threadPart: String = {
-            guard showThread else { return "" }
+            guard showThread else {
+                return ""
+            }
             let name = Thread.isMainThread ? "main"
-            : (String(cString: __dispatch_queue_get_label(nil), encoding: .utf8) ?? "bg")
+                : (String(cString: __dispatch_queue_get_label(nil),
+                          encoding: .utf8) ?? "bg")
             return " | \(name)"
         }()
         Swift.print("\(level.symbol) \(timeNow()) | \(fileName):\(line) | \(function)\(threadPart) → \(msg)",
                     terminator: terminator)
     }
     // 统一渲染：根据模式/类型输出
-    private static func render(_ any: Any, mode: Mode, prettyJSON: Bool, maxDepth: Int) -> String {
+    private static func render(_ any: Any,
+                               mode: Mode,
+                               prettyJSON: Bool,
+                               maxDepth: Int) -> String {
         switch mode {
         /// 处理 .plain 分支
         case .plain:
             return stringify(any)
         /// 处理 .json 分支
         case .json:
-            return toJSONString(any, pretty: prettyJSON, decodeUnicode: true) ?? stringify(any)
+            return toJSONString(any,
+                                pretty: prettyJSON,
+                                decodeUnicode: true) ?? stringify(any)
         /// 处理 .object 分支
         case .object:
-            return toJSONStringFromObject(any, pretty: prettyJSON, maxDepth: maxDepth) ?? stringify(any)
+            return toJSONStringFromObject(any,
+                                          pretty: prettyJSON,
+                                          maxDepth: maxDepth) ?? stringify(any)
         /// 处理 .auto 分支
         case .auto:
             // 1) 明确是 JSON 的几种：Data / String 以 { 或 [
-            if let s = toJSONString(any, pretty: prettyJSON, decodeUnicode: true) { return s }
+            if let s = toJSONString(any,
+                                    pretty: prettyJSON,
+                                    decodeUnicode: true) {
+                return s
+            }
             // 2) Swift 原生容器能成为 JSON（[Any] / [AnyHashable:Any]）
-            if let s = tryJSONFromContainers(any, pretty: prettyJSON) { return s }
+            if let s = tryJSONFromContainers(any,
+                                             pretty: prettyJSON) {
+                return s
+            }
             // 3) 其他对象 → 反射为 JSON
-            if let s = toJSONStringFromObject(any, pretty: prettyJSON, maxDepth: maxDepth) { return s }
+            if let s = toJSONStringFromObject(any,
+                                              pretty: prettyJSON,
+                                              maxDepth: maxDepth) {
+                return s
+            }
             // 4) 兜底：人类可读 stringify（会解码 \uXXXX）
             return stringify(any)
         }
     }
     // ---------- 基础工具 ----------
     private static func timeNow() -> String {
-        let f = DateFormatter.jobsMake { _ in }; f.dateFormat = "HH:mm:ss"; f.locale = Locale(identifier: "zh_CN")
+        let f = DateFormatter.jobsMake { _ in }
+        f.dateFormat = "HH:mm:ss"
+        f.locale = Locale(identifier: "zh_CN")
         return f.string(from: Date())
     }
     // 人类可读 stringify（递归容器 + Unicode 反转义）
     private static func stringify(_ v: Any) -> String {
-        if case Optional<Any>.none = v as Any? { return "nil" }
+        if case Optional<Any>.none = v as Any? {
+            return "nil"
+        }
         let x = v
-        if let s = x as? String { return decodeUnicodeEscapes(s) }
-        if let s = x as? NSString { return decodeUnicodeEscapes(s as String) }
+        if let s = x as? String {
+            return decodeUnicodeEscapes(s)
+        }
+        if let s = x as? NSString {
+            return decodeUnicodeEscapes(s as String)
+        }
         if let data = x as? Data,
            let json = try? JSONSerialization.jsonObject(with: data),
-           let pretty = try? JSONSerialization.data(withJSONObject: json, options: [.prettyPrinted]),
-           let s = String(data: pretty, encoding: .utf8) { return decodeUnicodeEscapes(s) }
+           let pretty = try? JSONSerialization.data(withJSONObject: json,
+                                                    options: [.prettyPrinted]),
+           let s = String(data: pretty,
+                          encoding: .utf8) {
+            return decodeUnicodeEscapes(s)
+        }
         if let arr = x as? [Any] {
-            return "[" + arr.map { stringify($0) }.joined(separator: ", ") + "]"
+            return "[" + arr.map {
+                stringify($0)
+            }
+                .joined(separator: ", ") + "]"
         }
         if let nsArr = x as? NSArray {
-            return "[" + nsArr.map { stringify($0) }.joined(separator: ", ") + "]"
+            return "[" + nsArr.map {
+                stringify($0)
+            }
+                .joined(separator: ", ") + "]"
         }
         if let set = x as? Set<AnyHashable> {
-            return "Set([" + set.map { stringify($0) }.joined(separator: ", ") + "])"
+            return "Set([" + set.map {
+                stringify($0)
+            }
+                .joined(separator: ", ") + "])"
         }
         if let dict = x as? [AnyHashable: Any] {
             let body = dict.map { k, v -> String in
@@ -235,7 +320,8 @@ public enum JobsLog {
                 } else {
                     return "\"\(ks)\": \(stringify(v))"
                 }
-            }.joined(separator: ", ")
+            }
+                .joined(separator: ", ")
             return "{\(body)}"
         }
         if let nsDict = x as? NSDictionary {
@@ -247,29 +333,41 @@ public enum JobsLog {
                 } else {
                     return "\"\(ks)\": \(stringify(v))"
                 }
-            }.joined(separator: ", ")
+            }
+                .joined(separator: ", ")
             return "{\(body)}"
-        };return decodeUnicodeEscapes(String(describing: x))
+        }
+        return decodeUnicodeEscapes(String(describing: x))
     }
     // 更稳的 Unicode 反转义：支持 \uXXXX / \UXXXXXXXX，且能处理整段文本
     private static func decodeUnicodeEscapes(_ s: String) -> String {
         // 先把可能的 “双反斜杠转义” 规整为单反斜杠，避免被当作普通字符
         let normalized = s
-            .replacingOccurrences(of: #"\\u"#, with: #"\u"#)
-            .replacingOccurrences(of: #"\\U"#, with: #"\U"#)
+            .replacingOccurrences(of: #"\\u"#,
+                                  with: #"\u"#)
+            .replacingOccurrences(of: #"\\U"#,
+                                  with: #"\U"#)
         let ms = NSMutableString(string: normalized)
         // "Any-Hex/Java" 会把 \uXXXX / \UXXXXXXXX 都转为真实字符
-        if CFStringTransform(ms, nil, "Any-Hex/Java" as CFString, true) {
+        if CFStringTransform(ms,
+                             nil,
+                             "Any-Hex/Java" as CFString,
+                             true) {
             return ms as String
-        };return s
+        }
+        return s
     }
     // ---------- JSON Utilities ----------
-    private static func toJSONString(_ any: Any, pretty: Bool, decodeUnicode: Bool) -> String? {
+    private static func toJSONString(_ any: Any,
+                                     pretty: Bool,
+                                     decodeUnicode: Bool) -> String? {
         let options: JSONSerialization.WritingOptions = pretty ? [.prettyPrinted] : []
         if let data = any as? Data,
            let obj = try? JSONSerialization.jsonObject(with: data),
-           let out = try? JSONSerialization.data(withJSONObject: obj, options: options),
-           let s = String(data: out, encoding: .utf8) {
+           let out = try? JSONSerialization.data(withJSONObject: obj,
+                                                 options: options),
+           let s = String(data: out,
+                          encoding: .utf8) {
             return decodeUnicode ? decodeUnicodeEscapes(s) : s
         }
         if let s = any as? String {
@@ -277,46 +375,69 @@ public enum JobsLog {
             if t.first == "{" || t.first == "[" {
                 if let d = s.data(using: .utf8),
                    let obj = try? JSONSerialization.jsonObject(with: d),
-                   let out = try? JSONSerialization.data(withJSONObject: obj, options: options),
-                   let js = String(data: out, encoding: .utf8) {
+                   let out = try? JSONSerialization.data(withJSONObject: obj,
+                                                         options: options),
+                   let js = String(data: out,
+                                   encoding: .utf8) {
                     return decodeUnicode ? decodeUnicodeEscapes(js) : js
                 }
-            };return nil
-        };return nil
+            }
+            return nil
+        }
+        return nil
     }
 
-    private static func tryJSONFromContainers(_ any: Any, pretty: Bool) -> String? {
+    private static func tryJSONFromContainers(_ any: Any,
+                                              pretty: Bool) -> String? {
         let options: JSONSerialization.WritingOptions = pretty ? [.prettyPrinted] : []
         if let dict = any as? [AnyHashable: Any] {
-            let m = Dictionary(uniqueKeysWithValues: dict.map { (k, v) in (String(describing: k), v) })
+            let m = Dictionary(uniqueKeysWithValues: dict.map { (k, v) in
+                (String(describing: k), v)
+            })
             if JSONSerialization.isValidJSONObject(m),
-               let d = try? JSONSerialization.data(withJSONObject: m, options: options),
-               let s = String(data: d, encoding: .utf8) {
+               let d = try? JSONSerialization.data(withJSONObject: m,
+                                                   options: options),
+               let s = String(data: d,
+                              encoding: .utf8) {
                 return decodeUnicodeEscapes(s)
             }
         }
         if let arr = any as? [Any],
            JSONSerialization.isValidJSONObject(arr),
-           let d = try? JSONSerialization.data(withJSONObject: arr, options: options),
-           let s = String(data: d, encoding: .utf8) {
+           let d = try? JSONSerialization.data(withJSONObject: arr,
+                                               options: options),
+           let s = String(data: d,
+                          encoding: .utf8) {
             return decodeUnicodeEscapes(s)
-        };return nil
+        }
+        return nil
     }
     // ---------- Object → JSON-ready（反射，防循环） ----------
-    private static func toJSONStringFromObject(_ any: Any, pretty: Bool, maxDepth: Int) -> String? {
+    private static func toJSONStringFromObject(_ any: Any,
+                                               pretty: Bool,
+                                               maxDepth: Int) -> String? {
         var visited = Set<ObjectIdentifier>()
-        let jsonReady = toJSONReady(any, depth: maxDepth, visited: &visited)
-        guard JSONSerialization.isValidJSONObject(jsonReady) else { return nil }
+        let jsonReady = toJSONReady(any,
+                                    depth: maxDepth,
+                                    visited: &visited)
+        guard JSONSerialization.isValidJSONObject(jsonReady) else {
+            return nil
+        }
         let opts: JSONSerialization.WritingOptions = pretty ? [.prettyPrinted] : []
-        if let d = try? JSONSerialization.data(withJSONObject: jsonReady, options: opts),
-           let s = String(data: d, encoding: .utf8) {
+        if let d = try? JSONSerialization.data(withJSONObject: jsonReady,
+                                               options: opts),
+           let s = String(data: d,
+                          encoding: .utf8) {
             return decodeUnicodeEscapes(s)
-        };return nil
+        }
+        return nil
     }
     // ✅ 用 Mirror 正确解 Optional
     private static func unwrapOptional(_ value: Any) -> (isNil: Bool, unwrapped: Any?) {
         let m = Mirror(reflecting: value)
-        guard m.displayStyle == .optional else { return (false, value) }
+        guard m.displayStyle == .optional else {
+            return (false, value)
+        }
         if let child = m.children.first {
             return (false, child.value) // .some
         } else {
@@ -324,61 +445,93 @@ public enum JobsLog {
         }
     }
 
-    private static func toJSONReady(_ any: Any, depth: Int, visited: inout Set<ObjectIdentifier>) -> Any {
-        if depth <= 0 { return "<depth-limit>" }
+    private static func toJSONReady(_ any: Any,
+                                    depth: Int,
+                                    visited: inout Set<ObjectIdentifier>) -> Any {
+        if depth <= 0 {
+            return "<depth-limit>"
+        }
         // 1) Optional
         let (isNil, unwrapped) = unwrapOptional(any)
-        if isNil { return NSNull.jobsMake { _ in } }
+        if isNil {
+            return NSNull.jobsMake { _ in }
+        }
         let value = unwrapped ?? any
         // 2) 基本/可序列化类型直接返回
         switch value {
         /// 处理 NSNull 类型分支
-        case is NSNull:               return NSNull.jobsMake { _ in }
+        case is NSNull:
+            return NSNull.jobsMake { _ in }
         /// 处理 String 类型分支
-        case let x as String:         return x
+        case let x as String:
+            return x
         /// 处理 NSString 类型分支
-        case let x as NSString:       return String(x)
+        case let x as NSString:
+            return String(x)
         /// 处理 Bool 类型分支
-        case let x as Bool:           return x
+        case let x as Bool:
+            return x
         /// 处理 Int 类型分支
-        case let x as Int:            return x
+        case let x as Int:
+            return x
         /// 处理 Int8 类型分支
-        case let x as Int8:           return x
+        case let x as Int8:
+            return x
         /// 处理 Int16 类型分支
-        case let x as Int16:          return x
+        case let x as Int16:
+            return x
         /// 处理 Int32 类型分支
-        case let x as Int32:          return x
+        case let x as Int32:
+            return x
         /// 处理 Int64 类型分支
-        case let x as Int64:          return x
+        case let x as Int64:
+            return x
         /// 处理 UInt 类型分支
-        case let x as UInt:           return x
+        case let x as UInt:
+            return x
         /// 处理 UInt8 类型分支
-        case let x as UInt8:          return x
+        case let x as UInt8:
+            return x
         /// 处理 UInt16 类型分支
-        case let x as UInt16:         return x
+        case let x as UInt16:
+            return x
         /// 处理 UInt32 类型分支
-        case let x as UInt32:         return x
+        case let x as UInt32:
+            return x
         /// 处理 UInt64 类型分支
-        case let x as UInt64:         return x
+        case let x as UInt64:
+            return x
         /// 处理 Float 类型分支
-        case let x as Float:          return x
+        case let x as Float:
+            return x
         /// 处理 Double 类型分支
-        case let x as Double:         return x
+        case let x as Double:
+            return x
         /// 处理 NSNumber 类型分支
-        case let x as NSNumber:       return x
+        case let x as NSNumber:
+            return x
         /// 处理 Date 类型分支
-        case let x as Date:           return ISO8601DateFormatter.jobsMake { _ in }.string(from: x)
+        case let x as Date:
+            return ISO8601DateFormatter.jobsMake { _ in }
+                .string(from: x)
         /// 处理 URL 类型分支
-        case let x as URL:            return x.absoluteString
+        case let x as URL:
+            return x.absoluteString
         /// 避免巨型 base64
-        case let x as Data:           return ["<Data>": x.count]
+        case let x as Data:
+            return ["<Data>": x.count]
         /// 未匹配已知分支时执行兜底处理
-        default: break
+        default:
+            break
         }
         let mirror = Mirror(reflecting: value)
         // 3) Array / Set
         if mirror.displayStyle == .collection || mirror.displayStyle == .set {
-            return mirror.children.map { toJSONReady($0.value, depth: depth - 1, visited: &visited) }
+            return mirror.children.map {
+                toJSONReady($0.value,
+                            depth: depth - 1,
+                            visited: &visited)
+            }
         }
         // 4) Dictionary（child 是 (key,value) 元组，这里稳妥拆解）
         if mirror.displayStyle == .dictionary {
@@ -386,45 +539,63 @@ public enum JobsLog {
             for child in mirror.children {
                 // 优先尝试强转
                 if let pair = child.value as? (AnyHashable, Any) {
-                    dict[String(describing: pair.0)] = toJSONReady(pair.1, depth: depth - 1, visited: &visited)
+                    dict[String(describing: pair.0)] = toJSONReady(pair.1,
+                                                                   depth: depth - 1,
+                                                                   visited: &visited)
                     continue
                 }
                 // 退而求其次：用反射拿到元组的两个 child
                 let pm = Mirror(reflecting: child.value)
-                let kv = pm.children.map { $0.value }
+                let kv = pm.children.map {
+                    $0.value
+                }
                 let k = kv.indices.contains(0) ? kv[0] : "<key>"
                 let v = kv.indices.contains(1) ? kv[1] : NSNull.jobsMake { _ in }
-                dict[String(describing: k)] = toJSONReady(v, depth: depth - 1, visited: &visited)
-            };return dict
+                dict[String(describing: k)] = toJSONReady(v,
+                                                          depth: depth - 1,
+                                                          visited: &visited)
+            }
+            return dict
         }
         // 5) Enum（记录类型、case、关联值）
         if mirror.displayStyle == .enum {
             var out: [String: Any] = ["_type": String(describing: type(of: value))]
             if let first = mirror.children.first {
                 out["_case"] = first.label ?? "<case>"
-                out["_value"] = toJSONReady(first.value, depth: depth - 1, visited: &visited)
+                out["_value"] = toJSONReady(first.value,
+                                            depth: depth - 1,
+                                            visited: &visited)
             } else {
                 out["_case"] = "<empty>"
-            };return out
+            }
+            return out
         }
         // 6) Class/Struct：采集属性；Class 做循环检测
         var props: [String: Any] = [:]
         if mirror.displayStyle == .class, let obj = value as AnyObject? {
             let oid = ObjectIdentifier(obj)
-            if visited.contains(oid) { return ["<ref>": String(describing: type(of: value))] }
-            visited.insert(oid); do { visited.remove(oid) }
+            if visited.contains(oid) {
+                return ["<ref>": String(describing: type(of: value))]
+            }
+            visited.insert(oid)
+            do {
+                visited.remove(oid)
+            }
         }
         var cur: Mirror? = mirror
         var depthNext = depth - 1
         while let m = cur, depthNext >= 0 {
             for c in m.children {
                 if let name = c.label {
-                    props[name] = toJSONReady(c.value, depth: depthNext, visited: &visited)
+                    props[name] = toJSONReady(c.value,
+                                              depth: depthNext,
+                                              visited: &visited)
                 }
             }
             cur = m.superclassMirror
             depthNext = depthNext - 1     // 防止超深的继承链
-        };return ["_type": String(describing: type(of: value)), "_props": props]
+        }
+        return ["_type": String(describing: type(of: value)), "_props": props]
     }
 }
 // MARK: - 全局函数（免前缀）
@@ -436,44 +607,69 @@ public func log(_ items: Any?...,
                 maxDepth: Int = 3,
                 separator: String = " ",
                 terminator: String = "\n",
-                file: String = #file, line: Int = #line, function: String = #function) {
+                file: String = #file,
+                line: Int = #line,
+                function: String = #function) {
     JobsLog.log(items,
-                level: level, mode: mode, prettyJSON: prettyJSON, maxDepth: maxDepth,
-                separator: separator, terminator: terminator,
-                file: file, line: line, function: function)
+                level: level,
+                mode: mode,
+                prettyJSON: prettyJSON,
+                maxDepth: maxDepth,
+                separator: separator,
+                terminator: terminator,
+                file: file,
+                line: line,
+                function: function)
 }
 // MARK: - NSTextAlignment 映射到 CATextLayerAlignmentMode
 extension CATextLayerAlignmentMode {
+
     static func fromNSTextAlignment(_ a: NSTextAlignment) -> CATextLayerAlignmentMode {
         switch a {
         /// 处理 .left 分支
-        case .left: return .left
+        case .left:
+            return .left
         /// 处理 .right 分支
-        case .right: return .right
+        case .right:
+            return .right
         /// 处理 .center 分支
-        case .center: return .center
+        case .center:
+            return .center
         /// 处理 .justified 分支
-        case .justified: return .justified
+        case .justified:
+            return .justified
         /// 处理 .natural 分支
-        case .natural: return .natural
+        case .natural:
+            return .natural
         /// 处理系统后续新增的未知枚举值
-        @unknown default: return .natural
+        @unknown default:
+            return .natural
         }
     }
 }
 // MARK: -
 @inline(__always)
 @available(*, deprecated, message: "Pass the rendering view traitCollection to jobsCTTextWidth(_:font:traitCollection:).")
-public func jobsCTTextWidth(_ text: String, font: UIFont) -> CGFloat {
-    return jobsCTTextWidth(text, font: font, traitCollection: .current)
+public func jobsCTTextWidth(_ text: String,
+                            font: UIFont) -> CGFloat {
+    return jobsCTTextWidth(text,
+                           font: font,
+                           traitCollection: .current)
 }
 
 @inline(__always)
-public func jobsCTTextWidth(_ text: String, font: UIFont, traitCollection: UITraitCollection) -> CGFloat {
+public func jobsCTTextWidth(_ text: String,
+                            font: UIFont,
+                            traitCollection: UITraitCollection) -> CGFloat {
     let attr = [NSAttributedString.Key.font: font]
-    let asr  = NSAttributedString(string: text, attributes: attr)
+    let asr  = NSAttributedString(string: text,
+                                  attributes: attr)
     let line = CTLineCreateWithAttributedString(asr)
-    let w    = CGFloat(CTLineGetTypographicBounds(line, nil, nil, nil))
-    let s    = max(traitCollection.displayScale, 1)
+    let w    = CGFloat(CTLineGetTypographicBounds(line,
+                                                  nil,
+                                                  nil,
+                                                  nil))
+    let s    = max(traitCollection.displayScale,
+                   1)
     return ceil(w * s) / s   // 像素对齐
 }

@@ -8,6 +8,7 @@
 import QuartzCore
 
 extension CABasicAnimation {
+
     /// fromValue
     @discardableResult
     public func byFromValue(_ value: Any?) -> Self {

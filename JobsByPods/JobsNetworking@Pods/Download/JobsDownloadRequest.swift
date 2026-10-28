@@ -8,6 +8,7 @@
 import Foundation
 
 public struct JobsDownloadRequest: Sendable {
+
     public var absoluteURL: URL
     public var destinationURL: URL
     public var headers: [String: String]
@@ -16,15 +17,13 @@ public struct JobsDownloadRequest: Sendable {
     public var expectedByteCount: Int64?
     public var expectedSHA256: String?
 
-    public init(
-        absoluteURL: URL,
-        destinationURL: URL,
-        headers: [String: String] = [:],
-        timeout: TimeInterval? = nil,
-        trace: JobsTrace = JobsTrace(),
-        expectedByteCount: Int64? = nil,
-        expectedSHA256: String? = nil
-    ) {
+    public init(absoluteURL: URL,
+                destinationURL: URL,
+                headers: [String: String] = [:],
+                timeout: TimeInterval? = nil,
+                trace: JobsTrace = JobsTrace(),
+                expectedByteCount: Int64? = nil,
+                expectedSHA256: String? = nil) {
         self.absoluteURL = absoluteURL
         self.destinationURL = destinationURL
         self.headers = headers

@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 extension UIStepper {
+
     @discardableResult
     public func byValue(_ value: Double) -> Self {
         self.value = value

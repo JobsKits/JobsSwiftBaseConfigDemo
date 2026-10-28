@@ -11,6 +11,7 @@ import JobsSwiftDSL
 import SnapKit
 
 public final class JobsAppDoorStyle2VC: JobsAppDoorBaseVC {
+
     public private(set) var currentMode: JobsAppDoorMode = .login
 
     private var hasRunEntranceAnimation = false
@@ -48,31 +49,42 @@ public final class JobsAppDoorStyle2VC: JobsAppDoorBaseVC {
 
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        guard !hasRunEntranceAnimation else { return }
+        guard !hasRunEntranceAnimation else {
+            return
+        }
         hasRunEntranceAnimation = true
         runEntrancePop(views: [logoView, loginForm, customerServiceButton])
     }
 
-    override func handleKeyboardOffset(_ offset: CGFloat, keyboardVisible: Bool) {
+    override func handleKeyboardOffset(_ offset: CGFloat,
+                                       keyboardVisible: Bool) {
         self.keyboardVisible = keyboardVisible
-        keyboardLift = keyboardVisible ? min(112, offset * 0.34) : 0
+        keyboardLift = keyboardVisible ? min(112,
+                                             offset * 0.34) : 0
         topConstraints[currentMode]?.update(offset: cardTop(for: currentMode))
         updateLogoVisibility(animated: true)
-        UIView.jobsAnimateWithOptions(
-            0.25,
-            options: [.curveEaseOut, .beginFromCurrentState],
-            animations: { self.view.layoutIfNeeded() }
-        )
+        UIView.jobsAnimateWithOptions(0.25,
+                                      options: [.curveEaseOut, .beginFromCurrentState],
+                                      animations: {
+            self.view.layoutIfNeeded()
+        })
     }
 }
 
 public typealias JobsAppDoorVC_Style2 = JobsAppDoorStyle2VC
 
 private extension JobsAppDoorStyle2VC {
+
     func setupLayout() {
-        install(form: loginForm, mode: .login, initialOffset: 0)
-        install(form: registerForm, mode: .register, initialOffset: offscreenOffset)
-        install(form: forgotPasswordForm, mode: .forgotPassword, initialOffset: offscreenOffset)
+        install(form: loginForm,
+                mode: .login,
+                initialOffset: 0)
+        install(form: registerForm,
+                mode: .register,
+                initialOffset: offscreenOffset)
+        install(form: forgotPasswordForm,
+                mode: .forgotPassword,
+                initialOffset: offscreenOffset)
         logoView.configure(style: .square)
         logoView.snp.makeConstraints { make in
             make.centerX.equalTo(view.safeAreaLayoutGuide)
@@ -87,7 +99,9 @@ private extension JobsAppDoorStyle2VC {
         customerServiceButton.byVisible(true)
     }
 
-    func install(form: JobsAppDoorFormView, mode: JobsAppDoorMode, initialOffset: CGFloat) {
+    func install(form: JobsAppDoorFormView,
+                 mode: JobsAppDoorMode,
+                 initialOffset: CGFloat) {
         form.byAddTo(view) { make in
             self.centerXConstraints[mode] = make.centerX.equalTo(self.view.safeAreaLayoutGuide).offset(initialOffset).constraint
             self.topConstraints[mode] = make.top.equalToSuperview().offset(self.cardTop(for: mode)).constraint
@@ -97,17 +111,16 @@ private extension JobsAppDoorStyle2VC {
     }
 
     func makeForm(mode: JobsAppDoorMode) -> JobsAppDoorFormView {
-        let form = JobsAppDoorFormView(
-            mode: mode,
-            configuration: configuration,
-            showsModeSwitcher: true
-        )
+        let form = JobsAppDoorFormView(mode: mode,
+                                       configuration: configuration,
+                                       showsModeSwitcher: true)
         form.configureGraphicCaptcha = configureGraphicCaptcha
         form.onModeRequest = { [weak self] mode in
             self?.switchMode(to: mode)
         }
         form.onSubmit = { [weak self] mode, values in
-            self?.dispatchSubmit(mode: mode, values: values)
+            self?.dispatchSubmit(mode: mode,
+                                 values: values)
         }
         form.onHome = { [weak self] in
             self?.finishToHome()
@@ -116,13 +129,18 @@ private extension JobsAppDoorStyle2VC {
             self?.openCountryCodePicker(for: inputView)
         }
         form.onVerificationCodeRequest = { [weak self, weak form] _ in
-            guard let self, let form else { return }
+            guard let self, let form else {
+                return
+            }
             verificationCodeHandler?(form.values)
-        };return form
+        }
+        return form
     }
 
     func switchMode(to mode: JobsAppDoorMode) {
-        guard mode != currentMode else { return }
+        guard mode != currentMode else {
+            return
+        }
         cancelSubmission()
         view.endEditing(true)
         keyboardVisible = false
@@ -149,22 +167,20 @@ private extension JobsAppDoorStyle2VC {
             customerServiceButton.byAlpha(0)
         }
 
-        UIView.jobsAnimateWithSpring(
-            2,
-            delay: 0.1,
-            dampingRatio: 0.3,
-            initialVelocity: 10,
-            options: [.curveEaseInOut, .beginFromCurrentState],
-            animations: {
-                if mode != .forgotPassword {
-                    self.customerServiceButton.byAlpha(1)
-                }
-                self.view.layoutIfNeeded()
-            },
-            completion: { [weak previousForm] _ in
-                previousForm?.byHidden(true)
+        UIView.jobsAnimateWithSpring(2,
+                                     delay: 0.1,
+                                     dampingRatio: 0.3,
+                                     initialVelocity: 10,
+                                     options: [.curveEaseInOut, .beginFromCurrentState],
+                                     animations: {
+            if mode != .forgotPassword {
+                self.customerServiceButton.byAlpha(1)
             }
-        )
+            self.view.layoutIfNeeded()
+        },
+                                     completion: { [weak previousForm] _ in
+            previousForm?.byHidden(true)
+        })
     }
 
     func installCustomerServiceConstraint(below form: JobsAppDoorFormView) {
@@ -182,11 +198,11 @@ private extension JobsAppDoorStyle2VC {
             logoView.byAlpha(alpha)
             return
         }
-        UIView.jobsAnimateWithOptions(
-            0.2,
-            options: [.curveEaseOut, .beginFromCurrentState],
-            animations: { self.logoView.byAlpha(alpha) }
-        )
+        UIView.jobsAnimateWithOptions(0.2,
+                                      options: [.curveEaseOut, .beginFromCurrentState],
+                                      animations: {
+            self.logoView.byAlpha(alpha)
+        })
     }
 
     func form(for mode: JobsAppDoorMode) -> JobsAppDoorFormView {

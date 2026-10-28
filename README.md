@@ -4,10 +4,9 @@
 >
 > **状态与维护：** 维护中（本地提交历史见统计章节）；负责人 Jobs，未登记独立维护团队。运行 / 硬件 / 生产功能须按对应证据验收。
 >
-> **统计基线：** 2026-10-19（Asia/Shanghai）；[项目规模、依赖与接手指南](#project-statistics)，页面、源码和提交分别采用明确口径，原有教程与历史记录继续保留。
+> **统计基线：** 页面与直接依赖核对至 2026-10-27，其余统计保留各表所列日期（Asia/Shanghai）；[项目规模、依赖与接手指南](#project-statistics)，页面、源码和提交分别采用明确口径，原有教程与历史记录继续保留。
 >
 > **版本说明：** 下方版本徽章保留为历史展示；当前最低系统、SDK 与锁文件以[工具链基线](#statistics-toolchain)为准。
-
 
 <p align="left">
   <a><img src="https://img.shields.io/badge/Swift-red" alt="Swift"/></a>
@@ -446,8 +445,23 @@
 
 ## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、👥 项目配置支持 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
+- [JobsSwiftDeviceGuard](./JobsByPods/JobsSwiftDeviceGuard@Pods/README.md) 提供独立的设备越狱风险检测：特征路径、当前进程已加载镜像和显式启用的沙盒外写探测按类别组合，默认两类命中才判定越狱风险；保留单类可疑、检测不完整和不支持环境的独立结果。核心不缓存、不上传、不退出 App；首页“设备安全检测”提供重新检测、可选写探测、完整证据报告与敏感业务门禁演示。检测 Pod 只返回报告和 `shouldRestrict` 建议；宿主已接入启动门禁：`AppDelegate` 在 CrashLog、业务初始化与 `super` 调用前同步只读检测，默认仅 `report.isJailbroken` 为真时停止后续显式业务启动并返回 `true`，每个 Scene 直接创建全屏原生拦截页，不创建正常业务根页面、Flutter 引擎或开屏。`JobsDeviceLaunchGate` 预留启动前判定策略和拦截页工厂，首次判定后冻结，后续 Scene 与恢复入口沿用该结果。`suspicious`、`indeterminate`、`unsupported` 按当前策略继续启动，不构成设备安全证明；现有 Demo 仍只展示单次判定，登录、支付、下单和请求尚未逐项接入独立拦截器。详细接口与流程见[启动接入说明](./JobsSwiftBaseConfigDemo/启动入口/JobsDeviceLaunchGate/README.md)。检测发生在运行期间，无法阻止系统安装 App；未命中特征也不代表设备绝对安全。
+
+设备安全入口使用打包的 `JobsDeviceGuardShield` 模板矢量图，素材为 [**iconfont**](https://www.iconfont.cn/collections/detail?cid=52407) 的 `fontawesome5 / shield-alt`（图标 ID `44771661`），由 Font Awesome 提供，按 [**CC BY 4.0 / Font Awesome Free 许可**](https://fontawesome.com/license/free)署名使用。原始 SVG 从该图标集合下载，仅转换为 PDF 以保留矢量缩放，不在运行时请求图片。
+
+- 首页左上角半屏菜单 → 用户信息：进入“用户与设备信息”页面，以“用户信息 / 本机信息”两个分组保留 `UserData.json` 字段和独立的 [JobsDeviceInfo](<./JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/临时项目页面/个人中心占位/JobsDeviceInfo/JobsDeviceInfo.swift>) 模块。两个分组默认展开，点击各自标题区可独立收起 / 展开；收起时同时隐藏该组内容和说明。页面与 OC 新旧工程统一使用内缩圆角卡片、分组背景和主次文字层级，标题区显示条目数，右侧提供当前可执行的展开 / 收起动作及箭头；分组状态切换在同一次无动画事务内完成布局，标题与内容组成完整圆角卡片，深浅色同步刷新。UDID、设备名称、IMEI、系统版本和序列号均可点击复制当前显示内容，并弹出“复制成功”；普通应用无法读取的 UDID、IMEI 和硬件序列号只展示、复制系统限制说明，不使用 IDFV 冒充 UDID。设备名称使用 [UIDevice.name](https://developer.apple.com/documentation/uikit/uidevice/name)，iOS 16 及以上可能只返回通用名称。
+
+**UDID / IMEI 为什么拿不到**
+
+<font color=red>**单靠普通 App 拿不到真实 UDID、IMEI**</font>，因为 iOS 没有开放读取它们的 API。联网或发请求也不会凭空得到这两个值，普通权限弹框不能解除这个限制。
+
+- **UDID**：可另接采集服务：App 发起会话 → [**Safari**](https://www.apple.com/safari/) 打开自有 HTTPS 采集页 → 用户到“设置”确认安装 [**Profile Service**](https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/iPhoneOTAConfiguration/profile-service/profile-service.html) 描述文件 → iOS 系统回传我们的后端 → App 查询会话并回填。这里需要本机明确操作，也需要后端接收、校验和返回结果；[**蒲公英**](https://www.pgyer.com/doc/view/udid)采用的也是描述文件采集方式。
+- **IMEI**：<font color=red>**不能保证同一条流程一定返回。**</font>[**Apple 旧版示例**](https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/iPhoneOTAConfiguration/ConfigurationProfileExamples/ConfigurationProfileExamples.html)列过它，但不能据此保证现在每台设备都会返回。可以请用户从“设置 → 通用 → 关于本机”复制后粘贴；企业受管设备可由 [**MDM**](https://developer.apple.com/documentation/devicemanagement/deviceinformationresponse/queryresponses-data.dictionary) 服务端按设备注册方式和查询权限获取。
+
+<font color=red>**当前项目还没有接入采集页面和后端**</font>，页面仍显示、复制系统限制说明，不会用 IDFV 冒充 UDID，也不承诺“授权后两项都能拿到”。
+
 - 自建 Pod 使用 [.github/tests/JobsPodsUpgrade/validate_builds.rb](<./.github/tests/JobsPodsUpgrade/validate_builds.rb>) 验证小工程，再验证 workspace 主工程。默认逐 Pod 排查；CI 用 `--batch-pods` 将全部自建根 target 放入同一依赖图构建，减少重复构图。保存 JSON / 编译日志；失败时阻止宿主验收。最低宿主系统已对齐 iOS 15.6。验证入口与行为迁移见本文“自建 Pod 稳定性与编译门禁”。
-- [JobsDebugPanel](./JobsByPods/JobsDebugPanel@Pods/README.md) 是仅 Debug 集成的本地调试 Pod：前台可拖动圆形按钮、push 功能列表与 URL 环境二级列表、自定义功能 Model DSL、长按隐藏至下次启动。圆按钮再次点击会退出菜单及本次工具页面，返回打开前的宿主页面；面板各层、Demo 与已打开页面跟随 JobsThemeCenter 的有效主题，App 与系统外观错配时保持一致；拖动限制在安全区域且不会误触点击或长按。`AppDelegate+JobsDebugPanel.swift` 配置三环境并接入 `JobsNetworking` 的后续相对路径请求；Demo 使用 3 秒超时与本地失败兜底，可无服务器直接预览。Release 不展示调试入口，弱网测试使用系统 [**Network Link Conditioner**](https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/On_Demand_Resources_Guide/TestingPerformance.html)。
+- [JobsDebugPanel](./JobsByPods/JobsDebugPanel@Pods/README.md) 是仅 Debug 集成的本地调试 Pod：启动默认隐藏，摇动手机后显示可拖动圆形按钮；push 功能列表与 URL 环境二级列表、自定义功能 Model DSL。长按隐藏全部悬浮入口，不弹出 deinit 提示，再次摇动可恢复；重复摇动复用浮层，重启仍等待摇动。圆按钮再次点击会退出菜单及本次工具页面，返回打开前的宿主页面；面板各层、Demo 与已打开页面跟随 JobsThemeCenter 的有效主题，App 与系统外观错配时保持一致；拖动限制在安全区域且不会误触点击或长按。`AppDelegate+JobsDebugPanel.swift` 配置三环境并接入 `JobsNetworking` 的后续相对路径请求；Demo 使用 3 秒超时与本地失败兜底，可无服务器直接预览。Release 不展示调试入口，弱网测试使用系统 [**Network Link Conditioner**](https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/On_Demand_Resources_Guide/TestingPerformance.html)。
 - 本工程已有 [**Flutter**](https://docs.flutter.dev/testing/build-modes) 内嵌模块，其 Release / Profile 不支持 iOS 模拟器。验证 Swift 宿主的 Release 宏、符号与资源隔离时，`xcodebuild -configuration Release` 可额外传 `FLUTTER_BUILD_MODE=debug`：仅内嵌 Flutter 使用 Debug，原生宿主仍为 Release；该产物不是完整 Flutter Release 包。完整真机 Release 还需现有 Unity 真机依赖及有效代码签名，工程最后的 IPA 保存阶段会拒绝无签名真机包。
 
 - [Podfile](./Podfile) 使用独立的 [CocoaPods 源自动选择模块](<./ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/README.md>)，在 `pod install` / `pod update` 解析依赖前同步测试官方 CDN 与 GitHub Specs，按真实 podspec 请求结果、耗时与 Git 仓库连接决定公共源；两条线路接近时优先 CDN。模块与其它安装脚本统一放在 `ScriptsByPods`，失败时告警并保留缓存或默认源使用机会。迁移时携带完整脚本包与 Podfile 加载代码，保留 `Podfile.lock`；Specs 测试通过仍不保证后续源码下载成功。
@@ -547,7 +561,7 @@
     
   * **注入调试工具**
   
-      * 同时支持 [**Swift**](https://developer.apple.com/swift/), **Objc**& **C++ **的代码热重载工具！
+      * 同时支持 [**Swift**](https://developer.apple.com/swift/), **Objc**& **C++** 的代码热重载工具！
   
         * [**InjectionIII**](https://github.com/johnno1962/InjectionIII)
         * [**InjectionNext**](https://github.com/johnno1962/InjectionNext)
@@ -782,7 +796,6 @@
     </tr>
   </table>
 
-
 * [**Swift**](https://developer.apple.com/swift/) SDK 工具链
 
   * 用 `xcrun` 从「当前选中的 Xcode/CLT 工具链」里找到  [**Swift**](https://developer.apple.com/swift/)，然后打印它的版本。不一定与项目 **Build Settings** 中使用的版本完全一致（项目可选择旧版编译）
@@ -919,7 +932,6 @@
     print_green "🎉 修改完成！已将 ENABLE_USER_SCRIPT_SANDBOXING 设置为 NO"
     ```
   
-
 ### <span id="jobs-toc-heading-6" data-jobs-toc="v2">3、第三方代码管理工具的配置 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 * **Podfile**
@@ -1078,6 +1090,7 @@
 > ​	4.1、**Codable** 是苹果官方的，类型安全，但需要写 `CodingKeys`，代码量较大。适合 **严格的数据结构、编译期安全** 的项目。
 >
 > ​	4.2、**HandyJSON** 偏动态映射，更“自动化”，开发效率高，但类型安全性稍差（运行期做解析）。适合 **快速开发 / 需求变动大的场景**。
+
 * 基本用法
 
   *  **JSON** ↔️ 模型
@@ -1860,7 +1873,6 @@ tableView.es.addInfiniteScrolling {
     evt.asSignal()          // 给 UI 绑定
     ```
   
-
 #### 4.8、<font id=数据库高频IO对比>数据库抽象层与高频 I/O 对比</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 下面的方案大多可以完成普通增删改查，真正拉开差异的是连接 / Context 模型、事务边界、锁等待、对象物化、通知和迁移。表中的“高频 I/O”指消息、事件、缓存索引或同步任务持续读写同一份本地数据；没有统一设备、数据量、索引、事务大小和 Release 配置时，不把任何方案写成绝对速度冠军。
@@ -1907,11 +1919,11 @@ tableView.es.addInfiniteScrolling {
 - CocoaPods 依赖声明位于 `Podfile.deps`，实际锁定版本以 `Podfile.lock` 为准。
 - 工程已包含 `[OBX] Update Sourcery Generated Files` 构建阶段，并对 App Target 关闭 `ENABLE_USER_SCRIPT_SANDBOXING`，保证 ObjectBox 代码生成器可以更新实体信息。
 - CRUD Demo 位于 `JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@ObjectBox/`，入口为功能列表中的“🗃️ ObjectBox”，覆盖新增、查询、修改和删除。
-- `model-JobsSwiftBaseConfigDemo.json` 与 `Generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift` 属于实体 ID 和代码生成基线，必须随实体变更一起提交，不能作为普通缓存删除。
+- `model-JobsSwiftBaseConfigDemo.json` 与 `Generated/EntityInfo-JobsSwiftBaseConfigDemo.generated.swift` 属于实体 ID 和代码生成基线，<font color=red>**必须随实体变更一起提交，不能作为普通缓存删除。**</font>
 
 #### 4.10、注入调试 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-* 同时支持 [**Swift**](https://developer.apple.com/swift/), **Objc**& **C++ **的代码热重载工具！
+* 同时支持 [**Swift**](https://developer.apple.com/swift/), **Objc**& **C++** 的代码热重载工具！
   * [**InjectionIII**](https://github.com/johnno1962/InjectionIII)
   * [**InjectionNext**](https://github.com/johnno1962/InjectionNext)
 * [**UI界面调试工具**](#UI界面调试工具)
@@ -1978,7 +1990,6 @@ tableView.es.addInfiniteScrolling {
 * 通用的生成方式：New Empty File ➤ 改名为`*.xcconfig` ⚠️ Xcode可能不会识别（影响范围：挂载此配置文件到Xcode工程项目的时候，无法被选中）
 
   * 解决方案 ➤ 拖到别处、删除Xcode对于此`*.xcconfig`的引用、再拖回来
-
 
 #### <span id="jobs-toc-heading-17" data-jobs-toc="v2">7.2、自动识别关联 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
@@ -2141,7 +2152,7 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
 
 公共 Specs 由 [CocoaPods 源自动选择模块](<./ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/README.md>)单独管理。Podfile 顶部同步加载 `jobs_cocoapods_source.rb` 并在 `source` 声明前完成真实 podspec GET 与 Git 连接测试；`pod install` / `pod update` 均按当前网络选源。可用 `JOBS_SPECS_SOURCE=cdn` / `git` 固定本次来源，默认 `auto`；每条候选线路完整测试默认最多 8 秒，可用 `JOBS_SPECS_PROBE_TIMEOUT` 调整。
 
-适配器只在当前进程映射锁文件公共源，保留锁定版本、校验和及私有源；不删除 Pods / 锁文件，不自动升级或二次安装。两条线路均失败时尝试锁文件源、已有缓存或默认 CDN，脚本异常时告警并继续 CocoaPods 自身流程，不能保证离线安装成功。迁移时保留 `ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/` 整包与 Podfile 的加载代码。
+适配器只在当前进程映射锁文件公共源，保留锁定版本、校验和及私有源；不删除 Pods / 锁文件，不自动升级或二次安装。两条线路均失败时尝试锁文件源、已有缓存或默认 CDN，脚本异常时告警并继续 CocoaPods 自身流程，<font color=red>**不能保证离线安装成功。**</font>迁移时保留 `ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/` 整包与 Podfile 的加载代码。
 
 [Podfile](./Podfile) 顶部加载 `./ScriptsByPods/【MacOS】📦Pod Install离线保护.command/jobs_pod_install_offline_guard.rb`，在依赖解析前同步运行同包调度器的 `--preflight`；`post_integrate` 同步运行 `--post-integrate`。两阶段都继承当前终端，依次展示自述、等待确认并显示真实结果。详见[本地脚本保护说明](<./ScriptsByPods/【MacOS】📦Pod Install离线保护.command/README.md>)。
 
@@ -2161,13 +2172,13 @@ INFOPLIST_KEY_CFBundleName = $(PRODUCT_NAME)
 | `check-only` | 只读检查，不安装、不生成依赖报告、不恢复 PIF、不建图或导出；兼容 `JOBS_POD_INSTALL_POST_SCRIPTS_CHECK_ONLY=1` |
 | `skip` | 跳过前置和收尾辅助任务 |
 
-`JOBS_POD_INSTALL_HOOK`、`JOBS_SKIP_README` 和 `CODEGRAPH_AUTO_INIT` 只描述调用上下文，不能代替用户确认。自动定位工程省去重复拖入路径，仍需确认后才写入。回车、取消和输入结束按各子脚本的提示处理；PIF 恢复始终要求精确 `YES`。
+`JOBS_POD_INSTALL_HOOK`、`JOBS_SKIP_README` 和 `CODEGRAPH_AUTO_INIT` 只描述调用上下文，不能代替用户确认。自动定位工程省去重复拖入路径，仍需确认后才写入。回车、取消和输入结束按各子脚本的提示处理；<font color=red>**PIF 恢复始终要求精确 `YES`。**</font>
 
 CodeGraph 完整体检覆盖系统 Shell / curl / Git / CLT、Brew 版本 / 配置 / doctor、Node.js 实际执行及 npm 配置、SQLite、CLI 子命令、隔离样例建图，以及目标状态 JSON 的工程路径和索引完整性。Homebrew 没有该官方 CodeGraph 对应 formula；缺失或损坏的 Node/npm 优先经确认用 Brew 的 `node@24` 补齐，CLI 从官方 npm 包 `@colbymchenry/codegraph` 安装到用户独立前缀，操作前展示来源。已有健康工具复用，地图更新 / 旧索引重建与导出遵循子脚本提示，产物为 `./.codegraph/codegraph.db` 和 `./.codegraph/codegraph.md/`。
 
-默认不强制离线。显式 `JOBS_POD_INSTALL_OFFLINE=1` 或调度器 `--offline` 才禁止辅助脚本安装 / 升级工具；`CODEGRAPH_ALLOW_INSTALL=0` 单独禁止 CodeGraph 安装。已有工具仍可经确认生成报告或更新地图；这些开关不保证 CocoaPods 本身完全离线。`JOBS_SKIP_CODEGRAPH=1` 跳过地图，重复更新由 `.codegraph/.jobs-update.lock` 工程锁控制。
+默认不强制离线。显式 `JOBS_POD_INSTALL_OFFLINE=1` 或调度器 `--offline` 才禁止辅助脚本安装 / 升级工具；`CODEGRAPH_ALLOW_INSTALL=0` 单独禁止 CodeGraph 安装。已有工具仍可经确认生成报告或更新地图；<font color=red>**这些开关不保证 CocoaPods 本身完全离线。**</font>`JOBS_SKIP_CODEGRAPH=1` 跳过地图，重复更新由 `.codegraph/.jobs-update.lock` 工程锁控制。
 
-所有辅助任务在前台完成并汇总。子任务失败会继续其余辅助任务、明确告警并返回调度失败状态，Podfile 保留 CocoaPods 自身的安装结果；不能用安装成功代替报告 / PIF / 地图成功。PIF 不删除 `Pods`、锁文件、工作空间或 `DerivedData`。网络适配与公共 Specs 选源仍按原顺序同步执行，不受辅助脚本交互开关替代。
+所有辅助任务在前台完成并汇总。子任务失败会继续其余辅助任务、明确告警并返回调度失败状态，Podfile 保留 CocoaPods 自身的安装结果；<font color=red>**不能用安装成功代替报告 / PIF / 地图成功。**</font>PIF 不删除 `Pods`、锁文件、工作空间或 `DerivedData`。网络适配与公共 Specs 选源仍按原顺序同步执行，不受辅助脚本交互开关替代。
 
 `post_install` 还会执行 Podfile 内的构建配置与兼容性修补；`post_integrate` 同时维护 Pods 工程中的 `Podfile` / `Podfile.deps` 引用。这些是 Podfile 内联逻辑，外置收尾脚本的实际调用点是 `post_integrate`。
 
@@ -2234,9 +2245,9 @@ Flutter 的健康检查同时核对 `Generated.xcconfig` 的 SDK / module 路径
 
 4、打包成功后，清空 `./build/` 全部内容，包括隐藏文件、子目录、历史 IPA 和另一平台的包，再放入本次 IPA。真机和模拟器包不会同时留存；临时快照在脚本退出时自动清理。
 
-**目录边界：** `./build/` 只存放可丢弃的构建产物，不要放源码、文档或需要保留的文件。DerivedData、构建中间目录和源 App 必须位于 `./build/` 外；命令行可使用 `-derivedDataPath ./DerivedData`。脚本拒绝清空作为软链接的 build 目录，或包含当前构建工作路径的 build 目录。
+**目录边界：** `./build/` <font color=red>**只存放可丢弃的构建产物，不要放源码、文档或需要保留的文件。**</font>DerivedData、构建中间目录和源 App 必须位于 `./build/` 外；命令行可使用 `-derivedDataPath ./DerivedData`。脚本拒绝清空作为软链接的 build 目录，或包含当前构建工作路径的 build 目录。
 
-**使用边界：** `模拟器.ipa` 是模拟器 `.app` 的 Payload 压缩快照，不能安装到真机，也不能用于 App Store 分发；解压后使用其中的 `.app` 安装到兼容的模拟器。`真机.ipa` 的安装范围取决于当前签名及描述文件，不能替代 Archive / 正式分发导出。
+**使用边界：** `模拟器.ipa` 是模拟器 `.app` 的 Payload 压缩快照，<font color=red>**不能安装到真机，也不能用于 App Store 分发**</font>；解压后使用其中的 `.app` 安装到兼容的模拟器。`真机.ipa` 的安装范围取决于当前签名及描述文件，不能替代 Archive / 正式分发导出。
 
 `clean`、非 iOS 平台、Tests / Widget 构建不独立输出 IPA；该阶段只挂在主 App，测试触发主 App 重建时仍会更新产物。Build Phase 发生在 Scheme 后置动作之前，产物存在不代表整个 workspace 或测试已成功完成。输入只声明脚本文件，不把整个 App 目录列为输入，避免签名、扩展和测试包造成依赖循环；输出声明 `./build/` 目录，以覆盖平台切换及全部内容清理。
 
@@ -4262,7 +4273,7 @@ private lazy var tvBlue: UITextView = { [unowned self] in
 
 从 `RootListVC` Demo 根列表进入的每个导航 / 模态子页面，以及类名以 `DemoVC` 结尾的独立演示页，都会由 `jobsSetupGKNav(...)` / 默认导航补齐链路统一管理右上角：导航栏最多只显示一个透明背景的主题入口；页面没有业务动作时直接切换主题，月亮 / 太阳图标与无障碍文案描述下一次点击会切换到的主题；存在业务动作时则使用 Demo 总入口同款 `ellipsis.circle` 展开下拉列表，展开后切换为填充图标与“收起”语义，把主题切换与全部页面动作放进列表。
 
-主题入口调用 `JobsThemeCenter.shared.toggle()`；公共能力位于 `JobsSwiftBaseDefines` / `JobsSwiftDSL`，主工程在 `Resources/Json文件/JobsThemeResources.json` 维护业务色值和显式主题图片映射。切换时只重放通过 `JobsCor` / `byTheme*` 标记过的背景色、文字色和主题图片，不遍历 Scene、Window 或控制器树，也不改布局与 `overrideUserInterfaceStyle`。缓存到 `CGColor`、`CALayer` 或自绘上下文的背景 / 文字颜色，需要用 `JobsThemeCenter.bind(...)` 显式登记。
+主题入口调用 `JobsThemeCenter.shared.toggle()`；公共能力位于 `JobsSwiftBaseDefines` / `JobsSwiftDSL`，主工程在 `Resources/Json文件/JobsThemeResources.json` 维护业务色值和显式主题图片映射。切换时重放通过 `JobsCor` / `byTheme*` 标记过的背景色、文字色和主题图片，不遍历 Scene、Window 或控制器树，也不改布局与全局 `overrideUserInterfaceStyle`。原生 Cell 箭头由 `byAccessoryType(...)` / `byEditingAccessoryType(...)` 绑定 Cell 局部外观，保持系统形状并跟随 App 主题；移除箭头或改用自定义附件时恢复原外观，调用方显式指定的外观优先。缓存到 `CGColor`、`CALayer` 或自绘上下文的背景 / 文字颜色，需要用 `JobsThemeCenter.bind(...)` 显式登记。
 
 ```swift
 jobsSetupGKNav(
@@ -4964,6 +4975,8 @@ required init?(coder: NSCoder) {
   Demo 根列表导航流中的子页面及类名以 `DemoVC` 结尾的独立演示页会自动获得唯一的全局主题入口，无需在 `rightButtons` 中重复创建。传入的 `rightButtons` 会作为页面业务动作收进该入口的下拉列表，不再并排占用导航栏；入口图标和无障碍文案始终表达下一次点击的切换主题、展开或收起动作。
 
   Demo 根列表支持拖拽调整普通分组顺序；“其他”作为兜底分组始终固定在列表末尾，不参与拖拽，也不会因历史持久化顺序恢复到中间。
+
+  演武堂根列表紧贴导航栏下沿布局，仅由列表顶部内容边距保留 `8pt` 间隔；初次进入与关闭搜索后使用相同位置。
 
   Demo 根列表的二级入口统一使用 `50pt` 固定行高；主标题和副标题由“设置 → 列表主/副标题”统一选择一般裁切、省略号、缩小字体、连续跑马灯或左右来回滚动，短文仍走 UILabel 原生绘制，深浅色下与同层普通 Label 保持同色。设置中的开屏内容、应用语言和列表文字策略均以一级 Cell 展示当前值，点击展开缩进的二级选项后再点选。Swift / OC 的 Label 分组统一覆盖动效数字、四种定尺寸文字策略、UILabel 与 UIButton.titleLabel 表现列表、可交互自定义 Label、圆点文本和文字旋转。
 
@@ -7808,19 +7821,18 @@ override func viewWillDisappear(_ animated: Bool) {
   </plist>
   ```
 
-
 #### <span id="jobs-toc-heading-145" data-jobs-toc="v2">43.2、<font id=国际化>对全局普通的字符串进行多语言国际化的处理</font> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 * 新建语言映射文件`*.strings`
  ![image-20251101165105182](./assets/image-20251101165105182.png)
 
- * `Localizable.strings (English)` **中文为键**
+* `Localizable.strings (English)` **中文为键**
 
    ```
    "🔑 注册登录" = "🔑 Sign in / Register";
    ```
 
- * `Localizable.strings (Chinese, Simplified)`
+* `Localizable.strings (Chinese, Simplified)`
 
    ```
    "🔑 注册登录" = "🔑 注册登录";
@@ -7856,8 +7868,8 @@ override func viewWillDisappear(_ animated: Bool) {
 
 * 说明
 
-   * 切换语言的时候，是通过发通知来转换的
-   * 对于已经赋值的UI控件，还是需要重新赋值。**`*.tr`**只是改变字符串
+  * 切换语言的时候，是通过发通知来转换的
+  * 对于已经赋值的UI控件，还是需要重新赋值。**`*.tr`**只是改变字符串
 
 ### <span id="jobs-toc-heading-146" data-jobs-toc="v2">44、PDF <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
@@ -8046,6 +8058,7 @@ jobsDismissKeyboard()
       }
   }
   ```
+
 ### <span id="jobs-toc-heading-149" data-jobs-toc="v2">47、真机/模拟器区分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 > 只能按照**CPU**架构来进行区分，具体设备要在真机代码部分，再进行详细区分
@@ -9056,7 +9069,6 @@ print(Config.maxCount)   // 直接通过类型访问
   }
   ```
 
-
 * 懒加载 + 属性观察器
 
   ```swift
@@ -9459,7 +9471,6 @@ MySingleton.destroy()
 > * `@objc` → 走 objc runtime
 > * 协议方法 → witness table
 > * 值类型 (struct/enum) → 静态派发
-
 
 #### <span id="jobs-toc-heading-214" data-jobs-toc="v2">8.1、静态派发 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
@@ -10628,6 +10639,7 @@ func resizableImage(edge: UIEdgeInsets = UIEdgeInsets(top: 10.h,
     ```
 
 * 同时指定 **`introduced`** / **`deprecated`** / **`obsoleted`**
+
   ```swift
   @available(iOS, introduced: 13.0, deprecated: 17.0, obsoleted: 18.0, message: "请迁移到新版本接口")
   func lifecycleAPI() {
@@ -11298,7 +11310,6 @@ for x in xs {
 
 > <font color=red>**`defer`**</font> = **作用域级 finally + 栈式收尾机制**
 
-
 ### <span id="jobs-toc-heading-293" data-jobs-toc="v2">31、**`UIAlertController`** <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 * `UIAlertController`内置输入框
@@ -11836,6 +11847,7 @@ for x in xs {
   print(u)       // 👤 用户名: Jobs
   debugPrint(u)  // User(name: Jobs)
   ```
+
 ### <span id="jobs-toc-heading-312" data-jobs-toc="v2">6、[**Swift**](https://developer.apple.com/swift/) 纯类 🆚 **`NSObject`** 子类 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 > **不继承 `NSObject`**：用于 **纯 [Swift](https://developer.apple.com/swift/)  逻辑/模型**，轻量、性能好、安全
@@ -11975,7 +11987,7 @@ for x in xs {
       let content = try readFile("foo.txt")
       ```
 
-  * 性能：[**Swift**](https://developer.apple.com/swift/) 的 `throw` **不走 ObjC 的 setjmp/longjmp**，实现方式更接近 **C++ ** 的零成本异常模型
+  * 性能：[**Swift**](https://developer.apple.com/swift/) 的 `throw` **不走 ObjC 的 setjmp/longjmp**，实现方式更接近 **C++**  的零成本异常模型
 
     * 不抛错时几乎没有开销；
     * 只有真的抛出时才走开销路径。
@@ -12278,7 +12290,7 @@ struct Point {
       - 只能存放 **Objc 对象**（继承自 `NSObject` 的类），**不能存放值类型**（比如 `int`、`struct`）
       - 在 [**Swift**](https://developer.apple.com/swift/) 混编时会自动桥接成 `AnyObject`
 
-     * **风险**：
+    * **风险**：
 
        ```objective-c
        [obj length];  // 如果 obj 是 NSString ✅
@@ -12300,9 +12312,9 @@ struct Point {
 
   * **特性**：
 
-     - 只能表示 **class 类型**，不能存放 **struct**/**enum** 等值类型。
+    - 只能表示 **class 类型**，不能存放 **struct**/**enum** 等值类型。
 
-     - 属于静态类型系统的一部分，支持 `is`、`as?` 等安全检查：
+    - 属于静态类型系统的一部分，支持 `is`、`as?` 等安全检查：
 
        ```swift
        if let str = obj as? NSString {
@@ -12310,7 +12322,7 @@ struct Point {
        }
        ```
 
-     - 遵循 **更安全的类型检查**，不会像 `id` 那样任你乱调方法直接崩。
+    - 遵循 **更安全的类型检查**，不会像 `id` 那样任你乱调方法直接崩。
 
 * <font id=Any>**[Swift](https://developer.apple.com/swift/).`Any`**</font>
 
@@ -13158,7 +13170,6 @@ static let demoHTML = """
 """
 ```
 
-
 ## <span id="jobs-toc-heading-359" data-jobs-toc="v2">七、自建 Pod 稳定性与编译门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 当前宿主最低系统为 iOS 15.6，与已集成 LiveChat 的要求一致；独立 Pod 的最低系统仍以各自 Podspec 和独立消费验证为准。生产 source glob 排除测试、示例和临时文件，实际使用 UserDefaults、文件时间或系统运行时间的模块随独立资源 bundle 交付隐私原因清单。
@@ -13228,16 +13239,16 @@ ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --host-only --configuratio
 
 ### 8.3、<span id="statistics-pages">页面、子页面与路由</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-计数时间：**2026-10-19**；单位选用 **ViewController 类型声明**，范围限定 Git 已跟踪的 `JobsSwiftBaseConfigDemo/主业务流程/VC/**/*.swift`，递归追踪 `BaseVC` / `UIViewController` 子类，每个不同类名算一个页面组件。这里是源码页面存量，包含条件编译与尚未从入口逐项验收的组件，不承诺所有页面均可在同一构建中到达。
+计数时间：**2026-10-27**；单位选用 **ViewController 类型声明**，范围限定当前工作区（含已落盘未提交文件）的 `JobsSwiftBaseConfigDemo/主业务流程/VC/**/*.swift`，递归追踪 `BaseVC` / `UIViewController` 子类，每个不同类名算一个页面组件。这里是源码页面存量，包含条件编译与尚未从入口逐项验收的组件，不承诺所有页面均可在同一构建中到达。
 
 | 端 | 页面数（含子页面） | 子页面数 | 路由条目数 | 口径与交叉核对 |
 | --- | ---: | ---: | ---: | --- |
-| iOS UIKit | 184 | 54 | 127 | 页面排除 3 个中间基类；主入口集合为 RootListVC / RootListSettingsVC / JobsMeCenterVC 加根列表 127 个去重目标，共 130 个，余下 54 个归子页面存量 |
+| iOS UIKit | 191 | 55 | 133 | 页面排除 3 个中间基类；主入口集合为 RootListVC / RootListSettingsVC / JobsMeCenterVC 加根列表 133 个去重目标，共 136 个，余下 55 个归子页面存量 |
 | 内嵌 Flutter / Unity | 不另加 | 不另加 | 包含在对应原生入口中 | `FlutterDemoVC` / `UnityDemoVC` 各已计一个容器页；不把第三方或生成工程的内部界面加进 UIKit 页面数 |
 
-`JobsNetworkingDemoBaseVC`、`JobsNetworkingMethodDemoVC`、`MosaicBaseDemoVC` 作为复用基类排除；导航 / Tab / 侧滑容器在统计目录外，亦排除。半屏、浮层、提示控件不另增页面；目录内真实 `BaseVC` 子类即使以模态或半屏方式展示，仍按一个类型计入，不能重复计数。子页面数字只表达“未列在主入口集合”，并非已完成运行时可达性审计。
+`JobsNetworkingDemoBaseVC`、`JobsNetworkingMethodDemoVC`、`MosaicBaseDemoVC` 作为复用基类排除；导航 / Tab / 侧滑容器及启动目录中的 `JobsDeviceBlockedVC` 在统计目录外，亦排除。半屏、浮层、提示控件不另增页面；目录内真实 `BaseVC` 子类即使以模态或半屏方式展示，仍按一个类型计入，不能重复计数。子页面数字只表达“未列在主入口集合”，并非已完成运行时可达性审计。
 
-路由采用根功能列表 `("标题", Xxx.self)` 的去重控制器目标，未把 push / present 调用数当路由。`FMDBDemoVC` 与 `WCDBDemoVC` 是互斥编译项，`UnityDemoVC` 仅真机，`JobsDebugPanelDemoVC` 仅 Debug；127 是所有条件分支的静态并集。当前 WCDB 依赖下，Debug 模拟器的根列表候选为 125，Release 模拟器为 124，Debug 真机为 126，Release 真机为 125；这些是按编译条件推导的候选值，未逐项运行。来源为 `Demo@功能列表根目录.swift` 的 `#if`，不能把静态并集当作每种构建都展示的数量。
+路由采用根功能列表 `("标题", Xxx.self)` 的去重控制器目标，未把 push / present 调用数当路由。`FMDBDemoVC` 与 `WCDBDemoVC` 是互斥编译项，`UnityDemoVC` 仅真机，`JobsDebugPanelDemoVC` 仅 Debug；133 是所有条件分支的静态并集。当前 WCDB 依赖下，Debug 模拟器的根列表候选为 131，Release 模拟器为 130，Debug 真机为 132，Release 真机为 131；这些是按编译条件推导的候选值，未逐项运行。来源为 `Demo@功能列表根目录.swift` 的 `#if`，不能把静态并集当作每种构建都展示的数量。
 
 只读复核页面与根路由：
 
@@ -13247,7 +13258,7 @@ from pathlib import Path
 import re, subprocess
 root = 'JobsSwiftBaseConfigDemo/主业务流程/VC/'
 classes = {}
-for name in subprocess.check_output(['git','ls-files','-z']).decode().split('\0'):
+for name in subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','-z']).decode().split('\0'):
     if name.startswith(root) and name.endswith('.swift'):
         for match in re.finditer(r'\bclass\s+(\w+)(?:<[^>]*>)?\s*:\s*([^\{\n]+)', Path(name).read_text()):
             classes[match[1]] = match[2].strip().split(',')[0].strip()
@@ -13288,7 +13299,9 @@ PY_PAGES
 
 ```mermaid
 flowchart LR
-    A["启动入口/AppDelegate.swift 与 SceneDelegate.swift"] --> B["RootListSettingsVC.swift / RootListPreferences"]
+    A["启动入口/AppDelegate.swift 与 SceneDelegate.swift"] --> Gate["JobsDeviceLaunchGate 宿主启动策略"]
+    Gate --> Detector["JobsSwiftDeviceGuard 检测报告"]
+    A --> B["RootListSettingsVC.swift / RootListPreferences"]
     B --> C["Demo@功能列表根目录.swift / RootListVC"]
     C --> D["主业务流程/VC/SubVC 中的 Demo"]
     D --> E["JobsByPods：JobsByUIKit / JobsSwiftDSL"]
@@ -13302,7 +13315,10 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    A["SceneDelegate.swift scene willConnect"] --> B["配置场景与启动展示"]
+    Start["AppDelegate 同步只读检测并冻结启动判定"] --> A["SceneDelegate.swift scene willConnect"]
+    A --> Gate{"冻结判定是否拦截?"}
+    Gate -->|是| Blocked["独立原生拦截根页面 跳过业务与开屏"]
+    Gate -->|否| B["配置场景与启动展示"]
     B --> C["RootListPreferences.makeAppRootViewController"]
     C --> D{"保存的根容器设置"}
     D -->|列表或侧滑| E["RootListVC / JobsSideDrawerVC"]
@@ -13411,7 +13427,7 @@ PY_STATS
 
 ### 8.8、<span id="statistics-dependencies">直接依赖清单与风险</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
-统计时间：**2026-10-19**。根 `Podfile.deps` 未注释的 `pod` 语句共 **119 条**，将同一 Pod 的 subspec 合并为根名后为 **117 个直接 Pod**：64 个自有 path、2 个本地供应商镜像、50 个公共 Specs Pod、1 个公共 Git Pod。所有声明所在函数均被主 target 调用；Debug 专用依赖仍算直接声明，注明配置边界。版本取 `Podfile.lock`，许可证优先取本地 podspec 声明，其余取已安装 Pods acknowledgement 的正文识别，不能视为完整许可证审计。版本与来源的进一步交叉核对入口为 `DEPENDENCIES`、`EXTERNAL SOURCES`、`CHECKOUT OPTIONS`。
+统计时间：**2026-10-27**。根 `Podfile.deps` 单行字面声明的 `pod` 语句共 **120 条**，将同一 Pod 的 subspec 合并为根名后为 **118 个直接 Pod**：65 个自有 path、2 个本地供应商镜像、50 个公共 Specs Pod、1 个公共 Git Pod。安装后当前 `Podfile.lock` 的 `DEPENDENCIES` 共 122 条、120 个根名称；其口径还包含 Flutter helper 和动态声明，不能与仅统计单行字面声明的数量混同。所有声明所在函数均被主 target 调用；Debug 专用依赖仍算直接声明，注明配置边界。版本取 `Podfile.lock`，许可证优先取本地 podspec 声明，其余取已安装 Pods acknowledgement 的正文识别，不能视为完整许可证审计。版本与来源的进一步交叉核对入口为 `DEPENDENCIES`、`EXTERNAL SOURCES`、`CHECKOUT OPTIONS`。
 
 此总数不包含 Flutter helper 自动展开的平台插件 / 引擎依赖；它们虽然出现在 CocoaPods 锁文件的 DEPENDENCIES 中，来源是 `my_flutter/pubspec.yaml` 与生成 helper，不属于手写 Podfile 的 117 个根声明。主 App 另有 1 个直接本地 SPM 包 `JobsSPMDemoPackage`（`JobsBySwiftPackageManager/JobsSPMDemoPackage`，版本为本仓源码、许可证未发现独立声明待核实、产品 JobsSPMDemoKit 已在 project.pbxproj 引用）；独立 MacroDemo 另直接引用父包和公共 `https://github.com/swiftlang/swift-syntax.git` 精确 `603.0.2`，Package.resolved 已入库，许可证待核实，该独立工具依赖不加进主 App Pod 总数。
 
@@ -13506,6 +13522,7 @@ PY_STATS
 | JobsSwiftSearcher | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsSwiftSearcher@Pods` | MIT（podspec 声明） | 直接 | Swift search component for Jobs projects. | import `JobsSwiftSearcher`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsSwiftSearcher/JobsSwiftSearcherDemoVC.swift`） |
 | JobsSwiftCountryCodeCtrl | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsSwiftCountryCodeCtrl@Pods` | MIT（podspec 声明） | 直接 | Swift country code selector controller for Jobs projects. | import `JobsSwiftCountryCodeCtrl`（`JobsByPods/JobsAppDoor@Pods/Core/登录注册模块公共件/Controller/JobsAppDoorBaseVC/JobsAppDoorBaseVC.swift`） |
 | JobsSwiftCalendar | 0.0.1 | 本仓自维护 path | `./JobsByPods/JobsSwiftCalendar@Pods` | MIT（podspec 声明） | 直接 | Standalone Swift calendar view for Jobs projects. | import `JobsSwiftCalendar`（`JobsSwiftBaseConfigDemo/主业务流程/VC/Demo@功能列表根目录/Demo@功能列表根目录.swift`） |
+| JobsSwiftDeviceGuard | 1.0.0 | 本仓自维护 path | `./JobsByPods/JobsSwiftDeviceGuard@Pods` | MIT（podspec 声明） | 直接 | 设备越狱风险检测与启动门禁；后续业务拦截按需接入 | import `JobsSwiftDeviceGuard`（`JobsDeviceGuardDemoVC.swift`）；2026-10-27 已解析 |
 | JobsSwiftExcel | 1.0.0 | 本仓自维护 path | `./JobsByPods/JobsSwiftExcel@Pods` | MIT（podspec 声明） | 直接 | Reusable spreadsheet UI with arbitrary frozen columns for Jobs Swift projects. | import `JobsSwiftExcel`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@JobsSwiftExcel/JobsSwiftExcelDemoCell.swift`） |
 | JobsWalletCard | 1.0.0 | 本仓自维护 path | `./JobsByPods/JobsWalletCard@Pods` | MIT（podspec 声明） | 直接 | Reusable wallet card stack with individual and all-card expansion modes. | import `JobsWalletCard`（`JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@钱包卡片效果/Demo@钱包卡片效果.swift`） |
 | JobsNavBar | 0.1.14 | 本仓自维护 path | `./JobsByPods/JobsNavBar@Pods` | MIT（podspec 声明） | 直接 | TODO | import `JobsNavBar`（`JobsByPods/JobsByUIKit@Pods/iOS.SDK/UIView/UIView+JobsNavBar.swift`） |
@@ -13587,6 +13604,6 @@ xcodebuild \
 
 目录职责：`JobsSwiftBaseConfigDemo/` 管宿主业务与启动，`JobsByPods/` 管自有组件，`JobsByPods/ManualBySwiftPods@Pods/` 为只读供应商边界，`JobsBySwiftPackageManager/` 为本地包示例，`JobsWidgetExtension/` 为 Widget，`my_flutter/` 与 `Unity/` 为跨端桥接工程，`ScriptsByPods/` / `ScriptsByDevTools/` 管安装与开发工具，`SwiftDoc.md/` 和原文主体保留学习资料。
 
-本节验证范围：读取已跟踪文件清单、入口源码、依赖声明与锁文件，复算静态数量，保留原有文档正文并检查新增相对路径 / 围栏 / 目录转换。不执行实际依赖安装、构建、测试、业务脚本、提交或推送；本地 Mermaid 发布形态与真实平台渲染是不同验收层，不能把静态语法检查写成真机功能通过。
+本节验证范围：读取已跟踪文件清单、入口源码、依赖声明与锁文件，复算静态数量，保留原有文档正文并检查新增相对路径 / 围栏 / 目录转换。不执行实际依赖安装、构建、测试、业务脚本、提交或推送；本地 Mermaid 发布形态与真实平台渲染是不同验收层，不能把静态语法检查写成真机功能通过。设备安全启动门禁的构建与运行验证单独记录于[启动接入说明](./JobsSwiftBaseConfigDemo/启动入口/JobsDeviceLaunchGate/README.md#validation)，不扩展为全部 Demo 已通过运行验收。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

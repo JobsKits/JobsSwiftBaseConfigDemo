@@ -8,6 +8,7 @@
 import Foundation
 
 public struct JobsAppDoorFormValues {
+
     public var username: String
     public var password: String
     public var confirmPassword: String
@@ -18,17 +19,15 @@ public struct JobsAppDoorFormValues {
     public var graphicCaptchaChallengeID: String?
     public var remembersPassword: Bool
 
-    public init(
-        username: String = "",
-        password: String = "",
-        confirmPassword: String = "",
-        countryCode: String = "+86",
-        phone: String = "",
-        smsCode: String = "",
-        graphicCaptcha: String = "",
-        graphicCaptchaChallengeID: String? = nil,
-        remembersPassword: Bool = true
-    ) {
+    public init(username: String = "",
+                password: String = "",
+                confirmPassword: String = "",
+                countryCode: String = "+86",
+                phone: String = "",
+                smsCode: String = "",
+                graphicCaptcha: String = "",
+                graphicCaptchaChallengeID: String? = nil,
+                remembersPassword: Bool = true) {
         self.username = username
         self.password = password
         self.confirmPassword = confirmPassword

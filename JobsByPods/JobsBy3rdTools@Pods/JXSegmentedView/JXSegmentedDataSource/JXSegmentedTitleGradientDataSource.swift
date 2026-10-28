@@ -15,6 +15,7 @@ import UIKit
 import JXSegmentedView
 // MARK: - TitleGradientDataSource
 extension JXSegmentedTitleGradientDataSource {
+
     @discardableResult
     public func byTitleNormalGradientColors(_ v: [CGColor]) -> Self {
         titleNormalGradientColors = v

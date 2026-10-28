@@ -16,8 +16,11 @@ import JobsSwiftBaseDefines
 
 // MARK: 设置富文本
 extension UITextView {
-    public func richTextBy(_ runs: [JobsRichRun], paragraphStyle: NSMutableParagraphStyle? = nil) {
-        attributedText = JobsRichText.make(runs, paragraphStyle: paragraphStyle)
+
+    public func richTextBy(_ runs: [JobsRichRun],
+                           paragraphStyle: NSMutableParagraphStyle? = nil) {
+        attributedText = JobsRichText.make(runs,
+                                           paragraphStyle: paragraphStyle)
         isEditable = false
         isScrollEnabled = false
         dataDetectorTypes = [] // 仅走自定义 link

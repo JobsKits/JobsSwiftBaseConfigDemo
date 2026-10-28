@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 public enum JobsIndicatorStyle {
+
     case medium
     case large
 
@@ -19,15 +20,22 @@ public enum JobsIndicatorStyle {
         switch self {
         /// 处理 .medium 分支
         case .medium:
-            if #available(iOS 13.0, *) { return .medium };return .gray
+            if #available(iOS 13.0, *) {
+                return .medium
+            }
+            return .gray
         /// 处理 .large 分支
         case .large:
-            if #available(iOS 13.0, *) { return .large };return .whiteLarge
+            if #available(iOS 13.0, *) {
+                return .large
+            }
+            return .whiteLarge
         }
     }
 }
 
 public extension UIActivityIndicatorView {
+
     convenience init(jobsStyle: JobsIndicatorStyle) {
         self.init(style: jobsStyle.uiStyle)
     }

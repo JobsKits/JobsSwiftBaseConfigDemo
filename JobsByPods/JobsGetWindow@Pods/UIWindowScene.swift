@@ -13,11 +13,14 @@ import UIKit
 
 @available(iOS 13.0, *)
 public extension UIWindowScene {
+
     var keyWindowCompat: UIWindow? {
         if #available(iOS 15.0, *) {
             return self.keyWindow
         } else {
-            return self.windows.first(where: { $0.isKeyWindow })
+            return self.windows.first(where: {
+                $0.isKeyWindow
+            })
         }
     }
 }
@@ -26,8 +29,12 @@ public extension UIWindowScene {
 public func legacyKeyWindowPreiOS13() -> UIWindow? {
     if #available(iOS 13.0, *) {
         return UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .first { $0.activationState == .foregroundActive }?
+            .compactMap {
+                $0 as? UIWindowScene
+            }
+            .first {
+                $0.activationState == .foregroundActive
+            }?
             .keyWindowCompat
     } else {
         return UIApplication.shared.keyWindow ?? UIApplication.shared.windows.first

@@ -13,15 +13,18 @@ import UIKit
 
 // MARK: - 直接赋值@单参数
 extension UIToolbar {
+
     // MARK: - Items
     @discardableResult
     public func byItemsAnimated(_ items: [UIBarButtonItem]?) -> Self {
-        self.setItems(items, animated: true)
+        self.setItems(items,
+                      animated: true)
         return self
     }
     @discardableResult
     public func byItems(_ items: [UIBarButtonItem]?) -> Self {
-        self.setItems(items, animated: false)
+        self.setItems(items,
+                      animated: false)
         return self
     }
     // MARK: - Style
@@ -47,14 +50,17 @@ extension UIToolbar {
     public func byBackgroundImage(_ image: UIImage?,
                                   forToolbarPosition position: UIBarPosition,
                                   barMetrics: UIBarMetrics = .default) -> Self {
-        self.setBackgroundImage(image, forToolbarPosition: position, barMetrics: barMetrics)
+        self.setBackgroundImage(image,
+                                forToolbarPosition: position,
+                                barMetrics: barMetrics)
         return self
     }
 
     @discardableResult
     public func byShadowImage(_ image: UIImage?,
                               forToolbarPosition position: UIBarPosition) -> Self {
-        self.setShadowImage(image, forToolbarPosition: position)
+        self.setShadowImage(image,
+                            forToolbarPosition: position)
         return self
     }
     // MARK: - Appearance (iOS 13+ / 15+)
@@ -94,15 +100,18 @@ extension UIToolbar {
 }
 // MARK: - 闭包重载@单参数
 extension UIToolbar {
+
     @discardableResult
     public func byItemsAnimated(_ builder: () -> [UIBarButtonItem]?) -> Self {
-        self.setItems(builder(), animated: true)
+        self.setItems(builder(),
+                      animated: true)
         return self
     }
 
     @discardableResult
     public func byItems(_ builder: () -> [UIBarButtonItem]?) -> Self {
-        self.setItems(builder(), animated: false)
+        self.setItems(builder(),
+                      animated: false)
         return self
     }
 
@@ -128,28 +137,32 @@ extension UIToolbar {
     public func byStandardAppearance(_ builder: () -> UIToolbarAppearance) -> Self {
         if #available(iOS 13.0, *) {
             self.standardAppearance = builder()
-        };return self
+        }
+        return self
     }
 
     @discardableResult
     public func byCompactAppearance(_ builder: () -> UIToolbarAppearance?) -> Self {
         if #available(iOS 13.0, *) {
             self.compactAppearance = builder()
-        };return self
+        }
+        return self
     }
 
     @discardableResult
     public func byScrollEdgeAppearance(_ builder: () -> UIToolbarAppearance?) -> Self {
         if #available(iOS 15.0, *) {
             self.scrollEdgeAppearance = builder()
-        };return self
+        }
+        return self
     }
 
     @discardableResult
     public func byCompactScrollEdgeAppearance(_ builder: () -> UIToolbarAppearance?) -> Self {
         if #available(iOS 15.0, *) {
             self.compactScrollEdgeAppearance = builder()
-        };return self
+        }
+        return self
     }
 
     @discardableResult

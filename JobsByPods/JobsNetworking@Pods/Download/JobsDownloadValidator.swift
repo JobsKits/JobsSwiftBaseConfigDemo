@@ -9,7 +9,11 @@ import Foundation
 import CommonCrypto
 
 enum JobsDownloadValidator {
-    static func validate(_ url: URL, response: HTTPURLResponse, request: JobsDownloadRequest, token: JobsRequestToken? = nil) throws {
+
+    static func validate(_ url: URL,
+                         response: HTTPURLResponse,
+                         request: JobsDownloadRequest,
+                         token: JobsRequestToken? = nil) throws {
         if token?.isCancelled == true {
             throw JobsError.cancelled
         }
@@ -25,7 +29,8 @@ enum JobsDownloadValidator {
             throw JobsError.invalidRequest(reason: "Downloaded byte count differs from expected length")
         }
         if let expectedHash = request.expectedSHA256 {
-            guard try sha256(url, isCancelled: {
+            guard try sha256(url,
+                             isCancelled: {
                 token?.isCancelled == true
             }) == expectedHash.lowercased() else {
                 throw JobsError.invalidRequest(reason: "Downloaded SHA256 differs from expected digest")
@@ -33,7 +38,8 @@ enum JobsDownloadValidator {
         }
     }
 
-    static func sha256(_ url: URL, isCancelled: () -> Bool = {
+    static func sha256(_ url: URL,
+                       isCancelled: () -> Bool = {
         false
     }) throws -> String {
         let handle = try FileHandle(forReadingFrom: url)
@@ -56,13 +62,19 @@ enum JobsDownloadValidator {
                 break
             }
             chunk.withUnsafeBytes { bytes in
-                _ = CC_SHA256_Update(&context, bytes.baseAddress, CC_LONG(chunk.count))
+                _ = CC_SHA256_Update(&context,
+                                     bytes.baseAddress,
+                                     CC_LONG(chunk.count))
             }
         }
-        var hash = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
-        CC_SHA256_Final(&hash, &context)
+        var hash = [UInt8](repeating: 0,
+                           count: Int(CC_SHA256_DIGEST_LENGTH))
+        CC_SHA256_Final(&hash,
+                        &context)
         return hash.map {
-            String(format: "%02x", $0)
-        }.joined()
+            String(format: "%02x",
+                   $0)
+        }
+            .joined()
     }
 }

@@ -36,9 +36,9 @@ public typealias JobsYTKBatchJobsVoidBlock = (_ batch: YTKBatchRequest) -> Void
 public typealias JobsYTKJobsVoidBlock = (_ request: YTKBaseRequest) -> Void
 public typealias JobsYTKChainSuccess = (_ chain: YTKChainRequest) -> Void
 public typealias JobsYTKChainFailure = (_ chain: YTKChainRequest,
-                                        _ failedRequest: YTKBaseRequest) -> Void
+    _ failedRequest: YTKBaseRequest) -> Void
 public typealias JobsYTKChainStepCallback = (_ chain: YTKChainRequest,
-                                             _ finishedRequest: YTKBaseRequest) -> Void
+    _ finishedRequest: YTKBaseRequest) -> Void
 #endif
 /// Cocoapods@Moya
 #if canImport(Moya)

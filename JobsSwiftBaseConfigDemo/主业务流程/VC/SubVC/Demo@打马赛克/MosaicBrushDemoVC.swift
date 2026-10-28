@@ -18,9 +18,16 @@ import JobsToast
 import JobsImageTools
 
 final class MosaicBrushDemoVC: MosaicBaseDemoVC {
-    override var pageTitle: String { "手势涂抹马赛克" }
-    override var preferredLoader: JobsImageLoaderPreference { .kingfisher }
-    override var imageForSaving: UIImage? { currentImage ?? imageView.image }
+
+    override var pageTitle: String {
+        "手势涂抹马赛克"
+    }
+    override var preferredLoader: JobsImageLoaderPreference {
+        .kingfisher
+    }
+    override var imageForSaving: UIImage? {
+        currentImage ?? imageView.image
+    }
 
     private let brushDiameter: CGFloat = 56
     private var currentImage: UIImage?
@@ -29,23 +36,31 @@ final class MosaicBrushDemoVC: MosaicBaseDemoVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.onBrushPan = { [weak self] previous, current in
-            self?.paintMosaic(from: previous, to: current)
+            self?.paintMosaic(from: previous,
+                              to: current)
         }
     }
 
     override func makeRightButtons() -> [UIButton] {
         [
             UIButton.sys()
-                .byFrame(CGRect(x: 0, y: 0, width: 32.w, height: 32.h))
-                .byImage("paintbrush".sysImg, for: .normal)
-                .byImage("paintbrush.fill".sysImg, for: .selected)
+                .byFrame(CGRect(x: 0,
+                                y: 0,
+                                width: 32.w,
+                                height: 32.h))
+                .byImage("paintbrush".sysImg,
+                         for: .normal)
+                .byImage("paintbrush.fill".sysImg,
+                         for: .selected)
                 .onTap { [weak self] sender in
-                    guard let self else { return }
-                    sender.byToggleSelected()
-                    let isSelected = sender.isSelected
-                    self.imageView.isBrushEnabled = isSelected
-                    (isSelected ? "涂抹马赛克已开启" : "涂抹马赛克已关闭").toast
+                guard let self else {
+                    return
                 }
+                sender.byToggleSelected()
+                let isSelected = sender.isSelected
+                self.imageView.isBrushEnabled = isSelected
+                (isSelected ? "涂抹马赛克已开启" : "涂抹马赛克已关闭").toast
+            }
         ]
     }
 
@@ -54,28 +69,28 @@ final class MosaicBrushDemoVC: MosaicBaseDemoVC {
         wholeMosaicImage = image.jobs_mosaicPixelated(blockSize: 18)
     }
 
-    private func paintMosaic(from previousViewPoint: CGPoint?, to currentViewPoint: CGPoint) {
+    private func paintMosaic(from previousViewPoint: CGPoint?,
+                             to currentViewPoint: CGPoint) {
         guard imageView.isBrushEnabled,
               let originalImage,
               let wholeMosaicImage,
-              let currentImage else { return }
-        guard let currentImagePoint = imageView.jobs_mosaicImagePoint(
-            from: currentViewPoint,
-            imageSize: originalImage.size
-        ) else { return }
+              let currentImage else {
+            return
+        }
+        guard let currentImagePoint = imageView.jobs_mosaicImagePoint(from: currentViewPoint,
+                                                                      imageSize: originalImage.size) else {
+            return
+        }
         let previousImagePoint = previousViewPoint.flatMap {
-            imageView.jobs_mosaicImagePoint(from: $0, imageSize: originalImage.size)
+            imageView.jobs_mosaicImagePoint(from: $0,
+                                            imageSize: originalImage.size)
         } ?? currentImagePoint
-        let centers = MosaicDemoPointSampler.points(
-            from: previousImagePoint,
-            to: currentImagePoint,
-            step: brushDiameter / 3
-        )
-        let image = currentImage.jobs_mosaicPainted(
-            with: wholeMosaicImage,
-            centers: centers,
-            brushDiameter: brushDiameter
-        )
+        let centers = MosaicDemoPointSampler.points(from: previousImagePoint,
+                                                    to: currentImagePoint,
+                                                    step: brushDiameter / 3)
+        let image = currentImage.jobs_mosaicPainted(with: wholeMosaicImage,
+                                                    centers: centers,
+                                                    brushDiameter: brushDiameter)
         self.currentImage = image
         imageView.byImage(image)
         hasEdited = true

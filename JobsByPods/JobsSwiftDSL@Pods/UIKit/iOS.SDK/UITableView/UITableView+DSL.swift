@@ -16,6 +16,7 @@ import JobsSwiftBaseDefines
 
 // MARK: - 直接赋值@单参数
 extension UITableView {
+
     @discardableResult
     public func byDelegate(_ delegate: UITableViewDelegate) -> Self {
         self.delegate = delegate
@@ -277,6 +278,7 @@ extension UITableView {
 }
 // MARK: - 闭包重载@单参数
 extension UITableView {
+
     @discardableResult
     public func byDelegate(_ builder: () -> UITableViewDelegate) -> Self {
         self.delegate = builder()
@@ -512,23 +514,28 @@ extension UITableView {
 }
 
 extension UITableView {
+
     // MARK: - iOS 11+ 禁止自动调整 contentInset
     @discardableResult
     public func byNoContentInsetAdjustment() -> Self {
         if #available(iOS 11.0, *) {
             self.contentInsetAdjustmentBehavior = .never
-        };return self
+        }
+        return self
     }
     // MARK: - iOS 15+ 去掉 section header 顶部默认间距
     @discardableResult
     public func byNoSectionHeaderTopPadding() -> Self {
         if #available(iOS 15.0, *) {
-            self.setValue(0, forKey: "sectionHeaderTopPadding")
-        };return self
+            self.setValue(0,
+                          forKey: "sectionHeaderTopPadding")
+        }
+        return self
     }
     // MARK: - 隐藏分割线
     public func hiddenSeparator() {
-        tableFooterView = UIView().byBackgroundColor(JobsCor.clear)
+        tableFooterView = UIView()
+            .byBackgroundColor(JobsCor.clear)
     }
     // MARK: - 设置整个区圆角
     public func sectionConner(cell: UITableViewCell,
@@ -537,13 +544,14 @@ extension UITableView {
                               cornerRadius: CGFloat = 10.0) {
         let bounds = CGRect(x: self.separatorInset.left,
                             y: 0,
-                            width: self.bounds.width - self.separatorInset.left*2,
+                            width: self.bounds.width - self.separatorInset.left * 2,
                             height: cell.bounds.height)
         let path: UIBezierPath
         let isFirst = indexPath.row == 0
         let isLast  = indexPath.row == self.numberOfRows(inSection: indexPath.section) - 1
         if isFirst && isLast {
-            path = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius)
+            path = UIBezierPath(roundedRect: bounds,
+                                cornerRadius: cornerRadius)
         } else if isFirst {
             path = UIBezierPath(roundedRect: bounds,
                                 byRoundingCorners: [.topLeft, .topRight],
@@ -556,13 +564,18 @@ extension UITableView {
             path = UIBezierPath(rect: bounds)
         }
         cell.byBackgroundView(UIView(frame: bounds)
-            .byInsertSublayer(CAShapeLayer().byPath(path.cgPath).byFillColor(bgColor), at: 0)
+            .byInsertSublayer(CAShapeLayer()
+                .byPath(path.cgPath)
+                .byFillColor(bgColor),
+                              at: 0)
             .byBackgroundColor(JobsCor.clear))
     }
     /// 设置编辑状态（带动画）
     @discardableResult
-    public func byEditing(_ editing: Bool, animated: Bool = true) -> Self {
-        self.setEditing(editing, animated: animated)
+    public func byEditing(_ editing: Bool,
+                          animated: Bool = true) -> Self {
+        self.setEditing(editing,
+                        animated: animated)
         return self
     }
     /// 选择 / 取消选择
@@ -570,12 +583,16 @@ extension UITableView {
     public func bySelectRow(_ indexPath: IndexPath?,
                             animated: Bool = true,
                             scrollPosition: UITableView.ScrollPosition = .none) -> Self {
-        self.selectRow(at: indexPath, animated: animated, scrollPosition: scrollPosition)
+        self.selectRow(at: indexPath,
+                       animated: animated,
+                       scrollPosition: scrollPosition)
         return self
     }
     @discardableResult
-    public func byDeselectRow(_ indexPath: IndexPath, animated: Bool = true) -> Self {
-        self.deselectRow(at: indexPath, animated: animated)
+    public func byDeselectRow(_ indexPath: IndexPath,
+                              animated: Bool = true) -> Self {
+        self.deselectRow(at: indexPath,
+                         animated: animated)
         return self
     }
     // MARK: - Batch Updates & Reload APIs
@@ -584,7 +601,8 @@ extension UITableView {
     @discardableResult
     public func byPerformBatchUpdates(_ updates: (jobsByVoidBlock)?,
                                       completion: (jobsByBOOLBlock)? = nil) -> Self {
-        self.performBatchUpdates(updates, completion: completion)
+        self.performBatchUpdates(updates,
+                                 completion: completion)
         return self
     }
 
@@ -603,21 +621,25 @@ extension UITableView {
     @discardableResult
     public func byInsertSections(_ sections: IndexSet,
                                  with animation: UITableView.RowAnimation = .automatic) -> Self {
-        self.insertSections(sections, with: animation)
+        self.insertSections(sections,
+                            with: animation)
         return self
     }
 
     @discardableResult
     public func byDeleteSections(_ sections: IndexSet,
                                  with animation: UITableView.RowAnimation = .automatic) -> Self {
-        self.deleteSections(sections, with: animation)
+        self.deleteSections(sections,
+                            with: animation)
         return self
     }
     /// iOS 5.0+
     @available(iOS 5.0, *)
     @discardableResult
-    public func byMoveSection(_ from: Int, to newSection: Int) -> Self {
-        self.moveSection(from, toSection: newSection)
+    public func byMoveSection(_ from: Int,
+                              to newSection: Int) -> Self {
+        self.moveSection(from,
+                         toSection: newSection)
         return self
     }
     /// iOS 3.0+
@@ -625,28 +647,33 @@ extension UITableView {
     @discardableResult
     public func byReloadSections(_ sections: IndexSet,
                                  with animation: UITableView.RowAnimation = .automatic) -> Self {
-        self.reloadSections(sections, with: animation)
+        self.reloadSections(sections,
+                            with: animation)
         return self
     }
 
     @discardableResult
     public func byInsertRows(at indexPaths: [IndexPath],
                              with animation: UITableView.RowAnimation = .automatic) -> Self {
-        self.insertRows(at: indexPaths, with: animation)
+        self.insertRows(at: indexPaths,
+                        with: animation)
         return self
     }
 
     @discardableResult
     public func byDeleteRows(at indexPaths: [IndexPath],
                              with animation: UITableView.RowAnimation = .automatic) -> Self {
-        self.deleteRows(at: indexPaths, with: animation)
+        self.deleteRows(at: indexPaths,
+                        with: animation)
         return self
     }
     /// iOS 5.0+
     @available(iOS 5.0, *)
     @discardableResult
-    public func byMoveRow(from: IndexPath, to: IndexPath) -> Self {
-        self.moveRow(at: from, to: to)
+    public func byMoveRow(from: IndexPath,
+                          to: IndexPath) -> Self {
+        self.moveRow(at: from,
+                     to: to)
         return self
     }
     /// iOS 3.0+
@@ -654,7 +681,8 @@ extension UITableView {
     @discardableResult
     public func byReloadRows(at indexPaths: [IndexPath],
                              with animation: UITableView.RowAnimation = .automatic) -> Self {
-        self.reloadRows(at: indexPaths, with: animation)
+        self.reloadRows(at: indexPaths,
+                        with: animation)
         return self
     }
     /// iOS 15.0+ 仅重新配置（不重载）
@@ -691,7 +719,8 @@ extension UITableView {
     @discardableResult
     public func byScrollToNearestSelectedRow(at position: UITableView.ScrollPosition,
                                              animated: Bool = true) -> Self {
-        self.scrollToNearestSelectedRow(at: position, animated: animated)
+        self.scrollToNearestSelectedRow(at: position,
+                                        animated: animated)
         return self
     }
 
@@ -701,6 +730,7 @@ extension UITableView {
     public func byContextMenuInteraction(_ config: jobsByContextMenuInteractionBlock) -> Self {
         if let interaction = self.contextMenuInteraction {
             config(interaction)
-        };return self
+        }
+        return self
     }
 }

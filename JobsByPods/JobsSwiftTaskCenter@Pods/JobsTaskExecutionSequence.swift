@@ -9,6 +9,7 @@ import Foundation
 /// 任务执行的异步序列
 
 public struct JobsTaskExecutionSequence: AsyncSequence {
+
     public typealias Element = TaskExecution
     private let task: JobsTask
 
@@ -18,11 +19,13 @@ public struct JobsTaskExecutionSequence: AsyncSequence {
 }
 
 extension JobsTaskExecutionSequence {
+
     public func makeAsyncIterator() -> AsyncIterator {
         AsyncIterator(task: task)
     }
 
     public struct AsyncIterator: AsyncIteratorProtocol {
+
         private let task: JobsTask
         private let stream: AsyncStream<TaskExecution>
         private var iterator: AsyncStream<TaskExecution>.Iterator
@@ -30,12 +33,10 @@ extension JobsTaskExecutionSequence {
             self.task = task
             self.stream = AsyncStream<TaskExecution>(bufferingPolicy: .unbounded) { continuation in
                 let actionToken = task.addAction { task in
-                    let execution = TaskExecution(
-                        count: task.executionCount,
-                        date: Date(),
-                        lifecycle: task.lifecycle,
-                        nextFireDate: task.estimatedNextExecutionDate
-                    )
+                    let execution = TaskExecution(count: task.executionCount,
+                                                  date: Date(),
+                                                  lifecycle: task.lifecycle,
+                                                  nextFireDate: task.estimatedNextExecutionDate)
                     continuation.yield(execution)
                     if task.lifecycle.isTerminated {
                         continuation.finish()
@@ -63,42 +64,50 @@ extension JobsTaskExecutionSequence {
 }
 
 extension JobsTaskExecutionSequence {
+
     public func prefix(_ maxCount: Int) -> JobsPrefixTaskExecutionSequence {
-        JobsPrefixTaskExecutionSequence(base: self, maxCount: maxCount)
+        JobsPrefixTaskExecutionSequence(base: self,
+                                        maxCount: maxCount)
     }
 
     public func filter(
         _ predicate: @escaping @Sendable (TaskExecution) -> Bool
     ) -> JobsFilteredTaskExecutionSequence {
-        JobsFilteredTaskExecutionSequence(base: self, predicate: predicate)
+        JobsFilteredTaskExecutionSequence(base: self,
+                                          predicate: predicate)
     }
 
     public func map<T>(
         _ transform: @escaping @Sendable (TaskExecution) -> T
     ) -> JobsMappedTaskExecutionSequence<T> where T: Sendable {
-        JobsMappedTaskExecutionSequence(base: self, transform: transform)
+        JobsMappedTaskExecutionSequence(base: self,
+                                        transform: transform)
     }
 
     public func dropFirst(_ count: Int = 1) -> JobsDropFirstTaskExecutionSequence {
-        JobsDropFirstTaskExecutionSequence(base: self, count: count)
+        JobsDropFirstTaskExecutionSequence(base: self,
+                                           count: count)
     }
 
     public func windowed(seconds: TimeInterval) -> JobsWindowedTaskExecutionSequence {
-        JobsWindowedTaskExecutionSequence(base: self, windowDuration: seconds)
+        JobsWindowedTaskExecutionSequence(base: self,
+                                          windowDuration: seconds)
     }
 
     public func collect() async -> [TaskExecution] {
         var results: [TaskExecution] = []
         for await execution in self {
             results.append(execution)
-        };return results
+        }
+        return results
     }
 
     public func collect(_ count: Int) async -> [TaskExecution] {
         var results: [TaskExecution] = []
         for await execution in self.prefix(count) {
             results.append(execution)
-        };return results
+        }
+        return results
     }
 
     public func forEach(_ action: @escaping @Sendable (TaskExecution) async -> Void) async {
@@ -114,6 +123,7 @@ extension JobsTaskExecutionSequence {
             if predicate(execution) {
                 return execution
             }
-        };return nil
+        }
+        return nil
     }
 }

@@ -13,11 +13,14 @@ import UIKit
 
 // ================================== NSTextAttachment 链式封装 ==================================
 extension NSTextAttachment {
+
     // MARK: - 初始化（便捷）
     /// 便捷初始化：等价于 init(data:ofType:)
     @available(iOS 7.0, *)
-    public convenience init(byData data: Data?, ofType uti: String?) {
-        self.init(data: data, ofType: uti)
+    public convenience init(byData data: Data?,
+                            ofType uti: String?) {
+        self.init(data: data,
+                  ofType: uti)
     }
     // MARK: - Content（数据/类型）
     /// 设置二进制内容（与 fileType/uti 搭配）
@@ -73,10 +76,13 @@ extension NSTextAttachment {
     }
     // usesTextAttachmentView 为只读属性，无法链式设置；提供便捷只读透传
     @available(iOS 15.0, *)
-    public var byUsesTextAttachmentView: Bool { self.usesTextAttachmentView }
+    public var byUsesTextAttachmentView: Bool {
+        self.usesTextAttachmentView
+    }
 }
 // ================================== NSTextAttachment 类级工具（iOS 15+） ==================================
 extension NSTextAttachment {
+
     /// 查询已注册的 Provider 类（按 fileType）
     @available(iOS 15.0, *)
     public static func byTextAttachmentViewProviderClass(forFileType fileType: String) -> AnyClass? {
@@ -84,7 +90,9 @@ extension NSTextAttachment {
     }
     /// 注册自定义 Provider 类（按 fileType）
     @available(iOS 15.0, *)
-    public static func byRegisterViewProviderClass(_ providerClass: AnyClass, forFileType fileType: String) {
-        Self.registerViewProviderClass(providerClass, forFileType: fileType)
+    public static func byRegisterViewProviderClass(_ providerClass: AnyClass,
+                                                   forFileType fileType: String) {
+        Self.registerViewProviderClass(providerClass,
+                                       forFileType: fileType)
     }
 }

@@ -10,6 +10,7 @@ import JobsSwiftTimer
 
 /// CoreText 长文本滚动配置。
 public struct JobsLabelScrollConfiguration {
+
     public var mode: JobsLabelScrollMode
     /// 每秒位移点数。
     public var speed: CGFloat
@@ -35,11 +36,16 @@ public struct JobsLabelScrollConfiguration {
                 timerKind: JobsTimerKind = .displayLink,
                 respectsReduceMotion: Bool = true) {
         self.mode = mode
-        self.speed = max(0, speed)
-        self.spacing = max(0, spacing)
-        self.startDelay = max(0, startDelay)
-        self.edgePause = max(0, edgePause)
-        self.framesPerSecond = min(max(1, framesPerSecond), 120)
+        self.speed = max(0,
+                         speed)
+        self.spacing = max(0,
+                           spacing)
+        self.startDelay = max(0,
+                              startDelay)
+        self.edgePause = max(0,
+                             edgePause)
+        self.framesPerSecond = min(max(1,framesPerSecond),
+                                   120)
         self.timerKind = timerKind
         self.respectsReduceMotion = respectsReduceMotion
     }
@@ -50,16 +56,14 @@ public struct JobsLabelScrollConfiguration {
                                   framesPerSecond: Int = 60,
                                   timerKind: JobsTimerKind = .displayLink,
                                   respectsReduceMotion: Bool = true) -> Self {
-        Self(
-            mode: .continuous,
-            speed: speed,
-            spacing: spacing,
-            startDelay: startDelay,
-            edgePause: 0,
-            framesPerSecond: framesPerSecond,
-            timerKind: timerKind,
-            respectsReduceMotion: respectsReduceMotion
-        )
+        Self(mode: .continuous,
+             speed: speed,
+             spacing: spacing,
+             startDelay: startDelay,
+             edgePause: 0,
+             framesPerSecond: framesPerSecond,
+             timerKind: timerKind,
+             respectsReduceMotion: respectsReduceMotion)
     }
 
     public static func pingPong(speed: CGFloat = 28,
@@ -68,15 +72,13 @@ public struct JobsLabelScrollConfiguration {
                                 framesPerSecond: Int = 60,
                                 timerKind: JobsTimerKind = .displayLink,
                                 respectsReduceMotion: Bool = true) -> Self {
-        Self(
-            mode: .pingPong,
-            speed: speed,
-            spacing: 0,
-            startDelay: startDelay,
-            edgePause: edgePause,
-            framesPerSecond: framesPerSecond,
-            timerKind: timerKind,
-            respectsReduceMotion: respectsReduceMotion
-        )
+        Self(mode: .pingPong,
+             speed: speed,
+             spacing: 0,
+             startDelay: startDelay,
+             edgePause: edgePause,
+             framesPerSecond: framesPerSecond,
+             timerKind: timerKind,
+             respectsReduceMotion: respectsReduceMotion)
     }
 }

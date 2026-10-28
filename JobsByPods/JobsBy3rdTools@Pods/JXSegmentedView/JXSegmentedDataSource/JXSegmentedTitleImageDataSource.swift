@@ -14,6 +14,7 @@ import UIKit
 #if canImport(JXSegmentedView)
 import JXSegmentedView
 extension JXSegmentedTitleImageDataSource {
+
     // MARK: - layout type
     /// 图文关系 ➤ .leftImage / .rightImage / .topImage / .bottomImage / .onlyImage / .onlyTitle / .backgroundImage
     @discardableResult
@@ -37,7 +38,8 @@ extension JXSegmentedTitleImageDataSource {
     }
     /// 一次性设置 normal + selected
     @discardableResult
-    public func byImages(normal: [String]?, selected: [String]? = nil) -> Self {
+    public func byImages(normal: [String]?,
+                         selected: [String]? = nil) -> Self {
         normalImageInfos = normal
         selectedImageInfos = selected
         return self
@@ -64,30 +66,45 @@ extension JXSegmentedTitleImageDataSource {
     // MARK: - zoom
     /// 图片缩放：可顺带配置选中 scale
     @discardableResult
-    public func byImageZoom(enabled: Bool = true, selectedScale: CGFloat? = nil) -> Self {
+    public func byImageZoom(enabled: Bool = true,
+                            selectedScale: CGFloat? = nil) -> Self {
         isImageZoomEnabled = enabled
-        if let s = selectedScale { imageSelectedZoomScale = s };return self
+        if let s = selectedScale {
+            imageSelectedZoomScale = s
+        }
+        return self
     }
     // MARK: - presets
     /// 上图下文：常用预设
     @discardableResult
-    public func byTopImage(bottomTitle spacing: CGFloat = 6, imageSize: CGSize? = nil) -> Self {
+    public func byTopImage(bottomTitle spacing: CGFloat = 6,
+                           imageSize: CGSize? = nil) -> Self {
         titleImageType = .topImage
         titleImageSpacing = spacing
-        if let s = imageSize { self.imageSize = s };return self
+        if let s = imageSize {
+            self.imageSize = s
+        }
+        return self
     }
     /// 左图右文：常用预设
     @discardableResult
-    public func byLeftImage(rightTitle spacing: CGFloat = 6, imageSize: CGSize? = nil) -> Self {
+    public func byLeftImage(rightTitle spacing: CGFloat = 6,
+                            imageSize: CGSize? = nil) -> Self {
         titleImageType = .leftImage
         titleImageSpacing = spacing
-        if let s = imageSize { self.imageSize = s };return self
+        if let s = imageSize {
+            self.imageSize = s
+        }
+        return self
     }
     /// 只有图标：常用预设
     @discardableResult
     public func byOnlyImage(imageSize: CGSize? = nil) -> Self {
         titleImageType = .onlyImage
-        if let s = imageSize { self.imageSize = s };return self
+        if let s = imageSize {
+            self.imageSize = s
+        }
+        return self
     }
     /// 只有标题：常用预设
     @discardableResult

@@ -15,10 +15,12 @@ import SnapKit
 import UIKit
 
 final class JobsIconfontGlyphDemoVC: BaseVC {
+
     private let glyphs = JobsIconfontGlyph.allCases
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
             .byRowHeight(64)
@@ -46,31 +48,34 @@ final class JobsIconfontGlyphDemoVC: BaseVC {
     }
 }
 
-extension JobsIconfontGlyphDemoVC: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension JobsIconfontGlyphDemoVC: UITableViewDataSource,
+                                   UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
         glyphs.count
     }
 
-    func tableView(
-        _ tableView: UITableView,
-        cellForRowAt indexPath: IndexPath
-    ) -> UITableViewCell {
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let glyph = glyphs[indexPath.row]
         return tableView
-            .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+            .byDequeueReusableCell(withType: UITableViewCell.self,
+                                   for: indexPath)
             .byListConfig {
-                $0.byImage(
-                    JobsIconfont.shared.iconImage(
-                        glyph,
-                        size: CGSize(width: 38, height: 38),
-                        color: JobsCor.systemIndigo,
-                        traitCollection: tableView.traitCollection
-                    )
-                )
-                .byText(glyph.title)
-                .bySecondaryText("语义枚举 → UILabel / UIButton / UIImage")
-                .byTextFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
-                .bySecondaryFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
+                $0
+                    .byImage(
+                JobsIconfont.shared.iconImage(glyph,
+                                              size: CGSize(width: 38, height: 38),
+                                              color: JobsCor.systemIndigo,
+                                              traitCollection: tableView.traitCollection)
+            )
+                    .byText(glyph.title)
+                    .bySecondaryText("语义枚举 → UILabel / UIButton / UIImage")
+                    .byTextFont(JobsFont.systemFont(ofSize: 16,
+                                                    weight: .semibold))
+                    .bySecondaryFont(JobsFont.systemFont(ofSize: 12,
+                                                         weight: .regular))
             }
     }
 }

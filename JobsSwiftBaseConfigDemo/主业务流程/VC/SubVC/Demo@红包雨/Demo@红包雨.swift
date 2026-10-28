@@ -24,31 +24,34 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class RedPacketRainDemoVC: BaseVC {
+
     private var isRaining = false
     private var count = 0
     // MARK: - UI
     /// 红包雨视图
     private lazy var rainView: RedPacketRainView = {
         RedPacketRainView
-            .dsl(
-                config: RedPacketRainConfig(
-                    // 可以改成 .default，或者继续用这套 Demo 配置
-                    spawnInterval: 0.2,
-                    minFallDuration: 5.5,
-                    maxFallDuration: 8.0,
-                    packetSize: CGSize(width: 44, height: 54),
-                    maxConcurrentCount: 80,
-                    spawnInsets: .init(top: 0, left: 10, bottom: 0, right: 10),
-                    tapEnabled: true,
-                    packetImage: nil
-                ),
-                timerKind: .gcd
-            )
+            .dsl(config: RedPacketRainConfig(
+                // 可以改成 .default，或者继续用这套 Demo 配置
+                spawnInterval: 0.2,
+                minFallDuration: 5.5,
+                maxFallDuration: 8.0,
+                packetSize: CGSize(width: 44, height: 54),
+                maxConcurrentCount: 80,
+                spawnInsets: .init(top: 0,
+                                   left: 10,
+                                   bottom: 0,
+                                   right: 10),
+                tapEnabled: true,
+                packetImage: nil),
+                 timerKind: .gcd)
             .onPacketTap { [weak self] _, count in
-                // ✅ Swift 6 / Sendable “同等待遇”：
-                // 1) 先冻结 weak self -> strongSelf，避免 “captured var self” 警告
-                // 2) 再显式切回 MainActor，安全触碰 UIKit
-                guard let strongSelf = self else { return }
+            // ✅ Swift 6 / Sendable “同等待遇”：
+            // 1) 先冻结 weak self -> strongSelf，避免 “captured var self” 警告
+            // 2) 再显式切回 MainActor，安全触碰 UIKit
+                guard let strongSelf = self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     strongSelf.countLabel.byText("已抢到：\(count) 个")
                 }
@@ -59,9 +62,11 @@ final class RedPacketRainDemoVC: BaseVC {
     }()
     /// 显示累计点击次数
     private lazy var countLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextAlignment(.center)
-            .byFont(JobsFont.systemFont(ofSize: 18, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 18,
+                                        weight: .medium))
             .byTextColor(JobsCor.white)
             .byBgCor(JobsCor.black.withAlphaComponent(0.4))
             .byCornerRadius(8)
@@ -80,26 +85,36 @@ final class RedPacketRainDemoVC: BaseVC {
     /// 开始 / 停止 红包雨
     private lazy var toggleButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
-            .byTitle("开始红包雨".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byBackgroundColor(JobsCor.systemGreen,
+                               for: .normal)
+            .byTitle("开始红包雨".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
             .byCornerRadius(8)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 isRaining.toggle()
                 if isRaining {
-                    // 开始下红包雨
+                // 开始下红包雨
                     rainView.byStart()
                     toggleButton
-                        .byTitle("停止红包雨".tr, for: .normal)
-                        .byBackgroundColor(JobsCor.systemRed, for: .normal)
+                        .byTitle("停止红包雨".tr,
+                                 for: .normal)
+                        .byBackgroundColor(JobsCor.systemRed,
+                                           for: .normal)
                 } else {
-                    // 停止继续生成，但保留屏幕上已有红包慢慢落完
+                // 停止继续生成，但保留屏幕上已有红包慢慢落完
                     rainView.byStop(clear: false)
                     toggleButton
-                        .byTitle("开始红包雨".tr, for: .normal)
-                        .byBackgroundColor(JobsCor.systemGreen, for: .normal)
+                        .byTitle("开始红包雨".tr,
+                                 for: .normal)
+                        .byBackgroundColor(JobsCor.systemGreen,
+                                           for: .normal)
                 }
             }
             .byAddTo(view) { [unowned self] make in

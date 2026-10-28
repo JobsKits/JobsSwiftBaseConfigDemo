@@ -16,7 +16,9 @@ import JobsByUIKit
 import JobsSwiftDSL
 
 final class GestureNodeView: UIView {
+
     enum State {
+
         case normal
         case selected
         case error
@@ -26,7 +28,9 @@ final class GestureNodeView: UIView {
     private let fillLayer = CAShapeLayer.jobsMake { _ in }
 
     var configuration: GestureUnlockConfiguration = .init() {
-        didSet { apply(state: state) }
+        didSet {
+            apply(state: state)
+        }
     }
 
     private(set) var index: Int = 0

@@ -13,6 +13,7 @@ import UIKit
 
 // MARK: - NSObject 层：只退键盘，按需退 accessory
 extension NSObject {
+
     /// 收起键盘；`hideAccessory = true` 时连 `inputAccessoryView` 一并收起
     public func jobsDismissKeyboard(hideAccessory: Bool = false) {
         // 1) 定位当前第一响应者
@@ -20,7 +21,8 @@ extension NSObject {
             // 没有第一响应者：仅当要求隐藏 accessory 时，退宿主 VC
             if hideAccessory {
                 UIApplication.jobsTopMostVC()?.resignFirstResponder()
-            };return
+            }
+            return
         }
         // 2) 只在“输入控件”时退键盘（不影响 VC 的第一响应者身份，工具条不消失）
         if fr is UITextField || fr is UITextView {
@@ -36,6 +38,6 @@ extension NSObject {
                 UIApplication.jobsTopMostVC()?.resignFirstResponder()
             }
         }
-        // 默认分支：既不是输入控件，也不要求隐藏 accessory -> 什么都不做（避免误把工具条干掉）
+    // 默认分支：既不是输入控件，也不要求隐藏 accessory -> 什么都不做（避免误把工具条干掉）
     }
 }

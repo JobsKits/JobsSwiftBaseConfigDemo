@@ -31,6 +31,7 @@ import JobsSwiftDSL
      label.text = uiFmt.format(Date())
  */
 extension DateFormatter {
+
     /// 统一入口：创建后在同一个 closure 内完成链式配置。
     public static func make(_ configure: jobsByDateFormatterBlock) -> DateFormatter {
         let formatter = DateFormatter()
@@ -40,11 +41,9 @@ extension DateFormatter {
 
     /// “尽可能最全”的打印器：yyyy-MM-dd HH:mm:ss.SSS Z（完整时区）(区域名) 星期 纪元
     // MARK: - 用于日志，不建议把字符串入库
-    public static func jobs_fullPrinter(
-        locale: Locale = Locale(identifier: "zh_CN"),
-        timeZone: TimeZone = .current,
-        calendar: Calendar = Calendar(identifier: .gregorian)
-    ) -> DateFormatter {
+    public static func jobs_fullPrinter(locale: Locale = Locale(identifier: "zh_CN"),
+                                        timeZone: TimeZone = .current,
+                                        calendar: Calendar = Calendar(identifier: .gregorian)) -> DateFormatter {
         DateFormatter.make { formatter in
             formatter
                 .byCalendar(calendar)

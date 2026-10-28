@@ -24,12 +24,17 @@ extension NSObject: @retroactive JobsAsyncable {}
 // MARK: -
 private var nameKey: UInt8 = 0
 extension NSObject {
+
     var nickname: String {
         get {
-            objc_getAssociatedObject(self, &nameKey) as? String ?? ""
+            objc_getAssociatedObject(self,
+                                     &nameKey) as? String ?? ""
         }
         set {
-            objc_setAssociatedObject(self, &nameKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+            objc_setAssociatedObject(self,
+                                     &nameKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_COPY_NONATOMIC)
         }
     }
     func greet() {
@@ -38,6 +43,7 @@ extension NSObject {
 }
 
 extension NSObject {
+
     /// 类名 ➤ 字符串
     /// 拿到的是更短的类名。例如：MyApp.TestView ➤ "TestView"
     public var className: String {
@@ -55,10 +61,14 @@ extension NSObject {
     func py_description() -> String {
         var output = ""
         do {
-            let data = try JSONSerialization.data(withJSONObject: self, options: .prettyPrinted)
-            output = String(data: data, encoding: .utf8) ?? ""
-            output = output.replacingOccurrences(of: "\\/", with: "/") // 处理\/转义字符
+            let data = try JSONSerialization.data(withJSONObject: self,
+                                                  options: .prettyPrinted)
+            output = String(data: data,
+                            encoding: .utf8) ?? ""
+            output = output.replacingOccurrences(of: "\\/",
+                                                 with: "/") // 处理\/转义字符
         } catch {
-        };return output
+        }
+        return output
     }
 }

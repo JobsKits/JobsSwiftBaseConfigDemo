@@ -8,6 +8,7 @@
 import Foundation
 
 final class JobsBluetoothPendingCommand {
+
     let identifier: String
     let payload: Data
     let timeout: TimeInterval
@@ -29,7 +30,8 @@ final class JobsBluetoothPendingCommand {
         identifier = command.identifier
         payload = command.payload
         timeout = command.timeout
-        retryCount = min(10, max(0, command.retryCount))
+        retryCount = min(10,
+                         max(0,command.retryCount))
         priority = command.priority
         allowsChunking = command.allowsChunking
         matcher = command.responseMatcher

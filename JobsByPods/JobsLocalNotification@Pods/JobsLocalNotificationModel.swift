@@ -10,6 +10,7 @@ import UserNotifications
 import JobsByUIKit
 
 public final class JobsLocalNotificationModel: NSObject {
+
     /// identifier
     @objc public dynamic var identifier: String = "DemoNotification"
     /// title

@@ -16,13 +16,13 @@ import JobsByUIKit
 import SnapKit
 
 /// GIF 刷新插件，支持资源名、文件路径和 Data。
-public final class JobsGIFRefreshView: UIView, JobsRefreshAnimatorProtocol {
+public final class JobsGIFRefreshView: UIView,
+                                       JobsRefreshAnimatorProtocol {
+
     public var indicatorSize: CGSize {
         didSet {
-            indicatorSize = CGSize(
-                width: max(1, indicatorSize.width),
-                height: max(1, indicatorSize.height)
-            )
+            indicatorSize = CGSize(width: max(1,indicatorSize.width),
+                                   height: max(1,indicatorSize.height))
             invalidateIntrinsicContentSize()
         }
     }
@@ -39,7 +39,8 @@ public final class JobsGIFRefreshView: UIView, JobsRefreshAnimatorProtocol {
         let pathExtension = (name as NSString).pathExtension.isEmpty
             ? "gif"
             : (name as NSString).pathExtension
-        let path = bundle.path(forResource: resourceName, ofType: pathExtension) ?? ""
+        let path = bundle.path(forResource: resourceName,
+                               ofType: pathExtension) ?? ""
         self.init(gifPath: path)
     }
 
@@ -49,14 +50,16 @@ public final class JobsGIFRefreshView: UIView, JobsRefreshAnimatorProtocol {
     }
 
     public init(gifData data: Data) {
-        indicatorSize = CGSize(width: 20, height: 20)
+        indicatorSize = CGSize(width: 20,
+                               height: 20)
         super.init(frame: .zero)
         jobs_setupGIFRefreshView()
         jobs_decodeGIF(data)
     }
 
     required init?(coder: NSCoder) {
-        indicatorSize = CGSize(width: 20, height: 20)
+        indicatorSize = CGSize(width: 20,
+                               height: 20)
         super.init(coder: coder)
         jobs_setupGIFRefreshView()
     }
@@ -111,17 +114,16 @@ public final class JobsGIFRefreshView: UIView, JobsRefreshAnimatorProtocol {
 
     public func refreshAnimatorApply(phase: JobsRefreshAnimatorPhase,
                                      progress: CGFloat) {
-        let normalizedProgress = min(1, max(0, progress))
+        let normalizedProgress = min(1,
+                                     max(0,progress))
         switch phase {
         /// 下拉过程展示 GIF 首帧并渐显缩放
         case .pulling:
             byStop()
                 .byHidden(false)
                 .byAlpha(0.35 + normalizedProgress * 0.65)
-                .byTransform(CGAffineTransform(
-                    scaleX: 0.8 + normalizedProgress * 0.2,
-                    y: 0.8 + normalizedProgress * 0.2
-                ))
+                .byTransform(CGAffineTransform(scaleX: 0.8 + normalizedProgress * 0.2,
+                                               y: 0.8 + normalizedProgress * 0.2))
         /// 达到阈值后展示完整首帧
         case .ready:
             byStop()
@@ -172,38 +174,51 @@ public final class JobsGIFRefreshView: UIView, JobsRefreshAnimatorProtocol {
     private func jobs_decodeGIF(_ data: Data) {
         gifData = data
         guard !data.isEmpty,
-              let source = CGImageSourceCreateWithData(data as CFData, nil) else { return }
+              let source = CGImageSourceCreateWithData(data as CFData,
+                                                       nil) else {
+            return
+        }
         var frames: [UIImage] = []
         var duration: TimeInterval = 0
         let count = CGImageSourceGetCount(source)
-        for index in 0..<count {
-            guard let imageRef = CGImageSourceCreateImageAtIndex(source, index, nil) else { continue }
-            frames.append(UIImage(
-                cgImage: imageRef,
-                scale: traitCollection.displayScale,
-                orientation: .up
-            ))
-            duration += jobs_delay(at: index, source: source)
+        for index in 0 ..< count {
+            guard let imageRef = CGImageSourceCreateImageAtIndex(source,
+                                                                 index,
+                                                                 nil) else {
+                continue
+            }
+            frames.append(UIImage(cgImage: imageRef,
+                                  scale: traitCollection.displayScale,
+                                  orientation: .up))
+            duration += jobs_delay(at: index,
+                                   source: source)
         }
-        guard let firstFrame = frames.first else { return }
+        guard let firstFrame = frames.first else {
+            return
+        }
         self.firstFrame = firstFrame
-        animatedImage = UIImage.animatedImage(
-            with: frames,
-            duration: max(duration, Double(frames.count) * 0.08)
-        )
-        indicatorSize = CGSize(width: max(1, firstFrame.size.width), height: max(1, firstFrame.size.height))
+        animatedImage = UIImage.animatedImage(with: frames,
+                                              duration: max(duration,
+                                                            Double(frames.count) * 0.08))
+        indicatorSize = CGSize(width: max(1,
+                                          firstFrame.size.width),
+                               height: max(1,
+                                           firstFrame.size.height))
         imageView.byImage(firstFrame)
     }
 
     private func jobs_delay(at index: Int,
                             source: CGImageSource) -> TimeInterval {
         let defaultDelay = 0.08
-        guard let properties = CGImageSourceCopyPropertiesAtIndex(source, index, nil) as? [CFString: Any],
+        guard let properties = CGImageSourceCopyPropertiesAtIndex(source,
+                                                                  index,
+                                                                  nil) as? [CFString: Any],
               let gifProperties = properties[kCGImagePropertyGIFDictionary] as? [CFString: Any] else {
             return defaultDelay
         }
         let unclampedDelay = gifProperties[kCGImagePropertyGIFUnclampedDelayTime] as? TimeInterval
         let clampedDelay = gifProperties[kCGImagePropertyGIFDelayTime] as? TimeInterval
-        return max(0.02, unclampedDelay ?? clampedDelay ?? defaultDelay)
+        return max(0.02,
+                   unclampedDelay ?? clampedDelay ?? defaultDelay)
     }
 }

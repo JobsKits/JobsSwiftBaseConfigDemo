@@ -10,6 +10,7 @@ import UIKit
 #endif
 
 public final class JobsScreenshotObserver {
+
     private var screenshotToken: NSObjectProtocol?
 
     public private(set) var isObserving = false
@@ -23,11 +24,9 @@ public final class JobsScreenshotObserver {
     @discardableResult
     public func start(_ onScreenshot: @escaping () -> Void) -> Self {
         stop()
-        screenshotToken = NotificationCenter.default.addObserver(
-            forName: UIApplication.userDidTakeScreenshotNotification,
-            object: nil,
-            queue: .main
-        ) { _ in
+        screenshotToken = NotificationCenter.default.addObserver(forName: UIApplication.userDidTakeScreenshotNotification,
+                                                                 object: nil,
+                                                                 queue: .main) { _ in
             onScreenshot()
         }
         isObserving = true

@@ -17,18 +17,24 @@ import enum JobsImageTools.JobsImageCacheCleaner
 /// 用于区分不同图片加载器的 token 空间，避免互相干扰。
 
 internal enum JobsButtonImageLoader: UInt8 {
+
     case sd = 1
     case kf = 2
 }
 /// 用于区分前景/背景请求的 token 空间。
 internal enum JobsButtonTokenChannel: UInt8 {
+
     case foreground = 1
     case background = 2
 }
-private enum _JobsButtonTokenAOKey { static var tokenMap: UInt8 = 0 }
+private enum _JobsButtonTokenAOKey {
+
+    static var tokenMap: UInt8 = 0
+}
 private var jobsImageScaleObservationKey: UInt8 = 0
 
 extension UIButton {
+
     // MARK: - Main thread helper
     /// ✅ 统一主线程执行：避免占位/回调乱序覆盖
     internal func _jobs_runOnMain(_ work: @escaping (UIButton) -> Void) {
@@ -41,23 +47,24 @@ extension UIButton {
     internal func _jobs_nextToken(loader: JobsButtonImageLoader,
                                   channel: JobsButtonTokenChannel,
                                   for state: UIControl.State) -> Int {
-        var map = (objc_getAssociatedObject(self, &_JobsButtonTokenAOKey.tokenMap) as? [UInt64: Int]) ?? [:]
+        var map = (objc_getAssociatedObject(self,
+                                            &_JobsButtonTokenAOKey.tokenMap) as? [UInt64: Int]) ?? [:]
         let key = (UInt64(loader.rawValue) << 56) | (UInt64(channel.rawValue) << 48) | UInt64(state.rawValue)
         let next = (map[key] ?? 0) + 1
         map[key] = next
-        objc_setAssociatedObject(
-            self,
-            &_JobsButtonTokenAOKey.tokenMap,
-            map,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-        );return next
+        objc_setAssociatedObject(self,
+                                 &_JobsButtonTokenAOKey.tokenMap,
+                                 map,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return next
     }
 
     func _jobs_isCurrentToken(_ token: Int,
-                             loader: JobsButtonImageLoader,
-                             channel: JobsButtonTokenChannel,
-                             for state: UIControl.State) -> Bool {
-        let map = (objc_getAssociatedObject(self, &_JobsButtonTokenAOKey.tokenMap) as? [UInt64: Int]) ?? [:]
+                              loader: JobsButtonImageLoader,
+                              channel: JobsButtonTokenChannel,
+                              for state: UIControl.State) -> Bool {
+        let map = (objc_getAssociatedObject(self,
+                                            &_JobsButtonTokenAOKey.tokenMap) as? [UInt64: Int]) ?? [:]
         let key = (UInt64(loader.rawValue) << 56) | (UInt64(channel.rawValue) << 48) | UInt64(state.rawValue)
         return map[key] == token
     }
@@ -73,15 +80,21 @@ extension UIButton {
     func _jobs_startBackgroundShimmer() {
         self.jobs_startShimmer()
         DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             // ✅ 关键：把文字层提到最前，避免被 shimmer overlay 盖住
-            if let tl = self.titleLabel { self.bringSubviewToFront(tl) }
+            if let tl = self.titleLabel {
+                self.bringSubviewToFront(tl)
+            }
             // subTitle 很可能也是 UILabel（bySubTitle 添加的），一起提到最前
             for v in self.subviews where v is UILabel {
                 self.bringSubviewToFront(v)
             }
             // 如果按钮还有前景图，也一并提到最前（可选）
-            if let iv = self.imageView { self.bringSubviewToFront(iv) }
+            if let iv = self.imageView {
+                self.bringSubviewToFront(iv)
+            }
             self.jobs_updateShimmerLayout()
         }
     }
@@ -91,8 +104,10 @@ extension UIButton {
     }
     // MARK: - Force set image helpers（避免 jobsReset 的“已有 image 不覆盖”保护挡掉最终图）
     /// ✅ 强制写入“前景图”（先走 jobsReset；如果没生效再强制覆盖）
-    func _jobs_forceSetForegroundImage(_ image: UIImage?, for state: UIControl.State) {
-        self.jobsResetBtnImage(image, for: state)
+    func _jobs_forceSetForegroundImage(_ image: UIImage?,
+                                       for state: UIControl.State) {
+        self.jobsResetBtnImage(image,
+                               for: state)
         if #available(iOS 15.0, *), state == .normal, var cfg = self.configuration {
             let current = cfg.image
             if (current !== image) && !(current == nil && image == nil) {
@@ -102,13 +117,16 @@ extension UIButton {
         } else {
             let current = self.image(for: state)
             if (current !== image) && !(current == nil && image == nil) {
-                self.setImage(image, for: state)
+                self.setImage(image,
+                              for: state)
             }
         }
     }
     /// ✅ 强制写入“背景图”（逻辑同上）
-    func _jobs_forceSetBackgroundImage(_ image: UIImage?, for state: UIControl.State) {
-        self.jobsResetBtnBgImage(image, for: state)
+    func _jobs_forceSetBackgroundImage(_ image: UIImage?,
+                                       for state: UIControl.State) {
+        self.jobsResetBtnBgImage(image,
+                                 for: state)
         if #available(iOS 15.0, *), state == .normal, var cfg = self.configuration {
             let current = cfg.background.image
             if (current !== image) && !(current == nil && image == nil) {
@@ -118,52 +136,78 @@ extension UIButton {
         } else {
             let current = self.backgroundImage(for: state)
             if (current !== image) && !(current == nil && image == nil) {
-                self.setBackgroundImage(image, for: state)
+                self.setBackgroundImage(image,
+                                        for: state)
             }
         }
     }
     // MARK: - Target size guessing
     func _jobs_guessForegroundTargetSize() -> CGSize {
-        if let s = self.jobs_remoteImageTargetSize, s.width > 1, s.height > 1 { return s }
+        if let s = self.jobs_remoteImageTargetSize, s.width > 1, s.height > 1 {
+            return s
+        }
         if let iv = self.imageView {
             let s = iv.bounds.size
-            if s.width > 1, s.height > 1 { return s }
+            if s.width > 1, s.height > 1 {
+                return s
+            }
         }
         let h = self.bounds.size.height
         if h > 1 {
-            let side = max(24, h - 16)
-            return CGSize(width: side, height: side)
-        };return CGSize(width: 48, height: 48)
+            let side = max(24,
+                           h - 16)
+            return CGSize(width: side,
+                          height: side)
+        }
+        return CGSize(width: 48,
+                      height: 48)
     }
 
     internal func _jobs_guessBackgroundTargetSize() -> CGSize {
-        if let s = self.jobs_bgImageTargetSize, s.width > 1, s.height > 1 { return s }
+        if let s = self.jobs_bgImageTargetSize, s.width > 1, s.height > 1 {
+            return s
+        }
         let s = self.bounds.size
-        if s.width > 1, s.height > 1 { return s };return CGSize(width: 320, height: 64)
+        if s.width > 1, s.height > 1 {
+            return s
+        }
+        return CGSize(width: 320,
+                      height: 64)
     }
     // MARK: - Loading placeholder
     /// 用于撑开 imageView frame，便于 overlay 精准覆盖
-    internal func _jobs_loadingPlaceholderImage(targetPointSize: CGSize, fallback: UIImage?) -> UIImage? {
-        if #available(iOS 17.0, *), objc_getAssociatedObject(self, &jobsImageScaleObservationKey) == nil {
-            objc_setAssociatedObject(self, &jobsImageScaleObservationKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    internal func _jobs_loadingPlaceholderImage(targetPointSize: CGSize,
+                                                fallback: UIImage?) -> UIImage? {
+        if #available(iOS 17.0, *), objc_getAssociatedObject(self,
+                                                             &jobsImageScaleObservationKey) == nil {
+            objc_setAssociatedObject(self,
+                                     &jobsImageScaleObservationKey,
+                                     true,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             registerForTraitChanges([UITraitDisplayScale.self]) { (button: UIButton, _: UITraitCollection) in
                 JobsImageCacheCleaner.forceRedownloadImages(in: button)
             }
         }
         guard let fallback else {
-            return UIImage._jobs_transparentPlaceholder(size: targetPointSize, scale: traitCollection.displayScale)
-        };return fallback
+            return UIImage._jobs_transparentPlaceholder(size: targetPointSize,
+                                                        scale: traitCollection.displayScale)
+        }
+        return fallback
     }
 }
 // MARK: - Transparent placeholder (internal)
 extension UIImage {
+
     static func _jobs_transparentPlaceholder(size: CGSize,
                                              scale: CGFloat) -> UIImage {
-        let w = max(1, size.width)
-        let h = max(1, size.height)
+        let w = max(1,
+                    size.width)
+        let h = max(1,
+                    size.height)
         let format = UIGraphicsImageRendererFormat()
         format.scale = scale
         format.opaque = false
-        return UIGraphicsImageRenderer(size: CGSize(width: w, height: h), format: format).image { _ in }
+        return UIGraphicsImageRenderer(size: CGSize(width: w, height: h),
+                                       format: format).image { _ in }
     }
 }

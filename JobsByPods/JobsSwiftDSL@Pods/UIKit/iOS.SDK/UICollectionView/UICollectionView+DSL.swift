@@ -15,6 +15,7 @@ import JobsSwiftBlock
 
 // MARK: - 直接赋值@单参数
 extension UICollectionView {
+
     @discardableResult
     public func byAllowsSelection(_ allow: Bool) -> Self {
         self.allowsSelection = allow
@@ -156,6 +157,7 @@ extension UICollectionView {
 }
 // MARK: - 闭包重载@单参数
 extension UICollectionView {
+
     @discardableResult
     public func byAllowsSelection(_ builder: () -> Bool) -> Self {
         self.allowsSelection = builder()
@@ -279,27 +281,35 @@ extension UICollectionView {
 }
 
 extension UICollectionView {
+
     // MARK: - 选择/取消选择
     @discardableResult
     public func bySelectItem(_ indexPath: IndexPath?,
                              animated: Bool = true,
                              scrollPosition: UICollectionView.ScrollPosition = []) -> Self {
-        selectItem(at: indexPath, animated: animated, scrollPosition: scrollPosition)
+        selectItem(at: indexPath,
+                   animated: animated,
+                   scrollPosition: scrollPosition)
         return self
     }
 
     @discardableResult
-    public func byDeselectItem(_ indexPath: IndexPath, animated: Bool = true) -> Self {
-        deselectItem(at: indexPath, animated: animated)
+    public func byDeselectItem(_ indexPath: IndexPath,
+                               animated: Bool = true) -> Self {
+        deselectItem(at: indexPath,
+                     animated: animated)
         return self
     }
 }
 /// UICollectionView@UICollectionViewLayout
 extension UICollectionView {
+
     // MARK: - 切换布局（动画）
     @discardableResult
-    public func bySetLayout(_ layout: UICollectionViewLayout, animated: Bool) -> Self {
-        setCollectionViewLayout(layout, animated: animated)
+    public func bySetLayout(_ layout: UICollectionViewLayout,
+                            animated: Bool) -> Self {
+        setCollectionViewLayout(layout,
+                                animated: animated)
         return self
     }
     // MARK: - iOS 7.0+ 切换布局（动画 + 完成回调）
@@ -316,27 +326,33 @@ extension UICollectionView {
 }
 /// 背景、Context_Menu@UICollectionView
 extension UICollectionView {
+
     // MARK: - iOS 13.2+ ContextMenuInteraction 配置闭包
     @available(iOS 13.2, *)
     @discardableResult
     public func byContextMenuInteraction(_ config: (UIContextMenuInteraction) -> Void) -> Self {
         if let interaction = contextMenuInteraction {
             config(interaction)
-        };return self
+        }
+        return self
     }
 }
 /// 滚动、可视区域@UICollectionView
 extension UICollectionView {
+
     @discardableResult
     public func byScrollToItem(_ indexPath: IndexPath,
                                at position: UICollectionView.ScrollPosition,
                                animated: Bool = true) -> Self {
-        scrollToItem(at: indexPath, at: position, animated: animated)
+        scrollToItem(at: indexPath,
+                     at: position,
+                     animated: animated)
         return self
     }
 }
 /// 更新、批量操作、交互式过渡_移动@UICollectionView
 extension UICollectionView {
+
     @discardableResult
     public func byReloadData() -> Self {
         reloadData()
@@ -346,7 +362,8 @@ extension UICollectionView {
     @discardableResult
     public func byPerformBatchUpdates(_ updates: (jobsByVoidBlock)?,
                                       completion: (jobsByBoolBlock)? = nil) -> Self {
-        performBatchUpdates(updates, completion: completion)
+        performBatchUpdates(updates,
+                            completion: completion)
         return self
     }
     // MARK: - Sections
@@ -363,8 +380,10 @@ extension UICollectionView {
     }
 
     @discardableResult
-    public func byMoveSection(_ from: Int, to: Int) -> Self {
-        moveSection(from, toSection: to)
+    public func byMoveSection(_ from: Int,
+                              to: Int) -> Self {
+        moveSection(from,
+                    toSection: to)
         return self
     }
 
@@ -387,8 +406,10 @@ extension UICollectionView {
     }
 
     @discardableResult
-    public func byMoveItem(from: IndexPath, to: IndexPath) -> Self {
-        moveItem(at: from, to: to)
+    public func byMoveItem(from: IndexPath,
+                           to: IndexPath) -> Self {
+        moveItem(at: from,
+                 to: to)
         return self
     }
 
@@ -410,7 +431,8 @@ extension UICollectionView {
     public func byStartInteractiveTransition(to layout: UICollectionViewLayout,
                                              completion: UICollectionView.LayoutInteractiveTransitionCompletion? = nil)
     -> UICollectionViewTransitionLayout {
-        return startInteractiveTransition(to: layout, completion: completion)
+        return startInteractiveTransition(to: layout,
+                                          completion: completion)
     }
     // MARK: - iOS 7.0+ 完成交互式过渡
     @available(iOS 7.0, *)

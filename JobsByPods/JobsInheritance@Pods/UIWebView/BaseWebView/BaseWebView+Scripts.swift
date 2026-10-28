@@ -15,6 +15,7 @@ import WebKit
 
 // ===== WK Script Bridge / UserScripts =====
 public extension BaseWebView {
+
     static func makeBridgeUserScript() -> WKUserScript {
         let js = """
         (function() {
@@ -118,9 +119,12 @@ public extension BaseWebView {
 }
 // MARK: - Dark CSS / MobileBridge shim
 extension BaseWebView {
+
     @MainActor
     func injectDarkCSSIfNeeded() {
-        guard injectDarkStylePatch else { return }
+        guard injectDarkStylePatch else {
+            return
+        }
         injectDarkCSS()
     }
     /// Dark CSS 注入（用于 injectDarkStylePatch）
@@ -136,7 +140,8 @@ extension BaseWebView {
         if #available(iOS 14.0, *) {
             script = WKUserScript(source: js,
                                   injectionTime: .atDocumentEnd,
-                                  forMainFrameOnly: false, in: .page)
+                                  forMainFrameOnly: false,
+                                  in: .page)
         } else {
             script = WKUserScript(source: js,
                                   injectionTime: .atDocumentEnd,
@@ -147,7 +152,9 @@ extension BaseWebView {
     /// 极简 JS shim：前端没注入时兜底
     @MainActor
     func injectMinimalMobileShimIfNeeded() {
-        guard mobileConfig.injectShim else { return }
+        guard mobileConfig.injectShim else {
+            return
+        }
         injectMinimalMobileShim()
     }
 
@@ -187,6 +194,7 @@ extension BaseWebView {
             script = WKUserScript(source: js,
                                   injectionTime: .atDocumentStart,
                                   forMainFrameOnly: false)
-        };webView.configuration.userContentController.addUserScript(script)
+        }
+        webView.configuration.userContentController.addUserScript(script)
     }
 }

@@ -8,6 +8,7 @@
 import Foundation
 
 public enum JobsCachePolicy: Sendable {
+
     case disabled
     case networkOnly
     case cacheOnly(ttl: TimeInterval)
@@ -15,11 +16,17 @@ public enum JobsCachePolicy: Sendable {
     case staleWhileRevalidate(ttl: TimeInterval)
 
     @available(*, deprecated, renamed: "disabled")
-    public static var none: JobsCachePolicy { .disabled }
+    public static var none: JobsCachePolicy {
+        .disabled
+    }
 
     @available(*, deprecated, renamed: "cacheElseLoad(ttl:)")
-    public static func cacheThenNetwork(ttl: TimeInterval) -> JobsCachePolicy { .cacheElseLoad(ttl: ttl) }
+    public static func cacheThenNetwork(ttl: TimeInterval) -> JobsCachePolicy {
+        .cacheElseLoad(ttl: ttl)
+    }
 
     @available(*, deprecated, renamed: "staleWhileRevalidate(ttl:)")
-    public static func memoryThenNetwork(ttl: TimeInterval) -> JobsCachePolicy { .staleWhileRevalidate(ttl: ttl) }
+    public static func memoryThenNetwork(ttl: TimeInterval) -> JobsCachePolicy {
+        .staleWhileRevalidate(ttl: ttl)
+    }
 }

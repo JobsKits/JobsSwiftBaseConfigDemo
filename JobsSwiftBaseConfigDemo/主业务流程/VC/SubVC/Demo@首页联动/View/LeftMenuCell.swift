@@ -18,8 +18,10 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class LeftMenuCell: UITableViewCell {
+
     private lazy var indicator: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemOrange)
             .byAddTo(contentView) { make in
                 make.leading.equalToSuperview()
@@ -30,7 +32,7 @@ final class LeftMenuCell: UITableViewCell {
     }()
 
     private lazy var iconView: UIImageView = {
-        UIImageView(image:"star".sysImg)
+        UIImageView(image: "star".sysImg)
             .byTintColor(JobsCor.systemGray)
             .byContentMode(.scaleAspectFit)
             .byAddTo(contentView) { make in
@@ -41,9 +43,11 @@ final class LeftMenuCell: UITableViewCell {
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("--")
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
                 make.leading.equalTo(iconView.snp.trailing).offset(10)
@@ -52,8 +56,10 @@ final class LeftMenuCell: UITableViewCell {
             }
     }()
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override init(style: UITableViewCell.CellStyle,
+                  reuseIdentifier: String?) {
+        super.init(style: style,
+                   reuseIdentifier: reuseIdentifier)
         self.byBackgroundColor(JobsCor.clear)
         contentView.byBackgroundColor(JobsCor.clear)
         selectionStyle = .none
@@ -61,9 +67,13 @@ final class LeftMenuCell: UITableViewCell {
         iconView.byVisible(YES)
         titleLabel.byVisible(YES)
     }
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
-    func configure(icon: String, title: String, selected: Bool) {
+    func configure(icon: String,
+                   title: String,
+                   selected: Bool) {
         iconView.byImage(UIImage(systemName: icon))
         titleLabel.byText(title)
         indicator.byHidden(!selected)
@@ -76,6 +86,7 @@ final class LeftMenuCell: UITableViewCell {
 }
 // MARK: - DSL
 extension LeftMenuCell {
+
     /// 一次性设置：图标 + 标题 + 选中态
     @discardableResult
     func byMenu(icon: String,
@@ -98,10 +109,14 @@ extension LeftMenuCell {
     }
     /// 仅更新标题或图标（可选）
     @discardableResult
-    func byMenuTitle(_ text: String) -> Self { titleLabel.byText(text); return self }
+    func byMenuTitle(_ text: String) -> Self {
+        titleLabel.byText(text)
+        return self
+    }
 
     @discardableResult
     func byMenuIcon(_ name: String) -> Self {
-        iconView.byImage(UIImage(systemName: name)); return self
+        iconView.byImage(UIImage(systemName: name))
+        return self
     }
 }

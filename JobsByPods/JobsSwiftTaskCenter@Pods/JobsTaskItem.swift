@@ -16,6 +16,7 @@ import UIKit
 /// 线程安全：使用 NSLock 保护状态修改
 
 public final class JobsTaskItem {
+
     var task: JobsTask
     private let lock = NSLock()
     public let tag: String
@@ -24,7 +25,10 @@ public final class JobsTaskItem {
     public var status: JobsTaskStatus {
         get {
             lock.lock()
-            defer { lock.unlock() };return _status
+            defer {
+                lock.unlock()
+            }
+            return _status
         }
         set {
             lock.lock()
@@ -36,7 +40,9 @@ public final class JobsTaskItem {
     public init(schedule: JobsPeriod,
                 for tag: String,
                 do action: @escaping () -> Void) {
-        self.task = JobsPlan.every(schedule).do(queue: .global()) { action() }
+        self.task = JobsPlan.every(schedule).do(queue: .global()) {
+            action()
+        }
         self.tag = tag
     }
 
@@ -50,6 +56,7 @@ public final class JobsTaskItem {
 }
 // MARK: - JobsTaskItem@DSL
 extension JobsTaskItem {
+
     /// 链式设置状态
     /// - Parameter status: 任务状态
     /// - Returns: self

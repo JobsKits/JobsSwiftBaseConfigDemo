@@ -8,6 +8,7 @@
 import Foundation
 
 public extension JSONDecoder {
+
     // MARK: - DateDecodingStrategy
     /// 统一入口：直接设置日期解码策略
     @discardableResult
@@ -92,16 +93,13 @@ public extension JSONDecoder {
     }
     /// 用字符串表示来解非规范浮点数
     @discardableResult
-    func byNonConformingFloatFromString(
-        positiveInfinity: String = "Infinity",
-        negativeInfinity: String = "-Infinity",
-        nan: String = "NaN"
-    ) -> Self {
-        nonConformingFloatDecodingStrategy = .convertFromString(
-            positiveInfinity: positiveInfinity,
-            negativeInfinity: negativeInfinity,
-            nan: nan
-        );return self
+    func byNonConformingFloatFromString(positiveInfinity: String = "Infinity",
+                                        negativeInfinity: String = "-Infinity",
+                                        nan: String = "NaN") -> Self {
+        nonConformingFloatDecodingStrategy = .convertFromString(positiveInfinity: positiveInfinity,
+                                                                negativeInfinity: negativeInfinity,
+                                                                nan: nan)
+        return self
     }
     // MARK: - KeyDecodingStrategy
     /// 统一入口：设置 key 解码策略
@@ -134,11 +132,13 @@ public extension JSONDecoder {
     func byUserInfo(_ dict: [CodingUserInfoKey: any Sendable]) -> Self {
         dict.forEach { key, value in
             userInfo[key] = value
-        };return self
+        }
+        return self
     }
     /// 设置单个 userInfo
     @discardableResult
-    func byUserInfo(_ key: CodingUserInfoKey, _ value: any Sendable) -> Self {
+    func byUserInfo(_ key: CodingUserInfoKey,
+                    _ value: any Sendable) -> Self {
         userInfo[key] = value
         return self
     }

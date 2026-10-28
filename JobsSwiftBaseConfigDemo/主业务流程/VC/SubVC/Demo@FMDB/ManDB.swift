@@ -11,10 +11,13 @@ import Foundation
 #if canImport(FMDB) && !canImport(WCDB)
 import FMDB
 final class ManDB {
+
     static let shared = ManDB()
     private let queue: FMDatabaseQueue
     private init() {
-        let doc = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first ?? NSTemporaryDirectory()
+        let doc = NSSearchPathForDirectoriesInDomains(.documentDirectory,
+                                                      .userDomainMask,
+                                                      true).first ?? NSTemporaryDirectory()
         let path = (doc as NSString).appendingPathComponent("fmdb_demo.sqlite")
         self.queue = FMDatabaseQueue(path: path)!
         createTableIfNeeded()
@@ -29,23 +32,33 @@ final class ManDB {
         );
         """
         queue.inDatabase { db in
-            do { try db.executeUpdate(sql, values: nil) }
-            catch { print("❌ createTable error:", error.localizedDescription) }
+            do {
+                try db.executeUpdate(sql,
+                                     values: nil)
+            }
+            catch {
+                print("❌ createTable error:",
+                      error.localizedDescription)
+            }
         }
     }
 
     @discardableResult
-    func insert(name: String, age: Int) -> Bool {
+    func insert(name: String,
+                age: Int) -> Bool {
         let sql = "INSERT INTO t_person (name, age) VALUES (?, ?);"
         var ok = false
         queue.inDatabase { db in
             do {
-                try db.executeUpdate(sql, values: [name, age])
+                try db.executeUpdate(sql,
+                                     values: [name, age])
                 ok = true
             } catch {
-                print("❌ insert error:", error.localizedDescription)
+                print("❌ insert error:",
+                      error.localizedDescription)
             }
-        };return ok
+        }
+        return ok
     }
 
     func fetchAll() -> [Man] {
@@ -53,31 +66,42 @@ final class ManDB {
         var list: [Man] = []
         queue.inDatabase { db in
             do {
-                let rs = try db.executeQuery(sql, values: nil)
+                let rs = try db.executeQuery(sql,
+                                             values: nil)
                 while rs.next() {
                     let id = rs.longLongInt(forColumn: "id")
                     let name = rs.string(forColumn: "name") ?? ""
                     let age = Int(rs.int(forColumn: "age"))
-                    list.append(Man(id: id, name: name, age: age))
-                };rs.close()
+                    list.append(Man(id: id,
+                                    name: name,
+                                    age: age))
+                }
+                rs.close()
             } catch {
-                print("❌ fetchAll error:", error.localizedDescription)
+                print("❌ fetchAll error:",
+                      error.localizedDescription)
             }
-        };return list
+        }
+        return list
     }
 
     @discardableResult
-    func update(id: Int64, name: String, age: Int) -> Bool {
+    func update(id: Int64,
+                name: String,
+                age: Int) -> Bool {
         let sql = "UPDATE t_person SET name = ?, age = ? WHERE id = ?;"
         var ok = false
         queue.inDatabase { db in
             do {
-                try db.executeUpdate(sql, values: [name, age, id])
+                try db.executeUpdate(sql,
+                                     values: [name, age, id])
                 ok = true
             } catch {
-                print("❌ update error:", error.localizedDescription)
+                print("❌ update error:",
+                      error.localizedDescription)
             }
-        };return ok
+        }
+        return ok
     }
 
     @discardableResult
@@ -86,12 +110,15 @@ final class ManDB {
         var ok = false
         queue.inDatabase { db in
             do {
-                try db.executeUpdate(sql, values: [id])
+                try db.executeUpdate(sql,
+                                     values: [id])
                 ok = true
             } catch {
-                print("❌ delete error:", error.localizedDescription)
+                print("❌ delete error:",
+                      error.localizedDescription)
             }
-        };return ok
+        }
+        return ok
     }
 
     @discardableResult
@@ -100,12 +127,15 @@ final class ManDB {
         var ok = false
         queue.inDatabase { db in
             do {
-                try db.executeUpdate(sql, values: nil)
+                try db.executeUpdate(sql,
+                                     values: nil)
                 ok = true
             } catch {
-                print("❌ clearAll error:", error.localizedDescription)
+                print("❌ clearAll error:",
+                      error.localizedDescription)
             }
-        };return ok
+        }
+        return ok
     }
 }
 #endif

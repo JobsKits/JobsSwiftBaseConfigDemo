@@ -11,6 +11,7 @@ import Moya
 import Alamofire
 
 public enum DemoAPI {
+
     // GitHub：公开 GET
     case ghZen
     case ghUser(username: String)
@@ -27,6 +28,7 @@ public enum DemoAPI {
 }
 
 extension DemoAPI: TargetType {
+
     public var baseURL: URL {
         switch self {
         /// 合并处理 .ghZen、.ghUser、.ghSearchUsers 分支
@@ -44,38 +46,53 @@ extension DemoAPI: TargetType {
     public var path: String {
         switch self {
         /// 处理 .ghZen 分支
-        case .ghZen: return "/zen"
+        case .ghZen:
+            return "/zen"
         /// 处理 .ghUser 分支
-        case let .ghUser(username): return "/users/\(username)"
+        case let .ghUser(username):
+            return "/users/\(username)"
         /// 处理 .ghSearchUsers 分支
-        case .ghSearchUsers: return "/search/users"
+        case .ghSearchUsers:
+            return "/search/users"
         /// 处理 .login 分支
-        case .login: return "/api/login"
+        case .login:
+            return "/api/login"
         /// 处理 .createUser 分支
-        case .createUser: return "/api/users"
+        case .createUser:
+            return "/api/users"
         /// 处理 .updateUser 分支
-        case let .updateUser(id, _): return "/api/users/\(id)"
+        case let .updateUser(id,
+                             _):
+            return "/api/users/\(id)"
         /// 处理 .deleteUser 分支
-        case let .deleteUser(id):    return "/api/users/\(id)"
+        case let .deleteUser(id):
+            return "/api/users/\(id)"
         /// 处理 .uploadAvatar 分支
-        case .uploadAvatar: return "/post"
+        case .uploadAvatar:
+            return "/post"
         /// 处理 .downloadPNG 分支
-        case .downloadPNG:  return "/image/png"
+        case .downloadPNG:
+            return "/image/png"
         /// 处理 .downloadBytes 分支
-        case let .downloadBytes(size): return "/bytes/\(size)"
+        case let .downloadBytes(size):
+            return "/bytes/\(size)"
         }
     }
 
     public var method: Moya.Method {
         switch self {
         /// 合并处理 .ghZen、.ghUser、.ghSearchUsers、.downloadPNG、.downloadBytes 分支
-        case .ghZen, .ghUser, .ghSearchUsers, .downloadPNG, .downloadBytes: return .get
+        case .ghZen, .ghUser, .ghSearchUsers, .downloadPNG, .downloadBytes:
+            return .get
         /// 合并处理 .login、.createUser、.uploadAvatar 分支
-        case .login, .createUser, .uploadAvatar: return .post
+        case .login, .createUser, .uploadAvatar:
+            return .post
         /// 处理 .updateUser 分支
-        case .updateUser: return .put
+        case .updateUser:
+            return .put
         /// 处理 .deleteUser 分支
-        case .deleteUser: return .delete
+        case .deleteUser:
+            return .delete
         }
     }
 
@@ -85,18 +102,25 @@ extension DemoAPI: TargetType {
         case .ghZen, .ghUser:
             return .requestPlain
         /// 处理 .ghSearchUsers 分支
-        case let .ghSearchUsers(q, page):
+        case let .ghSearchUsers(q,
+                                page):
             var params = ["q": q]
-            if let p = page { params["page"] = "\(p)" };return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+            if let p = page {
+                params["page"] = "\(p)"
+            }
+            return .requestParameters(parameters: params,
+                                      encoding: URLEncoding.queryString)
         /// ReqRes
-        case let .login(email, password):
+        case let .login(email,
+                        password):
             return .requestParameters(parameters: ["email": email, "password": password],
                                       encoding: JSONEncoding.default)
         /// 处理 .createUser 分支
         case let .createUser(body):
             return .requestJSONEncodable(body)
         /// 处理 .updateUser 分支
-        case let .updateUser(_, body):
+        case let .updateUser(_,
+                             body):
             return .requestJSONEncodable(body)
         /// 处理 .deleteUser 分支
         case .deleteUser:
@@ -111,32 +135,40 @@ extension DemoAPI: TargetType {
         /// 合并处理 .downloadPNG、.downloadBytes 分支
         case .downloadPNG, .downloadBytes:
             let destination: DownloadDestination = { _, _ in
-                let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                    .appendingPathComponent("Downloads", isDirectory: true)
-                try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+                let dir = FileManager.default.urls(for: .documentDirectory,
+                                                   in: .userDomainMask) [0]
+                    .appendingPathComponent("Downloads",
+                                            isDirectory: true)
+                try? FileManager.default.createDirectory(at: dir,
+                                                         withIntermediateDirectories: true)
                 let name: String = {
                     switch self {
                     /// 处理 .downloadPNG 分支
-                    case .downloadPNG: return "sample.png"
+                    case .downloadPNG:
+                        return "sample.png"
                     /// 处理 .downloadBytes 分支
-                    case let .downloadBytes(n): return "bytes_\(n).bin"
+                    case let .downloadBytes(n):
+                        return "bytes_\(n).bin"
                     /// 未匹配已知分支时执行兜底处理
-                    default: return "file.bin"
+                    default:
+                        return "file.bin"
                     }
                 }()
                 let url = dir.appendingPathComponent(name)
                 return (url, [.removePreviousFile, .createIntermediateDirectories])
-            };return .downloadDestination(destination)
+            }
+            return .downloadDestination(destination)
         }
     }
 
     public var headers: [String : String]? {
         var h = ["Accept": "application/json"]
         if case .uploadAvatar = self {
-            // multipart 自带 boundary Content-Type
+        // multipart 自带 boundary Content-Type
         } else {
             h["Content-Type"] = "application/json; charset=utf-8"
-        };return h
+        }
+        return h
     }
 
     public var sampleData: Data {
@@ -175,13 +207,17 @@ extension DemoAPI: TargetType {
         }
     }
 
-    public var validationType: ValidationType { .successCodes }
+    public var validationType: ValidationType {
+        .successCodes
+    }
     public var timeout: TimeInterval {
         switch self {
         /// 合并处理 .uploadAvatar、.downloadPNG、.downloadBytes 分支
-        case .uploadAvatar, .downloadPNG, .downloadBytes: return 60
+        case .uploadAvatar, .downloadPNG, .downloadBytes:
+            return 60
         /// 未匹配已知分支时执行兜底处理
-        default: return 20
+        default:
+            return 20
         }
     }
 }

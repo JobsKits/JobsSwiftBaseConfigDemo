@@ -13,19 +13,16 @@ import UIKit
 
 @available(iOS 13.0, tvOS 13.0, *)
 public extension UIMenu {
-    static func make(
-        title: String = "",
-        image: UIImage? = nil,
-        identifier: UIMenu.Identifier? = nil,
-        options: UIMenu.Options = [],
-        children: [UIMenuElement]
-    ) -> UIMenu {
-        UIMenu(
-            title: title,
-            image: image,
-            identifier: identifier,
-            options: options,
-            children: children
-        )
+
+    static func make(title: String = "",
+                     image: UIImage? = nil,
+                     identifier: UIMenu.Identifier? = nil,
+                     options: UIMenu.Options = [],
+                     children: [UIMenuElement]) -> UIMenu {
+        UIMenu(title: title,
+               image: image,
+               identifier: identifier,
+               options: options,
+               children: children)
     }
 }

@@ -13,6 +13,7 @@ import SnapKit
 /// mPaaS 是移动技术平台，不只是一个 WebView。此页把“宿主鉴权 → 应用目录 → 包校验 → 容器路由”串成最小闭环。
 /// 本页用依赖协议的本地适配器学习架构，不代表接入真实商业 SDK；厂商 SDK/控制台参数在实现层替换。
 final class JobsMPaaSDemoVC: JobsMicroAppLabBaseVC {
+
     override var lessonTitle: String {
         return "mPaaS 平台适配"
     }
@@ -26,7 +27,8 @@ final class JobsMPaaSDemoVC: JobsMicroAppLabBaseVC {
 
     private lazy var catalogLabel: UILabel = {
         UILabel.jobsMake { label in
-            label.byText("宿主 App\n↓ JobsMiniPlatformAdapter\n鉴权 / 注册目录 / 离线包 / 路由\n↓\nWKWebView + 白名单 Bridge")
+            label
+                .byText("宿主 App\n↓ JobsMiniPlatformAdapter\n鉴权 / 注册目录 / 离线包 / 路由\n↓\nWKWebView + 白名单 Bridge")
                 .byNumberOfLines(0)
                 .byTextColor(JobsCor.label)
                 .byFont(JobsFont.systemFont(ofSize: 15))
@@ -35,7 +37,8 @@ final class JobsMPaaSDemoVC: JobsMicroAppLabBaseVC {
                 }
         }
     }()
-    private lazy var loginButton: UIButton = lessonButton("登录教学账号", identifier: "lab.mpaasLogin") { [weak self] in
+    private lazy var loginButton: UIButton = lessonButton("登录教学账号",
+                                                          identifier: "lab.mpaasLogin") { [weak self] in
         guard let self else {
             return
         }
@@ -49,7 +52,8 @@ final class JobsMPaaSDemoVC: JobsMicroAppLabBaseVC {
             self.record("教学账号已退出，后续打开需要重新登录。")
         }
     }
-    private lazy var catalogButton: UIButton = lessonButton("读取注册目录与本地包", identifier: "lab.mpaasCatalog") { [weak self] in
+    private lazy var catalogButton: UIButton = lessonButton("读取注册目录与本地包",
+                                                            identifier: "lab.mpaasCatalog") { [weak self] in
         guard let self else {
             return
         }
@@ -60,10 +64,12 @@ final class JobsMPaaSDemoVC: JobsMicroAppLabBaseVC {
             self.record(error.localizedDescription)
         }
     }
-    private lazy var openButton: UIButton = lessonButton("打开已注册微应用", identifier: "lab.mpaasOpen") { [weak self] in
+    private lazy var openButton: UIButton = lessonButton("打开已注册微应用",
+                                                         identifier: "lab.mpaasOpen") { [weak self] in
         self?.openApplication("jobs.learning.microapp")
     }
-    private lazy var invalidButton: UIButton = lessonButton("测试拒绝：未注册 appId", identifier: "lab.mpaasInvalid") { [weak self] in
+    private lazy var invalidButton: UIButton = lessonButton("测试拒绝：未注册 appId",
+                                                            identifier: "lab.mpaasInvalid") { [weak self] in
         self?.openApplication("unregistered.application")
     }
 

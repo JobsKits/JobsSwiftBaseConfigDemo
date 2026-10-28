@@ -16,6 +16,7 @@ import SnapKit
 /// 后台执行仍受 iOS 生命周期限制，不能用目录隔离绕过权限；关键状态要及时落盘，再由服务器或备份恢复。
 /// 来源：https://developer.apple.com/documentation/foundation/filemanager
 final class JobsSandboxDemoVC: JobsMicroAppLabBaseVC {
+
     override var lessonTitle: String {
         return "沙箱运行环境"
     }
@@ -30,7 +31,8 @@ final class JobsSandboxDemoVC: JobsMicroAppLabBaseVC {
 
     private lazy var directoryLabel: UILabel = {
         UILabel.jobsMake { label in
-            label.byFont(JobsFont.systemFont(ofSize: 14))
+            label
+                .byFont(JobsFont.systemFont(ofSize: 14))
                 .byTextColor(JobsCor.label)
                 .byNumberOfLines(0)
                 .byAddTo(stageView) { make in
@@ -38,7 +40,8 @@ final class JobsSandboxDemoVC: JobsMicroAppLabBaseVC {
                 }
         }
     }()
-    private lazy var switchButton: UIButton = lessonButton("切换到 module-b", identifier: "lab.sandboxSwitch") { [weak self] in
+    private lazy var switchButton: UIButton = lessonButton("切换到 module-b",
+                                                           identifier: "lab.sandboxSwitch") { [weak self] in
         guard let self else {
             return
         }
@@ -46,7 +49,8 @@ final class JobsSandboxDemoVC: JobsMicroAppLabBaseVC {
         self.switchButton.byTitle("切换到 \(self.namespace == "module-a" ? "module-b" : "module-a")")
         self.readDraft()
     }
-    private lazy var writeButton: UIButton = lessonButton("写入当前模块草稿", identifier: "lab.sandboxWrite") { [weak self] in
+    private lazy var writeButton: UIButton = lessonButton("写入当前模块草稿",
+                                                          identifier: "lab.sandboxWrite") { [weak self] in
         guard let self else {
             return
         }
@@ -56,10 +60,12 @@ final class JobsSandboxDemoVC: JobsMicroAppLabBaseVC {
             self.record("写入成功：\(self.namespace) / draft.txt")
         }
     }
-    private lazy var readButton: UIButton = lessonButton("重新读取当前模块", identifier: "lab.sandboxRead") { [weak self] in
+    private lazy var readButton: UIButton = lessonButton("重新读取当前模块",
+                                                         identifier: "lab.sandboxRead") { [weak self] in
         self?.readDraft()
     }
-    private lazy var escapeButton: UIButton = lessonButton("测试拒绝：../module-b/draft.txt", identifier: "lab.sandboxEscape") { [weak self] in
+    private lazy var escapeButton: UIButton = lessonButton("测试拒绝：../module-b/draft.txt",
+                                                           identifier: "lab.sandboxEscape") { [weak self] in
         guard let self else {
             return
         }
@@ -68,7 +74,8 @@ final class JobsSandboxDemoVC: JobsMicroAppLabBaseVC {
             self.record("异常：越界请求未被拒绝。")
         }
     }
-    private lazy var resetButton: UIButton = lessonButton("清空当前模块草稿", identifier: "lab.sandboxReset") { [weak self] in
+    private lazy var resetButton: UIButton = lessonButton("清空当前模块草稿",
+                                                          identifier: "lab.sandboxReset") { [weak self] in
         guard let self else {
             return
         }

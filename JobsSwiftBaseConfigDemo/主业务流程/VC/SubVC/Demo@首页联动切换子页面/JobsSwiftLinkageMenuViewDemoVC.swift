@@ -21,7 +21,9 @@ import GKNavigationBarSwift
 import SnapKit
 
 final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
+
     private enum LayoutMode: Int {
+
         case fixedMenu
         case fixedContent
         case ratio
@@ -34,12 +36,15 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
         let control = UISegmentedControl(items: ["菜单固定", "内容固定", "比例"])
         control
             .bySelectedSegmentIndex(LayoutMode.fixedMenu.rawValue)
-            .byAddTarget(self, action: #selector(modeChanged(_:)), for: .valueChanged)
+            .byAddTarget(self,
+                         action: #selector(modeChanged(_:)),
+                         for: .valueChanged)
         return control
     }()
 
     private lazy var callbackLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("当前菜单：日常.1".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13))
@@ -82,8 +87,13 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
         config.indicatorHeight = 56
         config.menuBackgroundColor = UIColor(gray: 0.96 * 255)
         config.contentBackgroundColor = JobsCor.white
-        config.selectedTintColor = UIColor(r: 255, g: 0.55 * 255, b: 0)
-        config.selectedBackgroundColor = UIColor(r: 255, g: 0.55 * 255, b: 0, a: 0.18)
+        config.selectedTintColor = UIColor(r: 255,
+                                           g: 0.55 * 255,
+                                           b: 0)
+        config.selectedBackgroundColor = UIColor(r: 255,
+                                                 g: 0.55 * 255,
+                                                 b: 0,
+                                                 a: 0.18)
         switch LayoutMode(rawValue: modeControl.selectedSegmentIndex) ?? .fixedMenu {
         /// 处理 .fixedMenu 分支
         case .fixedMenu:
@@ -118,22 +128,29 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
         menuTitles.map {
             JobsSwiftLinkageMenuItem(title: $0,
                                      image: iconImage(color: JobsCor.gray),
-                                     selectedImage: iconImage(color: UIColor(r: 255, g: 0.55 * 255, b: 0)))
+                                     selectedImage: iconImage(color: UIColor(r: 255,
+                                                                             g: 0.55 * 255,
+                                                                             b: 0)))
         }
     }
 
     private func makeContentViews() -> [UIView?] {
         menuTitles.dropLast().map {
-            ActivityListView(sectionTitle: "活动", menuTitle: $0) as UIView?
+            ActivityListView(sectionTitle: "活动",
+                             menuTitle: $0) as UIView?
         }
     }
 
     private func iconImage(color: UIColor) -> UIImage {
-        let size = CGSize(width: 26, height: 26)
-        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        let size = CGSize(width: 26,
+                          height: 26)
+        UIGraphicsBeginImageContextWithOptions(size,
+                                               false,
+                                               0)
         let path = UIBezierPath.make()
-        let center = CGPoint(x: size.width / 2, y: size.height / 2)
-        for i in 0..<10 {
+        let center = CGPoint(x: size.width / 2,
+                             y: size.height / 2)
+        for i in 0 ..< 10 {
             let radius: CGFloat = i.isMultiple(of: 2) ? 12 : 5
             let angle = CGFloat(i) * .pi / 5 - .pi / 2
             let point = CGPoint(x: center.x + cos(angle) * radius,
@@ -158,6 +175,7 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
 }
 
 private final class ActivityListView: UIView {
+
     private let sectionTitle: String
     private let menuTitle: String
     private var cards: [UIView] = []
@@ -165,12 +183,13 @@ private final class ActivityListView: UIView {
     private var titleLabels: [UILabel] = []
     private var subtitleLabels: [UILabel] = []
 
-    init(sectionTitle: String, menuTitle: String) {
+    init(sectionTitle: String,
+         menuTitle: String) {
         self.sectionTitle = sectionTitle
         self.menuTitle = menuTitle
         super.init(frame: .zero)
         self.byBackgroundColor(JobsCor.secondarySystemBackground)
-        for index in 0..<5 {
+        for index in 0 ..< 5 {
             let card = makeCard(index: index)
             cards.append(card)
             card.byAddTo(self)
@@ -184,10 +203,14 @@ private final class ActivityListView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         let x: CGFloat = 16
-        let width = max(0, bounds.width - x * 2)
+        let width = max(0,
+                        bounds.width - x * 2)
         var y: CGFloat = 16
         for card in cards {
-            card.byFrame(CGRect(x: x, y: y, width: width, height: 96))
+            card.byFrame(CGRect(x: x,
+                                y: y,
+                                width: width,
+                                height: 96))
             y += 112
         }
     }
@@ -195,7 +218,9 @@ private final class ActivityListView: UIView {
     private func makeCard(index: Int) -> UIView {
         let card = UIView.jobsMake { _ in }
         card
-            .byBackgroundColor(UIColor(r: 0.86 * 255, g: 0.72 * 255, b: 0.91 * 255))
+            .byBackgroundColor(UIColor(r: 0.86 * 255,
+                                       g: 0.72 * 255,
+                                       b: 0.91 * 255))
             .byCornerRadius(12)
             .byShadowColor(JobsCor.black)
             .byShadowOpacity(0.15)
@@ -208,7 +233,9 @@ private final class ActivityListView: UIView {
             .byTextAlignment(.center)
             .byTextColor(JobsCor.white)
             .byFont(JobsFont.boldSystemFont(ofSize: 34))
-            .byBackgroundColor(UIColor(r: 255, g: 0.32 * 255, b: 0.13 * 255))
+            .byBackgroundColor(UIColor(r: 255,
+                                       g: 0.32 * 255,
+                                       b: 0.13 * 255))
             .byCornerRadius(8)
             .byMasksToBounds(true)
         let titleLabel = UILabel.jobsMake { _ in }
@@ -240,6 +267,7 @@ private final class ActivityListView: UIView {
         subtitleLabel.snp.makeConstraints { make in
             make.left.right.equalTo(titleLabel)
             make.top.equalTo(titleLabel.snp.bottom).offset(6)
-        };return card
+        }
+        return card
     }
 }

@@ -8,6 +8,7 @@
 import Foundation
 
 extension Notification.Name {
+
     /// 全局：语言切换完成
-     public static let JobsLanguageDidChange = Notification.Name("JobsLanguageDidChange")
+    public static let JobsLanguageDidChange = Notification.Name("JobsLanguageDidChange")
 }

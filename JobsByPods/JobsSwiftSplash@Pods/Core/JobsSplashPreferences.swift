@@ -8,15 +8,20 @@
 import Foundation
 
 public enum JobsSplashPreferences {
+
     private static let enabledKey = "JobsSwiftSplash.isEnabledForNextLaunch"
     private static let contentTypeKey = "com.jobs.splash.contentTypeForNextLaunch"
 
     public static var isEnabledForNextLaunch: Bool {
         get {
-            guard UserDefaults.standard.object(forKey: enabledKey) != nil else { return true };return UserDefaults.standard.bool(forKey: enabledKey)
+            guard UserDefaults.standard.object(forKey: enabledKey) != nil else {
+                return true
+            }
+            return UserDefaults.standard.bool(forKey: enabledKey)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: enabledKey)
+            UserDefaults.standard.set(newValue,
+                                      forKey: enabledKey)
         }
     }
 
@@ -25,7 +30,8 @@ public enum JobsSplashPreferences {
             JobsSplashContentType(rawValue: UserDefaults.standard.integer(forKey: contentTypeKey)) ?? .localImage
         }
         set {
-            UserDefaults.standard.set(newValue.rawValue, forKey: contentTypeKey)
+            UserDefaults.standard.set(newValue.rawValue,
+                                      forKey: contentTypeKey)
         }
     }
 

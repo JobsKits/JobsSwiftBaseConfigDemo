@@ -20,6 +20,7 @@ import JobsSwiftBaseDefines
 
 #if os(iOS) || os(tvOS)
 private struct JobsLegacyButtonState {
+
     // 只抓最常用且不会破坏你逻辑的字段；你后续如果需要更多（背景图、富文本等）可以继续往里加
     let isEnabled: Bool
 
@@ -53,27 +54,38 @@ private struct JobsLegacyButtonState {
         button.byEnabled(isEnabled)
         // 使用你自己的「DSL」API 做复原（避免直接 setXxx 导致 iOS15+ configuration 打架）
         if let attrTitleNormal {
-            button.byAttributedTitle(attrTitleNormal, for: .normal)
+            button.byAttributedTitle(attrTitleNormal,
+                                     for: .normal)
         } else {
-            button.byTitle(titleNormal, for: .normal)
+            button.byTitle(titleNormal,
+                           for: .normal)
         }
         if let attrTitleSelected {
-            button.byAttributedTitle(attrTitleSelected, for: .selected)
+            button.byAttributedTitle(attrTitleSelected,
+                                     for: .selected)
         } else {
-            button.byTitle(titleSelected, for: .selected)
+            button.byTitle(titleSelected,
+                           for: .selected)
         }
         button
-            .byTitleColor(titleColorNormal, for: .normal)
-            .byTitleColor(titleColorSelected, for: .selected)
-            .byImage(imageNormal, for: .normal)
-            .byImage(imageSelected, for: .selected)
-            .byBgImage(backgroundImageNormal, for: .normal)
-            .byBgImage(backgroundImageSelected, for: .selected)
+            .byTitleColor(titleColorNormal,
+                          for: .normal)
+            .byTitleColor(titleColorSelected,
+                          for: .selected)
+            .byImage(imageNormal,
+                     for: .normal)
+            .byImage(imageSelected,
+                     for: .selected)
+            .byBgImage(backgroundImageNormal,
+                       for: .normal)
+            .byBgImage(backgroundImageSelected,
+                       for: .selected)
     }
 }
 
 #else
 private struct JobsLegacyButtonState {
+
     init(_ button: UIButton) { }
     func restore(to button: UIButton) { }
 }
@@ -82,6 +94,7 @@ private struct JobsLegacyButtonState {
 // MARK: - 内部控制器
 @MainActor
 public final class JobsCountdownBtnCtrl {
+
     weak var button: UIButton?
     public var config: JobsCountdownBtnConfig
     private var timer: JobsSwiftTimerProtocol?
@@ -94,7 +107,8 @@ public final class JobsCountdownBtnCtrl {
     // iOS 14 及以下：保存一份按钮基础状态，stop(resetUI: true) 时复原
     private let baseLegacyState: JobsLegacyButtonState
 
-    init(button: UIButton, config: JobsCountdownBtnConfig) {
+    init(button: UIButton,
+         config: JobsCountdownBtnConfig) {
         self.button = button
         self.config = config
         self.baseLegacyState = JobsLegacyButtonState(button)
@@ -107,7 +121,9 @@ public final class JobsCountdownBtnCtrl {
         if config.renderOnInit {
             current = initialValue()
             onMainAsync { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.applyRender(sec: self.current)
             }
         }
@@ -120,9 +136,12 @@ public final class JobsCountdownBtnCtrl {
 }
 
 extension JobsCountdownBtnCtrl {
+
     // MARK: - 对外控制
     public func start() {
-        guard let btn = button else { return }
+        guard let btn = button else {
+            return
+        }
         // 先停掉旧的
         stop(resetUI: false)
         current = initialValue()
@@ -130,7 +149,9 @@ extension JobsCountdownBtnCtrl {
         isRunning = true
         if config.renderOnInit {
             onMainAsync { [weak self] in
-                guard let self, self.isRunning, self.generation == session else { return }
+                guard let self, self.isRunning, self.generation == session else {
+                    return
+                }
                 self.applyRender(sec: self.current)
             }
         }
@@ -138,18 +159,17 @@ extension JobsCountdownBtnCtrl {
         if !config.clickableWhileRunning {
             btn.byEnabled(false)
         }
-        let tConfig = JobsSwiftTimerConfig(
-            interval: config.interval,
-            repeats: true,
-            tolerance: config.tolerance,
-            queue: .main,
-            runLoop: .main,
-            runLoopMode: .common,
-            pauseInBackground: true,
-            autoManageAppState: true
-        )
+        let tConfig = JobsSwiftTimerConfig(interval: config.interval,
+                                           repeats: true,
+                                           tolerance: config.tolerance,
+                                           queue: .main,
+                                           runLoop: .main,
+                                           runLoopMode: .common,
+                                           pauseInBackground: true,
+                                           autoManageAppState: true)
         // ✅ 新版 JobsSwiftTimer：直接 new（不再用 JobsTimerFactory.make）
-        let t = JobsTimer(kind: config.timerKind, config: tConfig) { [weak self] in
+        let t = JobsTimer(kind: config.timerKind,
+                          config: tConfig) { [weak self] in
             // ✅ Swift 6：handler 是 @Sendable；触碰 UIKit 统一回 MainActor
             onMainAsync(self) { vc in
                 self?.onTickMainActor(generation: session)
@@ -165,7 +185,9 @@ extension JobsCountdownBtnCtrl {
         isRunning = false
         timer?.stop()
         timer = nil
-        guard let btn = button else { return }
+        guard let btn = button else {
+            return
+        }
         btn.byEnabled(baseLegacyState.isEnabled)
         if resetUI {
             if #available(iOS 15.0, *) {
@@ -182,16 +204,21 @@ extension JobsCountdownBtnCtrl {
     private func initialValue() -> Int {
         switch config.mode {
         /// 处理 .down 分支
-        case .down(let from): return max(0, from)
+        case .down(let from):
+            return max(0,
+                       from)
         /// 处理 .up 分支
-        case .up:             return 0
+        case .up:
+            return 0
         }
     }
 
     /// ✅ 所有 UI 更新统一在 MainActor
     @MainActor
     private func onTickMainActor(generation session: UInt64) {
-        guard isRunning, generation == session else { return }
+        guard isRunning, generation == session else {
+            return
+        }
         guard let btn = button else {
             stop(resetUI: false)
             return
@@ -200,20 +227,32 @@ extension JobsCountdownBtnCtrl {
         /// 处理 .down 分支
         case .down:
             current -= 1
-            let sec = max(0, current)
+            let sec = max(0,
+                          current)
             applyRender(sec: sec)
-            config.onTick?(btn, config, sec)
-            guard isRunning, generation == session else { return }
+            config.onTick?(btn,
+                           config,
+                           sec)
+            guard isRunning, generation == session else {
+                return
+            }
             if sec <= 0 {
                 finishMainActor()
             }
         /// 处理 .up 分支
         case .up(let to):
-            if current < Int.max { current += 1 }
-            let sec = min(max(0, to), current)
+            if current < Int.max {
+                current += 1
+            }
+            let sec = min(max(0,to),
+                          current)
             applyRender(sec: sec)
-            config.onTick?(btn, config, sec)
-            guard isRunning, generation == session else { return }
+            config.onTick?(btn,
+                           config,
+                           sec)
+            guard isRunning, generation == session else {
+                return
+            }
             if sec >= to {
                 finishMainActor()
             }
@@ -222,20 +261,24 @@ extension JobsCountdownBtnCtrl {
 
     @MainActor
     private func applyRender(sec: Int) {
-        guard let btn = button else { return }
+        guard let btn = button else {
+            return
+        }
         if #available(iOS 15.0, *) {
             var cfg = btn.configuration
                 ?? (baseConfiguration_iOS15 as? UIButton.Configuration)
                 ?? .plain()
             // iOS 15+：走 UIButton.Configuration 渲染
             if let renderer = config.renderConfiguration {
-                cfg = renderer(sec, cfg)
+                cfg = renderer(sec,
+                               cfg)
             }
             btn.byConfiguration(cfg)
             return
         }
         // iOS 14 及以下：走 legacy 渲染（不删你的逻辑，只是把渲染出口换到 closure）
-        config.renderLegacy?(sec, btn)
+        config.renderLegacy?(sec,
+                             btn)
     }
 
     @MainActor
@@ -245,6 +288,7 @@ extension JobsCountdownBtnCtrl {
             return
         }
         stop(resetUI: true)
-        config.onFinish?(btn, config)
+        config.onFinish?(btn,
+                         config)
     }
 }

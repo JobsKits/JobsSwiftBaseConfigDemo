@@ -15,6 +15,7 @@ import UIKit
 import JXSegmentedView
 // MARK: - Background
 extension JXSegmentedIndicatorBackgroundView {
+
     /// 兼容旧命名：backgroundWidthIncrement（内部会同步到 indicatorWidthIncrement）
     @discardableResult
     public func byBackgroundWidthIncrement(_ v: CGFloat) -> Self {

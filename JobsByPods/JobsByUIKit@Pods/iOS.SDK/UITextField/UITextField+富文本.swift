@@ -15,7 +15,10 @@ import JobsTextTools
 
 // MARK: - 设置富文本（UITextField）
 extension UITextField {
-     public func richTextBy(_ runs: [JobsRichRun], paragraphStyle: NSMutableParagraphStyle? = nil) {
-        self.attributedText = JobsRichText.make(runs, paragraphStyle: paragraphStyle)
+
+    public func richTextBy(_ runs: [JobsRichRun],
+                           paragraphStyle: NSMutableParagraphStyle? = nil) {
+        self.attributedText = JobsRichText.make(runs,
+                                                paragraphStyle: paragraphStyle)
     }
 }

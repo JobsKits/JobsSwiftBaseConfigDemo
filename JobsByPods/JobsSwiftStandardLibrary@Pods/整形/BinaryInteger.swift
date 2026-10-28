@@ -9,6 +9,7 @@ import Foundation
 
 // MARK: - BinaryInteger 是所有整数类型的“父协议”
 extension BinaryInteger {
+
     /// 纯“分秒版”（不显示小时，超过 3600 秒会折算成分钟）
     /// - 规则：
     ///   - < 60s：仅显示秒（避免 "00分59秒"）
@@ -24,7 +25,9 @@ extension BinaryInteger {
         let total = UInt64(clamping: self)
         let m = total / 60
         let s = total % 60
-        if m > 0 { return "\(m)分\((s < 10 ? "0\(s)" : "\(s)"))秒" }
+        if m > 0 {
+            return "\(m)分\((s < 10 ? "0\(s)" : "\(s)"))秒"
+        }
         return "\(s)秒"
     }
     /// 分/秒（需要时显示小时）；分钟“不补 0”，秒补 2 位
@@ -43,8 +46,12 @@ extension BinaryInteger {
         let h = total / 3600
         let m = (total % 3600) / 60
         let s = total % 60
-        if h > 0 { return "\(h)时\((m < 10 ? "0\(m)" : "\(m)"))分\((s < 10 ? "0\(s)" : "\(s)"))秒" }
-        if m > 0 { return "\(m)分\((s < 10 ? "0\(s)" : "\(s)"))秒" }
+        if h > 0 {
+            return "\(h)时\((m < 10 ? "0\(m)" : "\(m)"))分\((s < 10 ? "0\(s)" : "\(s)"))秒"
+        }
+        if m > 0 {
+            return "\(m)分\((s < 10 ? "0\(s)" : "\(s)"))秒"
+        }
         return "\(s)秒"
     }
     /// 分/秒（需要时显示小时）；分钟“补 2 位”，秒补 2 位
@@ -63,8 +70,12 @@ extension BinaryInteger {
         let h = total / 3600
         let m = (total % 3600) / 60
         let s = total % 60
-        if h > 0 { return "\(h)时\((m < 10 ? "0\(m)" : "\(m)"))分\((s < 10 ? "0\(s)" : "\(s)"))秒" }
-        if m > 0 { return "\((m < 10 ? "0\(m)" : "\(m)"))分\((s < 10 ? "0\(s)" : "\(s)"))秒" }
+        if h > 0 {
+            return "\(h)时\((m < 10 ? "0\(m)" : "\(m)"))分\((s < 10 ? "0\(s)" : "\(s)"))秒"
+        }
+        if m > 0 {
+            return "\((m < 10 ? "0\(m)" : "\(m)"))分\((s < 10 ? "0\(s)" : "\(s)"))秒"
+        }
         return "\(s)秒"
     }
 }

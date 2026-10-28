@@ -12,5 +12,5 @@ import _PhotosUI_SwiftUI
 @available(watchOS, unavailable)
 @available(tvOS, unavailable)
 extension PhotosPickerStyle {
-    /// TODO
+/// TODO
 }

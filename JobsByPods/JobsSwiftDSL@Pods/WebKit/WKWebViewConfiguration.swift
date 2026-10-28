@@ -17,6 +17,7 @@ import JobsSwiftBlock
 // 统一在主线程（WKWebViewConfiguration 本身就是 @MainActor）
 @MainActor
 extension WKWebViewConfiguration {
+
     // MARK: - 工厂
     public static func make(_ configure: jobsByInoutWKWebConfigBlock) -> WKWebViewConfiguration {
         var ct = WKWebViewConfiguration()
@@ -56,7 +57,9 @@ extension WKWebViewConfiguration {
     @available(iOS 9.0, *)
     @discardableResult
     public func byWebsiteDataStore(_ store: WKWebsiteDataStore? = nil) -> Self {
-        guard let store else { return self }
+        guard let store else {
+            return self
+        }
         self.websiteDataStore = store
         return self
     }
@@ -70,7 +73,9 @@ extension WKWebViewConfiguration {
     @available(iOS 9.0, *)
     @discardableResult
     public func byApplicationNameForUserAgent(_ suffix: String? = nil) -> Self {
-        guard let suffix else { return self }
+        guard let suffix else {
+            return self
+        }
         self.applicationNameForUserAgent = suffix
         return self
     }
@@ -166,15 +171,18 @@ extension WKWebViewConfiguration {
     // MARK: - URL Scheme Handler
     @available(iOS 11.0, *)
     @discardableResult
-    public func byURLSchemeHandler(_ handler: (any WKURLSchemeHandler)?, for scheme: String) -> Self {
-        self.setURLSchemeHandler(handler, forURLScheme: scheme)
+    public func byURLSchemeHandler(_ handler: (any WKURLSchemeHandler)?,
+                                   for scheme: String) -> Self {
+        self.setURLSchemeHandler(handler,
+                                 forURLScheme: scheme)
         return self
     }
 
     @available(iOS 11.0, *)
     @discardableResult
     public func byRemoveURLSchemeHandler(for scheme: String) -> Self {
-        self.setURLSchemeHandler(nil, forURLScheme: scheme)
+        self.setURLSchemeHandler(nil,
+                                 forURLScheme: scheme)
         return self
     }
     // MARK: - iOS 18+

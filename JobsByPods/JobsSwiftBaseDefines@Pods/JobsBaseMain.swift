@@ -163,18 +163,23 @@ public func onMainAsync(
 ///   - 必须执行的收尾逻辑
 ///   - deinit 中依赖 self 的析构清理
 @inline(__always)
-public func onMainAsync<Object: AnyObject>(
-    _ object: Object?,
-    _ block: @MainActor @escaping (Object) -> Void) {
-    guard let object else { return }
+public func onMainAsync<Object: AnyObject>(_ object: Object?,
+                                           _ block: @MainActor @escaping (Object) -> Void) {
+    guard let object else {
+        return
+    }
     if #available(iOS 13.0, tvOS 13.0, macOS 10.15, *) {
         Task { @MainActor [weak object] in
-            guard let object else { return }
+            guard let object else {
+                return
+            }
             block(object)
         }
     } else {
         DispatchQueue.main.async { [weak object] in
-            guard let object else { return }
+            guard let object else {
+                return
+            }
             block(object)
         }
     }
@@ -186,12 +191,15 @@ public func onMainAsync<Object: AnyObject>(
 ///   - 若真正执行时 object 已释放，则 block 不会执行
 @available(iOS 13.0, tvOS 13.0, macOS 10.15, *)
 @inline(__always)
-public func onMainAsync<Object: AnyObject>(
-    _ object: Object?,
-    _ block: @MainActor @escaping (Object) async -> Void) {
-    guard let object else { return }
+public func onMainAsync<Object: AnyObject>(_ object: Object?,
+                                           _ block: @MainActor @escaping (Object) async -> Void) {
+    guard let object else {
+        return
+    }
     Task { @MainActor [weak object] in
-        guard let object else { return }
+        guard let object else {
+            return
+        }
         await block(object)
     }
 }
@@ -209,12 +217,15 @@ public func onMainAsync(
 ///
 /// - 若真正执行时 object 已释放，则 block 不会执行。
 @inline(__always)
-public func onMainAsync<Object: AnyObject>(
-    _ object: Object?,
-    _ block: @escaping (Object) -> Void) {
-    guard let object else { return }
+public func onMainAsync<Object: AnyObject>(_ object: Object?,
+                                           _ block: @escaping (Object) -> Void) {
+    guard let object else {
+        return
+    }
     DispatchQueue.main.async { [weak object] in
-        guard let object else { return }
+        guard let object else {
+            return
+        }
         block(object)
     }
 }
@@ -261,15 +272,18 @@ public func onMainImmediateOrAsync(
 ///   - 它优先保证当前栈内执行路径的直接性与低开销
 ///   - 若业务明确需要“始终弱化”的特殊语义，应使用下方 `onMainImmediateOrAsyncWeak`
 @inline(__always)
-public func onMainImmediateOrAsync<Object: AnyObject>(
-    _ object: Object?,
-    _ block: @escaping (Object) -> Void) {
-    guard let object else { return }
+public func onMainImmediateOrAsync<Object: AnyObject>(_ object: Object?,
+                                                      _ block: @escaping (Object) -> Void) {
+    guard let object else {
+        return
+    }
     if Thread.isMainThread {
         block(object)
     } else {
         DispatchQueue.main.async { [weak object] in
-            guard let object else { return }
+            guard let object else {
+                return
+            }
             block(object)
         }
     }
@@ -300,17 +314,22 @@ public func onMainImmediateOrAsyncWeak(
 ///   - 即使当前已经在主线程，也会先通过弱引用重新检查 object 是否仍然有效
 ///   - 这会比默认版略微保守，但语义更统一
 @inline(__always)
-public func onMainImmediateOrAsyncWeak<Object: AnyObject>(
-    _ object: Object?,
-    _ block: @escaping (Object) -> Void) {
-    guard object != nil else { return }
+public func onMainImmediateOrAsyncWeak<Object: AnyObject>(_ object: Object?,
+                                                          _ block: @escaping (Object) -> Void) {
+    guard object != nil else {
+        return
+    }
     if Thread.isMainThread {
         weak var weakObject = object
-        guard let object = weakObject else { return }
+        guard let object = weakObject else {
+            return
+        }
         block(object)
     } else {
         DispatchQueue.main.async { [weak object] in
-            guard let object else { return }
+            guard let object else {
+                return
+            }
             block(object)
         }
     }
@@ -404,11 +423,15 @@ public func onMainTask(
 @available(iOS 13.0, tvOS 13.0, macOS 10.15, *)
 @discardableResult
 @inline(__always)
-public func onMainTask<Object: AnyObject>(
-    _ object: Object?,
-    _ block: @MainActor @escaping (Object) async -> Void) -> Task<Void, Never>? {
-    guard let object else { return nil };return Task { @MainActor [weak object] in
-        guard let object else { return }
+public func onMainTask<Object: AnyObject>(_ object: Object?,
+                                          _ block: @MainActor @escaping (Object) async -> Void) -> Task<Void, Never>? {
+    guard let object else {
+        return nil
+    }
+    return Task { @MainActor [weak object] in
+        guard let object else {
+            return
+        }
         await block(object)
     }
 }
@@ -436,7 +459,8 @@ public func onMainTask(
     } else {
         DispatchQueue.main.async {
             block()
-        };return nil
+        }
+        return nil
     }
 }
 /// object 版本：在主线程 / MainActor 上启动一个“无需 await 的任务”。
@@ -450,20 +474,26 @@ public func onMainTask(
 ///   - 老系统仅做异步派发，返回 nil
 @discardableResult
 @inline(__always)
-public func onMainTask<Object: AnyObject>(
-    _ object: Object?,
-    _ block: @MainActor @escaping (Object) -> Void) -> Task<Void, Never>? {
-    guard let object else { return nil }
+public func onMainTask<Object: AnyObject>(_ object: Object?,
+                                          _ block: @MainActor @escaping (Object) -> Void) -> Task<Void, Never>? {
+    guard let object else {
+        return nil
+    }
     if #available(iOS 13.0, tvOS 13.0, macOS 10.15, *) {
         return Task { @MainActor [weak object] in
-            guard let object else { return }
+            guard let object else {
+                return
+            }
             block(object)
         }
     } else {
         DispatchQueue.main.async { [weak object] in
-            guard let object else { return }
+            guard let object else {
+                return
+            }
             block(object)
-        };return nil
+        }
+        return nil
     }
 }
 #endif
@@ -484,16 +514,15 @@ public func onMainTask<Object: AnyObject>(
 @available(iOS 13.0, tvOS 13.0, macOS 10.15, *)
 @discardableResult
 @inline(__always)
-public func observeOnMain<S: AsyncSequence>(
-    _ sequence: S,
-    _ handler: @MainActor @escaping (S.Element) -> Void) -> Task<Void, Never> {
+public func observeOnMain<S: AsyncSequence>(_ sequence: S,
+                                            _ handler: @MainActor @escaping (S.Element) -> Void) -> Task<Void, Never> {
     Task { @MainActor in
         do {
             for try await value in sequence {
                 handler(value)
             }
         } catch {
-            // 保持 Never 失败语义：吞掉 sequence 抛出的错误
+        // 保持 Never 失败语义：吞掉 sequence 抛出的错误
         }
     }
 }
@@ -519,18 +548,23 @@ public func observeOnMain<S: AsyncSequence>(
 @available(iOS 13.0, tvOS 13.0, macOS 10.15, *)
 @discardableResult
 @inline(__always)
-public func observeOnMain<Object: AnyObject, S: AsyncSequence>(
-    _ object: Object?,
-    sequence: S,
-    _ handler: @MainActor @escaping (Object, S.Element) -> Void) -> Task<Void, Never>? {
-    guard object != nil else { return nil };return Task { @MainActor [weak object] in
+public func observeOnMain<Object: AnyObject, S: AsyncSequence>(_ object: Object?,
+                                                               sequence: S,
+                                                               _ handler: @MainActor @escaping (Object, S.Element) -> Void) -> Task<Void, Never>? {
+    guard object != nil else {
+        return nil
+    }
+    return Task { @MainActor [weak object] in
         do {
             for try await value in sequence {
-                guard let object else { return }
-                handler(object, value)
+                guard let object else {
+                    return
+                }
+                handler(object,
+                        value)
             }
         } catch {
-            // 保持 Never 失败语义：吞掉 sequence 抛出的错误
+        // 保持 Never 失败语义：吞掉 sequence 抛出的错误
         }
     }
 }
@@ -550,9 +584,8 @@ public func observeOnMain<Object: AnyObject, S: AsyncSequence>(
 @available(iOS 13.0, tvOS 13.0, macOS 10.15, *)
 @discardableResult
 @inline(__always)
-public func observeOnMainThrowing<S: AsyncSequence>(
-    _ sequence: S,
-    _ handler: @MainActor @escaping (S.Element) throws -> Void) -> Task<Void, Error> {
+public func observeOnMainThrowing<S: AsyncSequence>(_ sequence: S,
+                                                    _ handler: @MainActor @escaping (S.Element) throws -> Void) -> Task<Void, Error> {
     Task { @MainActor in
         for try await value in sequence {
             try handler(value)
@@ -569,14 +602,19 @@ public func observeOnMainThrowing<S: AsyncSequence>(
 @available(iOS 13.0, tvOS 13.0, macOS 10.15, *)
 @discardableResult
 @inline(__always)
-public func observeOnMainThrowing<Object: AnyObject, S: AsyncSequence>(
-    _ object: Object?,
-    sequence: S,
-    _ handler: @MainActor @escaping (Object, S.Element) throws -> Void) -> Task<Void, Error>? {
-    guard object != nil else { return nil };return Task { @MainActor [weak object] in
+public func observeOnMainThrowing<Object: AnyObject, S: AsyncSequence>(_ object: Object?,
+                                                                       sequence: S,
+                                                                       _ handler: @MainActor @escaping (Object, S.Element) throws -> Void) -> Task<Void, Error>? {
+    guard object != nil else {
+        return nil
+    }
+    return Task { @MainActor [weak object] in
         for try await value in sequence {
-            guard let object else { return }
-            try handler(object, value)
+            guard let object else {
+                return
+            }
+            try handler(object,
+                        value)
         }
     }
 }

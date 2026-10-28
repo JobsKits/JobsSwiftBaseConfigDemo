@@ -22,12 +22,14 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class QRCodeDemoVC: BaseVC {
+
     private let qrContent = "https://jobs.dev/hello"
     private let logoQRContent = "https://www.google.com"
     private let barcodeContent = "JOBS-2025-10-18"
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView.jobsMake { _ in }
+        UIScrollView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBackground)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
@@ -40,23 +42,31 @@ final class QRCodeDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(10)
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalToSuperview().inset(
-                    UIEdgeInsets(top: 24, left: 20, bottom: 24, right: 20)
-                )
+                UIEdgeInsets(top: 24,
+                             left: 20,
+                             bottom: 24,
+                             right: 20)
+            )
                 make.width.equalTo(scrollView.snp.width).offset(-40)
             }
     }()
 
     private lazy var qrImageView: UIImageView = {
-        UIImageView.jobsMake { _ in }
-            .byImage(qrContent.qrcodeImage(180, correction: "M"))
+        UIImageView
+            .jobsMake { _ in }
+            .byImage(qrContent.qrcodeImage(180,
+                                           correction: "M"))
             .byContentMode(.scaleAspectFit)
             .addTapAction { [weak self] (_: UIImageView) in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 copy(qrContent)
             }
             .byAddTo(contentView) { make in
@@ -67,10 +77,12 @@ final class QRCodeDemoVC: BaseVC {
     }()
 
     private lazy var qrLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText(qrContent)
             .byTextColor(JobsCor.label)
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .regular))
             .byTextAlignment(.center)
             .byNumberOfLines(0)
             .byAddTo(contentView) { [unowned self] make in
@@ -80,21 +92,22 @@ final class QRCodeDemoVC: BaseVC {
     }()
 
     private lazy var logoQRImageView: UIImageView = {
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byImage(
-                logoQRContent.qrcodeImage(
-                    180,
-                    correction: "H",
-                    centerLogo: "Ani".img,
-                    logoRatio: 0.22,
-                    logoCornerRadius: 10,
-                    borderWidth: 6,
-                    borderColor: JobsCor.white
-                )
-            )
+            logoQRContent.qrcodeImage(180,
+                                      correction: "H",
+                                      centerLogo: "Ani".img,
+                                      logoRatio: 0.22,
+                                      logoCornerRadius: 10,
+                                      borderWidth: 6,
+                                      borderColor: JobsCor.white)
+        )
             .byContentMode(.scaleAspectFit)
             .addTapAction { [weak self] (_: UIImageView) in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 copy(logoQRContent)
             }
             .byAddTo(contentView) { [unowned self] make in
@@ -105,10 +118,12 @@ final class QRCodeDemoVC: BaseVC {
     }()
 
     private lazy var logoQRLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("带中心 Logo 的二维码".tr)
             .byTextColor(JobsCor.label)
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .regular))
             .byTextAlignment(.center)
             .byNumberOfLines(0)
             .byAddTo(contentView) { [unowned self] make in
@@ -118,21 +133,23 @@ final class QRCodeDemoVC: BaseVC {
     }()
 
     private lazy var barcodeImageView: UIImageView = {
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byImage(
-                barcodeContent.code128ByText(
-                    width: 260,
-                    barHeight: 86,
-                    quietSpace: 7,
-                    spacing: 6,
-                    font: JobsFont.systemFont(ofSize: 15, weight: .regular),
-                    textColor: JobsCor.black,
-                    background: JobsCor.white
-                )
-            )
+            barcodeContent.code128ByText(width: 260,
+                                         barHeight: 86,
+                                         quietSpace: 7,
+                                         spacing: 6,
+                                         font: JobsFont.systemFont(ofSize: 15,
+                                                                   weight: .regular),
+                                         textColor: JobsCor.black,
+                                         background: JobsCor.white)
+        )
             .byContentMode(.scaleAspectFit)
             .addTapAction { [weak self] (_: UIImageView) in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 copy(barcodeContent)
             }
             .byAddTo(contentView) { [unowned self] make in
@@ -144,10 +161,12 @@ final class QRCodeDemoVC: BaseVC {
     }()
 
     private lazy var barcodeLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("Code128 条形码".tr)
             .byTextColor(JobsCor.label)
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .regular))
             .byTextAlignment(.center)
             .byNumberOfLines(0)
             .byAddTo(contentView) { [unowned self] make in

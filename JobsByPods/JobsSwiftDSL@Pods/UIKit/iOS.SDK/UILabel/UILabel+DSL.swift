@@ -16,16 +16,21 @@ import JobsSwiftBaseDefines
 
 // MARK: - 直接赋值@单参数
 extension UILabel {
+
     @discardableResult
     public func byJobsAttributedText(_ text: JobsText?) -> Self {
-        guard let text else { return self }
+        guard let text else {
+            return self
+        }
         self.attributedText = text.asAttributed
         return self
     }
 
     @discardableResult
     public func byJobsText(_ text: JobsText?) -> Self {
-        guard let text else { return self }
+        guard let text else {
+            return self
+        }
         self.text = text.asString
         return self
     }
@@ -40,13 +45,16 @@ extension UILabel {
     public func byTextColor(_ color: UIColor?) -> Self {
         let slot = "UILabel.textColor"
         if let key = color?.jobsThemeColorKey {
-            JobsThemeCenter.shared.bind(self, slot: slot) { object, center in
+            JobsThemeCenter.shared.bind(self,
+                                        slot: slot) { object, center in
                 (object as? UILabel)?.textColor = center.resolvedColor(key)
             }
         } else if color != nil {
-            JobsThemeCenter.shared.unbind(self, slot: slot)
+            JobsThemeCenter.shared.unbind(self,
+                                          slot: slot)
             textColor = color
-        };return self
+        }
+        return self
     }
     /// 固定字号（严格设计稿）
     @discardableResult
@@ -58,7 +66,8 @@ extension UILabel {
         return self
     }
     /// 动态字号（跟随系统文字大小）
-    public func byDynamicFont(_ font: UIFont, style: UIFont.TextStyle) -> Self {
+    public func byDynamicFont(_ font: UIFont,
+                              style: UIFont.TextStyle) -> Self {
         self.font = UIFontMetrics(forTextStyle: style).scaledFont(for: font)
         self.adjustsFontForContentSizeCategory = true
         return self
@@ -118,39 +127,48 @@ extension UILabel {
     public func byNextAttributedText(_ attributed: NSAttributedString?) -> Self {
         if let current = self.attributedText {
             let result = NSMutableAttributedString(attributedString: current)
-            if let attributed { result.append(attributed) }
+            if let attributed {
+                result.append(attributed)
+            }
             self.attributedText = result
         } else {
             self.attributedText = attributed
-        };return self
+        }
+        return self
     }
     @discardableResult
     public func byHugging(_ priority: UILayoutPriority,
                           axis: NSLayoutConstraint.Axis = .horizontal) -> Self {
-        setContentHuggingPriority(priority, for: axis)
+        setContentHuggingPriority(priority,
+                                  for: axis)
         return self
     }
     /// 双轴便捷
     @discardableResult
     public func byHugging(_ horizontal: UILayoutPriority,
                           _ vertical: UILayoutPriority) -> Self {
-        setContentHuggingPriority(horizontal, for: .horizontal)
-        setContentHuggingPriority(vertical, for: .vertical)
+        setContentHuggingPriority(horizontal,
+                                  for: .horizontal)
+        setContentHuggingPriority(vertical,
+                                  for: .vertical)
         return self
     }
 
     @discardableResult
     public func byCompressionResistance(_ priority: UILayoutPriority,
                                         axis: NSLayoutConstraint.Axis = .horizontal) -> Self {
-        setContentCompressionResistancePriority(priority, for: axis)
+        setContentCompressionResistancePriority(priority,
+                                                for: axis)
         return self
     }
     /// 双轴便捷
     @discardableResult
     public func byCompressionResistance(_ horizontal: UILayoutPriority,
                                         _ vertical: UILayoutPriority) -> Self {
-        setContentCompressionResistancePriority(horizontal, for: .horizontal)
-        setContentCompressionResistancePriority(vertical, for: .vertical)
+        setContentCompressionResistancePriority(horizontal,
+                                                for: .horizontal)
+        setContentCompressionResistancePriority(vertical,
+                                                for: .vertical)
         return self
     }
     // MARK: 背景图 → 平铺色
@@ -158,7 +176,8 @@ extension UILabel {
     public func bgImage(_ image: UIImage?) -> Self {
         if let img = image {
             self.backgroundColor = UIColor(patternImage: img)
-        };return self
+        }
+        return self
     }
 
     // 高亮 / 交互 / 启用
@@ -233,10 +252,13 @@ extension UILabel {
 }
 // MARK: - 闭包重载@单参数
 extension UILabel {
+
     @discardableResult
     public func byJobsAttributedText(_ builder: () -> JobsText?) -> Self {
         _byApplyOptional(builder) { [weak self] text in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.attributedText = text.asAttributed
         }
     }
@@ -244,7 +266,9 @@ extension UILabel {
     @discardableResult
     public func byJobsText(_ builder: () -> JobsText?) -> Self {
         _byApplyOptional(builder) { [weak self] text in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.text = text.asString
         }
     }
@@ -264,7 +288,9 @@ extension UILabel {
     public func byFont(_ builder: () -> UIFont?) -> Self {
         self.adjustsFontForContentSizeCategory = false
         return _byApplyOptional(builder) { [weak self] font in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.font = font
         }
     }
@@ -272,7 +298,9 @@ extension UILabel {
     @discardableResult
     public func byTextAlignment(_ builder: () -> NSTextAlignment) -> Self {
         _byApplyValue(builder) { [weak self] alignment in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.textAlignment = alignment
         }
     }
@@ -280,7 +308,9 @@ extension UILabel {
     @discardableResult
     public func byNumberOfLines(_ builder: () -> Int) -> Self {
         _byApplyValue(builder) { [weak self] lines in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.numberOfLines = lines
         }
     }
@@ -288,7 +318,9 @@ extension UILabel {
     @discardableResult
     public func byLineBreakMode(_ builder: () -> NSLineBreakMode) -> Self {
         _byApplyValue(builder) { [weak self] mode in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.lineBreakMode = mode
         }
     }
@@ -314,7 +346,9 @@ extension UILabel {
     @discardableResult
     public func byIsHighlighted(_ builder: () -> Bool) -> Self {
         _byApplyValue(builder) { [weak self] value in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.isHighlighted = value
         }
     }
@@ -322,7 +356,9 @@ extension UILabel {
     @discardableResult
     public func byEnabled(_ builder: () -> Bool) -> Self {
         _byApplyValue(builder) { [weak self] value in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.isEnabled = value
         }
     }
@@ -330,7 +366,9 @@ extension UILabel {
     @discardableResult
     public func byAdjustsFontSizeToFitWidth(_ builder: () -> Bool) -> Self {
         _byApplyValue(builder) { [weak self] value in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.adjustsFontSizeToFitWidth = value
         }
     }
@@ -338,7 +376,9 @@ extension UILabel {
     @discardableResult
     public func byBaselineAdjustment(_ builder: () -> UIBaselineAdjustment) -> Self {
         _byApplyValue(builder) { [weak self] value in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.baselineAdjustment = value
         }
     }
@@ -346,7 +386,9 @@ extension UILabel {
     @discardableResult
     public func byMinimumScaleFactor(_ builder: () -> CGFloat) -> Self {
         _byApplyValue(builder) { [weak self] value in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.minimumScaleFactor = value
         }
     }
@@ -354,7 +396,9 @@ extension UILabel {
     @discardableResult
     public func byAllowsDefaultTighteningForTruncation(_ builder: () -> Bool) -> Self {
         _byApplyValue(builder) { [weak self] value in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.allowsDefaultTighteningForTruncation = value
         }
     }
@@ -362,7 +406,9 @@ extension UILabel {
     @discardableResult
     public func byPreferredMaxLayoutWidth(_ builder: () -> CGFloat) -> Self {
         _byApplyValue(builder) { [weak self] value in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.preferredMaxLayoutWidth = value
         }
     }
@@ -371,7 +417,9 @@ extension UILabel {
     @discardableResult
     public func byLineBreakStrategy(_ builder: () -> NSParagraphStyle.LineBreakStrategy) -> Self {
         _byApplyValue(builder) { [weak self] value in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.lineBreakStrategy = value
         }
     }
@@ -380,7 +428,9 @@ extension UILabel {
     @discardableResult
     public func byPreferredVibrancy(_ builder: () -> UILabelVibrancy) -> Self {
         _byApplyValue(builder) { [weak self] value in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.preferredVibrancy = value
         }
     }
@@ -389,7 +439,9 @@ extension UILabel {
     @discardableResult
     public func byShowsExpansionTextWhenTruncated(_ builder: () -> Bool) -> Self {
         _byApplyValue(builder) { [weak self] value in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.showsExpansionTextWhenTruncated = value
         }
     }

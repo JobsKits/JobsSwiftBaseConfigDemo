@@ -15,6 +15,7 @@ import ObjectiveC
 
 // MARK: - 直接赋值@单参数
 extension UIControl {
+
     // MARK: - 基础状态
     @discardableResult
     public func byEnabled(_ on: Bool?) -> Self {
@@ -84,6 +85,7 @@ extension UIControl {
 }
 // MARK: - 闭包重载@单参数
 extension UIControl {
+
     @discardableResult
     public func byEnabled(_ builder: () -> Bool?) -> Self {
         self.isEnabled = builder() ?? false
@@ -139,30 +141,41 @@ extension UIControl {
 
 private var trampolines: UInt8 = 0
 extension UIControl {
+
     private final class _JobsActionTrampoline: NSObject {
+
         let handler: (UIControl) -> Void
-        init(_ handler: @escaping (UIControl) -> Void) { self.handler = handler }
-        @objc func invoke(_ sender: UIControl) { handler(sender) }
+        init(_ handler: @escaping (UIControl) -> Void) {
+            self.handler = handler
+        }
+        @objc func invoke(_ sender: UIControl) {
+            handler(sender)
+        }
     }
 
     private var _jobs_trampolines: NSMutableArray {
-        if let arr = objc_getAssociatedObject(self, &trampolines) as? NSMutableArray {
+        if let arr = objc_getAssociatedObject(self,
+                                              &trampolines) as? NSMutableArray {
             return arr
         }
         let arr = NSMutableArray()
-        objc_setAssociatedObject(
-            self,
-            &trampolines,
-            arr,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-        );return arr
+        objc_setAssociatedObject(self,
+                                 &trampolines,
+                                 arr,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return arr
     }
     /// 同时设置
     @discardableResult
     public func byContentAlignment(horizontal: UIControl.ContentHorizontalAlignment? = nil,
                                    vertical: UIControl.ContentVerticalAlignment? = nil) -> Self {
-        if let h = horizontal { self.contentHorizontalAlignment = h }
-        if let v = vertical { self.contentVerticalAlignment = v };return self
+        if let h = horizontal {
+            self.contentHorizontalAlignment = h
+        }
+        if let v = vertical {
+            self.contentVerticalAlignment = v
+        }
+        return self
     }
     /// effectiveContentHorizontalAlignment 是只读属性：这里只能提供读取（无法 DSL set）
     @discardableResult
@@ -175,14 +188,18 @@ extension UIControl {
     public func byAddTarget(_ target: Any?,
                             action: Selector,
                             for events: UIControl.Event) -> Self {
-        addTarget(target, action: action, for: events)
+        addTarget(target,
+                  action: action,
+                  for: events)
         return self
     }
     @discardableResult
     public func byRemoveTarget(_ target: Any?,
                                action: Selector? = nil,
                                for events: UIControl.Event) -> Self {
-        removeTarget(target, action: action, for: events)
+        removeTarget(target,
+                     action: action,
+                     for: events)
         return self
     }
     /// 触发指定事件（比如 .touchUpInside）
@@ -195,8 +212,10 @@ extension UIControl {
     /// 直接加一个 UIAction；identifier 相同会被替换
     @available(iOS 14.0, *)
     @discardableResult
-    public func byAddAction(_ action: UIAction, for events: UIControl.Event) -> Self {
-        addAction(action, for: events)
+    public func byAddAction(_ action: UIAction,
+                            for events: UIControl.Event) -> Self {
+        addAction(action,
+                  for: events)
         return self
     }
     /// ✅ 闭包形式，iOS12/13/14+ 都能用
@@ -206,20 +225,27 @@ extension UIControl {
         // iOS 14+ 走系统 UIAction（更干净）
         if #available(iOS 14.0, *) {
             let action = UIAction { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 handler(self)
             }
-            addAction(action, for: events)
+            addAction(action,
+                      for: events)
             // UIAction 系统会持有，不强制需要我们保存
             return self
         }
         // iOS 13-：用 trampoline
         let trampoline = _JobsActionTrampoline { control in
-            guard let typed = control as? Self else { return }
+            guard let typed = control as? Self else {
+                return
+            }
             handler(typed)
         }
         _jobs_trampolines.add(trampoline) // 必须保存，不然 trampoline 会被释放
-        addTarget(trampoline, action: #selector(_JobsActionTrampoline.invoke(_:)), for: events)
+        addTarget(trampoline,
+                  action: #selector(_JobsActionTrampoline.invoke(_:)),
+                  for: events)
         return self
     }
     // ================================== ✅ 强壮版：允许链式中类型被“擦除”也能拿到具体 sender ==================================
@@ -231,32 +257,45 @@ extension UIControl {
         // iOS 14+：UIAction
         if #available(iOS 14.0, *) {
             let action = UIAction { [weak self] _ in
-                guard let self, let typed = self as? T else { return }
+                guard let self, let typed = self as? T else {
+                    return
+                }
                 handler(typed)
             }
-            addAction(action, for: events)
+            addAction(action,
+                      for: events)
             return self
         }
         // iOS 13-：trampoline
         let trampoline = _JobsActionTrampoline { control in
-            guard let typed = control as? T else { return }
+            guard let typed = control as? T else {
+                return
+            }
             handler(typed)
         }
         _jobs_trampolines.add(trampoline)
-        addTarget(trampoline, action: #selector(_JobsActionTrampoline.invoke(_:)), for: events)
+        addTarget(trampoline,
+                  action: #selector(_JobsActionTrampoline.invoke(_:)),
+                  for: events)
         return self
     }
     /// 移除指定实例的 UIAction
     @available(iOS 14.0, *)
     @discardableResult
-    public func byRemoveAction(_ action: UIAction, for events: UIControl.Event) -> Self {
-        removeAction(action, for: events); return self
+    public func byRemoveAction(_ action: UIAction,
+                               for events: UIControl.Event) -> Self {
+        removeAction(action,
+                     for: events)
+        return self
     }
     /// 根据 identifier 移除 UIAction
     @available(iOS 14.0, *)
     @discardableResult
-    public func byRemoveAction(identifiedBy id: UIAction.Identifier, for events: UIControl.Event) -> Self {
-        removeAction(identifiedBy: id, for: events); return self
+    public func byRemoveAction(identifiedBy id: UIAction.Identifier,
+                               for events: UIControl.Event) -> Self {
+        removeAction(identifiedBy: id,
+                     for: events)
+        return self
     }
     /// 便捷：闭包形式 UIAction（建议你平时就用这个）
     @available(iOS 14.0, *)
@@ -264,7 +303,9 @@ extension UIControl {
     public func byOn(_ events: UIControl.Event,
                      id: UIAction.Identifier? = nil,
                      _ handler: @escaping (UIAction) -> Void) -> Self {
-        addAction( UIAction(identifier: id, handler: handler), for: events)
+        addAction(UIAction(identifier: id,
+                           handler: handler),
+                  for: events)
         return self
     }
     /// 便捷：primaryActionTriggered
@@ -272,7 +313,9 @@ extension UIControl {
     @discardableResult
     public func byOnPrimaryAction(id: UIAction.Identifier? = nil,
                                   _ handler: @escaping (UIAction) -> Void) -> Self {
-        byOn(.primaryActionTriggered, id: id, handler)
+        byOn(.primaryActionTriggered,
+             id: id,
+             handler)
     }
     // MARK: - Primary Action（iOS 17.4+）
     @available(iOS 17.4, *)

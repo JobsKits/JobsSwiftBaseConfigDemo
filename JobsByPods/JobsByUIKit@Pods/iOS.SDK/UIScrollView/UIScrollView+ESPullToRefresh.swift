@@ -20,6 +20,7 @@ import ESPullToRefresh
 import SnapKit
 // MARK: - Jobs Refresh Extension
 extension UIScrollView {
+
     // MARK: - 下拉刷新（Pull Down）
     /// 安装下拉刷新（默认 ESRefreshHeaderAnimator）
     @discardableResult
@@ -35,7 +36,8 @@ extension UIScrollView {
                                                                                height: headerH),
                                                                  handler: action,
                                                                  animator: animator))
-        };return self
+        }
+        return self
     }
     /// 安装下拉刷新（JobsHeaderAnimator 自定义样式）
     @discardableResult
@@ -51,24 +53,30 @@ extension UIScrollView {
                                                                                height: headerH),
                                                                  handler: action,
                                                                  animator: animator))
-        };return self
+        }
+        return self
     }
     /// 过期自动刷新
     @discardableResult
     public func pullDownAutoIfExpired() -> Self {
         if let key = self.header?.refreshIdentifier, JobsRefreshCache.isExpired(forKey: key) {
             onMainSync { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.header?.startRefreshing(isAuto: true)
             }
-        };return self
+        }
+        return self
     }
     /// 停止下拉刷新
     @discardableResult
-    public func pullDownStop(ignoreDate: Bool = false, ignoreFooter: Bool = false) -> Self {
+    public func pullDownStop(ignoreDate: Bool = false,
+                             ignoreFooter: Bool = false) -> Self {
         self.header?.stopRefreshing()
         if ignoreDate == false, let key = self.header?.refreshIdentifier {
-            JobsRefreshCache.setDate(Date(), forKey: key) // ✅ 自家缓存
+            JobsRefreshCache.setDate(Date(),
+                                     forKey: key) // ✅ 自家缓存
         }
         self.footer?.isHidden = ignoreFooter
         return self
@@ -77,10 +85,17 @@ extension UIScrollView {
     @discardableResult
     public func pullDownStart(auto: Bool = false) -> Self {
         onMainAsync { [weak self] in
-            guard let self else { return }
-            if auto { self.header?.startRefreshing(isAuto: true) }
-            else { self.header?.startRefreshing(isAuto: false) }
-        };return self
+            guard let self else {
+                return
+            }
+            if auto {
+                self.header?.startRefreshing(isAuto: true)
+            }
+            else {
+                self.header?.startRefreshing(isAuto: false)
+            }
+        }
+        return self
     }
     // MARK: - 上拉加载（Pull Up）
     /// 安装上拉加载（默认 ESRefreshFooterAnimator）
@@ -90,17 +105,18 @@ extension UIScrollView {
         if self.footer == nil {
             let animator = ESRefreshFooterAnimator()
             config?(animator)
-            let footer = ESRefreshFooterView(frame: .zero, handler: action, animator: animator)
+            let footer = ESRefreshFooterView(frame: .zero,
+                                             handler: action,
+                                             animator: animator)
             let footerH = animator.executeIncremental
-            footer.frame = CGRect(
-                x: 0,
-                y: self.contentSize.height + self.contentInset.bottom,
-                width: self.bounds.width,
-                height: footerH
-            )
+            footer.frame = CGRect(x: 0,
+                                  y: self.contentSize.height + self.contentInset.bottom,
+                                  width: self.bounds.width,
+                                  height: footerH)
             self.addSubview(footer)
             self.footer = footer
-        };return self
+        }
+        return self
     }
     /// 安装上拉加载（JobsFooterAnimator 自定义样式）
     @discardableResult
@@ -112,14 +128,13 @@ extension UIScrollView {
             self.footer = ESRefreshFooterView(frame: .zero,
                                               handler: action,
                                               animator: animator)
-            .byFrame(CGRect(
-                x: 0,
-                y: self.contentSize.height + self.contentInset.bottom,
-                width: self.bounds.width,
-                height: animator.executeIncremental
-            ))
-            .byAddTo(self)
-        };return self
+                .byFrame(CGRect(x: 0,
+                                y: self.contentSize.height + self.contentInset.bottom,
+                                width: self.bounds.width,
+                                height: animator.executeIncremental))
+                .byAddTo(self)
+        }
+        return self
     }
     /// 停止上拉加载
     @discardableResult
@@ -153,13 +168,18 @@ extension UIScrollView {
     }
 }
 // MARK: - 下拉刷新（Header）
-public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnimatorProtocol {
+public final class JobsHeaderAnimator: UIView,
+                                       ESRefreshProtocol,
+                                       ESRefreshAnimatorProtocol {
+
     public var state: ESRefreshViewState = .pullToRefresh
     public var idleDescription: String = "下拉刷新".tr
     public var releaseToRefreshDescription: String = "松开立即刷新".tr
     public var loadingDescription: String = "刷新中…".tr
     public var noMoreDataDescription: String = "已经是最新数据".tr
-    public var view: UIView { self }
+    public var view: UIView {
+        self
+    }
     public var insets: UIEdgeInsets = .zero
     public var trigger: CGFloat = 60
     public var executeIncremental: CGFloat = 60
@@ -168,8 +188,8 @@ public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
     private lazy var canvas: UIView = {
         UIView()
             .byBackgroundColor(JobsCor.clear)
-            /// 画布：等屏宽、中心对齐到父视图
-            .byAddTo(self) { [unowned self] make in
+        /// 画布：等屏宽、中心对齐到父视图
+        .byAddTo(self) { [unowned self] make in
                 make.centerX.equalToSuperview()                  // ✅ 中心对齐（不从 0,0 起）
                 make.centerY.equalToSuperview()
                 self.canvasWidthConstraint = make.width.equalTo(bounds.width).constraint
@@ -182,10 +202,12 @@ public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
-            .byHugging(.required, axis: .horizontal)
-            .byCompressionResistance(.required, axis: .horizontal)
-            /// 文本：永远居中在“画布”的几何中心
-            .byAddTo(canvas) { [unowned self] make in
+            .byHugging(.required,
+                       axis: .horizontal)
+            .byCompressionResistance(.required,
+                                     axis: .horizontal)
+        /// 文本：永远居中在“画布”的几何中心
+        .byAddTo(canvas) { [unowned self] make in
                 make.centerX.equalTo(canvas.snp.centerX)         // ✅ 真正中线
                 make.centerY.equalTo(canvas.snp.centerY)
                 make.leading.greaterThanOrEqualTo(canvas.snp.leading).offset(16)
@@ -202,10 +224,13 @@ public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
             }
     }()
 
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        byBackgroundColor(JobsCor.clear).byUserInteractionEnabled(false)
+        byBackgroundColor(JobsCor.clear)
+            .byUserInteractionEnabled(false)
         canvas.byAlpha(1)
     }
     // 跟随窗口宽度（适配横竖屏 / iPad 分屏）
@@ -218,10 +243,16 @@ public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
         }
     }
     // MARK: - ESRefreshProtocol
-    public func refreshAnimationBegin(view: ESRefreshComponent) { indicator.startAnimating() }
-    public func refreshAnimationEnd(view: ESRefreshComponent) { indicator.stopAnimating() }
-    public func refresh(view: ESRefreshComponent, progressDidChange progress: CGFloat) {}
-    public func refresh(view: ESRefreshComponent, stateDidChange state: ESRefreshViewState) {
+    public func refreshAnimationBegin(view: ESRefreshComponent) {
+        indicator.startAnimating()
+    }
+    public func refreshAnimationEnd(view: ESRefreshComponent) {
+        indicator.stopAnimating()
+    }
+    public func refresh(view: ESRefreshComponent,
+                        progressDidChange progress: CGFloat) {}
+    public func refresh(view: ESRefreshComponent,
+                        stateDidChange state: ESRefreshViewState) {
         self.state = state
         switch state {
         /// 处理 .pullToRefresh 分支
@@ -244,13 +275,18 @@ public final class JobsHeaderAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
     }
 }
 // MARK: - 上拉加载（Footer）
-public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnimatorProtocol {
+public final class JobsFooterAnimator: UIView,
+                                       ESRefreshProtocol,
+                                       ESRefreshAnimatorProtocol {
+
     public var state: ESRefreshViewState = .pullToRefresh
     public var idleDescription: String = "上拉加载更多".tr
     public var releaseToRefreshDescription: String = "松开立即加载".tr
     public var loadingMoreDescription: String = "加载中…".tr
     public var noMoreDataDescription: String = "没有更多数据".tr
-    public var view: UIView { self }
+    public var view: UIView {
+        self
+    }
     public var insets: UIEdgeInsets = .zero
     public var trigger: CGFloat = 52
     public var executeIncremental: CGFloat = 52
@@ -272,8 +308,10 @@ public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
-            .byHugging(.required, axis: .horizontal)
-            .byCompressionResistance(.required, axis: .horizontal)
+            .byHugging(.required,
+                       axis: .horizontal)
+            .byCompressionResistance(.required,
+                                     axis: .horizontal)
             .byAddTo(canvas) { [unowned self] make in
                 make.centerX.equalTo(canvas.snp.centerX)        // ✅ 文本居中于画布
                 make.centerY.equalTo(canvas.snp.centerY)
@@ -291,9 +329,13 @@ public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
             }
     }()
 
-    private var w: CGFloat { bounds.width }
+    private var w: CGFloat {
+        bounds.width
+    }
 
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     public override init(frame: CGRect) {
         super.init(frame: frame)
         byBackgroundColor(JobsCor.clear)
@@ -311,8 +353,10 @@ public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
         }
     }
     // MARK: - ESRefreshProtocol
-    public func refresh(view: ESRefreshComponent, progressDidChange progress: CGFloat) {}
-    public func refresh(view: ESRefreshComponent, stateDidChange state: ESRefreshViewState) {
+    public func refresh(view: ESRefreshComponent,
+                        progressDidChange progress: CGFloat) {}
+    public func refresh(view: ESRefreshComponent,
+                        stateDidChange state: ESRefreshViewState) {
         self.state = state
         switch state {
         /// 处理 .pullToRefresh 分支
@@ -334,11 +378,16 @@ public final class JobsFooterAnimator: UIView, ESRefreshProtocol, ESRefreshAnima
         }
     }
 
-    public func refreshAnimationBegin(view: ESRefreshComponent) { indicator.startAnimating() }
-    public func refreshAnimationEnd(view: ESRefreshComponent) { indicator.stopAnimating() }
+    public func refreshAnimationBegin(view: ESRefreshComponent) {
+        indicator.startAnimating()
+    }
+    public func refreshAnimationEnd(view: ESRefreshComponent) {
+        indicator.stopAnimating()
+    }
 }
 // MARK: - 上拉下拉链式语法
 public extension JobsHeaderAnimator {
+
     // MARK: - 单项链式配置
     @discardableResult
     func byIdleDescription(_ text: String) -> Self {
@@ -365,19 +414,27 @@ public extension JobsHeaderAnimator {
     }
     // MARK: - 组合链式配置（少写几行）
     @discardableResult
-    func byDescriptions(
-        idle: String? = nil,
-        releaseToRefresh: String? = nil,
-        loading: String? = nil,
-        noMoreData: String? = nil
-    ) -> Self {
-        if let v = idle { self.idleDescription = v }
-        if let v = releaseToRefresh { self.releaseToRefreshDescription = v }
-        if let v = loading { self.loadingDescription = v }
-        if let v = noMoreData { self.noMoreDataDescription = v };return self
+    func byDescriptions(idle: String? = nil,
+                        releaseToRefresh: String? = nil,
+                        loading: String? = nil,
+                        noMoreData: String? = nil) -> Self {
+        if let v = idle {
+            self.idleDescription = v
+        }
+        if let v = releaseToRefresh {
+            self.releaseToRefreshDescription = v
+        }
+        if let v = loading {
+            self.loadingDescription = v
+        }
+        if let v = noMoreData {
+            self.noMoreDataDescription = v
+        }
+        return self
     }
 }
 public extension JobsFooterAnimator {
+
     // MARK: - 单项链式配置
     @discardableResult
     func byIdleDescription(_ text: String) -> Self {
@@ -404,28 +461,40 @@ public extension JobsFooterAnimator {
     }
     // MARK: - 组合链式配置（可选，少写几行）
     @discardableResult
-    func byDescriptions(
-        idle: String? = nil,
-        releaseToRefresh: String? = nil,
-        loadingMore: String? = nil,
-        noMoreData: String? = nil
-    ) -> Self {
-        if let v = idle { self.idleDescription = v }
-        if let v = releaseToRefresh { self.releaseToRefreshDescription = v }
-        if let v = loadingMore { self.loadingMoreDescription = v }
-        if let v = noMoreData { self.noMoreDataDescription = v };return self
+    func byDescriptions(idle: String? = nil,
+                        releaseToRefresh: String? = nil,
+                        loadingMore: String? = nil,
+                        noMoreData: String? = nil) -> Self {
+        if let v = idle {
+            self.idleDescription = v
+        }
+        if let v = releaseToRefresh {
+            self.releaseToRefreshDescription = v
+        }
+        if let v = loadingMore {
+            self.loadingMoreDescription = v
+        }
+        if let v = noMoreData {
+            self.noMoreDataDescription = v
+        }
+        return self
     }
 }
 // MARK: - 轻量的“最近刷新时间”缓存，替代 ESRefreshDataManager（避免跨模块 internal 访问问题）
 public enum JobsRefreshCache {
+
     private static let prefix = "jobs.refresh."
     private static let ud = UserDefaults.standard
 
     @inline(__always)
-    private static func key(_ k: String) -> String { prefix + k }
+    private static func key(_ k: String) -> String {
+        prefix + k
+    }
 
-    public static func setDate(_ date: Date, forKey key: String) {
-        ud.set(date.timeIntervalSince1970, forKey: self.key(key))
+    public static func setDate(_ date: Date,
+                               forKey key: String) {
+        ud.set(date.timeIntervalSince1970,
+               forKey: self.key(key))
     }
 
     public static func date(forKey key: String) -> Date? {
@@ -433,9 +502,15 @@ public enum JobsRefreshCache {
         return ts > 0 ? Date(timeIntervalSince1970: ts) : nil
     }
     /// 可选：设置过期时长（秒）
-    public static func setExpiredInterval(_ interval: TimeInterval?, forKey key: String) {
+    public static func setExpiredInterval(_ interval: TimeInterval?,
+                                          forKey key: String) {
         let k = self.key(key) + ".expired"
-        if let interval { ud.set(interval, forKey: k) } else { ud.removeObject(forKey: k) }
+        if let interval {
+            ud.set(interval,
+                   forKey: k)
+        } else {
+            ud.removeObject(forKey: k)
+        }
     }
 
     public static func expiredInterval(forKey key: String) -> TimeInterval? {
@@ -446,7 +521,10 @@ public enum JobsRefreshCache {
     /// 可选：是否已过期（模仿 ES 行为）
     public static func isExpired(forKey key: String) -> Bool {
         guard let last = date(forKey: key),
-              let interval = expiredInterval(forKey: key) else { return false };return Date().timeIntervalSince(last) >= interval
+              let interval = expiredInterval(forKey: key) else {
+            return false
+        }
+        return Date().timeIntervalSince(last) >= interval
     }
 }
 #endif

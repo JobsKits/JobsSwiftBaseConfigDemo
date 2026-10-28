@@ -14,11 +14,13 @@ import UIKit
 #if canImport(JXSegmentedView)
 import JXSegmentedView
 extension JXSegmentedView {
+
     @discardableResult
     public func byContentScrollViewConfig(_ block: (UIScrollView) -> Void) -> Self {
         if let scrollView = self.contentScrollView {
             block(scrollView)
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -36,7 +38,9 @@ extension JXSegmentedView {
     @discardableResult
     public func byListContainer(_ container: JXSegmentedViewListContainer,
                                 defaultIndex: Int? = nil) -> Self {
-        if let i = defaultIndex { self.defaultSelectedIndex = i }
+        if let i = defaultIndex {
+            self.defaultSelectedIndex = i
+        }
         self.listContainer = container
         return self
     }
@@ -47,7 +51,8 @@ extension JXSegmentedView {
         self.contentScrollView = scrollView
         if let v = clickAnimation {
             self.isContentScrollViewClickTransitionAnimationEnabled = v
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -75,7 +80,8 @@ extension JXSegmentedView {
     }
     /// 内容左右边距（传 `JXSegmentedViewAutomaticDimension` 表示跟随 itemSpacing）
     @discardableResult
-    public func byContentEdgeInsets(left: CGFloat, right: CGFloat) -> Self {
+    public func byContentEdgeInsets(left: CGFloat,
+                                    right: CGFloat) -> Self {
         self.contentEdgeInsetLeft = left
         self.contentEdgeInsetRight = right
         return self
@@ -100,44 +106,62 @@ extension JXSegmentedView {
     }
 }
 /// 把 JXSegmentedViewDelegate 做成 closure 版，方便链式写回调
-public final class JobsSegmentedViewDelegateProxy: NSObject, JXSegmentedViewDelegate {
+public final class JobsSegmentedViewDelegateProxy: NSObject,
+                                                   JXSegmentedViewDelegate {
+
     public var didSelected: ((JXSegmentedView, Int) -> Void)?
     public var didClickSelected: ((JXSegmentedView, Int) -> Void)?
     public var didScrollSelected: ((JXSegmentedView, Int) -> Void)?
     public var scrolling: ((JXSegmentedView, Int, Int, CGFloat) -> Void)?
     public var canClick: ((JXSegmentedView, Int) -> Bool)?
 
-    public func segmentedView(_ segmentedView: JXSegmentedView, didSelectedItemAt index: Int) {
-        didSelected?(segmentedView, index)
+    public func segmentedView(_ segmentedView: JXSegmentedView,
+                              didSelectedItemAt index: Int) {
+        didSelected?(segmentedView,
+                     index)
     }
 
-    public func segmentedView(_ segmentedView: JXSegmentedView, didClickSelectedItemAt index: Int) {
-        didClickSelected?(segmentedView, index)
+    public func segmentedView(_ segmentedView: JXSegmentedView,
+                              didClickSelectedItemAt index: Int) {
+        didClickSelected?(segmentedView,
+                          index)
     }
 
-    public func segmentedView(_ segmentedView: JXSegmentedView, didScrollSelectedItemAt index: Int) {
-        didScrollSelected?(segmentedView, index)
+    public func segmentedView(_ segmentedView: JXSegmentedView,
+                              didScrollSelectedItemAt index: Int) {
+        didScrollSelected?(segmentedView,
+                           index)
     }
 
     public func segmentedView(_ segmentedView: JXSegmentedView,
                               scrollingFrom leftIndex: Int,
                               to rightIndex: Int,
                               percent: CGFloat) {
-        scrolling?(segmentedView, leftIndex, rightIndex, percent)
+        scrolling?(segmentedView,
+                   leftIndex,
+                   rightIndex,
+                   percent)
     }
 
-    public func segmentedView(_ segmentedView: JXSegmentedView, canClickItemAt index: Int) -> Bool {
-        canClick?(segmentedView, index) ?? true
+    public func segmentedView(_ segmentedView: JXSegmentedView,
+                              canClickItemAt index: Int) -> Bool {
+        canClick?(segmentedView,
+                  index) ?? true
     }
 }
 private var _jobs_jx_delegate_proxy_key: UInt8 = 0
 extension JXSegmentedView {
+
     private var jobs_delegateProxy: JobsSegmentedViewDelegateProxy {
-        if let p = objc_getAssociatedObject(self, &_jobs_jx_delegate_proxy_key) as? JobsSegmentedViewDelegateProxy {
+        if let p = objc_getAssociatedObject(self,
+                                            &_jobs_jx_delegate_proxy_key) as? JobsSegmentedViewDelegateProxy {
             return p
         }
         let p = JobsSegmentedViewDelegateProxy()
-        objc_setAssociatedObject(self, &_jobs_jx_delegate_proxy_key, p, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(self,
+                                 &_jobs_jx_delegate_proxy_key,
+                                 p,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return p
     }
     /// 安装 closure delegate（会覆盖 segmentedView.delegate）

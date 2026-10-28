@@ -30,14 +30,18 @@ import GKNavigationBar
 /// 农历 <-> 公历 Demo
 
 final class LunarDemoVC: BaseVC {
+
     // MARK: - Sections & Rows
-    private enum Section: Int, CaseIterable {
+    private enum Section: Int,
+                          CaseIterable {
+
         case example     // README 示例：农历 -> 公历
         case today       // 今天：公历 & 农历
         case interactive // 交互：选择任意公历日期
     }
 
     private struct Row {
+
         let title: String
         let value: String
     }
@@ -51,7 +55,8 @@ final class LunarDemoVC: BaseVC {
     private var isLoadingMore = false
     // MARK: - UI
     private lazy var datePicker: UIDatePicker = {
-       UIDatePicker.jobsMake { _ in }
+        UIDatePicker
+            .jobsMake { _ in }
             .byDatePickerMode(.dateAndTime)
             .byPreferredDatePickerStyle(.inline)
             .byLocale(Locale(identifier: "zh-Hans"))
@@ -60,22 +65,30 @@ final class LunarDemoVC: BaseVC {
             }
     }()
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
-            .byRegisterCell(UITableViewCell.self)                 
+            .byRegisterCell(UITableViewCell.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
             .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据".tr, for: .normal)
-                    .bySubTitle("点我填充示例数据".tr, for: .normal)
-                    .byImage("tray".sysImg, for: .normal)
+                    .byTitle("暂无数据".tr,
+                             for: .normal)
+                    .bySubTitle("点我填充示例数据".tr,
+                                for: .normal)
+                    .byImage("tray".sysImg,
+                             for: .normal)
                     .byImagePlacement(.top)
                     .onJobsTap { [weak self] (_: UIButton) in
-                        guard let self else { return }
-                        self.items = (1...10).map { "Row \($0)" }
+                        guard let self else {
+                            return
+                        }
+                        self.items = (1 ... 10).map {
+                            "Row \($0)"
+                        }
                         self.tableView.byReloadData()
                     }
                     .byEmptyLayout { btn, make, host in
@@ -86,11 +99,13 @@ final class LunarDemoVC: BaseVC {
                         make.width.lessThanOrEqualTo(host).multipliedBy(0.9)
                     }
             }
-            // 下拉刷新 Header
-            .byRefreshHeader(component: JobsDefaultHeader(),
-                             container: self,
-                             trigger: 66) { [weak self] in
-                guard let self else { return }
+        // 下拉刷新 Header
+        .byRefreshHeader(component: JobsDefaultHeader(),
+                         container: self,
+                         trigger: 66) { [weak self] in
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
                     self.buildTodayRows()
@@ -100,15 +115,19 @@ final class LunarDemoVC: BaseVC {
                     self.tableView.switchRefreshFooter(to: .normal)
                 }
             }
-            // 上拉加载 Footer
-            .byRefreshFooter(component: JobsDefaultFooter(),
-                             container: self,
-                             trigger: 66) { [weak self] in
-                guard let self else { return }
+        // 上拉加载 Footer
+        .byRefreshFooter(component: JobsDefaultFooter(),
+                         container: self,
+                         trigger: 66) { [weak self] in
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
                     let base = self.items.count
-                    self.items += (1...5).map { "Row \(base + $0)" }
+                    self.items += (1 ... 5).map {
+                        "Row \(base + $0)"
+                    }
                     self.tableView.byReloadData()
                     self.tableView.switchRefreshFooter(to: .noMoreData)
                 }
@@ -131,7 +150,10 @@ final class LunarDemoVC: BaseVC {
         )
         let header = UIView.jobsMake { _ in }
         datePicker.byAddTo(header) { make in
-            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
+            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 8,
+                                                             left: 16,
+                                                             bottom: 8,
+                                                             right: 16))
         }
         attachHeader(header)  // 已有：计算 fitting 高度并赋给 tableHeaderView
         // 初始数据
@@ -150,21 +172,25 @@ final class LunarDemoVC: BaseVC {
         header.setNeedsLayout()
         header.layoutIfNeeded()
         let fitH = header.systemLayoutSizeFitting(
-            CGSize(width: header.bounds.width, height: UIView.layoutFittingCompressedSize.height)
+            CGSize(width: header.bounds.width,
+                   height: UIView.layoutFittingCompressedSize.height)
         ).height
         header.frame.size.height = fitH
         tableView.byTableHeaderView(header)
     }
 
     private func recalcHeaderIfNeeded() {
-        guard let header = tableView.tableHeaderView else { return }
+        guard let header = tableView.tableHeaderView else {
+            return
+        }
         var needs = false
         if header.frame.width != tableView.bounds.width {
             header.frame.size.width = tableView.bounds.width
             needs = true
         }
         let fitH = header.systemLayoutSizeFitting(
-            CGSize(width: header.frame.width, height: UIView.layoutFittingCompressedSize.height)
+            CGSize(width: header.frame.width,
+                   height: UIView.layoutFittingCompressedSize.height)
         ).height
         if header.frame.height != fitH {
             header.frame.size.height = fitH
@@ -177,17 +203,22 @@ final class LunarDemoVC: BaseVC {
     // MARK: - Actions
     @objc private func onDateChanged() {
         buildInteractiveRows(for: datePicker.date)
-        tableView.byReloadSections(IndexSet(integer: Section.interactive.rawValue), with: .automatic)
+        tableView.byReloadSections(IndexSet(integer: Section.interactive.rawValue),
+                                   with: .automatic)
     }
     // MARK: - Data Builders
     private func buildExampleRows() {
         // README 示例：农历 1986-04-21
-        let lunar = Lunar.fromYmdHms(lunarYear: 1986, lunarMonth: 4, lunarDay: 21)
+        let lunar = Lunar.fromYmdHms(lunarYear: 1986,
+                                     lunarMonth: 4,
+                                     lunarDay: 21)
         let desc  = lunar.description
         let solar = lunar.solar.fullString
         exampleRows = [
-            .init(title: "农历（描述）".tr, value: desc),
-            .init(title: "对应公历".tr, value: solar)
+            .init(title: "农历（描述）".tr,
+                  value: desc),
+            .init(title: "对应公历".tr,
+                  value: solar)
         ]
     }
 
@@ -201,7 +232,8 @@ final class LunarDemoVC: BaseVC {
 
     private func convertSolar(date: Date) -> [Row] {
         let cal = Calendar(identifier: .gregorian)
-        let c   = cal.dateComponents(in: TimeZone.current, from: date)
+        let c   = cal.dateComponents(in: TimeZone.current,
+                                     from: date)
         let y   = c.year   ?? 2000
         let m   = c.month  ?? 1
         let d   = c.day    ?? 1
@@ -209,56 +241,81 @@ final class LunarDemoVC: BaseVC {
         let mm  = c.minute ?? 0
         let ss  = c.second ?? 0
         // 不同版本可能是 year/month/day 标签（而非 solarYear/solarMonth/...）
-        let solar = Solar.fromYmdHms(year: y, month: m, day: d, hour: hh, minute: mm, second: ss)
+        let solar = Solar.fromYmdHms(year: y,
+                                     month: m,
+                                     day: d,
+                                     hour: hh,
+                                     minute: mm,
+                                     second: ss)
         let solarStr = solar.fullString
         let lunarStr = solar.lunar.description
         return [
-            .init(title: "公历".tr, value: solarStr),
-            .init(title: "农历".tr, value: lunarStr)
+            .init(title: "公历".tr,
+                  value: solarStr),
+            .init(title: "农历".tr,
+                  value: lunarStr)
         ]
     }
 }
 // MARK: - UITableViewDataSource / UITableViewDelegate
-extension LunarDemoVC: UITableViewDataSource, UITableViewDelegate {
-    func numberOfSections(in tableView: UITableView) -> Int { Section.allCases.count }
+extension LunarDemoVC: UITableViewDataSource,
+                       UITableViewDelegate {
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        Section.allCases.count
+    }
+
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
         /// 处理 .example 分支
-        case .example:     return exampleRows.count
+        case .example:
+            return exampleRows.count
         /// 处理 .today 分支
-        case .today:       return todayRows.count
+        case .today:
+            return todayRows.count
         /// 处理 .interactive 分支
-        case .interactive: return interactiveRows.count
+        case .interactive:
+            return interactiveRows.count
         }
     }
 
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView,
+                   titleForHeaderInSection section: Int) -> String? {
         switch Section(rawValue: section)! {
         /// 处理 .example 分支
-        case .example:     return "示例：农历→公历（README 同款）"
+        case .example:
+            return "示例：农历→公历（README 同款）"
         /// 处理 .today 分支
-        case .today:       return "今天"
+        case .today:
+            return "今天"
         /// 处理 .interactive 分支
-        case .interactive: return "选择公历日期（公历→农历）"
+        case .interactive:
+            return "选择公历日期（公历→农历）"
         }
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row: Row
         switch Section(rawValue: indexPath.section)! {
         /// 处理 .example 分支
-        case .example:     row = exampleRows[indexPath.row]
+        case .example:
+            row = exampleRows[indexPath.row]
         /// 处理 .today 分支
-        case .today:       row = todayRows[indexPath.row]
+        case .today:
+            row = todayRows[indexPath.row]
         /// 处理 .interactive 分支
-        case .interactive: row = interactiveRows[indexPath.row]
+        case .interactive:
+            row = interactiveRows[indexPath.row]
         }
         if #available(iOS 14.0, *) {
             return tableView
-                .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+                .byDequeueReusableCell(withType: UITableViewCell.self,
+                                       for: indexPath)
                 .byListConfig {
-                    $0.byText(row.title)
+                    $0
+                        .byText(row.title)
                         .bySecondaryText(row.value)
                         .bySecondaryLines(0)
                 }
@@ -266,7 +323,8 @@ extension LunarDemoVC: UITableViewDataSource, UITableViewDelegate {
         } else {
             // 老系统：避免 subtitle 样式需求，直接合并成一行
             return tableView
-                .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+                .byDequeueReusableCell(withType: UITableViewCell.self,
+                                       for: indexPath)
                 .byText("\(row.title)  \(row.value)")
                 .byTitleNumberOfLines(0)
                 .bySelectionStyle(.none)

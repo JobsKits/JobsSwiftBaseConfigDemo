@@ -7,7 +7,9 @@
 
 import Foundation
 
-public enum JobsParameterEncoding: Codable, Sendable {
+public enum JobsParameterEncoding: Codable,
+                                   Sendable {
+
     case urlQuery
     case jsonBody
     case formURLEncoded

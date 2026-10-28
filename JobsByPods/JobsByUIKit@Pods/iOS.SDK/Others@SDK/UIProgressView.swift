@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 extension UIProgressView {
+
     // MARK: Style
     /// 设置样式
     @discardableResult
@@ -28,14 +29,17 @@ extension UIProgressView {
     }
     /// 设置 progress 是否动画
     @discardableResult
-    public func byProgress(_ progress: Float, animated: Bool) -> Self {
-        self.setProgress(progress, animated: animated)
+    public func byProgress(_ progress: Float,
+                           animated: Bool) -> Self {
+        self.setProgress(progress,
+                         animated: animated)
         return self
     }
     /// 仅提供“动画设置 progress”的链式语法（兼容你之前的命名）
     @discardableResult
     public func byProgressByAnimated(_ progress: Float) -> Self {
-        self.setProgress(progress, animated: true)
+        self.setProgress(progress,
+                         animated: true)
         return self
     }
     // MARK: Tint Color

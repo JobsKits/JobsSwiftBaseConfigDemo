@@ -23,23 +23,30 @@ import JobsFuseAnimation
 
 @MainActor
 private struct JobsAssocKeys {
+
     static var proxy: UInt8 = 0
 }
 
 @MainActor
 extension UIScrollView {
+
     var mrk_proxy: JobsProxy {
-        if let p = objc_getAssociatedObject(self, &JobsAssocKeys.proxy) as? JobsProxy {
+        if let p = objc_getAssociatedObject(self,
+                                            &JobsAssocKeys.proxy) as? JobsProxy {
             return p
         }
         let p = JobsProxy(scrollView: self)
-        objc_setAssociatedObject(self, &JobsAssocKeys.proxy, p, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(self,
+                                 &JobsAssocKeys.proxy,
+                                 p,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return p
     }
 }
 
 @MainActor
 extension UIScrollView {
+
     // MARK: - Info visibility (group)
     /// 头部信息：竖向 Header + 横向 Left
     @discardableResult
@@ -155,10 +162,8 @@ extension UIScrollView {
     /// Enable/disable haptic feedback when user triggers refresh/loading by reaching threshold.
     @discardableResult
     public func enableRefreshHaptics(_ enable: Bool) -> Self {
-        mrk_proxy.refreshFeedback = JobsRefreshFeedback(
-            enablesHaptics: enable,
-            soundFileName: mrk_proxy.refreshFeedback.soundFileName
-        )
+        mrk_proxy.refreshFeedback = JobsRefreshFeedback(enablesHaptics: enable,
+                                                        soundFileName: mrk_proxy.refreshFeedback.soundFileName)
         return self
     }
     /// Configure a sound file to play when user triggers refresh/loading by reaching threshold.
@@ -166,10 +171,8 @@ extension UIScrollView {
     /// Passing nil or empty string disables sound.
     @discardableResult
     public func setRefreshSound(_ fileName: String?) -> Self {
-        mrk_proxy.refreshFeedback = JobsRefreshFeedback(
-            enablesHaptics: mrk_proxy.refreshFeedback.enablesHaptics,
-            soundFileName: fileName
-        )
+        mrk_proxy.refreshFeedback = JobsRefreshFeedback(enablesHaptics: mrk_proxy.refreshFeedback.enablesHaptics,
+                                                        soundFileName: fileName)
         return self
     }
     // MARK: - Config header/footer/side
@@ -205,29 +208,31 @@ extension UIScrollView {
                                 height: CGFloat = 60,
                                 trigger: CGFloat = 60,
                                 action: @escaping jobsByVoidBlock) -> Self {
-        byRefreshHeader(
-            component: JobsRefreshAnimatorContainerView(
-                animator: animator,
-                heightOrWidth: height
-            ),
-            container: container,
-            trigger: trigger,
-            action: action
-        )
+        byRefreshHeader(component: JobsRefreshAnimatorContainerView(animator: animator,
+                                                                    heightOrWidth: height),
+                        container: container,
+                        trigger: trigger,
+                        action: action)
     }
 
     @discardableResult
     public func switchRefreshHeader(to state: JobsSwitch) -> Self {
-        guard let slot = mrk_proxy.header, let sv = mrk_proxy.scrollView else { return self }
+        guard let slot = mrk_proxy.header, let sv = mrk_proxy.scrollView else {
+            return self
+        }
         switch state {
         /// 处理 .refreshing 分支
-        case .refreshing: slot.beginRefreshing(on: sv)
+        case .refreshing:
+            slot.beginRefreshing(on: sv)
         /// 处理 .normal 分支
-        case .normal:     slot.reset(on: sv)
+        case .normal:
+            slot.reset(on: sv)
         /// 处理 .failed 分支
-        case .failed:     slot.fail(on: sv)
+        case .failed:
+            slot.fail(on: sv)
         /// 处理 .disabled 分支
-        case .disabled:   slot.disable(on: sv)
+        case .disabled:
+            slot.disable(on: sv)
         /// 处理 .removed 分支
         case .removed:
             slot.detach()
@@ -235,7 +240,8 @@ extension UIScrollView {
         /// 处理 .noMoreData 分支
         case .noMoreData:
             break
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -270,36 +276,41 @@ extension UIScrollView {
                                 height: CGFloat = 60,
                                 trigger: CGFloat = 60,
                                 action: @escaping jobsByVoidBlock) -> Self {
-        byRefreshFooter(
-            component: JobsRefreshAnimatorContainerView(
-                animator: animator,
-                heightOrWidth: height
-            ),
-            container: container,
-            trigger: trigger,
-            action: action
-        )
+        byRefreshFooter(component: JobsRefreshAnimatorContainerView(animator: animator,
+                                                                    heightOrWidth: height),
+                        container: container,
+                        trigger: trigger,
+                        action: action)
     }
 
     @discardableResult
     public func switchRefreshFooter(to state: JobsSwitch) -> Self {
-        guard let slot = mrk_proxy.footer, let sv = mrk_proxy.scrollView else { return self }
+        guard let slot = mrk_proxy.footer, let sv = mrk_proxy.scrollView else {
+            return self
+        }
         switch state {
         /// 处理 .refreshing 分支
-        case .refreshing: slot.beginRefreshing(on: sv, isFooter: true)
+        case .refreshing:
+            slot.beginRefreshing(on: sv,
+                                 isFooter: true)
         /// 处理 .normal 分支
-        case .normal:     slot.reset(on: sv)
+        case .normal:
+            slot.reset(on: sv)
         /// 处理 .failed 分支
-        case .failed:     slot.fail(on: sv)
+        case .failed:
+            slot.fail(on: sv)
         /// 处理 .disabled 分支
-        case .disabled:   slot.disable(on: sv)
+        case .disabled:
+            slot.disable(on: sv)
         /// 处理 .removed 分支
         case .removed:
             slot.detach()
             mrk_proxy.footer = nil
         /// 处理 .noMoreData 分支
-        case .noMoreData: slot.noticeNoMoreData(on: sv)
-        };return self
+        case .noMoreData:
+            slot.noticeNoMoreData(on: sv)
+        }
+        return self
     }
 
     @discardableResult
@@ -308,7 +319,8 @@ extension UIScrollView {
                               at position: JobsPosition,
                               trigger: CGFloat = 60,
                               action: @escaping jobsByVoidBlock) -> Self {
-        precondition(position == .left || position == .right, "SideRefresh 仅支持 .left / .right")
+        precondition(position == .left || position == .right,
+                     "SideRefresh 仅支持 .left / .right")
         // apply per-slot pref
         if let v = component as? JobsLottieConfigurable {
             v.lottiePreference = (position == .left) ? mrk_proxy.leftLottiePref : mrk_proxy.rightLottiePref
@@ -346,16 +358,12 @@ extension UIScrollView {
                               width: CGFloat = 60,
                               trigger: CGFloat = 60,
                               action: @escaping jobsByVoidBlock) -> Self {
-        bySideRefresh(
-            with: JobsRefreshAnimatorContainerView(
-                animator: animator,
-                heightOrWidth: width
-            ),
-            container: container,
-            at: position,
-            trigger: trigger,
-            action: action
-        )
+        bySideRefresh(with: JobsRefreshAnimatorContainerView(animator: animator,
+                                                             heightOrWidth: width),
+                      container: container,
+                      at: position,
+                      trigger: trigger,
+                      action: action)
     }
 
     /// 已挂载后原位替换动画，不重建或打断 JobsSwiftRefresher 状态机。
@@ -378,42 +386,63 @@ extension UIScrollView {
             slot = mrk_proxy.right
         }
         guard let slot,
-              let scrollView = mrk_proxy.scrollView else { return self }
-        slot.replaceAnimator(animator, on: scrollView)
+              let scrollView = mrk_proxy.scrollView else {
+            return self
+        }
+        slot.replaceAnimator(animator,
+                             on: scrollView)
         return self
     }
 
     @discardableResult
-    public func switchSideRefresh(_ position: JobsPosition, to state: JobsSwitch) -> Self {
+    public func switchSideRefresh(_ position: JobsPosition,
+                                  to state: JobsSwitch) -> Self {
         guard (position == .left || position == .right),
-              let sv = mrk_proxy.scrollView else { return self }
+              let sv = mrk_proxy.scrollView else {
+            return self
+        }
         let slot = (position == .left) ? mrk_proxy.left : mrk_proxy.right
-        guard let s = slot else { return self }
+        guard let s = slot else {
+            return self
+        }
         switch state {
         /// 处理 .refreshing 分支
-        case .refreshing: s.beginRefreshing(on: sv)
+        case .refreshing:
+            s.beginRefreshing(on: sv)
         /// 处理 .normal 分支
-        case .normal:     s.reset(on: sv)
+        case .normal:
+            s.reset(on: sv)
         /// 处理 .failed 分支
-        case .failed:     s.fail(on: sv)
+        case .failed:
+            s.fail(on: sv)
         /// 处理 .disabled 分支
-        case .disabled:   s.disable(on: sv)
+        case .disabled:
+            s.disable(on: sv)
         /// 处理 .removed 分支
         case .removed:
             s.detach()
-            if position == .left { mrk_proxy.left = nil } else { mrk_proxy.right = nil }
+            if position == .left {
+                mrk_proxy.left = nil
+            } else {
+                mrk_proxy.right = nil
+            }
         /// 处理 .noMoreData 分支
-        case .noMoreData: s.noticeNoMoreData(on: sv)
-        };return self
+        case .noMoreData:
+            s.noticeNoMoreData(on: sv)
+        }
+        return self
     }
 }
 // MARK: - Feedback helpers (defined in this category)
 @MainActor
 extension UIScrollView {
+
     /// Called by JobsSlot when a refresh/loading is actually triggered (state -> refreshing).
     public func byRefreshFeedback(for position: JobsPosition) {
         let feedback = mrk_proxy.refreshFeedback(for: position)
-        guard feedback.enablesHaptics || feedback.soundFileName != nil else { return }
+        guard feedback.enablesHaptics || feedback.soundFileName != nil else {
+            return
+        }
         if feedback.enablesHaptics {
             jobs_playHapticImpact()
         }
@@ -435,7 +464,9 @@ extension UIScrollView {
     private func jobs_playSound(named fileName: String) {
         #if os(iOS) || os(tvOS)
         let trimmed = fileName.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
+        guard !trimmed.isEmpty else {
+            return
+        }
         // Supports:
         //  - "Sound.wav" (full name)
         //  - "Sound" (base name; default to wav)
@@ -462,17 +493,24 @@ extension UIScrollView {
                                              ext: String,
                                              preferredFullName: String) -> URL? {
         // 1) Fast path: direct lookup by base/ext.
-        if let url = Bundle.main.url(forResource: baseName, withExtension: ext) {
+        if let url = Bundle.main.url(forResource: baseName,
+                                     withExtension: ext) {
             return url
         }
         // 2) Enumerate all matching ext files (works even if the file is inside subdirectories)
-        let urls = Bundle.main.urls(forResourcesWithExtension: ext, subdirectory: nil) ?? []
-        if let exact = urls.first(where: { $0.lastPathComponent == preferredFullName }) {
+        let urls = Bundle.main.urls(forResourcesWithExtension: ext,
+                                    subdirectory: nil) ?? []
+        if let exact = urls.first(where: {
+            $0.lastPathComponent == preferredFullName
+        }) {
             return exact
         }
-        if let byBase = urls.first(where: { $0.deletingPathExtension().lastPathComponent == baseName }) {
+        if let byBase = urls.first(where: {
+            $0.deletingPathExtension().lastPathComponent == baseName
+        }) {
             return byBase
-        };return nil
+        }
+        return nil
     }
 
     private static func jobs_playSystemSound(url: URL) {
@@ -482,7 +520,8 @@ extension UIScrollView {
             soundID = cached
         } else {
             var id: SystemSoundID = 0
-            AudioServicesCreateSystemSoundID(url as CFURL, &id)
+            AudioServicesCreateSystemSoundID(url as CFURL,
+                                             &id)
             jobs_soundCache[key] = id
             soundID = id
         }

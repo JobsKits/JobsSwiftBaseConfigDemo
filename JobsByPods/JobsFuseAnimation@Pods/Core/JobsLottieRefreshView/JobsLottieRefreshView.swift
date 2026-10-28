@@ -16,14 +16,14 @@ import Lottie
 import SnapKit
 
 /// Lottie 刷新插件；拖拽进度同步到动画进度，刷新态自动循环。
-public final class JobsLottieRefreshView: UIView, JobsRefreshAnimatorProtocol {
+public final class JobsLottieRefreshView: UIView,
+                                          JobsRefreshAnimatorProtocol {
+
     public private(set) var animationName: String
     public var indicatorSize: CGSize {
         didSet {
-            indicatorSize = CGSize(
-                width: max(1, indicatorSize.width),
-                height: max(1, indicatorSize.height)
-            )
+            indicatorSize = CGSize(width: max(1,indicatorSize.width),
+                                   height: max(1,indicatorSize.height))
             invalidateIntrinsicContentSize()
         }
     }
@@ -33,31 +33,37 @@ public final class JobsLottieRefreshView: UIView, JobsRefreshAnimatorProtocol {
 
     public init(animationNamed animationName: String,
                 bundle: Bundle = .main,
-                indicatorSize: CGSize = CGSize(width: 24, height: 24)) {
+                indicatorSize: CGSize = CGSize(width: 24,
+                                               height: 24)) {
         self.animationName = animationName
         self.indicatorSize = indicatorSize
         let normalizedName = (animationName as NSString).deletingPathExtension
         lottieView = LottieAnimationView(
-            animation: LottieAnimation.named(normalizedName, bundle: bundle)
+            animation: LottieAnimation.named(normalizedName,
+                                             bundle: bundle)
         )
-        super.init(frame: CGRect(origin: .zero, size: indicatorSize))
+        super.init(frame: CGRect(origin: .zero,
+                                 size: indicatorSize))
         jobs_setupLottieRefreshView()
     }
 
     public init(animationPath: String,
-                indicatorSize: CGSize = CGSize(width: 24, height: 24)) {
+                indicatorSize: CGSize = CGSize(width: 24,
+                                               height: 24)) {
         animationName = animationPath
         self.indicatorSize = indicatorSize
         lottieView = LottieAnimationView(
             animation: animationPath.isEmpty ? nil : LottieAnimation.filepath(animationPath)
         )
-        super.init(frame: CGRect(origin: .zero, size: indicatorSize))
+        super.init(frame: CGRect(origin: .zero,
+                                 size: indicatorSize))
         jobs_setupLottieRefreshView()
     }
 
     required init?(coder: NSCoder) {
         animationName = ""
-        indicatorSize = CGSize(width: 24, height: 24)
+        indicatorSize = CGSize(width: 24,
+                               height: 24)
         lottieView = LottieAnimationView(animation: nil)
         super.init(coder: coder)
         jobs_setupLottieRefreshView()
@@ -86,7 +92,8 @@ public final class JobsLottieRefreshView: UIView, JobsRefreshAnimatorProtocol {
         } else {
             lottieView.loopMode = .loop
             lottieView.play()
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -119,7 +126,8 @@ public final class JobsLottieRefreshView: UIView, JobsRefreshAnimatorProtocol {
 
     public func refreshAnimatorApply(phase: JobsRefreshAnimatorPhase,
                                      progress: CGFloat) {
-        let normalizedProgress = min(1, max(0, progress))
+        let normalizedProgress = min(1,
+                                     max(0,progress))
         switch phase {
         /// 下拉进度直接驱动 Lottie 进度
         case .pulling:

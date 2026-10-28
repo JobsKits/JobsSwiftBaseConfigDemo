@@ -20,11 +20,14 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class SwiftPackageManagerDemoVC: BaseVC {
+
     private lazy var introLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("一个本地 Package，同时演示 Library Product、资源 Bundle、泛型 API、actor 并发、Swift Macro、Executable 与测试。App 页面只负责调用公开 API。".tr)
             .byNumberOfLines(0)
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .medium))
             .byTextColor(JobsCor.label)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
@@ -38,38 +41,46 @@ final class SwiftPackageManagerDemoVC: BaseVC {
 
     private lazy var buttonStack: UIStackView = {
         UIStackView(arrangedSubviews: [
-            makeButton("① Package 信息", color: JobsCor.systemBlue) { [weak self] in
-                self?.showPackageSummary()
-            },
-            makeButton("② Bundle.module 资源", color: JobsCor.systemGreen) { [weak self] in
-                self?.showBundledResource()
-            },
-            makeButton("③ 泛型 Collection API", color: JobsCor.systemOrange) { [weak self] in
-                self?.showGenericFormatting()
-            },
-            makeButton("④ actor 异步查询", color: JobsCor.systemPurple) { [weak self] in
-                self?.runActorSearch()
-            },
-            makeButton("⑤ @EquatableBy Macro", color: JobsCor.systemPink) { [weak self] in
-                self?.showMacroBoundary()
-            },
-            makeButton("▶︎ 一键运行全部", color: JobsCor.systemIndigo) { [weak self] in
-                self?.runAllExamples()
-            }
-        ])
-        .byAxis(.vertical)
-        .bySpacing(10)
-        .byDistribution(.fillEqually)
-        .byAddTo(view) { [unowned self] make in
-            make.top.equalTo(introLabel.snp.bottom).offset(16)
-            make.left.right.equalToSuperview().inset(20)
+                makeButton("① Package 信息",
+                           color: JobsCor.systemBlue) { [weak self] in
+            self?.showPackageSummary()
+        },
+                makeButton("② Bundle.module 资源",
+                           color: JobsCor.systemGreen) { [weak self] in
+            self?.showBundledResource()
+        },
+                makeButton("③ 泛型 Collection API",
+                           color: JobsCor.systemOrange) { [weak self] in
+            self?.showGenericFormatting()
+        },
+                makeButton("④ actor 异步查询",
+                           color: JobsCor.systemPurple) { [weak self] in
+            self?.runActorSearch()
+        },
+                makeButton("⑤ @EquatableBy Macro",
+                           color: JobsCor.systemPink) { [weak self] in
+            self?.showMacroBoundary()
+        },
+                makeButton("▶︎ 一键运行全部",
+                           color: JobsCor.systemIndigo) { [weak self] in
+            self?.runAllExamples()
         }
+            ])
+            .byAxis(.vertical)
+            .bySpacing(10)
+            .byDistribution(.fillEqually)
+            .byAddTo(view) { [unowned self] make in
+                make.top.equalTo(introLabel.snp.bottom).offset(16)
+                make.left.right.equalToSuperview().inset(20)
+            }
     }()
 
     private lazy var resultView: UITextView = {
-        UITextView.jobsMake { _ in }
+        UITextView
+            .jobsMake { _ in }
             .byEditable(false)
-            .byFont(JobsFont.monospacedSystemFont(ofSize: 13, weight: .regular))
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 13,
+                                                  weight: .regular))
             .byTextColor(JobsCor.label)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
@@ -92,14 +103,21 @@ final class SwiftPackageManagerDemoVC: BaseVC {
 }
 
 private extension SwiftPackageManagerDemoVC {
-    func makeButton(_ title: String, color: UIColor, action: @escaping () -> Void) -> UIButton {
+
+    func makeButton(_ title: String,
+                    color: UIColor,
+                    action: @escaping () -> Void) -> UIButton {
         UIButton.sys()
-            .byTitle(title, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitle(title,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
             .byBackgroundColor(color)
             .byCornerRadius(10)
             .byHeight(42)
-            .onTap { _ in action() }
+            .onTap { _ in
+                action()
+            }
     }
 
     func showPackageSummary() {
@@ -126,7 +144,9 @@ private extension SwiftPackageManagerDemoVC {
 
     func runActorSearch(append: Bool = false) {
         Task { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             do {
                 let repository = try JobsSPMDemoRepository(catalog: .loadBundled())
                 let results = await repository.search("resource")

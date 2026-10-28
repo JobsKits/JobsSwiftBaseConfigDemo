@@ -11,16 +11,21 @@ import Moya
 
 #if compiler(>=5.5) && canImport(_Concurrency)
 public extension MoyaProvider {
+
     func request(_ target: Target,
                  callbackQueue: DispatchQueue? = nil,
                  progress: ProgressBlock? = nil) async throws -> Response {
         try await withCheckedThrowingContinuation { cont in
-            self.request(target, callbackQueue: callbackQueue, progress: progress) { result in
+            self.request(target,
+                         callbackQueue: callbackQueue,
+                         progress: progress) { result in
                 switch result {
                 /// 处理 .success 分支
-                case .success(let resp): cont.resume(returning: resp)
+                case .success(let resp):
+                    cont.resume(returning: resp)
                 /// 处理 .failure 分支
-                case .failure(let err):  cont.resume(throwing: err)
+                case .failure(let err):
+                    cont.resume(throwing: err)
                 }
             }
         }

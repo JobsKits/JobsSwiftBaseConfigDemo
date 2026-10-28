@@ -17,9 +17,11 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 public final class JobsTextField: UIImageView {
+
     // MARK: - Public
     public lazy var textField: UITextField = {
-        UITextField.jobsMake { _ in }
+        UITextField
+            .jobsMake { _ in }
             .byAddTo(self) { [unowned self] make in
                 make.edges.equalToSuperview().inset(textInsets)
             }
@@ -29,13 +31,47 @@ public final class JobsTextField: UIImageView {
                                                 left: 12,
                                                 bottom: 0,
                                                 right: 12) {
-        didSet { updateTextInsets() }
+        didSet {
+            updateTextInsets()
+        }
     }
     // 如果你想按方向单独暴露（可选）
-    public var insetTop: CGFloat { get { textInsets.top } set { textInsets.top = newValue; updateTextInsets() } }
-    public var insetLeft: CGFloat { get { textInsets.left } set { textInsets.left = newValue; updateTextInsets() } }
-    public var insetBottom: CGFloat { get { textInsets.bottom } set { textInsets.bottom = newValue; updateTextInsets() } }
-    public var insetRight: CGFloat { get { textInsets.right } set { textInsets.right = newValue; updateTextInsets() } }
+    public var insetTop: CGFloat {
+        get {
+            textInsets.top
+        }
+        set {
+            textInsets.top = newValue
+            updateTextInsets()
+        }
+    }
+    public var insetLeft: CGFloat {
+        get {
+            textInsets.left
+        }
+        set {
+            textInsets.left = newValue
+            updateTextInsets()
+        }
+    }
+    public var insetBottom: CGFloat {
+        get {
+            textInsets.bottom
+        }
+        set {
+            textInsets.bottom = newValue
+            updateTextInsets()
+        }
+    }
+    public var insetRight: CGFloat {
+        get {
+            textInsets.right
+        }
+        set {
+            textInsets.right = newValue
+            updateTextInsets()
+        }
+    }
     // MARK: - Init
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -66,27 +102,41 @@ public final class JobsTextField: UIImageView {
 }
 // MARK: - Convenience
 extension JobsTextField {
+
     public convenience init() {
         self.init(frame: .zero)
     }
 
     public var text: String? {
-        get { textField.text }
-        set { textField.byText(newValue) }
+        get {
+            textField.text
+        }
+        set {
+            textField.byText(newValue)
+        }
     }
 
     public var placeholder: String? {
-        get { textField.placeholder }
-        set { textField.byPlaceholder(newValue) }
+        get {
+            textField.placeholder
+        }
+        set {
+            textField.byPlaceholder(newValue)
+        }
     }
 
     public var delegate: UITextFieldDelegate? {
-        get { textField.delegate }
-        set { textField.byDelegate(newValue) }
+        get {
+            textField.delegate
+        }
+        set {
+            textField.byDelegate(newValue)
+        }
     }
 }
 // MARK: - DSL
 extension JobsTextField {
+
     /// 设置 text（链式）
     @discardableResult
     public func byText(_ text: String?) -> Self {
@@ -156,7 +206,10 @@ extension JobsTextField {
 
     @discardableResult
     public func byInsetAll(_ v: CGFloat) -> Self {
-        textInsets = .init(top: v, left: v, bottom: v, right: v)
+        textInsets = .init(top: v,
+                           left: v,
+                           bottom: v,
+                           right: v)
         updateTextInsets()
         return self
     }

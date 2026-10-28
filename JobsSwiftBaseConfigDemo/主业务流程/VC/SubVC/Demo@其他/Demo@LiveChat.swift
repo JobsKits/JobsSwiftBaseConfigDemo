@@ -20,15 +20,23 @@ import JobsSwiftBaseDefines
 import SnapKit
 import LiveChat
 
-final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
+final class LiveChatDemoVC: BaseVC,
+                            LiveChatDelegate {
+
     private lazy var btnDefault: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("默认展示（presentChat）".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
-            .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
+            .byTitle("默认展示（presentChat）".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .semibold))
+            .byContentEdgeInsets(.init(top: 12,
+                                       left: 16,
+                                       bottom: 12,
+                                       right: 16))
             .byBackgroundColor(JobsCor.systemBlue) // ≈ Configuration.filled 的视觉
-            .onTap { [weak self] _ in
+        .onTap { [weak self] _ in
                 self?.onDefault()    // ✅ 保留原有触发逻辑
             }
             .byAddTo(self.view) { [unowned self] make in
@@ -40,15 +48,21 @@ final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
 
     private lazy var btnCustom: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("自定义展示（半屏）".tr, for: .normal)
-            .byTitleColor(JobsCor.label, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
-            .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
+            .byTitle("自定义展示（半屏）".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.label,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
+            .byContentEdgeInsets(.init(top: 12,
+                                       left: 16,
+                                       bottom: 12,
+                                       right: 16))
             .byBackgroundColor(JobsCor.secondarySystemBackground) // ≈ Configuration.gray 的视觉
-            .onTap { [weak self] _ in
+        .onTap { [weak self] _ in
                 self?.onCustom()     // ✅ 保留原有触发逻辑
             }
-            .byAddTo(self.view) {[unowned self] make in
+            .byAddTo(self.view) { [unowned self] make in
                 make.centerX.equalToSuperview()
                 make.top.equalTo(btnDefault.snp.bottom).offset(16)
                 make.width.equalTo(btnDefault)
@@ -68,7 +82,9 @@ final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
     @objc private func onDefault() {
         LiveChat.delegate = self
         LiveChat.customPresentationStyleEnabled = false
-        guard !LiveChat.isChatPresented else { return }
+        guard !LiveChat.isChatPresented else {
+            return
+        }
         /// LiveChat 2.0.26 在入场动画期间会忽略关闭请求，真机上可能遗留透明 key window 阻断 Demo 退出。
         LiveChat.presentChat(animated: false)
     }
@@ -90,7 +106,9 @@ final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
                 sheet.detents = [.medium(), .large()]
             }
         }
-        present(chatVC, animated: true, completion: nil)
+        present(chatVC,
+                animated: true,
+                completion: nil)
     }
     // MARK: - LiveChatDelegate（可选）
     func chatPresented() {
@@ -101,7 +119,8 @@ final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
         print("🌓 LiveChat 关闭")
         // 如果是自定义展示，可以主动收起（默认展示不需要）
         if LiveChat.customPresentationStyleEnabled {
-            LiveChat.chatViewController?.dismiss(animated: true, completion: nil)
+            LiveChat.chatViewController?.dismiss(animated: true,
+                                                 completion: nil)
         }
     }
     // 收到新消息（可用于角标/本地通知等）
@@ -111,7 +130,7 @@ final class LiveChatDemoVC: BaseVC, LiveChatDelegate {
     // 统一接管聊天里的 URL（默认会走 Safari）
     func handle(URL: URL) {
         print("🔗 用户点击了链接：\(URL.absoluteString)")
-        // 可以在这里自行处理，比如用 SFSafariViewController 打开
+    // 可以在这里自行处理，比如用 SFSafariViewController 打开
     }
     // 加载失败（排障抓日志）
     func chatLoadingFailed(with error: Error) {

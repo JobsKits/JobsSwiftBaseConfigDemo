@@ -16,6 +16,7 @@ import YTKNetwork
 /// GET /headers => {"headers": {...}}
 
 final class GetHeadersRequest: YTKRequest {
+
     override func requestUrl() -> String {
         return "/headers"
     }

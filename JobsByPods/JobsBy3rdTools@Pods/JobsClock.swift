@@ -23,6 +23,7 @@ import JobsSwiftBaseDefines
 /// - 统一用 Task { @MainActor in ... } 回到主线程更新 UI（不要再把 self 传给 onMainAsync(self)）
 
 open class JobsClockView: UIView {
+
     deinit {
         // ✅ 关键：deinit 里不要 onMainAsync / 不要 async / 不要调用 @MainActor 的 stop()
         // 只做“同步断回调”，避免释放窗口期还在 tick
@@ -32,7 +33,8 @@ open class JobsClockView: UIView {
     // MARK: - 表盘 & 刻度
     /// 外圈表盘
     private lazy var dialLayer: CAShapeLayer = {
-        CAShapeLayer.jobsMake { _ in }
+        CAShapeLayer
+            .jobsMake { _ in }
             .byFillColor(JobsCor.clear)
             .byStrokeColor(JobsCor.label.withAlphaComponent(0.2))
             .byLineWidth(2)
@@ -40,7 +42,8 @@ open class JobsClockView: UIView {
     }()
     /// 12 个整点刻度
     private lazy var tickLayer: CAShapeLayer = {
-        CAShapeLayer.jobsMake { _ in }
+        CAShapeLayer
+            .jobsMake { _ in }
             .byFillColor(JobsCor.clear)
             .byStrokeColor(JobsCor.label)
             .byLineWidth(2)
@@ -48,17 +51,20 @@ open class JobsClockView: UIView {
     }()
     /// 中心小圆点
     private lazy var centerDotLayer: CAShapeLayer = {
-        CAShapeLayer.jobsMake { _ in }
+        CAShapeLayer
+            .jobsMake { _ in }
             .byFillColor(JobsCor.label)
             .byStrokeColor(JobsCor.clear)
             .byAddTo(layer)
     }()
     /// 1～12 的数字标签
     private lazy var numberLabels: [UILabel] = {
-        (1...12).map { value in
-            UILabel.jobsMake { _ in }
+        (1 ... 12).map { value in
+            UILabel
+                .jobsMake { _ in }
                 .byText("\(value)")
-                .byFont(.systemFont(ofSize: 12, weight: .medium))
+                .byFont(.systemFont(ofSize: 12,
+                                    weight: .medium))
                 .byTextColor(JobsCor.label)
                 .byTextAlignment(.center)
                 .byAddTo(self)
@@ -66,21 +72,24 @@ open class JobsClockView: UIView {
     }()
     // MARK: - 指针层（懒加载）
     private lazy var hourHand: CALayer = {
-        CALayer.jobsMake { _ in }
+        CALayer
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.label)
             .byCornerRadius(3)
             .byAddTo(layer)
     }()
 
     private lazy var minuteHand: CALayer = {
-        CALayer.jobsMake { _ in }
+        CALayer
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondaryLabel)
             .byCornerRadius(2)
             .byAddTo(layer)
     }()
 
     private lazy var secondHand: CALayer = {
-        CALayer.jobsMake { _ in }
+        CALayer
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.red)
             .byCornerRadius(1)
             .byAddTo(layer)
@@ -108,13 +117,16 @@ open class JobsClockView: UIView {
     #if os(iOS) || os(tvOS)
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        guard previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) != false else { return }
+        guard previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) != false else {
+            return
+        }
         applyTheme()
     }
     #endif
 }
 
 extension JobsClockView {
+
     private func commonInit() {
         self.byBackgroundColor(JobsCor.clear)
         dialLayer.byHidden(NO)
@@ -136,34 +148,32 @@ extension JobsClockView {
     }
     /// 布局表盘 + 刻度 + 数字
     private func layoutDialAndNumbers() {
-        let size = min(bounds.width, bounds.height)
-        guard size > 0 else { return }
-        let center = CGPoint(x: bounds.midX, y: bounds.midY)
+        let size = min(bounds.width,
+                       bounds.height)
+        guard size > 0 else {
+            return
+        }
+        let center = CGPoint(x: bounds.midX,
+                             y: bounds.midY)
         let inset: CGFloat = size * 0.05
         let radius = size / 2 - inset
         // 表盘外圈
-        let circleRect = CGRect(
-            x: center.x - radius,
-            y: center.y - radius,
-            width: radius * 2,
-            height: radius * 2
-        )
+        let circleRect = CGRect(x: center.x - radius,
+                                y: center.y - radius,
+                                width: radius * 2,
+                                height: radius * 2)
         let circlePath = UIBezierPath.make(ovalIn: circleRect)
         dialLayer.byPath(circlePath.cgPath)
         // 12 个整点刻度
         let tickPath = UIBezierPath.make()
         let tickLen: CGFloat = 8
-        for i in 0..<12 {
+        for i in 0 ..< 12 {
             // 0 对应 12 点，顺时针
             let angle = CGFloat(i) / 12.0 * 2.0 * .pi - .pi / 2.0
-            let outer = CGPoint(
-                x: center.x + cos(angle) * radius,
-                y: center.y + sin(angle) * radius
-            )
-            let inner = CGPoint(
-                x: center.x + cos(angle) * (radius - tickLen),
-                y: center.y + sin(angle) * (radius - tickLen)
-            )
+            let outer = CGPoint(x: center.x + cos(angle) * radius,
+                                y: center.y + sin(angle) * radius)
+            let inner = CGPoint(x: center.x + cos(angle) * (radius - tickLen),
+                                y: center.y + sin(angle) * (radius - tickLen))
             tickPath
                 .byMove(to: inner)
                 .byAddLine(to: outer)
@@ -171,12 +181,10 @@ extension JobsClockView {
         tickLayer.byPath(tickPath.cgPath)
         // 中心小圆点
         let dotRadius: CGFloat = 4
-        let dotRect = CGRect(
-            x: center.x - dotRadius,
-            y: center.y - dotRadius,
-            width: dotRadius * 2,
-            height: dotRadius * 2
-        )
+        let dotRect = CGRect(x: center.x - dotRadius,
+                             y: center.y - dotRadius,
+                             width: dotRadius * 2,
+                             height: dotRadius * 2)
         let dotPath = UIBezierPath.make(ovalIn: dotRect)
         centerDotLayer.byPath(dotPath.cgPath)
         // 1～12 数字布局
@@ -184,35 +192,45 @@ extension JobsClockView {
         for (index, label) in numberLabels.enumerated() {
             let value = CGFloat(index + 1) // 1...12
             let angle = value / 12.0 * 2.0 * .pi - .pi / 2.0
-            let labelCenter = CGPoint(
-                x: center.x + cos(angle) * numberRadius,
-                y: center.y + sin(angle) * numberRadius
-            )
+            let labelCenter = CGPoint(x: center.x + cos(angle) * numberRadius,
+                                      y: center.y + sin(angle) * numberRadius)
             let labelSize = label.intrinsicContentSize
-            label.byFrame(CGRect(
-                x: labelCenter.x - labelSize.width / 2,
-                y: labelCenter.y - labelSize.height / 2,
-                width: labelSize.width,
-                height: labelSize.height
-            ))
+            label.byFrame(CGRect(x: labelCenter.x - labelSize.width / 2,
+                                 y: labelCenter.y - labelSize.height / 2,
+                                 width: labelSize.width,
+                                 height: labelSize.height))
         }
     }
     /// 布局三根指针
     private func layoutHandLayers() {
-        let size = min(bounds.width, bounds.height)
-        guard size > 0 else { return }
-        let center = CGPoint(x: bounds.midX, y: bounds.midY)
+        let size = min(bounds.width,
+                       bounds.height)
+        guard size > 0 else {
+            return
+        }
+        let center = CGPoint(x: bounds.midX,
+                             y: bounds.midY)
         // 三根针长度比例
         let hourLen:   CGFloat = size * 0.25
         let minuteLen: CGFloat = size * 0.35
         let secondLen: CGFloat = size * 0.40
         // 触发布局时，顺便触发懒加载
-        hourHand.byBounds(CGRect(x: 0, y: 0, width: 6, height: hourLen))
-        minuteHand.byBounds(CGRect(x: 0, y: 0, width: 4, height: minuteLen))
-        secondHand.byBounds(CGRect(x: 0, y: 0, width: 2, height: secondLen))
+        hourHand.byBounds(CGRect(x: 0,
+                                 y: 0,
+                                 width: 6,
+                                 height: hourLen))
+        minuteHand.byBounds(CGRect(x: 0,
+                                   y: 0,
+                                   width: 4,
+                                   height: minuteLen))
+        secondHand.byBounds(CGRect(x: 0,
+                                   y: 0,
+                                   width: 2,
+                                   height: secondLen))
         // 以底部为 anchor，position 放在表盘中心，这样旋转就是绕表心转
         [hourHand, minuteHand, secondHand].forEach { hand in
-            hand.anchorPoint = CGPoint(x: 0.5, y: 1.0)
+            hand.anchorPoint = CGPoint(x: 0.5,
+                                       y: 1.0)
             hand.position = center
         }
     }
@@ -225,17 +243,16 @@ extension JobsClockView {
     public func start(kind: JobsTimerKind = .gcd) {
         stop()
         updateHands(animated: false)
-        let config = JobsSwiftTimerConfig(
-            interval: 1.0,          // 每秒 tick 一次
-            repeats: true,
-            tolerance: 0.01,
-            queue: .main,
-            runLoop: .main,
-            runLoopMode: .common,
-            pauseInBackground: true,
-            autoManageAppState: true
-        )
-        let t = JobsTimer(kind: kind, config: config) { [weak self] in
+        let config = JobsSwiftTimerConfig(interval: 1.0,          // 每秒 tick 一次
+                                          repeats: true,
+                                          tolerance: 0.01,
+                                          queue: .main,
+                                          runLoop: .main,
+                                          runLoopMode: .common,
+                                          pauseInBackground: true,
+                                          autoManageAppState: true)
+        let t = JobsTimer(kind: kind,
+                          config: config) { [weak self] in
             // ✅ @Sendable 回调里不直接碰 UI；回到 MainActor 再更新
             onMainAsync {
                 self?.updateHands(animated: true)
@@ -255,7 +272,8 @@ extension JobsClockView {
     private func updateHands(animated: Bool) {
         let date = Date()
         let cal = Calendar.current
-        let comps = cal.dateComponents([.hour, .minute, .second], from: date)
+        let comps = cal.dateComponents([.hour, .minute, .second],
+                                       from: date)
         let hour   = CGFloat(comps.hour ?? 0)   // 0...23
         let minute = CGFloat(comps.minute ?? 0) // 0...59
         let second = CGFloat(comps.second ?? 0) // 0...59
@@ -263,12 +281,21 @@ extension JobsClockView {
         let secAngle  = (second / 60.0) * 2.0 * .pi
         let minAngle  = ((minute + second / 60.0) / 60.0) * 2.0 * .pi
         let hourAngle = (((hour.truncatingRemainder(dividingBy: 12))
-                          + minute / 60.0
-                          + second / 3600.0) / 12.0) * 2.0 * .pi
+            + minute / 60.0
+            + second / 3600.0) / 12.0) * 2.0 * .pi
         let apply = {
-            self.hourHand.byTransform(CATransform3DMakeRotation(hourAngle, 0, 0, 1))
-            self.minuteHand.byTransform(CATransform3DMakeRotation(minAngle, 0, 0, 1))
-            self.secondHand.byTransform(CATransform3DMakeRotation(secAngle, 0, 0, 1))
+            self.hourHand.byTransform(CATransform3DMakeRotation(hourAngle,
+                                                                0,
+                                                                0,
+                                                                1))
+            self.minuteHand.byTransform(CATransform3DMakeRotation(minAngle,
+                                                                  0,
+                                                                  0,
+                                                                  1))
+            self.secondHand.byTransform(CATransform3DMakeRotation(secAngle,
+                                                                  0,
+                                                                  0,
+                                                                  1))
         }
         if animated {
             CATransaction.begin()

@@ -18,42 +18,65 @@ import JobsSwiftDSL
 import JobsByQuartzCore
 
 final class HollowOverlayView: UIView {
+
     enum HoleShape {
+
         case oval
         case roundedRect(CGFloat)
     }
-    var holeRect: CGRect = .zero { didSet { setNeedsLayout() } }
-    var holeShape: HoleShape = .oval { didSet { setNeedsLayout() } }
+    var holeRect: CGRect = .zero {
+        didSet {
+            setNeedsLayout()
+        }
+    }
+    var holeShape: HoleShape = .oval {
+        didSet {
+            setNeedsLayout()
+        }
+    }
     private let shapeLayer: CAShapeLayer = {
-        CAShapeLayer.jobsMake { _ in }.byFillRule(.evenOdd)
+        CAShapeLayer
+            .jobsMake { _ in }
+            .byFillRule(.evenOdd)
     }()
     /// 半透明遮罩颜色
     var overlayColor: UIColor = JobsCor.white.withAlphaComponent(0.5) {
-        didSet { shapeLayer.byFillColor(overlayColor) }
+        didSet {
+            shapeLayer.byFillColor(overlayColor)
+        }
     }
     /// 是否允许拖动镂空区域
     var enableDrag: Bool = true {
-        didSet { panGR.byEnabled(enableDrag) }
+        didSet {
+            panGR.byEnabled(enableDrag)
+        }
     }
     /// 允许从“洞的边缘外扩多少范围”开始拖（避免整屏拦截手势）
     var dragPadding: CGFloat = 30
     private lazy var panGR: UIPanGestureRecognizer = {
         UIPanGestureRecognizer
             .byConfig { [unowned self] gr in
-                guard self.enableDrag else { return }
-                guard let pan = gr as? UIPanGestureRecognizer else { return }
+                guard self.enableDrag else {
+                    return
+                }
+                guard let pan = gr as? UIPanGestureRecognizer else {
+                    return
+                }
                 let location = pan.location(in: self)
-                let hotArea = self.holeRect.insetBy(dx: -self.dragPadding, dy: -self.dragPadding)
+                let hotArea = self.holeRect.insetBy(dx: -self.dragPadding,
+                                                    dy: -self.dragPadding)
                 guard hotArea.contains(location) else {
-                    pan.setTranslation(.zero, in: self)
+                    pan.setTranslation(.zero,
+                                       in: self)
                     return
                 }
                 let t = pan.translation(in: self)
                 if pan.state == .changed {
                     self.moveHole(by: t)
-                    pan.setTranslation(.zero, in: self)
+                    pan.setTranslation(.zero,
+                                       in: self)
                 } else if pan.state == .ended {
-                    // 想要的回调/埋点可以写这里
+            // 想要的回调/埋点可以写这里
                 }
             }
             .byMinTouches(1)
@@ -61,7 +84,9 @@ final class HollowOverlayView: UIView {
             .byCancelsTouchesInView(true)
     }()
 
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     override init(frame: CGRect) {
         super.init(frame: frame)
         // 要能拖动：必须能接收手势
@@ -83,7 +108,8 @@ final class HollowOverlayView: UIView {
             holePath = UIBezierPath.make(ovalIn: holeRect)
         /// 处理 .roundedRect 分支
         case .roundedRect(let radius):
-            holePath = UIBezierPath.make(roundedRect: holeRect, cornerRadius: radius)
+            holePath = UIBezierPath.make(roundedRect: holeRect,
+                                         cornerRadius: radius)
         }
         path
             .byAppend(holePath)
@@ -91,20 +117,30 @@ final class HollowOverlayView: UIView {
         shapeLayer.byPath(path.cgPath)
     }
     // 关键：只在“洞附近”吃掉触摸，其它区域放行给下面的 scrollView 等
-    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        guard enableDrag else { return false };return holeRect.insetBy(dx: -dragPadding, dy: -dragPadding).contains(point)
+    override func point(inside point: CGPoint,
+                        with event: UIEvent?) -> Bool {
+        guard enableDrag else {
+            return false
+        }
+        return holeRect.insetBy(dx: -dragPadding,
+                                dy: -dragPadding).contains(point)
     }
 }
 
 extension HollowOverlayView : UIGestureRecognizerDelegate {
+
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        guard enableDrag else { return false }
+        guard enableDrag else {
+            return false
+        }
         let p = gestureRecognizer.location(in: self)
-        return holeRect.insetBy(dx: -dragPadding, dy: -dragPadding).contains(p)
+        return holeRect.insetBy(dx: -dragPadding,
+                                dy: -dragPadding).contains(p)
     }
 }
 
 extension HollowOverlayView {
+
     private func moveHole(by translation: CGPoint) {
         var r = holeRect
         r.origin.x += translation.x
@@ -113,13 +149,16 @@ extension HollowOverlayView {
         let minY = bounds.minY
         let maxX = bounds.maxX - r.width
         let maxY = bounds.maxY - r.height
-        r.origin.x = min(max(r.origin.x, minX), maxX)
-        r.origin.y = min(max(r.origin.y, minY), maxY)
+        r.origin.x = min(max(r.origin.x,minX),
+                         maxX)
+        r.origin.y = min(max(r.origin.y,minY),
+                         maxY)
         holeRect = r
     }
 }
 // MARK: - HollowOverlayView@DSL
 extension HollowOverlayView {
+
     @discardableResult
     func byHoleRect(_ rect: CGRect) -> Self {
         holeRect = rect
@@ -127,8 +166,14 @@ extension HollowOverlayView {
     }
 
     @discardableResult
-    func byHoleRect(x: CGFloat, y: CGFloat, w: CGFloat, h: CGFloat) -> Self {
-        holeRect = CGRect(x: x, y: y, width: w, height: h)
+    func byHoleRect(x: CGFloat,
+                    y: CGFloat,
+                    w: CGFloat,
+                    h: CGFloat) -> Self {
+        holeRect = CGRect(x: x,
+                          y: y,
+                          width: w,
+                          height: h)
         return self
     }
 
@@ -139,19 +184,27 @@ extension HollowOverlayView {
     }
 
     @discardableResult
-    func byOverlayColor(_ color: UIColor, alpha: CGFloat? = nil) -> Self {
+    func byOverlayColor(_ color: UIColor,
+                        alpha: CGFloat? = nil) -> Self {
         let slot = "HollowOverlayView.overlayColor"
         if let key = color.jobsThemeColorKey {
-            JobsThemeCenter.shared.bind(self, slot: slot) { object, center in
-                guard let overlayView = object as? HollowOverlayView else { return }
+            JobsThemeCenter.shared.bind(self,
+                                        slot: slot) { object, center in
+                guard let overlayView = object as? HollowOverlayView else {
+                    return
+                }
                 let resolvedColor = center.resolvedColor(key)
                 overlayView.overlayColor = alpha.map {
                     resolvedColor.withAlphaComponent($0)
                 } ?? resolvedColor
-            };return self
+            }
+            return self
         }
-        JobsThemeCenter.shared.unbind(self, slot: slot)
-        overlayColor = alpha.map { color.withAlphaComponent($0) } ?? color
+        JobsThemeCenter.shared.unbind(self,
+                                      slot: slot)
+        overlayColor = alpha.map {
+            color.withAlphaComponent($0)
+        } ?? color
         return self
     }
 

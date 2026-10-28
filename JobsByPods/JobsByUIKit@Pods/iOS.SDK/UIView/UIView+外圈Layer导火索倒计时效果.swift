@@ -20,8 +20,10 @@ import JobsSwiftDSL
 /// 这里先做最小配置：线宽、颜色、内边距、结束后是否移除
 
 public struct JobsFuseConfig {
+
     /// 动画方向：顺时针 / 逆时针
     public enum Direction {
+
         /// 逆时针：当前行为（strokeEnd: 1 → 0）
         case counterClockwise
         /// 顺时针：改为动 strokeStart: 0 → 1
@@ -47,8 +49,10 @@ public struct JobsFuseConfig {
 }
 
 extension UIView {
+
     // MARK: - Associated Keys
     private struct JobsFuseKeys {
+
         static var processKey: UInt8 = 0   // 先保留，外部类型不改
         static var layerKey: UInt8 = 0
         static var configKey: UInt8 = 0
@@ -57,53 +61,53 @@ extension UIView {
     /// 旧的倒计时 Process（现在基本不用了，只是为了兼容）
     private var jobs_fuseProcess: JobsSwiftTimerCountdown? {
         get {
-            objc_getAssociatedObject(self, &JobsFuseKeys.processKey) as? JobsSwiftTimerCountdown
+            objc_getAssociatedObject(self,
+                                     &JobsFuseKeys.processKey) as? JobsSwiftTimerCountdown
         }
         set {
-            objc_setAssociatedObject(
-                self,
-                &JobsFuseKeys.processKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self,
+                                     &JobsFuseKeys.processKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
     private var jobs_fuseLayer: CAShapeLayer? {
         get {
-            objc_getAssociatedObject(self, &JobsFuseKeys.layerKey) as? CAShapeLayer
+            objc_getAssociatedObject(self,
+                                     &JobsFuseKeys.layerKey) as? CAShapeLayer
         }
         set {
-            objc_setAssociatedObject(
-                self,
-                &JobsFuseKeys.layerKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self,
+                                     &JobsFuseKeys.layerKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
     private var jobs_fuseConfig: JobsFuseConfig? {
         get {
-            objc_getAssociatedObject(self, &JobsFuseKeys.configKey) as? JobsFuseConfig
+            objc_getAssociatedObject(self,
+                                     &JobsFuseKeys.configKey) as? JobsFuseConfig
         }
         set {
-            objc_setAssociatedObject(
-                self,
-                &JobsFuseKeys.configKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self,
+                                     &JobsFuseKeys.configKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
     private var jobs_fuseCompletion: (() -> Void)? {
         get {
-            objc_getAssociatedObject(self, &JobsFuseKeys.completionKey) as? (() -> Void)
+            objc_getAssociatedObject(self,
+                                     &JobsFuseKeys.completionKey) as? (() -> Void)
         }
         set {
-            objc_setAssociatedObject(
-                self,
-                &JobsFuseKeys.completionKey,
-                newValue,
-                .OBJC_ASSOCIATION_COPY_NONATOMIC)
+            objc_setAssociatedObject(self,
+                                     &JobsFuseKeys.completionKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_COPY_NONATOMIC)
         }
     }
     // MARK: - 公共 API
@@ -152,9 +156,11 @@ extension UIView {
             jobs_fuseLayer = fuseLayer
         }
         let inset = config.inset + config.lineWidth / 2.0
-        let rect = bounds.insetBy(dx: inset, dy: inset)
+        let rect = bounds.insetBy(dx: inset,
+                                  dy: inset)
         let cornerRadius = self.layer.cornerRadius
-        let path = UIBezierPath.make(roundedRect: rect, cornerRadius: cornerRadius)
+        let path = UIBezierPath.make(roundedRect: rect,
+                                     cornerRadius: cornerRadius)
         // 配置 Layer 几何与样式
         fuseLayer
             .byFrame(bounds)
@@ -164,13 +170,17 @@ extension UIView {
         // 重置到“满格”状态（禁用隐式动画）
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        fuseLayer.byStrokeStart(0).byStrokeEnd(1)
+        fuseLayer
+            .byStrokeStart(0)
+            .byStrokeEnd(1)
         CATransaction.commit()
         // 用 CABasicAnimation 按方向动 strokeStart / strokeEnd
         let animKey = "jobsFuseStroke"
         CATransaction.begin()
         CATransaction.setCompletionBlock { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             if config.removeOnFinish {
                 self.jobs_removeFuseLayer()
             } else {
@@ -192,17 +202,23 @@ extension UIView {
         /// 处理 .counterClockwise 分支
         case .counterClockwise:
             // 旧行为：尾巴往回缩，视觉上逆时针烧
-            anim = CABasicAnimation(keyPath: "strokeEnd").byFromValue(1.0).byToValue(0.0)
+            anim = CABasicAnimation(keyPath: "strokeEnd")
+                .byFromValue(1.0)
+                .byToValue(0.0)
         /// 处理 .clockwise 分支
         case .clockwise:
             // 固定 end = 1，头往前推，视觉上顺时针烧
-            anim = CABasicAnimation(keyPath: "strokeStart").byFromValue(0.0).byToValue(1.0)
+            anim = CABasicAnimation(keyPath: "strokeStart")
+                .byFromValue(0.0)
+                .byToValue(1.0)
         }
-        anim.byDuration(duration)
+        anim
+            .byDuration(duration)
             .byTimingFunction(CAMediaTimingFunction(name: .linear))
             .byFillMode(.forwards)
             .byRemovedOnCompletion(false)
-        fuseLayer.add(anim, forKey: animKey)
+        fuseLayer.add(anim,
+                      forKey: animKey)
         CATransaction.commit()
         // 现在不再依赖 JobsSwiftTimerCountdown，直接返回 nil 即可
         jobs_fuseProcess = nil
@@ -223,13 +239,19 @@ extension UIView {
     /// 如果 view 的 bounds 发生改变，想让导火索跟着更新一圈，可以在外面的 layoutSubviews/动画回调里手动调一下
     public func jobs_layoutFuseIfNeeded() {
         guard let fuseLayer = jobs_fuseLayer,
-              let config = jobs_fuseConfig else { return }
+              let config = jobs_fuseConfig else {
+            return
+        }
         layoutIfNeeded()
         let inset = config.inset + config.lineWidth / 2.0
-        let rect = bounds.insetBy(dx: inset, dy: inset)
+        let rect = bounds.insetBy(dx: inset,
+                                  dy: inset)
         let cornerRadius = self.layer.cornerRadius
-        let path = UIBezierPath.make(roundedRect: rect, cornerRadius: cornerRadius)
-        fuseLayer.byFrame(bounds).byPath(path.cgPath)
+        let path = UIBezierPath.make(roundedRect: rect,
+                                     cornerRadius: cornerRadius)
+        fuseLayer
+            .byFrame(bounds)
+            .byPath(path.cgPath)
     }
     // MARK: - Private
     private func jobs_removeFuseLayer() {
@@ -239,11 +261,14 @@ extension UIView {
 }
 // MARK: - ✅ 正计时（Progress）支持：准备一圈 + 按 progress 更新
 extension UIView {
+
     /// 准备外圈（progress 初始为 0）
     /// - 注意：这里不做 CABasicAnimation，只是把 layer/path/样式准备好
     public func jobs_prepareFuseProgress(config: JobsFuseConfig = JobsFuseConfig()) {
         layoutIfNeeded()
-        guard bounds.width > 0, bounds.height > 0 else { return }
+        guard bounds.width > 0, bounds.height > 0 else {
+            return
+        }
         // 停掉倒计时动画，但保留 layer
         jobs_cancelFuseCountdown(removeLayer: false)
         jobs_fuseConfig = config
@@ -260,10 +285,13 @@ extension UIView {
         }
         // 配置几何与样式（复用你倒计时的 path 计算方式）
         let inset = config.inset + config.lineWidth / 2.0
-        let rect = bounds.insetBy(dx: inset, dy: inset)
+        let rect = bounds.insetBy(dx: inset,
+                                  dy: inset)
         let cornerRadius = self.layer.cornerRadius
-        let path = UIBezierPath.make(roundedRect: rect, cornerRadius: cornerRadius)
-        fuseLayer.byFrame(bounds)
+        let path = UIBezierPath.make(roundedRect: rect,
+                                     cornerRadius: cornerRadius)
+        fuseLayer
+            .byFrame(bounds)
             .byPath(path.cgPath)
             .byLineWidth(config.lineWidth)
             .byStrokeColor(config.color)
@@ -286,17 +314,21 @@ extension UIView {
         CATransaction.commit()
     }
     /// 更新外圈 progress（0...1）
-    public func jobs_updateFuseProgress(_ progress: CGFloat, animated: Bool = false) {
-        let p = max(0, min(1, progress))
+    public func jobs_updateFuseProgress(_ progress: CGFloat,
+                                        animated: Bool = false) {
+        let p = max(0,
+                    min(1,progress))
         guard let fuseLayer = jobs_fuseLayer else {
             // 没准备过就先准备（用默认 config）
             jobs_prepareFuseProgress()
-            jobs_updateFuseProgress(p, animated: animated)
+            jobs_updateFuseProgress(p,
+                                    animated: animated)
             return
         }
         guard let config = jobs_fuseConfig else {
             jobs_fuseConfig = JobsFuseConfig()
-            jobs_updateFuseProgress(p, animated: animated)
+            jobs_updateFuseProgress(p,
+                                    animated: animated)
             return
         }
         CATransaction.begin()
@@ -304,12 +336,15 @@ extension UIView {
         switch config.direction {
         /// 处理 .clockwise 分支
         case .clockwise:
-            fuseLayer.byStrokeStart(0)
+            fuseLayer
+                .byStrokeStart(0)
                 .byStrokeEnd(p)
         /// 处理 .counterClockwise 分支
         case .counterClockwise:
             // 反向增长：露出“尾部”那一段
-            fuseLayer.byStrokeStart(1 - p).byStrokeEnd(1)
+            fuseLayer
+                .byStrokeStart(1 - p)
+                .byStrokeEnd(1)
         }
         CATransaction.commit()
     }

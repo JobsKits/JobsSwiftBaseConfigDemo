@@ -21,14 +21,17 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsSwiftCountryCodeCtrlDemoVC: BaseVC {
+
     private lazy var countryCodeController = JobsSwiftCountryCodeCtrl()
 
     private lazy var countryCodeTextField: UITextField = {
-        UITextField.jobsMake { _ in }
+        UITextField
+            .jobsMake { _ in }
             .byText("")
             .byPlaceholder("请选择国家 / 地区代码".tr)
             .byTextColor(JobsCor.label)
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 14,
+                                        weight: .regular))
             .byTextAlignment(.center)
             .byBorderStyle(.roundedRect)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
@@ -42,9 +45,12 @@ final class JobsSwiftCountryCodeCtrlDemoVC: BaseVC {
 
     private lazy var selectButton: UIButton = {
         UIButton.sys()
-            .byTitle("选择".tr, for: .normal)
-            .byTitleColor(JobsCor.systemBackground, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byTitle("选择".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.systemBackground,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 14,
+                                             weight: .regular))
             .byBackgroundColor(JobsCor.label)
             .byCornerRadius(6)
             .onTap { [weak self] _ in
@@ -71,12 +77,15 @@ final class JobsSwiftCountryCodeCtrlDemoVC: BaseVC {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         guard #available(iOS 13.0, *),
-              previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) == true else { return }
+              previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) == true else {
+            return
+        }
         applyThemeChrome()
     }
 }
 
 private extension JobsSwiftCountryCodeCtrlDemoVC {
+
     func applyThemeChrome() {
         view.byBackgroundColor(JobsCor.systemBackground)
         gk_navBackgroundColor = JobsCor.systemBackground
@@ -94,11 +103,14 @@ private extension JobsSwiftCountryCodeCtrlDemoVC {
         countryCodeController.countrySelectionHandler = { [weak self] country in
             self?.showSelectedCountry(country)
         }
-        navigationController?.pushViewController(countryCodeController, animated: true)
+        navigationController?.pushViewController(countryCodeController,
+                                                 animated: true)
     }
 
     func refreshSelectedCountry() {
-        guard let country = JobsSwiftCountryCodeCtrl.selectedCountry else { return }
+        guard let country = JobsSwiftCountryCodeCtrl.selectedCountry else {
+            return
+        }
         showSelectedCountry(country)
     }
 

@@ -17,14 +17,17 @@ import SnapKit
 
 @MainActor
 public final class JobsOpenWebViewController: BaseVC {
+
     private let url: URL
     private let pageTitle: String?
     private let pageLoadCompletion: ((Result<URL, Error>) -> Void)?
     private var activeNavigation: WKNavigation?
     private lazy var retryButton: UIButton = {
         JobsEmptyAuto.Config.defaultProvider()
-            .byTitle("网页加载失败", for: .normal)
-            .bySubTitle("点击重新加载", for: .normal)
+            .byTitle("网页加载失败",
+                     for: .normal)
+            .bySubTitle("点击重新加载",
+                        for: .normal)
             .byVisible(false)
             .onTap { [weak self] _ in
                 self?.reloadPage()
@@ -33,8 +36,12 @@ public final class JobsOpenWebViewController: BaseVC {
 
     private lazy var backButton: UIButton = {
         UIButton.sys()
-            .byFrame(CGRect(x: 0, y: 0, width: 64, height: 44))
-            .byTitle("‹ 返回", for: .normal)
+            .byFrame(CGRect(x: 0,
+                            y: 0,
+                            width: 64,
+                            height: 44))
+            .byTitle("‹ 返回",
+                     for: .normal)
             .byContentHorizontalAlignment(.left)
             .onTap { [weak self] _ in
                 self?.handleBack()
@@ -42,22 +49,22 @@ public final class JobsOpenWebViewController: BaseVC {
     }()
 
     private lazy var webView: WKWebView = {
-        let webView = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
+        let webView = WKWebView(frame: .zero,
+                                configuration: WKWebViewConfiguration())
         webView
             .byNavigationDelegate(self)
             .byAllowsBackForwardNavigationGestures(true)
         return webView
     }()
 
-    public init(
-        url: URL,
-        pageTitle: String? = nil,
-        pageLoadCompletion: ((Result<URL, Error>) -> Void)? = nil
-    ) {
+    public init(url: URL,
+                pageTitle: String? = nil,
+                pageLoadCompletion: ((Result<URL, Error>) -> Void)? = nil) {
         self.url = url
         self.pageTitle = pageTitle
         self.pageLoadCompletion = pageLoadCompletion
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil,
+                   bundle: nil)
     }
 
     @available(*, unavailable)
@@ -68,7 +75,8 @@ public final class JobsOpenWebViewController: BaseVC {
     public override func viewDidLoad() {
         super.viewDidLoad()
         title = pageTitle ?? url.host
-        jobsSetupGKNav(title: title ?? "网页", leftButton: backButton)
+        jobsSetupGKNav(title: title ?? "网页",
+                       leftButton: backButton)
         webView.byAddTo(view)
         webView.snp.makeConstraints { make in
             make.top.equalTo(gk_navigationBar.snp.bottom)
@@ -108,7 +116,9 @@ public final class JobsOpenWebViewController: BaseVC {
 }
 
 extension JobsOpenWebViewController: WKNavigationDelegate {
-    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+
+    public func webView(_ webView: WKWebView,
+                        didFinish navigation: WKNavigation!) {
         guard navigation === activeNavigation else {
             return
         }
@@ -119,19 +129,24 @@ extension JobsOpenWebViewController: WKNavigationDelegate {
             gk_navTitle = title ?? "网页"
         }
     }
-    public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+    public func webView(_ webView: WKWebView,
+                        didStartProvisionalNavigation navigation: WKNavigation!) {
         activeNavigation = navigation
         retryButton.byVisible(false)
     }
 
-    public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+    public func webView(_ webView: WKWebView,
+                        didFail navigation: WKNavigation!,
+                        withError error: Error) {
         guard navigation === activeNavigation else {
             return
         }
         didFail(error)
     }
 
-    public func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+    public func webView(_ webView: WKWebView,
+                        didFailProvisionalNavigation navigation: WKNavigation!,
+                        withError error: Error) {
         guard navigation === activeNavigation else {
             return
         }
@@ -139,7 +154,9 @@ extension JobsOpenWebViewController: WKNavigationDelegate {
     }
 
     public func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
-        didFail(NSError(domain: "JobsSwiftOpen", code: 1, userInfo: [NSLocalizedDescriptionKey: "网页进程已终止"]))
+        didFail(NSError(domain: "JobsSwiftOpen",
+                        code: 1,
+                        userInfo: [NSLocalizedDescriptionKey: "网页进程已终止"]))
     }
 
 }

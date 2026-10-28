@@ -15,6 +15,7 @@ import JobsSwiftBaseDefines
 
 @available(iOS 13.0, *)
 extension UIBarAppearance {
+
     // MARK: - 1. 背景预设 configureXXX
     /// 系统默认背景（跟随主题）
     @discardableResult
@@ -28,7 +29,8 @@ extension UIBarAppearance {
         configureWithOpaqueBackground()
         if let color {
             backgroundColor = color
-        };return self
+        }
+        return self
     }
     /// 透明背景（导航栏悬浮、全屏滚动那种）
     @discardableResult
@@ -58,11 +60,12 @@ extension UIBarAppearance {
     /// 背景图（可选顺便设 contentMode）
     @discardableResult
     public func byBackgroundImage(_ image: UIImage?,
-                           contentMode: UIView.ContentMode? = nil) -> Self {
+                                  contentMode: UIView.ContentMode? = nil) -> Self {
         backgroundImage = image
         if let mode = contentMode {
             backgroundImageContentMode = mode
-        };return self
+        }
+        return self
     }
     /// 单独改背景图 contentMode
     @discardableResult
@@ -86,12 +89,10 @@ extension UIBarAppearance {
     // MARK: - 4. 组合辅助
     /// 一次性指定：毛玻璃 + 背景色 + 阴影
     @discardableResult
-    public func byBackground(
-        effect: UIBlurEffect? = nil,
-        color: UIColor? = nil,
-        shadowColor: UIColor? = nil,
-        shadowImage: UIImage? = nil
-    ) -> Self {
+    public func byBackground(effect: UIBlurEffect? = nil,
+                             color: UIColor? = nil,
+                             shadowColor: UIColor? = nil,
+                             shadowImage: UIImage? = nil) -> Self {
         backgroundEffect = effect
         backgroundColor = color
         self.shadowColor = shadowColor

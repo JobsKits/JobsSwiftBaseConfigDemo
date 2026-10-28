@@ -11,17 +11,21 @@ import CoreVideo
 
 @MainActor
 public protocol VideoTextureManagerDelegate: AnyObject {
-    func videoDidUpdateTime(currentTime: TimeInterval, duration: TimeInterval)
+
+    func videoDidUpdateTime(currentTime: TimeInterval,
+                            duration: TimeInterval)
     func videoPlaybackStateChanged(isPlaying: Bool)
     func videoPlaybackDidFail(error: Error)
 }
 
 public extension VideoTextureManagerDelegate {
+
     func videoPlaybackDidFail(error: Error) {}
 }
 
 @MainActor
 class VideoTextureManager: NSObject {
+
     private let device: MTLDevice
     private var player: AVPlayer?
     private var playerItem: AVPlayerItem?
@@ -42,14 +46,18 @@ class VideoTextureManager: NSObject {
     }
 
     var duration: TimeInterval {
-        guard let playerItem = playerItem else { return 0 }
+        guard let playerItem = playerItem else {
+            return 0
+        }
         let duration = playerItem.duration
         let seconds = CMTimeGetSeconds(duration)
         return seconds.isFinite && !seconds.isNaN && seconds > 0 ? seconds : 0
     }
 
     var currentTime: TimeInterval {
-        guard let player = player else { return 0 }
+        guard let player = player else {
+            return 0
+        }
         let seconds = CMTimeGetSeconds(player.currentTime())
         return seconds.isFinite && !seconds.isNaN && seconds >= 0 ? seconds : 0
     }
@@ -57,7 +65,11 @@ class VideoTextureManager: NSObject {
     init(device: MTLDevice) {
         self.device = device
         super.init()
-        CVMetalTextureCacheCreate(nil, nil, device, nil, &textureCache)
+        CVMetalTextureCacheCreate(nil,
+                                  nil,
+                                  device,
+                                  nil,
+                                  &textureCache)
     }
 
     func loadVideo(url: URL) {
@@ -65,7 +77,8 @@ class VideoTextureManager: NSObject {
         clearPlayback()
         playbackError = nil
         guard textureCache != nil else {
-            fail(NSError(domain: "JobsBy3rdTools.Video", code: 2,
+            fail(NSError(domain: "JobsBy3rdTools.Video",
+                         code: 2,
                          userInfo: [NSLocalizedDescriptionKey: "Metal video texture cache is unavailable."]))
             return
         }
@@ -96,7 +109,9 @@ class VideoTextureManager: NSObject {
         timeObserver = nil
         player?.pause()
         if let playerItem {
-            NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
+            NotificationCenter.default.removeObserver(self,
+                                                      name: .AVPlayerItemDidPlayToEndTime,
+                                                      object: playerItem)
         }
         currentTexture = nil
         player = nil
@@ -106,18 +121,21 @@ class VideoTextureManager: NSObject {
 
     private func observePlayback() {
         let operation = generation
-        itemObservation = playerItem?.observe(\.status, options: [.initial, .new]) { [weak self] item, _ in
+        itemObservation = playerItem?.observe(\.status,
+                                              options: [.initial, .new]) { [weak self] item, _ in
             DispatchQueue.main.async { [weak self] in
                 guard let self, self.generation == operation, self.playerItem === item else {
                     return
                 }
                 if item.status == .failed {
-                    self.fail(item.error ?? NSError(domain: "JobsBy3rdTools.Video", code: 1,
-                                                   userInfo: [NSLocalizedDescriptionKey: "Video resource failed to load."]))
+                    self.fail(item.error ?? NSError(domain: "JobsBy3rdTools.Video",
+                                                    code: 1,
+                                                    userInfo: [NSLocalizedDescriptionKey: "Video resource failed to load."]))
                 }
             }
         }
-        playbackObservation = player?.observe(\.timeControlStatus, options: [.initial, .new]) { [weak self] player, _ in
+        playbackObservation = player?.observe(\.timeControlStatus,
+                                              options: [.initial, .new]) { [weak self] player, _ in
             DispatchQueue.main.async { [weak self] in
                 guard let self, self.generation == operation, self.player === player else {
                     return
@@ -142,32 +160,35 @@ class VideoTextureManager: NSObject {
 
     private func setupDisplayLink() {
         let target = VideoTextureDisplayLinkTarget(manager: self)
-        displayLink = CADisplayLink(target: target, selector: #selector(VideoTextureDisplayLinkTarget.tick(_:)))
-        displayLink?.add(to: RunLoop.main, forMode: .common)
+        displayLink = CADisplayLink(target: target,
+                                    selector: #selector(VideoTextureDisplayLinkTarget.tick(_:)))
+        displayLink?.add(to: RunLoop.main,
+                         forMode: .common)
         displayLink?.preferredFramesPerSecond = 60
         displayLink?.isPaused = true
     }
 
     private func setupTimeObserver() {
-        let interval = CMTime(seconds: 0.1, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        let interval = CMTime(seconds: 0.1,
+                              preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         let operation = generation
-        timeObserver = player?.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
+        timeObserver = player?.addPeriodicTimeObserver(forInterval: interval,
+                                                       queue: .main) { [weak self] time in
             guard let self, self.generation == operation else {
                 return
             }
             let currentTime = CMTimeGetSeconds(time)
             let duration = self.duration
-            self.delegate?.videoDidUpdateTime(currentTime: currentTime, duration: duration)
+            self.delegate?.videoDidUpdateTime(currentTime: currentTime,
+                                              duration: duration)
         }
     }
 
     private func setupNotifications() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(playerItemDidReachEnd),
-            name: .AVPlayerItemDidPlayToEndTime,
-            object: playerItem
-        )
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(playerItemDidReachEnd),
+                                               name: .AVPlayerItemDidPlayToEndTime,
+                                               object: playerItem)
     }
 
     @objc private func playerItemDidReachEnd() {
@@ -176,30 +197,35 @@ class VideoTextureManager: NSObject {
 
     func updateTexture() {
         guard let videoOutput = videoOutput,
-              let playerItem = playerItem else { return }
+              let playerItem = playerItem else {
+            return
+        }
         let currentTime = playerItem.currentTime()
         if videoOutput.hasNewPixelBuffer(forItemTime: currentTime) {
-            guard let pixelBuffer = videoOutput.copyPixelBuffer(forItemTime: currentTime, itemTimeForDisplay: nil) else { return }
+            guard let pixelBuffer = videoOutput.copyPixelBuffer(forItemTime: currentTime,
+                                                                itemTimeForDisplay: nil) else {
+                return
+            }
             createTexture(from: pixelBuffer)
         }
     }
 
     private func createTexture(from pixelBuffer: CVPixelBuffer) {
-        guard let textureCache = textureCache else { return }
+        guard let textureCache = textureCache else {
+            return
+        }
         let width = CVPixelBufferGetWidth(pixelBuffer)
         let height = CVPixelBufferGetHeight(pixelBuffer)
         var metalTexture: CVMetalTexture?
-        let status = CVMetalTextureCacheCreateTextureFromImage(
-            nil,
-            textureCache,
-            pixelBuffer,
-            nil,
-            .bgra8Unorm,
-            width,
-            height,
-            0,
-            &metalTexture
-        )
+        let status = CVMetalTextureCacheCreateTextureFromImage(nil,
+                                                               textureCache,
+                                                               pixelBuffer,
+                                                               nil,
+                                                               .bgra8Unorm,
+                                                               width,
+                                                               height,
+                                                               0,
+                                                               &metalTexture)
         if status == kCVReturnSuccess, let metalTexture = metalTexture {
             currentTexture = CVMetalTextureGetTexture(metalTexture)
         }
@@ -230,14 +256,17 @@ class VideoTextureManager: NSObject {
             return
         }
         let operation = generation
-        let destination = duration > 0 ? min(time, duration) : time
-        let cmTime = CMTime(seconds: destination, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        let destination = duration > 0 ? min(time,
+                                             duration) : time
+        let cmTime = CMTime(seconds: destination,
+                            preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         player?.seek(to: cmTime) { [weak self] _ in
             DispatchQueue.main.async { [weak self] in
                 guard let self, self.generation == operation else {
                     return
                 }
-                self.delegate?.videoDidUpdateTime(currentTime: self.currentTime, duration: self.duration)
+                self.delegate?.videoDidUpdateTime(currentTime: self.currentTime,
+                                                  duration: self.duration)
             }
         }
     }

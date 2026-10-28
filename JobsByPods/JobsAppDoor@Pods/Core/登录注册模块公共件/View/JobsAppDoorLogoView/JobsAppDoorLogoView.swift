@@ -11,13 +11,16 @@ import JobsSwiftDSL
 import SnapKit
 
 enum JobsAppDoorLogoStyle {
+
     case wide
     case square
 }
 
 final class JobsAppDoorLogoView: UIView {
+
     private lazy var imageView: UIImageView = {
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byImage(JobsAppDoorResource.image(named: "MainLogo"))
             .byContentMode(.scaleAspectFit)
             .byClipsToBounds(true)

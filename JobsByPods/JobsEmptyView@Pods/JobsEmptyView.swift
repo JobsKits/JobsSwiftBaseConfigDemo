@@ -18,10 +18,13 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 public class JobsEmptyView: UIView {
+
     private lazy var tapGR: UITapGestureRecognizer = {
         UITapGestureRecognizer
             .byConfig { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.jobsValueVoidCallback()
             }
             .byTaps(1)
@@ -32,7 +35,8 @@ public class JobsEmptyView: UIView {
     }()
 
     private lazy var label: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("暂无数据，点击重试".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
@@ -42,7 +46,9 @@ public class JobsEmptyView: UIView {
             }
     }()
 
-    public required init?(coder: NSCoder) { fatalError("Use init(frame:)") }
+    public required init?(coder: NSCoder) {
+        fatalError("Use init(frame:)")
+    }
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.byBackgroundColor(JobsCor.secondarySystemBackground)
@@ -60,7 +66,8 @@ public class JobsEmptyView: UIView {
     }
 }
 /// DSL
-extension JobsEmptyView{
+extension JobsEmptyView {
+
     @discardableResult
     public func byOnTapRetry(_ block: @escaping jobsByVoidBlock) -> Self {
         jobsByVoidCallback(block)

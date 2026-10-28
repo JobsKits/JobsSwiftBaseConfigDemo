@@ -15,6 +15,7 @@ import JobsSwiftBlock
 
 // MARK: - 直接赋值@单参数
 extension UIScrollView {
+
     /// Basics
     @discardableResult
     public func byContentSize(_ size: CGSize) -> Self {
@@ -223,6 +224,7 @@ extension UIScrollView {
 }
 // MARK: - 闭包重载@单参数
 extension UIScrollView {
+
     @discardableResult
     public func byContentSize(_ builder: () -> CGSize) -> Self {
         self.contentSize = builder()
@@ -416,15 +418,18 @@ extension UIScrollView {
 }
 
 extension UIScrollView {
+
     @discardableResult
     public func byContentOffsetBy(_ offset: CGPoint) -> Self {
-        self.setContentOffset(offset, animated: false)
+        self.setContentOffset(offset,
+                              animated: false)
         return self
     }
 
     @discardableResult
     public func byContentOffsetByAnimated(_ offset: CGPoint) -> Self {
-        self.setContentOffset(offset, animated: true)
+        self.setContentOffset(offset,
+                              animated: true)
         return self
     }
     /// iOS 17.4+ 滚动 offset 变化时强制显示滚动条
@@ -443,12 +448,15 @@ extension UIScrollView {
     }
 
     @discardableResult
-    public func byZoomScale(_ scale: CGFloat, animated: Bool = false) -> Self {
+    public func byZoomScale(_ scale: CGFloat,
+                            animated: Bool = false) -> Self {
         if animated {
-            self.setZoomScale(scale, animated: true)
+            self.setZoomScale(scale,
+                              animated: true)
         } else {
             self.zoomScale = scale
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -458,15 +466,23 @@ extension UIScrollView {
     }
 
     @discardableResult
-    public func byZoom(to rect: CGRect, animated: Bool) -> Self {
-        self.zoom(to: rect, animated: animated)
+    public func byZoom(to rect: CGRect,
+                       animated: Bool) -> Self {
+        self.zoom(to: rect,
+                  animated: animated)
         return self
     }
     /// Indicators
     @discardableResult
-    public func byShowsIndicators(vertical: Bool? = nil, horizontal: Bool? = nil) -> Self {
-        if let v = vertical { self.showsVerticalScrollIndicator = v }
-        if let h = horizontal { self.showsHorizontalScrollIndicator = h };return self
+    public func byShowsIndicators(vertical: Bool? = nil,
+                                  horizontal: Bool? = nil) -> Self {
+        if let v = vertical {
+            self.showsVerticalScrollIndicator = v
+        }
+        if let h = horizontal {
+            self.showsHorizontalScrollIndicator = h
+        }
+        return self
     }
 
     @discardableResult
@@ -476,8 +492,10 @@ extension UIScrollView {
     }
     /// Visible Rect
     @discardableResult
-    public func byScrollRectToVisible(_ rect: CGRect, animated: Bool) -> Self {
-        self.scrollRectToVisible(rect, animated: animated)
+    public func byScrollRectToVisible(_ rect: CGRect,
+                                      animated: Bool) -> Self {
+        self.scrollRectToVisible(rect,
+                                 animated: animated)
         return self
     }
     /// Gesture Config
@@ -492,7 +510,8 @@ extension UIScrollView {
     public func byPinchGesture(_ config: (UIPinchGestureRecognizer) -> Void) -> Self {
         if let pinch = self.pinchGestureRecognizer {
             config(pinch)
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -531,6 +550,7 @@ extension UIScrollView {
 }
 // MARK: - 初始位置（同步滚动条）
 extension UIScrollView {
+
     /// contentInset（内部同步滚动条insets）
     @discardableResult
     public func byContentInsetTop(_ v: CGFloat) -> Self {
@@ -571,7 +591,8 @@ extension UIScrollView {
             var inset = scrollIndicatorInsets
             inset.top = v
             scrollIndicatorInsets = inset
-        };return self
+        }
+        return self
     }
     /// 左侧滚动条inset（iOS13+ 用 horizontalScrollIndicatorInsets）
     @discardableResult
@@ -584,7 +605,8 @@ extension UIScrollView {
             var inset = scrollIndicatorInsets
             inset.left = v
             scrollIndicatorInsets = inset
-        };return self
+        }
+        return self
     }
     /// 底部滚动条inset（iOS13+ 用 verticalScrollIndicatorInsets）
     @discardableResult
@@ -597,7 +619,8 @@ extension UIScrollView {
             var inset = scrollIndicatorInsets
             inset.bottom = v
             scrollIndicatorInsets = inset
-        };return self
+        }
+        return self
     }
     /// 右侧滚动条inset（iOS13+ 用 horizontalScrollIndicatorInsets）
     @discardableResult
@@ -610,12 +633,14 @@ extension UIScrollView {
             var inset = scrollIndicatorInsets
             inset.right = v
             scrollIndicatorInsets = inset
-        };return self
+        }
+        return self
     }
     /// 仅增加“垂直”可滑动距离：底部加大（常用）
     /// - Parameter extra: 要额外增加的距离（<=0 会按 0 处理）
     public func byExpandVerticalScrollDistance(_ extra: CGFloat) -> Self {
-        let extra = max(0, extra)
+        let extra = max(0,
+                        extra)
         var inset = self.contentInset
         inset.bottom += extra
         self.contentInset = inset
@@ -627,7 +652,8 @@ extension UIScrollView {
     /// 仅增加“横向”可滑动距离：右侧加大（常用）
     /// - Parameter extra: 要额外增加的距离（<=0 会按 0 处理）
     public func byExpandHorizontalScrollDistance(_ extra: CGFloat) -> Self {
-        let extra = max(0, extra)
+        let extra = max(0,
+                        extra)
         var inset = self.contentInset
         inset.right += extra
         self.contentInset = inset

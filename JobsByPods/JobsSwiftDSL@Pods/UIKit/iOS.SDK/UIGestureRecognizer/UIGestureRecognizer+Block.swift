@@ -15,13 +15,17 @@ import ObjectiveC
 
 // ================================== 闭包容器 ==================================
 private final class _GestureClosureBox {
+
     let block: (UIGestureRecognizer) -> Void
-    init(_ block: @escaping (UIGestureRecognizer) -> Void) { self.block = block }
+    init(_ block: @escaping (UIGestureRecognizer) -> Void) {
+        self.block = block
+    }
 }
 // ================================== UIGestureRecognizer 链式 block 初始化 ==================================
 private var GestureBlockKey: UInt8 = 0
 private var GestureInvokeInstalledKey: UInt8 = 0
 extension UIGestureRecognizer {
+
     // MARK: - 通过闭包配置（替代 target/selector）——类方法（创建并绑定）
     public static func byConfig(_ block: @escaping (UIGestureRecognizer) -> Void) -> Self {
         let gesture = Self()
@@ -33,7 +37,9 @@ extension UIGestureRecognizer {
     public static func byConfig<T: UIGestureRecognizer>(_ block: @escaping (T) -> Void) -> Self {
         let gesture = Self()
         gesture._setActionBlock { sender in
-            guard let typed = sender as? T else { return }
+            guard let typed = sender as? T else {
+                return
+            }
             block(typed)
         }
         gesture._ensureInvokeTargetInstalled()
@@ -60,7 +66,9 @@ extension UIGestureRecognizer {
     @discardableResult
     public func byAction<T: UIGestureRecognizer>(_ block: @escaping (T) -> Void) -> Self {
         _setActionBlock { sender in
-            guard let typed = sender as? T else { return }
+            guard let typed = sender as? T else {
+                return
+            }
             block(typed)
         }
         _ensureInvokeTargetInstalled()
@@ -69,27 +77,28 @@ extension UIGestureRecognizer {
     // MARK: - invoke
     @objc
     private func _gestureInvoke(_ sender: UIGestureRecognizer) {
-        (objc_getAssociatedObject(self, &GestureBlockKey) as? _GestureClosureBox)?.block(sender)
+        (objc_getAssociatedObject(self,
+                                  &GestureBlockKey) as? _GestureClosureBox)?.block(sender)
     }
 
     private func _setActionBlock(_ block: @escaping (UIGestureRecognizer) -> Void) {
-        objc_setAssociatedObject(
-            self,
-            &GestureBlockKey,
-            _GestureClosureBox(block),
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-        )
+        objc_setAssociatedObject(self,
+                                 &GestureBlockKey,
+                                 _GestureClosureBox(block),
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
     /// 防止重复 addTarget（多次 byAction/byConfig 不会重复触发）
     private func _ensureInvokeTargetInstalled() {
-        let installed = (objc_getAssociatedObject(self, &GestureInvokeInstalledKey) as? Bool) ?? false
-        guard !installed else { return }
-        addTarget(self, action: #selector(_gestureInvoke(_:)))
-        objc_setAssociatedObject(
-            self,
-            &GestureInvokeInstalledKey,
-            true,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-        )
+        let installed = (objc_getAssociatedObject(self,
+                                                  &GestureInvokeInstalledKey) as? Bool) ?? false
+        guard !installed else {
+            return
+        }
+        addTarget(self,
+                  action: #selector(_gestureInvoke(_:)))
+        objc_setAssociatedObject(self,
+                                 &GestureInvokeInstalledKey,
+                                 true,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 }

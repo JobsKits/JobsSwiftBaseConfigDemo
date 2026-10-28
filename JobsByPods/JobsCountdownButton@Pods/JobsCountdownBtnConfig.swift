@@ -15,7 +15,9 @@ import JobsSwiftTimer
 
 // MARK: - 公共配置体
 public struct JobsCountdownBtnConfig {
+
     public enum Mode {
+
         /// 60 -> 59 -> ... -> 0
         case down(from: Int)
         /// 0 -> 1 -> ... -> to
@@ -45,8 +47,12 @@ public struct JobsCountdownBtnConfig {
     /// - 参数 base: 启动计时前的基础 configuration (已 copy)
     @available(iOS 15.0, *)
     public var renderConfiguration: ((Int, UIButton.Configuration) -> UIButton.Configuration)? {
-        get { _renderConfigurationBox as? ((Int, UIButton.Configuration) -> UIButton.Configuration) }
-        set { _renderConfigurationBox = newValue }
+        get {
+            _renderConfigurationBox as? ((Int, UIButton.Configuration) -> UIButton.Configuration)
+        }
+        set {
+            _renderConfigurationBox = newValue
+        }
     }
 
     /// iOS 14 及以下渲染（不使用 UIButton.Configuration）
@@ -56,14 +62,14 @@ public struct JobsCountdownBtnConfig {
 
     /// 每 tick 回调
     public var onTick: ((_ button: UIButton,
-                         _ config: JobsCountdownBtnConfig,
-                         _ sec: Int) -> Void)?
+            _ config: JobsCountdownBtnConfig,
+            _ sec: Int) -> Void)?
     /// 计时结束回调（已经自动复原 configuration & isEnabled）
     public var onFinish: ((_ button: UIButton,
-                           _ config: JobsCountdownBtnConfig) -> Void)?
+            _ config: JobsCountdownBtnConfig) -> Void)?
 
     /// 运行中被点击（仅当 clickableWhileRunning = true 时才会触发）
     public var onTapWhileRunning: ((_ button: UIButton,
-                                    _ config: JobsCountdownBtnConfig) -> Void)?
+            _ config: JobsCountdownBtnConfig) -> Void)?
     public init() { }
 }

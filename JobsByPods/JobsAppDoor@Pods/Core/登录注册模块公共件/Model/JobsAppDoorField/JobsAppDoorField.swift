@@ -8,6 +8,7 @@
 import Foundation
 
 public enum JobsAppDoorField: Hashable {
+
     case username
     case password
     case confirmPassword

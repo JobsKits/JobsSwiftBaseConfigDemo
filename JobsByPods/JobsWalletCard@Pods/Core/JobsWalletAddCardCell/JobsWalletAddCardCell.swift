@@ -17,8 +17,10 @@ import JobsSwiftDSL
 import SnapKit
 
 final class JobsWalletAddCardCell: UICollectionViewCell {
+
     private lazy var dashedBorder: CAShapeLayer = {
-        CAShapeLayer.jobsMake { _ in }
+        CAShapeLayer
+            .jobsMake { _ in }
             .byStrokeColor(JobsCor.systemGray3)
             .byFillColor(JobsCor.clear)
             .byLineDashPattern([6, 4])
@@ -27,7 +29,8 @@ final class JobsWalletAddCardCell: UICollectionViewCell {
     }()
 
     private lazy var iconView: UIImageView = {
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byImage("plus.circle.fill".sysImg)
             .byTintColor(JobsCor.systemBlue)
             .byContentMode(.scaleAspectFit)
@@ -39,8 +42,10 @@ final class JobsWalletAddCardCell: UICollectionViewCell {
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .medium))
             .byTextColor(JobsCor.systemBlue)
             .byAddTo(contentView) { [unowned self] make in
                 make.left.equalTo(self.iconView.snp.right).offset(12)
@@ -61,7 +66,8 @@ final class JobsWalletAddCardCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         dashedBorder
-            .byPath(UIBezierPath.make(roundedRect: bounds, cornerRadius: 14).cgPath)
+            .byPath(UIBezierPath.make(roundedRect: bounds,
+                                      cornerRadius: 14).cgPath)
             .byFrame(bounds)
     }
 

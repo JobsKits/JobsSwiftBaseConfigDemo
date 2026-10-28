@@ -9,9 +9,11 @@ import Foundation
 import JobsSwiftTaskCenter
 
 public final class JobsWorkerScheduler: @unchecked Sendable {
+
     public static let `default` = JobsWorkerScheduler()
 
     private struct Entry {
+
         let generation: UUID
         var task: JobsTask?
         var observer: UUID?
@@ -31,38 +33,40 @@ public final class JobsWorkerScheduler: @unchecked Sendable {
     }
 
     @discardableResult
-    public func schedule(
-        after delay: JobsPeriod,
-        key: String = UUID().uuidString,
-        queue: DispatchQueue = .main,
-        action: @escaping @Sendable () -> Void
-    ) -> JobsTask {
-        schedule(plan: .after(delay), key: key, queue: queue, action: action)
+    public func schedule(after delay: JobsPeriod,
+                         key: String = UUID().uuidString,
+                         queue: DispatchQueue = .main,
+                         action: @escaping @Sendable () -> Void) -> JobsTask {
+        schedule(plan: .after(delay),
+                 key: key,
+                 queue: queue,
+                 action: action)
     }
 
     @discardableResult
-    public func scheduleRepeating(
-        every interval: JobsPeriod,
-        key: String = UUID().uuidString,
-        queue: DispatchQueue = .main,
-        action: @escaping @Sendable () -> Void
-    ) -> JobsTask {
-        schedule(plan: .every(interval), key: key, queue: queue, action: action)
+    public func scheduleRepeating(every interval: JobsPeriod,
+                                  key: String = UUID().uuidString,
+                                  queue: DispatchQueue = .main,
+                                  action: @escaping @Sendable () -> Void) -> JobsTask {
+        schedule(plan: .every(interval),
+                 key: key,
+                 queue: queue,
+                 action: action)
     }
 
-    private func schedule(
-        plan: JobsPlan,
-        key: String,
-        queue: DispatchQueue,
-        action: @escaping @Sendable () -> Void
-    ) -> JobsTask {
+    private func schedule(plan: JobsPlan,
+                          key: String,
+                          queue: DispatchQueue,
+                          action: @escaping @Sendable () -> Void) -> JobsTask {
         let generation = UUID()
         lock.lock()
-        let replaced = tasks.updateValue(Entry(generation: generation), forKey: key)
+        let replaced = tasks.updateValue(Entry(generation: generation),
+                                         forKey: key)
         lock.unlock()
         release(replaced)
         let task = plan.do(queue: queue) { [weak self] in
-            guard self?.isCurrent(key: key, generation: generation) == true else {
+            guard self?.isCurrent(key: key,
+                                  generation: generation) == true else {
                 return
             }
             action()
@@ -71,7 +75,9 @@ public final class JobsWorkerScheduler: @unchecked Sendable {
             guard state.isTerminated, let task else {
                 return
             }
-            self?.finish(key: key, generation: generation, task: task)
+            self?.finish(key: key,
+                         generation: generation,
+                         task: task)
         }
         center.add(task)
         lock.lock()
@@ -90,7 +96,8 @@ public final class JobsWorkerScheduler: @unchecked Sendable {
         return task
     }
 
-    private func isCurrent(key: String, generation: UUID) -> Bool {
+    private func isCurrent(key: String,
+                           generation: UUID) -> Bool {
         lock.lock()
         defer {
             lock.unlock()
@@ -98,7 +105,9 @@ public final class JobsWorkerScheduler: @unchecked Sendable {
         return tasks[key]?.generation == generation
     }
 
-    private func finish(key: String, generation: UUID, task: JobsTask) {
+    private func finish(key: String,
+                        generation: UUID,
+                        task: JobsTask) {
         lock.lock()
         let entry: Entry?
         if tasks[key]?.generation == generation {
@@ -125,7 +134,9 @@ public final class JobsWorkerScheduler: @unchecked Sendable {
         let snapshot = Array(tasks.values)
         tasks.removeAll()
         lock.unlock()
-        snapshot.forEach { release($0) }
+        snapshot.forEach {
+            release($0)
+        }
     }
 
     private func release(_ entry: Entry?) {

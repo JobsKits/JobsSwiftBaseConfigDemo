@@ -18,6 +18,7 @@ import ObjectiveC
 #if canImport(SDWebImage)
 import SDWebImage
 public struct SDButtonLoadConfig {
+
     public var url: URL?
     public var placeholder: UIImage?
     /// ✅ 背景图占位（仅用于背景图：URL 为空/失败兜底；加载时仍优先 Shimmer）
@@ -35,79 +36,102 @@ public struct SDButtonLoadConfig {
 }
 
 private enum _SDButtonAOKey {
+
     static var config: UInt8 = 0
 }
 
 extension UIButton {
+
     private var _sd_config: SDButtonLoadConfig {
-        get { (objc_getAssociatedObject(self, &_SDButtonAOKey.config) as? SDButtonLoadConfig) ?? SDButtonLoadConfig() }
+        get {
+            (objc_getAssociatedObject(self,
+                                      &_SDButtonAOKey.config) as? SDButtonLoadConfig) ?? SDButtonLoadConfig()
+        }
         set {
-            objc_setAssociatedObject(
-                self,
-                &_SDButtonAOKey.config,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
+            objc_setAssociatedObject(self,
+                                     &_SDButtonAOKey.config,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 }
 
 extension UIButton {
+
     @discardableResult
     private func _sd_setImageURL(_ url: URL?) -> Self {
-        var c = _sd_config; c.url = url; _sd_config = c
+        var c = _sd_config
+        c.url = url
+        _sd_config = c
         return self
     }
 
     @discardableResult
     private func _sd_setPlaceholder(_ img: UIImage?) -> Self {
-        var c = _sd_config; c.placeholder = img; _sd_config = c
+        var c = _sd_config
+        c.placeholder = img
+        _sd_config = c
         return self
     }
 
     @discardableResult
     private func _sd_setBgPlaceholder(_ img: UIImage?) -> Self {
-        var c = _sd_config; c.bgPlaceholder = img; _sd_config = c
+        var c = _sd_config
+        c.bgPlaceholder = img
+        _sd_config = c
         return self
     }
 
     @discardableResult
     private func _sd_setOptions(_ opts: SDWebImageOptions) -> Self {
-        var c = _sd_config; c.options = opts; _sd_config = c
+        var c = _sd_config
+        c.options = opts
+        _sd_config = c
         return self
     }
 
     @discardableResult
     private func _sd_setContext(_ ctx: [SDWebImageContextOption: Any]?) -> Self {
-        var c = _sd_config; c.context = ctx; _sd_config = c
+        var c = _sd_config
+        c.context = ctx
+        _sd_config = c
         return self
     }
     @discardableResult
     private func _sd_setProgress(_ block: SDImageLoaderProgressBlock?) -> Self {
-        var c = _sd_config; c.progress = block; _sd_config = c
+        var c = _sd_config
+        c.progress = block
+        _sd_config = c
         return self
     }
 
     @discardableResult
     private func _sd_setCompleted(_ block: SDExternalCompletionBlock?) -> Self {
-        var c = _sd_config; c.completed = block; _sd_config = c
+        var c = _sd_config
+        c.completed = block
+        _sd_config = c
         return self
     }
 
     @discardableResult
     private func _sd_setTargetSize(_ size: CGSize?) -> Self {
-        var c = _sd_config; c.targetSize = size; _sd_config = c
+        var c = _sd_config
+        c.targetSize = size
+        _sd_config = c
         return self
     }
 
     @discardableResult
     private func _sd_setBgTargetSize(_ size: CGSize?) -> Self {
-        var c = _sd_config; c.bgTargetSize = size; _sd_config = c
+        var c = _sd_config
+        c.bgTargetSize = size
+        _sd_config = c
         return self
     }
 }
 
 extension UIButton {
+
     @discardableResult
     public func sd_imageURL(_ url: URL?) -> Self {
         _sd_setImageURL(url)
@@ -118,7 +142,8 @@ extension UIButton {
         guard let s = urlString, let u = URL(string: s)
         else {
             return _sd_setImageURL(nil)
-        };return _sd_setImageURL(u)
+        }
+        return _sd_setImageURL(u)
     }
 
     @discardableResult
@@ -250,7 +275,9 @@ extension UIButton {
 
 // MARK: - internal helpers
 extension UIButton {
-    private func _jobs_sdBuildContext(base: [SDWebImageContextOption: Any]?, targetPointSize: CGSize?) -> [SDWebImageContextOption: Any] {
+
+    private func _jobs_sdBuildContext(base: [SDWebImageContextOption: Any]?,
+                                      targetPointSize: CGSize?) -> [SDWebImageContextOption: Any] {
         var ctx = base ?? [:]
         if ctx[.imageScaleFactor] == nil {
             ctx[.imageScaleFactor] = traitCollection.displayScale
@@ -260,17 +287,24 @@ extension UIButton {
             let point = targetPointSize
             if let point, point.width > 1, point.height > 1 {
                 let scale = traitCollection.displayScale
-                ctx[.imageThumbnailPixelSize] = CGSize(width: max(1, point.width * scale), height: max(1, point.height * scale))
+                ctx[.imageThumbnailPixelSize] = CGSize(width: max(1,
+                                                                  point.width * scale),
+                                                       height: max(1,
+                                                                   point.height * scale))
             }
-        };return ctx
+        }
+        return ctx
     }
 }
 
 extension UIButton {
+
     // MARK: - 前景图（SDWebImage）
     public func _sd_loadImage(for state: UIControl.State) {
         let cfg = _sd_config
-        let token = _jobs_nextToken(loader: .sd, channel: .foreground, for: state)
+        let token = _jobs_nextToken(loader: .sd,
+                                    channel: .foreground,
+                                    for: state)
         // ✅ 标记实际使用的框架（给 JobsImageCacheCleaner 用）
         self.jobs_imageLoaderKind = .sdwebimage
         // ✅ 记录：前景 state / url（供 JobsImageCacheCleaner 遍历重下）
@@ -278,7 +312,8 @@ extension UIButton {
         // ✅ 目标尺寸：优先显式设置的 targetSize，否则按 UI 猜一个兜底值（用于 shimmer + thumbnail 下采样）
         let targetPointSize = cfg.targetSize ?? _jobs_guessForegroundTargetSize()
         self.jobs_remoteImageTargetSize = targetPointSize
-        let loadingPlaceholder = _jobs_loadingPlaceholderImage(targetPointSize: targetPointSize, fallback: cfg.placeholder)
+        let loadingPlaceholder = _jobs_loadingPlaceholderImage(targetPointSize: targetPointSize,
+                                                               fallback: cfg.placeholder)
         guard let url = cfg.url else {
             self.jobs_remoteURL = nil
             // URL 解析失败也视为失败：直接落兜底（不需要 shimmer）
@@ -286,10 +321,14 @@ extension UIButton {
                 guard btn._jobs_isCurrentToken(token,
                                                loader: .sd,
                                                channel: .foreground,
-                                               for: state) else { return }
+                                               for: state) else {
+                    return
+                }
                 btn._jobs_stopForegroundShimmer()
-                btn._jobs_forceSetForegroundImage(cfg.placeholder, for: state)
-            };return
+                btn._jobs_forceSetForegroundImage(cfg.placeholder,
+                                                  for: state)
+            }
+            return
         }
         self.jobs_remoteURL = url
         // 先灌入兜底图（或透明占位）让 imageView 可用，再在当前 imageView.layer 上做 shimmer。
@@ -297,8 +336,11 @@ extension UIButton {
             guard btn._jobs_isCurrentToken(token,
                                            loader: .sd,
                                            channel: .foreground,
-                                           for: state) else { return }
-            btn._jobs_forceSetForegroundImage(loadingPlaceholder, for: state)
+                                           for: state) else {
+                return
+            }
+            btn._jobs_forceSetForegroundImage(loadingPlaceholder,
+                                              for: state)
             btn.setNeedsLayout()
             btn._jobs_startForegroundShimmer(targetSize: targetPointSize)
         }
@@ -310,41 +352,53 @@ extension UIButton {
         opts.insert(.highPriority)
         opts.insert(.scaleDownLargeImages)
         opts.insert(.avoidAutoSetImage)
-        let ctx = _jobs_sdBuildContext(base: cfg.context, targetPointSize: targetPointSize)
-        self.sd_setImage(
-            with: url,
-            for: state,
-            placeholderImage: nil,
-            options: opts,
-            context: ctx,
-            progress: cfg.progress
-        ) { [weak self] img, err, cacheType, imageURL in
-            guard let self else { return }
+        let ctx = _jobs_sdBuildContext(base: cfg.context,
+                                       targetPointSize: targetPointSize)
+        self.sd_setImage(with: url,
+                         for: state,
+                         placeholderImage: nil,
+                         options: opts,
+                         context: ctx,
+                         progress: cfg.progress) { [weak self] img, err, cacheType, imageURL in
+            guard let self else {
+                return
+            }
             self._jobs_runOnMain { btn in
                 guard btn._jobs_isCurrentToken(token,
                                                loader: .sd,
                                                channel: .foreground,
-                                               for: state) else { return }
+                                               for: state) else {
+                    return
+                }
                 let nsErr = err as NSError?
                 let isCancelled = (nsErr?.domain == SDWebImageErrorDomain && nsErr?.code == SDWebImageError.cancelled.rawValue)
                 if isCancelled {
                     // ✅ 取消也算“请求结束”：停 shimmer；不覆盖新请求（token 已保证）
                     btn._jobs_stopForegroundShimmer()
-                    btn._jobs_forceSetForegroundImage(cfg.placeholder, for: state)
-                    cfg.completed?(img, err, cacheType, imageURL)
+                    btn._jobs_forceSetForegroundImage(cfg.placeholder,
+                                                      for: state)
+                    cfg.completed?(img,
+                                   err,
+                                   cacheType,
+                                   imageURL)
                     return
                 }
                 if let img {
                     // ✅ Success：请求结束，停 shimmer，显示最终图
                     btn._jobs_stopForegroundShimmer()
                     // UIButton.Configuration 会替换内部 imageView，不能放进 transition 动画块。
-                    btn._jobs_forceSetForegroundImage(img, for: state)
+                    btn._jobs_forceSetForegroundImage(img,
+                                                      for: state)
                 } else {
                     // ✅ Failure：请求结束，必须停 shimmer；有兜底图就落兜底；没有就保持 nil
                     btn._jobs_stopForegroundShimmer()
-                    btn._jobs_forceSetForegroundImage(cfg.placeholder, for: state)
+                    btn._jobs_forceSetForegroundImage(cfg.placeholder,
+                                                      for: state)
                 }
-                cfg.completed?(img, err, cacheType, imageURL)
+                cfg.completed?(img,
+                               err,
+                               cacheType,
+                               imageURL)
             }
         }
     }
@@ -359,7 +413,8 @@ extension UIButton {
         // ✅ Loading：永远先 Shimmer（placeholder 只作为「失败兜底」）
         _jobs_runOnMain { btn in
             // ✅ 背景加载：先落背景占位（如果有），再上 shimmer
-            btn._jobs_forceSetBackgroundImage((cfg.bgPlaceholder ?? cfg.placeholder), for: state)
+            btn._jobs_forceSetBackgroundImage((cfg.bgPlaceholder ?? cfg.placeholder),
+                                              for: state)
             btn._jobs_startBackgroundShimmer()
         }
         guard let url = cfg.url else {
@@ -367,9 +422,11 @@ extension UIButton {
             if let fb = (cfg.bgPlaceholder ?? cfg.placeholder) {
                 _jobs_runOnMain { btn in
                     btn._jobs_stopBackgroundShimmer()
-                    btn._jobs_forceSetBackgroundImage(fb, for: state)
+                    btn._jobs_forceSetBackgroundImage(fb,
+                                                      for: state)
                 }
-            };return
+            }
+            return
         }
         // ✅ 目标尺寸：背景优先显式设置，否则按按钮 bounds 兜底
         let targetPointSize = cfg.bgTargetSize ?? _jobs_guessBackgroundTargetSize()
@@ -382,33 +439,41 @@ extension UIButton {
         opts.insert(.highPriority)
         opts.insert(.scaleDownLargeImages)
         opts.insert(.avoidAutoSetImage)
-        let ctx = _jobs_sdBuildContext(base: cfg.context, targetPointSize: targetPointSize)
-        self.sd_setBackgroundImage(
-            with: url,
-            for: state,
-            placeholderImage: nil,
-            options: opts,
-            context: ctx,
-            progress: cfg.progress
-        ) { [weak self] img, err, cacheType, _ in
-            guard let self else { return }
+        let ctx = _jobs_sdBuildContext(base: cfg.context,
+                                       targetPointSize: targetPointSize)
+        self.sd_setBackgroundImage(with: url,
+                                   for: state,
+                                   placeholderImage: nil,
+                                   options: opts,
+                                   context: ctx,
+                                   progress: cfg.progress) { [weak self] img, err, cacheType, _ in
+            guard let self else {
+                return
+            }
             self._jobs_runOnMain { btn in
                 let nsErr = err as NSError?
                 let isCancelled = (nsErr?.domain == SDWebImageErrorDomain && nsErr?.code == SDWebImageError.cancelled.rawValue)
-                if isCancelled { return }
+                if isCancelled {
+                    return
+                }
                 if let img {
                     // ✅ Success：停 shimmer，显示最终图
                     btn._jobs_stopBackgroundShimmer()
                     // 背景图会同步到 UIButton.Configuration，避免在 transition 动画块内替换内部层级。
-                    btn._jobs_forceSetBackgroundImage(img, for: state)
+                    btn._jobs_forceSetBackgroundImage(img,
+                                                      for: state)
                 } else {
                     // ✅ Failure：有兜底图才落兜底；否则继续 shimmer
                     if let fb = (cfg.bgPlaceholder ?? cfg.placeholder) {
                         btn._jobs_stopBackgroundShimmer()
-                        btn._jobs_forceSetBackgroundImage(fb, for: state)
+                        btn._jobs_forceSetBackgroundImage(fb,
+                                                          for: state)
                     }
                 }
-                cfg.completed?(img, err, cacheType, url)
+                cfg.completed?(img,
+                               err,
+                               cacheType,
+                               url)
             }
         }
     }
@@ -427,41 +492,54 @@ extension UIButton {
         if effectiveURL == nil {
             if #available(iOS 15.0, *), let cfgImg = self.configuration?.background.image {
                 target._jobs_runOnMain { btn in
-                    btn._jobs_forceSetBackgroundImage(cfgImg, for: state)
-                };return
+                    btn._jobs_forceSetBackgroundImage(cfgImg,
+                                                      for: state)
+                }
+                return
             }
             if let img = self.backgroundImage(for: state) {
                 target._jobs_runOnMain { btn in
-                    btn._jobs_forceSetBackgroundImage(img, for: state)
-                };return
+                    btn._jobs_forceSetBackgroundImage(img,
+                                                      for: state)
+                }
+                return
             }
             // 只有占位图的极端情况
             if let ph = (snapCfg.bgPlaceholder ?? snapCfg.placeholder) {
                 target._jobs_runOnMain { btn in
-                    btn._jobs_forceSetBackgroundImage(ph, for: state)
+                    btn._jobs_forceSetBackgroundImage(ph,
+                                                      for: state)
                 }
-            };return
+            }
+            return
         }
         // ===== 情况 2：有 URL，说明是远程图；此时现成位图很可能只是占位，不能直接 return =====
         if let ph = (snapCfg.bgPlaceholder ?? snapCfg.placeholder) {
             target._jobs_runOnMain { btn in
-                btn._jobs_forceSetBackgroundImage(ph, for: state)
+                btn._jobs_forceSetBackgroundImage(ph,
+                                                  for: state)
             }
         }
         let url = effectiveURL!
         target.jobs_bgURL = url
         // ✅ 同步复制目标尺寸配置
         target._sd_setBgTargetSize(snapCfg.bgTargetSize)
-        if let s = snapCfg.bgTargetSize { target.jobs_bgImageTargetSize = s }
+        if let s = snapCfg.bgTargetSize {
+            target.jobs_bgImageTargetSize = s
+        }
         // 先查缓存（同步），命中就直接用缓存图
         let key = SDWebImageManager.shared.cacheKey(for: url) ?? url.absoluteString
         if let cached = SDImageCache.shared.imageFromCache(forKey: key) {
             target._jobs_runOnMain { btn in
-                btn._jobs_forceSetBackgroundImage(cached, for: state)
-            };return
+                btn._jobs_forceSetBackgroundImage(cached,
+                                                  for: state)
+            }
+            return
         }
         // 不允许走网，直接停在占位图
-        guard allowNetworkIfMissing else { return }
+        guard allowNetworkIfMissing else {
+            return
+        }
         // 允许走网：复制源按钮的加载配置；克隆场景加 avoidAutoSetImage，避免闪烁
         var opts = snapCfg.options
         opts.insert(.continueInBackground)
@@ -481,7 +559,9 @@ extension UIButton {
     /// 克隆“前景图”
     public func sd_cloneImage(to target: UIButton,
                               for state: UIControl.State = .normal) {
-        guard let url = _sd_config.url else { return }
+        guard let url = _sd_config.url else {
+            return
+        }
         target.jobs_imageLoaderKind = .sdwebimage
         target._sd_setImageURL(url)
         target._sd_setPlaceholder(self._sd_config.placeholder)
@@ -491,7 +571,9 @@ extension UIButton {
         target._sd_setCompleted(self._sd_config.completed)
         // ✅ 同步复制目标尺寸配置
         target._sd_setTargetSize(self._sd_config.targetSize)
-        if let s = self._sd_config.targetSize { target.jobs_remoteImageTargetSize = s }
+        if let s = self._sd_config.targetSize {
+            target.jobs_remoteImageTargetSize = s
+        }
         target._sd_loadImage(for: state)
     }
 }

@@ -16,7 +16,9 @@ import ObjectiveC
 #if canImport(JXSegmentedView)
 import JXSegmentedView
 // MARK: - 动态配置适配器（必须继承 NSObject）
-public final class JobsSegmentedTitleClosureConfiguration: NSObject, JXSegmentedTitleDynamicConfiguration {
+public final class JobsSegmentedTitleClosureConfiguration: NSObject,
+                                                           JXSegmentedTitleDynamicConfiguration {
+
     public var numberOfLines: ((Int) -> Int)?
     public var normalColor:   ((Int) -> UIColor)?
     public var selectedColor: ((Int) -> UIColor)?
@@ -42,13 +44,23 @@ public final class JobsSegmentedTitleClosureConfiguration: NSObject, JXSegmented
 // MARK: - 配置强引用（因为 dataSource.configuration 是 weak）
 private var _jobs_cfg_holder_key: UInt8 = 0
 extension JXSegmentedTitleDataSource {
-     private var jobs_cfg_holder: AnyObject? {
-        get { objc_getAssociatedObject(self, &_jobs_cfg_holder_key) as AnyObject? }
-        set { objc_setAssociatedObject(self, &_jobs_cfg_holder_key, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+
+    private var jobs_cfg_holder: AnyObject? {
+        get {
+            objc_getAssociatedObject(self,
+                                     &_jobs_cfg_holder_key) as AnyObject?
+        }
+        set {
+            objc_setAssociatedObject(self,
+                                     &_jobs_cfg_holder_key,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 }
 // MARK: - TitleDataSource 链式 DSL
 extension JXSegmentedTitleDataSource {
+
     // MARK: - Titles
     @discardableResult
     public func byTitles(_ value: [String]) -> Self {
@@ -75,7 +87,8 @@ extension JXSegmentedTitleDataSource {
     }
 
     @discardableResult
-    public func byTitleColors(normal: UIColor, selected: UIColor) -> Self {
+    public func byTitleColors(normal: UIColor,
+                              selected: UIColor) -> Self {
         titleNormalColor = normal
         titleSelectedColor = selected
         return self
@@ -94,7 +107,8 @@ extension JXSegmentedTitleDataSource {
     }
 
     @discardableResult
-    public func byTitleFonts(normal: UIFont, selected: UIFont?) -> Self {
+    public func byTitleFonts(normal: UIFont,
+                             selected: UIFont?) -> Self {
         titleNormalFont = normal
         titleSelectedFont = selected
         return self
@@ -107,25 +121,23 @@ extension JXSegmentedTitleDataSource {
     }
     /// ⚠️ 开启 zoom 时，官方建议 normalFont 与 selectedFont 一致（否则可能视觉不稳）
     @discardableResult
-    public func byZoomEnabled(
-            _ enabled: Bool = true,
-            scale: CGFloat? = nil
-    ) -> Self {
+    public func byZoomEnabled(_ enabled: Bool = true,
+                              scale: CGFloat? = nil) -> Self {
         isTitleZoomEnabled = enabled
         if let scale {
             titleSelectedZoomScale = scale
-        };return self
+        }
+        return self
     }
     /// strokeWidth: 负数越小越粗（例如 -2）
     @discardableResult
-    public func byStrokeEnabled(
-            _ enabled: Bool = true,
-            selectedWidth: CGFloat? = nil
-    ) -> Self {
+    public func byStrokeEnabled(_ enabled: Bool = true,
+                                selectedWidth: CGFloat? = nil) -> Self {
         isTitleStrokeWidthEnabled = enabled
         if let selectedWidth {
             titleSelectedStrokeWidth = selectedWidth
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -153,7 +165,9 @@ extension JXSegmentedTitleDataSource {
     public func byAttach(to segmentedView: JXSegmentedView,
                          indicators: [JXSegmentedIndicatorProtocol]? = nil) -> Self {
         segmentedView.dataSource = self
-        if let ins = indicators { segmentedView.indicators = ins }
+        if let ins = indicators {
+            segmentedView.indicators = ins
+        }
         segmentedView.reloadData()
         return self
     }
@@ -165,19 +179,23 @@ extension JXSegmentedTitleDataSource {
     }
     // MARK: - zoom
     @discardableResult
-    public func byTitleZoom(enabled: Bool = true, scale: CGFloat? = nil) -> Self {
+    public func byTitleZoom(enabled: Bool = true,
+                            scale: CGFloat? = nil) -> Self {
         isTitleZoomEnabled = enabled
         if let s = scale {
             titleSelectedZoomScale = s
-        };return self
+        }
+        return self
     }
     // MARK: - stroke width
     @discardableResult
-    public func byTitleStrokeWidth(enabled: Bool = true, width: CGFloat? = nil) -> Self {
+    public func byTitleStrokeWidth(enabled: Bool = true,
+                                   width: CGFloat? = nil) -> Self {
         isTitleStrokeWidthEnabled = enabled
         if let w = width {
             titleSelectedStrokeWidth = w
-        };return self
+        }
+        return self
     }
     // MARK: - mask
     @discardableResult
@@ -187,7 +205,7 @@ extension JXSegmentedTitleDataSource {
     }
     // MARK: - width closure
     @discardableResult
-    public func byWidthClosure(_ closure: @escaping (String)->CGFloat) -> Self {
+    public func byWidthClosure(_ closure: @escaping (String) -> CGFloat) -> Self {
         widthForTitleClosure = closure
         return self
     }

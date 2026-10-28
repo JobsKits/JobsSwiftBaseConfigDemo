@@ -21,24 +21,29 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class UIAlertDemoVC: BaseVC {
+
     // MARK: 最简单的 Alert：主/副标题 + 取消_确定@按钮行为监听 + 中间弹出 + 点击空白区域不可取消
     private lazy var simpleAlertBtn: UIButton = { [unowned self] in
         UIButton.sys()
             .byTitle("① 简单 Alert".tr)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 UIAlertController
-                    .makeAlert("提示", "这是一条简单提示")
+                    .makeAlert("提示",
+                               "这是一条简单提示")
                     .byAddCancel { _ in
                         print("Cancel")
                     }           // 一个回调，只给 action
-                    .byAddOK { _ in
+            .byAddOK { _ in
                         print("OK")
                     }
                     .byPresent(self)
             }
-            .byAddTo(view) {[unowned self] make in
+            .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom).offset(10) // 占满
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
@@ -48,33 +53,48 @@ final class UIAlertDemoVC: BaseVC {
     private lazy var textFieldAlertBtn: UIButton = { [unowned self] in
         UIButton.sys()
             .byTitle("② 输入框 Alert（读取文本）".tr)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 UIAlertController
-                    .makeAlert("重命名", "请输入新的名称")
-//                    .bySDBgImageView("https://picsum.photos/800/600",
-//                                     image: "唐老鸭".img,
-//                                     hideSystemBackdrop: true)
-//                    .byKFBgImageView("https://picsum.photos/800/600",
-//                                     image: "唐老鸭".img,
-//                                     hideSystemBackdrop: true)
-                    .byBgImage("唐老鸭".img)                      // 本地图背景（同步阶段，无动画）
-                    .byCardBorder(width: 1, color: JobsCor.systemBlue)   // 外层卡片描边
-                    .byAddTextField(placeholder: "新名称",
-                                    borderWidth: nil,             // ← 不给 tf 自身描边
-                                    borderColor: nil,
-                                    cornerRadius: 8) { alert, tf, input, oldText, isDeleting in
-                        let ok = alert.actions.first { $0.title == "确定" }
+                    .makeAlert("重命名",
+                               "请输入新的名称")
+            //                    .bySDBgImageView("https://picsum.photos/800/600",
+            //                                     image: "唐老鸭".img,
+            //                                     hideSystemBackdrop: true)
+            //                    .byKFBgImageView("https://picsum.photos/800/600",
+            //                                     image: "唐老鸭".img,
+            //                                     hideSystemBackdrop: true)
+            .byBgImage("唐老鸭".img)                      // 本地图背景（同步阶段，无动画）
+            .byCardBorder(width: 1,
+                          color: JobsCor.systemBlue)   // 外层卡片描边
+            .byAddTextField(placeholder: "新名称",
+                            borderWidth: nil,             // ← 不给 tf 自身描边
+                            borderColor: nil,
+                            cornerRadius: 8) { alert, tf, input, oldText, isDeleting in
+                        let ok = alert.actions.first {
+                            $0.title == "确定"
+                        }
                         ok?.byEnabled(!(tf.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     }
-                    .byTextFieldOuterBorder(at: 0, width: 1, color: JobsCor.systemBlue, cornerRadius: 10, insets: .init(top: 6, left: 12, bottom: 6, right: 12)) // ← 给灰色容器描边
-                    .byAddCancel { _ in                          // ✅ 一个回调（只给 action）
+                    .byTextFieldOuterBorder(at: 0,
+                                            width: 1,
+                                            color: JobsCor.systemBlue,
+                                            cornerRadius: 10,
+                                            insets: .init(top: 6,
+                                                          left: 12,
+                                                          bottom: 6,
+                                                          right: 12)) // ← 给灰色容器描边
+            .byAddCancel { _ in                          // ✅ 一个回调（只给 action）
                         print("Cancel tapped")
                     }
-                    .byAddOK{ alert, _ in                 // 需要 alert + action 的回调
+                    .byAddOK { alert, _ in                 // 需要 alert + action 的回调
                         let name = alert.textField(at: 0)?.text ?? ""
-                        print("new name =", name)
+                        print("new name =",
+                              name)
                     }
                     .byTintColor(JobsCor.systemBlue)
                     .byPresent(self)
@@ -88,11 +108,15 @@ final class UIAlertDemoVC: BaseVC {
     private lazy var actionSheetAutoBtn: UIButton = { [unowned self] in
         UIButton.sys()
             .byTitle("③ ActionSheet（自动锚点）".tr)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 UIAlertController
-                    .makeActionSheet("选择来源", nil)
+                    .makeActionSheet("选择来源",
+                                     nil)
                     .byAddAction(title: "相机".tr) { _ in
                         print("camera")
                     }
@@ -113,18 +137,23 @@ final class UIAlertDemoVC: BaseVC {
     private lazy var actionSheetFromButtonBtn: UIButton = { [unowned self] in
         UIButton.sys()
             .byTitle("④ 从当前按钮处弹出".tr)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
             .onTap { [weak self] sender in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 UIAlertController
-                    .makeActionSheet("操作", nil)
+                    .makeActionSheet("操作",
+                                     nil)
                     .byAddDestructive("删除") { _ in
                         print("delete")
                     }
                     .byAddCancel { _ in
                         print("Cancel tapped")
                     }
-                    .byPresent(self, anchor: .view(sender, sender.bounds)) // 指定锚点
+                    .byPresent(self,
+                               anchor: .view(sender,sender.bounds)) // 指定锚点
             }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(actionSheetAutoBtn.snp.bottom).offset(12)
@@ -135,12 +164,16 @@ final class UIAlertDemoVC: BaseVC {
     private lazy var severityAlertBtn: UIButton = { [unowned self] in
         UIButton.sys()
             .byTitle("⑤ Critical Alert（iOS16+）")
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 if #available(iOS 16.0, *) {
                     UIAlertController
-                        .makeAlert("危险操作", "此操作不可撤销")
+                        .makeAlert("危险操作",
+                                   "此操作不可撤销")
                         .bySeverity(.critical)
                         .byAddDestructive("删库跑路") { _ in
                             print("boom")
@@ -151,7 +184,8 @@ final class UIAlertDemoVC: BaseVC {
                         .byPresent(self)
                 } else {
                     UIAlertController
-                        .makeAlert("提示", "iOS16 以上才支持 severity")
+                        .makeAlert("提示",
+                                   "iOS16 以上才支持 severity")
                         .byAddOK()
                         .byPresent(self)
                 }

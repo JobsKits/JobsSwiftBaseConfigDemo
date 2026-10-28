@@ -16,7 +16,9 @@ import SnapKit
 /// 本页 A/B 各用独立 nonPersistent Store，Web localStorage 随页面/进程结束丢失；本地草稿按账号落盘可恢复。
 /// iOS 17+ 可用 WKWebsiteDataStore(forIdentifier:) 持久 profile，UUID 需要稳定保存；生产凭据统一进 Keychain。
 /// 来源：https://webkit.org/blog/14423/building-profiles-with-new-webkit-api/
-final class JobsMultiSessionDemoVC: JobsMicroAppLabBaseVC, WKNavigationDelegate {
+final class JobsMultiSessionDemoVC: JobsMicroAppLabBaseVC,
+                                    WKNavigationDelegate {
+
     override var lessonTitle: String {
         return "应用多开 / 多会话"
     }
@@ -31,26 +33,33 @@ final class JobsMultiSessionDemoVC: JobsMicroAppLabBaseVC, WKNavigationDelegate 
     private lazy var webA = makeSessionWebView()
     private lazy var webB = makeSessionWebView()
 
-    private lazy var accountAButton: UIButton = lessonButton("切换到账号 A", identifier: "lab.sessionA") { [weak self] in
+    private lazy var accountAButton: UIButton = lessonButton("切换到账号 A",
+                                                             identifier: "lab.sessionA") { [weak self] in
         self?.selectAccount("A")
     }
-    private lazy var accountBButton: UIButton = lessonButton("切换到账号 B", identifier: "lab.sessionB") { [weak self] in
+    private lazy var accountBButton: UIButton = lessonButton("切换到账号 B",
+                                                             identifier: "lab.sessionB") { [weak self] in
         self?.selectAccount("B")
     }
-    private lazy var writeButton: UIButton = lessonButton("写入当前账号草稿", identifier: "lab.sessionWrite") { [weak self] in
+    private lazy var writeButton: UIButton = lessonButton("写入当前账号草稿",
+                                                          identifier: "lab.sessionWrite") { [weak self] in
         self?.writeDraft()
     }
-    private lazy var readButton: UIButton = lessonButton("重新读取当前账号", identifier: "lab.sessionRead") { [weak self] in
+    private lazy var readButton: UIButton = lessonButton("重新读取当前账号",
+                                                         identifier: "lab.sessionRead") { [weak self] in
         self?.readDraft()
     }
-    private lazy var resetButton: UIButton = lessonButton("退出当前账号并清空其数据", identifier: "lab.sessionReset") { [weak self] in
+    private lazy var resetButton: UIButton = lessonButton("退出当前账号并清空其数据",
+                                                          identifier: "lab.sessionReset") { [weak self] in
         self?.resetAccount()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        displayBundledPage("session.html", in: webA)
-        displayBundledPage("session.html", in: webB)
+        displayBundledPage("session.html",
+                           in: webA)
+        displayBundledPage("session.html",
+                           in: webB)
         selectAccount("A")
     }
 
@@ -58,7 +67,8 @@ final class JobsMultiSessionDemoVC: JobsMicroAppLabBaseVC, WKNavigationDelegate 
         return WKWebView.make(configuration: WKWebViewConfiguration.make { configuration in
             configuration.byWebsiteDataStore(.nonPersistent())
         }) { web in
-            web.byNavigationDelegate(self)
+            web
+                .byNavigationDelegate(self)
                 .byAddTo(stageView) { make in
                     make.edges.equalToSuperview()
                 }
@@ -127,11 +137,12 @@ final class JobsMultiSessionDemoVC: JobsMicroAppLabBaseVC, WKNavigationDelegate 
             return
         }
         web.configuration.websiteDataStore.removeData(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(),
-                                                       modifiedSince: .distantPast) { [weak self, weak web] in
+                                                      modifiedSince: .distantPast) { [weak self, weak web] in
             guard let self, let web else {
                 return
             }
-            self.displayBundledPage("session.html", in: web)
+            self.displayBundledPage("session.html",
+                                    in: web)
             self.record("账号 \(account) 已退出并清空；另一账号数据保留。")
         }
     }
@@ -140,20 +151,25 @@ final class JobsMultiSessionDemoVC: JobsMicroAppLabBaseVC, WKNavigationDelegate 
         guard isViewLoaded else {
             return
         }
-        applyWebTheme(webA, isDark: isDark)
-        applyWebTheme(webB, isDark: isDark)
+        applyWebTheme(webA,
+                      isDark: isDark)
+        applyWebTheme(webB,
+                      isDark: isDark)
     }
 
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    func webView(_ webView: WKWebView,
+                 didFinish navigation: WKNavigation!) {
         let account = webView === webA ? "A" : "B"
         webView.jobsEval("window.setAccount('\(account)')")
-        applyWebTheme(webView, isDark: JobsThemeCenter.shared.isDarkMode)
+        applyWebTheme(webView,
+                      isDark: JobsThemeCenter.shared.isDarkMode)
         if account == activeAccount {
             readDraft()
         }
     }
 
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
+    func webView(_ webView: WKWebView,
+                 decidePolicyFor navigationAction: WKNavigationAction,
                  decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         let allowed = navigationAction.request.url?.standardizedFileURL
             == Self.resourceURL("session.html")?.standardizedFileURL

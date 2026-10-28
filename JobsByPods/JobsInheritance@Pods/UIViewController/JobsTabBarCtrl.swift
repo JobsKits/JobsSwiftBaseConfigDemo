@@ -18,10 +18,14 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 // MARK: - 自定义滚动 TabBar（继承 BaseVC）
-open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
+open class JobsTabBarCtrl: BaseVC,
+                           UIScrollViewDelegate {
+
     // MARK: - 可配置项
     public var isSwipeEnabled: Bool = true {
-        didSet { contentScrollView.isScrollEnabled = isSwipeEnabled }
+        didSet {
+            contentScrollView.isScrollEnabled = isSwipeEnabled
+        }
     }
     /// 只允许横向翻页（默认 true）
     public var horizontalOnly: Bool = true {
@@ -34,26 +38,37 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
     public var suppressChildVerticalScrolls: Bool = false
     /// 默认高度 = 49 + safeBottom
     public var customBarHeight: CGFloat? {
-        didSet { view.setNeedsLayout() }
+        didSet {
+            view.setNeedsLayout()
+        }
     }
     /// 距底部上移量（>0 上移）
     public var barBottomOffset: CGFloat = 0 {
-        didSet { view.setNeedsLayout() }
+        didSet {
+            view.setNeedsLayout()
+        }
     }
 
     public var barBackgroundColor: UIColor = JobsCor.systemBackground {
-        didSet { TabBar.byBackgroundColor(barBackgroundColor) }
+        didSet {
+            TabBar.byBackgroundColor(barBackgroundColor)
+        }
     }
 
     public var barBackgroundImage: UIImage? {
-        didSet { bgImageView.byImage(barBackgroundImage) }
+        didSet {
+            bgImageView.byImage(barBackgroundImage)
+        }
     }
     /// TabBar 内边距（用于 1/2~5 规则与 >5 的参考宽度计算）
-    public var contentInset: UIEdgeInsets = .init(top: 0, left: 12, bottom: 0, right: 12)
+    public var contentInset: UIEdgeInsets = .init(top: 0,
+                                                  left: 12,
+                                                  bottom: 0,
+                                                  right: 12)
     /// 2~5 等分时的按钮间距
     public var equalSpacing: CGFloat = 8
     /// 2~5 的可见等分范围（上限决定 >5 时的“参考单元宽度”）
-    public var equalVisibleRange: ClosedRange<Int> = 2...5
+    public var equalVisibleRange: ClosedRange<Int> = 2 ... 5
     /// 超过 5 个时是否仍然用“5 等分”的单元宽度与间距（是则超出横滑）
     public var lockUnitToMaxEqualCount: Bool = true
     /// 尺寸变化（旋转/分屏）时是否自动重排按钮
@@ -69,11 +84,14 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
     private(set) var selectedIndex: Int = 0
     // MARK: - UI
     private lazy var bgImageView: UIImageView = {
-        UIImageView.jobsMake { _ in }.byContentMode(.scaleToFill)
+        UIImageView
+            .jobsMake { _ in }
+            .byContentMode(.scaleToFill)
     }()
     /// 满足 `JobsTabBarCtrl().TabBar.byAlpha(1)` 的链式风格
     public lazy var TabBar: UIScrollView = {
-        UIScrollView.jobsMake { _ in }
+        UIScrollView
+            .jobsMake { _ in }
             .byContentInsetAdjustmentBehavior(.never)
             .byShowsHorizontalScrollIndicator(NO)
             .byAlwaysBounceHorizontal(YES)
@@ -82,7 +100,8 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
     }()
 
     private lazy var contentScrollView: UIScrollView = {
-        UIScrollView.jobsMake { _ in }
+        UIScrollView
+            .jobsMake { _ in }
             .byContentInsetAdjustmentBehavior(.never)
             .byPagingEnabled(YES)
             .byBounces(NO)
@@ -108,9 +127,12 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
         layoutUI()
     }
     // MARK: - Public API
-    public func setDataSource(buttons: [UIButton], controllers: [UIViewController]) {
+    public func setDataSource(buttons: [UIButton],
+                              controllers: [UIViewController]) {
         // 清理旧的
-        self.buttons.forEach { $0.removeFromSuperview() }
+        self.buttons.forEach {
+            $0.removeFromSuperview()
+        }
         self.controllers.forEach { vc in
             if vc.parent == self {
                 vc.willMove(toParent: nil)
@@ -133,8 +155,9 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
             b.byAddTo(TabBar)
         }
         // 配子控制器：仅取前 N（N = min(btns, ctrls)）
-        let pageCount = min(buttons.count, controllers.count)
-        for i in 0..<pageCount {
+        let pageCount = min(buttons.count,
+                            controllers.count)
+        for i in 0 ..< pageCount {
             let vc = embedIfNeeded(controllers[i])
             addChild(vc)
             vc.view.byAddTo(contentScrollView)
@@ -151,9 +174,13 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
         view.setNeedsLayout()
     }
     /// 主动选中
-    public func select(index: Int, animated: Bool = true) {
-        guard index >= 0, index < buttons.count else { return }
-        guard index < min(buttons.count, controllers.count) else {
+    public func select(index: Int,
+                       animated: Bool = true) {
+        guard index >= 0, index < buttons.count else {
+            return
+        }
+        guard index < min(buttons.count,
+                          controllers.count) else {
             "请配置子控制器".toast
             return
         }
@@ -175,20 +202,19 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
 
     private func layoutUI() {
         let safeBottom = view.safeAreaInsets.bottom
-        let barH = min(view.bounds.height, max(0, customBarHeight ?? (49 + safeBottom)))
-        TabBar.byFrame(CGRect(
-            x: 0,
-            y: view.bounds.height - barH - barBottomOffset,
-            width: view.bounds.width,
-            height: barH
-        ))
+        let barH = min(view.bounds.height,
+                       max(0,
+                           customBarHeight ?? (49 + safeBottom)))
+        TabBar.byFrame(CGRect(x: 0,
+                              y: view.bounds.height - barH - barBottomOffset,
+                              width: view.bounds.width,
+                              height: barH))
         bgImageView.byFrame(TabBar.bounds)
-        contentScrollView.byFrame(CGRect(
-            x: 0,
-            y: 0,
-            width: view.bounds.width,
-            height: max(0, view.bounds.height - barH - barBottomOffset)
-        ))
+        contentScrollView.byFrame(CGRect(x: 0,
+                                         y: 0,
+                                         width: view.bounds.width,
+                                         height: max(0,
+                                                     view.bounds.height - barH - barBottomOffset)))
         // 按钮布局
         if autoRelayoutForBoundsChange || !builtOnce {
             layoutButtonsByRule()
@@ -211,38 +237,57 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
         guard !safeFrame.isNull else {
             return
         }
-        let left = contentInset.left + max(0, safeFrame.minX - TabBar.frame.minX)
-        let right = contentInset.right + max(0, TabBar.frame.maxX - safeFrame.maxX)
-        let top = contentInset.top + max(0, safeFrame.minY - TabBar.frame.minY)
-        let availableW = max(0, bounds.width - left - right)
-        let h = max(0, safeFrame.height - contentInset.top - contentInset.bottom)
-        var frames: [CGRect] = .init(repeating: .zero, count: total)
+        let left = contentInset.left + max(0,
+                                           safeFrame.minX - TabBar.frame.minX)
+        let right = contentInset.right + max(0,
+                                             TabBar.frame.maxX - safeFrame.maxX)
+        let top = contentInset.top + max(0,
+                                         safeFrame.minY - TabBar.frame.minY)
+        let availableW = max(0,
+                             bounds.width - left - right)
+        let h = max(0,
+                    safeFrame.height - contentInset.top - contentInset.bottom)
+        var frames: [CGRect] = .init(repeating: .zero,
+                                     count: total)
         if total == 1 {
             // 居中：宽度取 intrinsic + padding 与 availableW 的夹取
             let b = buttons[0]
             let ideal = b.intrinsicContentSize.width
             // 取“等分 n=2”的基准宽度，避免过窄/过宽
-            let n2 = max(equalVisibleRange.lowerBound, 2)
+            let n2 = max(equalVisibleRange.lowerBound,
+                         2)
             let refW = (availableW - CGFloat(n2 - 1) * equalSpacing) / CGFloat(n2)
-            let w = max(minItemWidth, min(ideal + 2 * 16, refW))
+            let w = max(minItemWidth,
+                        min(ideal + 2 * 16,
+                            refW))
             let x = left + (availableW - w) * 0.5
-            frames[0] = CGRect(x: x, y: top, width: w, height: h)
+            frames[0] = CGRect(x: x,
+                               y: top,
+                               width: w,
+                               height: h)
         } else if equalVisibleRange.contains(total) {
             // 2~5 等分
             let n = total
             let w = (availableW - CGFloat(n - 1) * equalSpacing) / CGFloat(n)
             var curX = left
-            for i in 0..<total {
-                frames[i] = CGRect(x: curX, y: top, width: w, height: h)
+            for i in 0 ..< total {
+                frames[i] = CGRect(x: curX,
+                                   y: top,
+                                   width: w,
+                                   height: h)
                 curX += w + equalSpacing
             }
         } else {
             // >5：用“max 等分数”（默认 5）来确定单元宽度与间距
-            let nRef = max(equalVisibleRange.upperBound, 2)
+            let nRef = max(equalVisibleRange.upperBound,
+                           2)
             let unitW = (availableW - CGFloat(nRef - 1) * equalSpacing) / CGFloat(nRef)
             var curX = left
-            for i in 0..<total {
-                frames[i] = CGRect(x: curX, y: top, width: unitW, height: h)
+            for i in 0 ..< total {
+                frames[i] = CGRect(x: curX,
+                                   y: top,
+                                   width: unitW,
+                                   height: h)
                 curX += unitW + equalSpacing
             }
         }
@@ -257,58 +302,82 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
         } else {
             widthSum = (buttons.last!.frame.maxX) + right
         }
-        TabBar.contentSize = CGSize(width: widthSum, height: bounds.height)
+        TabBar.contentSize = CGSize(width: widthSum,
+                                    height: bounds.height)
     }
 
-    private var minItemWidth: CGFloat { 60 }
+    private var minItemWidth: CGFloat {
+        60
+    }
 
     private func layoutPages() {
-        let pageCount = min(buttons.count, controllers.count)
+        let pageCount = min(buttons.count,
+                            controllers.count)
         guard pageCount > 0 else {
             contentScrollView.byContentSize(.zero)
             return
         }
         let pageW = contentScrollView.bounds.width
         let pageH = contentScrollView.bounds.height
-        for i in 0..<pageCount {
+        for i in 0 ..< pageCount {
             let vc = children[i]
-            vc.view.byFrame(CGRect(x: CGFloat(i) * pageW, y: 0, width: pageW, height: pageH))
+            vc.view.byFrame(CGRect(x: CGFloat(i) * pageW,
+                                   y: 0,
+                                   width: pageW,
+                                   height: pageH))
         }
-        contentScrollView.byContentSize(CGSize(width: pageW * CGFloat(pageCount), height: pageH))
+        contentScrollView.byContentSize(CGSize(width: pageW * CGFloat(pageCount),
+                                               height: pageH))
     }
     // MARK: - 交互
     public func handleTap(at index: Int) {
-        if index >= min(buttons.count, controllers.count) {
+        if index >= min(buttons.count,
+                        controllers.count) {
             "请配置子控制器".toast
             return
         }
-        select(index: index, animated: true)
+        select(index: index,
+               animated: true)
     }
 
     public func applySelectionState(animated: Bool) {
-        for (i, b) in buttons.enumerated() { b.bySelected(i == selectedIndex) }
+        for (i, b) in buttons.enumerated() {
+            b.bySelected(i == selectedIndex)
+        }
         syncContentOffset(animated: animated)
-        scrollTabBarToVisible(index: selectedIndex, animated: animated)
+        scrollTabBarToVisible(index: selectedIndex,
+                              animated: animated)
     }
 
     public func syncContentOffset(animated: Bool) {
         let pageW = contentScrollView.bounds.width
         let x = CGFloat(selectedIndex) * pageW
-        contentScrollView.setContentOffset(CGPoint(x: x, y: 0), animated: animated)
+        contentScrollView.setContentOffset(CGPoint(x: x, y: 0),
+                                           animated: animated)
     }
 
-    public func scrollTabBarToVisible(index: Int, animated: Bool) {
-        guard index < buttons.count else { return }
-        let frame = buttons[index].frame.insetBy(dx: -16, dy: 0)
-        TabBar.scrollRectToVisible(frame, animated: animated)
+    public func scrollTabBarToVisible(index: Int,
+                                      animated: Bool) {
+        guard index < buttons.count else {
+            return
+        }
+        let frame = buttons[index].frame.insetBy(dx: -16,
+                                                 dy: 0)
+        TabBar.scrollRectToVisible(frame,
+                                   animated: animated)
     }
 
     public func embedIfNeeded(_ vc: UIViewController) -> UIViewController {
-        if vc is UINavigationController { return vc };return UINavigationController(rootViewController: vc)
+        if vc is UINavigationController {
+            return vc
+        }
+        return UINavigationController(rootViewController: vc)
     }
 
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard horizontalOnly, scrollView === contentScrollView else { return }
+        guard horizontalOnly, scrollView === contentScrollView else {
+            return
+        }
         if scrollView.contentOffset.y != 0 {
             scrollView.contentOffset.y = 0
         }
@@ -337,14 +406,19 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
             sv
                 .byShowsVerticalScrollIndicator(false)
                 .byAlwaysBounceVertical(false)
-            // 如需“一刀切完全不滚”，可加：sv.isScrollEnabled = false
+        // 如需“一刀切完全不滚”，可加：sv.isScrollEnabled = false
         }
-        root.subviews.forEach { suppressVertical(in: $0) }
+        root.subviews.forEach {
+            suppressVertical(in: $0)
+        }
     }
     // MARK: - UIScrollViewDelegate（页切换同步）
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        guard scrollView === contentScrollView else { return }
-        let page = Int(round(scrollView.contentOffset.x / max(scrollView.bounds.width, 1)))
+        guard scrollView === contentScrollView else {
+            return
+        }
+        let page = Int(round(scrollView.contentOffset.x / max(scrollView.bounds.width,
+                                                              1)))
         if page != selectedIndex {
             selectedIndex = page
             applySelectionState(animated: true)
@@ -352,8 +426,11 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
     }
 
     public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        guard scrollView === contentScrollView else { return }
-        let page = Int(round(scrollView.contentOffset.x / max(scrollView.bounds.width, 1)))
+        guard scrollView === contentScrollView else {
+            return
+        }
+        let page = Int(round(scrollView.contentOffset.x / max(scrollView.bounds.width,
+                                                              1)))
         if page != selectedIndex {
             selectedIndex = page
             applySelectionState(animated: false)
@@ -362,6 +439,7 @@ open class JobsTabBarCtrl: BaseVC, UIScrollViewDelegate {
 }
 // MARK: - 链式扩展
 extension JobsTabBarCtrl {
+
     // 基础布尔/数值/对象配置
     @discardableResult public func bySwipeEnabled(_ flag: Bool) -> Self {
         self.isSwipeEnabled = flag
@@ -424,8 +502,10 @@ extension JobsTabBarCtrl {
     }
 
     @discardableResult
-    public func byDataSource(buttons: [UIButton], controllers: [UIViewController]) -> Self {
-        self.setDataSource(buttons: buttons, controllers: controllers)
+    public func byDataSource(buttons: [UIButton],
+                             controllers: [UIViewController]) -> Self {
+        self.setDataSource(buttons: buttons,
+                           controllers: controllers)
         return self
     }
     /// 安全弱持有 owner 的包装，避免在外部写 [weak self]
@@ -434,8 +514,12 @@ extension JobsTabBarCtrl {
         _ block: @escaping (_ owner: JobsTabBarCtrl, _ btns: [UIButton]) -> Void
     ) -> Self {
         self.onButtonsLayouted = { [weak self] btns in
-            guard let self else { return }
-            block(self, btns)
-        };return self
+            guard let self else {
+                return
+            }
+            block(self,
+                  btns)
+        }
+        return self
     }
 }

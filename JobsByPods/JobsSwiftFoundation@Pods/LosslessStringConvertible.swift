@@ -8,6 +8,7 @@
 import Foundation
 
 extension LosslessStringConvertible {
+
     var toString: String {
         String(self)
     }

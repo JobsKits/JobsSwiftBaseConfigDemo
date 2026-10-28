@@ -19,13 +19,15 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class FoldCell: UITableViewCell {
+
     // VC 里算高度时用这两个常量就行（确保和约束一致）
     static let headerHeight: CGFloat = 76
     static let verticalInset: CGFloat = 8
 
     private var isExpanded: Bool = false
     private lazy var cardView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(14)
             .byAddTo(contentView) { make in
@@ -37,15 +39,19 @@ final class FoldCell: UITableViewCell {
     }()
 
     private lazy var headerView: UIView = {
-        UIView.jobsMake { _ in }.byAddTo(cardView) { make in
-            make.top.left.right.equalToSuperview()
-            make.height.equalTo(Self.headerHeight)
-        }
+        UIView
+            .jobsMake { _ in }
+            .byAddTo(cardView) { make in
+                make.top.left.right.equalToSuperview()
+                make.height.equalTo(Self.headerHeight)
+            }
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 18, weight: .semibold))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 18,
+                                        weight: .semibold))
             .byTextColor(JobsCor.label)
             .byAddTo(headerView) { [unowned self] make in
                 make.top.equalToSuperview().offset(16)
@@ -55,8 +61,10 @@ final class FoldCell: UITableViewCell {
     }()
 
     private lazy var subtitleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(headerView) { [unowned self] make in
                 make.top.equalTo(self.titleLabel.snp.bottom).offset(6)
@@ -78,7 +86,8 @@ final class FoldCell: UITableViewCell {
     }()
 
     private lazy var detailClipView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byClipsToBounds(YES)
             .byAddTo(cardView) { [unowned self] make in
                 make.top.equalTo(self.headerView.snp.bottom)
@@ -87,15 +96,17 @@ final class FoldCell: UITableViewCell {
     }()
 
     private lazy var detailContentView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byAddTo(detailClipView) { make in
-               make.edges.equalToSuperview()
+                make.edges.equalToSuperview()
             }
             .byVisible(NO)// 初始折叠：先隐藏
     }()
 
     private lazy var detailLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.label)
@@ -108,7 +119,8 @@ final class FoldCell: UITableViewCell {
     }()
 
     private lazy var foldShadowView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.black)
             .byAlpha(0.22)
             .byAddTo(detailClipView) { make in
@@ -116,9 +128,13 @@ final class FoldCell: UITableViewCell {
             }
     }()
     // MARK: - Init
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    override init(style: UITableViewCell.CellStyle,
+                  reuseIdentifier: String?) {
+        super.init(style: style,
+                   reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         self.byBackgroundColor(JobsCor.clear)
         contentView.byBackgroundColor(JobsCor.clear)
@@ -132,7 +148,8 @@ final class FoldCell: UITableViewCell {
         detailContentView.byVisible(YES)
         detailLabel.byVisible(YES)
         foldShadowView.byVisible(YES)
-        setExpanded(false, animated: false)
+        setExpanded(false,
+                    animated: false)
     }
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -142,23 +159,27 @@ final class FoldCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        setExpanded(false, animated: false)
+        setExpanded(false,
+                    animated: false)
     }
 }
 
 extension FoldCell {
+
     func byData(title: String,
                 subtitle: String,
                 detail: String,
-                expanded: Bool) -> Self{
+                expanded: Bool) -> Self {
         titleLabel.byText(title)
         subtitleLabel.byText(subtitle)
         detailLabel.byText(detail)
-        setExpanded(expanded, animated: false)
+        setExpanded(expanded,
+                    animated: false)
         return self
     }
     /// 展开/收起的核心方法
-    func setExpanded(_ expanded: Bool, animated: Bool) {
+    func setExpanded(_ expanded: Bool,
+                     animated: Bool) {
         isExpanded = expanded
         if expanded {
             detailContentView.byVisible(YES)
@@ -169,37 +190,47 @@ extension FoldCell {
         let targetChevron = expanded ? CGAffineTransform(rotationAngle: .pi) : .identity
         let apply = { [self] in
             detailContentView
-                .byLayer { $0.byTransform(targetTransform) }
+                .byLayer {
+                    $0.byTransform(targetTransform)
+                }
                 .byAlpha(targetAlpha)
             foldShadowView.byAlpha(targetShadowAlpha)
             chevron.byTransform(targetChevron)
         }
         if animated {
-            UIView.jobsAnimateWithSpring(
-                0.38,
-                dampingRatio: 0.92,
-                initialVelocity: 0,
-                options: [.beginFromCurrentState, .allowUserInteraction],
-                animations: {
-                    apply()
-                },
-                completion: { [weak self] _ in
-                    guard let self else { return }
-                    if !expanded {
-                        self.detailContentView.byVisible(NO)
-                    }
+            UIView.jobsAnimateWithSpring(0.38,
+                                         dampingRatio: 0.92,
+                                         initialVelocity: 0,
+                                         options: [.beginFromCurrentState, .allowUserInteraction],
+                                         animations: {
+                apply()
+            },
+                                         completion: { [weak self] _ in
+                guard let self else {
+                    return
                 }
-            )
+                if !expanded {
+                    self.detailContentView.byVisible(NO)
+                }
+            })
         } else {
-            UIView.jobsPerformWithoutAnimation { apply() }
-            if !expanded { detailContentView.byVisible(NO) }
+            UIView.jobsPerformWithoutAnimation {
+                apply()
+            }
+            if !expanded {
+                detailContentView.byVisible(NO)
+            }
         }
     }
 
     private func foldedTransform() -> CATransform3D {
         var t = CATransform3DIdentity
         t.m34 = -1.0 / 520.0   // 透视
-        t = CATransform3DRotate(t, -CGFloat.pi / 2.0, 1, 0, 0) // -90°
+        t = CATransform3DRotate(t,
+                                -CGFloat.pi / 2.0,
+                                1,
+                                0,
+                                0) // -90°
         return t
     }
 }

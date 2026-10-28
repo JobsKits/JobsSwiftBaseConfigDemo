@@ -9,6 +9,7 @@
 import UIKit
 
 public final class JobsDebugAction {
+
     public private(set) var title = ""
     public private(set) var image: UIImage?
     public private(set) var action: ((UIViewController) -> Void)?

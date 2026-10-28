@@ -10,6 +10,7 @@ import Foundation
 // MARK: - JobsTaskManagerStatusStream
 /// 任务管理器状态变化流
 public struct JobsTaskManagerStatusStream: AsyncSequence {
+
     public typealias Element = JobsTaskStatusChange
     private let manager: JobsTaskManager
 
@@ -19,11 +20,13 @@ public struct JobsTaskManagerStatusStream: AsyncSequence {
 }
 
 extension JobsTaskManagerStatusStream {
+
     public func makeAsyncIterator() -> AsyncIterator {
         AsyncIterator(manager: manager)
     }
 
     public struct AsyncIterator: AsyncIteratorProtocol {
+
         private let stream: AsyncStream<JobsTaskStatusChange>
         private var iterator: AsyncStream<JobsTaskStatusChange>.Iterator
         init(manager: JobsTaskManager) {

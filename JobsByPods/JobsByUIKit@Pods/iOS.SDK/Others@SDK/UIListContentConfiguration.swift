@@ -39,6 +39,7 @@ import JobsSwiftDSL
 @available(iOS 14.0, tvOS 14.0, *)
 @available(watchOS, unavailable)
 extension UIListContentConfiguration {
+
     // MARK: - 小工具
     private func jobs_mutating(_ body: jobsByInoutListContentConfigBlock) -> UIListContentConfiguration {
         var copy = self
@@ -98,42 +99,58 @@ extension UIListContentConfiguration {
     // ================================== 核心字段 ==================================
     @discardableResult
     public func byText(_ value: String?) -> Self {
-        jobs_mutating { $0.text = value }
+        jobs_mutating {
+            $0.text = value
+        }
     }
 
     @discardableResult
     public func byAttributedText(_ value: NSAttributedString?) -> Self {
-        jobs_mutating { $0.attributedText = value }
+        jobs_mutating {
+            $0.attributedText = value
+        }
     }
 
     @discardableResult
     public func bySecondaryText(_ value: String?) -> Self {
-        jobs_mutating { $0.secondaryText = value }
+        jobs_mutating {
+            $0.secondaryText = value
+        }
     }
 
     @discardableResult
     public func bySecondaryAttributedText(_ value: NSAttributedString?) -> Self {
-        jobs_mutating { $0.secondaryAttributedText = value }
+        jobs_mutating {
+            $0.secondaryAttributedText = value
+        }
     }
 
     @discardableResult
     public func byImage(_ value: UIImage?) -> Self {
-        jobs_mutating { $0.image = value }
+        jobs_mutating {
+            $0.image = value
+        }
     }
     /// 便捷：直接使用 SF Symbol 名称
     @discardableResult
     public func byImage(systemName: String) -> Self {
-        jobs_mutating { $0.image = UIImage(systemName: systemName) }
+        jobs_mutating {
+            $0.image = UIImage(systemName: systemName)
+        }
     }
     // ================================== 布局/边距/排布 ==================================
     @discardableResult
     public func byAxesPreservingSuperviewLayoutMargins(_ axes: UIAxis) -> Self {
-        jobs_mutating { $0.axesPreservingSuperviewLayoutMargins = axes }
+        jobs_mutating {
+            $0.axesPreservingSuperviewLayoutMargins = axes
+        }
     }
 
     @discardableResult
     public func byDirectionalLayoutMargins(_ edges: NSDirectionalEdgeInsets) -> Self {
-        jobs_mutating { $0.directionalLayoutMargins = edges }
+        jobs_mutating {
+            $0.directionalLayoutMargins = edges
+        }
     }
     /// 便捷：用 `UIEdgeInsets` 适配成 Directional
     @discardableResult
@@ -148,192 +165,268 @@ extension UIListContentConfiguration {
 
     @discardableResult
     public func byPrefersSideBySideTextAndSecondaryText(_ flag: Bool) -> Self {
-        jobs_mutating { $0.prefersSideBySideTextAndSecondaryText = flag }
+        jobs_mutating {
+            $0.prefersSideBySideTextAndSecondaryText = flag
+        }
     }
 
     @discardableResult
     public func byImageToTextPadding(_ v: CGFloat) -> Self {
-        jobs_mutating { $0.imageToTextPadding = v }
+        jobs_mutating {
+            $0.imageToTextPadding = v
+        }
     }
 
     @discardableResult
     public func byPrimarySecondaryHorizontalPadding(_ v: CGFloat) -> Self {
-        jobs_mutating { $0.textToSecondaryTextHorizontalPadding = v }
+        jobs_mutating {
+            $0.textToSecondaryTextHorizontalPadding = v
+        }
     }
 
     @discardableResult
     public func byPrimarySecondaryVerticalPadding(_ v: CGFloat) -> Self {
-        jobs_mutating { $0.textToSecondaryTextVerticalPadding = v }
+        jobs_mutating {
+            $0.textToSecondaryTextVerticalPadding = v
+        }
     }
 
     @available(iOS 18.0, tvOS 18.0, *)
     @discardableResult
     public func byAlpha(_ value: CGFloat) -> Self {
-        jobs_mutating { $0.alpha = value }
+        jobs_mutating {
+            $0.alpha = value
+        }
     }
     // ================================== 文本属性 · 主文案 ==================================
     @discardableResult
     public func byTextFont(_ font: UIFont) -> Self {
-        jobs_mutating { $0.textProperties.font = font }
+        jobs_mutating {
+            $0.textProperties.font = font
+        }
     }
 
     @discardableResult
     public func byTextColor(_ color: UIColor) -> Self {
-        jobs_mutating { $0.textProperties.color = color }
+        jobs_mutating {
+            $0.textProperties.color = color
+        }
     }
 
     @discardableResult
     public func byTextColorTransformer(_ transformer: UIConfigurationColorTransformer?) -> Self {
-        jobs_mutating { $0.textProperties.colorTransformer = transformer }
+        jobs_mutating {
+            $0.textProperties.colorTransformer = transformer
+        }
     }
 
     @discardableResult
     public func byTextAlignment(_ alignment: UIListContentConfiguration.TextProperties.TextAlignment) -> Self {
-        jobs_mutating { $0.textProperties.alignment = alignment }
+        jobs_mutating {
+            $0.textProperties.alignment = alignment
+        }
     }
 
     @discardableResult
     public func byTextLineBreakMode(_ mode: NSLineBreakMode) -> Self {
-        jobs_mutating { $0.textProperties.lineBreakMode = mode }
+        jobs_mutating {
+            $0.textProperties.lineBreakMode = mode
+        }
     }
 
     @discardableResult
     public func byTextLines(_ numberOfLines: Int) -> Self {
-        jobs_mutating { $0.textProperties.numberOfLines = numberOfLines }
+        jobs_mutating {
+            $0.textProperties.numberOfLines = numberOfLines
+        }
     }
 
     @discardableResult
-    public func byTextAdjustsFontSizeToFitWidth(_ flag: Bool, minimumScaleFactor: CGFloat? = nil) -> Self {
+    public func byTextAdjustsFontSizeToFitWidth(_ flag: Bool,
+                                                minimumScaleFactor: CGFloat? = nil) -> Self {
         jobs_mutating {
             $0.textProperties.adjustsFontSizeToFitWidth = flag
-            if let f = minimumScaleFactor { $0.textProperties.minimumScaleFactor = f }
+            if let f = minimumScaleFactor {
+                $0.textProperties.minimumScaleFactor = f
+            }
         }
     }
 
     @discardableResult
     public func byTextAllowsDefaultTightening(_ flag: Bool) -> Self {
-        jobs_mutating { $0.textProperties.allowsDefaultTighteningForTruncation = flag }
+        jobs_mutating {
+            $0.textProperties.allowsDefaultTighteningForTruncation = flag
+        }
     }
 
     @discardableResult
     public func byTextAdjustsForContentSizeCategory(_ flag: Bool) -> Self {
-        jobs_mutating { $0.textProperties.adjustsFontForContentSizeCategory = flag }
+        jobs_mutating {
+            $0.textProperties.adjustsFontForContentSizeCategory = flag
+        }
     }
 
     @discardableResult
     public func byTextTransform(_ transform: UIListContentConfiguration.TextProperties.TextTransform) -> Self {
-        jobs_mutating { $0.textProperties.transform = transform }
+        jobs_mutating {
+            $0.textProperties.transform = transform
+        }
     }
 
     #if targetEnvironment(macCatalyst)
     @available(macCatalyst 16.0, *)
     @discardableResult
     public func byTextShowsExpansionWhenTruncated(_ flag: Bool) -> Self {
-        jobs_mutating { $0.textProperties.showsExpansionTextWhenTruncated = flag }
+        jobs_mutating {
+            $0.textProperties.showsExpansionTextWhenTruncated = flag
+        }
     }
     #endif
 
     // ================================== 文本属性 · 副文案 ==================================
     @discardableResult
     public func bySecondaryFont(_ font: UIFont) -> Self {
-        jobs_mutating { $0.secondaryTextProperties.font = font }
+        jobs_mutating {
+            $0.secondaryTextProperties.font = font
+        }
     }
 
     @discardableResult
     public func bySecondaryColor(_ color: UIColor) -> Self {
-        jobs_mutating { $0.secondaryTextProperties.color = color }
+        jobs_mutating {
+            $0.secondaryTextProperties.color = color
+        }
     }
 
     @discardableResult
     public func bySecondaryColorTransformer(_ transformer: UIConfigurationColorTransformer?) -> Self {
-        jobs_mutating { $0.secondaryTextProperties.colorTransformer = transformer }
+        jobs_mutating {
+            $0.secondaryTextProperties.colorTransformer = transformer
+        }
     }
 
     @discardableResult
     public func bySecondaryAlignment(_ alignment: UIListContentConfiguration.TextProperties.TextAlignment) -> Self {
-        jobs_mutating { $0.secondaryTextProperties.alignment = alignment }
+        jobs_mutating {
+            $0.secondaryTextProperties.alignment = alignment
+        }
     }
 
     @discardableResult
     public func bySecondaryLines(_ numberOfLines: Int) -> Self {
-        jobs_mutating { $0.secondaryTextProperties.numberOfLines = numberOfLines }
+        jobs_mutating {
+            $0.secondaryTextProperties.numberOfLines = numberOfLines
+        }
     }
 
     @discardableResult
     public func bySecondaryLineBreakMode(_ mode: NSLineBreakMode) -> Self {
-        jobs_mutating { $0.secondaryTextProperties.lineBreakMode = mode }
+        jobs_mutating {
+            $0.secondaryTextProperties.lineBreakMode = mode
+        }
     }
 
     @discardableResult
     public func bySecondaryTransform(_ transform: UIListContentConfiguration.TextProperties.TextTransform) -> Self {
-        jobs_mutating { $0.secondaryTextProperties.transform = transform }
+        jobs_mutating {
+            $0.secondaryTextProperties.transform = transform
+        }
     }
     // ================================== 图片属性 ==================================
     @discardableResult
     public func byPreferredSymbolConfiguration(_ cfg: UIImage.SymbolConfiguration?) -> Self {
-        jobs_mutating { $0.imageProperties.preferredSymbolConfiguration = cfg }
+        jobs_mutating {
+            $0.imageProperties.preferredSymbolConfiguration = cfg
+        }
     }
     /// 便捷：直接传入 pointSize / weight / scale 生成 `preferredSymbolConfiguration`
     @discardableResult
     public func byPreferredSymbol(pointSize: CGFloat? = nil,
-                           weight: UIImage.SymbolWeight? = nil,
-                           scale: UIImage.SymbolScale? = nil) -> Self {
+                                  weight: UIImage.SymbolWeight? = nil,
+                                  scale: UIImage.SymbolScale? = nil) -> Self {
         let pieces: [UIImage.SymbolConfiguration] = [
-            pointSize.map { .init(pointSize: $0) },
-            weight.map    { .init(weight: $0)    },
-            scale.map     { .init(scale: $0)     }
-        ].compactMap { $0 }
+            pointSize.map {
+            .init(pointSize: $0)
+        },
+            weight.map    {
+            .init(weight: $0)
+        },
+            scale.map     {
+            .init(scale: $0)
+        }
+        ].compactMap {
+            $0
+        }
         let merged = pieces.reduce(nil as UIImage.SymbolConfiguration?) { acc, cfg in
             acc?.applying(cfg) ?? cfg
-        };return byPreferredSymbolConfiguration(merged)
+        }
+        return byPreferredSymbolConfiguration(merged)
     }
 
     @discardableResult
     public func byTintColor(_ color: UIColor?) -> Self {
-        jobs_mutating { $0.imageProperties.tintColor = color }
+        jobs_mutating {
+            $0.imageProperties.tintColor = color
+        }
     }
 
     @discardableResult
     public func byTintColorTransformer(_ transformer: UIConfigurationColorTransformer?) -> Self {
-        jobs_mutating { $0.imageProperties.tintColorTransformer = transformer }
+        jobs_mutating {
+            $0.imageProperties.tintColorTransformer = transformer
+        }
     }
 
     @discardableResult
     public func byImageCornerRadius(_ radius: CGFloat) -> Self {
-        jobs_mutating { $0.imageProperties.cornerRadius = radius }
+        jobs_mutating {
+            $0.imageProperties.cornerRadius = radius
+        }
     }
 
     @discardableResult
     public func byImageMaximumSize(_ size: CGSize) -> Self {
-        jobs_mutating { $0.imageProperties.maximumSize = size }
+        jobs_mutating {
+            $0.imageProperties.maximumSize = size
+        }
     }
     /// 为图片预留布局尺寸（即使无图也占位）
     @discardableResult
     public func byImageReservedLayoutSize(_ size: CGSize) -> Self {
-        jobs_mutating { $0.imageProperties.reservedLayoutSize = size }
+        jobs_mutating {
+            $0.imageProperties.reservedLayoutSize = size
+        }
     }
 
     @discardableResult
     public func byImageIgnoresInvertColors(_ flag: Bool) -> Self {
-        jobs_mutating { $0.imageProperties.accessibilityIgnoresInvertColors = flag }
+        jobs_mutating {
+            $0.imageProperties.accessibilityIgnoresInvertColors = flag
+        }
     }
 
     @available(iOS 18.0, tvOS 18.0, *)
     @discardableResult
     public func byImageStrokeColor(_ color: UIColor?) -> Self {
-        jobs_mutating { $0.imageProperties.strokeColor = color }
+        jobs_mutating {
+            $0.imageProperties.strokeColor = color
+        }
     }
 
     @available(iOS 18.0, tvOS 18.0, *)
     @discardableResult
     public func byImageStrokeColorTransformer(_ transformer: UIConfigurationColorTransformer?) -> Self {
-        jobs_mutating { $0.imageProperties.strokeColorTransformer = transformer }
+        jobs_mutating {
+            $0.imageProperties.strokeColorTransformer = transformer
+        }
     }
 
     @available(iOS 18.0, tvOS 18.0, *)
     @discardableResult
     public func byImageStrokeWidth(_ width: CGFloat) -> Self {
-        jobs_mutating { $0.imageProperties.strokeWidth = width }
+        jobs_mutating {
+            $0.imageProperties.strokeWidth = width
+        }
     }
     // ================================== 状态更新 / ContentView ==================================
     /// 对任意 `UIConfigurationState` 做增量更新（一般配合 `UICellConfigurationState` 使用）

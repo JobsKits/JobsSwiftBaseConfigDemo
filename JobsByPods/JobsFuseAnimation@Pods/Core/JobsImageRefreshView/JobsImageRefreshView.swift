@@ -16,15 +16,15 @@ import JobsSwiftTimer
 import SnapKit
 
 /// 单图静态展示；多图由 JobsTimer 定时轮播形成刷新动画。
-public final class JobsImageRefreshView: UIView, JobsRefreshAnimatorProtocol {
+public final class JobsImageRefreshView: UIView,
+                                         JobsRefreshAnimatorProtocol {
+
     public private(set) var images: [UIImage]
     public private(set) var frameInterval: TimeInterval
     public var indicatorSize: CGSize {
         didSet {
-            indicatorSize = CGSize(
-                width: max(1, indicatorSize.width),
-                height: max(1, indicatorSize.height)
-            )
+            indicatorSize = CGSize(width: max(1,indicatorSize.width),
+                                   height: max(1,indicatorSize.height))
             invalidateIntrinsicContentSize()
         }
     }
@@ -41,17 +41,22 @@ public final class JobsImageRefreshView: UIView, JobsRefreshAnimatorProtocol {
     public init(images: [UIImage],
                 frameInterval: TimeInterval = 0.08) {
         self.images = images
-        self.frameInterval = frameInterval.isFinite ? max(0.02, frameInterval) : 0.08
-        let firstSize = images.first?.size ?? CGSize(width: 20, height: 20)
-        indicatorSize = CGSize(width: max(1, firstSize.width), height: max(1, firstSize.height))
-        super.init(frame: CGRect(origin: .zero, size: indicatorSize))
+        self.frameInterval = frameInterval.isFinite ? max(0.02,
+                                                          frameInterval) : 0.08
+        let firstSize = images.first?.size ?? CGSize(width: 20,
+                                                     height: 20)
+        indicatorSize = CGSize(width: max(1,firstSize.width),
+                               height: max(1,firstSize.height))
+        super.init(frame: CGRect(origin: .zero,
+                                 size: indicatorSize))
         jobs_setupImageRefreshView()
     }
 
     required init?(coder: NSCoder) {
         images = []
         frameInterval = 0.08
-        indicatorSize = CGSize(width: 20, height: 20)
+        indicatorSize = CGSize(width: 20,
+                               height: 20)
         super.init(coder: coder)
         jobs_setupImageRefreshView()
     }
@@ -96,7 +101,8 @@ public final class JobsImageRefreshView: UIView, JobsRefreshAnimatorProtocol {
             frameTimer.resume()
         } else {
             jobs_startTimerIfNeeded()
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -119,17 +125,16 @@ public final class JobsImageRefreshView: UIView, JobsRefreshAnimatorProtocol {
 
     public func refreshAnimatorApply(phase: JobsRefreshAnimatorPhase,
                                      progress: CGFloat) {
-        let normalizedProgress = min(1, max(0, progress))
+        let normalizedProgress = min(1,
+                                     max(0,progress))
         switch phase {
         /// 下拉过程展示首帧并渐显缩放
         case .pulling:
             byStop()
                 .byHidden(false)
                 .byAlpha(0.35 + normalizedProgress * 0.65)
-                .byTransform(CGAffineTransform(
-                    scaleX: 0.78 + normalizedProgress * 0.22,
-                    y: 0.78 + normalizedProgress * 0.22
-                ))
+                .byTransform(CGAffineTransform(scaleX: 0.78 + normalizedProgress * 0.22,
+                                               y: 0.78 + normalizedProgress * 0.22))
         /// 达到阈值后展示完整首帧
         case .ready:
             byStop()
@@ -178,14 +183,13 @@ public final class JobsImageRefreshView: UIView, JobsRefreshAnimatorProtocol {
             frameTimer.resume()
             return
         }
-        let timerConfig = JobsSwiftTimerConfig(
-            interval: frameInterval,
-            repeats: true,
-            queue: .main,
-            pauseInBackground: true,
-            autoManageAppState: true
-        )
-        let timer = JobsTimer(kind: .gcd, config: timerConfig) { [weak self] in
+        let timerConfig = JobsSwiftTimerConfig(interval: frameInterval,
+                                               repeats: true,
+                                               queue: .main,
+                                               pauseInBackground: true,
+                                               autoManageAppState: true)
+        let timer = JobsTimer(kind: .gcd,
+                              config: timerConfig) { [weak self] in
             Task { @MainActor [weak self] in
                 self?.jobs_advanceFrame()
             }
@@ -195,7 +199,9 @@ public final class JobsImageRefreshView: UIView, JobsRefreshAnimatorProtocol {
     }
 
     private func jobs_advanceFrame() {
-        guard !images.isEmpty else { return }
+        guard !images.isEmpty else {
+            return
+        }
         frameIndex = (frameIndex + 1) % images.count
         jobs_showFrame(at: frameIndex)
     }
@@ -205,7 +211,8 @@ public final class JobsImageRefreshView: UIView, JobsRefreshAnimatorProtocol {
             imageView.byImage(nil)
             return
         }
-        let safeIndex = min(max(0, index), images.count - 1)
+        let safeIndex = min(max(0,index),
+                            images.count - 1)
         imageView.byImage(images[safeIndex])
     }
 }

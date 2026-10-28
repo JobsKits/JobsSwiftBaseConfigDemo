@@ -55,6 +55,7 @@ extension Data: @retroactive SafeUnwrappedInitializable {}
 extension Date: @retroactive SafeUnwrappedInitializable {}
 extension Decimal: @retroactive SafeUnwrappedInitializable {}
 extension DateComponents: @retroactive SafeUnwrappedInitializable {
+
     public init() {
         self.init(calendar: nil,
                   timeZone: nil,
@@ -82,6 +83,7 @@ extension NSAttributedString: @retroactive SafeUnwrappedInitializable {}
 extension AttributedString: @retroactive SafeUnwrappedInitializable {}
 // MARK: - 通用 safelyUnwrapped：给“允许兜底构造”的类型使用
 extension Optional where Wrapped: SafeUnwrappedInitializable {
+
     public func safelyUnwrapped(_ defaultValue: Wrapped? = nil) -> Wrapped {
         self ?? (defaultValue ?? Wrapped())
     }
@@ -92,6 +94,9 @@ extension UIView: @retroactive _UISafeUnwrappedBan {}
 extension UIImage: @retroactive _UISafeUnwrappedBan {}
 extension UIColor: @retroactive _UISafeUnwrappedBan {}
 extension Optional where Wrapped: _UISafeUnwrappedBan {
+
     @available(*, unavailable, message: "🚫 UI 类型禁止使用 safelyUnwrapped()，请显式处理 nil 或提供业务兜底。")
-    public func safelyUnwrapped(_ defaultValue: Wrapped? = nil) -> Wrapped { fatalError() }
+    public func safelyUnwrapped(_ defaultValue: Wrapped? = nil) -> Wrapped {
+        fatalError()
+    }
 }

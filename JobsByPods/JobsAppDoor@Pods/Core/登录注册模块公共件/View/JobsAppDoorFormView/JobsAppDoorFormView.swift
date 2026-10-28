@@ -13,6 +13,7 @@ import SnapKit
 import JobsSwiftGraphicCaptcha
 
 public final class JobsAppDoorFormView: UIView {
+
     public let configuration: JobsAppDoorConfig
     public private(set) var mode: JobsAppDoorMode
     public var onModeRequest: ((JobsAppDoorMode) -> Void)?
@@ -41,7 +42,8 @@ public final class JobsAppDoorFormView: UIView {
     public private(set) var isSubmitting = false
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView.jobsMake { _ in }
+        UIScrollView
+            .jobsMake { _ in }
             .byContentInsetAdjustmentBehavior(.never)
             .byAlwaysBounceVertical(false)
             .byKeyboardDismissMode(.interactive)
@@ -49,21 +51,25 @@ public final class JobsAppDoorFormView: UIView {
     }()
 
     private lazy var contentView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
             .byAddTo(scrollView)
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextColor(JobsCor.white)
             .byTextAlignment(.center)
-            .byFont(JobsFont.systemFont(ofSize: 20, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 20,
+                                        weight: .regular))
             .byAddTo(contentView)
     }()
 
     private lazy var fieldsStack: UIStackView = {
-        UIStackView.jobsMake { _ in }
+        UIStackView
+            .jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .byDistribution(.fill)
@@ -73,39 +79,41 @@ public final class JobsAppDoorFormView: UIView {
 
     private lazy var rememberButton: UIButton = {
         UIButton.sys()
-            .jobsAppDoorAppearance(
-                title: JobsAppDoorResource.text("记住我"),
-                titleColor: JobsAppDoorPalette.fieldStroke,
-                font: JobsFont.systemFont(ofSize: 12, weight: .regular),
-                backgroundColor: JobsCor.clear,
-                cornerRadius: 0
-            )
-            .byImage(rememberImage(selected: true), for: .normal)
-            .byImagePlacement(.left, padding: 4)
+            .jobsAppDoorAppearance(title: JobsAppDoorResource.text("记住我"),
+                                   titleColor: JobsAppDoorPalette.fieldStroke,
+                                   font: JobsFont.systemFont(ofSize: 12,
+                                                             weight: .regular),
+                                   backgroundColor: JobsCor.clear,
+                                   cornerRadius: 0)
+            .byImage(rememberImage(selected: true),
+                     for: .normal)
+            .byImagePlacement(.left,
+                              padding: 4)
             .jobsAppDoorSingleLineTitle()
             .byContentHorizontalAlignment(.left)
             .onTap { [weak self] sender in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 remembersPassword.toggle()
-                sender.byImage(rememberImage(selected: remembersPassword), for: .normal)
+                sender.byImage(rememberImage(selected: remembersPassword),
+                               for: .normal)
             }
     }()
 
     private lazy var forgotButton: UIButton = {
         UIButton.sys()
-            .jobsAppDoorAppearance(
-                title: JobsAppDoorResource.text("忘记密码"),
-                titleColor: JobsAppDoorPalette.gold,
-                font: JobsFont.systemFont(ofSize: 12, weight: .regular),
-                backgroundColor: JobsCor.clear,
-                cornerRadius: 0
-            )
-            .byImage(
-                JobsAppDoorResource.image(named: "AppDoorQuestion")
-                    ?? JobsAppDoorResource.image(named: "codeDecode"),
-                for: .normal
-            )
-            .byImagePlacement(.left, padding: 4)
+            .jobsAppDoorAppearance(title: JobsAppDoorResource.text("忘记密码"),
+                                   titleColor: JobsAppDoorPalette.gold,
+                                   font: JobsFont.systemFont(ofSize: 12,
+                                                             weight: .regular),
+                                   backgroundColor: JobsCor.clear,
+                                   cornerRadius: 0)
+            .byImage(JobsAppDoorResource.image(named: "AppDoorQuestion")
+                ?? JobsAppDoorResource.image(named: "codeDecode"),
+                     for: .normal)
+            .byImagePlacement(.left,
+                              padding: 4)
             .jobsAppDoorSingleLineTitle()
             .byContentHorizontalAlignment(.right)
             .onTap { [weak self] _ in
@@ -124,13 +132,12 @@ public final class JobsAppDoorFormView: UIView {
 
     private lazy var submitButton: UIButton = {
         UIButton.sys()
-            .jobsAppDoorAppearance(
-                title: submitTitle(),
-                titleColor: submitTitleColor(),
-                font: JobsFont.systemFont(ofSize: 15, weight: .semibold),
-                backgroundColor: submitBackgroundColor(enabled: false),
-                cornerRadius: 25
-            )
+            .jobsAppDoorAppearance(title: submitTitle(),
+                                   titleColor: submitTitleColor(),
+                                   font: JobsFont.systemFont(ofSize: 15,
+                                                             weight: .semibold),
+                                   backgroundColor: submitBackgroundColor(enabled: false),
+                                   cornerRadius: 25)
             .onTap { [weak self] _ in
                 self?.submitTapped()
             }
@@ -139,13 +146,12 @@ public final class JobsAppDoorFormView: UIView {
 
     private lazy var homeButton: UIButton = {
         UIButton.sys()
-            .jobsAppDoorAppearance(
-                title: JobsAppDoorResource.text("返回首页"),
-                titleColor: homeTitleColor(),
-                font: JobsFont.systemFont(ofSize: 15, weight: .semibold),
-                backgroundColor: JobsCor.clear,
-                cornerRadius: 0
-            )
+            .jobsAppDoorAppearance(title: JobsAppDoorResource.text("返回首页"),
+                                   titleColor: homeTitleColor(),
+                                   font: JobsFont.systemFont(ofSize: 15,
+                                                             weight: .semibold),
+                                   backgroundColor: JobsCor.clear,
+                                   cornerRadius: 0)
             .onTap { [weak self] _ in
                 self?.onHome?()
             }
@@ -154,42 +160,42 @@ public final class JobsAppDoorFormView: UIView {
 
     private lazy var modeButton: UIButton = {
         UIButton.sys()
-            .jobsAppDoorAppearance(
-                title: verticalModeTitle(),
-                titleColor: railTitleColor(),
-                font: JobsFont.systemFont(ofSize: 13, weight: .medium),
-                backgroundColor: railBackgroundColor(),
-                cornerRadius: 0
-            )
-            .byImage(
-                JobsAppDoorResource.image(named: "AppDoorBackLogin")
-                    ?? JobsAppDoorResource.image(named: "Lock"),
-                for: .normal
-            )
-            .byImagePlacement(.top, padding: 8)
+            .jobsAppDoorAppearance(title: verticalModeTitle(),
+                                   titleColor: railTitleColor(),
+                                   font: JobsFont.systemFont(ofSize: 13,
+                                                             weight: .medium),
+                                   backgroundColor: railBackgroundColor(),
+                                   cornerRadius: 0)
+            .byImage(JobsAppDoorResource.image(named: "AppDoorBackLogin")
+                ?? JobsAppDoorResource.image(named: "Lock"),
+                     for: .normal)
+            .byImagePlacement(.top,
+                              padding: 8)
             .byTitleAlignment(.center)
             .byNumberOfLines(0)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onModeRequest?(mode == .login ? .register : .login)
             }
             .byAddTo(self)
     }()
 
     private lazy var validationLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextColor(JobsAppDoorPalette.gold)
             .byTextAlignment(.center)
-            .byFont(JobsFont.systemFont(ofSize: 10, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 10,
+                                        weight: .medium))
             .byNumberOfLines(1)
             .byAddTo(contentView)
     }()
 
-    public init(
-        mode: JobsAppDoorMode,
-        configuration: JobsAppDoorConfig,
-        showsModeSwitcher: Bool
-    ) {
+    public init(mode: JobsAppDoorMode,
+                configuration: JobsAppDoorConfig,
+                showsModeSwitcher: Bool) {
         self.mode = mode
         self.configuration = configuration
         self.showsModeSwitcher = showsModeSwitcher
@@ -220,17 +226,15 @@ public final class JobsAppDoorFormView: UIView {
     }
 
     public var values: JobsAppDoorFormValues {
-        JobsAppDoorFormValues(
-            username: inputViews[.username]?.text ?? "",
-            password: inputViews[.password]?.text ?? "",
-            confirmPassword: inputViews[.confirmPassword]?.text ?? "",
-            countryCode: inputViews[.phone]?.countryCode ?? "+86",
-            phone: inputViews[.phone]?.text ?? "",
-            smsCode: inputViews[.smsCode]?.text ?? "",
-            graphicCaptcha: inputViews[.graphicCaptcha]?.text ?? "",
-            graphicCaptchaChallengeID: inputViews[.graphicCaptcha]?.captchaView?.serverChallenge?.identifier,
-            remembersPassword: remembersPassword
-        )
+        JobsAppDoorFormValues(username: inputViews[.username]?.text ?? "",
+                              password: inputViews[.password]?.text ?? "",
+                              confirmPassword: inputViews[.confirmPassword]?.text ?? "",
+                              countryCode: inputViews[.phone]?.countryCode ?? "+86",
+                              phone: inputViews[.phone]?.text ?? "",
+                              smsCode: inputViews[.smsCode]?.text ?? "",
+                              graphicCaptcha: inputViews[.graphicCaptcha]?.text ?? "",
+                              graphicCaptchaChallengeID: inputViews[.graphicCaptcha]?.captchaView?.serverChallenge?.identifier,
+                              remembersPassword: remembersPassword)
     }
 
     public func applySubmissionState(_ state: JobsAppDoorSubmissionState) {
@@ -251,20 +255,18 @@ public final class JobsAppDoorFormView: UIView {
             .byText(title())
             .byFont(titleFont())
         fieldsStack.bySpacing(mode == .login ? 20 : 12)
-        submitButton.jobsAppDoorAppearance(
-            title: submitTitle(),
-            titleColor: submitTitleColor(),
-            font: JobsFont.systemFont(ofSize: 15, weight: .semibold),
-            backgroundColor: submitBackgroundColor(enabled: false),
-            cornerRadius: 25
-        )
-        homeButton.jobsAppDoorAppearance(
-            title: JobsAppDoorResource.text("返回首页"),
-            titleColor: homeTitleColor(),
-            font: JobsFont.systemFont(ofSize: 15, weight: .semibold),
-            backgroundColor: JobsCor.clear,
-            cornerRadius: 0
-        )
+        submitButton.jobsAppDoorAppearance(title: submitTitle(),
+                                           titleColor: submitTitleColor(),
+                                           font: JobsFont.systemFont(ofSize: 15,
+                                                                     weight: .semibold),
+                                           backgroundColor: submitBackgroundColor(enabled: false),
+                                           cornerRadius: 25)
+        homeButton.jobsAppDoorAppearance(title: JobsAppDoorResource.text("返回首页"),
+                                         titleColor: homeTitleColor(),
+                                         font: JobsFont.systemFont(ofSize: 15,
+                                                                   weight: .semibold),
+                                         backgroundColor: JobsCor.clear,
+                                         cornerRadius: 0)
         loginOptionsStack.byHidden(mode != .login)
         validationLabel.byText("")
         rebuildFields()
@@ -275,6 +277,7 @@ public final class JobsAppDoorFormView: UIView {
 }
 
 private extension JobsAppDoorFormView {
+
     func setupView() {
         byBackgroundColor(showsModeSwitcher ? JobsAppDoorPalette.cardBackground : JobsCor.clear)
             .byCornerRadius(showsModeSwitcher ? 8 : 0)
@@ -368,7 +371,9 @@ private extension JobsAppDoorFormView {
             return 360
         }
         let count = CGFloat(orderedFields.count)
-        return max(394, 166 + count * 50 + max(0, count - 1) * 12)
+        return max(394,
+                   166 + count * 50 + max(0,
+                                          count - 1) * 12)
     }
 
     func rebuildFields() {
@@ -388,11 +393,9 @@ private extension JobsAppDoorFormView {
     }
 
     func makeInputView(field: JobsAppDoorField) -> JobsAppDoorInputView {
-        let inputView = JobsAppDoorInputView(
-            field: field,
-            captchaConfig: configuration.registerConfig.graphicCaptchaConfig,
-            verificationCodeDuration: configuration.verificationCodeDuration
-        )
+        let inputView = JobsAppDoorInputView(field: field,
+                                             captchaConfig: configuration.registerConfig.graphicCaptchaConfig,
+                                             verificationCodeDuration: configuration.verificationCodeDuration)
         if let captcha = inputView.captchaView {
             configureGraphicCaptcha?(captcha)
             let previous = captcha.onChallengeChanged
@@ -406,13 +409,18 @@ private extension JobsAppDoorFormView {
             self?.refreshSubmitState()
         }
         inputView.onCountryCodeRequest = { [weak self, weak inputView] in
-            guard let self, let inputView else { return }
+            guard let self, let inputView else {
+                return
+            }
             onCountryCodeRequest?(inputView)
         }
         inputView.onVerificationCodeRequest = { [weak self, weak inputView] in
-            guard let self, let inputView else { return }
+            guard let self, let inputView else {
+                return
+            }
             onVerificationCodeRequest?(inputView)
-        };return inputView
+        }
+        return inputView
     }
 
     func fieldsForMode() -> [JobsAppDoorField] {
@@ -428,27 +436,31 @@ private extension JobsAppDoorFormView {
             }
             if configuration.registerConfig.showsGraphicCaptcha {
                 fields.append(.graphicCaptcha)
-            };return fields
+            }
+            return fields
         /// 找回密码需要账号、手机验证和新密码
         case .forgotPassword:
             var fields: [JobsAppDoorField] = [.username, .phone, .smsCode, .password]
             if configuration.registerConfig.showsGraphicCaptcha {
                 fields.append(.graphicCaptcha)
-            };return fields
+            }
+            return fields
         }
     }
 
     func refreshRailAppearance() {
-        guard showsModeSwitcher else { return }
+        guard showsModeSwitcher else {
+            return
+        }
         modeButton
-            .jobsAppDoorAppearance(
-                title: verticalModeTitle(),
-                titleColor: railTitleColor(),
-                font: JobsFont.systemFont(ofSize: mode == .login ? 13 : 12, weight: .medium),
-                backgroundColor: railBackgroundColor(),
-                cornerRadius: 0
-            )
-            .byImagePlacement(.top, padding: 8)
+            .jobsAppDoorAppearance(title: verticalModeTitle(),
+                                   titleColor: railTitleColor(),
+                                   font: JobsFont.systemFont(ofSize: mode == .login ? 13 : 12,
+                                                             weight: .medium),
+                                   backgroundColor: railBackgroundColor(),
+                                   cornerRadius: 0)
+            .byImagePlacement(.top,
+                              padding: 8)
             .byTitleAlignment(.center)
             .byNumberOfLines(0)
     }
@@ -456,25 +468,27 @@ private extension JobsAppDoorFormView {
     func refreshSubmitState() {
         let valid = !isSubmitting && validationMessage(includeEmptyMessage: false) == nil
         submitButton
-            .jobsAppDoorAppearance(
-                title: submitTitle(),
-                titleColor: submitTitleColor(),
-                font: JobsFont.systemFont(ofSize: 15, weight: .semibold),
-                backgroundColor: submitBackgroundColor(enabled: valid),
-                cornerRadius: 25
-            )
+            .jobsAppDoorAppearance(title: submitTitle(),
+                                   titleColor: submitTitleColor(),
+                                   font: JobsFont.systemFont(ofSize: 15,
+                                                             weight: .semibold),
+                                   backgroundColor: submitBackgroundColor(enabled: valid),
+                                   cornerRadius: 25)
             .byEnabled(valid)
             .byAlpha(valid ? 1 : 0.45)
     }
 
     func submitTapped() {
-        guard !isSubmitting else { return }
+        guard !isSubmitting else {
+            return
+        }
         if let message = validationMessage(includeEmptyMessage: true) {
             validationLabel.byText(message)
             return
         }
         validationLabel.byText("")
-        onSubmit?(mode, values)
+        onSubmit?(mode,
+                  values)
     }
 
     func validationMessage(includeEmptyMessage: Bool) -> String? {
@@ -491,7 +505,8 @@ private extension JobsAppDoorFormView {
         if orderedFields.contains(.graphicCaptcha),
            inputViews[.graphicCaptcha]?.validateGraphicCaptcha() != true {
             return JobsAppDoorResource.text("图形验证码错误")
-        };return nil
+        }
+        return nil
     }
 
     func title() -> String {
@@ -510,8 +525,10 @@ private extension JobsAppDoorFormView {
 
     func titleFont() -> UIFont {
         mode == .login
-            ? JobsFont.systemFont(ofSize: 20, weight: .regular)
-            : JobsFont.systemFont(ofSize: 18, weight: .semibold)
+            ? JobsFont.systemFont(ofSize: 20,
+                                  weight: .regular)
+            : JobsFont.systemFont(ofSize: 18,
+                                  weight: .semibold)
     }
 
     func submitTitle() -> String {
@@ -550,7 +567,8 @@ private extension JobsAppDoorFormView {
     func submitBackgroundColor(enabled: Bool) -> UIColor {
         if showsModeSwitcher {
             return JobsCor.systemPink.withAlphaComponent(enabled ? 0.85 : 0.35)
-        };return JobsAppDoorPalette.gold.withAlphaComponent(enabled ? 0.92 : 0.42)
+        }
+        return JobsAppDoorPalette.gold.withAlphaComponent(enabled ? 0.92 : 0.42)
     }
 
     func homeTitleColor() -> UIColor {

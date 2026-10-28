@@ -19,6 +19,7 @@ import JobsSwiftOpen
 import SnapKit
 
 public final class JobsSplashVC: BaseVC {
+
     private let countdownTimeKey = "com.BSports.countdownTimeKey"
     private let isCountdownTimeKey = "com.BSports.isCountdownTimeKey"
     private let defaultCountdownTime = 15 * 60
@@ -38,7 +39,8 @@ public final class JobsSplashVC: BaseVC {
             UserDefaults.standard.bool(forKey: isCountdownTimeKey)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: isCountdownTimeKey)
+            UserDefaults.standard.set(newValue,
+                                      forKey: isCountdownTimeKey)
         }
     }
 
@@ -51,16 +53,19 @@ public final class JobsSplashVC: BaseVC {
             return value > 0 ? value : effectiveCountdownSeconds
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: countdownTimeKey)
+            UserDefaults.standard.set(newValue,
+                                      forKey: countdownTimeKey)
         }
     }
 
     private var effectiveCountdownSeconds: Int {
-        max(0, configuration.countdownSeconds ?? defaultCountdownTime)
+        max(0,
+            configuration.countdownSeconds ?? defaultCountdownTime)
     }
 
     private lazy var imageView: UIImageView = {
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byContentMode(configuration.contentMode)
             .byClipsToBounds()
             .byUserInteractionEnabled(true)
@@ -70,10 +75,12 @@ public final class JobsSplashVC: BaseVC {
     }()
 
     private lazy var remoteVideoDownloadNoticeLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText(JobsSplashLocalization.remoteVideoWiFiDownloadNotice(language: configuration.language))
             .byTextColor(JobsCor.white)
-            .byFont(JobsFont.systemFont(ofSize: 12, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 12,
+                                        weight: .medium))
             .byTextAlignment(.right)
             .byNumberOfLines(1)
             .byVisible(false)
@@ -81,31 +88,40 @@ public final class JobsSplashVC: BaseVC {
 
     private lazy var skipButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(JobsCor.black.withAlphaComponent(0.45), for: .normal)
+            .byBackgroundColor(JobsCor.black.withAlphaComponent(0.45),
+                               for: .normal)
             .byTitleColor(JobsCor.white)
-            .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+            .byTitleFont(JobsFont.systemFont(ofSize: 14,
+                                             weight: .medium))
             .byCornerRadius(18)
             .byMasksToBounds(true)
             .byCountdown { [weak self] cfg in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 cfg.mode = .down(from: self.countdownTime)
                 cfg.clickableWhileRunning = true
                 cfg.onTapWhileRunning = { [weak self] _, _ in
                     self?.finish()
                 }
                 cfg.renderLegacy = { [weak self] sec, button in
-                    self?.renderSkipButtonTitle(button, remainingSeconds: sec)
+                    self?.renderSkipButtonTitle(button,
+                                                remainingSeconds: sec)
                 }
                 if #available(iOS 15.0, *) {
                     cfg.renderConfiguration = { [weak self] sec, base in
-                        guard let self else { return base }
+                        guard let self else {
+                            return base
+                        }
                         var config = base
                         config.title = self.skipButtonTitle(remainingSeconds: sec)
                         return config
                     }
                 }
                 cfg.onTick = { [weak self] _, _, sec in
-                    guard let self else { return }
+                    guard let self else {
+                        return
+                    }
                     self.isCountdownTime = true
                     self.countdownTime = sec
                 }
@@ -114,10 +130,13 @@ public final class JobsSplashVC: BaseVC {
                 }
             }
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 if let ctrl = self.skipButton.jobsCountdownController,
                    ctrl.isRunning {
-                    ctrl.config.onTapWhileRunning?(self.skipButton, ctrl.config)
+                    ctrl.config.onTapWhileRunning?(self.skipButton,
+                                                   ctrl.config)
                 } else {
                     self.finish()
                 }
@@ -126,7 +145,8 @@ public final class JobsSplashVC: BaseVC {
 
     public init(configuration: JobsSplashConfiguration) {
         self.configuration = configuration
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil,
+                   bundle: nil)
     }
 
     @available(*, unavailable)
@@ -134,7 +154,9 @@ public final class JobsSplashVC: BaseVC {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override var canBecomeFirstResponder: Bool { true }
+    public override var canBecomeFirstResponder: Bool {
+        true
+    }
 
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -192,19 +214,22 @@ public final class JobsSplashVC: BaseVC {
         if let customFrame = configuration.skipButtonFrame {
             skipButton.byFrame(customFrame)
         } else {
-            skipButton.byFrame(CGRect(
-                x: max(view.safeAreaInsets.left, view.bounds.width - view.safeAreaInsets.right - configuration.skipButtonInsets.right - skipButtonDynamicWidth),
-                y: view.safeAreaInsets.top + configuration.skipButtonInsets.top,
-                width: skipButtonDynamicWidth,
-                height: 36
-            ))
+            skipButton.byFrame(CGRect(x: max(view.safeAreaInsets.left,
+                                             view.bounds.width - view.safeAreaInsets.right - configuration.skipButtonInsets.right - skipButtonDynamicWidth),
+                                      y: view.safeAreaInsets.top + configuration.skipButtonInsets.top,
+                                      width: skipButtonDynamicWidth,
+                                      height: 36))
         }
         updateRemoteVideoNoticePosition()
     }
 
-    public override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        super.motionEnded(motion, with: event)
-        guard motion == .motionShake else { return }
+    public override func motionEnded(_ motion: UIEvent.EventSubtype,
+                                     with event: UIEvent?) {
+        super.motionEnded(motion,
+                          with: event)
+        guard motion == .motionShake else {
+            return
+        }
         perform(configuration.shakeAction)
     }
 
@@ -217,7 +242,9 @@ public final class JobsSplashVC: BaseVC {
 
     @MainActor
     public func finish() {
-        guard !hasFinished else { return }
+        guard !hasFinished else {
+            return
+        }
         hasFinished = true
         isCountdownTime = false
         countdownTime = 0
@@ -252,35 +279,51 @@ public final class JobsSplashVC: BaseVC {
         imageView.byImage(configuration.fallbackImage)
         switch configuration.content {
         /// 处理 .localImage 分支
-        case let .localImage(name, bundle):
-            imageView.byImage(UIImage(named: name, in: bundle, compatibleWith: nil))
+        case let .localImage(name,
+                             bundle):
+            imageView.byImage(UIImage(named: name,
+                                      in: bundle,
+                                      compatibleWith: nil))
         /// 处理 .localGIF 分支
-        case let .localGIF(name, bundle):
-            guard let url = resourceURL(name: name, defaultExtension: "gif", bundle: bundle),
-                  let data = try? Data(contentsOf: url) else { return }
+        case let .localGIF(name,
+                           bundle):
+            guard let url = resourceURL(name: name,
+                                        defaultExtension: "gif",
+                                        bundle: bundle),
+                  let data = try? Data(contentsOf: url) else {
+                return
+            }
             imageView.byImage(JobsSplashGIFDecoder.image(data: data))
         /// 处理 .remoteImage 分支
         case let .remoteImage(url):
             loadRemoteImage(url)
         /// 处理 .localVideo 分支
-        case let .localVideo(name, fileExtension, bundle):
-            guard let url = resourceURL(name: name, defaultExtension: fileExtension, bundle: bundle) else { return }
+        case let .localVideo(name,
+                             fileExtension,
+                             bundle):
+            guard let url = resourceURL(name: name,
+                                        defaultExtension: fileExtension,
+                                        bundle: bundle) else {
+                return
+            }
             playVideo(url)
         /// 处理 .remoteVideo 分支
-        case let .remoteVideo(url, fallbackName, fallbackFileExtension, fallbackBundle):
-            loadRemoteVideo(
-                url,
-                fallbackName: fallbackName,
-                fallbackFileExtension: fallbackFileExtension,
-                fallbackBundle: fallbackBundle
-            )
+        case let .remoteVideo(url,
+                              fallbackName,
+                              fallbackFileExtension,
+                              fallbackBundle):
+            loadRemoteVideo(url,
+                            fallbackName: fallbackName,
+                            fallbackFileExtension: fallbackFileExtension,
+                            fallbackBundle: fallbackBundle)
         }
     }
 
     private func loadRemoteImage(_ url: URL) {
         if let cachedURL = JobsSplashMediaCache.shared.cachedFileURL(for: url),
            let data = try? Data(contentsOf: cachedURL) {
-            if let image = image(from: data, url: url) {
+            if let image = image(from: data,
+                                 url: url) {
                 imageView.byImage(image)
                 return
             }
@@ -288,33 +331,34 @@ public final class JobsSplashVC: BaseVC {
         }
         mediaTask = JobsSplashMediaCache.shared.download(url) { [weak self] result in
             guard let self, !self.hasFinished, case let .success(localURL) = result,
-                  let data = try? Data(contentsOf: localURL) else { return }
-            self.imageView.byImage(self.image(from: data, url: url))
+                  let data = try? Data(contentsOf: localURL) else {
+                return
+            }
+            self.imageView.byImage(self.image(from: data,
+                                              url: url))
         }
     }
 
-    private func loadRemoteVideo(
-        _ url: URL,
-        fallbackName: String?,
-        fallbackFileExtension: String?,
-        fallbackBundle: Bundle
-    ) {
+    private func loadRemoteVideo(_ url: URL,
+                                 fallbackName: String?,
+                                 fallbackFileExtension: String?,
+                                 fallbackBundle: Bundle) {
         if let cachedURL = JobsSplashMediaCache.shared.cachedVideoFileURL(for: url) {
             remoteVideoDownloadNoticeLabel.byVisible(false)
             playVideo(cachedURL)
             return
         }
         if let fallbackName,
-           let fallbackURL = resourceURL(
-               name: fallbackName,
-               defaultExtension: fallbackFileExtension,
-               bundle: fallbackBundle
-           ) {
+           let fallbackURL = resourceURL(name: fallbackName,
+                                         defaultExtension: fallbackFileExtension,
+                                         bundle: fallbackBundle) {
             playVideo(fallbackURL)
         }
         remoteVideoDownloadNoticeLabel.byVisible(true)
         JobsSplashMediaCache.shared.preloadVideo(url) { [weak self] _ in
-            guard let self, !self.hasFinished else { return }
+            guard let self, !self.hasFinished else {
+                return
+            }
             self.remoteVideoDownloadNoticeLabel.byVisible(false)
         }
     }
@@ -330,33 +374,40 @@ public final class JobsSplashVC: BaseVC {
         player.play()
     }
 
-    private func image(from data: Data, url: URL) -> UIImage? {
+    private func image(from data: Data,
+                       url: URL) -> UIImage? {
         if url.pathExtension.lowercased() == "gif" {
             return JobsSplashGIFDecoder.image(data: data)
-        };return UIImage(data: data)
+        }
+        return UIImage(data: data)
     }
 
-    private func resourceURL(name: String, defaultExtension: String?, bundle: Bundle) -> URL? {
+    private func resourceURL(name: String,
+                             defaultExtension: String?,
+                             bundle: Bundle) -> URL? {
         if name.hasPrefix("/") {
             let fileURL = URL(fileURLWithPath: name)
             return FileManager.default.fileExists(atPath: fileURL.path) ? fileURL : nil
         }
         let nameExtension = (name as NSString).pathExtension
         if !nameExtension.isEmpty {
-            return bundle.url(
-                forResource: (name as NSString).deletingPathExtension,
-                withExtension: nameExtension
-            )
-        };return bundle.url(forResource: name, withExtension: defaultExtension)
+            return bundle.url(forResource: (name as NSString).deletingPathExtension,
+                              withExtension: nameExtension)
+        }
+        return bundle.url(forResource: name,
+                          withExtension: defaultExtension)
     }
 
     private func startCountdownIfNeeded() {
-        guard configuration.countdownSeconds != nil || isCountdownTime else { return }
+        guard configuration.countdownSeconds != nil || isCountdownTime else {
+            return
+        }
         let seconds = countdownTime
         guard seconds > 0 else {
             DispatchQueue.main.async { [weak self] in
                 self?.finish()
-            };return
+            }
+            return
         }
         isCountdownTime = true
         countdownTime = seconds
@@ -364,13 +415,15 @@ public final class JobsSplashVC: BaseVC {
     }
 
     private func refreshSkipButtonTitle() {
-        renderSkipButtonTitle(skipButton, remainingSeconds: configuredRemainingSeconds)
+        renderSkipButtonTitle(skipButton,
+                              remainingSeconds: configuredRemainingSeconds)
         view.bySetNeedsLayout()
     }
 
     private var skipButtonDynamicWidth: CGFloat {
         let size = skipButton.sizeThatFits(CGSize(width: 160, height: 36))
-        return max(64, size.width + 24)
+        return max(64,
+                   size.width + 24)
     }
 
     private func updateRemoteVideoNoticePosition() {
@@ -392,22 +445,24 @@ public final class JobsSplashVC: BaseVC {
     }
 
     private func skipButtonTitle(remainingSeconds: Int?) -> String {
-        JobsSplashLocalization.skipTitle(
-            language: configuration.language,
-            remainingSeconds: remainingSeconds
-        )
+        JobsSplashLocalization.skipTitle(language: configuration.language,
+                                         remainingSeconds: remainingSeconds)
     }
 
-    private func renderSkipButtonTitle(_ button: UIButton, remainingSeconds: Int?) {
+    private func renderSkipButtonTitle(_ button: UIButton,
+                                       remainingSeconds: Int?) {
         button.byTitle(skipButtonTitle(remainingSeconds: remainingSeconds))
     }
 
     private func perform(_ action: JobsSplashAction?) {
-        guard let action else { return }
+        guard let action else {
+            return
+        }
         switch action {
         /// 处理 .open 分支
         case let .open(configuration):
-            JobsOpen.shared.open(configuration, from: self)
+            JobsOpen.shared.open(configuration,
+                                 from: self)
         /// 处理 .custom 分支
         case let .custom(block):
             block(self)
@@ -418,7 +473,9 @@ public final class JobsSplashVC: BaseVC {
     }
 
     private func restoreHostGesturesIfNeeded() {
-        guard let hostGestureRestoration else { return }
+        guard let hostGestureRestoration else {
+            return
+        }
         self.hostGestureRestoration = nil
         hostGestureRestoration()
     }

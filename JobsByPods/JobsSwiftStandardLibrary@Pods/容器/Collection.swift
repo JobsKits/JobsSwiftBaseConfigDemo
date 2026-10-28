@@ -12,8 +12,9 @@ import UIKit
 #endif
 
 extension Collection {
+
     /// 安全读：越界返回 nil，不 crash
-     public subscript(safe index: Index) -> Element? {
+    public subscript(safe index: Index) -> Element? {
         indices.contains(index) ? self[index] : nil
     }
 }

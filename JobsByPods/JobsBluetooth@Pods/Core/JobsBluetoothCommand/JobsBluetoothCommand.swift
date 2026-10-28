@@ -9,6 +9,7 @@ import Foundation
 
 /// 一条可排队、可超时、可重试、可匹配通知响应的命令。
 public final class JobsBluetoothCommand {
+
     public var identifier = UUID().uuidString
     public var payload = Data()
     public var timeout: TimeInterval = 5
@@ -33,13 +34,15 @@ public final class JobsBluetoothCommand {
 
     @discardableResult
     public func byTimeout(_ value: TimeInterval) -> Self {
-        timeout = max(0, value)
+        timeout = max(0,
+                      value)
         return self
     }
 
     @discardableResult
     public func byRetryCount(_ value: Int) -> Self {
-        retryCount = max(0, value)
+        retryCount = max(0,
+                         value)
         return self
     }
 

@@ -9,12 +9,17 @@
 import Foundation
 
 public final class JobsDebugEnvironment {
+
     public private(set) var identifier = ""
     public private(set) var urlString = ""
     public private(set) var remark = ""
 
-    public var title: String { remark }
-    public var baseURL: URL? { url }
+    public var title: String {
+        remark
+    }
+    public var baseURL: URL? {
+        url
+    }
 
     public var url: URL? {
         guard let url = URL(string: urlString),

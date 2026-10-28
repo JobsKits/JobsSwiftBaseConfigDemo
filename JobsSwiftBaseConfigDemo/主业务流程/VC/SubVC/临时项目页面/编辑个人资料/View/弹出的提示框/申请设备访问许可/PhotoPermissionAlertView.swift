@@ -22,6 +22,7 @@ import JobsSwiftAppTools
 import SnapKit
 
 final class PhotoPermissionAlertView: UIView {
+
     // MARK: - Callbacks Storage
     private var limitedHandler: (jobsByVoidBlock)?
     private var fullHandler: (jobsByVoidBlock)?
@@ -46,7 +47,8 @@ final class PhotoPermissionAlertView: UIView {
     }
     // MARK: - UI
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("要允许“AC”访问此设备的照片和视频吗?".tr)
             .byTextColor(JobsCor.label)
             .byFont(.init(regular: 16)!)
@@ -60,11 +62,12 @@ final class PhotoPermissionAlertView: UIView {
     }()
 
     private lazy var buttonsStack: UIStackView = {
-        UIStackView.jobsMake { _ in }
+        UIStackView
+            .jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .byDistribution(.fillEqually)   // 改成等分
-            .bySpacing(0)
+        .bySpacing(0)
             .addArrangedSubviews(limitedButton)
             .addArrangedSubviews(fullButton)
             .addArrangedSubviews(denyButton)
@@ -111,21 +114,29 @@ final class PhotoPermissionAlertView: UIView {
 }
 // MARK: - Private
 private extension PhotoPermissionAlertView {
+
     func setupUI() {
         byBackgroundColor(JobsCor.systemBackground)
             .byCornerRadius(12)
             .byClipsToBounds(true)
         titleLabel.byVisible(YES)
-        makeBelowSeparatorBy(below: titleLabel).byVisible(YES)
+        makeBelowSeparatorBy(below: titleLabel)
+            .byVisible(YES)
         buttonsStack.byVisible(YES)
     }
 
     func makeActionButton(_ title: String) -> UIButton {
         UIButton.sys()
-            .byTitle(title, for: .normal)
-            .byTitleColor("#2CB4EF".cor, for: .normal)
+            .byTitle(title,
+                     for: .normal)
+            .byTitleColor("#2CB4EF".cor,
+                          for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16))
-            .byBackgroundColor(JobsCor.clear, for: .normal)
-            .byContentEdgeInsets(.init(top: 11, left: 0, bottom: 11, right: 0))
+            .byBackgroundColor(JobsCor.clear,
+                               for: .normal)
+            .byContentEdgeInsets(.init(top: 11,
+                                       left: 0,
+                                       bottom: 11,
+                                       right: 0))
     }
 }

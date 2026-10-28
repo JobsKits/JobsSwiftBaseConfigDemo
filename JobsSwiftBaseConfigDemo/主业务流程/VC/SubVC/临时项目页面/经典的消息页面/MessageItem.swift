@@ -8,7 +8,9 @@
 
 import Foundation
 
-struct MessageItem: Identifiable, Equatable {
+struct MessageItem: Identifiable,
+                    Equatable {
+
     let id: UUID
     var title: String
     var preview: String

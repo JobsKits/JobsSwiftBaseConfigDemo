@@ -20,19 +20,23 @@ import SnapKit
 /// 单个视频：自动播放，结束后出现「播放按钮」可重播
 
 public final class VideoCell: UICollectionViewCell {
+
     private var playerLayer: AVPlayerLayer?
     private var player: AVPlayer?
     private var endObserver: NSObjectProtocol?
     private lazy var playOverlay: UIButton = { [unowned self] in
         let img = "播放按钮".img.withRenderingMode(.alwaysOriginal)   // 确保非模板渲染
         let b = UIButton.sys()
-            .byImage(img, for: .normal)
+            .byImage(img,
+                     for: .normal)
             .byBackgroundColor(JobsCor.clear)
             .byContentEdgeInsets(.zero)
-            .onTap { [weak self] _ in self?.onReplay() }
+            .onTap { [weak self] _ in
+                self?.onReplay()
+            }
             .byAddTo(self.contentView) { make in
                 make.center.equalToSuperview()
-                // 按原设计 64x64；想用原图尺寸就改成 img.size.width/height
+            // 按原设计 64x64；想用原图尺寸就改成 img.size.width/height
                 make.width.height.equalTo(64)
             }
         // 绝对置顶
@@ -45,7 +49,9 @@ public final class VideoCell: UICollectionViewCell {
         super.prepareForReuse()
         tearDownPlayer()
     }
-    deinit { tearDownPlayer() }
+    deinit {
+        tearDownPlayer()
+    }
 
     private func tearDownPlayer() {
         if let obs = endObserver {
@@ -81,7 +87,8 @@ public final class VideoCell: UICollectionViewCell {
                 render(url)
             } else {
                 tearDownPlayer()
-            };return self
+            }
+            return self
         }
         tearDownPlayer()
         return self
@@ -111,16 +118,15 @@ public final class VideoCell: UICollectionViewCell {
             .byZPosition(9999)
             .byHidden(true)
         // 结束后显示按钮 —— object 用 nil 更稳
-        endObserver = NotificationCenter.default.addObserver(
-            forName: .AVPlayerItemDidPlayToEndTime,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
+        endObserver = NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime,
+                                                             object: nil,
+                                                             queue: .main) { [weak self] _ in
             self?.playOverlay.byHidden(false)
         }
         player.seek(to: .zero)
         player.play()
-        setNeedsLayout(); layoutIfNeeded()
+        setNeedsLayout()
+        layoutIfNeeded()
         playerLayer?.byFrame(contentView.bounds)
     }
 
@@ -134,7 +140,9 @@ public final class VideoCell: UICollectionViewCell {
         super.layoutSubviews()
         playerLayer?.byFrame(contentView.bounds)
         // 再次确保覆盖层在最顶
-        if let pl = playerLayer { pl.zPosition = -1 }
+        if let pl = playerLayer {
+            pl.zPosition = -1
+        }
         playOverlay.byZPosition(9999)
     }
 }

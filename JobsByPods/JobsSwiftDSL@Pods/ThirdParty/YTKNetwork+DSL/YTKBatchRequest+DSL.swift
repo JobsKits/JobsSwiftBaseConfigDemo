@@ -11,6 +11,7 @@ import JobsSwiftBlock
 import YTKNetwork
 import AFNetworking
 public extension YTKBatchRequest {
+
     // MARK: - 基本配置
     /// tag 标记
     @discardableResult
@@ -33,7 +34,10 @@ public extension YTKBatchRequest {
     /// 一次性设置一批 accessory
     @discardableResult
     func byAccessories(_ accessories: [YTKRequestAccessory]) -> Self {
-        accessories.forEach { self.add($0) };return self
+        accessories.forEach {
+            self.add($0)
+        }
+        return self
     }
     // MARK: - 回调配置
     /// 成功回调
@@ -41,25 +45,32 @@ public extension YTKBatchRequest {
     func bySuccess(_ block: @escaping JobsYTKBatchJobsVoidBlock) -> Self {
         self.successCompletionBlock = { batch in
             block(batch)
-        };return self
+        }
+        return self
     }
     /// 失败回调
     @discardableResult
     func byFailure(_ block: @escaping JobsYTKBatchJobsVoidBlock) -> Self {
         self.failureCompletionBlock = { batch in
             block(batch)
-        };return self
+        }
+        return self
     }
     /// 同时设置成功 + 失败
     @discardableResult
     func byCompletion(success: JobsYTKBatchJobsVoidBlock? = nil,
                       failure: JobsYTKBatchJobsVoidBlock? = nil) -> Self {
         if let s = success {
-            self.successCompletionBlock = { batch in s(batch) }
+            self.successCompletionBlock = { batch in
+                s(batch)
+            }
         }
         if let f = failure {
-            self.failureCompletionBlock = { batch in f(batch) }
-        };return self
+            self.failureCompletionBlock = { batch in
+                f(batch)
+            }
+        }
+        return self
     }
     // MARK: - 启动
     /// 启动批量请求，按需自动 clearJobsVoidBlockBlock，避免循环引用

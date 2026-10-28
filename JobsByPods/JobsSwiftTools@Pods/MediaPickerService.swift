@@ -25,6 +25,7 @@ import UniformTypeIdentifiers // iOS 14+
 #endif
 
 public enum MediaPickerError: Error {
+
     case noPresenter
     case permissionDenied
     case unavailable
@@ -37,30 +38,40 @@ public enum MediaPickerError: Error {
 
 @MainActor
 public final class MediaPickerService: NSObject {
+
     // ---------- 一键：相机 ----------
     public static func pickFromCamera(from presenter: UIViewController,
                                       allowsEditing: Bool = false,
                                       onFailure: ((MediaPickerError) -> Void)? = nil,
                                       onImage: @escaping (UIImage) -> Void) {
-        PermissionCenter.ensure(.camera, from: presenter, onDenied: { onFailure?(.permissionDenied) }) {
+        PermissionCenter.ensure(.camera,
+                                from: presenter,
+                                onDenied: {
+            onFailure?(.permissionDenied)
+        }) {
             guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
                 onMainAsync {
                     "此设备不支持相机".toast
                     onFailure?(.unavailable)
-                };return
+                }
+                return
             }
             onMainAsync {
                 guard canPresent(from: presenter) else {
                     onFailure?(.presenterBusy)
                     return
                 }
-                let proxy = CameraProxy(allowsEditing: allowsEditing, jobsByVoidBlock: onImage)
+                let proxy = CameraProxy(allowsEditing: allowsEditing,
+                                        jobsByVoidBlock: onImage)
                 proxy.onFailure = onFailure
-                attachProxy(proxy, to: presenter)
-                presenter.present(UIImagePickerController.jobsMake { _ in }
+                attachProxy(proxy,
+                            to: presenter)
+                presenter.present(UIImagePickerController
+                    .jobsMake { _ in }
                     .bySourceType(.camera)
                     .byAllowsEditing(allowsEditing)
-                    .byDelegate(proxy), animated: true)
+                    .byDelegate(proxy),
+                                  animated: true)
             }
         }
     }
@@ -81,33 +92,46 @@ public final class MediaPickerService: NSObject {
                     var config = PHPickerConfiguration(photoLibrary: PHPhotoLibrary.shared())
                     config
                         .bySelectionLimit(maxSelection <= 0 ? 0 : maxSelection) // 0=不限制
-                        .byFilter(imagesOnly ? .images : .any(of: [.images, .livePhotos, .videos]))
-                    let proxy = PHPickerProxy(timeout: loadTimeout, jobsByVoidBlock: onImages)
+                    .byFilter(imagesOnly ? .images : .any(of: [.images, .livePhotos, .videos]))
+                    let proxy = PHPickerProxy(timeout: loadTimeout,
+                                              jobsByVoidBlock: onImages)
                     proxy.onFailure = onFailure
-                    attachProxy(proxy, to: presenter)
-                    presenter.present(PHPickerViewController(configuration: config).byDelegate(proxy), animated: true)
+                    attachProxy(proxy,
+                                to: presenter)
+                    presenter.present(PHPickerViewController(configuration: config)
+                        .byDelegate(proxy),
+                                      animated: true)
                 } else {
                     guard UIImagePickerController.isSourceTypeAvailable(.photoLibrary) else {
                         onFailure?(.unavailable)
                         return
                     }
                     let proxy = LegacyLibraryProxy { img in
-                        onImages(img.map { [$0] } ?? [])
+                        onImages(img.map {
+                            [$0]
+                        } ?? [])
                     }
                     proxy.onFailure = onFailure
-                    attachProxy(proxy, to: presenter)
-                    presenter.present(UIImagePickerController.jobsMake { _ in }
+                    attachProxy(proxy,
+                                to: presenter)
+                    presenter.present(UIImagePickerController
+                        .jobsMake { _ in }
                         .bySourceType(.photoLibrary)
                         .byAllowsEditing(false)
-                        .byDelegate(proxy), animated: true)
+                        .byDelegate(proxy),
+                                      animated: true)
                 }
             }
         }
         if #available(iOS 14, *) {
             presentPicker()
         } else {
-            PermissionCenter.ensure(.photoLibraryReadWrite, from: presenter,
-                                    onDenied: { onFailure?(.permissionDenied) }, onAuthorized: presentPicker)
+            PermissionCenter.ensure(.photoLibraryReadWrite,
+                                    from: presenter,
+                                    onDenied: {
+                onFailure?(.permissionDenied)
+            },
+                                    onAuthorized: presentPicker)
         }
     }
     // ---------- 一键：录制视频 ----------
@@ -117,8 +141,16 @@ public final class MediaPickerService: NSObject {
                                    onFailure: ((MediaPickerError) -> Void)? = nil,
                                    onVideoURL: @escaping (URL) -> Void) {
         // 依次确认相机 + 麦克风
-        PermissionCenter.ensure(.camera, from: presenter, onDenied: { onFailure?(.permissionDenied) }) {
-            PermissionCenter.ensure(.microphone, from: presenter, onDenied: { onFailure?(.permissionDenied) }) {
+        PermissionCenter.ensure(.camera,
+                                from: presenter,
+                                onDenied: {
+            onFailure?(.permissionDenied)
+        }) {
+            PermissionCenter.ensure(.microphone,
+                                    from: presenter,
+                                    onDenied: {
+                onFailure?(.permissionDenied)
+            }) {
                 guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
                     "此设备不支持相机".toast
                     onFailure?(.unavailable)
@@ -126,8 +158,12 @@ public final class MediaPickerService: NSObject {
                 }
                 // 1) 能力检查：是否支持录视频 UTI
                 let movieUTI: String = {
-                    if #available(iOS 14.0, *) { return UTType.movie.identifier } // "public.movie"
-                    else { return "public.movie" }
+                    if #available(iOS 14.0, *) {
+                        return UTType.movie.identifier
+                    } // "public.movie"
+                    else {
+                        return "public.movie"
+                    }
                 }()
                 let supported = UIImagePickerController.availableMediaTypes(for: .camera) ?? []
                 guard supported.contains(movieUTI) else {
@@ -143,19 +179,27 @@ public final class MediaPickerService: NSObject {
                             return false
                         }
                         // modes: [NSNumber]，对比 CameraCaptureMode.video 的 rawValue
-                        return modes.contains { $0.intValue == UIImagePickerController.CameraCaptureMode.video.rawValue }
-                        // 或者：
-                        // return modes.compactMap { UIImagePickerController.CameraCaptureMode(rawValue: $0.intValue) }
-                        //            .contains(.video)
+                        return modes.contains {
+                            $0.intValue == UIImagePickerController.CameraCaptureMode.video.rawValue
+                        }
+                    // 或者：
+                    // return modes.compactMap { UIImagePickerController.CameraCaptureMode(rawValue: $0.intValue) }
+                    //            .contains(.video)
                     }
-                    if supportsVideo(.rear)  { return .rear }
-                    if supportsVideo(.front) { return .front };return nil
+                    if supportsVideo(.rear)  {
+                        return .rear
+                    }
+                    if supportsVideo(.front) {
+                        return .front
+                    }
+                    return nil
                 }()
                 guard let device = chooseDevice else {
                     onMainAsync {
                         "未检测到可用摄像头用于录制".toast
                         onFailure?(.unavailable)
-                    };return
+                    }
+                    return
                 }
                 // 3) 顺序很重要：先 mediaTypes，后 cameraCaptureMode
                 onMainAsync {
@@ -163,13 +207,17 @@ public final class MediaPickerService: NSObject {
                         onFailure?(.presenterBusy)
                         return
                     }
-                    let proxy = VideoCameraProxy { url in onVideoURL(url) }
+                    let proxy = VideoCameraProxy { url in
+                        onVideoURL(url)
+                    }
                     proxy.onFailure = onFailure
-                    let picker = UIImagePickerController.jobsMake { _ in }
+                    let picker = UIImagePickerController
+                        .jobsMake { _ in }
                         .bySourceType(.camera)
                         .byCameraDevice(device)
                         .byVideoQuality(quality)
-                        .byVideoMaximumDuration(maxDuration.isFinite && maxDuration > 0 ? min(maxDuration, 3_600) : 30)
+                        .byVideoMaximumDuration(maxDuration.isFinite && maxDuration > 0 ? min(maxDuration,
+                                                                                              3_600) : 30)
                         .byDelegate(proxy)
                     if #available(iOS 14.0, *) {
                         picker.byMediaTypes([UTType.movie.identifier]) // ✅ 先设类型
@@ -177,8 +225,10 @@ public final class MediaPickerService: NSObject {
                         picker.byMediaTypes(["public.movie"])
                     }
                     picker.byCameraCaptureMode(.video)
-                    attachProxy(proxy, to: presenter)
-                    presenter.present(picker, animated: true)
+                    attachProxy(proxy,
+                                to: presenter)
+                    presenter.present(picker,
+                                      animated: true)
                 }
             }
         }
@@ -186,14 +236,19 @@ public final class MediaPickerService: NSObject {
 }
 // ================================== 代理们 ==================================
 // 相机拍照
-private final class CameraProxy: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MediaSessionProxy {
+private final class CameraProxy: NSObject,
+                                 UIImagePickerControllerDelegate,
+                                 UINavigationControllerDelegate,
+                                 MediaSessionProxy {
+
     var isFinished = false
     weak var host: UIViewController?
     var onFailure: ((MediaPickerError) -> Void)?
     let allowsEditing: Bool
     let jobsByVoidBlock: (UIImage) -> Void
 
-    init(allowsEditing: Bool, jobsByVoidBlock: @escaping (UIImage)->Void) {
+    init(allowsEditing: Bool,
+         jobsByVoidBlock: @escaping (UIImage) -> Void) {
         self.allowsEditing = allowsEditing
         self.jobsByVoidBlock = jobsByVoidBlock
     }
@@ -201,7 +256,9 @@ private final class CameraProxy: NSObject, UIImagePickerControllerDelegate, UINa
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let key: UIImagePickerController.InfoKey = allowsEditing ? .editedImage : .originalImage
-        guard finishProxy(self) else { return }
+        guard finishProxy(self) else {
+            return
+        }
         if let img = info[key] as? UIImage {
             jobsByVoidBlock(img)
         } else {
@@ -211,14 +268,19 @@ private final class CameraProxy: NSObject, UIImagePickerControllerDelegate, UINa
     }
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        guard finishProxy(self) else { return }
+        guard finishProxy(self) else {
+            return
+        }
         picker.dismiss(animated: true)
         onFailure?(.cancelled)
     }
 }
 // iOS 14+ 相册多选
 @available(iOS 14, *)
-private final class PHPickerProxy: NSObject, PHPickerViewControllerDelegate, MediaSessionProxy {
+private final class PHPickerProxy: NSObject,
+                                   PHPickerViewControllerDelegate,
+                                   MediaSessionProxy {
+
     var isFinished = false
     weak var host: UIViewController?
     var onFailure: ((MediaPickerError) -> Void)?
@@ -230,8 +292,10 @@ private final class PHPickerProxy: NSObject, PHPickerViewControllerDelegate, Med
     private let timeout: TimeInterval
     let jobsByVoidBlock: ([UIImage]) -> Void
 
-    init(timeout: TimeInterval, jobsByVoidBlock: @escaping ([UIImage]) -> Void) {
-        self.timeout = timeout.isFinite && timeout > 0 ? min(timeout, 300) : 30
+    init(timeout: TimeInterval,
+         jobsByVoidBlock: @escaping ([UIImage]) -> Void) {
+        self.timeout = timeout.isFinite && timeout > 0 ? min(timeout,
+                                                             300) : 30
         self.jobsByVoidBlock = jobsByVoidBlock
     }
 
@@ -240,23 +304,34 @@ private final class PHPickerProxy: NSObject, PHPickerViewControllerDelegate, Med
         timeoutWork?.cancel()
     }
 
-    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        guard !selectionReceived, !isFinished else { return }
+    func picker(_ picker: PHPickerViewController,
+                didFinishPicking results: [PHPickerResult]) {
+        guard !selectionReceived, !isFinished else {
+            return
+        }
         selectionReceived = true
         picker.dismiss(animated: true)
         guard !results.isEmpty else {
-            guard finishProxy(self) else { return }
+            guard finishProxy(self) else {
+                return
+            }
             jobsByVoidBlock([])
             return
         }
-        let work = DispatchWorkItem { [weak self] in self?.fail(.timedOut) }
+        let work = DispatchWorkItem { [weak self] in
+            self?.fail(.timedOut)
+        }
         timeoutWork = work
-        DispatchQueue.main.asyncAfter(deadline: .now() + timeout, execute: work)
-        loadNext(results, index: 0)
+        DispatchQueue.main.asyncAfter(deadline: .now() + timeout,
+                                      execute: work)
+        loadNext(results,
+                 index: 0)
     }
 
     private func fail(_ error: MediaPickerError) {
-        guard finishProxy(self) else { return }
+        guard finishProxy(self) else {
+            return
+        }
         progress?.cancel()
         progress = nil
         timeoutWork?.cancel()
@@ -265,10 +340,15 @@ private final class PHPickerProxy: NSObject, PHPickerViewControllerDelegate, Med
         onFailure?(error)
     }
 
-    private func loadNext(_ results: [PHPickerResult], index: Int) {
-        guard !isFinished else { return }
+    private func loadNext(_ results: [PHPickerResult],
+                          index: Int) {
+        guard !isFinished else {
+            return
+        }
         guard index < results.count else {
-            guard finishProxy(self) else { return }
+            guard finishProxy(self) else {
+                return
+            }
             timeoutWork?.cancel()
             timeoutWork = nil
             progress = nil
@@ -284,12 +364,16 @@ private final class PHPickerProxy: NSObject, PHPickerViewControllerDelegate, Med
         }
         progress = provider.loadObject(ofClass: UIImage.self) { [weak self] object, error in
             onMainAsync {
-                guard let self, !self.isFinished else { return }
+                guard let self, !self.isFinished else {
+                    return
+                }
                 guard let image = object as? UIImage, error == nil else {
                     self.fail(.decodingFailed)
                     return
                 }
-                let cost = image.cgImage.map { $0.bytesPerRow.multipliedReportingOverflow(by: $0.height) }
+                let cost = image.cgImage.map {
+                    $0.bytesPerRow.multipliedReportingOverflow(by: $0.height)
+                }
                 guard let cost, !cost.overflow,
                       cost.partialValue <= 64 * 1024 * 1024 - self.decodedBytes else {
                     self.fail(.decodedMemoryBudgetExceeded)
@@ -297,7 +381,8 @@ private final class PHPickerProxy: NSObject, PHPickerViewControllerDelegate, Med
                 }
                 self.decodedBytes += cost.partialValue
                 self.decodedImages.append(image)
-                self.loadNext(results, index: index + 1)
+                self.loadNext(results,
+                              index: index + 1)
             }
         }
     }
@@ -307,6 +392,7 @@ private final class LegacyLibraryProxy: NSObject,
                                         UIImagePickerControllerDelegate,
                                         UINavigationControllerDelegate,
                                         MediaSessionProxy {
+
     var isFinished = false
     weak var host: UIViewController?
     var onFailure: ((MediaPickerError) -> Void)?
@@ -318,7 +404,9 @@ private final class LegacyLibraryProxy: NSObject,
 
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        guard finishProxy(self) else { return }
+        guard finishProxy(self) else {
+            return
+        }
         let img = info[.originalImage] as? UIImage
         if img == nil {
             onFailure?(.decodingFailed)
@@ -328,7 +416,9 @@ private final class LegacyLibraryProxy: NSObject,
     }
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        guard finishProxy(self) else { return }
+        guard finishProxy(self) else {
+            return
+        }
         picker.dismiss(animated: true)
         onFailure?(.cancelled)
         jobsByVoidBlock(nil)
@@ -339,15 +429,20 @@ private final class VideoCameraProxy: NSObject,
                                       UIImagePickerControllerDelegate,
                                       UINavigationControllerDelegate,
                                       MediaSessionProxy {
+
     var isFinished = false
     weak var host: UIViewController?
     var onFailure: ((MediaPickerError) -> Void)?
     let jobsByVoidBlock: (URL) -> Void
-    init(jobsByVoidBlock: @escaping (URL) -> Void) { self.jobsByVoidBlock = jobsByVoidBlock }
+    init(jobsByVoidBlock: @escaping (URL) -> Void) {
+        self.jobsByVoidBlock = jobsByVoidBlock
+    }
 
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        guard finishProxy(self) else { return }
+        guard finishProxy(self) else {
+            return
+        }
         if let url = info[.mediaURL] as? URL {
             jobsByVoidBlock(url)
         } else {
@@ -357,7 +452,9 @@ private final class VideoCameraProxy: NSObject,
     }
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        guard finishProxy(self) else { return }
+        guard finishProxy(self) else {
+            return
+        }
         picker.dismiss(animated: true)
         onFailure?(.cancelled)
     }
@@ -365,6 +462,7 @@ private final class VideoCameraProxy: NSObject,
 // ================================== AO：把代理挂到 VC 防止释放 ==================================
 @MainActor
 private protocol MediaSessionProxy: AnyObject {
+
     var host: UIViewController? { get set }
     var isFinished: Bool { get set }
 }
@@ -372,13 +470,16 @@ private protocol MediaSessionProxy: AnyObject {
 @MainActor
 private func canPresent(from host: UIViewController) -> Bool {
     host.viewIfLoaded?.window != nil && host.presentedViewController == nil &&
-        objc_getAssociatedObject(host, &mediaPickerProxy) == nil
+        objc_getAssociatedObject(host,
+                                 &mediaPickerProxy) == nil
 }
 
 @MainActor
 @discardableResult
 private func finishProxy(_ proxy: MediaSessionProxy) -> Bool {
-    guard !proxy.isFinished else { return false }
+    guard !proxy.isFinished else {
+        return false
+    }
     proxy.isFinished = true
     releaseProxy(proxy)
     return true
@@ -387,14 +488,21 @@ private func finishProxy(_ proxy: MediaSessionProxy) -> Bool {
 @MainActor
 private func releaseProxy(_ proxy: MediaSessionProxy) {
     guard let host = proxy.host,
-          objc_getAssociatedObject(host, &mediaPickerProxy) as AnyObject? === proxy else { return }
-    objc_setAssociatedObject(host, &mediaPickerProxy, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+          objc_getAssociatedObject(host,
+                                   &mediaPickerProxy) as AnyObject? === proxy else {
+        return
+    }
+    objc_setAssociatedObject(host,
+                             &mediaPickerProxy,
+                             nil,
+                             .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     proxy.host = nil
 }
 
 private var mediaPickerProxy = UInt8(0)
 @MainActor
-private func attachProxy(_ proxy: AnyObject, to host: UIViewController) {
+private func attachProxy(_ proxy: AnyObject,
+                         to host: UIViewController) {
     (proxy as? MediaSessionProxy)?.host = host
     objc_setAssociatedObject(host,
                              &mediaPickerProxy,
@@ -403,6 +511,7 @@ private func attachProxy(_ proxy: AnyObject, to host: UIViewController) {
 }
 // ================================== VC 便利方法 ==================================
 public extension NSObject {
+
     /// 一键：相机拍照
     @MainActor
     func pickFromCamera(allowsEditing: Bool = false,

@@ -8,6 +8,7 @@
 import Foundation
 
 public enum JobsAppDoorMode: Hashable {
+
     case login
     case register
     case forgotPassword

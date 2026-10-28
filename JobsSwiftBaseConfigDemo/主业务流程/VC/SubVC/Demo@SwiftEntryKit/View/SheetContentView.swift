@@ -19,9 +19,12 @@ import SnapKit
 import SwiftEntryKit
 
 // MARK: - 自定义底部表单（键盘联动）
-final class SheetContentView: UIView, UITextFieldDelegate {
+final class SheetContentView: UIView,
+                              UITextFieldDelegate {
+
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("底部表单（键盘联动）".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byTextColor(JobsCor.label)
@@ -31,7 +34,8 @@ final class SheetContentView: UIView, UITextFieldDelegate {
             }
     }()
     private lazy var textField: UITextField = {
-        UITextField.jobsMake { _ in }
+        UITextField
+            .jobsMake { _ in }
             .byPlaceholder("输入点什么…".tr)
             .byBorderStyle(.roundedRect)
             .byAddTo(self) { [unowned self] make in
@@ -61,5 +65,7 @@ final class SheetContentView: UIView, UITextFieldDelegate {
         textField.byVisible(YES)
         confirmBtn.byVisible(YES)
     }
-    required init?(coder: NSCoder) { fatalError() }
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
 }

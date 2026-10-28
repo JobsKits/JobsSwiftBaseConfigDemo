@@ -17,6 +17,7 @@ import JobsSwiftDSL
 
 // MARK: - Associated Store
 private final class _JobsAnimatedNumberStore {
+
     // config (只配置，不启动)
     var start: Double?
     var step: Double?
@@ -33,6 +34,7 @@ private final class _JobsAnimatedNumberStore {
 }
 // MARK: - DSL
 extension _JobsAnimatedNumberStore {
+
     /// DSL: .byTimer { $0.duration = 1 }
     @discardableResult
     func byTimer(_ configure: (_JobsAnimatedNumberStore) -> Void) -> Self {
@@ -60,13 +62,15 @@ extension _JobsAnimatedNumberStore {
     /// DSL: .byFPS(60)
     @discardableResult
     func byFPS(_ fps: Double) -> Self {
-        self.minimumInterval = 1.0 / max(0.000_001, fps)
+        self.minimumInterval = 1.0 / max(0.000_001,
+                                         fps)
         return self
     }
     /// DSL: .byMinimumInterval(1.0 / 60.0)
     @discardableResult
     func byMinimumInterval(_ value: TimeInterval) -> Self {
-        self.minimumInterval = max(0.000_001, value)
+        self.minimumInterval = max(0.000_001,
+                                   value)
         return self
     }
     /// DSL: .byCompletion { }
@@ -78,25 +82,28 @@ extension _JobsAnimatedNumberStore {
 }
 
 private enum _JobsAnimatedNumberAssocKey {
+
     static var storeKey: UInt8 = 0
 }
 
 private extension UILabel {
+
     var _jobsAnimatedNumberStore: _JobsAnimatedNumberStore {
-        if let obj = objc_getAssociatedObject(self, &_JobsAnimatedNumberAssocKey.storeKey) as? _JobsAnimatedNumberStore {
+        if let obj = objc_getAssociatedObject(self,
+                                              &_JobsAnimatedNumberAssocKey.storeKey) as? _JobsAnimatedNumberStore {
             return obj
         }
         let obj = _JobsAnimatedNumberStore()
-        objc_setAssociatedObject(
-            self,
-            &_JobsAnimatedNumberAssocKey.storeKey,
-            obj,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-        );return obj
+        objc_setAssociatedObject(self,
+                                 &_JobsAnimatedNumberAssocKey.storeKey,
+                                 obj,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return obj
     }
 }
 // MARK: - Public Chain API
 extension UILabel {
+
     /// ✅ 仅配置（不启动）——链式
     @discardableResult
     public func byAnimatedTextNumber(start: Double? = nil,
@@ -107,7 +114,7 @@ extension UILabel {
         _jobsAnimatedNumberStore
             .byStart(start)
             .byStep(step)
-            .byDuration(max(0, duration))
+            .byDuration(max(0,duration))
             .byMinimumInterval(minimumInterval)
             .byCompletion(completion)
         return self
@@ -136,8 +143,10 @@ extension UILabel {
         // decimals：以目标文本的小数位为准
         let decimals = _jobsDecimalPlaces(of: trimmed)
         // interval / ticks
-        let interval = max(0.000_001, s.minimumInterval)
-        let ticks = max(1, Int((s.duration / interval).rounded(.toNearestOrAwayFromZero)))
+        let interval = max(0.000_001,
+                           s.minimumInterval)
+        let ticks = max(1,
+                        Int((s.duration / interval).rounded(.toNearestOrAwayFromZero)))
         let delta = target - from
         // 每 tick 增量：优先用用户 step，否则自动按 duration 平滑到达
         let perTick: Double
@@ -155,22 +164,23 @@ extension UILabel {
         s.decimals = decimals
         s.originalText = text
         // 先显示起点（更直观）
-        self.byText(_jobsFormatNumber(from, decimals: decimals))
+        self.byText(_jobsFormatNumber(from,
+                                      decimals: decimals))
         // JobsSwiftTimer 驱动
         let timer = JobsTimer(kind: .foundation,
-                              config: JobsSwiftTimerConfig(
-                                interval: interval,
-                                repeats: true,
-                                tolerance: 0,
-                                queue: .main,
-                                runLoop: .main,
-                                runLoopMode: .common,
-                                pauseInBackground: true,
-                                autoManageAppState: true
-                            )) { [weak self] in
-                                guard let self else { return }
-                                self._jobsTickAnimatedNumber()
-                            }
+                              config: JobsSwiftTimerConfig(interval: interval,
+                                                           repeats: true,
+                                                           tolerance: 0,
+                                                           queue: .main,
+                                                           runLoop: .main,
+                                                           runLoopMode: .common,
+                                                           pauseInBackground: true,
+                                                           autoManageAppState: true)) { [weak self] in
+            guard let self else {
+                return
+            }
+            self._jobsTickAnimatedNumber()
+        }
         s.timer = timer.start()
         return self
     }
@@ -183,6 +193,7 @@ extension UILabel {
 }
 // MARK: - Internal Tick / Stop
 extension UILabel {
+
     private func _jobsStopAnimatedNumberTimer() {
         let s = _jobsAnimatedNumberStore
         s.timer?.stop()
@@ -191,7 +202,9 @@ extension UILabel {
 
     private func _jobsTickAnimatedNumber() {
         let s = _jobsAnimatedNumberStore
-        guard s.timer != nil else { return }
+        guard s.timer != nil else {
+            return
+        }
         let target = s.targetValue
         var cur = s.currentValue
         let step = s.deltaPerTick
@@ -212,11 +225,13 @@ extension UILabel {
             return
         }
         // 中间帧：按 decimals 格式化显示
-        self.byText(_jobsFormatNumber(cur, decimals: s.decimals))
+        self.byText(_jobsFormatNumber(cur,
+                                      decimals: s.decimals))
     }
 }
 // MARK: - Helpers
 extension UILabel {
+
     /// 解析数字：支持 -123 / 123.45 / +12.3
     private func _jobsParseNumber(_ str: String) -> Double? {
         // Double() 本身已经支持正负号与小数点；不支持千分位逗号
@@ -225,17 +240,24 @@ extension UILabel {
     }
     /// 以目标文本的小数位决定展示小数位
     private func _jobsDecimalPlaces(of str: String) -> Int {
-        guard let dotRange = str.range(of: ".") else { return 0 }
+        guard let dotRange = str.range(of: ".") else {
+            return 0
+        }
         let fraction = str[dotRange.upperBound...]
         // 过滤掉可能的尾部空格
-        let digits = fraction.prefix { $0.isNumber };return digits.count
+        let digits = fraction.prefix {
+            $0.isNumber
+        }
+        return digits.count
     }
 
-    private func _jobsFormatNumber(_ value: Double, decimals: Int) -> String {
+    private func _jobsFormatNumber(_ value: Double,
+                                   decimals: Int) -> String {
         if decimals <= 0 {
             return "\(Int(value.rounded()))"
         } else {
-            return String(format: "%.\(decimals)f", value)
+            return String(format: "%.\(decimals)f",
+                          value)
         }
     }
 }

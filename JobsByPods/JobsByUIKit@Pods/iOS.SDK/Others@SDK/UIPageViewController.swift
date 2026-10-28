@@ -14,6 +14,7 @@ import UIKit
 import JobsSwiftBlock
 
 extension UIPageViewController {
+
     @discardableResult
     public func byViewControllers(_ viewControllers: [UIViewController],
                                   direction: NavigationDirection,
@@ -43,7 +44,7 @@ extension UIPageViewController {
                                   navigationOrientation: UIPageViewController.NavigationOrientation,
                                   options: [UIPageViewController.OptionsKey : Any]? = nil) -> Self {
         UIPageViewController(transitionStyle: style,
-                                    navigationOrientation: navigationOrientation,
-                                    options: options) as! Self
+                             navigationOrientation: navigationOrientation,
+                             options: options) as! Self
     }
 }

@@ -15,11 +15,17 @@ import UIKit
 import JobsSwiftDSL
 
 enum TextKitMeasure {
-    static func fits(_ attr: NSAttributedString, width: CGFloat, maxLines: Int) -> Bool {
-        guard width > 0, maxLines > 0 else { return true }
+
+    static func fits(_ attr: NSAttributedString,
+                     width: CGFloat,
+                     maxLines: Int) -> Bool {
+        guard width > 0, maxLines > 0 else {
+            return true
+        }
         let storage = NSTextStorage(attributedString: attr)
         let layout = NSLayoutManager.jobsMake { _ in }
-        let container = NSTextContainer(size: CGSize(width: width, height: .greatestFiniteMagnitude))
+        let container = NSTextContainer(size: CGSize(width: width,
+                                                     height: .greatestFiniteMagnitude))
         container.lineFragmentPadding = 0
         container.maximumNumberOfLines = maxLines
         container.lineBreakMode = .byWordWrapping
@@ -32,6 +38,7 @@ enum TextKitMeasure {
 }
 
 enum TimelineLayoutMode {
+
     /// ✅ 不开 estimated：走“手动高度 + 缓存”
     case noEstimated_manualHeight
     /// ✅ 开 estimated：走“自动高度 + 更准的 estimatedHeightForRowAt”

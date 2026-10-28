@@ -8,6 +8,7 @@
 import Foundation
 
 public final class JobsRequestToken: @unchecked Sendable {
+
     private let lock = NSLock()
     private var cancelHandler: (() -> Void)?
     private var cancelled = false
@@ -94,7 +95,8 @@ public final class JobsRequestToken: @unchecked Sendable {
         return accepted
     }
 
-    func scheduleRetry(after delay: TimeInterval, _ action: @escaping () -> Void) {
+    func scheduleRetry(after delay: TimeInterval,
+                       _ action: @escaping () -> Void) {
         let currentGeneration = UUID()
         let item = DispatchWorkItem { [weak self] in
             guard let self else {
@@ -130,8 +132,10 @@ public final class JobsRequestToken: @unchecked Sendable {
         guard accepted else {
             return
         }
-        let safeDelay = delay.isFinite ? min(86_400, max(0, delay)) : 0
-        DispatchQueue.global().asyncAfter(deadline: .now() + safeDelay, execute: item)
+        let safeDelay = delay.isFinite ? min(86_400,
+                                             max(0,delay)) : 0
+        DispatchQueue.global().asyncAfter(deadline: .now() + safeDelay,
+                                          execute: item)
     }
 
     private func locked<T>(_ action: () -> T) -> T {

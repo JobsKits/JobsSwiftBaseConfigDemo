@@ -15,6 +15,7 @@ import WebKit
 import JobsSwiftBaseDefines
 
 extension BaseWebView {
+
     @MainActor
     @objc func handlePullToRefresh() {
         // 用当前 URL 重新发起“无缓存”加载，避免 reload 走到内存缓存
@@ -25,7 +26,9 @@ extension BaseWebView {
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
             onMainAsync { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.refresher.endRefreshing()
             }
         }

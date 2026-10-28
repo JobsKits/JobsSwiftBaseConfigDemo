@@ -14,6 +14,7 @@ import UIKit
 /// 定义于 Swift 标准库
 
 public extension Double {
+
     // MARK: - 把 Double 转换成 金额字符串，始终保留 两位小数
     public func toAmount() -> String? {
         let format = NumberFormatter.init()
@@ -28,18 +29,22 @@ public extension Double {
 
     /// 保留两位小数（截断，不四舍五入）
     func truncate(to decimals: Int) -> Double {
-        let multiplier = pow(10.0, Double(decimals))
+        let multiplier = pow(10.0,
+                             Double(decimals))
         return Double(Int(self * multiplier)) / multiplier
     }
 }
 // MARK: 获取屏幕相对宽高
 public extension Double {
+
     // TODO: Legacy scalar properties have no scene context; use w(in:) / h(in:) in layout.
     static var screenWidth: CGFloat {
-        return min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+        return min(UIScreen.main.bounds.width,
+                   UIScreen.main.bounds.height)
     }
     static var screenHeight: CGFloat {
-        return max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+        return max(UIScreen.main.bounds.width,
+                   UIScreen.main.bounds.height)
     }
 
     func w(in view: UIView) -> CGFloat {
@@ -49,9 +54,17 @@ public extension Double {
         return CGFloat(self) * view.bounds.height / 812
     }
 
-    private var py_scaleW: CGFloat { Self.screenWidth / 375 }
-    private var py_scaleH: CGFloat { Self.screenHeight / 812 }
+    private var py_scaleW: CGFloat {
+        Self.screenWidth / 375
+    }
+    private var py_scaleH: CGFloat {
+        Self.screenHeight / 812
+    }
 
-    var w: CGFloat { CGFloat(self) * py_scaleW }
-    var h: CGFloat { CGFloat(self) * py_scaleH }
+    var w: CGFloat {
+        CGFloat(self) * py_scaleW
+    }
+    var h: CGFloat {
+        CGFloat(self) * py_scaleH
+    }
 }

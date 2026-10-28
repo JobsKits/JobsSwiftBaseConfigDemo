@@ -15,6 +15,7 @@ import JobsSwiftDSL
 import JobsSwiftBaseDefines
 
 extension UILabel {
+
     /// 一次性设置文本样式 + 开启 Dynamic Type
     @available(iOS 10.0, *)
     @discardableResult
@@ -25,53 +26,72 @@ extension UILabel {
     }
     /// 段落样式（对 attributedText 生效；若当前是纯文本会自动构造）
     @discardableResult
-    public func byParagraph(
-        lineSpacing: CGFloat? = nil,
-        paragraphSpacing: CGFloat? = nil,
-        alignment: NSTextAlignment? = nil,
-        lineHeightMultiple: CGFloat? = nil,
-        hyphenationFactor: Float? = nil,
-        kerning: Double? = nil
-    ) -> Self {
+    public func byParagraph(lineSpacing: CGFloat? = nil,
+                            paragraphSpacing: CGFloat? = nil,
+                            alignment: NSTextAlignment? = nil,
+                            lineHeightMultiple: CGFloat? = nil,
+                            hyphenationFactor: Float? = nil,
+                            kerning: Double? = nil) -> Self {
         let raw = self.attributedText ?? {
-            NSAttributedString(string: self.text ?? "", attributes: [
-                .font: self.font as Any,
-                .foregroundColor: self.textColor as Any
-            ])
+            NSAttributedString(string: self.text ?? "",
+                               attributes: [
+                    .font: self.font as Any,
+                    .foregroundColor: self.textColor as Any
+                ])
         }()
         let result = NSMutableAttributedString(attributedString: raw)
-        let full = NSRange(location: 0, length: result.length)
-        let p = (result.attribute(.paragraphStyle, at: 0, effectiveRange: nil) as? NSMutableParagraphStyle) ?? {
+        let full = NSRange(location: 0,
+                           length: result.length)
+        let p = (result.attribute(.paragraphStyle,
+                                  at: 0,
+                                  effectiveRange: nil) as? NSMutableParagraphStyle) ?? {
             return NSMutableParagraphStyle()
         }()
-        if let v = lineSpacing { p.lineSpacing = v }
-        if let v = paragraphSpacing { p.paragraphSpacing = v }
-        if let v = alignment { p.alignment = v }
-        if let v = lineHeightMultiple { p.lineHeightMultiple = v }
-        if let v = hyphenationFactor { p.hyphenationFactor = v }
-        result.addAttribute(.paragraphStyle, value: p, range: full)
-        if let k = kerning { result.addAttribute(.kern, value: k, range: full) }
+        if let v = lineSpacing {
+            p.lineSpacing = v
+        }
+        if let v = paragraphSpacing {
+            p.paragraphSpacing = v
+        }
+        if let v = alignment {
+            p.alignment = v
+        }
+        if let v = lineHeightMultiple {
+            p.lineHeightMultiple = v
+        }
+        if let v = hyphenationFactor {
+            p.hyphenationFactor = v
+        }
+        result.addAttribute(.paragraphStyle,
+                            value: p,
+                            range: full)
+        if let k = kerning {
+            result.addAttribute(.kern,
+                                value: k,
+                                range: full)
+        }
         self.attributedText = result
         return self
     }
     /// 尺寸测量
     public func jobs_height(fittingWidth width: CGFloat) -> CGFloat {
-        let size = CGSize(width: width, height: .greatestFiniteMagnitude)
+        let size = CGSize(width: width,
+                          height: .greatestFiniteMagnitude)
         return sizeThatFits(size).height
     }
 
     public func jobs_width(fittingHeight height: CGFloat) -> CGFloat {
-        let size = CGSize(width: .greatestFiniteMagnitude, height: height)
+        let size = CGSize(width: .greatestFiniteMagnitude,
+                          height: height)
         return sizeThatFits(size).width
     }
     /// 轻量 Layer 阴影（UILabel 自带 shadowColor/Offset 太弱）
     @discardableResult
-    public func byLayerShadow(
-        color: UIColor? = JobsCor.black.withAlphaComponent(0.25),
-        radius: CGFloat = 3,
-        offset: CGSize = .init(width: 0, height: 2),
-        opacity: Float = 1
-    ) -> Self {
+    public func byLayerShadow(color: UIColor? = JobsCor.black.withAlphaComponent(0.25),
+                              radius: CGFloat = 3,
+                              offset: CGSize = .init(width: 0,
+                                                     height: 2),
+                              opacity: Float = 1) -> Self {
         layer.masksToBounds = false
         layer.shadowColor = color?.cgColor
         layer.shadowRadius = radius
@@ -94,14 +114,18 @@ extension UILabel {
             /// 一行 + 裁剪（如需滚动，外层包 UIScrollView 再放 label）
             numberOfLines = 1
             lineBreakMode = .byClipping
-            setContentCompressionResistancePriority(.required, for: .horizontal)
-            setContentHuggingPriority(.defaultLow, for: .horizontal)
+            setContentCompressionResistancePriority(.required,
+                                                    for: .horizontal)
+            setContentHuggingPriority(.defaultLow,
+                                      for: .horizontal)
         /// 处理 .type03 分支
         case .type03:
             /// 一行，不定宽，定高，定字体 → 让宽度自适应
             numberOfLines = 1
-            setContentCompressionResistancePriority(.required, for: .horizontal)
-            setContentHuggingPriority(.required, for: .horizontal)
+            setContentCompressionResistancePriority(.required,
+                                                    for: .horizontal)
+            setContentHuggingPriority(.required,
+                                      for: .horizontal)
         /// 处理 .type04 分支
         case .type04:
             /// 一行，定宽定高，通过缩小字体完整显示
@@ -114,6 +138,7 @@ extension UILabel {
             /// 多行，定宽不定高，定字体
             numberOfLines = 0
             lineBreakMode = .byWordWrapping
-        };return self
+        }
+        return self
     }
 }

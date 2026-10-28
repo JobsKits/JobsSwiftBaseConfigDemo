@@ -38,6 +38,7 @@
 - Jobs 自维护的 Swift 主工程和本地 Pods 显式 `import JobsSwiftDSL` 后使用点语法，不在调用方回退到已有 DSL 覆盖的系统 API。
 - `UIView.byAccessibilityLabel(_:) -> Self` 在真实 UIView 层配置无障碍文案，按钮等子类保持原返回类型继续链；`JobsDebugPanel` 的圆按钮使用它说明点按与长按行为。
 - `JobsCor` 语义背景色、文字色经 `byBackgroundColor(...)`、`byTextColor(...)`、`byTitleColor(...)` 等 DSL 自动登记到 `JobsThemeCenter`；也可使用 `byThemeBackground(...)`、`byThemeTextColor(...)` 和 `byThemeImage(...)` 显式绑定主题 Key。
+- `UITableViewCell.byAccessoryType(...)` / `byEditingAccessoryType(...)` 保留系统原生箭头，未显式指定外观的 Cell 随 App 主题更新局部外观；移除箭头或改用自定义附件时恢复原外观，调用方显式指定的外观优先。不修改 Window 或控制器外观。
 - `UIButton.byClearConfigurationBackground()` 会持续清除普通、选中、高亮等状态下的配置背景，并在旧系统同步移除背景图，适合只保留前景图标 / 文字的导航按钮。
 - 发现封装缺口时先在本 Pod 的正确类型层补齐，再同步业务代码与 Xcode CodeSnippets。
 

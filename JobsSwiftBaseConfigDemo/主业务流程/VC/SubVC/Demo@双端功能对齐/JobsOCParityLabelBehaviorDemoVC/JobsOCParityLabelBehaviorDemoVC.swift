@@ -19,11 +19,13 @@ import GKNavigationBarSwift
 import SnapKit
 
 fileprivate enum JobsLabelBehaviorTarget: String {
+
     case label = "UILabel"
     case buttonTitleLabel = "UIButton.titleLabel"
 }
 
 fileprivate enum JobsLabelBehaviorKind {
+
     case fixedTruncation
     case autoScroll
     case categoryScroll
@@ -35,6 +37,7 @@ fileprivate enum JobsLabelBehaviorKind {
 }
 
 fileprivate struct JobsLabelBehaviorItem {
+
     let title: String
     let subtitle: String
     let target: JobsLabelBehaviorTarget
@@ -45,12 +48,15 @@ final class JobsLabelBehaviorDemoVC: BaseVC {
 
     private static let reuseID = "JobsLabelBehaviorDemoCell"
     private lazy var sections: [[JobsLabelBehaviorItem]] = [
-        makeItems(target: .label, includesCategoryScroll: true),
-        makeItems(target: .buttonTitleLabel, includesCategoryScroll: false)
+        makeItems(target: .label,
+                  includesCategoryScroll: true),
+        makeItems(target: .buttonTitleLabel,
+                  includesCategoryScroll: false)
     ]
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
             .byRowHeight(74)
@@ -73,64 +79,48 @@ final class JobsLabelBehaviorDemoVC: BaseVC {
     private func makeItems(target: JobsLabelBehaviorTarget,
                            includesCategoryScroll: Bool) -> [JobsLabelBehaviorItem] {
         var items = [
-            JobsLabelBehaviorItem(
-                title: "固定宽高省略".tr,
-                subtitle: "定宽、定高、定字体，超出内容以省略号收口".tr,
-                target: target,
-                kind: .fixedTruncation
-            ),
-            JobsLabelBehaviorItem(
-                title: "AutoScroll 单行滚动".tr,
-                subtitle: "固定宽高，超出内容横向往返滚动".tr,
-                target: target,
-                kind: .autoScroll
-            ),
-            JobsLabelBehaviorItem(
-                title: "宽度自适应".tr,
-                subtitle: "定高不定宽，按文字真实宽度撑开".tr,
-                target: target,
-                kind: .widthAdaptive
-            ),
-            JobsLabelBehaviorItem(
-                title: "缩小字号全展示".tr,
-                subtitle: "固定宽高，必要时缩小字号".tr,
-                target: target,
-                kind: .scaleToFit
-            ),
-            JobsLabelBehaviorItem(
-                title: "普通文本自动换行".tr,
-                subtitle: "定宽不定高，按可用宽度自动换行".tr,
-                target: target,
-                kind: .automaticWrapping
-            ),
-            JobsLabelBehaviorItem(
-                title: "普通文本手动换行".tr,
-                subtitle: "文本内置换行符，固定宽度展示多行".tr,
-                target: target,
-                kind: .manualNewline
-            ),
-            JobsLabelBehaviorItem(
-                title: "富文本手动换行".tr,
-                subtitle: "分段配置字体、颜色和背景，并按换行符展示".tr,
-                target: target,
-                kind: .richText
-            )
+            JobsLabelBehaviorItem(title: "固定宽高省略".tr,
+                                  subtitle: "定宽、定高、定字体，超出内容以省略号收口".tr,
+                                  target: target,
+                                  kind: .fixedTruncation),
+            JobsLabelBehaviorItem(title: "AutoScroll 单行滚动".tr,
+                                  subtitle: "固定宽高，超出内容横向往返滚动".tr,
+                                  target: target,
+                                  kind: .autoScroll),
+            JobsLabelBehaviorItem(title: "宽度自适应".tr,
+                                  subtitle: "定高不定宽，按文字真实宽度撑开".tr,
+                                  target: target,
+                                  kind: .widthAdaptive),
+            JobsLabelBehaviorItem(title: "缩小字号全展示".tr,
+                                  subtitle: "固定宽高，必要时缩小字号".tr,
+                                  target: target,
+                                  kind: .scaleToFit),
+            JobsLabelBehaviorItem(title: "普通文本自动换行".tr,
+                                  subtitle: "定宽不定高，按可用宽度自动换行".tr,
+                                  target: target,
+                                  kind: .automaticWrapping),
+            JobsLabelBehaviorItem(title: "普通文本手动换行".tr,
+                                  subtitle: "文本内置换行符，固定宽度展示多行".tr,
+                                  target: target,
+                                  kind: .manualNewline),
+            JobsLabelBehaviorItem(title: "富文本手动换行".tr,
+                                  subtitle: "分段配置字体、颜色和背景，并按换行符展示".tr,
+                                  target: target,
+                                  kind: .richText)
         ]
         if includesCategoryScroll {
-            items.insert(
-                JobsLabelBehaviorItem(
-                    title: "UILabel 分类单行滚动".tr,
-                    subtitle: "复用四种定尺寸文字策略的连续滚动能力".tr,
-                    target: target,
-                    kind: .categoryScroll
-                ),
-                at: 2
-            )
-        };return items
+            items.insert(JobsLabelBehaviorItem(title: "UILabel 分类单行滚动".tr,
+                                               subtitle: "复用四种定尺寸文字策略的连续滚动能力".tr,
+                                               target: target,
+                                               kind: .categoryScroll),
+                         at: 2)
+        }
+        return items
     }
 }
 
-extension JobsLabelBehaviorDemoVC: UITableViewDataSource, UITableViewDelegate {
+extension JobsLabelBehaviorDemoVC: UITableViewDataSource,
+                                   UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
         sections.count
@@ -149,13 +139,16 @@ extension JobsLabelBehaviorDemoVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Self.reuseID) ??
-            UITableViewCell(style: .subtitle, reuseIdentifier: Self.reuseID)
-        let item = sections[indexPath.section][indexPath.row]
+            UITableViewCell(style: .subtitle,
+                            reuseIdentifier: Self.reuseID)
+        let item = sections[indexPath.section] [indexPath.row]
         cell.textLabel?
             .byText(item.title)
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .medium))
             .byTextColor(JobsCor.label)
-            .byTextDisplayMode(.scaleToFit, minimumScaleFactor: 0.7)
+            .byTextDisplayMode(.scaleToFit,
+                               minimumScaleFactor: 0.7)
         cell.detailTextLabel?
             .byText(item.subtitle)
             .byFont(JobsFont.systemFont(ofSize: 12))
@@ -169,9 +162,10 @@ extension JobsLabelBehaviorDemoVC: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView,
                    didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        tableView.deselectRow(at: indexPath,
+                              animated: true)
         let detailVC = JobsLabelBehaviorDetailVC()
-        detailVC.item = sections[indexPath.section][indexPath.row]
+        detailVC.item = sections[indexPath.section] [indexPath.row]
         detailVC
             .byTitle(detailVC.item.title)
             .byPush(self)
@@ -180,15 +174,14 @@ extension JobsLabelBehaviorDemoVC: UITableViewDataSource, UITableViewDelegate {
 
 private final class JobsLabelBehaviorDetailVC: BaseVC {
 
-    fileprivate var item = JobsLabelBehaviorItem(
-        title: "固定宽高省略".tr,
-        subtitle: "定宽、定高、定字体，超出内容以省略号收口".tr,
-        target: .label,
-        kind: .fixedTruncation
-    )
+    fileprivate var item = JobsLabelBehaviorItem(title: "固定宽高省略".tr,
+                                                 subtitle: "定宽、定高、定字体，超出内容以省略号收口".tr,
+                                                 target: .label,
+                                                 kind: .fixedTruncation)
 
     private lazy var introLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText(item.subtitle)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)
@@ -200,7 +193,8 @@ private final class JobsLabelBehaviorDetailVC: BaseVC {
     }()
 
     private lazy var previewCard: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
             .byCornerRadius(14)
             .byAddTo(view) { [unowned self] make in
@@ -211,7 +205,8 @@ private final class JobsLabelBehaviorDetailVC: BaseVC {
     }()
 
     private lazy var demoLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextColor(JobsCor.white)
             .byFont(JobsFont.systemFont(ofSize: 15))
             .byTextAlignment(.center)
@@ -226,7 +221,8 @@ private final class JobsLabelBehaviorDetailVC: BaseVC {
         UIButton.sys()
             .byTitleColor(JobsCor.white)
             .byTitleFont(JobsFont.systemFont(ofSize: 15))
-            .byBackgroundColor(JobsCor.systemBrown, for: .normal)
+            .byBackgroundColor(JobsCor.systemBrown,
+                               for: .normal)
             .byAddTo(previewCard) { [unowned self] make in
                 make.center.equalToSuperview()
                 applyPreviewSize(make)
@@ -260,31 +256,43 @@ private final class JobsLabelBehaviorDetailVC: BaseVC {
         switch item.target {
         case .label:
             demoLabel.byVisible(YES)
-            apply(kind: item.kind, to: demoLabel)
+            apply(kind: item.kind,
+                  to: demoLabel)
         case .buttonTitleLabel:
             demoButton.byVisible(YES)
-            apply(kind: item.kind, to: demoButton)
+            apply(kind: item.kind,
+                  to: demoButton)
         }
     }
 
-    private func apply(kind: JobsLabelBehaviorKind, to label: UILabel) {
+    private func apply(kind: JobsLabelBehaviorKind,
+                       to label: UILabel) {
         if kind == .richText {
             label.byAttributedString(richText())
         } else {
             label.byText(demoText(manualNewline: kind == .manualNewline))
         }
-        apply(kind: kind, to: label, supportsCategoryScroll: true)
+        apply(kind: kind,
+              to: label,
+              supportsCategoryScroll: true)
     }
 
-    private func apply(kind: JobsLabelBehaviorKind, to button: UIButton) {
+    private func apply(kind: JobsLabelBehaviorKind,
+                       to button: UIButton) {
         if kind == .richText {
-            button.byAttributedTitle(richText(), for: .normal)
+            button.byAttributedTitle(richText(),
+                                     for: .normal)
         } else {
-            button.byTitle(demoText(manualNewline: kind == .manualNewline), for: .normal)
+            button.byTitle(demoText(manualNewline: kind == .manualNewline),
+                           for: .normal)
         }
-        guard let titleLabel = button.titleLabel else { return }
+        guard let titleLabel = button.titleLabel else {
+            return
+        }
         titleLabel.byTextAlignment(.center)
-        apply(kind: kind, to: titleLabel, supportsCategoryScroll: false)
+        apply(kind: kind,
+              to: titleLabel,
+              supportsCategoryScroll: false)
     }
 
     private func apply(kind: JobsLabelBehaviorKind,
@@ -294,20 +302,20 @@ private final class JobsLabelBehaviorDetailVC: BaseVC {
         case .fixedTruncation:
             label.byTextDisplayMode(.singleLineTailTruncation)
         case .autoScroll:
-            label.byTextDisplayMode(
-                .scrolling,
-                scrollConfiguration: .pingPong(speed: 28)
-            )
+            label.byTextDisplayMode(.scrolling,
+                                    scrollConfiguration: .pingPong(speed: 28))
         case .categoryScroll:
-            guard supportsCategoryScroll else { return }
-            label.byTextDisplayMode(
-                .scrolling,
-                scrollConfiguration: .continuous(speed: 36, spacing: 36)
-            )
+            guard supportsCategoryScroll else {
+                return
+            }
+            label.byTextDisplayMode(.scrolling,
+                                    scrollConfiguration: .continuous(speed: 36,
+                                                                     spacing: 36))
         case .widthAdaptive:
             label.makeLabelByShowingType(.type03)
         case .scaleToFit:
-            label.byTextDisplayMode(.scaleToFit, minimumScaleFactor: 0.45)
+            label.byTextDisplayMode(.scaleToFit,
+                                    minimumScaleFactor: 0.45)
         case .automaticWrapping, .manualNewline, .richText:
             label
                 .byNumberOfLines(0)
@@ -318,28 +326,24 @@ private final class JobsLabelBehaviorDetailVC: BaseVC {
     private func demoText(manualNewline: Bool) -> String {
         if manualNewline {
             return "编译器自动管理内存地址，\n让程序员更加专注于\nAPP 的业务。".tr
-        };return "编译器自动管理内存地址，让程序员更加专注于 APP 的业务。".tr
+        }
+        return "编译器自动管理内存地址，让程序员更加专注于 APP 的业务。".tr
     }
 
     private func richText() -> NSAttributedString {
         let text = "编译器自动管理内存地址\n让程序员更加专注于\nAPP 的业务。".tr
-        let result = NSMutableAttributedString(
-            string: text,
-            attributes: [
+        let result = NSMutableAttributedString(string: text,
+                                               attributes: [
                 .font: JobsFont.systemFont(ofSize: 14),
                 .foregroundColor: JobsCor.white
-            ]
-        )
-        result.addAttributes(
-            [
+            ])
+        result.addAttributes([
                 .foregroundColor: JobsCor.systemYellow,
                 .backgroundColor: JobsCor.systemBrown
             ],
-            range: (text as NSString).range(of: "编译器自动管理内存地址".tr)
-        )
-        result.addAttributes(
-            [.foregroundColor: JobsCor.systemGreen],
-            range: (text as NSString).range(of: "APP 的业务。".tr)
-        );return result
+                             range: (text as NSString).range(of: "编译器自动管理内存地址".tr))
+        result.addAttributes([.foregroundColor: JobsCor.systemGreen],
+                             range: (text as NSString).range(of: "APP 的业务。".tr))
+        return result
     }
 }

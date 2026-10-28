@@ -23,7 +23,9 @@ import JobsSwiftDSL
 import SnapKit
 
 final class JobsWidgetDemoVC: BaseVC {
+
     private enum WidgetFamily: Int {
+
         case small
         case medium
         case large
@@ -47,7 +49,8 @@ final class JobsWidgetDemoVC: BaseVC {
     private var counter = JobsWidgetSharedStore.counter
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView.jobsMake { _ in }
+        UIScrollView
+            .jobsMake { _ in }
             .byAlwaysBounceVertical(YES)
             .byShowsVerticalScrollIndicator(NO)
             .byAddTo(view) { [unowned self] make in
@@ -61,7 +64,8 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalTo(self.scrollView.contentLayoutGuide)
                 make.width.equalTo(self.scrollView.frameLayoutGuide)
@@ -69,10 +73,12 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var introLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("宿主联调页：切换 Widget family，修改状态，观察时间线快照如何重新排版。".tr)
             .byTextColor(JobsCor.secondaryLabel)
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 14,
+                                        weight: .regular))
             .byNumberOfLines(0)
             .byAddTo(contentView) { make in
                 make.top.equalToSuperview().offset(20)
@@ -85,8 +91,11 @@ final class JobsWidgetDemoVC: BaseVC {
             .bySelectedSegmentIndex(WidgetFamily.medium.rawValue)
             .onJobsChange { [weak self] (control: UISegmentedControl) in
                 guard let self,
-                      let family = WidgetFamily(rawValue: control.selectedSegmentIndex) else { return }
-                self.apply(family, status: "family：已切换为\(control.titleForSegment(at: control.selectedSegmentIndex) ?? "--")")
+                      let family = WidgetFamily(rawValue: control.selectedSegmentIndex) else {
+                    return
+                }
+                self.apply(family,
+                           status: "family：已切换为\(control.titleForSegment(at: control.selectedSegmentIndex) ?? "--")")
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.introLabel.snp.bottom).offset(16)
@@ -96,7 +105,8 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var previewCard: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemIndigo)
             .byCornerRadius(22)
             .byClipsToBounds(YES)
@@ -108,20 +118,24 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var previewEyebrowLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("WIDGETKIT · PREVIEW")
             .byTextColor(JobsCor.white.withAlphaComponent(0.72))
-            .byFont(JobsFont.systemFont(ofSize: 11, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 11,
+                                        weight: .semibold))
             .byAddTo(previewCard) { make in
                 make.top.left.equalToSuperview().offset(16)
             }
     }()
 
     private lazy var previewTitleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("演武堂 · 小组件".tr)
             .byTextColor(JobsCor.white)
-            .byFont(JobsFont.systemFont(ofSize: 20, weight: .bold))
+            .byFont(JobsFont.systemFont(ofSize: 20,
+                                        weight: .bold))
             .byAddTo(previewCard) { [unowned self] make in
                 make.top.equalTo(self.previewEyebrowLabel.snp.bottom).offset(6)
                 make.left.right.equalToSuperview().inset(16)
@@ -129,10 +143,12 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var previewTimeLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("--:--:--")
             .byTextColor(JobsCor.white)
-            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 30, weight: .bold))
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 30,
+                                                       weight: .bold))
             .byAddTo(previewCard) { [unowned self] make in
                 make.top.equalTo(self.previewTitleLabel.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(16)
@@ -140,9 +156,11 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var previewCounterLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextColor(JobsCor.white.withAlphaComponent(0.86))
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .semibold))
             .byAddTo(previewCard) { [unowned self] make in
                 make.top.equalTo(self.previewTimeLabel.snp.bottom).offset(3)
                 make.left.right.equalToSuperview().inset(16)
@@ -150,9 +168,11 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var previewDescriptionLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextColor(JobsCor.white.withAlphaComponent(0.72))
-            .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 12,
+                                        weight: .regular))
             .byNumberOfLines(2)
             .byAddTo(previewCard) { make in
                 make.left.right.bottom.equalToSuperview().inset(16)
@@ -161,13 +181,18 @@ final class JobsWidgetDemoVC: BaseVC {
 
     private lazy var increaseButton: UIButton = {
         UIButton.sys()
-            .byTitle("计数 +1".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
+            .byTitle("计数 +1".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .bold))
             .byBackgroundColor(JobsCor.systemBlue)
             .byCornerRadius(12)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 counter = counter >= 12 ? 1 : counter + 1
                 syncHomeScreenWidget(status: "桌面 Widget：计数已同步".tr)
             }
@@ -181,9 +206,12 @@ final class JobsWidgetDemoVC: BaseVC {
 
     private lazy var refreshButton: UIButton = {
         UIButton.sys()
-            .byTitle("刷新时间线".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
+            .byTitle("刷新时间线".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .bold))
             .byBackgroundColor(JobsCor.systemPurple)
             .byCornerRadius(12)
             .onTap { [weak self] _ in
@@ -198,9 +226,11 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var timelineLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextColor(JobsCor.label)
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .semibold))
             .byNumberOfLines(0)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.increaseButton.snp.bottom).offset(16)
@@ -209,10 +239,12 @@ final class JobsWidgetDemoVC: BaseVC {
     }()
 
     private lazy var footnoteLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("已接入真实 Widget Extension 与 App Group。真机运行宿主 App 一次后：回到系统桌面 → 长按空白处 → 点击“+” 或“添加小组件” → 搜索“SwiftDemo”（进入后显示“演武堂小组件”） → 选择尺寸并添加。\n\n本页“计数 +1”和“刷新时间线”会重载桌面 Widget；iOS 不允许 App 直接弹出系统小组件库。".tr)
             .byTextColor(JobsCor.secondaryLabel)
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .regular))
             .byNumberOfLines(0)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.timelineLabel.snp.bottom).offset(14)
@@ -226,12 +258,14 @@ final class JobsWidgetDemoVC: BaseVC {
         jobsSetupGKNav(title: "iOS Widget Demo".tr)
         view.byBackgroundColor(JobsCor.systemGroupedBackground)
         setupUI()
-        apply(.medium, status: "时间线：已生成当前快照".tr)
+        apply(.medium,
+              status: "时间线：已生成当前快照".tr)
         syncHomeScreenWidget(status: "桌面 Widget：共享状态已就绪".tr)
     }
 }
 
 private extension JobsWidgetDemoVC {
+
     private func setupUI() {
         [
             scrollView,
@@ -248,10 +282,13 @@ private extension JobsWidgetDemoVC {
             refreshButton,
             timelineLabel,
             footnoteLabel
-        ].forEach { $0.byVisible(YES) }
+        ].forEach {
+            $0.byVisible(YES)
+        }
     }
 
-    private func apply(_ family: WidgetFamily, status: String) {
+    private func apply(_ family: WidgetFamily,
+                       status: String) {
         widgetFamily = family
         familyControl.bySelectedSegmentIndex(family.rawValue)
         previewCard.byRemakeConstraints { [unowned self] make in
@@ -280,9 +317,9 @@ private extension JobsWidgetDemoVC {
 
     private func syncHomeScreenWidget(status: String) {
         JobsWidgetSharedStore.save(counter: counter)
-#if canImport(WidgetKit)
+        #if canImport(WidgetKit)
         WidgetCenter.shared.reloadTimelines(ofKind: JobsWidgetSharedStore.widgetKind)
-#endif
+        #endif
         refreshPreview(status: status)
     }
 

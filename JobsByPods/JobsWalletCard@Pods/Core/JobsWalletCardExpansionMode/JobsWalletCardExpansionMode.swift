@@ -8,6 +8,7 @@
 import Foundation
 
 public enum JobsWalletCardExpansionMode {
+
     /// 只管理当前点击卡片的开合
     case individual
     /// 任意卡片点击都管理全部卡片的开合

@@ -22,13 +22,15 @@ import Jobsl10n
 import SnapKit
 
 final class JobsScreenshotTipsDemoVC: BaseVC {
+
     private let screenshotObserver = JobsScreenshotObserver()
     private let screenshotCapturer = JobsScreenshotCapturer()
     private var systemScreenshotCount = 0
     private var activeScreenshotCount = 0
 
     private lazy var statusCardView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(20)
             .byAddTo(view) { [unowned self] make in
@@ -38,9 +40,11 @@ final class JobsScreenshotTipsDemoVC: BaseVC {
     }()
 
     private lazy var statusIconLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("📸")
-            .byFont(JobsFont.systemFont(ofSize: 42, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 42,
+                                        weight: .regular))
             .byTextAlignment(.center)
             .byAddTo(statusCardView) { make in
                 make.top.equalToSuperview().offset(26)
@@ -49,9 +53,11 @@ final class JobsScreenshotTipsDemoVC: BaseVC {
     }()
 
     private lazy var statusTitleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("等待截屏操作".tr)
-            .byFont(JobsFont.systemFont(ofSize: 21, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 21,
+                                        weight: .semibold))
             .byTextColor(JobsCor.label)
             .byTextAlignment(.center)
             .byAddTo(statusCardView) { [unowned self] make in
@@ -61,9 +67,11 @@ final class JobsScreenshotTipsDemoVC: BaseVC {
     }()
 
     private lazy var statusDetailLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("系统截屏 0 次 · 按钮截屏 0 次".tr)
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
             .byNumberOfLines(0)
@@ -75,9 +83,11 @@ final class JobsScreenshotTipsDemoVC: BaseVC {
     }()
 
     private lazy var guideLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("真机可同时按下侧边键与音量加键；也可以点击下方按钮主动截取当前页面并保存到相册。程序主动截屏不会触发系统截屏通知，因此这里分开计数。".tr)
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 14,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
             .byAddTo(view) { [unowned self] make in
@@ -89,12 +99,17 @@ final class JobsScreenshotTipsDemoVC: BaseVC {
     private lazy var activeCaptureButton: UIButton = {
         let button = UIButton.sys()
             .byTitle("点击截屏并保存到相册".tr)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .semibold))
             .byTitleColor(JobsCor.white)
-            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
+            .byBackgroundColor(JobsCor.systemBlue,
+                               for: .normal)
             .byCornerRadius(10)
             .byMasksToBounds(true)
-            .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 18, bottom: 10, right: 18))
+            .byContentEdgeInsets(UIEdgeInsets(top: 10,
+                                              left: 18,
+                                              bottom: 10,
+                                              right: 18))
             .onTap { [weak self] _ in
                 self?.captureCurrentScreen()
             }
@@ -109,7 +124,8 @@ final class JobsScreenshotTipsDemoVC: BaseVC {
                     background.cornerRadius = 10
                 }
             }
-        };return button
+        }
+        return button
     }()
 
     override func viewDidLoad() {
@@ -149,7 +165,9 @@ final class JobsScreenshotTipsDemoVC: BaseVC {
 
     private func captureCurrentScreen() {
         screenshotCapturer.captureAndSave(view.window ?? view) { [weak self] result in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             switch result {
             /// 处理 .success 分支
             case .success:

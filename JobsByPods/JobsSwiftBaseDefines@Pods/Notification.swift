@@ -14,6 +14,7 @@ import UIKit
 /// 通知分类
 
 extension Notification.Name {
+
     /// 用户登陆
     static let userDidLogin = Notification.Name("userDidLogin")
     /// 跳转在线客服通知

@@ -15,11 +15,14 @@ import JobsSwiftDSL
 
 #if os(iOS) || os(tvOS)
 public final class JobsClockIconView: UIView {
+
     /// 默认每 0.1 秒前进 6°，6 秒完成一周。
     public static let defaultInterval: TimeInterval = 0.1
 
     public var direction: JobsImageRotationDirection {
-        get { rotationDirection }
+        get {
+            rotationDirection
+        }
         set {
             rotationDirection = newValue
             rotator?.direction = newValue
@@ -27,7 +30,9 @@ public final class JobsClockIconView: UIView {
     }
 
     public var interval: TimeInterval {
-        get { rotator?.interval ?? tickInterval }
+        get {
+            rotator?.interval ?? tickInterval
+        }
         set {
             tickInterval = newValue
             rotator?.interval = newValue
@@ -46,10 +51,8 @@ public final class JobsClockIconView: UIView {
     private var rotator: JobsImageRotator?
     private var hasStarted = false
 
-    public init(
-        direction: JobsImageRotationDirection = .clockwise,
-        interval: TimeInterval = JobsClockIconView.defaultInterval
-    ) {
+    public init(direction: JobsImageRotationDirection = .clockwise,
+                interval: TimeInterval = JobsClockIconView.defaultInterval) {
         self.rotationDirection = direction
         self.tickInterval = interval
         super.init(frame: .zero)
@@ -66,7 +69,8 @@ public final class JobsClockIconView: UIView {
     public override func layoutSubviews() {
         super.layoutSubviews()
         minuteHandContainer
-            .byBounds(CGRect(origin: .zero, size: bounds.size))
+            .byBounds(CGRect(origin: .zero,
+                             size: bounds.size))
             .byCenter(CGPoint(x: bounds.midX, y: bounds.midY))
         layoutIcon()
     }
@@ -78,7 +82,9 @@ public final class JobsClockIconView: UIView {
 
     @discardableResult
     public func start() -> Self {
-        guard !isRunning else { return self }
+        guard !isRunning else {
+            return self
+        }
         rotator?.start()
         hasStarted = true
         isRunning = true
@@ -87,7 +93,9 @@ public final class JobsClockIconView: UIView {
 
     @discardableResult
     public func pause() -> Self {
-        guard hasStarted, isRunning else { return self }
+        guard hasStarted, isRunning else {
+            return self
+        }
         rotator?.pause()
         isRunning = false
         return self
@@ -95,7 +103,9 @@ public final class JobsClockIconView: UIView {
 
     @discardableResult
     public func resume() -> Self {
-        guard hasStarted, !isRunning else { return self }
+        guard hasStarted, !isRunning else {
+            return self
+        }
         rotator?.resume()
         isRunning = true
         return self
@@ -111,6 +121,7 @@ public final class JobsClockIconView: UIView {
 }
 
 private extension JobsClockIconView {
+
     func commonInit() {
         backgroundColor = .clear
         isUserInteractionEnabled = false
@@ -126,11 +137,9 @@ private extension JobsClockIconView {
                 .byLineCap(.round)
                 .byLineJoin(.round)
         }
-        rotator = JobsImageRotator(
-            targetView: minuteHandContainer,
-            direction: rotationDirection,
-            interval: tickInterval
-        )
+        rotator = JobsImageRotator(targetView: minuteHandContainer,
+                                   direction: rotationDirection,
+                                   interval: tickInterval)
         tickInterval = rotator?.interval ?? tickInterval
         applyTintColor()
     }
@@ -144,22 +153,26 @@ private extension JobsClockIconView {
     }
 
     func layoutIcon() {
-        let side = min(bounds.width, bounds.height)
-        guard side > 0 else { return }
-        let center = CGPoint(x: bounds.midX, y: bounds.midY)
-        let lineWidth = max(1.35, side * 0.075)
-        let radius = max(0, side / 2 - lineWidth / 2)
+        let side = min(bounds.width,
+                       bounds.height)
+        guard side > 0 else {
+            return
+        }
+        let center = CGPoint(x: bounds.midX,
+                             y: bounds.midY)
+        let lineWidth = max(1.35,
+                            side * 0.075)
+        let radius = max(0,
+                         side / 2 - lineWidth / 2)
 
         dialLayer
             .byFrame(bounds)
             .byLineWidth(lineWidth)
         dialLayer.path = UIBezierPath(
-            ovalIn: CGRect(
-                x: center.x - radius,
-                y: center.y - radius,
-                width: radius * 2,
-                height: radius * 2
-            )
+            ovalIn: CGRect(x: center.x - radius,
+                           y: center.y - radius,
+                           width: radius * 2,
+                           height: radius * 2)
         ).cgPath
 
         let hourLength = side * 0.22
@@ -167,10 +180,8 @@ private extension JobsClockIconView {
         let hourPath = UIBezierPath.jobsMake { _ in }
         hourPath.move(to: center)
         hourPath.addLine(
-            to: CGPoint(
-                x: center.x + sin(hourAngle) * hourLength,
-                y: center.y - cos(hourAngle) * hourLength
-            )
+            to: CGPoint(x: center.x + sin(hourAngle) * hourLength,
+                        y: center.y - cos(hourAngle) * hourLength)
         )
         hourHandLayer
             .byFrame(bounds)
@@ -179,21 +190,22 @@ private extension JobsClockIconView {
 
         let minutePath = UIBezierPath.jobsMake { _ in }
         minutePath.move(to: center)
-        minutePath.addLine(to: CGPoint(x: center.x, y: center.y - side * 0.34))
+        minutePath.addLine(to: CGPoint(x: center.x,
+                                       y: center.y - side * 0.34))
         minuteHandLayer
             .byFrame(minuteHandContainer.bounds)
-            .byLineWidth(max(1.1, lineWidth * 0.72))
+            .byLineWidth(max(1.1,
+                             lineWidth * 0.72))
             .byPath(minutePath.cgPath)
 
-        let dotRadius = max(1.2, lineWidth * 0.72)
+        let dotRadius = max(1.2,
+                            lineWidth * 0.72)
         centerDotLayer.byFrame(bounds)
         centerDotLayer.path = UIBezierPath(
-            ovalIn: CGRect(
-                x: center.x - dotRadius,
-                y: center.y - dotRadius,
-                width: dotRadius * 2,
-                height: dotRadius * 2
-            )
+            ovalIn: CGRect(x: center.x - dotRadius,
+                           y: center.y - dotRadius,
+                           width: dotRadius * 2,
+                           height: dotRadius * 2)
         ).cgPath
     }
 }

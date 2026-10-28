@@ -16,12 +16,17 @@ import JobsGetWindow
 
 // MARK: - 快捷屏幕宽高（保持你原来接口）
 @inline(__always)
-public func ScreenWidth(_ rate: CGFloat = 1) -> CGFloat { Screen.width * rate }
+public func ScreenWidth(_ rate: CGFloat = 1) -> CGFloat {
+    Screen.width * rate
+}
 
 @inline(__always)
-public func ScreenHeight(_ rate: CGFloat = 1) -> CGFloat { Screen.height * rate }
+public func ScreenHeight(_ rate: CGFloat = 1) -> CGFloat {
+    Screen.height * rate
+}
 // MARK: - 字体缩放模式
 public enum JobsFontScaleMode {
+
     /// 连续缩放：font = base * (screenWidth / designWidth)
     case continuous
     /// 分档缩放：更稳定、可控（推荐用于字体）
@@ -29,6 +34,7 @@ public enum JobsFontScaleMode {
 }
 // MARK: - 核心比例器（UI + Font 合一）
 public enum JobsScale {
+
     // MARK: Design Reference
     private static var designW: CGFloat = 375
     private static var designH: CGFloat = 812
@@ -54,27 +60,33 @@ public enum JobsScale {
         (.greatestFiniteMagnitude, 1.14)
     ]
     // MARK: Setup
-    public static func setup(
-        designWidth: CGFloat,
-        designHeight: CGFloat,
-        useSafeArea: Bool = false,
-        fontMode: JobsFontScaleMode = .breakpoints,
-        fontMinScale: CGFloat = 1.0,
-        fontMaxScale: CGFloat = 1.15,
-        fontBreakpoints: [(maxWidth: CGFloat, scale: CGFloat)]? = nil
-    ) {
+    public static func setup(designWidth: CGFloat,
+                             designHeight: CGFloat,
+                             useSafeArea: Bool = false,
+                             fontMode: JobsFontScaleMode = .breakpoints,
+                             fontMinScale: CGFloat = 1.0,
+                             fontMaxScale: CGFloat = 1.15,
+                             fontBreakpoints: [(maxWidth: CGFloat, scale: CGFloat)]? = nil) {
         self.designW = designWidth.isFinite && designWidth > 0 ? designWidth : 375
         self.designH = designHeight.isFinite && designHeight > 0 ? designHeight : 812
         self.useSafeArea = useSafeArea
         self.fontMode = fontMode
         let minimum = fontMinScale.isFinite && fontMinScale > 0 ? fontMinScale : 1
         let maximum = fontMaxScale.isFinite && fontMaxScale > 0 ? fontMaxScale : 1.15
-        self.fontMinScale = min(minimum, maximum)
-        self.fontMaxScale = max(minimum, maximum)
+        self.fontMinScale = min(minimum,
+                                maximum)
+        self.fontMaxScale = max(minimum,
+                                maximum)
         if let bps = fontBreakpoints, !bps.isEmpty {
-            let normalized = bps.filter { $0.maxWidth.isFinite && $0.maxWidth > 0 && $0.scale.isFinite && $0.scale > 0 }
-                .sorted { $0.maxWidth < $1.maxWidth }
-            if !normalized.isEmpty { self.fontBreakpoints = normalized }
+            let normalized = bps.filter {
+                $0.maxWidth.isFinite && $0.maxWidth > 0 && $0.scale.isFinite && $0.scale > 0
+            }
+                .sorted {
+                    $0.maxWidth < $1.maxWidth
+                }
+            if !normalized.isEmpty {
+                self.fontBreakpoints = normalized
+            }
         }
     }
     // MARK: Screen Size（用于比例输入）
@@ -83,23 +95,33 @@ public enum JobsScale {
     /// - 若启用 useSafeArea，则尝试从“主界面 normal window”扣除 safeAreaInsets；失败则回退 Screen.size
     public static var screenSize: CGSize {
         let base = Screen.size
-        guard useSafeArea else { return base }
+        guard useSafeArea else {
+            return base
+        }
         if let window = UIApplication.jobsKeyWindow(preferMainScreen: true),
            window.windowLevel == .normal,
            !window.isHidden,
            window.alpha > 0.01,
            window.bounds.size != .zero {
             let insets = window.safeAreaInsets
-            let w = max(0, window.bounds.width - (insets.left + insets.right))
-            let h = max(0, window.bounds.height - (insets.top + insets.bottom))
+            let w = max(0,
+                        window.bounds.width - (insets.left + insets.right))
+            let h = max(0,
+                        window.bounds.height - (insets.top + insets.bottom))
             if w > 0, h > 0 {
-                return CGSize(width: w, height: h)
+                return CGSize(width: w,
+                              height: h)
             }
-        };return base
+        }
+        return base
     }
     // MARK: UI Scale
-    public static var x: CGFloat { screenSize.width / designW }
-    public static var y: CGFloat { screenSize.height / designH }
+    public static var x: CGFloat {
+        screenSize.width / designW
+    }
+    public static var y: CGFloat {
+        screenSize.height / designH
+    }
     // MARK: Font Scale（独立比例尺）
     /// 字体缩放只看“宽度”，避免 height / min(w,h) 在横屏/Pad 上乱跳
     public static var fontScale: CGFloat {
@@ -112,12 +134,17 @@ public enum JobsScale {
         /// 处理 .breakpoints 分支
         case .breakpoints:
             raw = scaleFromBreakpoints(w)
-        };return clamp(raw, fontMinScale, fontMaxScale)
+        }
+        return clamp(raw,
+                     fontMinScale,
+                     fontMaxScale)
     }
 
     private static func scaleFromBreakpoints(_ width: CGFloat) -> CGFloat {
         for item in fontBreakpoints {
-            if width <= item.maxWidth { return item.scale }
+            if width <= item.maxWidth {
+                return item.scale
+            }
         }
         return fontBreakpoints.last?.scale ?? 1
     }
@@ -129,8 +156,10 @@ public enum JobsScale {
             return bounds
         }
         let inset = view.safeAreaInsets
-        return CGSize(width: max(0, bounds.width - inset.left - inset.right),
-                      height: max(0, bounds.height - inset.top - inset.bottom))
+        return CGSize(width: max(0,
+                                 bounds.width - inset.left - inset.right),
+                      height: max(0,
+                                  bounds.height - inset.top - inset.bottom))
     }
 
     public static func widthScale(in view: UIView) -> CGFloat {
@@ -144,16 +173,22 @@ public enum JobsScale {
     public static func fontScale(in view: UIView) -> CGFloat {
         let width = screenSize(in: view).width
         let raw = fontMode == .continuous ? width / designW : scaleFromBreakpoints(width)
-        return clamp(raw, fontMinScale, fontMaxScale)
+        return clamp(raw,
+                     fontMinScale,
+                     fontMaxScale)
     }
 
     /// 多窗口调用传入实际 window，避免改变全局比例上下文。
     public static func screenSize(in window: UIWindow) -> CGSize {
         let bounds = window.bounds.size
-        guard useSafeArea else { return bounds }
+        guard useSafeArea else {
+            return bounds
+        }
         let inset = window.safeAreaInsets
-        return CGSize(width: max(1, bounds.width - inset.left - inset.right),
-                      height: max(1, bounds.height - inset.top - inset.bottom))
+        return CGSize(width: max(1,
+                                 bounds.width - inset.left - inset.right),
+                      height: max(1,
+                                  bounds.height - inset.top - inset.bottom))
     }
 
     public static func widthScale(in window: UIWindow) -> CGFloat {
@@ -167,12 +202,15 @@ public enum JobsScale {
     // MARK: Pixel Align（像素对齐）
     @available(*, deprecated, message: "Use pixelAlign(_:traitCollection:) with the consumer view traits.")
     public static func pixelAlign(_ value: CGFloat) -> CGFloat {
-        return pixelAlign(value, traitCollection: .current)
+        return pixelAlign(value,
+                          traitCollection: .current)
     }
 
-    public static func pixelAlign(_ value: CGFloat, traitCollection: UITraitCollection) -> CGFloat {
+    public static func pixelAlign(_ value: CGFloat,
+                                  traitCollection: UITraitCollection) -> CGFloat {
         #if os(iOS) || os(tvOS)
-        let s = max(traitCollection.displayScale, 1)
+        let s = max(traitCollection.displayScale,
+                    1)
         return (value * s).rounded() / s
         #else
         return value
@@ -182,27 +220,43 @@ public enum JobsScale {
     private static func clamp(_ v: CGFloat,
                               _ lo: CGFloat,
                               _ hi: CGFloat) -> CGFloat {
-        min(max(v, lo), hi)
+        min(max(v,lo),
+            hi)
     }
 }
 // MARK: - Sugar：你要的 33.w / 33.h / 33.fz
 extension BinaryInteger {
+
     /// UI 宽度缩放（像素对齐）
-    public var w: CGFloat { JobsScale.pixelAlign(CGFloat(self) * JobsScale.x) }
+    public var w: CGFloat {
+        JobsScale.pixelAlign(CGFloat(self) * JobsScale.x)
+    }
     /// UI 高度缩放（像素对齐）
-    public var h: CGFloat { JobsScale.pixelAlign(CGFloat(self) * JobsScale.y) }
+    public var h: CGFloat {
+        JobsScale.pixelAlign(CGFloat(self) * JobsScale.y)
+    }
     /// 字体缩放（独立比例尺，像素对齐）
-    public var fz: CGFloat { JobsScale.pixelAlign(CGFloat(self) * JobsScale.fontScale) }
+    public var fz: CGFloat {
+        JobsScale.pixelAlign(CGFloat(self) * JobsScale.fontScale)
+    }
 }
 
 extension BinaryFloatingPoint {
-     public var w: CGFloat { JobsScale.pixelAlign(CGFloat(self) * JobsScale.x) }
-     public var h: CGFloat { JobsScale.pixelAlign(CGFloat(self) * JobsScale.y) }
-     public var fz: CGFloat { JobsScale.pixelAlign(CGFloat(self) * JobsScale.fontScale) }
+
+    public var w: CGFloat {
+        JobsScale.pixelAlign(CGFloat(self) * JobsScale.x)
+    }
+    public var h: CGFloat {
+        JobsScale.pixelAlign(CGFloat(self) * JobsScale.y)
+    }
+    public var fz: CGFloat {
+        JobsScale.pixelAlign(CGFloat(self) * JobsScale.fontScale)
+    }
 }
 
 // MARK: - Screen（兼容横竖屏，不依赖 connectedScenes）
 public enum Screen {
+
     /// 屏幕尺寸（以点为单位）
     /// - 优先 window.bounds.size：天然随横竖屏变化
     /// - 回退 UIScreen.main.bounds.size：在 iOS 8+ 通常是“竖屏坐标系”，但作为兜底足够
@@ -217,12 +271,17 @@ public enum Screen {
         if let window = UIApplication.jobsKeyWindow(preferMainScreen: true),
            window.bounds.size != .zero {
             return window.bounds.size
-        };return UIScreen.main.bounds.size
+        }
+        return UIScreen.main.bounds.size
         #else
         return .zero
         #endif
     }
 
-    public static var width: CGFloat  { size.width }
-    public static var height: CGFloat { size.height }
+    public static var width: CGFloat  {
+        size.width
+    }
+    public static var height: CGFloat {
+        size.height
+    }
 }

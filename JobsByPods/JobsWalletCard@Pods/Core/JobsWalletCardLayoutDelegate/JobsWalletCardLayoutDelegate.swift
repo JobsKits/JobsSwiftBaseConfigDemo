@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 public protocol JobsWalletCardLayoutDelegate: AnyObject {
+
     func collectionView(_ collectionView: UICollectionView,
                         reusableHeaderHeightFor section: Int) -> CGFloat
 

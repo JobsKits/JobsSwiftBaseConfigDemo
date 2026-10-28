@@ -10,6 +10,7 @@ import Foundation
 
 public typealias InternalTaskCenter = JobsTaskCenter
 public final class JobsTaskCenter: @unchecked Sendable {
+
     /// 单例实例，便于全局访问。
     public static let `default` = JobsTaskCenter()
     /// 互斥锁，保证多线程环境下对任务/标签字典的安全访问。
@@ -36,10 +37,16 @@ public final class JobsTaskCenter: @unchecked Sendable {
 }
 
 extension JobsTaskCenter {
+
     /// 当前所有任务的标签并集（去重后返回数组）。
     public var allTags: [String] {
         lock.lock()
-        defer { lock.unlock() };return Array(Set(taskTags.values.flatMap { $0 }))
+        defer {
+            lock.unlock()
+        }
+        return Array(Set(taskTags.values.flatMap {
+            $0
+        }))
     }
     /// 添加任务到中心。
     /// - Parameter task: 要管理的任务。
@@ -55,21 +62,25 @@ extension JobsTaskCenter {
             guard state.isTerminated, let task else {
                 return
             }
-            self?.detach(task, cancel: false)
+            self?.detach(task,
+                         cancel: false)
         }
         lifecycleTokens[key] = token
         lock.unlock()
         if task.lifecycle.isTerminated {
-            detach(task, cancel: false)
+            detach(task,
+                   cancel: false)
         }
     }
 
     /// 移除并取消任务；已完成任务的自动回收不会改变 finished 状态。
     public func remove(_ task: JobsTask) {
-        detach(task, cancel: true)
+        detach(task,
+               cancel: true)
     }
 
-    private func detach(_ task: JobsTask, cancel: Bool) {
+    private func detach(_ task: JobsTask,
+                        cancel: Bool) {
         let key = ObjectIdentifier(task)
         lock.lock()
         tasks.removeValue(forKey: key)
@@ -103,9 +114,11 @@ extension JobsTaskCenter {
     /// - Parameters:
     ///   - tag: 标签字符串。
     ///   - task: 需要打标签的任务。
-    public func addTag(_ tag: String, to task: JobsTask) {
+    public func addTag(_ tag: String,
+                       to task: JobsTask) {
         lock.lock()
-        taskTags[ObjectIdentifier(task), default: []].insert(tag)
+        taskTags[ObjectIdentifier(task),
+                 default: []].insert(tag)
         lock.unlock()
     }
 }

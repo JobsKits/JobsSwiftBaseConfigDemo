@@ -10,6 +10,7 @@ import UIKit
 import JobsSwiftBaseDefines
 
 public struct JobsSwiftExcelStyle {
+
     public var defaultColumnWidth: CGFloat
     public var headerHeight: CGFloat
     public var rowHeight: CGFloat
@@ -28,26 +29,27 @@ public struct JobsSwiftExcelStyle {
     public var showsHorizontalScrollIndicator: Bool
     public var bouncesHorizontally: Bool
 
-    public init(
-        defaultColumnWidth: CGFloat = 112,
-        headerHeight: CGFloat = 46,
-        rowHeight: CGFloat = 44,
-        gridLineWidth: CGFloat = 0.5,
-        gridLineColor: UIColor = JobsCor.separator,
-        frozenHeaderBackgroundColor: UIColor = JobsCor.systemIndigo,
-        headerBackgroundColor: UIColor = JobsCor.secondarySystemBackground,
-        frozenColumnBackgroundColor: UIColor = JobsCor.tertiarySystemBackground,
-        bodyBackgroundColor: UIColor = JobsCor.systemBackground,
-        frozenHeaderTextColor: UIColor = JobsCor.white,
-        headerTextColor: UIColor = JobsCor.label,
-        primaryTextColor: UIColor = JobsCor.label,
-        secondaryTextColor: UIColor = JobsCor.secondaryLabel,
-        headerFont: UIFont = JobsFont.systemFont(ofSize: 14, weight: .semibold),
-        bodyFont: UIFont = JobsFont.systemFont(ofSize: 14, weight: .regular),
-        showsHorizontalScrollIndicator: Bool = true,
-        bouncesHorizontally: Bool = true
-    ) {
-        self.defaultColumnWidth = max(1, defaultColumnWidth)
+    public init(defaultColumnWidth: CGFloat = 112,
+                headerHeight: CGFloat = 46,
+                rowHeight: CGFloat = 44,
+                gridLineWidth: CGFloat = 0.5,
+                gridLineColor: UIColor = JobsCor.separator,
+                frozenHeaderBackgroundColor: UIColor = JobsCor.systemIndigo,
+                headerBackgroundColor: UIColor = JobsCor.secondarySystemBackground,
+                frozenColumnBackgroundColor: UIColor = JobsCor.tertiarySystemBackground,
+                bodyBackgroundColor: UIColor = JobsCor.systemBackground,
+                frozenHeaderTextColor: UIColor = JobsCor.white,
+                headerTextColor: UIColor = JobsCor.label,
+                primaryTextColor: UIColor = JobsCor.label,
+                secondaryTextColor: UIColor = JobsCor.secondaryLabel,
+                headerFont: UIFont = JobsFont.systemFont(ofSize: 14,
+                                                         weight: .semibold),
+                bodyFont: UIFont = JobsFont.systemFont(ofSize: 14,
+                                                       weight: .regular),
+                showsHorizontalScrollIndicator: Bool = true,
+                bouncesHorizontally: Bool = true) {
+        self.defaultColumnWidth = max(1,
+                                      defaultColumnWidth)
         self.headerHeight = headerHeight
         self.rowHeight = rowHeight
         self.gridLineWidth = gridLineWidth
@@ -67,10 +69,14 @@ public struct JobsSwiftExcelStyle {
     }
     public var normalized: JobsSwiftExcelStyle {
         var result = self
-        result.defaultColumnWidth = defaultColumnWidth.isFinite ? min(max(1, defaultColumnWidth), 100_000) : 112
-        result.headerHeight = headerHeight.isFinite ? min(max(1, headerHeight), 100_000) : 46
-        result.rowHeight = rowHeight.isFinite ? min(max(1, rowHeight), 100_000) : 44
-        result.gridLineWidth = gridLineWidth.isFinite ? min(max(0, gridLineWidth), 100) : 0.5
+        result.defaultColumnWidth = defaultColumnWidth.isFinite ? min(max(1,defaultColumnWidth),
+                                                                      100_000) : 112
+        result.headerHeight = headerHeight.isFinite ? min(max(1,headerHeight),
+                                                          100_000) : 46
+        result.rowHeight = rowHeight.isFinite ? min(max(1,rowHeight),
+                                                    100_000) : 44
+        result.gridLineWidth = gridLineWidth.isFinite ? min(max(0,gridLineWidth),
+                                                            100) : 0.5
         return result
     }
 

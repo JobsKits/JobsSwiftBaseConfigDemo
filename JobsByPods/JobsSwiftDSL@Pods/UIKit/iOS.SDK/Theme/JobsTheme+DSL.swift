@@ -10,6 +10,7 @@ import UIKit
 import JobsSwiftBaseDefines
 
 public extension UIView {
+
     @discardableResult
     func byThemeBackground(_ key: JobsThemeColorKey) -> Self {
         byBackgroundColor(JobsThemeCenter.shared.color(key))
@@ -17,6 +18,7 @@ public extension UIView {
 }
 
 public extension UILabel {
+
     @discardableResult
     func byThemeTextColor(_ key: JobsThemeColorKey) -> Self {
         byTextColor(JobsThemeCenter.shared.color(key))
@@ -24,6 +26,7 @@ public extension UILabel {
 }
 
 public extension UITextField {
+
     @discardableResult
     func byThemeTextColor(_ key: JobsThemeColorKey) -> Self {
         byTextColor(JobsThemeCenter.shared.color(key))
@@ -31,6 +34,7 @@ public extension UITextField {
 }
 
 public extension UITextView {
+
     @discardableResult
     func byThemeTextColor(_ key: JobsThemeColorKey) -> Self {
         byTextColor(JobsThemeCenter.shared.color(key))
@@ -38,26 +42,31 @@ public extension UITextView {
 }
 
 public extension UIButton {
+
     @discardableResult
     func byThemeTitleColor(_ key: JobsThemeColorKey,
                            for state: UIControl.State = .normal) -> Self {
-        byTitleColor(JobsThemeCenter.shared.color(key), for: state)
+        byTitleColor(JobsThemeCenter.shared.color(key),
+                     for: state)
     }
 
     @discardableResult
     func byThemeImage(_ key: JobsThemeImageKey,
                       for state: UIControl.State = .normal) -> Self {
-        byImage(JobsThemeCenter.shared.image(key), for: state)
+        byImage(JobsThemeCenter.shared.image(key),
+                for: state)
     }
 
     @discardableResult
     func byThemeBackgroundImage(_ key: JobsThemeImageKey,
                                 for state: UIControl.State = .normal) -> Self {
-        byBackgroundImage(JobsThemeCenter.shared.image(key), for: state)
+        byBackgroundImage(JobsThemeCenter.shared.image(key),
+                          for: state)
     }
 }
 
 public extension UIImageView {
+
     @discardableResult
     func byThemeImage(_ key: JobsThemeImageKey) -> Self {
         byImage(JobsThemeCenter.shared.image(key))

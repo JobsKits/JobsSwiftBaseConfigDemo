@@ -37,20 +37,15 @@ import SnapKit
 import MJRefresh
 
 final class RootListVC: BaseVC {
+
     private static let demoSectionOrderUserDefaultsKey = "com.BSports.JobsSwiftDemoListSectionOrderUserDefaultsKey"
     private static let demoSearchHistoryUserDefaultsKey = "com.BSports.JobsSwiftDemoSearchHistoryUserDefaultsKey"
     private static let pinnedDemoUserDefaultsKey = "com.BSports.JobsSwiftPinnedDemoUserDefaultsKey"
     private static let maximumDemoSearchHistoryCount = 20
-    private static let demoProjectFolderInfoKey = "JobsProjectFolderName"
-    private static let fallbackDemoProjectFolderName = "JobsBaseConfig@JobsSwiftBaseConfigDemo"
-    private static let demoProjectFolderName: String = {
-        let configuredName = Bundle.main.object(forInfoDictionaryKey: demoProjectFolderInfoKey) as? String
-        let normalizedName = configuredName?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        let shouldUseFallback = normalizedName.isEmpty || normalizedName.contains("$(")
-        return shouldUseFallback ? fallbackDemoProjectFolderName : normalizedName
-    }()
+    private static let demoProjectTitle = "JobsSwiftBaseConfigDemo"
 
     private enum FunctionMenuAction: CaseIterable {
+
         case search
         case demoFold
         case settings
@@ -115,9 +110,12 @@ final class RootListVC: BaseVC {
             let text = value.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !text.isEmpty,
                   !history.contains(text),
-                  history.count < Self.maximumDemoSearchHistoryCount else { continue }
+                  history.count < Self.maximumDemoSearchHistoryCount else {
+                continue
+            }
             history.append(text)
-        };return history
+        }
+        return history
     }()
     /// ✅ 唯一数据源：外层=一级目录；内层=二级目录列表
     private lazy var g0 : [DemoItem] = {
@@ -139,10 +137,12 @@ final class RootListVC: BaseVC {
             ("💬 LiveChat", LiveChatDemoVC.self)
         ]
         #if canImport(FMDB) && !canImport(WCDB)
-        temp.insert(("🛢️ FMDB@如需测试WCDB需要在Podfile屏蔽FMDB", FMDBDemoVC.self), at: 1) // 或 append
+        temp.insert(("🛢️ FMDB@如需测试WCDB需要在Podfile屏蔽FMDB", FMDBDemoVC.self),
+                    at: 1) // 或 append
         #endif
         #if !canImport(FMDB) && canImport(WCDB)
-        temp.insert( ("🐧 腾讯数据库@如需测试FMDB需要在Podfile屏蔽WCDB)", WCDBDemoVC.self), at: 2) // 或 append
+        temp.insert(("🐧 腾讯数据库@如需测试FMDB需要在Podfile屏蔽WCDB)", WCDBDemoVC.self),
+                    at: 2) // 或 append
         #endif
         return temp
     }()
@@ -152,7 +152,8 @@ final class RootListVC: BaseVC {
             ("🐦 Swift ➤ Flutter", FlutterDemoVC.self),
         ]
         #if !targetEnvironment(simulator)
-        temp.insert(("🚀 Unity", UnityDemoVC.self), at: 0) // 或 append
+        temp.insert(("🚀 Unity", UnityDemoVC.self),
+                    at: 0) // 或 append
         #endif
         return temp
     }()
@@ -170,173 +171,183 @@ final class RootListVC: BaseVC {
     private func makeDemo2D() -> [DemoGroup] {
         return [
             (title: "微应用与容器技术学习".tr, items: [
-                ("微应用 / 微程序：JS 与 Native 白名单桥接", JobsMicroApplicationDemoVC.self),
-                ("应用多开：宿主内独立账号会话", JobsMultiSessionDemoVC.self),
-                ("mPaaS：平台能力协议与本地适配器", JobsMPaaSDemoVC.self),
-                ("沙箱环境：命名空间文件与越界拒绝", JobsSandboxDemoVC.self),
-                ("PWA：原生离线包与 Service Worker", JobsPWADemoVC.self)
-            ]),
+                    ("微应用 / 微程序：JS 与 Native 白名单桥接", JobsMicroApplicationDemoVC.self),
+                    ("应用多开：宿主内独立账号会话", JobsMultiSessionDemoVC.self),
+                    ("mPaaS：平台能力协议与本地适配器", JobsMPaaSDemoVC.self),
+                    ("沙箱环境：命名空间文件与越界拒绝", JobsSandboxDemoVC.self),
+                    ("PWA：原生离线包与 Service Worker", JobsPWADemoVC.self)
+                ]),
             (title: "系统能力与硬件通信".tr, items: [
-                ("本地录音与音频管理", JobsAudioRecorderDemoVC.self),
-                ("📶 JobsBluetooth 全能力 Demo", JobsBluetoothDemoVC.self),
-                ("🧭 CoreMotion DSL Demo", JobsCoreMotionDemoVC.self),
-                ("🪟 SceneDelegate 多场景与窗口会话", JobsSceneDelegateDemoVC.self),
-                ("📳 动作切换 App 图标", JobsMotionAppIconDemoVC.self),
-                ("📸 截屏后 Tips 提示", JobsScreenshotTipsDemoVC.self),
-                ("🙈 禁止截屏：敏感内容保护", JobsScreenshotProtectionDemoVC.self),
-                ("📱 全局横竖屏切换", JobsLandscapeSwitchDemoVC.self),
-                ("📋 系统剪贴板及粘贴提示", JobsClipboardCueDemoVC.self),
-                ("📱 iOS Widget", JobsWidgetDemoVC.self)
-            ]),
+                    ("设备越狱风险检测与业务门禁", JobsDeviceGuardDemoVC.self),
+                    ("本地录音与音频管理", JobsAudioRecorderDemoVC.self),
+                    ("📶 JobsBluetooth 全能力 Demo", JobsBluetoothDemoVC.self),
+                    ("🧭 CoreMotion DSL Demo", JobsCoreMotionDemoVC.self),
+                    ("🪟 SceneDelegate 多场景与窗口会话", JobsSceneDelegateDemoVC.self),
+                    ("📳 动作切换 App 图标", JobsMotionAppIconDemoVC.self),
+                    ("📸 截屏后 Tips 提示", JobsScreenshotTipsDemoVC.self),
+                    ("🙈 禁止截屏：敏感内容保护", JobsScreenshotProtectionDemoVC.self),
+                    ("📱 全局横竖屏切换", JobsLandscapeSwitchDemoVC.self),
+                    ("📋 系统剪贴板及粘贴提示", JobsClipboardCueDemoVC.self),
+                    ("📱 iOS Widget", JobsWidgetDemoVC.self)
+                ]),
             (title: "JobsSwiftTimer系列衍生产品".tr, items: [
-                ("🐯 节流防抖", JobsWorkerDemoVC.self),
-                ("🧠 任务中枢@TaskCenter", TaskCenterComponentDemoVC.self),
-                ("⏰ JobsSwiftTimer", TimerDemoVC.self),
-                ("🛠️ Jobs时间管理大师", JobsTimerMgrDemoVC.self),
-                ("🎲 时时彩@单页面管理多个Timer", JobsMultiTimerTableDemoVC.self),
-                ("动态时钟图标｜顺/逆时针", JobsImageRotationDemoVC.self),
-                ("🏷️ 动效数字按钮", AnimatedButtonNumberDemoVC.self),
-                ("🐎 跑马灯 / 🛞 轮播图", JobsMarqueeDemoVC.self),
-                ("💥 倒计时按钮", JobsCountdownDemoVC.self),
-                ("时钟", ClockDemoVC.self),
-                ("🎲 抽奖轮盘@仿系统减速曲线", LuckyWheelDemoVC.self),
-                ("🧧 红包雨", RedPacketRainDemoVC.self),
-                ("💣 任意UIView.layer@导火索倒计时效果", JobsCountdownLayerDemoVC.self),
-                ("系统进度条", JobsSysProgressDemoVC.self),
-                ("自定义进度条（进度值+前进方向）", JobsProgressDemoVC.self)
-            ]),
+                    ("🐯 节流防抖", JobsWorkerDemoVC.self),
+                    ("🧠 任务中枢@TaskCenter", TaskCenterComponentDemoVC.self),
+                    ("⏰ JobsSwiftTimer", TimerDemoVC.self),
+                    ("🛠️ Jobs时间管理大师", JobsTimerMgrDemoVC.self),
+                    ("🎲 时时彩@单页面管理多个Timer", JobsMultiTimerTableDemoVC.self),
+                    ("动态时钟图标｜顺/逆时针", JobsImageRotationDemoVC.self),
+                    ("🏷️ 动效数字按钮", AnimatedButtonNumberDemoVC.self),
+                    ("🐎 跑马灯 / 🛞 轮播图", JobsMarqueeDemoVC.self),
+                    ("💥 倒计时按钮", JobsCountdownDemoVC.self),
+                    ("时钟", ClockDemoVC.self),
+                    ("🎲 抽奖轮盘@仿系统减速曲线", LuckyWheelDemoVC.self),
+                    ("🧧 红包雨", RedPacketRainDemoVC.self),
+                    ("💣 任意UIView.layer@导火索倒计时效果", JobsCountdownLayerDemoVC.self),
+                    ("系统进度条", JobsSysProgressDemoVC.self),
+                    ("自定义进度条（进度值+前进方向）", JobsProgressDemoVC.self)
+                ]),
             (title: "Label".tr, items: [
-                ("🏷️ 动效数字标签", AnimationEffectLabelDemoVC.self),
-                ("🏷️ UILabel+Scrolling｜四种定尺寸文字策略", UILabelScrollingDemoVC.self),
-                ("🏷️ UILabel / UIButton.titleLabel 表现列表", JobsLabelBehaviorDemoVC.self),
-                ("🏷️ 可交互自定义 Label", JobsInteractiveLabelDemoVC.self),
-                ("• 带小圆点文本及对齐", JobsBulletTextDemoVC.self),
-                ("🔄 UILabel 文字旋转", JobsLabelRotationDemoVC.self)
-            ]),
+                    ("🏷️ 动效数字标签", AnimationEffectLabelDemoVC.self),
+                    ("🏷️ UILabel+Scrolling｜四种定尺寸文字策略", UILabelScrollingDemoVC.self),
+                    ("🏷️ UILabel / UIButton.titleLabel 表现列表", JobsLabelBehaviorDemoVC.self),
+                    ("🏷️ 可交互自定义 Label", JobsInteractiveLabelDemoVC.self),
+                    ("• 带小圆点文本及对齐", JobsBulletTextDemoVC.self),
+                    ("🔄 UILabel 文字旋转", JobsLabelRotationDemoVC.self)
+                ]),
             (title: "阿里巴巴矢量图标库".tr, items: [
-                ("JobsIconfont｜图片、图标字体与文字字体", JobsIconfontDemoListVC.self)
-            ]),
+                    ("JobsIconfont｜图片、图标字体与文字字体", JobsIconfontDemoListVC.self)
+                ]),
             (title: "Pods集成@其他外源框架使用示例".tr, items: g0),
             (title: "Pods集成@网络请求适用示例".tr, items: [
-                ("🌍 JobsNetworking 公共网络接口", JobsNetworkingListDemoVC.self),
-                ("🌍 JobsNetworking 本地模拟数据", JobsNetworkingDemoVC.self),
-                ("🐒 猿题库网络请求框架@Objc", YTKNetworkDemoVC.self),
-                ("↔️ WebSocket 双向通信", JobsWebSocketDemoVC.self),
-                ("🛜 Moya网络请求框架", MoyaDemoVC.self),
-                ("🛜 Alamofire网络请求框架", AFDemoVC.self),
-            ]),
+                    ("🌍 JobsNetworking 公共网络接口", JobsNetworkingListDemoVC.self),
+                    ("🌍 JobsNetworking 本地模拟数据", JobsNetworkingDemoVC.self),
+                    ("🐒 猿题库网络请求框架@Objc", YTKNetworkDemoVC.self),
+                    ("↔️ WebSocket 双向通信", JobsWebSocketDemoVC.self),
+                    ("🛜 Moya网络请求框架", MoyaDemoVC.self),
+                    ("🛜 Alamofire网络请求框架", AFDemoVC.self),
+                ]),
             (title: "3rd集成@区分设备条件编译".tr, items: g1),
             (title: "直播项目相关".tr, items: [
-                ("⏺️ 本地录制到系统相册", HKLocalRecordVC.self),
-                ("🌘 直播间@滚动留言", LiveCommentDemoVC.self),
-                ("📺 直播推流", HKLiveVC.self),
-                ("📹 播放器@BMPlayer(🛜 网络流量监控)", BMPlayerDemoVC.self),
-                ("📹 播放器@PNPlayer", PNPlayerDemoVC.self),
-            ]),
+                    ("⏺️ 本地录制到系统相册", HKLocalRecordVC.self),
+                    ("🌘 直播间@滚动留言", LiveCommentDemoVC.self),
+                    ("📺 直播推流", HKLiveVC.self),
+                    ("📹 播放器@BMPlayer(🛜 网络流量监控)", BMPlayerDemoVC.self),
+                    ("📹 播放器@PNPlayer", PNPlayerDemoVC.self),
+                ]),
             (title: "炫技特效".tr, items: [
-                ("🗜️ UITableViewCell的折叠效果", FoldTableDemoVC.self),
-                ("👛 钱包卡片效果", JobsWalletDemoVC.self),
-                ("☁️ 镂空特效", TransparentRegionVC.self),
-                ("🧩 打马赛克", MosaicDemoListVC.self),
-                ("👍 长按点赞冒泡", JobsLongPressLikeDemoVC.self),
-                ("🔴 抖音双球刷新动画", JobsDouyinRefreshDemoVC.self),
-                ("🌍 球形特效（可拖动点选）", SphereDemoVC.self),
-                ("🔘 不规则形状按钮", IrregularButtonDemoVC.self),
-                ("🃏 GXCard 式滑动卡片堆", JobsCardStackDemoVC.self),
-                ("↕️ 指定 Y 区间拖动并吸附", JobsDockingScrollDemoVC.self),
-                ("🧭 苹果滑动开锁@带骨架屏的呼吸效果", SlideToUnlockDemoVC.self),
-                ("🔒 手势解锁", GestureUnlockDemoVC.self),
-                ("⏱️ 仪表盘", FTDashboadDemoVC.self),
-            ]),
+                    ("🗜️ UITableViewCell的折叠效果", FoldTableDemoVC.self),
+                    ("👛 钱包卡片效果", JobsWalletDemoVC.self),
+                    ("☁️ 镂空特效", TransparentRegionVC.self),
+                    ("🧩 打马赛克", MosaicDemoListVC.self),
+                    ("👍 长按点赞冒泡", JobsLongPressLikeDemoVC.self),
+                    ("🔴 抖音双球刷新动画", JobsDouyinRefreshDemoVC.self),
+                    ("🌍 球形特效（可拖动点选）", SphereDemoVC.self),
+                    ("🔘 不规则形状按钮", IrregularButtonDemoVC.self),
+                    ("🃏 GXCard 式滑动卡片堆", JobsCardStackDemoVC.self),
+                    ("↕️ 指定 Y 区间拖动并吸附", JobsDockingScrollDemoVC.self),
+                    ("🧭 苹果滑动开锁@带骨架屏的呼吸效果", SlideToUnlockDemoVC.self),
+                    ("🔒 手势解锁", GestureUnlockDemoVC.self),
+                    ("⏱️ 仪表盘", FTDashboadDemoVC.self),
+                ]),
             (title: "实用UI@Sys".tr, items: [
-                ("🔘 按钮的替代解决方案", JobsButtonDemoVC.self),
-                ("🔘 按钮", UIButtonDemoVC.self),
-                ("🔘 依据状态为按钮设置不同背景颜色", UIButtonBackgroundColorDemoVC.self),
-                ("🌞 BaseWebView", BaseWebViewDemoVC.self),
-                ("✍️ UITextField", UITextFieldDemoVC.self),
-                ("✍️ UITextView", UITextViewDemoVC.self),
-                ("✍️ 手写板｜本地保存与离开确认", JobsHandwritingDemoVC.self),
-                ("🗄️ UITableView", EmptyTableViewDemoVC.self),
-                ("🗄️ UITableView设置圆角和边距", UITableViewCellCornerDemoVC.self),
-                ("🗄️ UICollectionView", EmptyCollectionViewDemoVC.self),
-                ("💬 JobsSwiftComment", JobsSwiftCommentDemoVC.self),
-                ("🔍 JobsSwiftSearcher", JobsSwiftSearcherDemoVC.self),
-                ("👆 3D Touch / Context Menu", JobsContextMenuDemoVC.self),
-                ("😂 按钮完全覆盖在 Cell 上", JobsButtonCoverCellDemoListVC.self),
-                ("🧭 系统导航栏@富文本标题", JobsNavigationDemoVC.self),
-            ]),
+                    ("🔘 按钮的替代解决方案", JobsButtonDemoVC.self),
+                    ("🔘 按钮", UIButtonDemoVC.self),
+                    ("🔘 依据状态为按钮设置不同背景颜色", UIButtonBackgroundColorDemoVC.self),
+                    ("🌞 BaseWebView", BaseWebViewDemoVC.self),
+                    ("✍️ UITextField", UITextFieldDemoVC.self),
+                    ("✍️ UITextView", UITextViewDemoVC.self),
+                    ("✍️ 手写板｜本地保存与离开确认", JobsHandwritingDemoVC.self),
+                    ("🗄️ UITableView", EmptyTableViewDemoVC.self),
+                    ("🗄️ UITableView设置圆角和边距", UITableViewCellCornerDemoVC.self),
+                    ("🗄️ UICollectionView", EmptyCollectionViewDemoVC.self),
+                    ("💬 JobsSwiftComment", JobsSwiftCommentDemoVC.self),
+                    ("🔍 JobsSwiftSearcher", JobsSwiftSearcherDemoVC.self),
+                    ("👆 3D Touch / Context Menu", JobsContextMenuDemoVC.self),
+                    ("😂 按钮完全覆盖在 Cell 上", JobsButtonCoverCellDemoListVC.self),
+                    ("🧭 系统导航栏@富文本标题", JobsNavigationDemoVC.self),
+                ]),
             (title: "实用工具集".tr, items: debugPanelDemoItems + [
-                ("📢 本地通知", LocalNotificationDemoVC.self),
-                ("🧹 JobsSwiftRefresher", JobsSwiftRefresherDemoVC.self),
-                ("🧹 JobsSwiftRefresher（非正式协议闭包化）", JobsSwiftRefresherBy非正式协议闭包化DemoVC.self),
-                ("⌨️ 键盘", KeyboardDemoVC.self),
-                ("📷 相机/相册/录像与照片滤镜", PhotoAlbumDemoVC.self),
-                ("🔐 图片加盐后转字符串存取", JobsSaltedImageStoreDemoVC.self),
-                ("🎲 随机数测试模块", JobsRandomNumberDemoVC.self),
-                ("🌍 JobsSwiftCountryCodeCtrl", JobsSwiftCountryCodeCtrlDemoVC.self),
-                ("📅 JobsSwiftCalendar", JobsSwiftCalendarDemoVC.self),
-                ("📊 JobsSwiftExcel｜任意冻结列与四种文字策略", JobsSwiftExcelDemoVC.self),
-                ("🔥 JobsSwiftPatch", JobsSwiftPatchDemoVC.self),
-                ("🕹️ ControlEvents", JobsControlEventsDemoVC.self),
-                ("➕ 数字步进输入", JobsSwiftNumberStepperDemoVC.self),
-                ("图形验证码", JobsSwiftGraphicCaptchaDemoVC.self),
-                ("🌍 JobsTabBarCtrl", TabBarDemoVC.self),
-                ("🏷️ Toast", ToastDemoVC.self),
-                ("⚠️ 系统的弹出框", UIAlertDemoVC.self),
-                ("🐎 二维码/条形码", QRCodeDemoVC.self),
-                ("👮 中国大陆公民身份证号码校验", CNIDDemoVC.self),
-                ("🧧 TraitChange", TraitChangeDemoVC.self),
-                ("🚀 JobsOpen", JobsOpenDemoVC.self),
-            ]),
+                    ("📢 本地通知", LocalNotificationDemoVC.self),
+                    ("🧹 JobsSwiftRefresher", JobsSwiftRefresherDemoVC.self),
+                    ("🧹 JobsSwiftRefresher（非正式协议闭包化）", JobsSwiftRefresherBy非正式协议闭包化DemoVC.self),
+                    ("⌨️ 键盘", KeyboardDemoVC.self),
+                    ("📷 相机/相册/录像与照片滤镜", PhotoAlbumDemoVC.self),
+                    ("🔐 图片加盐后转字符串存取", JobsSaltedImageStoreDemoVC.self),
+                    ("🎲 随机数测试模块", JobsRandomNumberDemoVC.self),
+                    ("🌍 JobsSwiftCountryCodeCtrl", JobsSwiftCountryCodeCtrlDemoVC.self),
+                    ("📅 JobsSwiftCalendar", JobsSwiftCalendarDemoVC.self),
+                    ("📊 JobsSwiftExcel｜任意冻结列与四种文字策略", JobsSwiftExcelDemoVC.self),
+                    ("🔥 JobsSwiftPatch", JobsSwiftPatchDemoVC.self),
+                    ("🕹️ ControlEvents", JobsControlEventsDemoVC.self),
+                    ("➕ 数字步进输入", JobsSwiftNumberStepperDemoVC.self),
+                    ("图形验证码", JobsSwiftGraphicCaptchaDemoVC.self),
+                    ("🌍 JobsTabBarCtrl", TabBarDemoVC.self),
+                    ("🏷️ Toast", ToastDemoVC.self),
+                    ("⚠️ 系统的弹出框", UIAlertDemoVC.self),
+                    ("🐎 二维码/条形码", QRCodeDemoVC.self),
+                    ("👮 中国大陆公民身份证号码校验", CNIDDemoVC.self),
+                    ("🧧 TraitChange", TraitChangeDemoVC.self),
+                    ("🚀 JobsOpen", JobsOpenDemoVC.self),
+                ]),
             (title: "一些常见功能模块页面".tr, items: [
-                ("📮 经典的消息页面", MessageListDemoVC.self),
-                ("📝 图文发帖编辑与草稿存取", JobsPostDraftDemoVC.self),
-                ("🔥 编辑个人资料", LGOEditProfileDemoVC.self),
-                ("🏠 首页联动", HomeLinkageDemoListVC.self),
-                ("🔑 JobsAppDoor｜双风格认证".tr, JobsAppDoorDemoVC.self),
-            ]),
+                    ("📮 经典的消息页面", MessageListDemoVC.self),
+                    ("📝 图文发帖编辑与草稿存取", JobsPostDraftDemoVC.self),
+                    ("🔥 编辑个人资料", LGOEditProfileDemoVC.self),
+                    ("🏠 首页联动", HomeLinkageDemoListVC.self),
+                    ("🔑 JobsAppDoor｜双风格认证".tr, JobsAppDoorDemoVC.self),
+                ]),
             (title: "富文本/普通文本处理".tr, items: [
-                ("📚 Markdown 文档浏览器".tr, JobsMarkdownDocumentsDemoVC.self),
-                ("🌋 富文本", RichTextDemoVC.self),
-                ("🌋 普通文本和富文本的融合数据类型", JobsTextDemoVC.self),
-                ("🗜️ 字符串压缩、解压", JobsStringCompressionDemoVC.self),
-            ]),
+                    ("📚 Markdown 文档浏览器".tr, JobsMarkdownDocumentsDemoVC.self),
+                    ("🌋 富文本", RichTextDemoVC.self),
+                    ("🌋 普通文本和富文本的融合数据类型", JobsTextDemoVC.self),
+                    ("🗜️ 字符串压缩、解压", JobsStringCompressionDemoVC.self),
+                ]),
             (title: "安全推页面（高度自定义）".tr, items: [
-        ("🧩 UIView支持上下左右Push和原路返回", JobsViewPushDemoVC.self),
-        ("🗂️ 侧滑抽屉：方向、比例与跟随模式", JobsSideDrawerDemoVC.self),
-                ("⛑️ 支持上下左右安全Push和原路返回", SafetyPushDemoVC.self),
-                ("⛑️ 安全Present", SafetyPresentDemoVC.self),
-            ]),
+                    ("🧩 UIView支持上下左右Push和原路返回", JobsViewPushDemoVC.self),
+                    ("🗂️ 侧滑抽屉：方向、比例与跟随模式", JobsSideDrawerDemoVC.self),
+                    ("⛑️ 支持上下左右安全Push和原路返回", SafetyPushDemoVC.self),
+                    ("⛑️ 安全Present", SafetyPresentDemoVC.self),
+                ]),
             (title: "其他".tr, items: [
-//                ("📌 自定义注解", 自定义注解DemoVC.self),
-                ("📦 本地 SPM 综合能力", SwiftPackageManagerDemoVC.self),
-                ("🛢️ 解码", SafeCodableDemoVC.self),
-                ("❄️ 雪花算法", SnowflakeDemoVC.self),
-            ])
+                    //                ("📌 自定义注解", 自定义注解DemoVC.self),
+                    ("📦 本地 SPM 综合能力", SwiftPackageManagerDemoVC.self),
+                    ("🛢️ 解码", SafeCodableDemoVC.self),
+                    ("❄️ 雪花算法", SnowflakeDemoVC.self),
+                ])
         ]
     }
     // ================================== 悬浮控件（原逻辑不动） ==================================
     private lazy var suspendBtn: UIButton = {
         UIButton.sys()
-            .byTitle("当前时间".tr, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 18, weight: .bold))
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
+            .byTitle("当前时间".tr,
+                     for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 18,
+                                             weight: .bold))
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byBackgroundColor(JobsCor.systemBlue,
+                               for: .normal)
             .byCornerRadius(10)
             .byMasksToBounds(true)
             .onLongPress(minimumPressDuration: 0.8) { [weak self] _, gesture in
-                guard gesture.state == .began else { return }
+                guard gesture.state == .began else {
+                    return
+                }
                 self?.showSuspendTimeButtonVisibilityAlert()
             }
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 "点击了悬浮按钮".tr.toast
             }
             .bySuspend { cfg in
                 cfg
                     .byContainer(view)
                     .byStart { _ in
-                        CGPoint(x: 15, y: 120)  // 这里就是“safeArea 内部坐标”，不用再加 safeAreaInsets.top
+                        CGPoint(x: 15,
+                                y: 120)  // 这里就是“safeArea 内部坐标”，不用再加 safeAreaInsets.top
                     }
                     .byFallbackSize(CGSize(width: 110, height: 66))
                     .byDocking(.nearestEdge)
@@ -346,17 +357,23 @@ final class RootListVC: BaseVC {
 
     private lazy var suspendSpinBtn: UIButton = {
         UIButton.sys()
-            .byTitle("0", for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 22, weight: .bold))
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byBackgroundColor(JobsCor.systemOrange, for: .normal)
+            .byTitle("0",
+                     for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 22,
+                                             weight: .bold))
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byBackgroundColor(JobsCor.systemOrange,
+                               for: .normal)
             .byCornerRadius(25)
             .byMasksToBounds(true)
             .onLongPress(minimumPressDuration: 0.8) { _, _ in
                 "长按了悬浮按钮".tr.toast
             }
             .onTap { [weak self] btn in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 if btn.jobs_isSpinning {
                     btn.bySpinPause()
                     self.suspendSpinBtnTimer?.pause()
@@ -371,7 +388,8 @@ final class RootListVC: BaseVC {
             .bySuspend { cfg in
                 cfg
                     .byContainer(view)
-                    .byStart(.point(CGPoint(x: view.bounds.width - 60, y: view.bounds.height - 100)))
+                    .byStart(.point(CGPoint(x: view.bounds.width - 60,
+                                            y: view.bounds.height - 100)))
                     .byFallbackSize(CGSize(width: 50, height: 50))
                     .byHapticOnDock(true)
             }
@@ -379,73 +397,78 @@ final class RootListVC: BaseVC {
 
     private lazy var suspendFuseBtn: UIButton = {
         UIButton.sys()
-            .byTitle("按".tr, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 10, weight: .bold))
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byBackgroundColor(JobsCor.systemPurple, for: .normal)
+            .byTitle("按".tr,
+                     for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 10,
+                                             weight: .bold))
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byBackgroundColor(JobsCor.systemPurple,
+                               for: .normal)
             .byCornerRadius(25)
             .byMasksToBounds(true)
             .byPointerInteractionEnabled(false)
             .byAccessibilityIdentifier("RootListVC.suspendFuseBtn")
             .onTap { [weak self] sender in
-                guard let self else { return }
-                // 短按：播放声音并在列表顶部、尾部之间切换；长按结束后可能冒出来的 tap 直接吞掉
-                guard !self.suspendFuseLongPressConsumed else { return }
+                guard let self else {
+                    return
+                }
+            // 短按：播放声音并在列表顶部、尾部之间切换；长按结束后可能冒出来的 tap 直接吞掉
+                guard !self.suspendFuseLongPressConsumed else {
+                    return
+                }
                 sender
                     .byFusePlaySound()
                     .byToggleSelected()
                 let tableView = self.tableView
                 let topOffsetY = -tableView.adjustedContentInset.top
-                let bottomOffsetY = max(
-                    topOffsetY,
-                    tableView.contentSize.height
-                        - tableView.bounds.height
-                        + tableView.adjustedContentInset.bottom
-                )
+                let bottomOffsetY = max(topOffsetY,
+                                        tableView.contentSize.height
+                                            - tableView.bounds.height
+                                            + tableView.adjustedContentInset.bottom)
                 tableView.byContentOffsetByAnimated(
-                    CGPoint(x: tableView.contentOffset.x,
-                            y: sender.isSelected ? bottomOffsetY : topOffsetY)
-                )
+                CGPoint(x: tableView.contentOffset.x,
+                        y: sender.isSelected ? bottomOffsetY : topOffsetY)
+            )
             }
             .onLongPress(minimumPressDuration: 0.8) { [weak self] btn, gr in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 switch gr.state {
-                /// 处理 .began 分支
+            /// 处理 .began 分支
                 case .began:
                     self.suspendFuseLongPressConsumed = true
-                    btn.byFusePressStart(
-                        ringConfig: JobsFuseOuterRingConfig(
-                            lineWidth: 4,
-                            strokeColor: JobsCor.white,
-                            trackColor: JobsCor.white.withAlphaComponent(0.22),
-                            fromOpacity: 1.0,
-                            toOpacity: 1.0,
-                            growDuration: 1.2,
-                            timerInterval: 1.0 / 60.0,
-                            repeatsWhileHolding: false,
-                            fadeOutDuration: 0.18,
-                            inset: 1,
-                            startsFromTop: true
-                        ),
-                        scale: 1.18
-                    )
-                /// 合并处理 .ended、.cancelled、.failed 分支
+                    btn.byFusePressStart(ringConfig: JobsFuseOuterRingConfig(lineWidth: 4,
+                                                                             strokeColor: JobsCor.white,
+                                                                             trackColor: JobsCor.white.withAlphaComponent(0.22),
+                                                                             fromOpacity: 1.0,
+                                                                             toOpacity: 1.0,
+                                                                             growDuration: 1.2,
+                                                                             timerInterval: 1.0 / 60.0,
+                                                                             repeatsWhileHolding: false,
+                                                                             fadeOutDuration: 0.18,
+                                                                             inset: 1,
+                                                                             startsFromTop: true),
+                                         scale: 1.18)
+            /// 合并处理 .ended、.cancelled、.failed 分支
                 case .ended, .cancelled, .failed:
                     btn.byFusePressStop()
-                    // 给 UIControl 的 touchUpInside 留一点时间，避免长按结束后被当成短按
+                // 给 UIControl 的 touchUpInside 留一点时间，避免长按结束后被当成短按
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.20) { [weak self] in
                         self?.suspendFuseLongPressConsumed = false
                     }
-                /// 未匹配已知分支时执行兜底处理
+            /// 未匹配已知分支时执行兜底处理
                 default:
                     break
                 }
             }
-            // ✅ 悬浮：复用 RootListVC 这套 bySuspend 写法
-            .bySuspend { cfg in
+        // ✅ 悬浮：复用 RootListVC 这套 bySuspend 写法
+        .bySuspend { cfg in
                 cfg
                     .byContainer(view)
-                    .byStart(.point(CGPoint(x: 15, y: view.bounds.height - 100)))
+                    .byStart(.point(CGPoint(x: 15,
+                                            y: view.bounds.height - 100)))
                     .byFallbackSize(CGSize(width: 50, height: 50))
                     .byDocking(.nearestEdge)
                     .byHapticOnDock(true)
@@ -456,25 +479,32 @@ final class RootListVC: BaseVC {
         UILabel.jobsMake { _ in }
             .tr_setText("演武堂".tr)
             .byTextColor(RootListPreferences.primaryTextColor)
-            .byFont(JobsFont.systemFont(ofSize: 17, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 17,
+                                        weight: .medium))
             .byTextAlignment(.center)
             .byNumberOfLines(1)
     }()
 
     private lazy var demoNavigationProjectLabel: UILabel = {
-        UILabel.jobsMake { _ in }
-            .byText(Self.demoProjectFolderName)
+        UILabel
+            .jobsMake { _ in }
+            .byText(Self.demoProjectTitle)
             .byTextColor(RootListPreferences.secondaryTextColor)
-            .byFont(JobsFont.systemFont(ofSize: 10, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 10,
+                                        weight: .regular))
             .byTextAlignment(.center)
             .byNumberOfLines(1)
             .byLineBreakMode(.byTruncatingMiddle)
             .byAdjustsFontSizeToFitWidth(YES)
             .byMinimumScaleFactor(0.75)
+            .onTap { _ in
+                "https://github.com/JobsKits/JobsSwiftBaseConfigDemo".open()
+            }
     }()
 
     private lazy var demoNavigationTitleView: UIStackView = {
-        UIStackView.jobsMake { _ in }
+        UIStackView
+            .jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.center)
             .byDistribution(.fill)
@@ -487,21 +517,29 @@ final class RootListVC: BaseVC {
 
     private lazy var functionMenuButton: UIButton = {
         UIButton.sys()
-            .byFrame(CGRect(x: 0, y: 0, width: 32, height: 32))
-            .byImage("ellipsis.circle".sysImg, for: .normal)
-            .byImage("ellipsis.circle.fill".sysImg, for: .selected)
+            .byFrame(CGRect(x: 0,
+                            y: 0,
+                            width: 32,
+                            height: 32))
+            .byImage("ellipsis.circle".sysImg,
+                     for: .normal)
+            .byImage("ellipsis.circle.fill".sysImg,
+                     for: .selected)
             .byTintColor(RootListPreferences.primaryTextColor)
             .byShadowOpacity(0)
             .byClipsToBounds(YES)
             .onTap { [weak self] sender in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 sender.byToggleSelected()
                 toggleFunctionMenu(sender.isSelected)
             }
     }()
 
     private lazy var functionMenuDismissTapGesture: UITapGestureRecognizer = {
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(handleFunctionMenuDismissTap(_:)))
+        let gesture = UITapGestureRecognizer(target: self,
+                                             action: #selector(handleFunctionMenuDismissTap(_:)))
         gesture.cancelsTouchesInView = false
         return gesture
     }()
@@ -509,7 +547,8 @@ final class RootListVC: BaseVC {
     private weak var loadedFunctionMenuTableView: UITableView?
 
     private lazy var functionMenuTableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .plain)
+        let tableView = UITableView(frame: .zero,
+                                    style: .plain)
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(UITableViewCell.self)
@@ -540,18 +579,27 @@ final class RootListVC: BaseVC {
 
     private lazy var demoSearchCancelButton: UIButton = {
         UIButton.sys()
-            .byTitle("取消".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleColor(JobsCor.white.withAlphaComponent(0.78), for: .highlighted)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+            .byTitle("取消".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleColor(JobsCor.white.withAlphaComponent(0.78),
+                          for: .highlighted)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .semibold))
             .byNumberOfLines(1)
             .byLineBreakMode(.byClipping)
             .byTitleAdjustsFontSizeToFitWidth(true)
             .byTitleMinimumScaleFactor(0.8)
             .byContentHorizontalAlignment(.center)
-            .byContentEdgeInsets(UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12))
-            .byBackgroundColor(RootListPreferences.selectedTintColor, for: .normal)
-            .byBackgroundColor(RootListPreferences.selectedTintColor.withAlphaComponent(0.72), for: .highlighted)
+            .byContentEdgeInsets(UIEdgeInsets(top: 0,
+                                              left: 12,
+                                              bottom: 0,
+                                              right: 12))
+            .byBackgroundColor(RootListPreferences.selectedTintColor,
+                               for: .normal)
+            .byBackgroundColor(RootListPreferences.selectedTintColor.withAlphaComponent(0.72),
+                               for: .highlighted)
             .byCornerRadius(10)
             .onTap { [weak self] _ in
                 self?.setSearchEnabled(false)
@@ -569,7 +617,8 @@ final class RootListVC: BaseVC {
     }()
 
     private lazy var demoSearchBar: UISearchBar = {
-        UISearchBar.jobsMake { _ in }
+        UISearchBar
+            .jobsMake { _ in }
             .byPlaceholder("输入关键词搜索 Demo".tr)
             .byDelegate(self)
             .byShowsCancelButton(false)
@@ -591,30 +640,32 @@ final class RootListVC: BaseVC {
     }()
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
-            // ✅ 关键：禁用预估高度，避免首次布局“画错一遍”
-            .byEstimatedRowHeight(0)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
+        // ✅ 关键：禁用预估高度，避免首次布局“画错一遍”
+        .byEstimatedRowHeight(0)
             .byEstimatedSectionHeaderHeight(0)
             .byEstimatedSectionFooterHeight(0)
             .byDataSource(self)
             .byDelegate(self)
             .byDragDelegate(self)
             .byDropDelegate(self)
-            // iPhone 端显式开启，避免依赖系统默认值。
-            .byDragInteractionEnabled(YES)
+        // iPhone 端显式开启，避免依赖系统默认值。
+        .byDragInteractionEnabled(YES)
             .byRegisterCell(UITableViewCell.self)
             .byRegisterCell(RootFoldTableCell.self)
             .byBackgroundColor(JobsCor.clear)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.none)
             .byNoSectionHeaderTopPadding()
-            .byContentInset(UIEdgeInsets(
-                top: 8,left: 0, bottom: 0, right: 0
-            ))
-            .byAddTo(view) {[unowned self] make in
+            .byContentInset(UIEdgeInsets(top: 8,
+                                         left: 0,
+                                         bottom: 0,
+                                         right: 0))
+            .byAddTo(view) { [unowned self] make in
                 make.left.bottom.right.equalToSuperview()
                 if view.jobs_hasVisibleTopBar() {
-                    make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
+                    make.top.equalTo(self.gk_navigationBar.snp.bottom)
                 } else {
                     make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
                 }
@@ -623,12 +674,14 @@ final class RootListVC: BaseVC {
     // MARK: - Lifecycle
     override func loadView() {
         super.loadView()
-//        OCCls().string("q", image: "".img)
+        //        OCCls().string("q", image: "".img)
         reloadDemoDataFromSource()
-        langToken = NotificationCenter.default.addObserver(
-            forName: .JobsLanguageDidChange, object: nil, queue: .main
-        ) { [weak self] _ in
-            guard let self else { return }
+        langToken = NotificationCenter.default.addObserver(forName: .JobsLanguageDidChange,
+                                                           object: nil,
+                                                           queue: .main) { [weak self] _ in
+            guard let self else {
+                return
+            }
             self.reloadDemoDataFromSource()
             self.refreshLocalizedContent()
             self.applyDemoListThemeChrome()
@@ -641,11 +694,9 @@ final class RootListVC: BaseVC {
                 functionMenuTableView.reloadData()
             }
         }
-        themeToken = NotificationCenter.default.addObserver(
-            forName: .JobsThemeDidChange,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
+        themeToken = NotificationCenter.default.addObserver(forName: .JobsThemeDidChange,
+                                                            object: nil,
+                                                            queue: .main) { [weak self] _ in
             self?.applyDemoListThemeColors()
         }
     }
@@ -653,37 +704,42 @@ final class RootListVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(RootListPreferences.pageBackgroundColor)
-        jobsSetupGKNav(
-            title: "演武堂".tr,
-            leftButton: UIButton.sys()
-                .byFrame(CGRect(x: 0, y: 0, width: 32, height: 32))
-                .byImage("list.bullet".sysImg, for: .normal)
-                .byImage("list.bullet".sysImg, for: .selected)
-                .byShadowOpacity(0)
-                .byClipsToBounds(YES)
-                .onTap { [weak self] sender in
-                    guard let self else { return }
-                    sender.byToggleSelected()
-                    self.jobsSideDrawer?.toggleDrawer()
-                    print("")
+        jobsSetupGKNav(title: "演武堂".tr,
+                       leftButton: UIButton.sys()
+                           .byFrame(CGRect(x: 0,
+                                           y: 0,
+                                           width: 32,
+                                           height: 32))
+                           .byImage("list.bullet".sysImg,
+                                    for: .normal)
+                           .byImage("list.bullet".sysImg,
+                                    for: .selected)
+                           .byShadowOpacity(0)
+                           .byClipsToBounds(YES)
+                           .onTap { [weak self] sender in
+                guard let self else {
+                    return
                 }
-                .onTapAppend { _ in
-                    print("追加的点按事件")
+                sender.byToggleSelected()
+                self.jobsSideDrawer?.toggleDrawer()
+                print("")
+            }
+                           .onTapAppend { _ in
+                print("追加的点按事件")
+            }
+                           .onLongPress(minimumPressDuration: 0.8) { btn, gr in
+                if gr.state == .began {
+                    btn.byAlpha(0.6)
+                    print("长按开始 on \(btn)")
+                } else if gr.state == .ended || gr.state == .cancelled {
+                    btn.byAlpha(1.0)
+                    print("长按结束")
                 }
-                .onLongPress(minimumPressDuration: 0.8) { btn, gr in
-                    if gr.state == .began {
-                        btn.byAlpha(0.6)
-                        print("长按开始 on \(btn)")
-                    } else if gr.state == .ended || gr.state == .cancelled {
-                        btn.byAlpha(1.0)
-                        print("长按结束")
-                    }
-                }
-                .onLongPressAppend(minimumPressDuration: 0.8) { _, _ in
-                    print("追加的长按事件")
-                },
-            rightButtons: [functionMenuButton]
-        )
+            }
+                           .onLongPressAppend(minimumPressDuration: 0.8) { _, _ in
+                print("追加的长按事件")
+            },
+                       rightButtons: [functionMenuButton])
         gk_navTitleView = demoNavigationTitleView
         demoSearchBar.byVisible(NO)
         demoSearchCancelButton.byVisible(NO)
@@ -718,13 +774,18 @@ final class RootListVC: BaseVC {
         byGKNavBarHidden(false)
         jobsForceHideSystemNavBar(true)
         guard tableView.window != nil else {
-            guard !pendingDemoListAppearanceUpdate else { return }
+            guard !pendingDemoListAppearanceUpdate else {
+                return
+            }
             pendingDemoListAppearanceUpdate = true
             DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.pendingDemoListAppearanceUpdate = false
                 self.performDemoListAppearanceUpdate()
-            };return
+            }
+            return
         }
         performDemoListAppearanceUpdate()
     }
@@ -735,10 +796,13 @@ final class RootListVC: BaseVC {
     }
 }
 
-extension RootListVC{
+extension RootListVC {
+
     /// 侧滑容器首次装配时，子控制器可能先收到 viewDidAppear，再真正进入 Window。
     private func performDemoListAppearanceUpdate() {
-        guard tableView.window != nil else { return }
+        guard tableView.window != nil else {
+            return
+        }
         installTableRefreshControlsIfNeeded()
         tableView.beginUpdates()
         tableView.endUpdates()
@@ -756,19 +820,21 @@ extension RootListVC{
     /// 刷新 Footer 会读取表格尺寸，必须等主表进入 Window 后再挂载。
     private func installTableRefreshControlsIfNeeded() {
         guard !didInstallTableRefreshControls,
-              tableView.window != nil else { return }
+              tableView.window != nil else {
+            return
+        }
         didInstallTableRefreshControls = true
         tableView
             .setHeaderRefreshFeedback(
-                JobsRefreshFeedback(
-                    enablesHaptics: true,
-                    soundFileName: "Sound.wav"
-                )
-            )
+            JobsRefreshFeedback(enablesHaptics: true,
+                                soundFileName: "Sound.wav")
+        )
             .byRefreshHeader(component: JobsDefaultHeader(),
                              container: self,
                              trigger: 66) { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 Task { @MainActor in
                     self.tableView.byReloadData()
                     self.tableView.switchRefreshHeader(to: .normal)
@@ -778,7 +844,9 @@ extension RootListVC{
             .byRefreshFooter(component: JobsDefaultFooter(),
                              container: self,
                              trigger: 66) { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 Task { @MainActor in
                     self.tableView.switchRefreshFooter(to: .noMoreData)
                 }
@@ -791,7 +859,9 @@ extension RootListVC{
                        "隐藏后可在“设置”中重新开启。".tr)
             .byAddCancel("取消".tr)
             .byAddDestructive("隐藏".tr) { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 RootListPreferences.showsSuspendTimeButton = false
                 refreshSuspendTimeButtonVisibility()
             }
@@ -813,9 +883,12 @@ extension RootListVC{
     private func refreshLocalizedContent() {
         demoNavigationTitleLabel.byText("演武堂".tr)
         demoSearchBar.byPlaceholder("输入关键词搜索 Demo".tr)
-        demoSearchCancelButton.byTitle("取消".tr, for: .normal)
-        suspendBtn.byTitle("当前时间".tr, for: .normal)
-        suspendFuseBtn.byTitle("按".tr, for: .normal)
+        demoSearchCancelButton.byTitle("取消".tr,
+                                       for: .normal)
+        suspendBtn.byTitle("当前时间".tr,
+                           for: .normal)
+        suspendFuseBtn.byTitle("按".tr,
+                               for: .normal)
         if let tabBarController = view.window?.rootViewController as? UITabBarController,
            let items = tabBarController.tabBar.items,
            items.count >= 3 {
@@ -827,10 +900,8 @@ extension RootListVC{
 
     // ================================== Demo 列表主题刷新 ==================================
     private func applyDemoListThemeColors() {
-        RootListPreferences.applyThemeColors(
-            to: self,
-            backgroundColor: RootListPreferences.pageBackgroundColor
-        )
+        RootListPreferences.applyThemeColors(to: self,
+                                             backgroundColor: RootListPreferences.pageBackgroundColor)
         tableView.byBackgroundColor(JobsCor.clear)
         demoNavigationTitleLabel.byTextColor(RootListPreferences.primaryTextColor)
         demoNavigationProjectLabel.byTextColor(RootListPreferences.secondaryTextColor)
@@ -845,23 +916,25 @@ extension RootListVC{
             .byBarTintColor(RootListPreferences.pageBackgroundColor)
             .byBackgroundColor(JobsCor.clear)
         demoSearchCancelButton
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleColor(JobsCor.white.withAlphaComponent(0.78), for: .highlighted)
-            .byBackgroundColor(RootListPreferences.selectedTintColor, for: .normal)
-            .byBackgroundColor(RootListPreferences.selectedTintColor.withAlphaComponent(0.72), for: .highlighted)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleColor(JobsCor.white.withAlphaComponent(0.78),
+                          for: .highlighted)
+            .byBackgroundColor(RootListPreferences.selectedTintColor,
+                               for: .normal)
+            .byBackgroundColor(RootListPreferences.selectedTintColor.withAlphaComponent(0.72),
+                               for: .highlighted)
         #if os(iOS)
         if #available(iOS 13.0, *) {
             demoSearchBar.searchTextField
                 .byBackgroundColor(RootListPreferences.foldCardBackgroundColor)
                 .byTextColor(RootListPreferences.primaryTextColor)
                 .byAttributedPlaceholder(
-                    NSAttributedString(
-                        string: "输入关键词搜索 Demo".tr,
-                        attributes: [
-                            .foregroundColor: RootListPreferences.secondaryTextColor
-                        ]
-                    )
-                )
+                NSAttributedString(string: "输入关键词搜索 Demo".tr,
+                                   attributes: [
+                        .foregroundColor: RootListPreferences.secondaryTextColor
+                    ])
+            )
         }
         #endif
         if tableView.window != nil {
@@ -870,10 +943,8 @@ extension RootListVC{
     }
 
     private func applyDemoListThemeChrome() {
-        RootListPreferences.applyThemeChrome(
-            to: self,
-            backgroundColor: RootListPreferences.pageBackgroundColor
-        )
+        RootListPreferences.applyThemeChrome(to: self,
+                                             backgroundColor: RootListPreferences.pageBackgroundColor)
         applyDemoListThemeColors()
         gk_navShadowColor = JobsCor.clear
         gk_navLineHidden = true
@@ -888,7 +959,8 @@ extension RootListVC{
         if #available(iOS 13.0, *) {
             demoSearchBar.searchTextField
                 .byTintColor(RootListPreferences.selectedTintColor)
-                .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+                .byFont(JobsFont.systemFont(ofSize: 15,
+                                            weight: .regular))
                 .byCornerRadius(18)
                 .byBorderWidth(1)
                 .byBorderColor(RootListPreferences.separatorColor)
@@ -907,19 +979,19 @@ extension RootListVC{
                                            repeats: true,
                                            tolerance: 0,
                                            queue: .main)
-            suspendBtnTimer = try timerMgr.create(
-                kind: .gcd,
-                identifier: suspendBtnTimerID,
-                config: cfg,
-                dedupPolicy: .replace
-            ) { [weak self] in
+            suspendBtnTimer = try timerMgr.create(kind: .gcd,
+                                                  identifier: suspendBtnTimerID,
+                                                  config: cfg,
+                                                  dedupPolicy: .replace) { [weak self] in
                 onMainAsync(self) { vc in
                     let btn = vc.suspendBtn
                     if btn.title(for: .normal) != "当前时间" {
-                        btn.byTitle("当前时间".tr, for: .normal)
+                        btn.byTitle("当前时间".tr,
+                                    for: .normal)
                     }
                     btn
-                        .bySubTitle(nowClock(), for: .normal)
+                        .bySubTitle(nowClock(),
+                                    for: .normal)
                         .bySetNeedsUpdateConfiguration()
                 }
             }
@@ -934,18 +1006,18 @@ extension RootListVC{
                                            repeats: true,
                                            tolerance: 0,
                                            queue: .main)
-            suspendSpinBtnTimer = try timerMgr.create(
-                kind: .gcd,
-                identifier: suspendSpinBtnTimerID,
-                config: cfg,
-                dedupPolicy: .replace
-            ) { [weak self] in
+            suspendSpinBtnTimer = try timerMgr.create(kind: .gcd,
+                                                      identifier: suspendSpinBtnTimerID,
+                                                      config: cfg,
+                                                      dedupPolicy: .replace) { [weak self] in
                 onMainAsync(self) { vc in
                     vc.spinSeconds += 1
                     let btn = vc.suspendSpinBtn
                     let sec = vc.spinSeconds
                     if btn.title(for: .normal) != "\(sec)" {
-                        btn.byTitle("\(sec)", for: .normal)
+                        btn
+                            .byTitle("\(sec)",
+                                     for: .normal)
                             .bySetNeedsUpdateConfiguration()
                     }
                 }
@@ -961,12 +1033,10 @@ extension RootListVC{
                                            repeats: true,
                                            tolerance: 0.03,
                                            queue: .main)
-            progressIndicatorTimer = try timerMgr.create(
-                kind: .gcd,
-                identifier: progressIndicatorTimerID,
-                config: cfg,
-                dedupPolicy: .replace
-            ) { [weak self] in
+            progressIndicatorTimer = try timerMgr.create(kind: .gcd,
+                                                         identifier: progressIndicatorTimerID,
+                                                         config: cfg,
+                                                         dedupPolicy: .replace) { [weak self] in
                 onMainAsync(self) { vc in
                     vc.progressIndicatorPhase = (vc.progressIndicatorPhase + 1) % 3
                     vc.updateVisibleProgressIndicators()
@@ -981,8 +1051,12 @@ extension RootListVC{
     private func updateVisibleProgressIndicators() {
         let phase = UIAccessibility.isReduceMotionEnabled ? 2 : progressIndicatorPhase
         tableView.visibleCells
-            .compactMap { $0 as? RootFoldTableCell }
-            .forEach { $0.updateChargingProgress(phase: phase) }
+            .compactMap {
+                $0 as? RootFoldTableCell
+            }
+            .forEach {
+                $0.updateChargingProgress(phase: phase)
+            }
     }
 
     private var hasPinnedDemoSection: Bool {
@@ -1010,8 +1084,8 @@ extension RootListVC{
             (
                 title: group.title.tr,
                 items: group.items.map { item in
-                    (title: item.title.tr, vcType: item.vcType)
-                }
+                (title: item.title.tr, vcType: item.vcType)
+            }
             )
         }
         applySavedDemoSectionOrderIfNeeded()
@@ -1025,15 +1099,20 @@ extension RootListVC{
 
     private func isPinnedDemoItem(_ item: DemoItem) -> Bool {
         let key = demoPersistentKey(for: item)
-        return pinnedDemoItems.contains { demoPersistentKey(for: $0) == key }
+        return pinnedDemoItems.contains {
+            demoPersistentKey(for: $0) == key
+        }
     }
 
     private func savedPinnedDemoKeys() -> [String] {
-        guard let keys = UserDefaults.standard.array(forKey: Self.pinnedDemoUserDefaultsKey) as? [String] else { return [] }
+        guard let keys = UserDefaults.standard.array(forKey: Self.pinnedDemoUserDefaultsKey) as? [String] else {
+            return []
+        }
         var result: [String] = []
         for key in keys where !key.isEmpty && !result.contains(key) {
             result.append(key)
-        };return result
+        }
+        return result
     }
 
     private func applySavedPinnedDemosIfNeeded() {
@@ -1042,9 +1121,13 @@ extension RootListVC{
             pinnedDemoItems.removeAll()
             return
         }
-        let allItems = allDemo2D.flatMap { $0.items }
+        let allItems = allDemo2D.flatMap {
+            $0.items
+        }
         pinnedDemoItems = savedKeys.compactMap { key in
-            allItems.first { demoPersistentKey(for: $0) == key }
+            allItems.first {
+                demoPersistentKey(for: $0) == key
+            }
         }
         if pinnedDemoItems.count != savedKeys.count {
             savePinnedDemos()
@@ -1052,33 +1135,44 @@ extension RootListVC{
     }
 
     private func savePinnedDemos() {
-        let keys = pinnedDemoItems.map { demoPersistentKey(for: $0) }
+        let keys = pinnedDemoItems.map {
+            demoPersistentKey(for: $0)
+        }
         if keys.isEmpty {
             UserDefaults.standard.removeObject(forKey: Self.pinnedDemoUserDefaultsKey)
         } else {
-            UserDefaults.standard.set(keys, forKey: Self.pinnedDemoUserDefaultsKey)
+            UserDefaults.standard.set(keys,
+                                      forKey: Self.pinnedDemoUserDefaultsKey)
         }
         UserDefaults.standard.synchronize()
     }
 
     private func pinDemoItem(_ item: DemoItem) {
-        guard !isPinnedDemoItem(item) else { return }
+        guard !isPinnedDemoItem(item) else {
+            return
+        }
         pinnedDemoItems.append(item)
         savePinnedDemos()
         applySearchKeyword(demoSearchKeyword)
         tableView.reloadData()
         tableView.layoutIfNeeded()
-        tableView.setContentOffset(CGPoint(x: 0, y: -tableView.adjustedContentInset.top), animated: true)
+        tableView.setContentOffset(CGPoint(x: 0,
+                                           y: -tableView.adjustedContentInset.top),
+                                   animated: true)
     }
 
     private func unpinPinnedDemo(at index: Int) {
-        guard pinnedDemoItems.indices.contains(index) else { return }
+        guard pinnedDemoItems.indices.contains(index) else {
+            return
+        }
         let item = pinnedDemoItems.remove(at: index)
         let key = demoPersistentKey(for: item)
         savePinnedDemos()
         applySearchKeyword(demoSearchKeyword)
         if let row = demo2D.firstIndex(where: { group in
-            group.items.contains { demoPersistentKey(for: $0) == key }
+            group.items.contains {
+                demoPersistentKey(for: $0) == key
+            }
         }) {
             expandedGroups.insert(row)
         }
@@ -1086,7 +1180,12 @@ extension RootListVC{
     }
 
     private func savedDemoSectionOrder() -> [String] {
-        guard let titles = UserDefaults.standard.array(forKey: Self.demoSectionOrderUserDefaultsKey) as? [String] else { return [] };return titles.filter { !$0.isEmpty }
+        guard let titles = UserDefaults.standard.array(forKey: Self.demoSectionOrderUserDefaultsKey) as? [String] else {
+            return []
+        }
+        return titles.filter {
+            !$0.isEmpty
+        }
     }
 
     private func isOtherDemoGroup(_ group: DemoGroup) -> Bool {
@@ -1094,8 +1193,13 @@ extension RootListVC{
     }
 
     private func demoGroupsKeepingOtherLast(_ groups: [DemoGroup]) -> [DemoGroup] {
-        let regularGroups = groups.filter { !isOtherDemoGroup($0) }
-        let otherGroups = groups.filter { isOtherDemoGroup($0) };return regularGroups + otherGroups
+        let regularGroups = groups.filter {
+            !isOtherDemoGroup($0)
+        }
+        let otherGroups = groups.filter {
+            isOtherDemoGroup($0)
+        }
+        return regularGroups + otherGroups
     }
 
     private func applySavedDemoSectionOrderIfNeeded() {
@@ -1104,7 +1208,11 @@ extension RootListVC{
             var unorderedGroups = allDemo2D
             var orderedGroups: [DemoGroup] = []
             for title in titles {
-                guard let index = unorderedGroups.firstIndex(where: { $0.title == title }) else { continue }
+                guard let index = unorderedGroups.firstIndex(where: {
+                    $0.title == title
+                }) else {
+                    continue
+                }
                 orderedGroups.append(unorderedGroups.remove(at: index))
             }
             orderedGroups.append(contentsOf: unorderedGroups)
@@ -1117,7 +1225,10 @@ extension RootListVC{
 
     private func saveDemoSectionOrder() {
         allDemo2D = demoGroupsKeepingOtherLast(allDemo2D)
-        UserDefaults.standard.set(allDemo2D.map { $0.title }, forKey: Self.demoSectionOrderUserDefaultsKey)
+        UserDefaults.standard.set(allDemo2D.map {
+            $0.title
+        },
+                                  forKey: Self.demoSectionOrderUserDefaultsKey)
         UserDefaults.standard.synchronize()
     }
 
@@ -1129,7 +1240,10 @@ extension RootListVC{
         demoSearchKeyword = normalizedDemoSearchText(keyword)
         guard !demoSearchKeyword.isEmpty else {
             demo2D = allDemo2D.compactMap { group in
-                let items = group.items.filter { !isPinnedDemoItem($0) };return items.isEmpty ? nil : (title: group.title, items: items)
+                let items = group.items.filter {
+                    !isPinnedDemoItem($0)
+                }
+                return items.isEmpty ? nil : (title: group.title, items: items)
             }
             expandedGroups = demo2D.isEmpty ? [] : [0]
             return
@@ -1141,14 +1255,17 @@ extension RootListVC{
             }
             if demoSearchKeyword.inStr(group.title) {
                 return group.items.isEmpty ? nil : (title: group.title, items: group.items)
-            };return matchedItems.isEmpty ? nil : (title: group.title, items: matchedItems)
+            }
+            return matchedItems.isEmpty ? nil : (title: group.title, items: matchedItems)
         }
         expandedGroups = Set(demo2D.indices)
     }
 
     private func applySearchHistory(_ historyText: String) {
         let text = normalizedDemoSearchText(historyText)
-        guard !text.isEmpty else { return }
+        guard !text.isEmpty else {
+            return
+        }
         demoSearchBar.byText(text)
         applySearchKeyword(text)
         tableView.reloadData()
@@ -1157,11 +1274,14 @@ extension RootListVC{
 
     private func saveDemoSearchHistory(_ searchText: String?) {
         let text = normalizedDemoSearchText(searchText)
-        guard !text.isEmpty else { return }
+        guard !text.isEmpty else {
+            return
+        }
         if let index = demoSearchHistory.firstIndex(of: text) {
             demoSearchHistory.remove(at: index)
         }
-        demoSearchHistory.insert(text, at: 0)
+        demoSearchHistory.insert(text,
+                                 at: 0)
         if demoSearchHistory.count > Self.maximumDemoSearchHistoryCount {
             demoSearchHistory.removeLast(demoSearchHistory.count - Self.maximumDemoSearchHistoryCount)
         }
@@ -1170,7 +1290,9 @@ extension RootListVC{
     }
 
     private func deleteDemoSearchHistory(at index: Int) {
-        guard demoSearchHistory.indices.contains(index) else { return }
+        guard demoSearchHistory.indices.contains(index) else {
+            return
+        }
         demoSearchHistory.remove(at: index)
         persistDemoSearchHistory()
         tableView.reloadData()
@@ -1188,17 +1310,21 @@ extension RootListVC{
         if demoSearchHistory.isEmpty {
             UserDefaults.standard.removeObject(forKey: Self.demoSearchHistoryUserDefaultsKey)
         } else {
-            UserDefaults.standard.set(demoSearchHistory, forKey: Self.demoSearchHistoryUserDefaultsKey)
+            UserDefaults.standard.set(demoSearchHistory,
+                                      forKey: Self.demoSearchHistoryUserDefaultsKey)
         }
     }
 
     private func demoSearchHistoryHeaderView() -> UIView {
-        let headerView = UIView.jobsMake { _ in }
+        let headerView = UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("搜索历史".tr)
             .byTextColor(RootListPreferences.primaryTextColor)
-            .byFont(JobsFont.systemFont(ofSize: 17, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 17,
+                                        weight: .semibold))
             .byAddTo(headerView) { make in
                 make.left.equalToSuperview().offset(16)
                 make.centerY.equalToSuperview()
@@ -1206,8 +1332,10 @@ extension RootListVC{
         UIButton.sys()
             .byTitle("清空".tr)
             .byTitleColor(RootListPreferences.secondaryTextColor)
-            .byTitleColor(RootListPreferences.selectedTintColor, for: .highlighted)
-            .byTitleFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+            .byTitleColor(RootListPreferences.selectedTintColor,
+                          for: .highlighted)
+            .byTitleFont(JobsFont.systemFont(ofSize: 13,
+                                             weight: .regular))
             .byNumberOfLines(1)
             .byLineBreakMode(.byClipping)
             .byTitleAdjustsFontSizeToFitWidth(true)
@@ -1222,19 +1350,24 @@ extension RootListVC{
                 make.centerY.equalToSuperview()
                 make.width.equalTo(52)
                 make.height.equalTo(32)
-            };return headerView
+            }
+        return headerView
     }
 
     @objc private func handleFunctionMenuDismissTap(_ gesture: UITapGestureRecognizer) {
         let point = gesture.location(in: view)
-        let searchBarFrame = demoSearchBar.convert(demoSearchBar.bounds, to: view)
+        let searchBarFrame = demoSearchBar.convert(demoSearchBar.bounds,
+                                                   to: view)
         let pointInSearchBar = !demoSearchBar.isHidden && searchBarFrame.contains(point)
         if !pointInSearchBar {
             jobsDismissKeyboard()
         }
         guard let functionMenuTableView = loadedFunctionMenuTableView,
-              !functionMenuTableView.isHidden else { return }
-        let buttonFrame = functionMenuButton.convert(functionMenuButton.bounds, to: view)
+              !functionMenuTableView.isHidden else {
+            return
+        }
+        let buttonFrame = functionMenuButton.convert(functionMenuButton.bounds,
+                                                     to: view)
         if functionMenuTableView.frame.contains(point) || buttonFrame.contains(point) {
             return
         }
@@ -1243,32 +1376,47 @@ extension RootListVC{
 
     private func canDragDemoGroup(at indexPath: IndexPath) -> Bool {
         indexPath.section == demoGroupTableSection &&
-        demo2D.indices.contains(indexPath.row) &&
-        !isOtherDemoGroup(demo2D[indexPath.row]) &&
-        demo2D.count > 1
+            demo2D.indices.contains(indexPath.row) &&
+            !isOtherDemoGroup(demo2D[indexPath.row]) &&
+            demo2D.count > 1
     }
 
-    private func moveDemoGroup(from sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+    private func moveDemoGroup(from sourceIndexPath: IndexPath,
+                               to destinationIndexPath: IndexPath) {
         let sourceRow = sourceIndexPath.row
         let destinationRow = destinationIndexPath.row
         guard sourceRow != destinationRow,
               demo2D.indices.contains(sourceRow),
-              demo2D.indices.contains(destinationRow) else { return }
+              demo2D.indices.contains(destinationRow) else {
+            return
+        }
         let sourceTitle = demo2D[sourceRow].title
         let destinationTitle = demo2D[destinationRow].title
-        guard let sourceIndex = allDemo2D.firstIndex(where: { $0.title == sourceTitle }),
-              let destinationIndex = allDemo2D.firstIndex(where: { $0.title == destinationTitle }) else { return }
+        guard let sourceIndex = allDemo2D.firstIndex(where: {
+            $0.title == sourceTitle
+        }),
+              let destinationIndex = allDemo2D.firstIndex(where: {
+            $0.title == destinationTitle
+        }) else {
+            return
+        }
         let visibleGroup = demo2D.remove(at: sourceRow)
-        demo2D.insert(visibleGroup, at: destinationRow)
+        demo2D.insert(visibleGroup,
+                      at: destinationRow)
         let group = allDemo2D.remove(at: sourceIndex)
-        allDemo2D.insert(group, at: min(destinationIndex, allDemo2D.count))
+        allDemo2D.insert(group,
+                         at: min(destinationIndex,allDemo2D.count))
         demo2D = demoGroupsKeepingOtherLast(demo2D)
         allDemo2D = demoGroupsKeepingOtherLast(allDemo2D)
-        moveExpandedDemoGroupState(from: sourceRow, to: destinationRow)
+        moveExpandedDemoGroupState(from: sourceRow,
+                                   to: destinationRow)
     }
 
-    private func moveExpandedDemoGroupState(from sourceRow: Int, to destinationRow: Int) {
-        guard sourceRow != destinationRow else { return }
+    private func moveExpandedDemoGroupState(from sourceRow: Int,
+                                            to destinationRow: Int) {
+        guard sourceRow != destinationRow else {
+            return
+        }
         var next = Set<Int>()
         for row in expandedGroups {
             if row == sourceRow {
@@ -1316,7 +1464,9 @@ extension RootListVC{
         reloadDemoDataFromSource()
         tableView.reloadData()
         tableView.layoutIfNeeded()
-        tableView.setContentOffset(CGPoint(x: 0, y: -tableView.adjustedContentInset.top), animated: false)
+        tableView.setContentOffset(CGPoint(x: 0,
+                                           y: -tableView.adjustedContentInset.top),
+                                   animated: false)
         tableView.mj_header?.beginRefreshing()
     }
 
@@ -1343,7 +1493,8 @@ extension RootListVC{
             setAllDemoGroupsExpanded(!anyVisibleDemoGroupExpanded())
         /// 处理 .settings 分支
         case .settings:
-            RootListSettingsVC().byPush(self)
+            RootListSettingsVC()
+                .byPush(self)
         }
     }
 
@@ -1355,7 +1506,7 @@ extension RootListVC{
             if enabled {
                 make.top.equalTo(demoSearchBar.snp.bottom).offset(6)
             } else if view.jobs_hasVisibleTopBar() {
-                make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
+                make.top.equalTo(self.gk_navigationBar.snp.bottom)
             } else {
                 make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             }
@@ -1375,7 +1526,9 @@ extension RootListVC{
 
     // MARK: - Footer 自动显隐逻辑
     private func updateFooterAvailability() {
-        guard tableView.window != nil else { return }
+        guard tableView.window != nil else {
+            return
+        }
         guard !demoSearchEnabled else {
             tableView.mj_footer?.byHidden(true)
             return
@@ -1388,13 +1541,15 @@ extension RootListVC{
         let enableLoadMore = contentH > visibleH + 20
         tableView.mj_footer?.byHidden(!enableLoadMore)
         if !enableLoadMore {
-            /// TODO
+        /// TODO
         }
     }
 }
 // MARK: —— UISearchBarDelegate
 extension RootListVC: UISearchBarDelegate {
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+
+    func searchBar(_ searchBar: UISearchBar,
+                   textDidChange searchText: String) {
         applySearchKeyword(searchText)
         tableView.reloadData()
         updateFooterAvailability()
@@ -1407,13 +1562,21 @@ extension RootListVC: UISearchBarDelegate {
 
 }
 // MARK: —— UITableViewDataSource & UITableViewDelegate
-extension RootListVC: UITableViewDataSource, UITableViewDelegate {
+extension RootListVC: UITableViewDataSource,
+                      UITableViewDelegate {
+
     func numberOfSections(in tableView: UITableView) -> Int {
-        if tableView === loadedFunctionMenuTableView { return 1 }
-        if demoSearchLandingActive { return 1 };return hasPinnedDemoSection ? 2 : 1
+        if tableView === loadedFunctionMenuTableView {
+            return 1
+        }
+        if demoSearchLandingActive {
+            return 1
+        }
+        return hasPinnedDemoSection ? 2 : 1
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
         if tableView === loadedFunctionMenuTableView {
             return FunctionMenuAction.allCases.count
         }
@@ -1422,60 +1585,82 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
         }
         if hasPinnedDemoSection && section == 0 {
             return 1
-        };return section == demoGroupTableSection ? demo2D.count : 0
+        }
+        return section == demoGroupTableSection ? demo2D.count : 0
     }
-    func tableView(_ tableView: UITableView,cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if tableView === loadedFunctionMenuTableView {
-            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: UITableViewCell.self), for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: UITableViewCell.self),
+                                                     for: indexPath)
             let action = FunctionMenuAction.allCases[indexPath.row]
             return cell
                 .byText(menuTitle(for: action))
-                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+                .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                                 weight: .medium))
                 .byTitleCor(RootListPreferences.primaryTextColor)
                 .bySelectionStyle(.default)
                 .bySelectedBackgroundView(
-                    UIView.jobsMake { _ in }.byBackgroundColor(JobsCor.tertiarySystemBackground)
-                )
+                UIView
+                    .jobsMake { _ in }
+                    .byBackgroundColor(JobsCor.tertiarySystemBackground)
+            )
                 .byTintColor(RootListPreferences.selectedTintColor)
                 .byBackgroundColor(RootListPreferences.foldCardBackgroundColor)
-                .byContentView { $0.byBackgroundColor(RootListPreferences.foldCardBackgroundColor) }
+                .byContentView {
+                    $0.byBackgroundColor(RootListPreferences.foldCardBackgroundColor)
+                }
                 .byAccessoryType(.none)
         }
         if demoSearchLandingActive {
             let historyText = demoSearchHistory.indices.contains(indexPath.row) ? demoSearchHistory[indexPath.row] : ""
             return tableView
-                .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
-                .byContentView { $0.byBackgroundColor(RootListPreferences.cardBackgroundColor) }
+                .byDequeueReusableCell(withType: UITableViewCell.self,
+                                       for: indexPath)
+                .byContentView {
+                    $0.byBackgroundColor(RootListPreferences.cardBackgroundColor)
+                }
                 .byImageView {
-                    $0.byTintColor(RootListPreferences.secondaryTextColor)
+                    $0
+                        .byTintColor(RootListPreferences.secondaryTextColor)
                         .byContentMode(.scaleAspectFit)
                 }
                 .byText(historyText)
-                .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .regular))
+                .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                                 weight: .regular))
                 .byTitleCor(RootListPreferences.primaryTextColor)
                 .byImage("clock".sysImg.withRenderingMode(.alwaysTemplate))
                 .byAccessoryType(.none)
                 .byAccessoryView(
-                    UIButton.sys()
-                        .byImage("xmark.circle.fill".sysImg.withRenderingMode(.alwaysTemplate))
-                        .byTintColor(RootListPreferences.secondaryTextColor)
-                        .byFrame(CGRect(x: 0, y: 0, width: 38, height: 38))
-                        .byImageEdgeInsets(UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
-                        .onTap { [weak self] _ in
-                            self?.deleteDemoSearchHistory(at: indexPath.row)
-                        }
-                )
+                UIButton.sys()
+                    .byImage("xmark.circle.fill".sysImg.withRenderingMode(.alwaysTemplate))
+                    .byTintColor(RootListPreferences.secondaryTextColor)
+                    .byFrame(CGRect(x: 0,
+                                    y: 0,
+                                    width: 38,
+                                    height: 38))
+                    .byImageEdgeInsets(UIEdgeInsets(top: 8,
+                                                    left: 8,
+                                                    bottom: 8,
+                                                    right: 8))
+                    .onTap { [weak self] _ in
+                    self?.deleteDemoSearchHistory(at: indexPath.row)
+                }
+            )
                 .bySelectionStyle(.default)
                 .byBackgroundColor(RootListPreferences.cardBackgroundColor)
                 .byTintColor(RootListPreferences.secondaryTextColor)
         }
         if hasPinnedDemoSection && indexPath.section == 0 {
             return tableView
-                .byDequeueReusableCell(withType: RootFoldTableCell.self, for: indexPath)
+                .byDequeueReusableCell(withType: RootFoldTableCell.self,
+                                       for: indexPath)
                 .configurePinned(groupTitle: "置顶".tr,
                                  items: pinnedDemoItems) { [weak self] itemIndex in
                     guard let self,
-                          self.pinnedDemoItems.indices.contains(itemIndex) else { return }
+                          self.pinnedDemoItems.indices.contains(itemIndex) else {
+                        return
+                    }
                     let item = self.pinnedDemoItems[itemIndex]
                     item.vcType.init()
                         .byTitle(item.title)
@@ -1485,55 +1670,80 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
                 }
         }
         guard indexPath.section == demoGroupTableSection,
-              demo2D.indices.contains(indexPath.row) else { return UITableViewCell.jobsMake { _ in } }
+              demo2D.indices.contains(indexPath.row) else {
+            return UITableViewCell.jobsMake { _ in }
+        }
         let row = indexPath.row
         let g = demo2D[row]
         let expanded = expandedGroups.contains(row)
         return tableView
-            .byDequeueReusableCell(withType: RootFoldTableCell.self, for: indexPath)
+            .byDequeueReusableCell(withType: RootFoldTableCell.self,
+                                   for: indexPath)
             .configure(groupTitle: g.title,
                        items: g.items,
                        expanded: expanded) { [weak self] itemIndex in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 if self.demoSearchActive {
                     self.saveDemoSearchHistory(self.demoSearchKeyword)
                 }
                 let item = g.items[itemIndex]
-                /// 这里推入控制器
+            /// 这里推入控制器
                 item.vcType.init()
                     .byTitle(item.title)
                     .byPush(self)
             } pinItem: { [weak self] itemIndex in
                 guard let self,
-                      g.items.indices.contains(itemIndex) else { return }
+                      g.items.indices.contains(itemIndex) else {
+                    return
+                }
                 self.pinDemoItem(g.items[itemIndex])
             }
     }
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if tableView === loadedFunctionMenuTableView { return 44 }
-        if demoSearchLandingActive { return 54 }
+    func tableView(_ tableView: UITableView,
+                   heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if tableView === loadedFunctionMenuTableView {
+            return 44
+        }
+        if demoSearchLandingActive {
+            return 54
+        }
         if hasPinnedDemoSection && indexPath.section == 0 {
             return RootFoldTableCell.expandedHeight(itemCount: pinnedDemoItems.count)
         }
         guard indexPath.section == demoGroupTableSection,
-              demo2D.indices.contains(indexPath.row) else { return .leastNonzeroMagnitude }
+              demo2D.indices.contains(indexPath.row) else {
+            return .leastNonzeroMagnitude
+        }
         let row = indexPath.row
-        guard expandedGroups.contains(row) else { return RootFoldTableCell.collapsedHeight() };return RootFoldTableCell.expandedHeight(itemCount: demo2D[row].items.count)
+        guard expandedGroups.contains(row) else {
+            return RootFoldTableCell.collapsedHeight()
+        }
+        return RootFoldTableCell.expandedHeight(itemCount: demo2D[row].items.count)
     }
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath,
+                              animated: true)
         if tableView === loadedFunctionMenuTableView {
             handleMenuAction(FunctionMenuAction.allCases[indexPath.row])
             return
         }
         if demoSearchLandingActive {
-            guard demoSearchHistory.indices.contains(indexPath.row) else { return }
+            guard demoSearchHistory.indices.contains(indexPath.row) else {
+                return
+            }
             applySearchHistory(demoSearchHistory[indexPath.row])
             return
         }
-        if hasPinnedDemoSection && indexPath.section == 0 { return }
+        if hasPinnedDemoSection && indexPath.section == 0 {
+            return
+        }
         guard indexPath.section == demoGroupTableSection,
-              demo2D.indices.contains(indexPath.row) else { return }
+              demo2D.indices.contains(indexPath.row) else {
+            return
+        }
         let row = indexPath.row
         if expandedGroups.contains(row) {
             expandedGroups.remove(row)
@@ -1541,31 +1751,42 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
             expandedGroups.insert(row)
         }
         if let cell = tableView.cellForRow(at: indexPath) as? RootFoldTableCell {
-            cell.setExpanded(expandedGroups.contains(row), animated: true)
+            cell.setExpanded(expandedGroups.contains(row),
+                             animated: true)
         }
         tableView.performBatchUpdates(nil) { [weak self] _ in
             self?.updateFooterAvailability()
         }
     }
 
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView,
+                   heightForHeaderInSection section: Int) -> CGFloat {
         guard tableView !== loadedFunctionMenuTableView,
-              demoSearchLandingActive else { return .leastNonzeroMagnitude };return 48
+              demoSearchLandingActive else {
+            return .leastNonzeroMagnitude
+        }
+        return 48
     }
 
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView,
+                   viewForHeaderInSection section: Int) -> UIView? {
         guard tableView !== loadedFunctionMenuTableView,
-              demoSearchLandingActive else { return nil };return demoSearchHistoryHeaderView()
+              demoSearchLandingActive else {
+            return nil
+        }
+        return demoSearchHistoryHeaderView()
     }
 
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView,
+                   heightForFooterInSection section: Int) -> CGFloat {
         .leastNonzeroMagnitude
     }
 
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    func tableView(_ tableView: UITableView,
+                   canEditRowAt indexPath: IndexPath) -> Bool {
         tableView !== loadedFunctionMenuTableView &&
-        demoSearchLandingActive &&
-        demoSearchHistory.indices.contains(indexPath.row)
+            demoSearchLandingActive &&
+            demoSearchHistory.indices.contains(indexPath.row)
     }
 
     func tableView(_ tableView: UITableView,
@@ -1573,19 +1794,25 @@ extension RootListVC: UITableViewDataSource, UITableViewDelegate {
                    forRowAt indexPath: IndexPath) {
         guard tableView !== loadedFunctionMenuTableView,
               editingStyle == .delete,
-              demoSearchLandingActive else { return }
+              demoSearchLandingActive else {
+            return
+        }
         deleteDemoSearchHistory(at: indexPath.row)
     }
 }
 
 // MARK: —— Demo 分组长按排序
-extension RootListVC: UITableViewDragDelegate, UITableViewDropDelegate {
+extension RootListVC: UITableViewDragDelegate,
+                      UITableViewDropDelegate {
+
     func tableView(_ tableView: UITableView,
                    itemsForBeginning session: UIDragSession,
                    at indexPath: IndexPath) -> [UIDragItem] {
         guard tableView === self.tableView,
               !demoSearchEnabled,
-              canDragDemoGroup(at: indexPath) else { return [] }
+              canDragDemoGroup(at: indexPath) else {
+            return []
+        }
         let title = demo2D[indexPath.row].title
         let dragItem = UIDragItem(itemProvider: NSItemProvider(object: title as NSString))
         dragItem.localObject = title
@@ -1604,16 +1831,21 @@ extension RootListVC: UITableViewDragDelegate, UITableViewDropDelegate {
 
     func tableView(_ tableView: UITableView,
                    dragSessionWillBegin session: UIDragSession) {
-        guard tableView === self.tableView else { return }
+        guard tableView === self.tableView else {
+            return
+        }
         session.localContext = tableView
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
     }
 
     func tableView(_ tableView: UITableView,
                    canHandle session: UIDropSession) -> Bool {
-        guard let sourceTableView = session.localDragSession?.localContext as? UITableView else { return false };return tableView === self.tableView &&
-        !demoSearchEnabled &&
-        sourceTableView === self.tableView
+        guard let sourceTableView = session.localDragSession?.localContext as? UITableView else {
+            return false
+        }
+        return tableView === self.tableView &&
+            !demoSearchEnabled &&
+            sourceTableView === self.tableView
     }
 
     func tableView(_ tableView: UITableView,
@@ -1625,7 +1857,9 @@ extension RootListVC: UITableViewDragDelegate, UITableViewDropDelegate {
               sourceTableView === self.tableView,
               demoGroupDropDestinationIndexPath(destinationIndexPath) != nil else {
             return UITableViewDropProposal(operation: .cancel)
-        };return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+        }
+        return UITableViewDropProposal(operation: .move,
+                                       intent: .insertAtDestinationIndexPath)
     }
 
     func tableView(_ tableView: UITableView,
@@ -1634,38 +1868,54 @@ extension RootListVC: UITableViewDragDelegate, UITableViewDropDelegate {
               let dropItem = coordinator.items.first,
               let sourceIndexPath = dropItem.sourceIndexPath,
               let destinationIndexPath = demoGroupDropDestinationIndexPath(coordinator.destinationIndexPath),
-              canDragDemoGroup(at: sourceIndexPath) else { return }
-        if sourceIndexPath != destinationIndexPath {
-            moveDemoGroup(from: sourceIndexPath, to: destinationIndexPath)
-            tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
+              canDragDemoGroup(at: sourceIndexPath) else {
+            return
         }
-        coordinator.drop(dropItem.dragItem, toRowAt: destinationIndexPath)
+        if sourceIndexPath != destinationIndexPath {
+            moveDemoGroup(from: sourceIndexPath,
+                          to: destinationIndexPath)
+            tableView.moveRow(at: sourceIndexPath,
+                              to: destinationIndexPath)
+        }
+        coordinator.drop(dropItem.dragItem,
+                         toRowAt: destinationIndexPath)
         saveDemoSectionOrder()
     }
 
     private func demoGroupDropDestinationIndexPath(_ proposedIndexPath: IndexPath?) -> IndexPath? {
-        guard demo2D.count > 1 else { return nil }
+        guard demo2D.count > 1 else {
+            return nil
+        }
         let section = proposedIndexPath?.section ?? demoGroupTableSection
-        guard section == demoGroupTableSection else { return nil }
+        guard section == demoGroupTableSection else {
+            return nil
+        }
         let proposedRow = proposedIndexPath?.row ?? (demo2D.count - 1)
         let lastRow = demo2D.count - 1
         let maximumRow = isOtherDemoGroup(demo2D[lastRow]) ? lastRow - 1 : lastRow
-        guard maximumRow >= 0 else { return nil };return IndexPath(
-            row: min(max(proposedRow, 0), maximumRow),
-            section: section
-        )
+        guard maximumRow >= 0 else {
+            return nil
+        }
+        return IndexPath(row: min(max(proposedRow,0),
+                                  maximumRow),
+                         section: section)
     }
 }
 
 // MARK: —— UIScrollViewDelegate
 extension RootListVC: UIScrollViewDelegate {
+
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        guard scrollView === tableView else { return }
+        guard scrollView === tableView else {
+            return
+        }
         toggleFunctionMenu(false)
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard scrollView === tableView else { return }
+        guard scrollView === tableView else {
+            return
+        }
         updateFooterAvailability()
     }
 }

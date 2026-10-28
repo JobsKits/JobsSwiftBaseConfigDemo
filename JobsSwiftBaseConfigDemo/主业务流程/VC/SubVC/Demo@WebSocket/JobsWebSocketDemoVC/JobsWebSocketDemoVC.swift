@@ -21,6 +21,7 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsWebSocketDemoVC: BaseVC {
+
     private let defaultEndpoint = "wss://ws.postman-echo.com/raw"
     private let client = JobsSwiftWebSocketClient()
     private let horizontalInset: CGFloat = 16
@@ -31,7 +32,8 @@ final class JobsWebSocketDemoVC: BaseVC {
     }()
     // MARK: - UI
     private lazy var endpointTF: UITextField = {
-        UITextField.jobsMake { _ in }
+        UITextField
+            .jobsMake { _ in }
             .byText(defaultEndpoint)
             .byPlaceholder("请输入 ws:// 或 wss:// 地址".tr)
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -55,8 +57,10 @@ final class JobsWebSocketDemoVC: BaseVC {
 
     private lazy var connectBtn: UIButton = {
         UIButton.sys()
-            .byTitle("连接".tr, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byTitle("连接".tr,
+                     for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .medium))
             .onTap { [weak self] _ in
                 self?.connect()
             }
@@ -64,10 +68,14 @@ final class JobsWebSocketDemoVC: BaseVC {
 
     private lazy var disconnectBtn: UIButton = {
         UIButton.sys()
-            .byTitle("断开".tr, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byTitle("断开".tr,
+                     for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .medium))
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 client.disconnect()
                 appendLog("主动断开连接")
             }
@@ -75,8 +83,10 @@ final class JobsWebSocketDemoVC: BaseVC {
 
     private lazy var sendBtn: UIButton = {
         UIButton.sys()
-            .byTitle("发送".tr, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byTitle("发送".tr,
+                     for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .medium))
             .onTap { [weak self] _ in
                 self?.sendMessage()
             }
@@ -96,7 +106,8 @@ final class JobsWebSocketDemoVC: BaseVC {
     }()
 
     private lazy var messageTF: UITextField = {
-        UITextField.jobsMake { _ in }
+        UITextField
+            .jobsMake { _ in }
             .byText("Hello WebSocket")
             .byPlaceholder("输入要发送的文本消息".tr)
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -114,9 +125,11 @@ final class JobsWebSocketDemoVC: BaseVC {
     }()
 
     private lazy var statusLab: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("状态：未连接".tr)
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 14,
+                                        weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
             .byAddTo(view) { [unowned self] make in
@@ -127,10 +140,12 @@ final class JobsWebSocketDemoVC: BaseVC {
     }()
 
     private lazy var logTextView: UITextView = {
-        UITextView.jobsMake { _ in }
+        UITextView
+            .jobsMake { _ in }
             .byText("操作日志".tr)
             .byEditable(false)
-            .byFont(JobsFont.monospacedSystemFont(ofSize: 13, weight: .regular))
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 13,
+                                                  weight: .regular))
             .byTextColor(JobsCor.label)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(10)
@@ -165,9 +180,9 @@ final class JobsWebSocketDemoVC: BaseVC {
         let endpoint = (endpointTF.text ?? "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
         guard
-            let url = URL(string: endpoint),
-            let scheme = url.scheme?.lowercased(),
-            scheme == "ws" || scheme == "wss"
+        let url = URL(string: endpoint),
+        let scheme = url.scheme?.lowercased(),
+        scheme == "ws" || scheme == "wss"
         else {
             appendLog("地址无效，请输入 ws:// 或 wss:// 地址")
             return
@@ -184,7 +199,9 @@ final class JobsWebSocketDemoVC: BaseVC {
             return
         }
         client.send(text: message) { [weak self] result in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             switch result {
             /// 发送成功
             case .success:
@@ -198,7 +215,9 @@ final class JobsWebSocketDemoVC: BaseVC {
     // MARK: - Client
     private func bindClient() {
         client.onStateChange = { [weak self] state in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             updateUI(for: state)
             appendLog("状态：\(state.title)")
         }
@@ -235,12 +254,14 @@ final class JobsWebSocketDemoVC: BaseVC {
         let oldText = logTextView.text ?? ""
         let prefix = oldText.isEmpty ? "" : "\n"
         let text = "\(oldText)\(prefix)[\(timestamp)] \(message)"
-        logTextView.byText(text)
+        logTextView
+            .byText(text)
             .byScrollToVisible(range: NSRange(location: text.utf16.count, length: 0))
     }
 }
 
 private extension JobsSwiftWebSocketClient.State {
+
     var title: String {
         switch self {
         /// 尚未发起连接
@@ -253,7 +274,8 @@ private extension JobsSwiftWebSocketClient.State {
         case .connected:
             return "已连接"
         /// 正在等待自动重连
-        case .reconnecting(let attempt, let delay):
+        case .reconnecting(let attempt,
+                           let delay):
             return "第 \(attempt) 次重连将在 \(String(format: "%.1f", delay)) 秒后开始"
         /// 已主动断开
         case .disconnected:

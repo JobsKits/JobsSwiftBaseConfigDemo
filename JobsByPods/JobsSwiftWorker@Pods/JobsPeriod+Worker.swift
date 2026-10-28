@@ -9,6 +9,7 @@ import Foundation
 import JobsSwiftTaskCenter
 
 public extension BinaryInteger {
+
     var milliseconds: JobsPeriod {
         JobsPeriod(Double(Int(self)) / 1_000.0)
     }
@@ -19,6 +20,7 @@ public extension BinaryInteger {
 }
 
 public extension BinaryFloatingPoint {
+
     var milliseconds: JobsPeriod {
         JobsPeriod(Double(self) / 1_000.0)
     }

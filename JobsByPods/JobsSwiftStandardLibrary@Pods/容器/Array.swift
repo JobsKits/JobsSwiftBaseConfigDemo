@@ -14,6 +14,7 @@ import UIKit
 import ObjectiveC
 
 extension Array {
+
     /// 不改原数组，返回一个新数组
     @discardableResult
     public func add(_ element: Element) -> [Element] {
@@ -37,9 +38,12 @@ extension Array {
      }
  */
 public extension Array {
+
     /// 链式构建器：在闭包里支持 .addBy(...).addBy(...)
     struct Builder {
+
         fileprivate final class Storage {
+
             var elements: [Element] = []
         }
         fileprivate let storage: Storage

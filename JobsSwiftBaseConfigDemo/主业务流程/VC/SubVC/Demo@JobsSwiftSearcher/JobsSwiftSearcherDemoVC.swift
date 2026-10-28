@@ -21,6 +21,7 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsSwiftSearcherDemoVC: BaseVC {
+
     private lazy var searchView: JobsSwiftSearcherView = {
         JobsSwiftSearcherView(config: demoSearchConfig())
             .byRecommendSearches(Self.recommendTexts)
@@ -44,6 +45,7 @@ final class JobsSwiftSearcherDemoVC: BaseVC {
 }
 
 private extension JobsSwiftSearcherDemoVC {
+
     static let recommendTexts = [
         "Java",
         "Python",
@@ -72,6 +74,7 @@ private extension JobsSwiftSearcherDemoVC {
         }
         config.clearHistoryBlock = {
             print("清空搜索历史")
-        };return config
+        }
+        return config
     }
 }

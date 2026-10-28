@@ -25,25 +25,38 @@ import SnapKit
 #if canImport(BMPlayer)
 import BMPlayer
 final class PlayerDetailVC: BaseVC {
+
     private let item: FeedItem
-    required init?(coder: NSCoder) { fatalError() }
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
     init(item: FeedItem) {
         self.item = item
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil,
+                   bundle: nil)
     }
     // MARK: - 懒加载：播放器（用的链式 API：byResource + byAddTo）
     private lazy var player: BMPlayer = { [unowned self] in
         // 1) 统一构造 Resource
-        let def = BMPlayerResourceDefinition(url: item.videoURL, definition: "默认")
-        let res = BMPlayerResource(name: item.id, definitions: [def], cover: item.headImg)
+        let def = BMPlayerResourceDefinition(url: item.videoURL,
+                                             definition: "默认")
+        let res = BMPlayerResource(name: item.id,
+                                   definitions: [def],
+                                   cover: item.headImg)
         // 2) 一步完成：resource + 回调 + 约束（byAddTo）
         return BMPlayer()
-            .byResource(res, definitionIndex: 0, autoPlay: true)
+            .byResource(res,
+                        definitionIndex: 0,
+                        autoPlay: true)
             .byVideoGravity(.resizeAspect)     // 需要铺满可改 .resizeAspectFill
-            .byPanGestureEnabled(true)
+        .byPanGestureEnabled(true)
             .byBack { [weak self] isFull in
-                guard let self else { return }
-                if !isFull { self.navigationController?.popViewController(animated: true) }
+                guard let self else {
+                    return
+                }
+                if !isFull {
+                    self.navigationController?.popViewController(animated: true)
+                }
             }
             .byAddTo(view) { [unowned self] make in
                 if self.view.jobs_hasVisibleTopBar() {
@@ -52,7 +65,7 @@ final class PlayerDetailVC: BaseVC {
                     make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
                 }
                 make.left.right.equalToSuperview()
-                // 16:9 等比高度
+            // 16:9 等比高度
                 make.height.equalTo(self.view.snp.width)
                     .multipliedBy(9.0 / 16.0)
                     .priority(750)
@@ -60,7 +73,8 @@ final class PlayerDetailVC: BaseVC {
     }()
     // MARK: - 懒加载：正文
     private lazy var contentLabel: UILabel = { [unowned self] in
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byNumberOfLines(0)
             .byText(item.content.isEmpty ? " " : item.content)
             .byTextColor(JobsCor.label)
@@ -82,7 +96,9 @@ final class PlayerDetailVC: BaseVC {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if isMovingFromParent { player.byPause() }   // 阻断后续 autoPlay
+        if isMovingFromParent {
+            player.byPause()
+        }   // 阻断后续 autoPlay
     }
 }
 #endif

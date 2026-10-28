@@ -26,6 +26,7 @@ import GKNavigationBarSwift
 import SnapKit
 
 final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
+
     // ✅ Fix：既然 node 通过 heightFormula 手算高度，就别开 estimated（避免滚动抖动/跳）
     private let layoutMode: TimelineLayoutMode = .noEstimated_manualHeight
     private var rows: Int = 20
@@ -49,12 +50,17 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
             .byEstimatedSectionFooterHeight(0)
             .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据".tr, for: .normal)
-                    .bySubTitle("点我填充示例数据".tr, for: .normal)
-                    .byImage("tray".sysImg, for: .normal)
+                    .byTitle("暂无数据".tr,
+                             for: .normal)
+                    .bySubTitle("点我填充示例数据".tr,
+                                for: .normal)
+                    .byImage("tray".sysImg,
+                             for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in
-                        guard let self, !self.isExiting else { return }
+                        guard let self, !self.isExiting else {
+                            return
+                        }
                         self.rows = 20
                         self.posts = MomentPost.makeSample(rows: self.rows)
                         self.tableNode.reloadData()
@@ -70,9 +76,13 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
             .byRefreshHeader(component: JobsDefaultHeader(),
                              container: self,
                              trigger: 66) { [weak self] in
-                guard let self, !self.isExiting else { return }
+                guard let self, !self.isExiting else {
+                    return
+                }
                 Task { @MainActor [weak self] in
-                    guard let self, !self.isExiting else { return }
+                    guard let self, !self.isExiting else {
+                        return
+                    }
                     self.rows = 20
                     self.posts = MomentPost.makeSample(rows: self.rows)
                     self.tableNode.reloadData()
@@ -83,9 +93,13 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
             .byRefreshFooter(component: JobsDefaultFooter(),
                              container: self,
                              trigger: 66) { [weak self] in
-                guard let self, !self.isExiting else { return }
+                guard let self, !self.isExiting else {
+                    return
+                }
                 Task { @MainActor [weak self] in
-                    guard let self, !self.isExiting else { return }
+                    guard let self, !self.isExiting else {
+                        return
+                    }
                     if self.rows < 60 {
                         self.rows += 20
                         self.posts = MomentPost.makeSample(rows: self.rows)
@@ -103,7 +117,8 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
                 } else {
                     make.edges.equalToSuperview()
                 }
-            };return n
+            }
+        return n
     }()
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -151,7 +166,9 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
                              sourceNode: MomentPostUIKitCellNode?) {
         // ✅ UI 只展示最多 9 张（3×3），预览也必须保持一致
         let medias = Array(post.media.prefix(9))
-        guard medias.indices.contains(index) else { return }
+        guard medias.indices.contains(index) else {
+            return
+        }
         var photos: [GKPhoto] = []
         photos.reserveCapacity(medias.count)
         for (i, m) in medias.enumerated() {
@@ -169,7 +186,8 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
             }
             photos.append(p)
         }
-        let b = GKPhotoBrowser(photos: photos, currentIndex: index)
+        let b = GKPhotoBrowser(photos: photos,
+                               currentIndex: index)
         let cfg = GKPhotoBrowserConfigure.default()
         cfg.showStyle = .zoom
         b.configure = cfg
@@ -178,59 +196,98 @@ final class GKPhotoBrowserByTextureSwiftSupportDemoVC: BaseVC {
     }
 }
 // MARK: - ASTableNode DataSource & Delegate
-extension GKPhotoBrowserByTextureSwiftSupportDemoVC: ASTableDataSource, ASTableDelegate {
-    func numberOfSections(in tableNode: ASTableNode) -> Int { 1 }
-    func tableNode(_ tableNode: ASTableNode, numberOfRowsInSection section: Int) -> Int {
+extension GKPhotoBrowserByTextureSwiftSupportDemoVC: ASTableDataSource,
+                                                     ASTableDelegate {
+
+    func numberOfSections(in tableNode: ASTableNode) -> Int {
+        1
+    }
+    func tableNode(_ tableNode: ASTableNode,
+                   numberOfRowsInSection section: Int) -> Int {
         posts.count
     }
     /// ✅ 用 nodeBlock（后台线程创建 Node），Texture 线程模型更稳
-    func tableNode(_ tableNode: ASTableNode, nodeBlockForRowAt indexPath: IndexPath) -> ASCellNodeBlock {
+    func tableNode(_ tableNode: ASTableNode,
+                   nodeBlockForRowAt indexPath: IndexPath) -> ASCellNodeBlock {
         let row = indexPath.row
         let post = posts[row]
         let layoutMode = self.layoutMode
         return { [weak self, weak tableNode] in
-            MomentPostUIKitCellNode(post: post, layoutMode: layoutMode)
+            MomentPostUIKitCellNode(post: post,
+                                    layoutMode: layoutMode)
                 .byOnNeedHeightUpdate { [weak self, weak tableNode] in
-                    guard let self, let tableNode, !self.isExiting else { return }
+                    guard let self, let tableNode, !self.isExiting else {
+                        return
+                    }
                     DispatchQueue.main.async { [weak self, weak tableNode] in
-                        guard let self, let tableNode, !self.isExiting else { return }
-                        guard tableNode.view.window != nil else { return }
-                        // ✅ Fix：ASTableView 的 begin/endUpdates 已 deprecated
-                        // 用 ASTableNode.performBatchUpdates 触发高度/布局刷新（无动画）
+                        guard let self, let tableNode, !self.isExiting else {
+                            return
+                        }
+                        guard tableNode.view.window != nil else {
+                            return
+                        }
+                    // ✅ Fix：ASTableView 的 begin/endUpdates 已 deprecated
+                    // 用 ASTableNode.performBatchUpdates 触发高度/布局刷新（无动画）
                         UIView.performWithoutAnimation {
                             tableNode.performBatchUpdates({
-                                // no-op: height re-query happens because node invalidated layout
-                            }, completion: nil)
+                            // no-op: height re-query happens because node invalidated layout
+                            },
+                                                          completion: nil)
                         }
                     }
                 }
                 .byOnTapMedia { [weak self] node, mediaIndex in
-                    guard let self, !self.isExiting else { return }
-                    guard self.posts.indices.contains(row) else { return }
-                    self.showBrowser(for: self.posts[row], at: mediaIndex, sourceNode: node)
+                    guard let self, !self.isExiting else {
+                        return
+                    }
+                    guard self.posts.indices.contains(row) else {
+                        return
+                    }
+                    self.showBrowser(for: self.posts[row],
+                                     at: mediaIndex,
+                                     sourceNode: node)
                 }
                 .byOnToggleExpand { [weak self, weak tableNode] in
-                    guard let self, let tableNode, !self.isExiting else { return }
-                    guard self.posts.indices.contains(row) else { return }
+                    guard let self, let tableNode, !self.isExiting else {
+                        return
+                    }
+                    guard self.posts.indices.contains(row) else {
+                        return
+                    }
                     self.posts[row].isExpanded.toggle()
-                    tableNode.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
+                    tableNode.reloadRows(at: [IndexPath(row: row,
+                                                        section: 0)],
+                                         with: .automatic)
                 }
                 .byOnLikeTapped { [weak self, weak tableNode] in
-                    guard let self, let tableNode, !self.isExiting else { return }
-                    guard self.posts.indices.contains(row) else { return }
+                    guard let self, let tableNode, !self.isExiting else {
+                        return
+                    }
+                    guard self.posts.indices.contains(row) else {
+                        return
+                    }
                     var p = self.posts[row]
                     p.isLiked.toggle()
                     p.likeCount += p.isLiked ? 1 : -1
                     self.posts[row] = p
-                    tableNode.reloadRows(at: [IndexPath(row: row, section: 0)], with: .none)
+                    tableNode.reloadRows(at: [IndexPath(row: row,
+                                                        section: 0)],
+                                         with: .none)
                 }
                 .byOnCommentTapped { [weak self, weak tableNode] in
-                    guard let self, let tableNode, !self.isExiting else { return }
-                    guard self.posts.indices.contains(row) else { return }
+                    guard let self, let tableNode, !self.isExiting else {
+                        return
+                    }
+                    guard self.posts.indices.contains(row) else {
+                        return
+                    }
                     var p = self.posts[row]
-                    p.comments.append(.init(user: "Jobs", text: "Nice～"))
+                    p.comments.append(.init(user: "Jobs",
+                                            text: "Nice～"))
                     self.posts[row] = p
-                    tableNode.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
+                    tableNode.reloadRows(at: [IndexPath(row: row,
+                                                        section: 0)],
+                                         with: .automatic)
                 }
         }
     }

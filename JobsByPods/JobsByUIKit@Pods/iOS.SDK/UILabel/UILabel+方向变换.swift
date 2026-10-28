@@ -18,39 +18,55 @@ import JobsSwiftBaseDefines
 private var jobsRotatedTextScaleKey: UInt8 = 0
 
 extension UILabel {
+
     // MARK: 方向变换（使用 CATextLayer，避免富文本/对齐丢失）
     @discardableResult
     public func transformLayer(_ direction: TransformLayerDirectionType) -> Self {
-        if #available(iOS 17.0, *), objc_getAssociatedObject(self, &jobsRotatedTextScaleKey) == nil {
-            objc_setAssociatedObject(self, &jobsRotatedTextScaleKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        if #available(iOS 17.0, *), objc_getAssociatedObject(self,
+                                                             &jobsRotatedTextScaleKey) == nil {
+            objc_setAssociatedObject(self,
+                                     &jobsRotatedTextScaleKey,
+                                     true,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             registerForTraitChanges([UITraitDisplayScale.self]) { (label: UILabel, _: UITraitCollection) in
-                for layer in label.layer.sublayers?.compactMap({ $0 as? CATextLayer }).filter({ $0.name == "JobsTextLayer" }) ?? [] {
+                for layer in label.layer.sublayers?.compactMap({
+                    $0 as? CATextLayer
+                }).filter({
+                    $0.name == "JobsTextLayer"
+                }) ?? [] {
                     layer.contentsScale = label.traitCollection.displayScale
                 }
             }
         }
         superview?.layoutIfNeeded()
         let oldTextLayers = layer.sublayers?
-            .compactMap { $0 as? CATextLayer }
-            .filter { $0.name == "JobsTextLayer" } ?? []
+            .compactMap {
+                $0 as? CATextLayer
+            }
+            .filter {
+                $0.name == "JobsTextLayer"
+            } ?? []
         let currentTextColor = textColor.cgColor
         /// UILabel 已隐藏原始文字时，沿用旧文字层颜色，保证重复布局后仍然可见
         let textLayerColor = currentTextColor.alpha == 0
-        ? (oldTextLayers.first?.foregroundColor ?? currentTextColor)
-        : currentTextColor
-        oldTextLayers.forEach { $0.removeFromSuperlayer() }
+            ? (oldTextLayers.first?.foregroundColor ?? currentTextColor)
+            : currentTextColor
+        oldTextLayers.forEach {
+            $0.removeFromSuperlayer()
+        }
         let textLayer = CATextLayer()
             .byName("JobsTextLayer")
             .byContentsScale(traitCollection.displayScale)
             .byAlignmentMode(._jobs_fromNSTextAlignment(textAlignment))
             .byTruncationMode((lineBreakMode == .byTruncatingHead) ? .start :
-                                (lineBreakMode == .byTruncatingMiddle) ? .middle :
-                                (lineBreakMode == .byTruncatingTail) ? .end : .none)
+                (lineBreakMode == .byTruncatingMiddle) ? .middle :
+                (lineBreakMode == .byTruncatingTail) ? .end : .none)
             .byWrapped((numberOfLines == 0))
         if let attributed = attributedText {
             textLayer.byString(attributed)
         } else {
-            textLayer.byString(text ?? "")
+            textLayer
+                .byString(text ?? "")
                 .byForegroundColor(textLayerColor)
                 .byFont(font)
                 .byFontSize(font.pointSize)
@@ -65,18 +81,28 @@ extension UILabel {
             textLayer
                 .byAnchorPoint(CGPoint(x: 0.5, y: 0.5))
                 .byPosition(CGPoint(x: bounds.midX, y: bounds.midY))
-                .byTransform(CATransform3DMakeRotation(-.pi/2, 0, 0, 1))
+                .byTransform(CATransform3DMakeRotation(-.pi / 2,
+                                                       0,
+                                                       0,
+                                                       1))
         /// 处理 .down 分支
         case .down:
             textLayer
                 .byAnchorPoint(CGPoint(x: 0.5, y: 0.5))
                 .byPosition(CGPoint(x: bounds.midX, y: bounds.midY))
-                .byTransform(CATransform3DMakeRotation(.pi, 0, 0, 1))
+                .byTransform(CATransform3DMakeRotation(.pi,
+                                                       0,
+                                                       0,
+                                                       1))
         /// 处理 .right 分支
         case .right:
-            textLayer.byAnchorPoint(CGPoint(x: 0.5, y: 0.5))
+            textLayer
+                .byAnchorPoint(CGPoint(x: 0.5, y: 0.5))
                 .byPosition(CGPoint(x: bounds.midX, y: bounds.midY))
-                .byTransform(CATransform3DMakeRotation(.pi/2, 0, 0, 1))
+                .byTransform(CATransform3DMakeRotation(.pi / 2,
+                                                       0,
+                                                       0,
+                                                       1))
         }
         self.byAddSublayer(textLayer)
         byTextColor(JobsCor.clear) // 只显示 layer 的文字
@@ -85,20 +111,27 @@ extension UILabel {
 }
 // MARK: - 对齐映射（CATextLayerAlignmentMode ← NSTextAlignment）
 extension CATextLayerAlignmentMode {
+
     internal static func _jobs_fromNSTextAlignment(_ a: NSTextAlignment) -> CATextLayerAlignmentMode {
         switch a {
         /// 处理 .left 分支
-        case .left: return .left
+        case .left:
+            return .left
         /// 处理 .right 分支
-        case .right: return .right
+        case .right:
+            return .right
         /// 处理 .center 分支
-        case .center: return .center
+        case .center:
+            return .center
         /// 处理 .justified 分支
-        case .justified: return .justified
+        case .justified:
+            return .justified
         /// 处理 .natural 分支
-        case .natural: return .natural
+        case .natural:
+            return .natural
         /// 处理系统后续新增的未知枚举值
-        @unknown default: return .natural
+        @unknown default:
+            return .natural
         }
     }
 }

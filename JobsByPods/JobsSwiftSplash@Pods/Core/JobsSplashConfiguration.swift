@@ -13,11 +13,14 @@ import AVFoundation
 import JobsSwiftOpen
 
 public enum JobsSplashLanguage {
+
     case system
     case code(String)
 }
 
-public enum JobsSplashContentType: Int, CaseIterable {
+public enum JobsSplashContentType: Int,
+                                   CaseIterable {
+
     case localImage
     case localGIF
     case remoteImage
@@ -26,6 +29,7 @@ public enum JobsSplashContentType: Int, CaseIterable {
 }
 
 public enum JobsSplashContent {
+
     case localImage(name: String, bundle: Bundle = .main)
     case localGIF(name: String, bundle: Bundle = .main)
     case remoteImage(URL)
@@ -43,12 +47,14 @@ public enum JobsSplashContent {
 }
 
 public enum JobsSplashAction {
+
     case open(JobsOpenConfiguration)
     case custom((_ splashVC: JobsSplashVC) -> Void)
     case none
 }
 
 public final class JobsSplashConfiguration {
+
     public var content: JobsSplashContent
     public var fallbackImage: UIImage?
     public var countdownSeconds: Int?
@@ -68,7 +74,10 @@ public final class JobsSplashConfiguration {
         language = .system
         isSkipButtonVisible = true
         skipButtonFrame = nil
-        skipButtonInsets = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
+        skipButtonInsets = UIEdgeInsets(top: 12,
+                                        left: 16,
+                                        bottom: 12,
+                                        right: 16)
         contentMode = .scaleAspectFill
         videoGravity = .resizeAspectFill
         tapAction = .open(JobsOpenConfiguration())
@@ -78,7 +87,11 @@ public final class JobsSplashConfiguration {
 
     @discardableResult
     public func byCountdownSeconds(_ seconds: Int?) -> Self {
-        countdownSeconds = seconds.map { max(0, $0) };return self
+        countdownSeconds = seconds.map {
+            max(0,
+                $0)
+        }
+        return self
     }
 
     @discardableResult

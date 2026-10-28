@@ -13,6 +13,7 @@ import UIKit
 
 // MARK: - DSL
 extension UIImagePickerController {
+
     // delegate
     @discardableResult
     public func byDelegate(_ delegate: (UIImagePickerControllerDelegate & UINavigationControllerDelegate)?) -> Self {

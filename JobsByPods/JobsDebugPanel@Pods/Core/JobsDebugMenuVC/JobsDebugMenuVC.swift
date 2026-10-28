@@ -12,7 +12,10 @@ import JobsByUIKit
 import JobsSwiftBaseDefines
 import SnapKit
 
-final class JobsDebugMenuVC: BaseVC, UITableViewDataSource, UITableViewDelegate {
+final class JobsDebugMenuVC: BaseVC,
+                             UITableViewDataSource,
+                             UITableViewDelegate {
+
     private lazy var tableView: UITableView = {
         UITableView.jobsMake { table in
             table
@@ -49,34 +52,43 @@ final class JobsDebugMenuVC: BaseVC, UITableViewDataSource, UITableViewDelegate 
         JobsDebugPanel.shared.refreshFloatingButtonAccessibility()
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
         return JobsDebugPanel.shared.actions.count + 1
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 {
-            return UITableViewCell.make(style: .subtitle, reuseIdentifier: "Environment")
+            return UITableViewCell.make(style: .subtitle,
+                                        reuseIdentifier: "Environment")
                 .byText("App 环境切换")
                 .bySecondaryText(JobsDebugPanel.shared.selectedEnvironment?.remark ?? "尚未配置环境")
                 .byTitleCor(JobsCor.label)
                 .byDetailTitleCor(JobsCor.secondaryLabel)
                 .byBackgroundColor(JobsCor.systemBackground)
                 .byTintColor(JobsCor.label)
-                .bySelectedBackgroundView(UIView.jobsMake { $0.byBackgroundColor(JobsCor.secondarySystemBackground) })
+                .bySelectedBackgroundView(UIView.jobsMake {
+                $0.byBackgroundColor(JobsCor.secondarySystemBackground)
+            })
                 .byAccessoryType(.disclosureIndicator)
         }
         let action = JobsDebugPanel.shared.actions[indexPath.row - 1]
-        return UITableViewCell.make(style: .default, reuseIdentifier: "Action")
+        return UITableViewCell.make(style: .default,
+                                    reuseIdentifier: "Action")
             .byText(action.title)
             .byImage(action.image)
             .byTitleCor(JobsCor.label)
             .byBackgroundColor(JobsCor.systemBackground)
             .byTintColor(JobsCor.label)
-            .bySelectedBackgroundView(UIView.jobsMake { $0.byBackgroundColor(JobsCor.secondarySystemBackground) })
+            .bySelectedBackgroundView(UIView.jobsMake {
+            $0.byBackgroundColor(JobsCor.secondarySystemBackground)
+        })
             .byAccessoryType(.disclosureIndicator)
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
         tableView.byDeselectRow(indexPath)
         if indexPath.row == 0 {
             navigationController?.pushViewControllerByAnimated(JobsDebugEnvironmentsVC())

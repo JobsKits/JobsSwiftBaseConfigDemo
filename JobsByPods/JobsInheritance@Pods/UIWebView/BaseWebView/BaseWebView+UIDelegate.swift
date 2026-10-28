@@ -22,16 +22,22 @@ import UniformTypeIdentifiers
 #endif
 
 extension BaseWebView: WKUIDelegate {
+
     @MainActor
     public func webView(_ webView: WKWebView,
                         runJavaScriptAlertPanelWithMessage message: String,
                         initiatedByFrame frame: WKFrameInfo,
                         completionHandler: @escaping () -> Void) {
         UIAlertController
-            .makeAlert("提示".tr, message)
-            .byAddOK { _ in completionHandler() }
+            .makeAlert("提示".tr,
+                       message)
+            .byAddOK { _ in
+                completionHandler()
+            }
             .byData("Jobs")
-            .onResult { name in print("回来了 \(String(describing: name))") }
+            .onResult { name in
+                print("回来了 \(String(describing: name))")
+            }
             .byPresent(presentingVC)
     }
 
@@ -41,11 +47,18 @@ extension BaseWebView: WKUIDelegate {
                         initiatedByFrame frame: WKFrameInfo,
                         completionHandler: @escaping (Bool) -> Void) {
         UIAlertController
-            .makeAlert("确认".tr, message)
-            .byAddCancel { _ in completionHandler(false) }
-            .byAddOK { _ in completionHandler(true) }
+            .makeAlert("确认".tr,
+                       message)
+            .byAddCancel { _ in
+                completionHandler(false)
+            }
+            .byAddOK { _ in
+                completionHandler(true)
+            }
             .byData("Jobs")
-            .onResult { name in print("回来了 \(String(describing: name))") }
+            .onResult { name in
+                print("回来了 \(String(describing: name))")
+            }
             .byPresent(presentingVC)
     }
 
@@ -56,14 +69,21 @@ extension BaseWebView: WKUIDelegate {
                         initiatedByFrame frame: WKFrameInfo,
                         completionHandler: @escaping (String?) -> Void) {
         UIAlertController
-            .makeAlert("确认".tr, prompt)
+            .makeAlert("确认".tr,
+                       prompt)
             .byAddTextField { tf in
                 tf.byText(defaultText)
             }
-            .byAddCancel { _ in completionHandler(nil) }
-            .byAddOK { _ in completionHandler(nil) }
+            .byAddCancel { _ in
+                completionHandler(nil)
+            }
+            .byAddOK { _ in
+                completionHandler(nil)
+            }
             .byData("Jobs")
-            .onResult { name in print("回来了 \(String(describing: name))") }
+            .onResult { name in
+                print("回来了 \(String(describing: name))")
+            }
             .byPresent(presentingVC)
     }
     /// iOS 18.4+ 自定义文件选择
@@ -74,7 +94,9 @@ extension BaseWebView: WKUIDelegate {
                         initiatedByFrame frame: WKFrameInfo,
                         completionHandler: @escaping ([URL]?) -> Void) {
         var types: [UTType] = [.item]
-        if parameters.allowsDirectories { types = [.folder] }
+        if parameters.allowsDirectories {
+            types = [.folder]
+        }
         let picker = UIDocumentPickerViewController(forOpeningContentTypes: types)
         picker.byAllowsMultipleSelection(parameters.allowsMultipleSelection)
         let proxy = DocumentPickerDelegateProxy { [weak self] urls in
@@ -84,6 +106,7 @@ extension BaseWebView: WKUIDelegate {
         docPickerDelegate = proxy
         picker.byDelegate(proxy)
         picker.modalPresentationStyle = .formSheet
-        presentingVC?.present(picker, animated: true)
+        presentingVC?.present(picker,
+                              animated: true)
     }
 }

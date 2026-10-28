@@ -20,8 +20,11 @@ import MessageUI
 // MARK: 一行打开：网址(任何支持的 URL scheme) 、一行拨号、发邮件
 @MainActor
 extension String {
+
     // 内部委托：托管 MFMailComposeViewController 的回调与收尾
-    fileprivate final class _JobsMailProxy: NSObject, @MainActor MFMailComposeViewControllerDelegate {
+    fileprivate final class _JobsMailProxy: NSObject,
+                                            @MainActor MFMailComposeViewControllerDelegate {
+
         static let shared = _JobsMailProxy()
         var completion: jobsByOpenResultBlock?
         @MainActor
@@ -31,7 +34,8 @@ extension String {
             controller.dismiss(animated: true) { [completion] in
                 // 这层 API 只关心“是否成功调起”，这里统一回调 .opened
                 completion?(.opened)
-            };self.completion = nil
+            }
+            self.completion = nil
         }
     }
     /// 一行打开：网址 / 任何支持的 URL scheme
@@ -54,9 +58,11 @@ extension String {
             return .cannotOpen
         }
         // 3) iOS 10+ 统一走 open(_:options:JobsVoidBlockHandler:)
-        UIApplication.shared.open(url, options: options) { ok in
+        UIApplication.shared.open(url,
+                                  options: options) { ok in
             jobsByVoidBlock?(ok ? .opened : .cannotOpen)
-        };return .opened
+        }
+        return .opened
     }
     /// 一行拨号
     /// 例子：
@@ -96,9 +102,11 @@ extension String {
             jobsByVoidBlock?(.cannotOpen)
             return .cannotOpen
         }
-        UIApplication.shared.open(url, options: [:]) { ok in
+        UIApplication.shared.open(url,
+                                  options: [:]) { ok in
             jobsByVoidBlock?(ok ? .opened : .cannotOpen)
-        };return .opened
+        }
+        return .opened
         #endif
     }
     /// 一行发邮件（优先原生 Mail VC；不可用时回退 mailto://）
@@ -129,27 +137,44 @@ extension String {
         if MFMailComposeViewController.canSendMail() {
             let vc = MFMailComposeViewController()
             vc.setToRecipients(tos)
-            if let subject { vc.setSubject(subject) }
-            if let body    { vc.setMessageBody(body, isHTML: isHTML) }
-            if !cc.isEmpty { vc.setCcRecipients(Self._parseEmails(cc.joined(separator: ","))) }
-            if !bcc.isEmpty { vc.setBccRecipients(Self._parseEmails(bcc.joined(separator: ","))) }
+            if let subject {
+                vc.setSubject(subject)
+            }
+            if let body    {
+                vc.setMessageBody(body,
+                                  isHTML: isHTML)
+            }
+            if !cc.isEmpty {
+                vc.setCcRecipients(Self._parseEmails(cc.joined(separator: ",")))
+            }
+            if !bcc.isEmpty {
+                vc.setBccRecipients(Self._parseEmails(bcc.joined(separator: ",")))
+            }
             vc.mailComposeDelegate = _JobsMailProxy.shared
             // 顶层展示 VC
             let host = presentFrom
                 ?? UIApplication.jobsKeyWindow()?.rootViewController
                 ?? UIViewController()
             _JobsMailProxy.shared.completion = completion
-            host.present(vc, animated: true, completion: nil)
+            host.present(vc,
+                         animated: true,
+                         completion: nil)
             return .opened
         }
         // 2) 回退：mailto://
-        guard let url = Self._makeMailtoURL(to: tos, subject: subject, body: body, cc: cc, bcc: bcc),
+        guard let url = Self._makeMailtoURL(to: tos,
+                                            subject: subject,
+                                            body: body,
+                                            cc: cc,
+                                            bcc: bcc),
               UIApplication.shared.canOpenURL(url) else {
             completion?(.cannotOpen)
             return .cannotOpen
         }
-        UIApplication.shared.open(url, options: [:]) { ok in
+        UIApplication.shared.open(url,
+                                  options: [:]) { ok in
             completion?(ok ? .opened : .cannotOpen)
-        };return .opened
+        }
+        return .opened
     }
 }

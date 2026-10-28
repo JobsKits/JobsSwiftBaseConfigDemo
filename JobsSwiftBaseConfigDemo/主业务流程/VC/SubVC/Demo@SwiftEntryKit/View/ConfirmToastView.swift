@@ -19,8 +19,10 @@ import SnapKit
 
 // ============================== 自定义“需确认”中心 Toast 视图 ==============================
 final class ConfirmToastView: UIView {
+
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("需要确认".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byTextColor(JobsCor.label)
@@ -32,7 +34,8 @@ final class ConfirmToastView: UIView {
     }()
 
     private lazy var descLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("这是一个中心弹出的自定义 View。只有点击下方“我知道了”后才会关闭。".tr)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)
@@ -65,5 +68,7 @@ final class ConfirmToastView: UIView {
         descLabel.byVisible(YES)
         confirmBtn.byVisible(YES)
     }
-    required init?(coder: NSCoder) { fatalError() }
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
 }

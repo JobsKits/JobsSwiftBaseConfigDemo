@@ -14,6 +14,7 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class JobsSideDrawerDemoVC: BaseVC {
+
     private lazy var directionControl: UISegmentedControl = {
         UISegmentedControl(items: ["上".tr, "下".tr, "左".tr, "右".tr])
             .bySelectedSegmentIndex(2)
@@ -30,11 +31,14 @@ final class JobsSideDrawerDemoVC: BaseVC {
     }()
 
     private lazy var ratioSlider: UISlider = {
-        UISlider.jobsMake { _ in }
+        UISlider
+            .jobsMake { _ in }
             .byMinimumValue(0.2)
             .byMaximumValue(0.9)
             .byValue(0.5)
-            .byAddTarget(self, action: #selector(updateRatio), for: .valueChanged)
+            .byAddTarget(self,
+                         action: #selector(updateRatio),
+                         for: .valueChanged)
     }()
 
     private lazy var ratioLabel: UILabel = {
@@ -51,16 +55,16 @@ final class JobsSideDrawerDemoVC: BaseVC {
 
     private lazy var optionStack: UIStackView = {
         UIStackView(arrangedSubviews: [
-            self.directionControl,
-            self.modeControl,
-            self.carrierControl,
-            self.ratioLabel,
-            self.ratioSlider,
-            self.previewButton
-        ])
-        .byAxis(.vertical)
-        .bySpacing(22)
-        .byTranslatesAutoresizingMaskIntoConstraints(false)
+                self.directionControl,
+                self.modeControl,
+                self.carrierControl,
+                self.ratioLabel,
+                self.ratioSlider,
+                self.previewButton
+            ])
+            .byAxis(.vertical)
+            .bySpacing(22)
+            .byTranslatesAutoresizingMaskIntoConstraints(false)
     }()
 
     private var drawerPage: UIView?
@@ -87,47 +91,53 @@ final class JobsSideDrawerDemoVC: BaseVC {
     }
 
     @objc private func updateRatio() {
-        ratioLabel.byText(String(format: "推出比例：%.0f%%", ratioSlider.value * 100))
+        ratioLabel.byText(String(format: "推出比例：%.0f%%",
+                                 ratioSlider.value * 100))
     }
 
     private func preview() {
         let directions: [JobsSideDrawerDirection] = [.top, .bottom, .left, .right]
-        let configuration = JobsSideDrawerConfiguration(
-            direction: directions[directionControl.selectedSegmentIndex],
-            contentMode: modeControl.selectedSegmentIndex == 0 ? .following : .fixed,
-            presentedRatio: CGFloat(ratioSlider.value),
-            onDidClose: { [weak self] in
-                self?.dismissPreview()
-            }
-        )
+        let configuration = JobsSideDrawerConfiguration(direction: directions[directionControl.selectedSegmentIndex],
+                                                        contentMode: modeControl.selectedSegmentIndex == 0 ? .following : .fixed,
+                                                        presentedRatio: CGFloat(ratioSlider.value),
+                                                        onDidClose: { [weak self] in
+            self?.dismissPreview()
+        })
         pageViews.removeAll()
         pageLabels.removeAll()
-        drawerPage = makePage(text: "侧滑菜单\n点击遮罩原路返回", color: JobsCor.systemBlue)
-        mainPage = makePage(text: "底部内容", color: JobsCor.systemBackground)
-        guard let drawerPage, let mainPage else { return }
+        drawerPage = makePage(text: "侧滑菜单\n点击遮罩原路返回",
+                              color: JobsCor.systemBlue)
+        mainPage = makePage(text: "底部内容",
+                            color: JobsCor.systemBackground)
+        guard let drawerPage, let mainPage else {
+            return
+        }
         if carrierControl.selectedSegmentIndex == 0 {
             drawerPageController = UIViewController.jobsMake { _ in }
             drawerPageController?.view = drawerPage
             mainPageController = UIViewController.jobsMake { _ in }
             mainPageController?.view = mainPage
-            guard let drawerPageController, let mainPageController else { return }
-            sideDrawerController = JobsSideDrawerVC(
-                drawerViewController: drawerPageController,
-                mainViewController: mainPageController,
-                configuration: configuration
-            )
-        }else{
+            guard let drawerPageController, let mainPageController else {
+                return
+            }
+            sideDrawerController = JobsSideDrawerVC(drawerViewController: drawerPageController,
+                                                    mainViewController: mainPageController,
+                                                    configuration: configuration)
+        } else {
             drawerPageController = nil
             mainPageController = nil
-            sideDrawerController = JobsSideDrawerVC(
-                drawerView: drawerPage,
-                mainView: mainPage,
-                configuration: configuration
-            )
+            sideDrawerController = JobsSideDrawerVC(drawerView: drawerPage,
+                                                    mainView: mainPage,
+                                                    configuration: configuration)
         }
-        guard let sideDrawerController else { return }
+        guard let sideDrawerController else {
+            return
+        }
         sideDrawerController.byModalPresentationStyle(.fullScreen)
-        present(sideDrawerController, animated: false) { sideDrawerController.openDrawer() }
+        present(sideDrawerController,
+                animated: false) {
+            sideDrawerController.openDrawer()
+        }
     }
 
     private func dismissPreview() {
@@ -146,17 +156,21 @@ final class JobsSideDrawerDemoVC: BaseVC {
         pageLabels.removeAll()
     }
 
-    private func makePage(text: String, color: UIColor) -> UIView {
-        let page = UIView.jobsMake { _ in }
+    private func makePage(text: String,
+                          color: UIColor) -> UIView {
+        let page = UIView
+            .jobsMake { _ in }
             .byBackgroundColor(color)
         pageViews.append(page)
-        let label = UILabel.jobsMake { _ in }
+        let label = UILabel
+            .jobsMake { _ in }
             .byText(text)
             .byNumberOfLines(0)
             .byTextAlignment(.center)
         pageLabels.append(label)
         label.byAddTo(page) { make in
             make.center.equalToSuperview()
-        };return page
+        }
+        return page
     }
 }

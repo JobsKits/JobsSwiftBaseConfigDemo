@@ -7,7 +7,9 @@
 
 import Foundation
 
-enum JobsMotionAppIconOption: Int, CaseIterable {
+enum JobsMotionAppIconOption: Int,
+                              CaseIterable {
+
     case primary
     case shake
     case gyroscope
@@ -95,7 +97,10 @@ enum JobsMotionAppIconOption: Int, CaseIterable {
     }
 
     static func option(matching alternateIconName: String?) -> JobsMotionAppIconOption {
-        guard let alternateIconName else { return .primary };return allCases.first {
+        guard let alternateIconName else {
+            return .primary
+        }
+        return allCases.first {
             $0.alternateIconName == alternateIconName
         } ?? .primary
     }

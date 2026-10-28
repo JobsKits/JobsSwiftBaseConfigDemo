@@ -7,11 +7,13 @@
 
 #if DEBUG
 import UIKit
+import ObjectiveC
 import JobsByUIKit
 import JobsSwiftBaseDefines
 
 @MainActor
 public final class JobsDebugPanel {
+
     public static let shared = JobsDebugPanel()
     public static let environmentDidChangeNotification = Notification.Name("JobsDebugPanelEnvironmentDidChange")
     public static var buttonImage: UIImage? {
@@ -24,21 +26,23 @@ public final class JobsDebugPanel {
     private let selectedURLKey = "JobsDebugPanel.Debug.SelectedEnvironmentURL"
     private var environmentDidChange: ((JobsDebugEnvironment) -> Void)?
     private var overlayWindows: [String: JobsDebugOverlayWindow] = [:]
-    private let menuControllers = NSMapTable<UIWindow, JobsDebugMenuVC>(
-        keyOptions: .weakMemory,
-        valueOptions: .weakMemory
-    )
+    private let menuControllers = NSMapTable<UIWindow, JobsDebugMenuVC>(keyOptions: .weakMemory,
+                                                                        valueOptions: .weakMemory)
     private var notificationTokens: [NSObjectProtocol] = []
     private var started = false
-    private var hiddenForCurrentLaunch = false
+    private var floatingEntryHidden = true
 
     private init() {}
 
     @discardableResult
     public func byEnvironments(_ environments: [JobsDebugEnvironment]) -> Self {
-        self.environments = environments.filter { $0.url != nil }
+        self.environments = environments.filter {
+            $0.url != nil
+        }
         let saved = UserDefaults.standard.string(forKey: selectedURLKey)
-        selectedEnvironment = self.environments.first { $0.urlString == saved } ?? self.environments.first
+        selectedEnvironment = self.environments.first {
+            $0.urlString == saved
+        } ?? self.environments.first
         if let environment = selectedEnvironment {
             apply(environment)
         } else {
@@ -68,6 +72,7 @@ public final class JobsDebugPanel {
             return self
         }
         started = true
+        _ = UIApplication.jobsDebugPanelShakeHook
         let center = NotificationCenter.default
         let activationNames: [Notification.Name] = [
             UIScene.didActivateNotification,
@@ -75,11 +80,15 @@ public final class JobsDebugPanel {
             UIWindow.didBecomeKeyNotification
         ]
         for name in activationNames {
-            notificationTokens.append(center.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
+            notificationTokens.append(center.addObserver(forName: name,
+                                                         object: nil,
+                                                         queue: .main) { [weak self] _ in
                 self?.refreshWindows()
             })
         }
-        notificationTokens.append(center.addObserver(forName: UIScene.didDisconnectNotification, object: nil, queue: .main) { [weak self] notification in
+        notificationTokens.append(center.addObserver(forName: UIScene.didDisconnectNotification,
+                                                     object: nil,
+                                                     queue: .main) { [weak self] notification in
             guard let scene = notification.object as? UIWindowScene else {
                 return
             }
@@ -90,12 +99,23 @@ public final class JobsDebugPanel {
         return self
     }
 
+    /// 隐藏悬浮入口，再次摇动手机后恢复。
     @discardableResult
     public func byHideForCurrentLaunch() -> Self {
-        hiddenForCurrentLaunch = true
-        overlayWindows.values.forEach { $0.byHidden(true) }
-        overlayWindows.removeAll()
+        floatingEntryHidden = true
+        // 保留控制器和拖动位置，隐藏入口不触发 BaseVC 的销毁提示。
+        overlayWindows.values.forEach {
+            $0.byHidden(true)
+        }
         return self
+    }
+
+    fileprivate func showOnShake() {
+        guard started, UIApplication.shared.applicationState == .active else {
+            return
+        }
+        floatingEntryHidden = false
+        refreshWindows()
     }
 
     public func open(from source: UIViewController) {
@@ -115,8 +135,11 @@ public final class JobsDebugPanel {
     private func closeIfOpen(from hostWindow: UIWindow) -> Bool {
         guard let menu = menuControllers.object(forKey: hostWindow),
               let navigation = menu.navigationController,
-              containsController(navigation, in: hostWindow.rootViewController),
-              let menuIndex = navigation.viewControllers.firstIndex(where: { $0 === menu }) else {
+              containsController(navigation,
+                                 in: hostWindow.rootViewController),
+              let menuIndex = navigation.viewControllers.firstIndex(where: {
+            $0 === menu
+        }) else {
             return false
         }
         guard navigation.transitionCoordinator == nil,
@@ -156,13 +179,19 @@ public final class JobsDebugPanel {
             }
             let menu = menuControllers.object(forKey: host)
             let navigation = menu?.navigationController
-            let isOpen = navigation?.viewControllers.contains(where: { $0 === menu }) == true
-                && navigation.map { containsController($0, in: host.rootViewController) } == true
+            let isOpen = navigation?.viewControllers.contains(where: {
+                $0 === menu
+            }) == true
+                && navigation.map {
+                containsController($0,
+                                   in: host.rootViewController)
+            } == true
             buttonController.updateAccessibility(isPanelOpen: isOpen)
         }
     }
 
-    private func containsController(_ target: UIViewController, in root: UIViewController?) -> Bool {
+    private func containsController(_ target: UIViewController,
+                                    in root: UIViewController?) -> Bool {
         guard let root else {
             return false
         }
@@ -170,10 +199,14 @@ public final class JobsDebugPanel {
             return true
         }
         // 全屏工具会移除底层导航视图，以控制器归属判断本次会话是否仍有效。
-        if containsController(target, in: root.presentedViewController) {
+        if containsController(target,
+                              in: root.presentedViewController) {
             return true
         }
-        return root.children.contains { containsController(target, in: $0) }
+        return root.children.contains {
+            containsController(target,
+                               in: $0)
+        }
     }
 
     func open(from hostWindow: UIWindow) {
@@ -205,15 +238,20 @@ public final class JobsDebugPanel {
             guard navigation.transitionCoordinator == nil else {
                 return
             }
-            if let existingMenu = navigation.viewControllers.first(where: { $0 is JobsDebugMenuVC }) {
-                menuControllers.setObject(existingMenu as? JobsDebugMenuVC, forKey: hostWindow)
+            if let existingMenu = navigation.viewControllers.first(where: {
+                $0 is JobsDebugMenuVC
+            }) {
+                menuControllers.setObject(existingMenu as? JobsDebugMenuVC,
+                                          forKey: hostWindow)
                 navigation.popToViewControllerByAnimated(existingMenu)
             } else {
-                menuControllers.setObject(menu, forKey: hostWindow)
+                menuControllers.setObject(menu,
+                                          forKey: hostWindow)
                 navigation.pushViewControllerByAnimated(menu)
             }
         } else {
-            menuControllers.setObject(menu, forKey: hostWindow)
+            menuControllers.setObject(menu,
+                                      forKey: hostWindow)
             let navigation = UINavigationController.jobsMake { navigation in
                 navigation
                     .byViewControllers([JobsDebugNavigationRootVC()])
@@ -221,7 +259,8 @@ public final class JobsDebugPanel {
                 navigation.jobsDebugFollowTheme()
             }
             // 等临时容器挂载完成再 push，兼容宿主的安全转场闸门。
-            navigation.byPresent(source, animated: true) { [weak navigation] in
+            navigation.byPresent(source,
+                                 animated: true) { [weak navigation] in
                 guard let navigation else {
                     return
                 }
@@ -247,7 +286,9 @@ public final class JobsDebugPanel {
     }
 
     func select(_ environment: JobsDebugEnvironment) {
-        guard environments.contains(where: { $0 === environment }), environment.url != nil else {
+        guard environments.contains(where: {
+            $0 === environment
+        }), environment.url != nil else {
             return
         }
         selectedEnvironment = environment
@@ -255,16 +296,20 @@ public final class JobsDebugPanel {
     }
 
     private func apply(_ environment: JobsDebugEnvironment) {
-        UserDefaults.standard.set(environment.urlString, forKey: selectedURLKey)
+        UserDefaults.standard.set(environment.urlString,
+                                  forKey: selectedURLKey)
         environmentDidChange?(environment)
-        NotificationCenter.default.post(name: Self.environmentDidChangeNotification, object: environment)
+        NotificationCenter.default.post(name: Self.environmentDidChangeNotification,
+                                        object: environment)
     }
 
     private func refreshWindows() {
-        guard started, !hiddenForCurrentLaunch else {
+        guard started, !floatingEntryHidden else {
             return
         }
-        let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+        let scenes = UIApplication.shared.connectedScenes.compactMap {
+            $0 as? UIWindowScene
+        }
         for scene in scenes {
             let identifier = scene.session.persistentIdentifier
             guard scene.activationState == .foregroundActive else {
@@ -274,8 +319,12 @@ public final class JobsDebugPanel {
             let candidates = scene.windows.filter {
                 !($0 is JobsDebugOverlayWindow) && !$0.isHidden && $0.rootViewController != nil
             }
-            guard let host = candidates.first(where: { $0.isKeyWindow })
-                    ?? candidates.first(where: { $0.windowLevel == .normal }) else {
+            guard let host = candidates.first(where: {
+                $0.isKeyWindow
+            })
+                ?? candidates.first(where: {
+                $0.windowLevel == .normal
+            }) else {
                 continue
             }
             if let overlay = overlayWindows[identifier] {
@@ -283,7 +332,8 @@ public final class JobsDebugPanel {
                     .byHostWindow(host)
                     .byHidden(false)
             } else {
-                let overlay = JobsDebugOverlayWindow.make(scene: scene, host: host)
+                let overlay = JobsDebugOverlayWindow.make(scene: scene,
+                                                          host: host)
                     .byRootViewController(JobsDebugButtonVC())
                     .byWindowLevel(.alert + 100)
                     .byBackgroundColor(JobsCor.clear)
@@ -329,12 +379,35 @@ public final class JobsDebugPanel {
                   let window = view.window,
                   !view.isHidden,
                   view.alpha > 0,
-                  view.convert(view.bounds, to: window).intersects(window.bounds) else {
+                  view.convert(view.bounds,
+                               to: window).intersects(window.bounds) else {
                 continue
             }
             return topController(from: child)
         }
         return controller
+    }
+}
+
+private extension UIApplication {
+
+    static let jobsDebugPanelShakeHook: Void = {
+        guard let original = class_getInstanceMethod(UIApplication.self,
+                                                     #selector(UIApplication.sendEvent(_:))),
+              let replacement = class_getInstanceMethod(UIApplication.self,
+                                                        #selector(UIApplication.jobsDebugPanelSendEvent(_:))) else {
+            return
+        }
+        method_exchangeImplementations(original,
+                                       replacement)
+    }()
+
+    @objc func jobsDebugPanelSendEvent(_ event: UIEvent) {
+        if event.type == .motion, event.subtype == .motionShake {
+            JobsDebugPanel.shared.showOnShake()
+        }
+        // 保留 UIKit 的完整事件传递，不改变业务页面或输入框的第一响应者。
+        jobsDebugPanelSendEvent(event)
     }
 }
 #endif

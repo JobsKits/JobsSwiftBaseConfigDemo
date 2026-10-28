@@ -15,8 +15,11 @@ import JobsByUIKit
 import SnapKit
 
 /// 系统菊花刷新插件。
-public final class JobsSystemRefreshView: UIView, JobsRefreshAnimatorProtocol {
-    public private(set) var indicatorSize = CGSize(width: 20, height: 20)
+public final class JobsSystemRefreshView: UIView,
+                                          JobsRefreshAnimatorProtocol {
+
+    public private(set) var indicatorSize = CGSize(width: 20,
+                                                   height: 20)
 
     private let indicatorView: UIActivityIndicatorView = {
         let style: UIActivityIndicatorView.Style
@@ -24,7 +27,8 @@ public final class JobsSystemRefreshView: UIView, JobsRefreshAnimatorProtocol {
             style = .medium
         } else {
             style = .gray
-        };return UIActivityIndicatorView(style: style)
+        }
+        return UIActivityIndicatorView(style: style)
             .byHidesWhenStopped(true)
     }()
 
@@ -50,10 +54,8 @@ public final class JobsSystemRefreshView: UIView, JobsRefreshAnimatorProtocol {
 
     @discardableResult
     public func byIndicatorSize(_ indicatorSize: CGSize) -> Self {
-        self.indicatorSize = CGSize(
-            width: max(1, indicatorSize.width),
-            height: max(1, indicatorSize.height)
-        )
+        self.indicatorSize = CGSize(width: max(1,indicatorSize.width),
+                                    height: max(1,indicatorSize.height))
         invalidateIntrinsicContentSize()
         return self
     }

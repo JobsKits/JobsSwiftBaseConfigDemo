@@ -14,14 +14,17 @@ import UIKit
 import JobsSwiftBlock
 
 private struct JobsConfirmKeys {
+
     static var confirm: UInt8 = 0
     static var cancel:  UInt8 = 0
 }
 
 extension UIView {
+
     public var confirmHandler: jobsByVoidBlock? {
         get {
-            objc_getAssociatedObject(self, &JobsConfirmKeys.confirm) as? jobsByVoidBlock
+            objc_getAssociatedObject(self,
+                                     &JobsConfirmKeys.confirm) as? jobsByVoidBlock
         }
         set {
             objc_setAssociatedObject(self,
@@ -33,7 +36,8 @@ extension UIView {
 
     public var cancelHandler: jobsByVoidBlock? {
         get {
-            objc_getAssociatedObject(self, &JobsConfirmKeys.cancel) as? jobsByVoidBlock
+            objc_getAssociatedObject(self,
+                                     &JobsConfirmKeys.cancel) as? jobsByVoidBlock
         }
         set {
             objc_setAssociatedObject(self,

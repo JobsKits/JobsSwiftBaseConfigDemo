@@ -10,6 +10,7 @@ import JobsSwiftBlock
 import JobsSwiftDSL
 
 extension NumberFormatter {
+
     /// 统一入口：NumberFormatter.make { $0.byNumberStyle(...).byLocale(...) }
     public static func make(_ configure: jobsByNumberFormatterBlock) -> NumberFormatter {
         let formatter = NumberFormatter()

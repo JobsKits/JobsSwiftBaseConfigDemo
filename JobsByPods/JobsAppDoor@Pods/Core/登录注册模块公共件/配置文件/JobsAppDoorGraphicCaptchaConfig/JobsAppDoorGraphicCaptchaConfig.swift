@@ -9,6 +9,7 @@ import Foundation
 import JobsSwiftGraphicCaptcha
 
 public struct JobsAppDoorGraphicCaptchaCharacterType: OptionSet {
+
     public let rawValue: Int
 
     public init(rawValue: Int) {
@@ -23,22 +24,25 @@ public struct JobsAppDoorGraphicCaptchaCharacterType: OptionSet {
 }
 
 public struct JobsAppDoorGraphicCaptchaConfig {
+
     public var length: Int
     public var caseSensitive: Bool
     public var characterTypes: JobsAppDoorGraphicCaptchaCharacterType
 
-    public init(
-        length: Int = 4,
-        caseSensitive: Bool = true,
-        characterTypes: JobsAppDoorGraphicCaptchaCharacterType = .default
-    ) {
+    public init(length: Int = 4,
+                caseSensitive: Bool = true,
+                characterTypes: JobsAppDoorGraphicCaptchaCharacterType = .default) {
         self.length = length
         self.caseSensitive = caseSensitive
         self.characterTypes = characterTypes
     }
 
-    public static var defaultConfig: Self { Self() }
-    public static var numberAndEnglishConfig: Self { .defaultConfig }
+    public static var defaultConfig: Self {
+        Self()
+    }
+    public static var numberAndEnglishConfig: Self {
+        .defaultConfig
+    }
     public static var numberAndChineseConfig: Self {
         Self(characterTypes: [.number, .chinese])
     }
@@ -67,11 +71,10 @@ public struct JobsAppDoorGraphicCaptchaConfig {
         if units.isEmpty {
             units = .default
             groupCount = 2
-        };return JobsSwiftGraphicCaptchaConfig(
-            length: max(length, groupCount),
-            caseSensitive: caseSensitive,
-            characterUnits: units,
-            mixedGroupCount: groupCount
-        )
+        }
+        return JobsSwiftGraphicCaptchaConfig(length: max(length,groupCount),
+                                             caseSensitive: caseSensitive,
+                                             characterUnits: units,
+                                             mixedGroupCount: groupCount)
     }
 }

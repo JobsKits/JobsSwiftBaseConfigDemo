@@ -18,10 +18,12 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class FeedVideoCell: UITableViewCell {
+
     // MARK: - UI（懒加载）
     /// 播放器真正挂载到这个容器（PlayerCenter 负责把 BMPlayer 迁移到这里）
     lazy var playerHost: UIView = { [unowned self] in
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byAddTo(contentView) { make in
                 make.edges.equalToSuperview()
             }
@@ -30,7 +32,8 @@ final class FeedVideoCell: UITableViewCell {
     }()
 
     private lazy var subtitleLabel: UILabel = { [unowned self] in
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byNumberOfLines(2)
@@ -41,7 +44,8 @@ final class FeedVideoCell: UITableViewCell {
     }()
 
     private lazy var titleLabel: UILabel = { [unowned self] in
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextColor(JobsCor.white)
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byAddTo(contentView) { make in
@@ -52,7 +56,8 @@ final class FeedVideoCell: UITableViewCell {
     // MARK: - 生命周期
     override init(style: UITableViewCell.CellStyle,
                   reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        super.init(style: style,
+                   reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         contentView.byBackgroundColor(JobsCor.black)
         playerHost.byVisible(YES)
@@ -60,9 +65,12 @@ final class FeedVideoCell: UITableViewCell {
         titleLabel.byVisible(YES)
     }
 
-    required init?(coder: NSCoder) { fatalError() }
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
     // MARK: - 填充
-    func fill(nickname: String, content: String) {
+    func fill(nickname: String,
+              content: String) {
         titleLabel.byText(nickname)
         subtitleLabel.byText(content.isEmpty ? " " : content)
     }

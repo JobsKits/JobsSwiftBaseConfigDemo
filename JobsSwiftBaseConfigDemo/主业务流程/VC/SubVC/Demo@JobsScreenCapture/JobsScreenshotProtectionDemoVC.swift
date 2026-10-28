@@ -22,6 +22,7 @@ import Jobsl10n
 import SnapKit
 
 final class JobsScreenshotProtectionDemoVC: BaseVC {
+
     private let screenshotCapturer = JobsScreenshotCapturer()
 
     private lazy var protectionView: JobsScreenshotProtectionView = {
@@ -35,7 +36,8 @@ final class JobsScreenshotProtectionDemoVC: BaseVC {
     }()
 
     private lazy var sensitiveCardView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemIndigo)
             .byCornerRadius(22)
             .byAddTo(protectionView.contentView) { make in
@@ -44,9 +46,11 @@ final class JobsScreenshotProtectionDemoVC: BaseVC {
     }()
 
     private lazy var sensitiveTitleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("敏感内容安全区".tr)
-            .byFont(JobsFont.systemFont(ofSize: 22, weight: .bold))
+            .byFont(JobsFont.systemFont(ofSize: 22,
+                                        weight: .bold))
             .byTextColor(JobsCor.white)
             .byTextAlignment(.center)
             .byAddTo(sensitiveCardView) { make in
@@ -56,9 +60,11 @@ final class JobsScreenshotProtectionDemoVC: BaseVC {
     }()
 
     private lazy var sensitiveValueLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("账号：Jobs\n授权码：2026-0721-DEMO".tr)
-            .byFont(JobsFont.monospacedSystemFont(ofSize: 17, weight: .semibold))
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 17,
+                                                  weight: .semibold))
             .byTextColor(JobsCor.white)
             .byTextAlignment(.center)
             .byNumberOfLines(0)
@@ -69,8 +75,10 @@ final class JobsScreenshotProtectionDemoVC: BaseVC {
     }()
 
     private lazy var protectionStateLabel: UILabel = {
-        UILabel.jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 14,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
             .byNumberOfLines(0)
@@ -83,7 +91,8 @@ final class JobsScreenshotProtectionDemoVC: BaseVC {
     private lazy var toggleProtectionButton: UIButton = {
         UIButton.sys()
             .byTitleColor(JobsCor.systemBlue)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .semibold))
             .onTap { [weak self] _ in
                 self?.toggleProtection()
             }
@@ -97,12 +106,17 @@ final class JobsScreenshotProtectionDemoVC: BaseVC {
     private lazy var activeCaptureButton: UIButton = {
         let button = UIButton.sys()
             .byTitle("点击截屏并保存到相册".tr)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .semibold))
             .byTitleColor(JobsCor.white)
-            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
+            .byBackgroundColor(JobsCor.systemBlue,
+                               for: .normal)
             .byCornerRadius(10)
             .byMasksToBounds(true)
-            .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 18, bottom: 10, right: 18))
+            .byContentEdgeInsets(UIEdgeInsets(top: 10,
+                                              left: 18,
+                                              bottom: 10,
+                                              right: 18))
             .onTap { [weak self] _ in
                 self?.captureCurrentScreen()
             }
@@ -117,7 +131,8 @@ final class JobsScreenshotProtectionDemoVC: BaseVC {
                     background.cornerRadius = 10
                 }
             }
-        };return button
+        }
+        return button
     }()
 
     override func viewDidLoad() {

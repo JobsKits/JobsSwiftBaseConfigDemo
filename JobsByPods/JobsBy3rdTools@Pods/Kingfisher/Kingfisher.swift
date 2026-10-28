@@ -14,10 +14,16 @@ import UIKit
 #if canImport(Kingfisher)
 import Kingfisher
 extension UIImageView {
+
     @discardableResult
-    public func byKfLocalGIF(_ url: URL, fallback: UIImage? = nil) -> Self {
-        guard url.isFileURL else { self.image = fallback; return self}
-        kf.setImage(with: url, placeholder: fallback)
+    public func byKfLocalGIF(_ url: URL,
+                             fallback: UIImage? = nil) -> Self {
+        guard url.isFileURL else {
+            self.image = fallback
+            return self
+        }
+        kf.setImage(with: url,
+                    placeholder: fallback)
         return self
     }
 }

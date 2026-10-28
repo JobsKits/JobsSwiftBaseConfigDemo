@@ -12,17 +12,17 @@ import UIKit
 import JobsByUIKit
 
 public final class JobsOpen: NSObject {
+
     public static let shared = JobsOpen()
 
     @MainActor
-    public func open(
-        _ configuration: JobsOpenConfiguration = JobsOpenConfiguration(),
-        from sourceViewController: UIViewController? = nil
-    ) {
+    public func open(_ configuration: JobsOpenConfiguration = JobsOpenConfiguration(),
+                     from sourceViewController: UIViewController? = nil) {
         switch configuration.mode {
         /// 处理 .inApp 分支
         case .inApp:
-            openInsideApp(configuration, from: sourceViewController)
+            openInsideApp(configuration,
+                          from: sourceViewController)
         /// 处理 .externalBrowser 分支
         case .externalBrowser:
             openInExternalBrowser(configuration)
@@ -30,26 +30,24 @@ public final class JobsOpen: NSObject {
     }
 
     @MainActor
-    private func openInsideApp(
-        _ configuration: JobsOpenConfiguration,
-        from sourceViewController: UIViewController?
-    ) {
+    private func openInsideApp(_ configuration: JobsOpenConfiguration,
+                               from sourceViewController: UIViewController?) {
         let source = sourceViewController ?? topViewController()
         guard let source else {
             configuration.completion?(false)
             return
         }
-        let webViewController = JobsOpenWebViewController(
-            url: configuration.url,
-            pageTitle: configuration.title,
-            pageLoadCompletion: configuration.pageLoadCompletion
-        )
+        let webViewController = JobsOpenWebViewController(url: configuration.url,
+                                                          pageTitle: configuration.title,
+                                                          pageLoadCompletion: configuration.pageLoadCompletion)
         if let navigationController = source.navigationController {
-            navigationController.pushViewController(webViewController, animated: configuration.animated)
+            navigationController.pushViewController(webViewController,
+                                                    animated: configuration.animated)
         } else {
             let navigationController = UINavigationController(rootViewController: webViewController)
             navigationController.byModalPresentationStyle(.fullScreen)
-            source.present(navigationController, animated: configuration.animated)
+            source.present(navigationController,
+                           animated: configuration.animated)
         }
         configuration.completion?(true)
     }
@@ -60,10 +58,8 @@ public final class JobsOpen: NSObject {
             configuration.completion?(false)
             return
         }
-        UIApplication.shared.open(
-            configuration.url,
-            options: [:],
-            completionHandler: configuration.completion
-        )
+        UIApplication.shared.open(configuration.url,
+                                  options: [:],
+                                  completionHandler: configuration.completion)
     }
 }

@@ -26,17 +26,25 @@ import GKNavigationBarSwift
 ///   3) 长按主按钮：进入 highlighted（看 highlighted 背景色）
 
 final class UIButtonBackgroundColorDemoVC: BaseVC {
+
     // MARK: - UI
     private lazy var exampleButton: UIButton = {
         UIButton.sys()
-            .byTitle("Hi", for: .normal)
-            .byTitle("Selected（再点切回）".tr, for: .selected)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
-            /// ✅ 核心：按 state 设置背景色
-            .byTitleColor(JobsCor.yellow, for: .normal)
-            .byTitleColor(JobsCor.red, for: .disabled)
-            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
-            .byBackgroundColor(JobsCor.systemGray, for: .disabled)
+            .byTitle("Hi",
+                     for: .normal)
+            .byTitle("Selected（再点切回）".tr,
+                     for: .selected)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .semibold))
+        /// ✅ 核心：按 state 设置背景色
+        .byTitleColor(JobsCor.yellow,
+                      for: .normal)
+            .byTitleColor(JobsCor.red,
+                          for: .disabled)
+            .byBackgroundColor(JobsCor.systemGreen,
+                               for: .normal)
+            .byBackgroundColor(JobsCor.systemGray,
+                               for: .disabled)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(50)
@@ -52,15 +60,22 @@ final class UIButtonBackgroundColorDemoVC: BaseVC {
 
     private lazy var toggleEnabledButton: UIButton = {
         UIButton.sys()
-            .byTitle("切换 isEnabled".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
-            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
-            .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.7), for: .highlighted)
+            .byTitle("切换 isEnabled".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .medium))
+            .byBackgroundColor(JobsCor.systemBlue,
+                               for: .normal)
+            .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.7),
+                               for: .highlighted)
             .byCornerRadius(10)
             .byMasksToBounds(true)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.exampleButton.byEnabled(self.exampleButton.jobs_effectiveState == .disabled)
             }
             .byAddTo(view) { [unowned self] make in

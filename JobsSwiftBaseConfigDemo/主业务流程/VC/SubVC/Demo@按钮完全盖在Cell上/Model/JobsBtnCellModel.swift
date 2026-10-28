@@ -17,6 +17,7 @@ import JobsSwiftBaseDefines
 /// Model
 
 struct JobsBtnCellModel {
+
     // MARK: - 主标题
     let title: String?
     let titleSelected: String?
@@ -67,15 +68,19 @@ struct JobsBtnCellModel {
         // MARK: - 主标题
         title: String? = "",
         titleSelected: String? = "",
-        titleFont: UIFont? = JobsFont.systemFont(ofSize: 14, weight: .semibold),
-        titleFontSelected: UIFont? = JobsFont.systemFont(ofSize: 14, weight: .semibold),
+        titleFont: UIFont? = JobsFont.systemFont(ofSize: 14,
+                                                 weight: .semibold),
+        titleFontSelected: UIFont? = JobsFont.systemFont(ofSize: 14,
+                                                         weight: .semibold),
         titleCor: UIColor? = JobsCor.black,
         titleCorSelected: UIColor? = JobsCor.black,
         // MARK: - 副标题
         subTitle: String? = "",
         subTitleSelected: String? = "",
-        subTitleFont: UIFont? = JobsFont.systemFont(ofSize: 12, weight: .semibold),
-        subTitleFontSelected: UIFont? = JobsFont.systemFont(ofSize: 12, weight: .semibold),
+        subTitleFont: UIFont? = JobsFont.systemFont(ofSize: 12,
+                                                    weight: .semibold),
+        subTitleFontSelected: UIFont? = JobsFont.systemFont(ofSize: 12,
+                                                            weight: .semibold),
         subTitleCor: UIColor? = JobsCor.black,
         subTitleCorSelected: UIColor? = JobsCor.black,
         // MARK: - 前景色
@@ -108,8 +113,7 @@ struct JobsBtnCellModel {
         selected: Bool = false,
         highlighted: Bool = false,
         userInteractionEnabled: Bool = false,
-        enabled: Bool = false
-    ) {
+        enabled: Bool = false) {
         // MARK: - 主标题
         self.title = title
         self.titleSelected = titleSelected

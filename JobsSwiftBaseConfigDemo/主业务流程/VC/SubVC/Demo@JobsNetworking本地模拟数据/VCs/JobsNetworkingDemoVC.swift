@@ -24,17 +24,17 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsNetworkingDemoVC: BaseVC {
+
     private var dataSources: [MethodDemoItem] = MethodType.allCases.map {
-        MethodDemoItem(
-            title: $0.title,
-            subTitle: $0.subTitle,
-            methodType: $0,
-            path: $0.path
-        )
+        MethodDemoItem(title: $0.title,
+                       subTitle: $0.subTitle,
+                       methodType: $0,
+                       path: $0.path)
     }
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byRegisterCell(MethodTBVCell.self)
             .byBackgroundColor(JobsCor.systemGroupedBackground)
             .byNoContentInsetAdjustment()
@@ -43,28 +43,42 @@ final class JobsNetworkingDemoVC: BaseVC {
             .byContentInsetTop(8)
             .byExpandVerticalScrollDistance(200.h)
             .byTableHeaderView(
-                UIView.jobsMake { _ in }
-                    .byHeight(8)
-                    .byBackgroundColor(JobsCor.clear)
-            )
+            UIView
+                .jobsMake { _ in }
+                .byHeight(8)
+                .byBackgroundColor(JobsCor.clear)
+        )
             .byTarget(self)
             .numberOfRowsInSection { [weak self] (_, _, _) -> Int in
-                guard let self else { return 0 };return self.dataSources.count
+                guard let self else {
+                    return 0
+                }
+                return self.dataSources.count
             }
             .cellForRowAt { [weak self] _, tv, indexPath in
-                guard let self else { return UITableViewCell.jobsMake { _ in } };return tv
-                    .byDequeueReusableCell(withType: MethodTBVCell.self, for: indexPath)
+                guard let self else {
+                    return UITableViewCell.jobsMake { _ in }
+                }
+                return tv
+                    .byDequeueReusableCell(withType: MethodTBVCell.self,
+                                           for: indexPath)
                     .byData(self.dataSources[indexPath.row])
             }
             .didSelectRowAt { [weak self] _, tv, indexPath in
-                guard let self else { return }
-                tv.deselectRow(at: indexPath, animated: true)
-                self.makeDetailVC(with: self.dataSources[indexPath.row]).byPush(self)
+                guard let self else {
+                    return
+                }
+                tv.deselectRow(at: indexPath,
+                               animated: true)
+                self.makeDetailVC(with: self.dataSources[indexPath.row])
+                    .byPush(self)
             }
             .byEmptyViewProvider { [unowned self] in
                 JobsEmptyView()
                     .byOnTapRetry { [weak self] in
-                        guard let self else { return }
+                        guard let self else {
+                            return
+                        }
                         self.loadCatalog()
                     }
             }
@@ -78,13 +92,17 @@ final class JobsNetworkingDemoVC: BaseVC {
             .byRefreshHeader(component: JobsDefaultHeader(),
                              container: self,
                              trigger: 66) { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.loadCatalog(isRefresh: true)
             }
             .byRefreshFooter(component: JobsDefaultFooter(),
                              container: self,
                              trigger: 66) { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainSync {
                     self.tableView.switchRefreshFooter(to: .noMoreData)
                 }
@@ -104,24 +122,29 @@ final class JobsNetworkingDemoVC: BaseVC {
         jobsSetupGKNav(title: "JobsNetworking@本地模拟数据（iOS模拟器可看数据，真机无法）".tr)
         view.byBackgroundColor(JobsCor.systemBackground)
         tableView.byVisible(YES)
-//        loadCatalog()
+    //        loadCatalog()
     }
 }
 
 extension JobsNetworkingDemoVC {
+
     private func loadCatalog(isRefresh: Bool = false) {
         Task {
             do {
                 let items = try await DemoService.shared.loadCatalog()
                 onMainSync { [weak self] in
-                    guard let self else { return }
+                    guard let self else {
+                        return
+                    }
                     self.dataSources = items
                     self.tableView.byReloadData()
                     self.endRefreshing()
                 }
             } catch {
                 onMainSync { [weak self] in
-                    guard let self else { return }
+                    guard let self else {
+                        return
+                    }
                     self.endRefreshing()
                     "目录加载失败：\(error.localizedDescription)".toast
                     self.tableView.byReloadData()
@@ -138,19 +161,26 @@ extension JobsNetworkingDemoVC {
     private func makeDetailVC(with item: MethodDemoItem) -> UIViewController {
         switch item.methodType {
         /// 处理 .get 分支
-        case .get: JobsNetworkingGetDemoVC(item: item)
+        case .get:
+            JobsNetworkingGetDemoVC(item: item)
         /// 处理 .post 分支
-        case .post: JobsNetworkingPostDemoVC(item: item)
+        case .post:
+            JobsNetworkingPostDemoVC(item: item)
         /// 处理 .put 分支
-        case .put: JobsNetworkingPutDemoVC(item: item)
+        case .put:
+            JobsNetworkingPutDemoVC(item: item)
         /// 处理 .patch 分支
-        case .patch: JobsNetworkingPatchDemoVC(item: item)
+        case .patch:
+            JobsNetworkingPatchDemoVC(item: item)
         /// 处理 .delete 分支
-        case .delete: JobsNetworkingDeleteDemoVC(item: item)
+        case .delete:
+            JobsNetworkingDeleteDemoVC(item: item)
         /// 处理 .upload 分支
-        case .upload: JobsNetworkingUploadDemoVC(item: item)
+        case .upload:
+            JobsNetworkingUploadDemoVC(item: item)
         /// 处理 .download 分支
-        case .download: JobsNetworkingDownloadDemoVC(item: item)
+        case .download:
+            JobsNetworkingDownloadDemoVC(item: item)
         }
     }
 }

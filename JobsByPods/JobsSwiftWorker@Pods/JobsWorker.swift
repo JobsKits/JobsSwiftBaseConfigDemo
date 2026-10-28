@@ -7,7 +7,9 @@
 
 import Foundation
 
-public final class JobsWorker: JobsWorkerDisposable, @unchecked Sendable {
+public final class JobsWorker: JobsWorkerDisposable,
+                               @unchecked Sendable {
+
     public let id: UUID = UUID()
     public let mode: JobsWorkerMode
     public let label: String?
@@ -65,6 +67,7 @@ public final class JobsWorker: JobsWorkerDisposable, @unchecked Sendable {
 }
 
 public final class JobsWorkerBag {
+
     private let lock = NSLock()
     private var workers: [UUID: JobsWorkerDisposable] = [:]
 
@@ -72,7 +75,10 @@ public final class JobsWorkerBag {
 
     public var count: Int {
         lock.lock()
-        defer { lock.unlock() };return workers.count
+        defer {
+            lock.unlock()
+        }
+        return workers.count
     }
 
     public func insert(_ worker: JobsWorkerDisposable) {
@@ -87,7 +93,9 @@ public final class JobsWorkerBag {
         snapshot = Array(workers.values)
         workers.removeAll()
         lock.unlock()
-        snapshot.forEach { $0.dispose() }
+        snapshot.forEach {
+            $0.dispose()
+        }
     }
 
     deinit {
@@ -96,6 +104,7 @@ public final class JobsWorkerBag {
 }
 
 public extension JobsWorkerDisposable {
+
     @discardableResult
     func store(in bag: JobsWorkerBag) -> Self {
         bag.insert(self)

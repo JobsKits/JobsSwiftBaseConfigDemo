@@ -8,6 +8,7 @@
 import UIKit
 
 public extension UIView {
+
     @discardableResult
     func byAccessibilityLabel(_ label: String?) -> Self {
         accessibilityLabel = label

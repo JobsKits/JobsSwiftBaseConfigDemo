@@ -20,9 +20,11 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class TransparentRegionVC: BaseVC {
+
     private let horizontalInset: CGFloat = 16
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("iOS-UIView设置阴影效果".tr)
             .byTextAlignment(.center)
             .byNumberOfLines(0)
@@ -44,9 +46,10 @@ final class TransparentRegionVC: BaseVC {
 
     private lazy var overlayView: HollowOverlayView = {
         HollowOverlayView()
-            .byOverlayColor(JobsCor.label, alpha: 0.5)
+            .byOverlayColor(JobsCor.label,
+                            alpha: 0.5)
             .byHoleShape(.oval) // 想要圆角矩形：.roundedRect(12)
-            .byAddTo(view) { make in
+        .byAddTo(view) { make in
                 make.edges.equalToSuperview()
             }
     }()
@@ -61,13 +64,15 @@ final class TransparentRegionVC: BaseVC {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let size: CGFloat = min(200, view.safeAreaLayoutGuide.layoutFrame.width)
+        let size: CGFloat = min(200,
+                                view.safeAreaLayoutGuide.layoutFrame.width)
         let x = view.safeAreaLayoutGuide.layoutFrame.midX - size * 0.5
         let y = view.safeAreaInsets.top + 60
-        overlayView.holeRect = CGRect(x: x, y: y, width: size, height: size)
-        titleLabel.layer.shadowPath = UIBezierPath.make(
-            roundedRect: titleLabel.bounds,
-            cornerRadius: 9
-        ).cgPath
+        overlayView.holeRect = CGRect(x: x,
+                                      y: y,
+                                      width: size,
+                                      height: size)
+        titleLabel.layer.shadowPath = UIBezierPath.make(roundedRect: titleLabel.bounds,
+                                                        cornerRadius: 9).cgPath
     }
 }

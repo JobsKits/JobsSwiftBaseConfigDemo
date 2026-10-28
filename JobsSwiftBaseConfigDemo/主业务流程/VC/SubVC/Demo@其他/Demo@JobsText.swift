@@ -24,6 +24,7 @@ import GKNavigationBarSwift
 /// 如果项目有 BaseVC，则可改为继承 BaseVC
 
 final class JobsTextDemoVC: BaseVC {
+
     // MARK: - 模型
     private var current: JobsText = "Hello, JobsText!"
     private var history: [JobsText] = []
@@ -32,10 +33,12 @@ final class JobsTextDemoVC: BaseVC {
         UISegmentedControl(items: ["纯文本", "富文本样例"])
             .bySelectedSegmentIndex(0)
             .onJobsTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onSourceChanged()
             }
-            .byAddTo(view) {[unowned self] make in
+            .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
                     make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
                 } else {
@@ -47,7 +50,8 @@ final class JobsTextDemoVC: BaseVC {
     }()
 
     private lazy var previewLabel: UILabel = { [unowned self] in
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byNumberOfLines(0)
             .byAddTo(view) { make in
                 make.top.equalTo(self.sourceControl.snp.bottom).offset(12)
@@ -56,7 +60,8 @@ final class JobsTextDemoVC: BaseVC {
     }()
 
     private lazy var rawLabel: UILabel = { [unowned self] in
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byTextColor(JobsCor.secondaryLabel)
@@ -68,10 +73,11 @@ final class JobsTextDemoVC: BaseVC {
 
     private lazy var boldBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("加粗".tr, for: .normal)
+            .byTitle("加粗".tr,
+                     for: .normal)
             .onTap(jobs_weakify(self) { me, _ in
-                me.onBold()
-            })
+            me.onBold()
+        })
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.rawLabel.snp.bottom).offset(12)
                 make.left.equalToSuperview().inset(16)
@@ -81,8 +87,11 @@ final class JobsTextDemoVC: BaseVC {
 
     private lazy var redBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("红色".tr, for: .normal)
-            .onTap { [weak self] _ in self?.onRed() }
+            .byTitle("红色".tr,
+                     for: .normal)
+            .onTap { [weak self] _ in
+                self?.onRed()
+            }
             .byAddTo(view) { make in
                 make.centerY.equalTo(self.boldBtn)
                 make.left.equalTo(self.boldBtn.snp.right).offset(10)
@@ -92,8 +101,11 @@ final class JobsTextDemoVC: BaseVC {
 
     private lazy var appendBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("拼接“ +World”".tr, for: .normal)
-            .onTap { [weak self] _ in self?.onAppend() }
+            .byTitle("拼接“ +World”".tr,
+                     for: .normal)
+            .onTap { [weak self] _ in
+                self?.onAppend()
+            }
             .byAddTo(view) { make in
                 make.centerY.equalTo(self.boldBtn)
                 make.left.equalTo(self.redBtn.snp.right).offset(10)
@@ -103,8 +115,11 @@ final class JobsTextDemoVC: BaseVC {
 
     private lazy var resetBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("还原".tr, for: .normal)
-            .onTap { [weak self] _ in self?.onReset() }
+            .byTitle("还原".tr,
+                     for: .normal)
+            .onTap { [weak self] _ in
+                self?.onReset()
+            }
             .byAddTo(view) { make in
                 make.centerY.equalTo(self.boldBtn)
                 make.left.equalTo(self.appendBtn.snp.right).offset(10)
@@ -114,8 +129,11 @@ final class JobsTextDemoVC: BaseVC {
 
     private lazy var exportRTFBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("导出为 RTF".tr, for: .normal)
-            .onTap { [weak self] _ in self?.onExportRTF() }
+            .byTitle("导出为 RTF".tr,
+                     for: .normal)
+            .onTap { [weak self] _ in
+                self?.onExportRTF()
+            }
             .byAddTo(view) { make in
                 make.top.equalTo(self.boldBtn.snp.bottom).offset(10)
                 make.left.equalToSuperview().inset(16)
@@ -125,8 +143,11 @@ final class JobsTextDemoVC: BaseVC {
 
     private lazy var importRTFBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("从 RTF 导入".tr, for: .normal)
-            .onTap { [weak self] _ in self?.onImportRTF() }
+            .byTitle("从 RTF 导入".tr,
+                     for: .normal)
+            .onTap { [weak self] _ in
+                self?.onImportRTF()
+            }
             .byAddTo(view) { make in
                 make.centerY.equalTo(self.exportRTFBtn)
                 make.left.equalTo(self.exportRTFBtn.snp.right).offset(10)
@@ -135,16 +156,18 @@ final class JobsTextDemoVC: BaseVC {
     }()
 
     private lazy var debugTextView: UITextView = { [unowned self] in
-        UITextView.jobsMake { _ in }
+        UITextView
+            .jobsMake { _ in }
             .byEditable(false)
-            .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 12,
+                                                  weight: .regular))
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(8)
-            .byAddTo(view) {[unowned self] make in
+            .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.exportRTFBtn.snp.bottom).offset(12)
                 make.left.right.equalToSuperview().inset(16)
                 make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).inset(12)
-        }
+            }
     }()
 
     // MARK: - 生命周期
@@ -220,10 +243,11 @@ final class JobsTextDemoVC: BaseVC {
             <b><i>HTML</i> 导入</b> · <span style="color:#e53935">Red</span> + <span style="color:#1e88e5">Blue</span>
             """
             if let data = html.data(using: .utf8),
-               let restored = JobsText.from(data: data, options: [
-                   .documentType: NSAttributedString.DocumentType.html,
-                   .characterEncoding: String.Encoding.utf8.rawValue
-               ]) {
+               let restored = JobsText.from(data: data,
+                                            options: [
+                    .documentType: NSAttributedString.DocumentType.html,
+                    .characterEncoding: String.Encoding.utf8.rawValue
+                ]) {
                 current = restored
                 "已从 HTML 恢复".tr.toast
                 refresh()
@@ -244,17 +268,20 @@ final class JobsTextDemoVC: BaseVC {
     // MARK: - 辅助
     private func makeSampleAttributed() -> JobsText {
         let m = NSMutableAttributedString(string: "Hello, ")
-        m.append(NSAttributedString(string: "Rich", attributes: [
-            .font: JobsFont.boldSystemFont(ofSize: 22),
-            .foregroundColor: JobsCor.systemBlue
-        ]))
-        m.append(NSAttributedString(string: "Text", attributes: [
-            .font: JobsFont.italicSystemFont(ofSize: 22),
-            .foregroundColor: JobsCor.systemPink
-        ]))
-        m.append(NSAttributedString(string: " ✨", attributes: [
-            .baselineOffset: 2
-        ]))
+        m.append(NSAttributedString(string: "Rich",
+                                    attributes: [
+                    .font: JobsFont.boldSystemFont(ofSize: 22),
+                    .foregroundColor: JobsCor.systemBlue
+                ]))
+        m.append(NSAttributedString(string: "Text",
+                                    attributes: [
+                    .font: JobsFont.italicSystemFont(ofSize: 22),
+                    .foregroundColor: JobsCor.systemPink
+                ]))
+        m.append(NSAttributedString(string: " ✨",
+                                    attributes: [
+                    .baselineOffset: 2
+                ]))
         return JobsText(m)
     }
 
@@ -265,8 +292,10 @@ final class JobsTextDemoVC: BaseVC {
         lines.append("length: \(a.length)")
         lines.append("string: \"\(a.string)\"")
         lines.append("attributes:")
-        a.enumerateAttributes(in: NSRange(location: 0, length: a.length), options: []) { attrs, range, _ in
+        a.enumerateAttributes(in: NSRange(location: 0, length: a.length),
+                              options: []) { attrs, range, _ in
             lines.append("  - range: \(range.location)..<\(range.location + range.length), attrs: \(attrs)")
-        };return lines.joined(separator: "\n")
+        }
+        return lines.joined(separator: "\n")
     }
 }

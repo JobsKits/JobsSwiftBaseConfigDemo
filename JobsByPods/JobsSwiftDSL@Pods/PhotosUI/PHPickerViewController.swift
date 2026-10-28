@@ -17,6 +17,7 @@ import PhotosUI
 @available(watchOS, unavailable)
 @available(tvOS, unavailable)
 extension PHPickerViewController {
+
     // MARK: - Delegate
     /// 设置 `PHPickerViewControllerDelegate`
     ///
@@ -57,10 +58,8 @@ extension PHPickerViewController {
     /// picker.byAddTo(self, in: view)
     /// ```
     @discardableResult
-    public func byAddTo(
-        _ parent: UIViewController,
-        in containerView: UIView
-    ) -> Self {
+    public func byAddTo(_ parent: UIViewController,
+                        in containerView: UIView) -> Self {
         parent.addChild(self)
         containerView.addSubview(view)
         didMove(toParent: parent)
@@ -75,10 +74,8 @@ extension PHPickerViewController {
     /// }
     /// ```
     @discardableResult
-    public func byAddTo(
-        _ parent: UIViewController,
-        layout: (PHPickerViewController) -> Void
-    ) -> Self {
+    public func byAddTo(_ parent: UIViewController,
+                        layout: (PHPickerViewController) -> Void) -> Self {
         parent.addChild(self)
         parent.view.addSubview(view)
         layout(self)
@@ -88,23 +85,25 @@ extension PHPickerViewController {
     // MARK: - Present
     /// 由指定控制器 present 当前 picker
     @discardableResult
-    public func byPresent(
-        from presenter: UIViewController,
-        animated: Bool = true,
-        completion: (() -> Void)? = nil
-    ) -> Self {
-        presenter.present(self, animated: animated, completion: completion)
+    public func byPresent(from presenter: UIViewController,
+                          animated: Bool = true,
+                          completion: (() -> Void)? = nil) -> Self {
+        presenter.present(self,
+                          animated: animated,
+                          completion: completion)
         return self
     }
     /// 若传入 presenter 不为空，则 present 当前 picker
     @discardableResult
-    public func byPresent(
-        from presenter: UIViewController?,
-        animated: Bool = true,
-        completion: (() -> Void)? = nil
-    ) -> Self {
-        guard let presenter else { return self }
-        presenter.present(self, animated: animated, completion: completion)
+    public func byPresent(from presenter: UIViewController?,
+                          animated: Bool = true,
+                          completion: (() -> Void)? = nil) -> Self {
+        guard let presenter else {
+            return self
+        }
+        presenter.present(self,
+                          animated: animated,
+                          completion: completion)
         return self
     }
 }

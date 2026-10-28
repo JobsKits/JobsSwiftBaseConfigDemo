@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 extension UISearchBar {
+
     @discardableResult
     public func byDelegate(_ delegate: UISearchBarDelegate?) -> Self {
         self.delegate = delegate

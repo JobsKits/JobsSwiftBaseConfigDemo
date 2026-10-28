@@ -10,6 +10,7 @@ import Foundation
 
 // ============================== Model ==============================
 struct LiveMsg: Hashable {
+
     let id = UUID()
     let time = Date()
     let text: String

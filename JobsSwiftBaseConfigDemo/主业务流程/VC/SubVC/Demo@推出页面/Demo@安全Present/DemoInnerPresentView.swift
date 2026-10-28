@@ -19,16 +19,20 @@ import SnapKit
 
 // MARK: - UIResponder 内触发 presentVC 示例
 final class DemoInnerPresentView: UIView {
+
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("👉 点我 (View 内触发 presentSafely)".tr)
             .byNumberOfLines(0)
             .byTextColor(JobsCor.systemGreen)
-            .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 16,
+                                        weight: .semibold))
     }()
 
     private lazy var detailLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("👆 点击绿色区域也会触发 presentSafely".tr)
             .byNumberOfLines(0)
             .byTextColor(JobsCor.secondaryLabel)
@@ -37,9 +41,9 @@ final class DemoInnerPresentView: UIView {
 
     private lazy var contentStack: UIStackView = {
         UIStackView(arrangedSubviews: [
-            titleLabel,
-            detailLabel
-        ])
+                titleLabel,
+                detailLabel
+            ])
             .byAxis(.vertical)
             .bySpacing(6)
             .byAlignment(.fill)
@@ -51,11 +55,13 @@ final class DemoInnerPresentView: UIView {
     private lazy var tapGestureRecognizer: UITapGestureRecognizer = {
         UITapGestureRecognizer
             .byConfig { [weak self] gr in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 print("Tap 触发 on: \(String(describing: gr.view))")
                 DemoDetailVC()
                     .byData("Jobs")// 字符串
-                    .onResult { name in
+            .onResult { name in
                         print("回来了 \(String(describing: name))")
                     }
                     .byPresent(self)

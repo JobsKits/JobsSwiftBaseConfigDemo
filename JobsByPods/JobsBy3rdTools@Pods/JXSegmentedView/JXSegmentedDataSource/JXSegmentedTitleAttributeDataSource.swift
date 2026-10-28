@@ -14,6 +14,7 @@ import UIKit
 #if canImport(JXSegmentedView)
 import JXSegmentedView
 extension JXSegmentedTitleAttributeDataSource {
+
     @discardableResult
     public func byTitleNumberOfLines(_ lines: Int) -> Self {
         titleNumberOfLines = lines

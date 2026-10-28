@@ -15,6 +15,7 @@ import UIKit
 import JXSegmentedView
 /// 共用：基类可链式配置
 extension JXSegmentedIndicatorBaseView {
+
     @discardableResult
     public func byIndicatorColor(_ v: UIColor) -> Self {
         indicatorColor = v

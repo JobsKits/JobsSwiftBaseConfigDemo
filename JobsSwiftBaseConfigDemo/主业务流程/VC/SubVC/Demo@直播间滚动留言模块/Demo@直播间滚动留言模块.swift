@@ -22,6 +22,7 @@ import IQKeyboardManagerSwift
 import GKNavigationBarSwift
 
 final class LiveCommentDemoVC: BaseVC {
+
     private static let inputBarBottomSpacing: CGFloat = 8
 
     // Data
@@ -33,7 +34,9 @@ final class LiveCommentDemoVC: BaseVC {
     private lazy var accessory: LiveInputBar = {
         LiveInputBar()
             .onSend { [weak self] text in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.appendMessage(text)
             }
             .byAutoClearAfterSend(true)
@@ -46,7 +49,8 @@ final class LiveCommentDemoVC: BaseVC {
     }()
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .plain)
+        UITableView(frame: .zero,
+                    style: .plain)
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(LiveMsgCell.self)
@@ -87,7 +91,9 @@ final class LiveCommentDemoVC: BaseVC {
         let currentType = ObjectIdentifier(LiveCommentDemoVC.self)
         guard !manager.disabledDistanceHandlingClasses.contains(where: {
             ObjectIdentifier($0) == currentType
-        }) else { return }
+        }) else {
+            return
+        }
         manager.disabledDistanceHandlingClasses.append(LiveCommentDemoVC.self)
     }
 
@@ -96,18 +102,26 @@ final class LiveCommentDemoVC: BaseVC {
         let newRow = data.count
         data.append(new)
         tableView.performBatchUpdates({
-            tableView.insertRows(at: [IndexPath(row: newRow, section: 0)], with: .none)
-        }, completion: { [weak self] _ in
-            guard let self else { return }
+            tableView.insertRows(at: [IndexPath(row: newRow,
+                                                section: 0)],
+                                 with: .none)
+        },
+                                      completion: { [weak self] _ in
+            guard let self else {
+                return
+            }
             self.tableView.layoutIfNeeded()
             self.scrollToBottom(false)
-            let ip = IndexPath(row: newRow, section: 0)
+            let ip = IndexPath(row: newRow,
+                               section: 0)
             if let cell = self.tableView.cellForRow(at: ip) as? LiveMsgCell {
                 cell.playAppearAnimation()
             } else {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
                     guard let self,
-                          let c = self.tableView.cellForRow(at: ip) as? LiveMsgCell else { return }
+                          let c = self.tableView.cellForRow(at: ip) as? LiveMsgCell else {
+                        return
+                    }
                     c.playAppearAnimation()
                 }
             }
@@ -115,15 +129,24 @@ final class LiveCommentDemoVC: BaseVC {
     }
 
     private func scrollToBottom(_ animated: Bool) {
-        guard !data.isEmpty else { return }
+        guard !data.isEmpty else {
+            return
+        }
         tableView.layoutIfNeeded()
-        let ip = IndexPath(row: data.count - 1, section: 0)
-        tableView.scrollToRow(at: ip, at: .bottom, animated: animated)
+        let ip = IndexPath(row: data.count - 1,
+                           section: 0)
+        tableView.scrollToRow(at: ip,
+                              at: .bottom,
+                              animated: animated)
     }
 }
 // MARK: —— UITableViewDataSource & UITableViewDelegate
-extension LiveCommentDemoVC: UITableViewDataSource, UITableViewDelegate {
-    func numberOfSections(in tableView: UITableView) -> Int { 1 }
+extension LiveCommentDemoVC: UITableViewDataSource,
+                             UITableViewDelegate {
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        1
+    }
 
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
@@ -132,10 +155,8 @@ extension LiveCommentDemoVC: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        (tableView.dequeueReusableCell(
-            withIdentifier: LiveMsgCell.className,
-            for: indexPath
-        ) as! LiveMsgCell).configure(data[indexPath.row])
+        (tableView.dequeueReusableCell(withIdentifier: LiveMsgCell.className,
+                                       for: indexPath) as! LiveMsgCell).configure(data[indexPath.row])
     }
 
     func tableView(_ tableView: UITableView,

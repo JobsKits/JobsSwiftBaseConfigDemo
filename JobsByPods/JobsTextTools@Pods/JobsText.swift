@@ -17,7 +17,9 @@ import UIKit
 /// 富文本可包含调用方自定义的可变属性或附件，因此不承诺 Sendable。
 /// 跨 actor 传递纯文本使用 asString；富文本在所属 UI/调用执行域内消费。
 public struct JobsText {
+
     public enum Storage {
+
         case plain(String)
         case attributed(NSAttributedString)
     }
@@ -45,13 +47,21 @@ public struct JobsText {
 // MARK: - 字面量协议 & 描述
 extension JobsText: ExpressibleByStringLiteral {}
 extension JobsText: CustomStringConvertible {
-    public var description: String { asString }
+
+    public var description: String {
+        asString
+    }
 }
 // MARK: - 基础访问
 public extension JobsText {
+
     /// 仅当是纯文本时为 true
     var isPlain: Bool {
-        if case .plain = storage { return true } else { return false }
+        if case .plain = storage {
+            return true
+        } else {
+            return false
+        }
     }
     /// ⬆️ 不管 plain/attributed，都给 NSAttributedString
     var asAttributed: NSAttributedString {
@@ -68,18 +78,22 @@ public extension JobsText {
     var asString: String {
         switch storage {
         /// 处理 .plain 分支
-        case .plain(let s): return s
+        case .plain(let s):
+            return s
         /// 处理 .attributed 分支
-        case .attributed(let a): return a.string
+        case .attributed(let a):
+            return a.string
         }
     }
     /// 只关心富文本时用；纯文本则返回 nil
     var attributed: NSAttributedString? {
         switch storage {
         /// 处理 .plain 分支
-        case .plain:              return nil
+        case .plain:
+            return nil
         /// 处理 .attributed 分支
-        case .attributed(let at): return at
+        case .attributed(let at):
+            return at
         }
     }
     /// 以 NSAttributedString 取出
@@ -89,7 +103,8 @@ public extension JobsText {
         /// 处理 .plain 分支
         case .plain(let s):
             if let attrs = baseAttributes, !attrs.isEmpty {
-                return NSAttributedString(string: s, attributes: attrs)
+                return NSAttributedString(string: s,
+                                          attributes: attrs)
             } else {
                 return NSAttributedString(string: s)
             }
@@ -102,24 +117,34 @@ public extension JobsText {
 }
 // MARK: - 变换 & 组合
 public extension JobsText {
+
     /// 在现有文本上“叠加”属性：
     /// - 若为纯文本：直接用 new 包一层。
     /// - 若为富文本：在每个 range 上 merge（已有的属性保持，冲突键以 new 覆盖）。
     func applying(_ new: [NSAttributedString.Key: Any]) -> JobsText {
-        guard !new.isEmpty else { return self }
+        guard !new.isEmpty else {
+            return self
+        }
         switch storage {
         /// 处理 .plain 分支
         case .plain(let s):
-            return JobsText(NSAttributedString(string: s, attributes: new))
+            return JobsText(NSAttributedString(string: s,
+                                               attributes: new))
         /// 处理 .attributed 分支
         case .attributed(let a):
             let m = NSMutableAttributedString(attributedString: a)
-            let full = NSRange(location: 0, length: m.length)
-            m.enumerateAttributes(in: full, options: []) { attrs, range, _ in
+            let full = NSRange(location: 0,
+                               length: m.length)
+            m.enumerateAttributes(in: full,
+                                  options: []) { attrs, range, _ in
                 var merged = attrs
-                new.forEach { k, v in merged[k] = v } // 以 new 覆盖冲突
-                m.setAttributes(merged, range: range)
-            };return JobsText(m) // 新实例，保持不可变存储
+                new.forEach { k, v in
+                    merged[k] = v
+                } // 以 new 覆盖冲突
+                m.setAttributes(merged,
+                                range: range)
+            }
+            return JobsText(m) // 新实例，保持不可变存储
         }
     }
     /// 自定义映射到底层 NSAttributedString（给完全控制权）
@@ -134,7 +159,8 @@ public extension JobsText {
         }
     }
     /// 拼接
-    static func + (lhs: JobsText, rhs: JobsText) -> JobsText {
+    static func + (lhs: JobsText,
+                   rhs: JobsText) -> JobsText {
         switch (lhs.storage, rhs.storage) {
         /// 处理 .plain 分支
         case (.plain(let l), .plain(let r)):
@@ -149,7 +175,9 @@ public extension JobsText {
 }
 // MARK: - 相等性（基于 NSAttributedString 的 isEqual）
 extension JobsText: Equatable {
-    public static func == (l: JobsText, r: JobsText) -> Bool {
+
+    public static func == (l: JobsText,
+                           r: JobsText) -> Bool {
         switch (l.storage, r.storage) {
         /// 处理 .plain 分支
         case (.plain(let ls), .plain(let rs)):
@@ -162,6 +190,7 @@ extension JobsText: Equatable {
 }
 // MARK: - （可选）序列化：RTF/HTML 编解码帮助
 public extension JobsText {
+
     /// 尝试以 RTF 表示导出（纯文本将被转换为带默认属性的 RTF）
     func rtfData() -> Data? {
         let a = asAttributedString()
@@ -171,8 +200,11 @@ public extension JobsText {
     /// 从 RTF/RTFD/HTML 等数据恢复富文本
     static func from(data: Data,
                      options: [NSAttributedString.DocumentReadingOptionKey: Any] = [:]) -> JobsText? {
-        if let a = try? NSAttributedString(data: data, options: options, documentAttributes: nil) {
+        if let a = try? NSAttributedString(data: data,
+                                           options: options,
+                                           documentAttributes: nil) {
             return JobsText(a)
-        };return nil
+        }
+        return nil
     }
 }

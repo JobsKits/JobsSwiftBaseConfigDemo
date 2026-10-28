@@ -15,10 +15,12 @@ import SnapKit
 import UIKit
 
 final class JobsIconfontCacheDemoVC: BaseVC {
+
     private var automaticSecondLoadPending = true
 
     private lazy var imageView: UIImageView = {
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byContentMode(.scaleAspectFit)
             .byCornerRadius(16)
@@ -26,9 +28,11 @@ final class JobsIconfontCacheDemoVC: BaseVC {
     }()
 
     private lazy var statusLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("首次加载准备中".tr)
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .medium))
             .byTextColor(JobsCor.label)
             .byTextAlignment(.center)
             .byNumberOfLines(0)
@@ -36,11 +40,15 @@ final class JobsIconfontCacheDemoVC: BaseVC {
 
     private lazy var clearButton: UIButton = {
         UIButton.sys()
-            .byTitle("清空缓存并自动重载".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitle("清空缓存并自动重载".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
             .byNormalBgColor(JobsCor.systemRed)
             .byCornerRadius(10)
-            .onTap { [weak self] _ in self?.clearAndReload() }
+            .onTap { [weak self] _ in
+                self?.clearAndReload()
+            }
     }()
 
     override func viewDidLoad() {
@@ -48,7 +56,8 @@ final class JobsIconfontCacheDemoVC: BaseVC {
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: title ?? "缓存命中、清理与重载".tr)
         layoutUI()
-        loadImage(forceRefresh: true, phase: "首次网络加载")
+        loadImage(forceRefresh: true,
+                  phase: "首次网络加载")
     }
 
     private func layoutUI() {
@@ -74,23 +83,26 @@ final class JobsIconfontCacheDemoVC: BaseVC {
         }
     }
 
-    private func loadImage(forceRefresh: Bool, phase: String) {
-        imageView.byJobsIconfont(
-            .logo,
-            targetSize: CGSize(width: 220, height: 220),
-            forceRefresh: forceRefresh
-        ) { [weak self] event in
+    private func loadImage(forceRefresh: Bool,
+                           phase: String) {
+        imageView.byJobsIconfont(.logo,
+                                 targetSize: CGSize(width: 220, height: 220),
+                                 forceRefresh: forceRefresh) { [weak self] event in
             switch event {
             case .placeholder:
                 self?.statusLabel.byText("\(phase)｜先显示占位图")
-            case .success(let loader, let isCacheHit):
+            case .success(let loader,
+                          let isCacheHit):
                 self?.statusLabel.byText(
                     "\(phase)｜\(loader.rawValue)｜\(isCacheHit ? "缓存命中" : "网络返回")"
                 )
-                guard self?.automaticSecondLoadPending == true else { return }
+                guard self?.automaticSecondLoadPending == true else {
+                    return
+                }
                 self?.automaticSecondLoadPending = false
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-                    self?.loadImage(forceRefresh: false, phase: "自动第二次加载")
+                    self?.loadImage(forceRefresh: false,
+                                    phase: "自动第二次加载")
                 }
             case .failure:
                 self?.statusLabel.byText("\(phase)｜加载失败，保留兜底图")
@@ -101,7 +113,8 @@ final class JobsIconfontCacheDemoVC: BaseVC {
     private func clearAndReload() {
         statusLabel.byText("正在统一清理三套缓存…")
         JobsIconfont.shared.clearImageCache { [weak self] in
-            self?.loadImage(forceRefresh: true, phase: "清理后的强制重载")
+            self?.loadImage(forceRefresh: true,
+                            phase: "清理后的强制重载")
         }
     }
 }

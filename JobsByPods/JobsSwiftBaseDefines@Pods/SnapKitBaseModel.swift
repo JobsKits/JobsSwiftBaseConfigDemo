@@ -12,11 +12,13 @@ import UIKit
 #endif
 
 public enum SnapAxis {
+
     case horizontal
     case vertical
 }
 
 public struct SnapDistributeModel {
+
     /// 分布方向：横向一排 / 纵向一列
     public var axis: SnapAxis = .horizontal
     /// 沿 axis 方向的固定长度
@@ -56,18 +58,16 @@ public struct SnapDistributeModel {
     /// - nil:        不固定（通过 top/bottom 或 left/right 拉伸）
     public var crossSize: CGFloat? = nil
 
-    public init(
-        axis: SnapAxis = .horizontal,
-        fixedItemLength: CGFloat? = nil,
-        leadSpacing: CGFloat = 0,
-        tailSpacing: CGFloat = 0,
-        makeContainerConstraints: Bool = false,
-        top: CGFloat? = nil,
-        bottom: CGFloat? = nil,
-        left: CGFloat? = nil,
-        right: CGFloat? = nil,
-        crossSize: CGFloat? = nil
-    ) {
+    public init(axis: SnapAxis = .horizontal,
+                fixedItemLength: CGFloat? = nil,
+                leadSpacing: CGFloat = 0,
+                tailSpacing: CGFloat = 0,
+                makeContainerConstraints: Bool = false,
+                top: CGFloat? = nil,
+                bottom: CGFloat? = nil,
+                left: CGFloat? = nil,
+                right: CGFloat? = nil,
+                crossSize: CGFloat? = nil) {
         self.axis = axis
         self.fixedItemLength = fixedItemLength
         self.leadSpacing = leadSpacing

@@ -16,6 +16,7 @@ import JobsSwiftBaseDefines
 #if canImport(GKNavigationBarSwift)
 import GKNavigationBarSwift
 extension GKNavigationBarConfigure {
+
     // MARK: - 顶层 DSL 入口（全局一次性配置 & 后续增量更新）
     /// 外部入口：应用启动时调用一次
     /// 用法：GKConfigure.setupDefault()
@@ -57,11 +58,15 @@ extension GKNavigationBarConfigure {
     /// 简单闭包链式语法糖
     @discardableResult
     public func dsl(_ block: (GKNavigationBarConfigure) -> Void) -> Self {
-        block(self); return self
+        block(self)
+        return self
     }
     /// 调用原生 awake（只做一次“唤醒”）
     @discardableResult
-    public func byAwake() -> Self { self.awake(); return self }
+    public func byAwake() -> Self {
+        self.awake()
+        return self
+    }
     /// mirror 一次“外部配置”到“内部参数”
     /// 等价于原类 `setupCustom` 结尾那段：
     ///     disableFixSpace = gk_disableFixSpace
@@ -77,7 +82,8 @@ extension GKNavigationBarConfigure {
     // MARK: - 背景 / 分割线
     @discardableResult
     public func byBackground(_ color: UIColor?) -> Self {
-        self.backgroundColor = color; return self
+        self.backgroundColor = color
+        return self
     }
     /// 同时设置浅色/深色模式的背景图（可选）
     @discardableResult
@@ -90,7 +96,8 @@ extension GKNavigationBarConfigure {
 
     @discardableResult
     public func byLine(color: UIColor?) -> Self {
-        self.lineColor = color; return self
+        self.lineColor = color
+        return self
     }
     /// 组合设置分割线：图片优先于颜色；可附带隐藏开关
     @discardableResult
@@ -100,23 +107,31 @@ extension GKNavigationBarConfigure {
                        hidden: Bool? = nil) -> Self {
         self.lineImage = image
         self.darkLineImage = dark
-        if let color { self.lineColor = color }
-        if let hidden { self.lineHidden = hidden };return self
+        if let color {
+            self.lineColor = color
+        }
+        if let hidden {
+            self.lineHidden = hidden
+        }
+        return self
     }
 
     @discardableResult
     public func byLineHidden(_ hidden: Bool) -> Self {
-        self.lineHidden = hidden; return self
+        self.lineHidden = hidden
+        return self
     }
     // MARK: - 标题
     @discardableResult
     public func byTitleCor(_ color: UIColor?) -> Self {
-        self.titleColor = color; return self
+        self.titleColor = color
+        return self
     }
 
     @discardableResult
     public func byTitleFont(_ font: UIFont?) -> Self {
-        self.titleFont = font; return self
+        self.titleFont = font
+        return self
     }
     /// 一次性设置标题颜色 + 字体
     @discardableResult
@@ -129,12 +144,14 @@ extension GKNavigationBarConfigure {
     // MARK: - 返回按钮
     @discardableResult
     public func byBack(image: UIImage?) -> Self {
-        self.backImage = image; return self
+        self.backImage = image
+        return self
     }
 
     @discardableResult
     public func byBack(darkImage: UIImage?) -> Self {
-        self.darkBackImage = darkImage; return self
+        self.darkBackImage = darkImage
+        return self
     }
 
     @discardableResult
@@ -147,7 +164,8 @@ extension GKNavigationBarConfigure {
 
     @discardableResult
     public func byBack(style: GKNavigationBarBackStyle) -> Self {
-        self.backStyle = style; return self
+        self.backStyle = style
+        return self
     }
     /// 组合式：一次性把所有 Back 相关塞进去（什么有就配什么）
     @discardableResult
@@ -156,11 +174,22 @@ extension GKNavigationBarConfigure {
                        black: UIImage? = nil,
                        white: UIImage? = nil,
                        style: GKNavigationBarBackStyle? = nil) -> Self {
-        if let image { self.backImage = image }
-        if let dark { self.darkBackImage = dark }
-        if let black { self.blackBackImage = black }
-        if let white { self.whiteBackImage = white }
-        if let style { self.backStyle = style };return self
+        if let image {
+            self.backImage = image
+        }
+        if let dark {
+            self.darkBackImage = dark
+        }
+        if let black {
+            self.blackBackImage = black
+        }
+        if let white {
+            self.whiteBackImage = white
+        }
+        if let style {
+            self.backStyle = style
+        }
+        return self
     }
     // MARK: - Item 间距修复
     /// 开关 + 左右间距（外部配置位）
@@ -169,68 +198,99 @@ extension GKNavigationBarConfigure {
                            openSystemFixSpace: Bool? = nil,
                            left: CGFloat? = nil,
                            right: CGFloat? = nil) -> Self {
-        if let disable { self.gk_disableFixSpace = disable }
-        if let openSystemFixSpace { self.gk_openSystemFixSpace = openSystemFixSpace }
-        if let left { self.gk_navItemLeftSpace = left }
-        if let right { self.gk_navItemRightSpace = right };return self
+        if let disable {
+            self.gk_disableFixSpace = disable
+        }
+        if let openSystemFixSpace {
+            self.gk_openSystemFixSpace = openSystemFixSpace
+        }
+        if let left {
+            self.gk_navItemLeftSpace = left
+        }
+        if let right {
+            self.gk_navItemRightSpace = right
+        }
+        return self
     }
     /// 仅设置左右间距（外部配置位）
     @discardableResult
     public func byNavItemSpacing(left: CGFloat? = nil,
                                  right: CGFloat? = nil) -> Self {
-        if let left { self.gk_navItemLeftSpace = left }
-        if let right { self.gk_navItemRightSpace = right };return self
+        if let left {
+            self.gk_navItemLeftSpace = left
+        }
+        if let right {
+            self.gk_navItemRightSpace = right
+        }
+        return self
     }
     // MARK: - 状态栏
     @discardableResult
     public func byStatusBar(hidden: Bool) -> Self {
-        self.statusBarHidden = hidden; return self
+        self.statusBarHidden = hidden
+        return self
     }
 
     @discardableResult
     public func byStatusBar(style: UIStatusBarStyle) -> Self {
-        self.statusBarStyle = style; return self
+        self.statusBarStyle = style
+        return self
     }
     // MARK: - 还原系统导航栏 / TabBar 行为
     @discardableResult
     public func byRestoreSystemNavBar(_ restore: Bool) -> Self {
-        self.gk_restoreSystemNavBar = restore; return self
+        self.gk_restoreSystemNavBar = restore
+        return self
     }
 
     @discardableResult
     public func byHidesBottomBarWhenPushed(_ hide: Bool) -> Self {
-        self.gk_hidesBottomBarWhenPushed = hide; return self
+        self.gk_hidesBottomBarWhenPushed = hide
+        return self
     }
     // MARK: - 手势相关
     /// 设置需要屏蔽手势的 VC 列表（支持 UIViewController / String）
     @discardableResult
     public func byShieldGestureVCs(_ v: [Any]?) -> Self {
-        self.shiledGuestureVCs = v; return self
+        self.shiledGuestureVCs = v
+        return self
     }
     /// 全局开启 UIScrollView 手势处理
     @discardableResult
     public func byOpenScrollViewGestureHandle(_ on: Bool) -> Self {
-        self.gk_openScrollViewGestureHandle = on; return self
+        self.gk_openScrollViewGestureHandle = on
+        return self
     }
     // MARK: - 交互参数（滑动临界、缩放、灵敏度）
     /// 快速滑动灵敏度（0~1，越大越“敏”）
     @discardableResult
     public func bySnapSensitivity(_ val: CGFloat) -> Self {
-        self.gk_snapMovementSensitivity = val; return self
+        self.gk_snapMovementSensitivity = val
+        return self
     }
     /// push / pop 过渡临界值
     @discardableResult
     public func byTransitionCritical(push: CGFloat? = nil,
                                      pop: CGFloat? = nil) -> Self {
-        if let push { self.gk_pushTransitionCriticalValue = push }
-        if let pop { self.gk_popTransitionCriticalValue = pop };return self
+        if let push {
+            self.gk_pushTransitionCriticalValue = push
+        }
+        if let pop {
+            self.gk_popTransitionCriticalValue = pop
+        }
+        return self
     }
     /// x/y 轴缩放（转场时）
     @discardableResult
     public func byScale(x: CGFloat? = nil,
                         y: CGFloat? = nil) -> Self {
-        if let x { self.gk_scaleX = x }
-        if let y { self.gk_scaleY = y };return self
+        if let x {
+            self.gk_scaleX = x
+        }
+        if let y {
+            self.gk_scaleY = y
+        }
+        return self
     }
     // MARK: - 便捷组合（背景 + 标题 + 返回）
     /// 一把梭：背景（图/色）、标题（色/字重）、返回（图/样式）
@@ -239,22 +299,37 @@ extension GKNavigationBarConfigure {
                          backgroundImage: UIImage? = nil,
                          darkBackgroundImage: UIImage? = nil,
                          titleColor: UIColor? = nil,
-                            titleFont: UIFont? = nil,
-                  backStyle: GKNavigationBarBackStyle? = nil) -> Self {
-        if let backgroundColor { self.backgroundColor = backgroundColor }
-        if let backgroundImage { self.backgroundImage = backgroundImage }
-        if let darkBackgroundImage { self.darkBackgroundImage = darkBackgroundImage }
-        if let titleColor { self.titleColor = titleColor }
-        if let titleFont { self.titleFont = titleFont }
-        if let backStyle { self.backStyle = backStyle };return self
+                         titleFont: UIFont? = nil,
+                         backStyle: GKNavigationBarBackStyle? = nil) -> Self {
+        if let backgroundColor {
+            self.backgroundColor = backgroundColor
+        }
+        if let backgroundImage {
+            self.backgroundImage = backgroundImage
+        }
+        if let darkBackgroundImage {
+            self.darkBackgroundImage = darkBackgroundImage
+        }
+        if let titleColor {
+            self.titleColor = titleColor
+        }
+        if let titleFont {
+            self.titleFont = titleFont
+        }
+        if let backStyle {
+            self.backStyle = backStyle
+        }
+        return self
     }
 }
 
 public extension UIViewController {
+
     /// 将全屏返回限制在左边缘，避免抢占页面内横向滚动视图的右滑手势。
     @discardableResult
     func byGKMaxPopDistance(_ distance: CGFloat) -> Self {
-        gk_maxPopDistance = max(0, distance)
+        gk_maxPopDistance = max(0,
+                                distance)
         return self
     }
 }

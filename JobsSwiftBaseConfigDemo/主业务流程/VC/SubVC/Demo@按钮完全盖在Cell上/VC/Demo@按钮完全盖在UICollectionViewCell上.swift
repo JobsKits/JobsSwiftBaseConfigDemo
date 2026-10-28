@@ -24,31 +24,42 @@ import GKNavigationBarSwift
 import SnapKit
 
 final class BtnFullOnCVCellDemoVC: BaseVC {
+
     private var items: [JobsBtnCellModel] = []
     private lazy var flowLayout: UICollectionViewFlowLayout = {
-        UICollectionViewFlowLayout.jobsMake { _ in }
+        UICollectionViewFlowLayout
+            .jobsMake { _ in }
             .byScrollDirection(.vertical)
             .byMinimumLineSpacing(10)
             .byMinimumInteritemSpacing(10)
-            .bySectionInset(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
+            .bySectionInset(UIEdgeInsets(top: 10,
+                                         left: 12,
+                                         bottom: 10,
+                                         right: 12))
     }()
     private lazy var collectionView: UICollectionView = {
-        UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        UICollectionView(frame: .zero,
+                         collectionViewLayout: flowLayout)
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(SDBtnCVCell.self)
             .byRegisterCell(KFBtnCVCell.self)
             .byBackgroundView(nil)
             .byDragInteractionEnabled(false)
-            // 空态按钮
-            .byEmptyButtonProvider { [unowned self] in
+        // 空态按钮
+        .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据".tr, for: .normal)
-                    .bySubTitle("点我填充示例数据".tr, for: .normal)
-                    .byImage(UIImage(systemName: "square.grid.2x2"), for: .normal)
+                    .byTitle("暂无数据".tr,
+                             for: .normal)
+                    .bySubTitle("点我填充示例数据".tr,
+                                for: .normal)
+                    .byImage(UIImage(systemName: "square.grid.2x2"),
+                             for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in
-                        guard let self else { return }
+                        guard let self else {
+                            return
+                        }
                         self.items = self.makeMockItems(count: 12)
                         self.collectionView.byReloadData()
                     }
@@ -60,11 +71,13 @@ final class BtnFullOnCVCellDemoVC: BaseVC {
                         make.width.lessThanOrEqualTo(host).multipliedBy(0.9)
                     }
             }
-            // 下拉刷新
-            .byRefreshHeader(component: JobsDefaultHeader(),
-                             container: self,
-                             trigger: 66) { [weak self] in
-                guard let self else { return }
+        // 下拉刷新
+        .byRefreshHeader(component: JobsDefaultHeader(),
+                         container: self,
+                         trigger: 66) { [weak self] in
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     self.items = self.makeMockItems(count: 12)
                     self.collectionView.byReloadData()
@@ -72,14 +85,17 @@ final class BtnFullOnCVCellDemoVC: BaseVC {
                     self.collectionView.switchRefreshFooter(to: .normal)
                 }
             }
-            // 上拉加载
-            .byRefreshFooter(component: JobsDefaultFooter(),
-                             container: self,
-                             trigger: 66) { [weak self] in
-                guard let self else { return }
+        // 上拉加载
+        .byRefreshFooter(component: JobsDefaultFooter(),
+                         container: self,
+                         trigger: 66) { [weak self] in
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     if self.items.count < 60 {
-                        self.items.append(contentsOf: self.makeMockItems(count: 12, startAt: self.items.count + 1))
+                        self.items.append(contentsOf: self.makeMockItems(count: 12,
+                                                                         startAt: self.items.count + 1))
                         self.collectionView.byReloadData()
                         self.collectionView.switchRefreshFooter(to: .normal)
                     } else {
@@ -87,8 +103,8 @@ final class BtnFullOnCVCellDemoVC: BaseVC {
                     }
                 }
             }
-            // SnapKit 约束写在 byAddTo 里
-            .byAddTo(view) { [unowned self] make in
+        // SnapKit 约束写在 byAddTo 里
+        .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
                     make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
                     make.left.right.bottom.equalToSuperview()
@@ -119,54 +135,62 @@ final class BtnFullOnCVCellDemoVC: BaseVC {
 }
 
 extension BtnFullOnCVCellDemoVC : UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int { 1 }
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        1
+    }
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
         items.count
     }
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         collectionView
-            // .byDequeueCell(SDBtnCVCell.self, for: indexPath)
-            .byDequeueCell(KFBtnCVCell.self, for: indexPath)
-            .byData(items[indexPath.item], indexPath.item)
+        // .byDequeueCell(SDBtnCVCell.self, for: indexPath)
+        .byDequeueCell(KFBtnCVCell.self,
+                       for: indexPath)
+            .byData(items[indexPath.item],
+                    indexPath.item)
             .onResult { _ in }
     }
 }
 
 extension BtnFullOnCVCellDemoVC : UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+    func collectionView(_ collectionView: UICollectionView,
+                        didSelectItemAt indexPath: IndexPath) {
         "✅ 点击了👉UICollectionViewCell: \(indexPath.item)".toast
-        // 演示：点击 Cell 后切换“拥有/未拥有”
-//        items[indexPath.item] = .init(
-//            title: items[indexPath.item].title,
-//            subTitle: items[indexPath.item].subTitle,
-//            selected: !items[indexPath.item].selected
-//        )
-//
-//        // 让 Cell 重绘选中态（同时驱动 coverButton.selected）
-//        collectionView.reloadItems(at: [indexPath])
-//        collectionView.deselectItem(at: indexPath, animated: true)
+    // 演示：点击 Cell 后切换“拥有/未拥有”
+    //        items[indexPath.item] = .init(
+    //            title: items[indexPath.item].title,
+    //            subTitle: items[indexPath.item].subTitle,
+    //            selected: !items[indexPath.item].selected
+    //        )
+    //
+    //        // 让 Cell 重绘选中态（同时驱动 coverButton.selected）
+    //        collectionView.reloadItems(at: [indexPath])
+    //        collectionView.deselectItem(at: indexPath, animated: true)
     }
 }
 
 extension BtnFullOnCVCellDemoVC : UICollectionViewDelegateFlowLayout {}
 
 extension BtnFullOnCVCellDemoVC {
-    private func makeMockItems(count: Int, startAt: Int = 1) -> [JobsBtnCellModel] {
+
+    private func makeMockItems(count: Int,
+                               startAt: Int = 1) -> [JobsBtnCellModel] {
         let titles = ["贵族勋章", "超级会员", "专属皮肤", "聊天气泡", "进场特效", "昵称边框"]
-        return (0..<count).map { i in
+        return (0 ..< count).map { i in
             let idx = startAt + i
-            return JobsBtnCellModel(
-                title: titles[idx % titles.count],
-                titleCor:JobsCor.red,
-                subTitle: "发言时聊天专属皮肤",
-                subTitleCor: JobsCor.blue,
-                imageURL:"https://picsum.photos/200",
-                bgImageURL:"https://picsum.photos/300",
-                selected: NO,
-                userInteractionEnabled:NO,
-                enabled: YES
-            )
+            return JobsBtnCellModel(title: titles[idx % titles.count],
+                                    titleCor: JobsCor.red,
+                                    subTitle: "发言时聊天专属皮肤",
+                                    subTitleCor: JobsCor.blue,
+                                    imageURL: "https://picsum.photos/200",
+                                    bgImageURL: "https://picsum.photos/300",
+                                    selected: NO,
+                                    userInteractionEnabled: NO,
+                                    enabled: YES)
         }
     }
 }

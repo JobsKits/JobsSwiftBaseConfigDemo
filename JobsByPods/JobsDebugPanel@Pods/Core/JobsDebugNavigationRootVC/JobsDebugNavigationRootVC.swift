@@ -12,8 +12,10 @@ import JobsByUIKit
 import JobsSwiftBaseDefines
 
 extension UIViewController {
+
     func jobsDebugFollowTheme() {
-        JobsThemeCenter.shared.bind(self, slot: "JobsDebugPanel.appearance") { object, center in
+        JobsThemeCenter.shared.bind(self,
+                                    slot: "JobsDebugPanel.appearance") { object, center in
             guard let controller = object as? UIViewController else {
                 return
             }
@@ -25,6 +27,7 @@ extension UIViewController {
 
 /// 没有宿主导航栈时承接 push；返回此页即关闭临时导航容器。
 final class JobsDebugNavigationRootVC: BaseVC {
+
     private var didLeaveRootForMenu = false
 
     override func viewDidLoad() {

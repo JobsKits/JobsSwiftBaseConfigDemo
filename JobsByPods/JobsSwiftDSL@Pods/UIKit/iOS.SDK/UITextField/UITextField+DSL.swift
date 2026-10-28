@@ -17,6 +17,7 @@ import JobsSwiftBlock
 
 // MARK: - 直接赋值@单参数
 extension UITextField {
+
     @discardableResult
     public func byPlaceholder(_ placeholder: String?) -> Self {
         self.placeholder = placeholder
@@ -45,11 +46,13 @@ extension UITextField {
     public func byTextColor(_ color: UIColor?) -> Self {
         let slot = "UITextField.textColor"
         if let key = color?.jobsThemeColorKey {
-            JobsThemeCenter.shared.bind(self, slot: slot) { object, center in
+            JobsThemeCenter.shared.bind(self,
+                                        slot: slot) { object, center in
                 (object as? UITextField)?.textColor = center.resolvedColor(key)
             }
         } else {
-            JobsThemeCenter.shared.unbind(self, slot: slot)
+            JobsThemeCenter.shared.unbind(self,
+                                          slot: slot)
             textColor = color
         }
         return self
@@ -282,6 +285,7 @@ extension UITextField {
 }
 // MARK: - 闭包重载@单参数
 extension UITextField {
+
     @discardableResult
     public func byPlaceholder(_ builder: () -> String?) -> Self {
         self.placeholder = builder()
@@ -524,15 +528,18 @@ extension UITextField {
 }
 
 extension UITextField {
+
     @discardableResult
-    public func byLeftView(_ view: UIView?, mode: UITextField.ViewMode = .always) -> Self {
+    public func byLeftView(_ view: UIView?,
+                           mode: UITextField.ViewMode = .always) -> Self {
         self.leftView = view
         self.leftViewMode = mode
         return self
     }
 
     @discardableResult
-    public func byRightView(_ view: UIView?, mode: UITextField.ViewMode = .always) -> Self {
+    public func byRightView(_ view: UIView?,
+                            mode: UITextField.ViewMode = .always) -> Self {
         self.rightView = view
         self.rightViewMode = mode
         return self
@@ -545,36 +552,42 @@ extension UITextField {
         _jobs_onReturnHandler = handler
         if #available(iOS 14.0, *) {
             // iOS14+: UIAction
-            let action = UIAction(
-                title: "",
-                image: nil,
-                identifier: nil,
-                discoverabilityTitle: nil,
-                attributes: [],
-                state: .off
-            ) { [weak self] _ in
-                guard let self else { return }
+            let action = UIAction(title: "",
+                                  image: nil,
+                                  identifier: nil,
+                                  discoverabilityTitle: nil,
+                                  attributes: [],
+                                  state: .off) { [weak self] _ in
+                guard let self else {
+                    return
+                }
                 handler(self)
             }
-            addAction(action, for: .editingDidEndOnExit)
+            addAction(action,
+                      for: .editingDidEndOnExit)
         } else {
             // iOS13-: target-action
-            addTarget(self, action: #selector(_jobs_handleReturn), for: .editingDidEndOnExit)
-        };return self
+            addTarget(self,
+                      action: #selector(_jobs_handleReturn),
+                      for: .editingDidEndOnExit)
+        }
+        return self
     }
 }
 
 private var onReturnKey: UInt8 = 0
 extension UITextField {
+
     private var _jobs_onReturnHandler: (jobsByTextFieldBlock)? {
-        get { objc_getAssociatedObject(self, &onReturnKey) as? (jobsByTextFieldBlock) }
+        get {
+            objc_getAssociatedObject(self,
+                                     &onReturnKey) as? (jobsByTextFieldBlock)
+        }
         set {
-            objc_setAssociatedObject(
-                self,
-                &onReturnKey,
-                newValue,
-                .OBJC_ASSOCIATION_COPY_NONATOMIC
-            )
+            objc_setAssociatedObject(self,
+                                     &onReturnKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_COPY_NONATOMIC)
         }
     }
     @objc private func _jobs_handleReturn() {
@@ -583,14 +596,15 @@ extension UITextField {
 }
 // MARK: - 左侧图标 & 纯留白
 extension UITextField {
+
     /// 设置左侧图标，并精确控制：leading（到边距）和 spacing（到文字）
     @discardableResult
-    public func byLeftIcon(
-        _ image: UIImage?,
-        tint: UIColor? = nil,
-        size: CGSize = .init(width: 18, height: 18),
-        leading: CGFloat = 12,      // 图标距 TextField 左边缘
-        spacing: CGFloat = 8        // 图标与文字之间
+    public func byLeftIcon(_ image: UIImage?,
+                           tint: UIColor? = nil,
+                           size: CGSize = .init(width: 18,
+                                                height: 18),
+                           leading: CGFloat = 12,      // 图标距 TextField 左边缘
+                           spacing: CGFloat = 8        // 图标与文字之间
     ) -> Self {
         guard let image else {
             leftView = nil
@@ -598,21 +612,32 @@ extension UITextField {
             return self
         }
         let containerW = leading + size.width + spacing
-        let containerH = max(24, size.height)    // 高度随便给，系统会垂直居中
-        let container = UIView(frame: CGRect(x: 0, y: 0, width: containerW, height: containerH))
-        self.byLeftView(container.byAddSubviewRetSuper(UIImageView().byImage(tint == nil ? image : image.withRenderingMode(.alwaysTemplate))
+        let containerH = max(24,
+                             size.height)    // 高度随便给，系统会垂直居中
+        let container = UIView(frame: CGRect(x: 0,
+                                             y: 0,
+                                             width: containerW,
+                                             height: containerH))
+        self.byLeftView(container.byAddSubviewRetSuper(UIImageView()
+            .byImage(tint == nil ? image : image.withRenderingMode(.alwaysTemplate))
             .byTintColor(tint)
             .byContentMode(.scaleAspectFit)
-            .byFrame(CGRect(origin: .zero, size: size))
-             // 把图标放到带 leading 的位置
-            .byCenter(CGPoint(x: leading + size.width / 2, y: container.bounds.midY))
-            .byAutoresizingMask([.flexibleTopMargin, .flexibleBottomMargin])),mode:.always)
+            .byFrame(CGRect(origin: .zero,
+                            size: size))
+                // 把图标放到带 leading 的位置
+                .byCenter(CGPoint(x: leading + size.width / 2,
+                                  y: container.bounds.midY))
+            .byAutoresizingMask([.flexibleTopMargin, .flexibleBottomMargin])),
+                        mode: .always)
         return self
     }
     /// 仅设置左侧留白（没有图标），常用于单纯增加文本左内边距
     @discardableResult
     public func byLeftPadding(_ padding: CGFloat) -> Self {
-        let spacer = UIView(frame: CGRect(x: 0, y: 0, width: padding, height: 1))
+        let spacer = UIView(frame: CGRect(x: 0,
+                                          y: 0,
+                                          width: padding,
+                                          height: 1))
         spacer.isUserInteractionEnabled = false
         leftView = spacer
         leftViewMode = .always

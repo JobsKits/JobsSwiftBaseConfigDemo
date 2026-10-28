@@ -16,7 +16,9 @@ import JobsByUIKit
 import JobsSwiftDSL
 
 /// 按真实录屏还原的今日头条红色闭合轮廓刷新动画。
-public final class JobsTodayNewsRefreshView: UIView, JobsRefreshAnimatorProtocol {
+public final class JobsTodayNewsRefreshView: UIView,
+                                             JobsRefreshAnimatorProtocol {
+
     public private(set) var config: JobsTodayNewsRefreshConfig
     public private(set) var isAnimating = false
 
@@ -33,7 +35,8 @@ public final class JobsTodayNewsRefreshView: UIView, JobsRefreshAnimatorProtocol
     }
 
     public convenience init(config: JobsTodayNewsRefreshConfig) {
-        self.init(frame: CGRect(origin: .zero, size: config.indicatorSize))
+        self.init(frame: CGRect(origin: .zero,
+                                size: config.indicatorSize))
         byConfig(config)
     }
 
@@ -57,7 +60,9 @@ public final class JobsTodayNewsRefreshView: UIView, JobsRefreshAnimatorProtocol
         guard wantsAnimating,
               window != nil,
               !UIAccessibility.isReduceMotionEnabled,
-              lastAnimationBounds != bounds else { return }
+              lastAnimationBounds != bounds else {
+            return
+        }
         jobs_installAnimations()
     }
 
@@ -71,21 +76,20 @@ public final class JobsTodayNewsRefreshView: UIView, JobsRefreshAnimatorProtocol
     public func byConfig(_ config: JobsTodayNewsRefreshConfig) -> Self {
         let shouldRestart = wantsAnimating
         jobs_removeAnimations()
-        self.config = JobsTodayNewsRefreshConfig(
-            strokeColor: config.strokeColor,
-            lineWidth: config.lineWidth,
-            triangleWidth: config.triangleWidth,
-            triangleHeight: config.triangleHeight,
-            centerGap: config.centerGap,
-            cycleDuration: config.cycleDuration
-        )
+        self.config = JobsTodayNewsRefreshConfig(strokeColor: config.strokeColor,
+                                                 lineWidth: config.lineWidth,
+                                                 triangleWidth: config.triangleWidth,
+                                                 triangleHeight: config.triangleHeight,
+                                                 centerGap: config.centerGap,
+                                                 cycleDuration: config.cycleDuration)
         invalidateIntrinsicContentSize()
         setNeedsLayout()
         if shouldRestart {
             wantsAnimating = true
             layoutIfNeeded()
             jobs_syncAnimationState()
-        };return self
+        }
+        return self
     }
 
     /// 开始循环；重复调用不会叠加动画。
@@ -132,7 +136,8 @@ public final class JobsTodayNewsRefreshView: UIView, JobsRefreshAnimatorProtocol
 
     public func refreshAnimatorApply(phase: JobsRefreshAnimatorPhase,
                                      progress: CGFloat) {
-        let normalizedProgress = min(1, max(0, progress))
+        let normalizedProgress = min(1,
+                                     max(0,progress))
         switch phase {
         /// 下拉过程中按进度描边并缩放
         case .pulling:
@@ -170,24 +175,18 @@ public final class JobsTodayNewsRefreshView: UIView, JobsRefreshAnimatorProtocol
         accessibilityLabel = "刷新中"
         layer.addSublayer(contentLayer)
         contentLayer.addSublayer(markLayer)
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(jobs_environmentDidChange),
-            name: UIAccessibility.reduceMotionStatusDidChangeNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(jobs_environmentDidChange),
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(jobs_applicationDidEnterBackground),
-            name: UIApplication.didEnterBackgroundNotification,
-            object: nil
-        )
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(jobs_environmentDidChange),
+                                               name: UIAccessibility.reduceMotionStatusDidChangeNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(jobs_environmentDidChange),
+                                               name: UIApplication.didBecomeActiveNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(jobs_applicationDidEnterBackground),
+                                               name: UIApplication.didEnterBackgroundNotification,
+                                               object: nil)
         jobs_layoutMark()
         jobs_applyPullProgress(0)
     }
@@ -197,7 +196,9 @@ public final class JobsTodayNewsRefreshView: UIView, JobsRefreshAnimatorProtocol
     }
 
     @objc private func jobs_applicationDidEnterBackground() {
-        guard wantsAnimating else { return }
+        guard wantsAnimating else {
+            return
+        }
         jobs_pauseAnimations()
     }
 
@@ -211,10 +212,13 @@ public final class JobsTodayNewsRefreshView: UIView, JobsRefreshAnimatorProtocol
                 jobs_applyPullProgress(1)
             } else if isAnimating {
                 jobs_pauseAnimations()
-            };return
+            }
+            return
         }
         layoutIfNeeded()
-        guard bounds.width > 0, bounds.height > 0 else { return }
+        guard bounds.width > 0, bounds.height > 0 else {
+            return
+        }
         if markLayer.animation(forKey: "jobs.todaynews.path") == nil {
             jobs_installAnimations()
         } else {
@@ -224,20 +228,17 @@ public final class JobsTodayNewsRefreshView: UIView, JobsRefreshAnimatorProtocol
 
     private func jobs_layoutMark() {
         let indicatorSize = config.indicatorSize
-        let origin = CGPoint(
-            x: (bounds.width - indicatorSize.width) / 2,
-            y: (bounds.height - indicatorSize.height) / 2
-        )
+        let origin = CGPoint(x: (bounds.width - indicatorSize.width) / 2,
+                             y: (bounds.height - indicatorSize.height) / 2)
         let inset = config.lineWidth
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        contentLayer.byFrame(CGRect(origin: origin, size: indicatorSize))
-        markLayer.frame = CGRect(
-            x: inset,
-            y: inset,
-            width: indicatorSize.width - inset * 2,
-            height: indicatorSize.height - inset * 2
-        )
+        contentLayer.byFrame(CGRect(origin: origin,
+                                    size: indicatorSize))
+        markLayer.frame = CGRect(x: inset,
+                                 y: inset,
+                                 width: indicatorSize.width - inset * 2,
+                                 height: indicatorSize.height - inset * 2)
         markLayer
             .byFillColor(UIColor.clear)
             .byStrokeColor(config.strokeColor)
@@ -250,7 +251,8 @@ public final class JobsTodayNewsRefreshView: UIView, JobsRefreshAnimatorProtocol
     }
 
     private func jobs_applyPullProgress(_ progress: CGFloat) {
-        let normalizedProgress = min(1, max(0, progress))
+        let normalizedProgress = min(1,
+                                     max(0,progress))
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         markLayer
@@ -260,10 +262,8 @@ public final class JobsTodayNewsRefreshView: UIView, JobsRefreshAnimatorProtocol
         contentLayer.byTransform(CATransform3DIdentity)
         CATransaction.commit()
         byAlpha(0.25 + normalizedProgress * 0.75)
-            .byTransform(CGAffineTransform(
-                scaleX: 0.72 + normalizedProgress * 0.28,
-                y: 0.72 + normalizedProgress * 0.28
-            ))
+            .byTransform(CGAffineTransform(scaleX: 0.72 + normalizedProgress * 0.28,
+                                           y: 0.72 + normalizedProgress * 0.28))
     }
 
     private func jobs_installAnimations() {
@@ -282,7 +282,9 @@ public final class JobsTodayNewsRefreshView: UIView, JobsRefreshAnimatorProtocol
         let linear = CAMediaTimingFunction(name: .linear)
         let pathAnimation = CAKeyframeAnimation(keyPath: "path")
         pathAnimation
-            .byValues(paths.map { $0.cgPath })
+            .byValues(paths.map {
+            $0.cgPath
+        })
             .byKeyTimes([0, 0.15, 0.38, 0.46, 0.69, 0.85, 1])
             .byTimingFunctions([linear, linear, linear, linear, linear, linear])
         pathAnimation.duration = config.cycleDuration
@@ -290,7 +292,8 @@ public final class JobsTodayNewsRefreshView: UIView, JobsRefreshAnimatorProtocol
         pathAnimation.byCalculationMode(.linear)
         pathAnimation.isRemovedOnCompletion = false
         pathAnimation.fillMode = .both
-        markLayer.add(pathAnimation, forKey: "jobs.todaynews.path")
+        markLayer.add(pathAnimation,
+                      forKey: "jobs.todaynews.path")
         lastAnimationBounds = bounds
         pausedTime = 0
         isAnimating = true
@@ -299,87 +302,101 @@ public final class JobsTodayNewsRefreshView: UIView, JobsRefreshAnimatorProtocol
     private func jobs_bowtiePath() -> UIBezierPath {
         let width = markLayer.bounds.width
         let height = markLayer.bounds.height
-        let center = CGPoint(x: width / 2, y: height / 2)
+        let center = CGPoint(x: width / 2,
+                             y: height / 2)
         return jobs_path(with: [
-            .zero,
-            center,
-            CGPoint(x: width, y: 0),
-            CGPoint(x: width, y: height),
-            center,
-            CGPoint(x: 0, y: height)
-        ])
+                .zero,
+                center,
+                CGPoint(x: width, y: 0),
+                CGPoint(x: width, y: height),
+                center,
+                CGPoint(x: 0, y: height)
+            ])
     }
 
     private func jobs_leftPointPath() -> UIBezierPath {
         let width = markLayer.bounds.width
         let height = markLayer.bounds.height
-        let leftPoint = CGPoint(x: 0, y: height / 2)
+        let leftPoint = CGPoint(x: 0,
+                                y: height / 2)
         return jobs_path(with: [
-            leftPoint,
-            leftPoint,
-            CGPoint(x: width, y: 0),
-            CGPoint(x: width, y: height),
-            leftPoint,
-            leftPoint
-        ])
+                leftPoint,
+                leftPoint,
+                CGPoint(x: width, y: 0),
+                CGPoint(x: width, y: height),
+                leftPoint,
+                leftPoint
+            ])
     }
 
     private func jobs_rectanglePath() -> UIBezierPath {
         let width = markLayer.bounds.width
         let height = markLayer.bounds.height
         let leftTop = CGPoint.zero
-        let leftBottom = CGPoint(x: 0, y: height)
+        let leftBottom = CGPoint(x: 0,
+                                 y: height)
         return jobs_path(with: [
-            leftTop,
-            leftTop,
-            CGPoint(x: width, y: 0),
-            CGPoint(x: width, y: height),
-            leftBottom,
-            leftBottom
-        ])
+                leftTop,
+                leftTop,
+                CGPoint(x: width, y: 0),
+                CGPoint(x: width, y: height),
+                leftBottom,
+                leftBottom
+            ])
     }
 
     private func jobs_rightPointPath() -> UIBezierPath {
         let width = markLayer.bounds.width
         let height = markLayer.bounds.height
         let leftTop = CGPoint.zero
-        let leftBottom = CGPoint(x: 0, y: height)
-        let rightPoint = CGPoint(x: width, y: height / 2)
+        let leftBottom = CGPoint(x: 0,
+                                 y: height)
+        let rightPoint = CGPoint(x: width,
+                                 y: height / 2)
         return jobs_path(with: [
-            leftTop,
-            leftTop,
-            rightPoint,
-            rightPoint,
-            leftBottom,
-            leftBottom
-        ])
+                leftTop,
+                leftTop,
+                rightPoint,
+                rightPoint,
+                leftBottom,
+                leftBottom
+            ])
     }
 
     private func jobs_path(with points: [CGPoint]) -> UIBezierPath {
         let path = UIBezierPath.make()
-        guard let firstPoint = points.first else { return path }
+        guard let firstPoint = points.first else {
+            return path
+        }
         path.byMove(to: firstPoint)
         points.dropFirst().forEach { point in
             path.byAddLine(to: point)
-        };return path.byClose()
+        }
+        return path.byClose()
     }
 
     private func jobs_pauseAnimations() {
         guard isAnimating,
-              markLayer.speed != 0 else { return }
-        pausedTime = markLayer.convertTime(CACurrentMediaTime(), from: nil)
+              markLayer.speed != 0 else {
+            return
+        }
+        pausedTime = markLayer.convertTime(CACurrentMediaTime(),
+                                           from: nil)
         markLayer.speed = 0
         markLayer.timeOffset = pausedTime
     }
 
     private func jobs_resumeAnimations() {
         guard isAnimating,
-              markLayer.speed == 0 else { return }
+              markLayer.speed == 0 else {
+            return
+        }
         let pausedTime = markLayer.timeOffset
         markLayer.speed = 1
         markLayer.timeOffset = 0
         markLayer.beginTime = 0
-        markLayer.beginTime = markLayer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
+        markLayer.beginTime = markLayer.convertTime(CACurrentMediaTime(),
+                                                    from: nil) - pausedTime
         self.pausedTime = 0
     }
 

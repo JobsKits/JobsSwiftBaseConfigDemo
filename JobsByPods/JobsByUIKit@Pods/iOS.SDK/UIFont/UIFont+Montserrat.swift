@@ -12,7 +12,9 @@ import UIKit
 #endif
 
 extension UIFont {
+
     public enum Montserrat {
+
         public static func Regular(_ size: CGFloat) -> UIFont {
             switch Bundle.lang() {
             /// 合并处理 .vietnamese、.turkish 分支
@@ -26,7 +28,9 @@ extension UIFont {
                 return UIFont.SFArabic.Regular(size)
             /// 未匹配已知分支时执行兜底处理
             default:
-                return make("Montserrat-Regular", size, fallback: .regular)
+                return make("Montserrat-Regular",
+                            size,
+                            fallback: .regular)
             }
         }
         public static func Medium(_ size: CGFloat) -> UIFont {
@@ -42,7 +46,9 @@ extension UIFont {
                 return UIFont.SFArabic.Regular(size)
             /// 未匹配已知分支时执行兜底处理
             default:
-                return make("Montserrat-Medium", size, fallback: .medium)
+                return make("Montserrat-Medium",
+                            size,
+                            fallback: .medium)
             }
         }
         public static func Semibold(_ size: CGFloat) -> UIFont {
@@ -58,7 +64,9 @@ extension UIFont {
                 return UIFont.SFArabic.Regular(size)
             /// 未匹配已知分支时执行兜底处理
             default:
-                return make("Montserrat-SemiBold", size, fallback: .semibold)
+                return make("Montserrat-SemiBold",
+                            size,
+                            fallback: .semibold)
             }
         }
         public static func SemiboldItalic(_ size: CGFloat) -> UIFont {
@@ -74,13 +82,17 @@ extension UIFont {
                 return UIFont.SFArabic.Regular(size)
             /// 未匹配已知分支时执行兜底处理
             default:
-                return make("Montserrat-SemiBoldItalic", size, fallback: .semibold)
+                return make("Montserrat-SemiBoldItalic",
+                            size,
+                            fallback: .semibold)
             }
         }
         private static func make(_ name: String,
                                  _ size: CGFloat,
                                  fallback: UIFont.Weight) -> UIFont {
-            UIFont(name: name, size: size) ?? .systemFont(ofSize: size, weight: fallback)
+            UIFont(name: name,
+                   size: size) ?? .systemFont(ofSize: size,
+                                              weight: fallback)
         }
     }
 }

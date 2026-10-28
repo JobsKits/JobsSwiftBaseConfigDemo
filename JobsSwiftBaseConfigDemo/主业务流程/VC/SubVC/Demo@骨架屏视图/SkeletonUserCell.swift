@@ -19,9 +19,11 @@ import SnapKit
 import SkeletonView
 
 final class SkeletonUserCell: UITableViewCell {
+
     // MARK: - UI（lazy）
     private lazy var avatar: UIImageView = {
-        let iv = UIImageView.jobsMake { _ in }
+        let iv = UIImageView
+            .jobsMake { _ in }
             .bySkeletonable()
             .bySkeletonCornerRadius(24)
             .byAddTo(contentView) { make in
@@ -39,8 +41,10 @@ final class SkeletonUserCell: UITableViewCell {
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 16,
+                                        weight: .semibold))
             .byTextColor(JobsCor.label)
             .byNumberOfLines(1)
             .bySkeletonable()
@@ -48,8 +52,10 @@ final class SkeletonUserCell: UITableViewCell {
     }()
 
     private lazy var subtitleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(2)
             .bySkeletonable()
@@ -58,7 +64,8 @@ final class SkeletonUserCell: UITableViewCell {
     }()
 
     private lazy var stack: UIStackView = {
-        UIStackView.jobsMake { _ in }
+        UIStackView
+            .jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .byDistribution(.fill)
@@ -71,9 +78,13 @@ final class SkeletonUserCell: UITableViewCell {
             }
     }()
     // MARK: - Init
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    override init(style: UITableViewCell.CellStyle,
+                  reuseIdentifier: String?) {
+        super.init(style: style,
+                   reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         contentView.byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
         avatar.byVisible(YES)
@@ -84,6 +95,7 @@ final class SkeletonUserCell: UITableViewCell {
 }
 
 extension SkeletonUserCell {
+
     // MARK: - Data
     func configure(with u: User) {
         avatar.byBackgroundColor(u.color)

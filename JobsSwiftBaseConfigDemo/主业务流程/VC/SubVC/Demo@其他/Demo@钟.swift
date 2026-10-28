@@ -22,10 +22,13 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class ClockDemoVC: BaseVC {
+
     private lazy var clockView: JobsClockView = {
         JobsClockView()
             .byAddTo(view) { [weak self] make in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 make.center.equalToSuperview()
                 make.width.height.equalTo(240)   // 正方形表盘
             }

@@ -13,6 +13,7 @@ import UIKit
 
 // MARK: - 创建工厂
 public extension UIBezierPath {
+
     /// 创建空路径。
     static func make() -> UIBezierPath {
         UIBezierPath()
@@ -31,18 +32,17 @@ public extension UIBezierPath {
     /// 创建统一圆角的矩形路径。
     static func make(roundedRect rect: CGRect,
                      cornerRadius: CGFloat) -> UIBezierPath {
-        UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius)
+        UIBezierPath(roundedRect: rect,
+                     cornerRadius: cornerRadius)
     }
 
     /// 创建指定圆角位置和半径的矩形路径。
     static func make(roundedRect rect: CGRect,
                      byRoundingCorners corners: UIRectCorner,
                      cornerRadii: CGSize) -> UIBezierPath {
-        UIBezierPath(
-            roundedRect: rect,
-            byRoundingCorners: corners,
-            cornerRadii: cornerRadii
-        )
+        UIBezierPath(roundedRect: rect,
+                     byRoundingCorners: corners,
+                     cornerRadii: cornerRadii)
     }
 
     /// 创建圆弧路径。
@@ -51,12 +51,10 @@ public extension UIBezierPath {
                      startAngle: CGFloat,
                      endAngle: CGFloat,
                      clockwise: Bool) -> UIBezierPath {
-        UIBezierPath(
-            arcCenter: center,
-            radius: radius,
-            startAngle: startAngle,
-            endAngle: endAngle,
-            clockwise: clockwise
-        )
+        UIBezierPath(arcCenter: center,
+                     radius: radius,
+                     startAngle: startAngle,
+                     endAngle: endAngle,
+                     clockwise: clockwise)
     }
 }

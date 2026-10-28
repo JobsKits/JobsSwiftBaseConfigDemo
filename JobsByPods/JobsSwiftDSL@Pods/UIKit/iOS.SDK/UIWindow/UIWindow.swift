@@ -14,6 +14,7 @@ import UIKit
 import JobsSwiftDSL
 
 extension UIWindow {
+
     /// 返回一个“保证非空”的 UIWindow
     /// - 优先 jobsKeyWindow（真实窗口）
     /// - 取不到时兜底创建一个离屏窗口，避免 unwrap 报错
@@ -23,11 +24,14 @@ extension UIWindow {
             return real
         } else {
             // ✅ 构造一个兜底 window（不会显示，只用于防止 nil）
-            return UIWindow(frame: UIScreen.main.bounds).byWindowLevel(.alert + 1)
+            return UIWindow(frame: UIScreen.main.bounds)
+                .byWindowLevel(.alert + 1)
         }
     }
     /// 实例访问也保持一致
-    public var wd: UIWindow { self }
+    public var wd: UIWindow {
+        self
+    }
     // ================================== 跨版本入口：iOS 12+ 可编译 ==================================
     @discardableResult
     public static func jobsMake(root: UIViewController? = nil,
@@ -54,10 +58,20 @@ extension UIWindow {
                                 level: UIWindow.Level = .normal,
                                 makeKeyVisible: Bool = true) -> UIWindow {
         let targetScene: UIWindowScene? = {
-            if let scene { return scene };return UIApplication.shared.connectedScenes
-                .compactMap { $0 as? UIWindowScene }
-                .first { $0.activationState == .foregroundActive }
-                ?? UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first
+            if let scene {
+                return scene
+            }
+            return UIApplication.shared.connectedScenes
+                .compactMap {
+                    $0 as? UIWindowScene
+                }
+                .first {
+                    $0.activationState == .foregroundActive
+                }
+                ?? UIApplication.shared.connectedScenes.compactMap {
+                $0 as? UIWindowScene
+            }
+                    .first
         }()
         let win: UIWindow
         if let s = targetScene {
@@ -66,14 +80,17 @@ extension UIWindow {
             // 极端兜底：没拿到 scene 时也能创建（理论上很少见）
             // TODO: A scene-less legacy caller must pass its own UIWindowScene to jobsMake(scene:).
             win = UIWindow(frame: UIScreen.main.bounds)
-        };return win
+        }
+        return win
             .byRootViewController(root)
             .byWindowLevel(level)
             ._makeIfNeeded(makeKeyVisible)
     }
     // 顶层 VC（跨 UINavigationController / UITabBarController / presented 链）
     public static func jobsTopMost(from base: UIViewController?) -> UIViewController? {
-        guard let base else { return nil }
+        guard let base else {
+            return nil
+        }
         if let nav = base as? UINavigationController {
             return jobsTopMost(from: nav.visibleViewController ?? nav.topViewController)
         }
@@ -82,11 +99,15 @@ extension UIWindow {
         }
         if let presented = base.presentedViewController {
             return jobsTopMost(from: presented)
-        };return base
+        }
+        return base
     }
     // 私有小工具：是否 makeKeyAndVisible
     @discardableResult
     private func _makeIfNeeded(_ flag: Bool) -> Self {
-        if flag { self.makeKeyAndVisible() };return self
+        if flag {
+            self.makeKeyAndVisible()
+        }
+        return self
     }
 }

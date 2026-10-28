@@ -18,7 +18,9 @@ import SnapKit
 
 /// 把 JobsFuseAnimation 插件适配到 JobsSwiftRefresher 槽位，不承载刷新状态机。
 @MainActor
-public final class JobsRefreshAnimatorContainerView: UIView, JobsAnimatable {
+public final class JobsRefreshAnimatorContainerView: UIView,
+                                                     JobsAnimatable {
+
     public private(set) var animator: JobsRefreshAnimatorProtocol
     public var heightOrWidth: CGFloat
 
@@ -27,7 +29,8 @@ public final class JobsRefreshAnimatorContainerView: UIView, JobsAnimatable {
     public init(animator: JobsRefreshAnimatorProtocol,
                 heightOrWidth: CGFloat = 60) {
         self.animator = animator
-        self.heightOrWidth = heightOrWidth.isFinite ? max(1, heightOrWidth) : 60
+        self.heightOrWidth = heightOrWidth.isFinite ? max(1,
+                                                          heightOrWidth) : 60
         super.init(frame: .zero)
         byBackgroundColor(JobsCor.clear)
             .byUserInteractionEnabled(false)
@@ -42,7 +45,8 @@ public final class JobsRefreshAnimatorContainerView: UIView, JobsAnimatable {
     /// 原位替换动画插件，并立即同步当前刷新阶段。
     @discardableResult
     public func byAnimator(_ animator: JobsRefreshAnimatorProtocol) -> Self {
-        self.animator.refreshAnimatorApply(phase: .inactive, progress: 0)
+        self.animator.refreshAnimatorApply(phase: .inactive,
+                                           progress: 0)
         self.animator.refreshAnimatorView.removeFromSuperview()
         self.animator = animator
         jobs_mountAnimatorView()
@@ -55,22 +59,28 @@ public final class JobsRefreshAnimatorContainerView: UIView, JobsAnimatable {
         switch state {
         /// 空闲态隐藏动画插件
         case .idle:
-            animator.refreshAnimatorApply(phase: .idle, progress: 0)
+            animator.refreshAnimatorApply(phase: .idle,
+                                          progress: 0)
         /// 将下拉进度透传给动画插件
         case .pulling(let progress):
-            animator.refreshAnimatorApply(phase: .pulling, progress: progress)
+            animator.refreshAnimatorApply(phase: .pulling,
+                                          progress: progress)
         /// 达到刷新阈值
         case .ready:
-            animator.refreshAnimatorApply(phase: .ready, progress: 1)
+            animator.refreshAnimatorApply(phase: .ready,
+                                          progress: 1)
         /// 刷新中启动插件循环
         case .refreshing:
-            animator.refreshAnimatorApply(phase: .refreshing, progress: 1)
+            animator.refreshAnimatorApply(phase: .refreshing,
+                                          progress: 1)
         /// 回弹阶段通知插件收尾
         case .ending:
-            animator.refreshAnimatorApply(phase: .ending, progress: 1)
+            animator.refreshAnimatorApply(phase: .ending,
+                                          progress: 1)
         /// 非活跃状态统一停止并隐藏插件
         case .failed, .disabled, .noMore, .removed:
-            animator.refreshAnimatorApply(phase: .inactive, progress: 0)
+            animator.refreshAnimatorApply(phase: .inactive,
+                                          progress: 0)
         }
     }
 

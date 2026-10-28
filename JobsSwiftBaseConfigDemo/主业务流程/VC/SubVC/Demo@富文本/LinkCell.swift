@@ -24,16 +24,21 @@ import NSObject_Rx          // 自动提供 disposeBag
 /// 自定义可点击标记（给“电话”用：红字+蓝线，不走系统 link 样式）
 
 public extension NSAttributedString.Key {
+
     static let jobsAction = NSAttributedString.Key("jobsAction")
 }
 // MARK: - 单一 Cell（支持 Delegate / RAC / RightAligned）
-final class LinkCell: UITableViewCell, HasDisposeBag {
+final class LinkCell: UITableViewCell,
+                      HasDisposeBag {
+
     enum Mode { case delegate, rac, rightAligned }   // ← 新增 rightAligned
     private var simulatorAlertController: UIAlertController?
     // ============================== UI（懒加载：内部完成 add + 约束） ==============================
     private lazy var titleLabel: UILabel = { [unowned self] in
-        UILabel.jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(1)
             .byAddTo(self.contentView) { make in
@@ -44,7 +49,8 @@ final class LinkCell: UITableViewCell, HasDisposeBag {
     }()
 
     private lazy var cardView: UIView = { [unowned self] in
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(10)
             .byClipsToBounds(true)
@@ -57,19 +63,24 @@ final class LinkCell: UITableViewCell, HasDisposeBag {
     }()
 
     private lazy var textView: UITextView = { [unowned self] in
-        UITextView.jobsMake { _ in }
+        UITextView
+            .jobsMake { _ in }
             .byEditable(false)
             .bySelectable(true)               // 最终由 configure 调整
-            .byTextAlignment(.center)
+        .byTextAlignment(.center)
             .byBackgroundColor(JobsCor.clear)
-            .byTextContainerInset(UIEdgeInsets(top: 14, left: 12, bottom: 6, right: 12))
+            .byTextContainerInset(UIEdgeInsets(top: 14,
+                                               left: 12,
+                                               bottom: 6,
+                                               right: 12))
             .byAddTo(self.cardView) { make in
                 make.top.left.right.equalToSuperview()
             }
     }()
 
     private lazy var attachmentLabel: UILabel = { [unowned self] in
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextAlignment(.center)
             .byNumberOfLines(1)
             .byAddTo(self.cardView) { make in
@@ -79,9 +90,13 @@ final class LinkCell: UITableViewCell, HasDisposeBag {
             }
     }()
     // ============================== Init ==============================
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    override init(style: UITableViewCell.CellStyle,
+                  reuseIdentifier: String?) {
+        super.init(style: style,
+                   reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         byBackgroundColor(JobsCor.systemBackground)
         contentView.byBackgroundColor(JobsCor.clear)
@@ -94,6 +109,7 @@ final class LinkCell: UITableViewCell, HasDisposeBag {
 }
 
 extension LinkCell {
+
     // ============================== 配置入口 ==============================
     func configure(title: String,
                    runs: [JobsRichRun],
@@ -106,32 +122,42 @@ extension LinkCell {
                    vc: RichTextDemoVC) {
         // 懒加载可能尚未唤起，保险再“点”一次
         titleLabel
-            .byAlpha(1); cardView.byAlpha(1); textView.byAlpha(1); attachmentLabel.byAlpha(1)
+            .byAlpha(1)
+        cardView.byAlpha(1)
+        textView.byAlpha(1)
+        attachmentLabel
+            .byAlpha(1)
             .byText(title)
         // 复用安全：清理旧状态
-        textView.byDelegate(nil)
+        textView
+            .byDelegate(nil)
             .byDataDetectorTypes([])
             .bySelectable(mode == .delegate || mode == .rightAligned) // rightAligned 也保留系统 link 的可交互能力
         // 主富文本
-        textView.richTextBy(runs, paragraphStyle: paragraphStyle)
+        textView.richTextBy(runs,
+                            paragraphStyle: paragraphStyle)
         // 给“电话”片段打 .jobsAction + 颜色/下划线（无论哪种模式都打标，命中时按 preferJobsAction 优先）
         if let ms = textView.attributedText?.mutableCopy() as? NSMutableAttributedString {
             let full = ms.string as NSString
             let range = full.range(of: phoneText)
             if range.location != NSNotFound {
                 ms.addAttributes([
-                    .jobsAction: phoneURL,
-                    .foregroundColor: JobsCor.red,
-                    .underlineStyle: NSUnderlineStyle.single.rawValue,
-                    .underlineColor: JobsCor.blue
-                ], range: range)
+                        .jobsAction: phoneURL,
+                        .foregroundColor: JobsCor.red,
+                        .underlineStyle: NSUnderlineStyle.single.rawValue,
+                        .underlineColor: JobsCor.blue
+                    ],
+                                 range: range)
                 textView.byAttributedText(ms)
             }
         }
         // 附件文案
-        attachmentLabel.richTextBy(attachmentRuns, paragraphStyle: attachmentParagraphStyle)
+        attachmentLabel.richTextBy(attachmentRuns,
+                                   paragraphStyle: attachmentParagraphStyle)
         // 手势：先清旧，再加新
-        textView.gestureRecognizers?.forEach { textView.removeGestureRecognizer($0) }
+        textView.gestureRecognizers?.forEach {
+            textView.removeGestureRecognizer($0)
+        }
         // ✅ 使用的手势 DSL：byConfig / byCancelsTouchesInView / byTaps / byTouches …
         let tap = textView.jobs_addGesture(UITapGestureRecognizer
             .byConfig { gr in
@@ -146,9 +172,14 @@ extension LinkCell {
             // 仅处理自定义“电话”；系统 link（专属客服）交给 UITextViewDelegate
             tap!.event
                 .subscribe(onNext: { [weak self, weak vc] (gr: UITapGestureRecognizer) in
-                    guard let self, let vc else { return }
-                    if let url = self.urlAtTap(in: self.textView, gesture: gr, preferJobsAction: true) {
-                        self.handle(url: url, on: vc)
+                    guard let self, let vc else {
+                        return
+                    }
+                    if let url = self.urlAtTap(in: self.textView,
+                                               gesture: gr,
+                                               preferJobsAction: true) {
+                        self.handle(url: url,
+                                    on: vc)
                     }
                 })
                 .disposed(by: disposeBag)
@@ -158,9 +189,17 @@ extension LinkCell {
             // 自管“专属客服”+“电话”
             tap!.event
                 .subscribe(onNext: { [weak self, weak vc] (gr: UITapGestureRecognizer) in
-                    guard let self, let vc else { return }
-                    guard let url = self.urlAtTap(in: self.textView, gesture: gr, preferJobsAction: true) else { return }
-                    self.handle(url: url, on: vc, racCustomerAlert: true)
+                    guard let self, let vc else {
+                        return
+                    }
+                    guard let url = self.urlAtTap(in: self.textView,
+                                                  gesture: gr,
+                                                  preferJobsAction: true) else {
+                        return
+                    }
+                    self.handle(url: url,
+                                on: vc,
+                                racCustomerAlert: true)
                 })
                 .disposed(by: disposeBag)
         /// 处理 .rightAligned 分支
@@ -168,9 +207,14 @@ extension LinkCell {
             // 和 delegate 一致：系统 link 仍走 UITextViewDelegate；自定义电话走手势
             tap!.event
                 .subscribe(onNext: { [weak self, weak vc] (gr: UITapGestureRecognizer) in
-                    guard let self, let vc else { return }
-                    if let url = self.urlAtTap(in: self.textView, gesture: gr, preferJobsAction: true) {
-                        self.handle(url: url, on: vc)
+                    guard let self, let vc else {
+                        return
+                    }
+                    if let url = self.urlAtTap(in: self.textView,
+                                               gesture: gr,
+                                               preferJobsAction: true) {
+                        self.handle(url: url,
+                                    on: vc)
                     }
                 })
                 .disposed(by: disposeBag)
@@ -186,20 +230,37 @@ extension LinkCell {
         var p  = gesture.location(in: textView)
         p.x -= textView.textContainerInset.left
         p.y -= textView.textContainerInset.top
-        let glyph = lm.glyphIndex(for: p, in: tc)
-        guard glyph < lm.numberOfGlyphs else { return nil }
-        var usedRect = lm.lineFragmentUsedRect(forGlyphAt: glyph, effectiveRange: nil, withoutAdditionalLayout: true)
+        let glyph = lm.glyphIndex(for: p,
+                                  in: tc)
+        guard glyph < lm.numberOfGlyphs else {
+            return nil
+        }
+        var usedRect = lm.lineFragmentUsedRect(forGlyphAt: glyph,
+                                               effectiveRange: nil,
+                                               withoutAdditionalLayout: true)
         usedRect.origin.x += textView.textContainerInset.left
         usedRect.origin.y += textView.textContainerInset.top
-        guard usedRect.contains(gesture.location(in: textView)) else { return nil }
+        guard usedRect.contains(gesture.location(in: textView)) else {
+            return nil
+        }
         let char = lm.characterIndexForGlyph(at: glyph)
-        guard char < textView.attributedText.length else { return nil }
-        let attrs = textView.attributedText.attributes(at: char, effectiveRange: nil)
+        guard char < textView.attributedText.length else {
+            return nil
+        }
+        let attrs = textView.attributedText.attributes(at: char,
+                                                       effectiveRange: nil)
         if preferJobsAction,
            let action = attrs[.jobsAction] as? String,
-           let url = URL(string: action) { return url }
-        if let v = attrs[.link] as? URL { return v }
-        if let s = attrs[.link] as? String, let url = URL(string: s) { return url };return nil
+           let url = URL(string: action) {
+            return url
+        }
+        if let v = attrs[.link] as? URL {
+            return v
+        }
+        if let s = attrs[.link] as? String, let url = URL(string: s) {
+            return url
+        }
+        return nil
     }
     // ============================== URL 处理 ==============================
     private func handle(url: URL,
@@ -208,38 +269,51 @@ extension LinkCell {
         if url.scheme == "click", url.host == "customer" {
             if racCustomerAlert {
                 UIAlertController
-                    .makeAlert("重命名", "请输入新的名称")
+                    .makeAlert("重命名",
+                               "请输入新的名称")
                     .byAddTextField(placeholder: "新名称") { alert, tf, input, oldText, isDeleting in
                         log("━━━━━━━━━━━━━━━━━━━━")
-                        log("旧文本 = ",oldText)
-                        log("新文本 = ",tf.text)
-                        log("本次输入 = ",input)
-                        log("是否删除  = ",isDeleting)
-                        let ok = alert.actions.first { $0.title == "确定" }
+                        log("旧文本 = ",
+                            oldText)
+                        log("新文本 = ",
+                            tf.text)
+                        log("本次输入 = ",
+                            input)
+                        log("是否删除  = ",
+                            isDeleting)
+                        let ok = alert.actions.first {
+                            $0.title == "确定"
+                        }
                         ok?.byEnabled(!tf.text!.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     }
                     .byAddCancel { _ in                          // ✅ 一个回调（只给 action）
                         print("Cancel tapped")
                     }                                 // 可省略回调
-                    .byAddOK{ alert, _ in                   // 需要拿到 alert 时用 withAlert
+                .byAddOK { alert, _ in                   // 需要拿到 alert 时用 withAlert
                         let name = alert.textField(at: 0)?.text ?? ""
-                        print("new name =", name)
+                        print("new name =",
+                              name)
                     }
                     .byTintColor(JobsCor.systemBlue)
                     .byPresent(vc)
-            };return
+            }
+            return
         }
         if url.scheme == "tel" || url.scheme == "telprompt" {
             #if targetEnvironment(simulator)
             simulatorAlertController = UIAlertController(title: "提示".tr,
                                                          message: "模拟器不支持拨号：\(url.absoluteString)",
                                                          preferredStyle: .alert)
-            simulatorAlertController?.addAction(UIAlertAction(title: "确定".tr, style: .default))
+            simulatorAlertController?.addAction(UIAlertAction(title: "确定".tr,
+                                                              style: .default))
             if let simulatorAlertController {
-                vc.present(simulatorAlertController, animated: true)
+                vc.present(simulatorAlertController,
+                           animated: true)
             }
             #else
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            UIApplication.shared.open(url,
+                                      options: [:],
+                                      completionHandler: nil)
             #endif
         }
     }

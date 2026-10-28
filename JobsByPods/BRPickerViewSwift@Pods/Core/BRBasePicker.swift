@@ -14,6 +14,7 @@ import UIKit
 import JobsSwiftDSL
 
 open class BRBasePicker<Result>: NSObject {
+
     private(set) weak var panel: BRPickerPanel?
     private var lastPanelWasDismissed = false
     private var resultHandler: ((Result) -> Void)?
@@ -49,7 +50,7 @@ open class BRBasePicker<Result>: NSObject {
         return self
     }
 
-// MARK: - Fluent config
+    // MARK: - Fluent config
     @discardableResult
     public func byTheme(_ config: (BRPickerTheme) -> Void) -> Self {
         config(theme)
@@ -57,6 +58,7 @@ open class BRBasePicker<Result>: NSObject {
     }
 
     public enum AnimationStyle {
+
         case slide, spring, fade
         case custom(BRPanelAnimatable)
     }
@@ -64,20 +66,35 @@ open class BRBasePicker<Result>: NSObject {
     @discardableResult
     public func byAnimation(_ style: AnimationStyle) -> Self {
         switch style {
-        case .slide: animator = BRSlideAnimation()
-        case .spring: animator = BRSpringAnimation()
-        case .fade: animator = BRFadeAnimation()
-        case .custom(let a): animator = a
-        };return self
+        case .slide:
+            animator = BRSlideAnimation()
+        case .spring:
+            animator = BRSpringAnimation()
+        case .fade:
+            animator = BRFadeAnimation()
+        case .custom(let a):
+            animator = a
+        }
+        return self
     }
 
     public final class ToolbarConfig {
+
         fileprivate var title: String?
         fileprivate var cancelText: String = "Cancel"
         fileprivate var confirmText: String = "Done"
-        @discardableResult public func byTitle(_ t: String?) -> Self { title = t; return self }
-        @discardableResult public func byCancelText(_ t: String) -> Self { cancelText = t; return self }
-        @discardableResult public func byConfirmText(_ t: String) -> Self { confirmText = t; return self }
+        @discardableResult public func byTitle(_ t: String?) -> Self {
+            title = t
+            return self
+        }
+        @discardableResult public func byCancelText(_ t: String) -> Self {
+            cancelText = t
+            return self
+        }
+        @discardableResult public func byConfirmText(_ t: String) -> Self {
+            confirmText = t
+            return self
+        }
     }
 
     @discardableResult
@@ -136,22 +153,31 @@ open class BRBasePicker<Result>: NSObject {
     @available(iOS 13.0, *)
     @MainActor
     public func awaitResult() async throws -> Result {
-        guard !lastPanelWasDismissed else { throw BRPickerAwaitError.cancelled }
-        guard pendingAwait == nil else { throw BRPickerAwaitError.alreadyAwaiting }
+        guard !lastPanelWasDismissed else {
+            throw BRPickerAwaitError.cancelled
+        }
+        guard pendingAwait == nil else {
+            throw BRPickerAwaitError.alreadyAwaiting
+        }
         let state = BRPickerAwaitState<Result>()
         pendingAwait = state
         defer {
-            if pendingAwait === state { pendingAwait = nil }
+            if pendingAwait === state {
+                pendingAwait = nil
+            }
         }
         return try await withTaskCancellationHandler(operation: {
             try Task.checkCancellation()
             return try await withCheckedThrowingContinuation { continuation in
                 state.install(continuation)
             }
-        }, onCancel: { [weak self] in
+        },
+                                                     onCancel: { [weak self] in
             state.finish(.failure(CancellationError()))
             Task { @MainActor [weak self] in
-                guard let self, self.pendingAwait === state else { return }
+                guard let self, self.pendingAwait === state else {
+                    return
+                }
                 self.panel?.dismiss()
             }
         })
@@ -171,8 +197,10 @@ open class BRBasePicker<Result>: NSObject {
     }
     #endif
 
-// MARK: - Override points
-    open func buildContentView() -> UIView { UIView.jobsMake { _ in } }
+    // MARK: - Override points
+    open func buildContentView() -> UIView {
+        UIView.jobsMake { _ in }
+    }
     open func confirmSelection() { /* subclasses should call send(...) */ }
     open func cancelSelection() { /* optional */ }
 
@@ -182,22 +210,24 @@ open class BRBasePicker<Result>: NSObject {
         let panel = BRPickerPanel()
         bind(panel: panel)
         let content = buildContentView()
-        panel.configureToolbar(
-            title: toolbarTitle,
-            cancelText: cancelText,
-            confirmText: confirmText,
-            onCancel: { [weak self] in
-                guard let self else { return }
-                self.cancelSelection()
-                self.dismissPanel()
-            },
-            onConfirm: { [weak self] in
-                guard let self else { return }
-                BRPickerHaptics.successIfNeeded(self.theme.hapticsOnConfirm)
-                self.confirmSelection()
-                self.dismissPanel()
+        panel.configureToolbar(title: toolbarTitle,
+                               cancelText: cancelText,
+                               confirmText: confirmText,
+                               onCancel: { [weak self] in
+            guard let self else {
+                return
             }
-        )
+            self.cancelSelection()
+            self.dismissPanel()
+        },
+                               onConfirm: { [weak self] in
+            guard let self else {
+                return
+            }
+            BRPickerHaptics.successIfNeeded(self.theme.hapticsOnConfirm)
+            self.confirmSelection()
+            self.dismissPanel()
+        })
         panel.embed(content)
         panel.present(in: container)
         return self
@@ -205,12 +235,14 @@ open class BRBasePicker<Result>: NSObject {
 }
 
 public enum BRPickerAwaitError: Error {
+
     case cancelled
     case alreadyAwaiting
 }
 
 #if canImport(_Concurrency)
 private final class BRPickerAwaitState<Value>: @unchecked Sendable {
+
     private let lock = NSLock()
     private var continuation: CheckedContinuation<Value, Error>?
     private var result: Swift.Result<Value, Error>?

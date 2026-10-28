@@ -14,30 +14,32 @@ import UIKit
 import PDFKit
 
 extension PDFThumbnailView {
+
     @discardableResult
     public func byPDFView(to pdfView: PDFView) -> Self {
-        self.pdfView = pdfView;
+        self.pdfView = pdfView
         return self
     }
     @discardableResult
     public func byLayoutMode(_ mode: PDFThumbnailLayoutMode) -> Self {
-        self.layoutMode = mode;
+        self.layoutMode = mode
         return self
     }
     @discardableResult
     public func byThumbnailSize(_ size: CGSize) -> Self {
-        self.thumbnailSize = size;
+        self.thumbnailSize = size
         return self
     }
     @discardableResult
     public func byBackgroundColor(_ color: UIColor) -> Self {
-        self.backgroundColor = color;
+        self.backgroundColor = color
         return self
     }
     @discardableResult
     public func byContentInset(_ inset: UIEdgeInsets) -> Self {
         if #available(iOS 11.0, *) {
             self.contentInset = inset
-        }; return self
+        }
+        return self
     }
 }

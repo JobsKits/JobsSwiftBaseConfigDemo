@@ -12,6 +12,7 @@ import JobsSwiftDSL
 import SnapKit
 
 public final class JobsAppDoorVC: JobsAppDoorBaseVC {
+
     public private(set) var currentMode: JobsAppDoorMode = .login
 
     private var hasRunEntranceAnimation = false
@@ -22,7 +23,8 @@ public final class JobsAppDoorVC: JobsAppDoorBaseVC {
     private var panelHeightConstraint: Constraint?
 
     private lazy var panelView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsAppDoorPalette.panelBackground)
             .byCornerRadius(8)
             .byClipsToBounds(true)
@@ -34,31 +36,29 @@ public final class JobsAppDoorVC: JobsAppDoorBaseVC {
             }
     }()
 
-    private lazy var formView = JobsAppDoorFormView(
-        mode: .login,
-        configuration: configuration,
-        showsModeSwitcher: false
-    )
+    private lazy var formView = JobsAppDoorFormView(mode: .login,
+                                                    configuration: configuration,
+                                                    showsModeSwitcher: false)
 
     private lazy var railButton: UIButton = {
         UIButton.sys()
-            .jobsAppDoorAppearance(
-                title: verticalTitle(for: .register),
-                titleColor: JobsAppDoorPalette.gold,
-                font: JobsFont.systemFont(ofSize: 13, weight: .medium),
-                backgroundColor: JobsAppDoorPalette.cardBackground,
-                cornerRadius: 0
-            )
-            .byImage(
-                JobsAppDoorResource.image(named: "AppDoorBackLogin")
-                    ?? JobsAppDoorResource.image(named: "Lock"),
-                for: .normal
-            )
-            .byImagePlacement(.top, padding: 8)
+            .jobsAppDoorAppearance(title: verticalTitle(for: .register),
+                                   titleColor: JobsAppDoorPalette.gold,
+                                   font: JobsFont.systemFont(ofSize: 13,
+                                                             weight: .medium),
+                                   backgroundColor: JobsAppDoorPalette.cardBackground,
+                                   cornerRadius: 0)
+            .byImage(JobsAppDoorResource.image(named: "AppDoorBackLogin")
+                ?? JobsAppDoorResource.image(named: "Lock"),
+                     for: .normal)
+            .byImagePlacement(.top,
+                              padding: 8)
             .byTitleAlignment(.center)
             .byNumberOfLines(0)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 switchMode(to: currentMode == .login ? .register : .login)
             }
             .byAddTo(panelView)
@@ -85,21 +85,25 @@ public final class JobsAppDoorVC: JobsAppDoorBaseVC {
 
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        guard !hasRunEntranceAnimation else { return }
+        guard !hasRunEntranceAnimation else {
+            return
+        }
         hasRunEntranceAnimation = true
         runEntrancePop(views: [logoView, panelView, customerServiceButton])
     }
 
-    override func handleKeyboardOffset(_ offset: CGFloat, keyboardVisible: Bool) {
+    override func handleKeyboardOffset(_ offset: CGFloat,
+                                       keyboardVisible: Bool) {
         self.keyboardVisible = keyboardVisible
-        keyboardLift = keyboardVisible ? min(108, offset * 0.32) : 0
+        keyboardLift = keyboardVisible ? min(108,
+                                             offset * 0.32) : 0
         panelTopConstraint?.update(offset: panelTop(for: currentMode))
         updateLogoVisibility(animated: true)
-        UIView.jobsAnimateWithOptions(
-            0.25,
-            options: [.curveEaseOut, .beginFromCurrentState],
-            animations: { self.view.layoutIfNeeded() }
-        )
+        UIView.jobsAnimateWithOptions(0.25,
+                                      options: [.curveEaseOut, .beginFromCurrentState],
+                                      animations: {
+            self.view.layoutIfNeeded()
+        })
     }
 
     public func toRegister() {
@@ -112,6 +116,7 @@ public final class JobsAppDoorVC: JobsAppDoorBaseVC {
 }
 
 private extension JobsAppDoorVC {
+
     func setupLayout() {
         logoView.configure(style: .wide)
         logoView.snp.makeConstraints { make in
@@ -137,7 +142,8 @@ private extension JobsAppDoorVC {
             self?.switchMode(to: mode)
         }
         formView.onSubmit = { [weak self] mode, values in
-            self?.dispatchSubmit(mode: mode, values: values)
+            self?.dispatchSubmit(mode: mode,
+                                 values: values)
         }
         formView.onHome = { [weak self] in
             self?.finishToHome()
@@ -146,7 +152,9 @@ private extension JobsAppDoorVC {
             self?.openCountryCodePicker(for: inputView)
         }
         formView.onVerificationCodeRequest = { [weak self] _ in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             verificationCodeHandler?(formView.values)
         }
     }
@@ -184,7 +192,9 @@ private extension JobsAppDoorVC {
     }
 
     func switchMode(to mode: JobsAppDoorMode) {
-        guard mode != currentMode else { return }
+        guard mode != currentMode else {
+            return
+        }
         cancelSubmission()
         view.endEditing(true)
         keyboardLift = 0
@@ -197,14 +207,14 @@ private extension JobsAppDoorVC {
         installPanelLayout(mode: mode)
         refreshRailAppearance()
         updateLogoVisibility(animated: false)
-        UIView.jobsAnimateWithSpring(
-            0.7,
-            delay: 0.1,
-            dampingRatio: 1,
-            initialVelocity: 0.1,
-            options: [.curveEaseInOut, .beginFromCurrentState],
-            animations: { self.view.layoutIfNeeded() }
-        )
+        UIView.jobsAnimateWithSpring(0.7,
+                                     delay: 0.1,
+                                     dampingRatio: 1,
+                                     initialVelocity: 0.1,
+                                     options: [.curveEaseInOut, .beginFromCurrentState],
+                                     animations: {
+            self.view.layoutIfNeeded()
+        })
     }
 
     func updateLogoVisibility(animated: Bool) {
@@ -213,11 +223,11 @@ private extension JobsAppDoorVC {
             logoView.byAlpha(alpha)
             return
         }
-        UIView.jobsAnimateWithOptions(
-            0.2,
-            options: [.curveEaseOut, .beginFromCurrentState],
-            animations: { self.logoView.byAlpha(alpha) }
-        )
+        UIView.jobsAnimateWithOptions(0.2,
+                                      options: [.curveEaseOut, .beginFromCurrentState],
+                                      animations: {
+            self.logoView.byAlpha(alpha)
+        })
     }
 
     func verticalTitle(for mode: JobsAppDoorMode) -> String {
@@ -232,20 +242,21 @@ private extension JobsAppDoorVC {
         /// 找回密码侧轨文案
         case .forgotPassword:
             title = JobsAppDoorResource.text("返回登录")
-        };return title.map(String.init).joined(separator: "\n")
+        }
+        return title.map(String.init).joined(separator: "\n")
     }
 
     func refreshRailAppearance() {
         let loginMode = currentMode == .login
         railButton
-            .jobsAppDoorAppearance(
-                title: verticalTitle(for: loginMode ? .register : .login),
-                titleColor: loginMode ? JobsAppDoorPalette.gold : JobsAppDoorPalette.cardBackground,
-                font: JobsFont.systemFont(ofSize: loginMode ? 13 : 12, weight: .medium),
-                backgroundColor: loginMode ? JobsAppDoorPalette.cardBackground : JobsAppDoorPalette.fieldStroke,
-                cornerRadius: 0
-            )
-            .byImagePlacement(.top, padding: 8)
+            .jobsAppDoorAppearance(title: verticalTitle(for: loginMode ? .register : .login),
+                                   titleColor: loginMode ? JobsAppDoorPalette.gold : JobsAppDoorPalette.cardBackground,
+                                   font: JobsFont.systemFont(ofSize: loginMode ? 13 : 12,
+                                                             weight: .medium),
+                                   backgroundColor: loginMode ? JobsAppDoorPalette.cardBackground : JobsAppDoorPalette.fieldStroke,
+                                   cornerRadius: 0)
+            .byImagePlacement(.top,
+                              padding: 8)
             .byTitleAlignment(.center)
             .byNumberOfLines(0)
     }

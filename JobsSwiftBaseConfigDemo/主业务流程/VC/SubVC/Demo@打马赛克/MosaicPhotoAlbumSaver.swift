@@ -14,31 +14,37 @@ import UIKit
 import Photos
 
 enum MosaicPhotoAlbumSaveError: LocalizedError {
+
     case unauthorized
     case failed
 
     var errorDescription: String? {
         switch self {
         /// 处理 .unauthorized 分支
-        case .unauthorized: return "没有相册写入权限"
+        case .unauthorized:
+            return "没有相册写入权限"
         /// 处理 .failed 分支
-        case .failed: return "未知原因保存失败"
+        case .failed:
+            return "未知原因保存失败"
         }
     }
 }
 
 enum MosaicPhotoAlbumSaver {
+
     static func save(_ image: UIImage,
                      completion: @escaping (Result<Void, Error>) -> Void) {
         PHPhotoLibrary.requestAuthorization { status in
             guard status == .authorized || status == .limited else {
                 DispatchQueue.main.async {
                     completion(.failure(MosaicPhotoAlbumSaveError.unauthorized))
-                };return
+                }
+                return
             }
             PHPhotoLibrary.shared().performChanges({
                 PHAssetChangeRequest.creationRequestForAsset(from: image)
-            }, completionHandler: { saved, error in
+            },
+                                                   completionHandler: { saved, error in
                 DispatchQueue.main.async {
                     if saved {
                         completion(.success(()))

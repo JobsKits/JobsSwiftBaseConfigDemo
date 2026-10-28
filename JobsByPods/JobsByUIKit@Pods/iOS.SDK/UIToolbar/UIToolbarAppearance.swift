@@ -15,6 +15,7 @@ import JobsSwiftBlock
 
 @available(iOS 13.0, *)
 extension UIToolbarAppearance {
+
     // MARK: - Configure presets
     @discardableResult
     public func byConfigureWithDefaultBackground() -> Self {

@@ -21,8 +21,10 @@ import JobsSwiftDSL
 import SnapKit
 
 final class JobsAppDoorDemoVC: BaseVC {
+
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("JobsAppDoor")
             .byTextColor(JobsCor.label)
             .byTextAlignment(.center)
@@ -30,40 +32,44 @@ final class JobsAppDoorDemoVC: BaseVC {
     }()
 
     private lazy var detailLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("同一套登录 / 注册 / 找回密码能力\n分别演示单面板换轨与独立卡片横滑")
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 14,
+                                        weight: .regular))
             .byNumberOfLines(0)
     }()
 
     private lazy var style1Button: UIButton = {
         UIButton.sys()
-            .byJobsAppDoorAppearance(
-                title: "Style1 · 单面板左右换轨",
-                titleColor: JobsCor.white,
-                font: JobsFont.systemFont(ofSize: 16, weight: .semibold),
-                backgroundColor: JobsCor.systemPink,
-                cornerRadius: 26
-            )
+            .byJobsAppDoorAppearance(title: "Style1 · 单面板左右换轨",
+                                     titleColor: JobsCor.white,
+                                     font: JobsFont.systemFont(ofSize: 16,
+                                                               weight: .semibold),
+                                     backgroundColor: JobsCor.systemPink,
+                                     cornerRadius: 26)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 openAppDoor(JobsAppDoorVC(configuration: .fullConfig))
             }
     }()
 
     private lazy var style2Button: UIButton = {
         UIButton.sys()
-            .byJobsAppDoorAppearance(
-                title: "Style2 · 独立卡片弹簧横滑",
-                titleColor: JobsCor.white,
-                font: JobsFont.systemFont(ofSize: 16, weight: .semibold),
-                backgroundColor: JobsCor.systemIndigo,
-                cornerRadius: 26
-            )
+            .byJobsAppDoorAppearance(title: "Style2 · 独立卡片弹簧横滑",
+                                     titleColor: JobsCor.white,
+                                     font: JobsFont.systemFont(ofSize: 16,
+                                                               weight: .semibold),
+                                     backgroundColor: JobsCor.systemIndigo,
+                                     cornerRadius: 26)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 openAppDoor(JobsAppDoorStyle2VC(configuration: .fullConfig))
             }
     }()
@@ -96,27 +102,30 @@ final class JobsAppDoorDemoVC: BaseVC {
 }
 
 private extension JobsAppDoorDemoVC {
+
     func openAppDoor(_ controller: JobsAppDoorBaseVC) {
         controller.submitHandler = { [weak controller, weak self] mode, values in
-            let alertController = UIAlertController(
-                title: self?.modeTitle(mode),
-                message: "username: \(values.username)\nphone: \(values.countryCode) \(values.phone)",
-                preferredStyle: .alert
-            )
-            alertController.addAction(UIAlertAction(title: "OK", style: .default))
-            controller?.present(alertController, animated: true)
+            let alertController = UIAlertController(title: self?.modeTitle(mode),
+                                                    message: "username: \(values.username)\nphone: \(values.countryCode) \(values.phone)",
+                                                    preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "OK",
+                                                    style: .default))
+            controller?.present(alertController,
+                                animated: true)
         }
         controller.customerServiceHandler = { [weak controller] in
-            let alertController = UIAlertController(
-                title: "在线客服".tr,
-                message: "7×24小时".tr,
-                preferredStyle: .alert
-            )
-            alertController.addAction(UIAlertAction(title: "OK", style: .default))
-            controller?.present(alertController, animated: true)
+            let alertController = UIAlertController(title: "在线客服".tr,
+                                                    message: "7×24小时".tr,
+                                                    preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "OK",
+                                                    style: .default))
+            controller?.present(alertController,
+                                animated: true)
         }
         controller.verificationCodeHandler = { values in
-            print("📨 JobsAppDoor verification request:", values.countryCode, values.phone)
+            print("📨 JobsAppDoor verification request:",
+                  values.countryCode,
+                  values.phone)
         }
         controller.byPush(self)
     }

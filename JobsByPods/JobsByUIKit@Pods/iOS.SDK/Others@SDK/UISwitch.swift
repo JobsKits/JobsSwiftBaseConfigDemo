@@ -12,15 +12,18 @@ import UIKit
 #endif
 
 extension UISwitch {
+
     @discardableResult
     public func byOn(_ on: Bool) -> Self {
-        self.setOn(on, animated: false)
+        self.setOn(on,
+                   animated: false)
         return self
     }
 
     @discardableResult
     public func byOnAnimated(_ on: Bool) -> Self {
-        self.setOn(on, animated: true)
+        self.setOn(on,
+                   animated: true)
         return self
     }
 

@@ -15,6 +15,7 @@ import JobsSwiftBaseDefines
 
 // MARK: - 直接赋值@单参数
 extension UIView {
+
     @discardableResult
     public func byHidden(_ hidden: Bool) -> Self {
         self.isHidden = hidden
@@ -31,12 +32,17 @@ extension UIView {
     public func byTintColor(_ color: UIColor?) -> Self {
         let slot = "UIView.tintColor"
         if let key = color?.jobsThemeColorKey {
-            JobsThemeCenter.shared.bind(self, slot: slot) { object, center in
-                guard let view = object as? UIView else { return }
+            JobsThemeCenter.shared.bind(self,
+                                        slot: slot) { object, center in
+                guard let view = object as? UIView else {
+                    return
+                }
                 view.tintColor = center.resolvedColor(key)
-            };return self
+            }
+            return self
         }
-        JobsThemeCenter.shared.unbind(self, slot: slot)
+        JobsThemeCenter.shared.unbind(self,
+                                      slot: slot)
         self.tintColor = color
         return self
     }
@@ -44,7 +50,8 @@ extension UIView {
     /// 统一圆角：按钮走 UIButton.Configuration 方案，其他视图保持原始 layer 逻辑
     @discardableResult
     public func byCornerRadius(_ radius: CGFloat?) -> Self {
-        let r = max(0, radius ?? 0.0)
+        let r = max(0,
+                    radius ?? 0.0)
         if let btn = self as? UIButton {
             if #available(iOS 15.0, *), var cfg = btn.configuration {
                 cfg.cornerStyle = .fixed
@@ -90,7 +97,10 @@ extension UIView {
     @discardableResult
     public func byBorderColor(_ color: UIColor?) -> Self {
         self.layer.borderColor = color?.cgColor
-        if color == nil { self.layer.borderWidth = 0 };return self
+        if color == nil {
+            self.layer.borderWidth = 0
+        }
+        return self
     }
 
     @discardableResult
@@ -240,6 +250,7 @@ extension UIView {
 }
 // MARK: - 闭包重载@单参数
 extension UIView {
+
     @discardableResult
     public func byHidden(_ builder: () -> Bool) -> Self {
         self.isHidden = builder()
@@ -286,7 +297,10 @@ extension UIView {
     public func byBorderColor(_ builder: () -> UIColor?) -> Self {
         let color = builder()
         self.layer.borderColor = color?.cgColor
-        if color == nil { self.layer.borderWidth = 0 };return self
+        if color == nil {
+            self.layer.borderWidth = 0
+        }
+        return self
     }
 
     @discardableResult
@@ -430,6 +444,7 @@ extension UIView {
 }
 
 extension UIView {
+
     // MARK: 设置UI
     /// 统一在一个回调里配置 layer
     @discardableResult
@@ -445,20 +460,26 @@ extension UIView {
     }
 
     @discardableResult
-    public func byInsertSublayer(_ layer: CALayer, at index: UInt32) -> Self {
-        layer.insertSublayer(layer, at: index)
+    public func byInsertSublayer(_ layer: CALayer,
+                                 at index: UInt32) -> Self {
+        layer.insertSublayer(layer,
+                             at: index)
         return self
     }
 
     @discardableResult
-    public func byInsertSublayer(_ layer: CALayer, below sibling: CALayer?) -> Self {
-        layer.insertSublayer(layer, below: sibling)
+    public func byInsertSublayer(_ layer: CALayer,
+                                 below sibling: CALayer?) -> Self {
+        layer.insertSublayer(layer,
+                             below: sibling)
         return self
     }
 
     @discardableResult
-    public func byInsertSublayer(_ layer: CALayer, above sibling: CALayer?) -> Self {
-        layer.insertSublayer(layer, above: sibling)
+    public func byInsertSublayer(_ layer: CALayer,
+                                 above sibling: CALayer?) -> Self {
+        layer.insertSublayer(layer,
+                             above: sibling)
         return self
     }
 
@@ -483,12 +504,17 @@ extension UIView {
     /// 会影响阴影：layer.mask 会把阴影也一起裁掉（阴影经常“消失”），除非你额外用外层容器做 shadow。
     /// 动态变化时需要反复更新 maskPath，否则旋转、尺寸变化圆角会错。
     @discardableResult
-    public func byCornerRaduis(corner: UIRectCorner, raduis: CGFloat) -> Self {
-        if self.bounds == .zero { return self }
+    public func byCornerRaduis(corner: UIRectCorner,
+                               raduis: CGFloat) -> Self {
+        if self.bounds == .zero {
+            return self
+        }
         let maskPath = UIBezierPath(roundedRect: self.bounds,
                                     byRoundingCorners: corner,
                                     cornerRadii: CGSize(width: raduis, height: raduis))
-        self.layer.mask = CAShapeLayer().byFrame(self.bounds).byPath(maskPath.cgPath)
+        self.layer.mask = CAShapeLayer()
+            .byFrame(self.bounds)
+            .byPath(maskPath.cgPath)
         self.clipsToBounds = true
         return self
     }
@@ -513,44 +539,58 @@ extension UIView {
     }
     /// 在指定层级插入 ✅ 返回调用者（父视图）
     @discardableResult
-    public func byInsertSubview(_ view: UIView, at index: Int) -> Self {
-        insertSubview(view, at: index)
+    public func byInsertSubview(_ view: UIView,
+                                at index: Int) -> Self {
+        insertSubview(view,
+                      at: index)
         return self
     }
     /// 在指定层级插入 ✅ 返回子视图
     @discardableResult
-    public func byInsertSubviewRetSub<T: UIView>(_ view: T, at index: Int) -> T {
-        insertSubview(view, at: index)
+    public func byInsertSubviewRetSub<T: UIView>(_ view: T,
+                                                 at index: Int) -> T {
+        insertSubview(view,
+                      at: index)
         return view
     }
     /// 在某视图之下插入 ✅ 返回调用者（父视图）
     @discardableResult
-    public func byInsertSubview(_ view: UIView, below sibling: UIView) -> Self {
-        insertSubview(view, belowSubview: sibling)
+    public func byInsertSubview(_ view: UIView,
+                                below sibling: UIView) -> Self {
+        insertSubview(view,
+                      belowSubview: sibling)
         return self
     }
     /// 在某视图之下插入 ✅ 返回子视图
     @discardableResult
-    public func byInsertSubviewRetSub<T: UIView>(_ view: T, below sibling: UIView) -> T {
-        insertSubview(view, belowSubview: sibling)
+    public func byInsertSubviewRetSub<T: UIView>(_ view: T,
+                                                 below sibling: UIView) -> T {
+        insertSubview(view,
+                      belowSubview: sibling)
         return view
     }
     /// 在某视图之上插入 ✅ 返回调用者（父视图）
     @discardableResult
-    public func byInsertSubview(_ view: UIView, above sibling: UIView) -> Self {
-        insertSubview(view, aboveSubview: sibling)
+    public func byInsertSubview(_ view: UIView,
+                                above sibling: UIView) -> Self {
+        insertSubview(view,
+                      aboveSubview: sibling)
         return self
     }
     /// 在某视图之上插入 ✅ 返回子视图
     @discardableResult
-    public func byInsertSubviewRetSub<T: UIView>(_ view: T, above sibling: UIView) -> T {
-        insertSubview(view, aboveSubview: sibling)
+    public func byInsertSubviewRetSub<T: UIView>(_ view: T,
+                                                 above sibling: UIView) -> T {
+        insertSubview(view,
+                      aboveSubview: sibling)
         return view
     }
     /// 交换两个下标的子视图 ✅ 返回调用者（父视图）
     @discardableResult
-    public func byExchangeSubview(at i: Int, with j: Int) -> Self {
-        exchangeSubview(at: i, withSubviewAt: j)
+    public func byExchangeSubview(at i: Int,
+                                  with j: Int) -> Self {
+        exchangeSubview(at: i,
+                        withSubviewAt: j)
         return self
     }
     /// 置顶 ✅ 返回调用者（父视图）
@@ -586,7 +626,10 @@ extension UIView {
     /// 移除所有子视图（便捷）
     @discardableResult
     public func byRemoveAllSubviews() -> Self {
-        subviews.forEach { $0.removeFromSuperview() };return self
+        subviews.forEach {
+            $0.removeFromSuperview()
+        }
+        return self
     }
     // MARK: - UIView · Layout Triggers
     /// 标记需要布局
@@ -616,21 +659,25 @@ extension UIView {
     /// 手势封装：添加手势以后返回这个手势本身@常用于链式调用
     @discardableResult
     public func jobs_addGestureRetView<T: UIGestureRecognizer>(_ gesture: T?) -> Self {
-        guard let gesture = gesture else { return self }
+        guard let gesture = gesture else {
+            return self
+        }
         addGestureRecognizer(gesture)
         return self
     }
     /// 手势封装：添加手势以后返回这个手势本身@常用于链式调用
     @discardableResult
     public func jobs_addGesture<T: UIGestureRecognizer>(_ gesture: T?) -> T? {
-        guard let gesture = gesture else { return nil }
+        guard let gesture = gesture else {
+            return nil
+        }
         addGestureRecognizer(gesture)
         return gesture
     }
     /// 刷新UI@标记即可（让系统合帧处理）：适合大多数情况
     @MainActor
     @discardableResult
-    public func refresh()-> Self{
+    public func refresh() -> Self {
         setNeedsLayout()  // 下帧再布局
         layoutIfNeeded()  // 立刻完成布局（当前 runloop）
         return self
@@ -654,33 +701,34 @@ extension UIView {
     public func byActivate() -> Self {
         // 下一帧：让父视图先布局，再让自己重建，避免首帧 bounds==0 的问题
         DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             superview?.setNeedsLayout()
             superview?.layoutIfNeeded()
             setNeedsLayout()
-        };return self
+        }
+        return self
     }
 }
 // MARK: 修改背景色
 private var kBgColorMapKey: UInt8 = 0
 private extension UIView {
-    func jobsApplyBackgroundColor(
-        _ color: UIColor?,
-        for state: UIControl.State
-    ) {
+
+    func jobsApplyBackgroundColor(_ color: UIColor?,
+                                  for state: UIControl.State) {
         // ===== UIButton =====
         if let button = self as? UIButton {
             // -------- iOS 15+ --------
             if #available(iOS 15.0, *) {
                 // 1. 存颜色
-                var map = objc_getAssociatedObject(button, &kBgColorMapKey) as? [Int: UIColor] ?? [:]
+                var map = objc_getAssociatedObject(button,
+                                                   &kBgColorMapKey) as? [Int: UIColor] ?? [:]
                 map[Int(state.rawValue)] = color
-                objc_setAssociatedObject(
-                    button,
-                    &kBgColorMapKey,
-                    map,
-                    .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-                )
+                objc_setAssociatedObject(button,
+                                         &kBgColorMapKey,
+                                         map,
+                                         .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
                 // 2. 初始化 configuration
                 if button.configuration == nil {
                     button.configuration = UIButton.Configuration.plain()
@@ -692,8 +740,11 @@ private extension UIView {
                 button.updateConfiguration()
                 // 3. 状态渲染
                 button.configurationUpdateHandler = { btn in
-                    guard var c = btn.configuration else { return }
-                    let colors = objc_getAssociatedObject(btn, &kBgColorMapKey) as? [Int: UIColor]
+                    guard var c = btn.configuration else {
+                        return
+                    }
+                    let colors = objc_getAssociatedObject(btn,
+                                                          &kBgColorMapKey) as? [Int: UIColor]
                     let normalKey = Int(UIControl.State.normal.rawValue)
                     let highlightedKey = Int(UIControl.State.highlighted.rawValue)
                     let selectedKey = Int(UIControl.State.selected.rawValue)
@@ -710,7 +761,7 @@ private extension UIView {
                     }
                     // ✅关键：没有设置对应状态色，就回退到 normal（避免变成 nil 触发系统蓝色高亮）
                     let resolvedColor =
-                        colors?[wantedKey]
+                    colors?[wantedKey]
                         ?? colors?[normalKey]
                         ?? JobsCor.clear
                     c.background.backgroundColor = resolvedColor
@@ -721,7 +772,8 @@ private extension UIView {
                 return
             }
             // -------- iOS14- --------
-            button.byBackgroundImage(color?.byImage(), for: state)
+            button.byBackgroundImage(color?.byImage(),
+                                     for: state)
             return
         }
         // ===== UIView（无状态）=====
@@ -730,25 +782,23 @@ private extension UIView {
 }
 
 extension UIView {
+
     @discardableResult
-    public func byBackgroundColor(
-        _ color: UIColor?,
-        for state: UIControl.State = .normal
-    ) -> Self {
+    public func byBackgroundColor(_ color: UIColor?,
+                                  for state: UIControl.State = .normal) -> Self {
         let slot = "UIView.backgroundColor.\(state.rawValue)"
         if let key = color?.jobsThemeColorKey {
-            JobsThemeCenter.shared.bind(
-                self,
-                slot: slot
-            ) { object, center in
-                (object as? UIView)?.jobsApplyBackgroundColor(
-                    center.resolvedColor(key),
-                    for: state
-                )
-            };return self
+            JobsThemeCenter.shared.bind(self,
+                                        slot: slot) { object, center in
+                (object as? UIView)?.jobsApplyBackgroundColor(center.resolvedColor(key),
+                                                              for: state)
+            }
+            return self
         }
-        JobsThemeCenter.shared.unbind(self, slot: slot)
-        jobsApplyBackgroundColor(color, for: state)
+        JobsThemeCenter.shared.unbind(self,
+                                      slot: slot)
+        jobsApplyBackgroundColor(color,
+                                 for: state)
         return self
     }
 }

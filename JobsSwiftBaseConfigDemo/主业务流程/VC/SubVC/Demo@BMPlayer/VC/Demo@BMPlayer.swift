@@ -22,31 +22,39 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class BMPlayerDemoVC: BaseVC {
-    private enum Row: Int, CaseIterable {
+
+    private enum Row: Int,
+                      CaseIterable {
+
         case local, remote, feed, float
         var title: String {
             switch self {
             /// 处理 .local 分支
-            case .local:  return "本地视频：welcome_video.mp4（单独播放）".tr
+            case .local:
+                return "本地视频：welcome_video.mp4（单独播放）".tr
             /// 处理 .remote 分支
-            case .remote: return "网络视频：中国频道优先 · 多信号源可切换（单独播放）".tr
+            case .remote:
+                return "网络视频：中国频道优先 · 多信号源可切换（单独播放）".tr
             /// 处理 .feed 分支
-            case .feed:   return "抖音风：列表预览 → 详情页独立播放".tr
+            case .feed:
+                return "抖音风：列表预览 → 详情页独立播放".tr
             /// 处理 .float 分支
-            case .float:  return "悬浮窗口播放（直播）".tr
+            case .float:
+                return "悬浮窗口播放（直播）".tr
             }
         }
     }
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(UITableViewCell.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
-            .byAddTo(view) {[unowned self] make in
+            .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
                     make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
                     make.left.right.bottom.equalToSuperview()
@@ -66,28 +74,45 @@ final class BMPlayerDemoVC: BaseVC {
     }
 }
 
-extension BMPlayerDemoVC : UITableViewDataSource,UITableViewDelegate{
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { Row.allCases.count }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        tableView.byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+extension BMPlayerDemoVC : UITableViewDataSource,
+                           UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
+        Row.allCases.count
+    }
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        tableView
+            .byDequeueReusableCell(withType: UITableViewCell.self,
+                                   for: indexPath)
             .byText(Row(rawValue: indexPath.row)?.title)
             .byAccessoryType(.disclosureIndicator)
             .onResult { _ in
             }
     }
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath,
+                              animated: true)
         switch Row(rawValue: indexPath.row)! {
         /// 处理 .remote 分支
-        case .remote: PlayerRemoteVC().byPush(self)
+        case .remote:
+            PlayerRemoteVC()
+                .byPush(self)
         /// 处理 .feed 分支
-        case .feed:   FeedListVC().byPush(self)
-#if canImport(BMPlayer)
+        case .feed:
+            FeedListVC()
+                .byPush(self)
+        #if canImport(BMPlayer)
         /// 处理 .local 分支
-        case .local:  PlayerLocalVC().byPush(self)
+        case .local:
+            PlayerLocalVC()
+                .byPush(self)
         /// 处理 .float 分支
-        case .float:  JobsLiveFloatPlayer.shared.showRemoteLive()
-#endif
+        case .float:
+            JobsLiveFloatPlayer.shared.showRemoteLive()
+        #endif
         }
     }
 }

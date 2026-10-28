@@ -21,12 +21,14 @@ import SnapKit
 import Lottie
 
 final class LottieDemoVC: BaseVC {
+
     // MARK: - Config
     private let initialAnimationName   = "9squares_AlBoardman" // 主 Bundle 的 .json（不带扩展）
     private let alternateAnimationName = "LottieLogo1"         // 用于替换演示
     // MARK: - UI（lazy：只配置，不 add/约束）
     private lazy var containerView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
             .byAddTo(view) { [unowned self] make in
@@ -56,7 +58,9 @@ final class LottieDemoVC: BaseVC {
         UIButton.sys()
             .byTitle("■ 停止".tr)
             .onJobsTap { [weak self] (_: UIButton) in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.containerView.lottieStop(resetToBeginning: true)
                 self.progressSlider.byValue(0)
             }
@@ -66,22 +70,24 @@ final class LottieDemoVC: BaseVC {
         UIButton.sys()
             .byTitle("⇄ 替换动画".tr)
             .onJobsTap { [weak self] (_: UIButton) in
-                guard let self else { return }
-                if Bundle.main.path(forResource: self.alternateAnimationName, ofType: "json") != nil {
-                    self.containerView.lottieReplace(name: self.alternateAnimationName, autoPlay: true)
+                guard let self else {
+                    return
+                }
+                if Bundle.main.path(forResource: self.alternateAnimationName,
+                                    ofType: "json") != nil {
+                    self.containerView.lottieReplace(name: self.alternateAnimationName,
+                                                     autoPlay: true)
                     self.progressSlider.byValue(0)
                 } else if let anim = LottieAnimation.named(self.initialAnimationName) {
                     self.containerView.lottieRemove()
-                    self.containerView.byLottieAnimation(
-                        anim,
-                        loop: self.resolvedLoopMode(),
-                        speed: CGFloat(self.speedSlider.value),
-                        contentMode: .scaleAspectFit,
-                        autoPlay: true,
-                        makeConstraints: { make in
-                            make.edges.equalToSuperview().inset(12)
-                        }
-                    )
+                    self.containerView.byLottieAnimation(anim,
+                                                         loop: self.resolvedLoopMode(),
+                                                         speed: CGFloat(self.speedSlider.value),
+                                                         contentMode: .scaleAspectFit,
+                                                         autoPlay: true,
+                                                         makeConstraints: { make in
+                        make.edges.equalToSuperview().inset(12)
+                    })
                     self.progressSlider.byValue(0)
                 }
             }
@@ -91,18 +97,22 @@ final class LottieDemoVC: BaseVC {
         let seg = UISegmentedControl(items: ["once", "loop", "auto"])
         seg.bySelectedSegmentIndex(1)
         seg.onJobsChange { [weak self] (sender: UISegmentedControl) in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             let mode = self.resolvedLoopMode()
             self.containerView.jobs_lottieView?.loopMode = mode
             if mode == .playOnce {
                 self.containerView.lottieStop(resetToBeginning: true)
                 self.progressSlider.byValue(0)
             }
-        };return seg
+        }
+        return seg
     }()
 
     private lazy var progressSlider: UISlider = {
-        UISlider.jobsMake { _ in }
+        UISlider
+            .jobsMake { _ in }
             .byMinimumValue(0)
             .byMaximumValue(1)
             .byValue(0)
@@ -112,55 +122,76 @@ final class LottieDemoVC: BaseVC {
     }()
 
     private lazy var speedSlider: UISlider = {
-        UISlider.jobsMake { _ in }
+        UISlider
+            .jobsMake { _ in }
             .byMinimumValue(0.25)
             .byMaximumValue(3.0)
             .byValue(1.0)
             .onJobsChange { [weak self] (s: UISlider) in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 let speed = CGFloat(s.value)
                 self.containerView.jobs_lottieView?.animationSpeed = speed
-                self.speedLabel.byText(String(format: "%.2f×", speed))
+                self.speedLabel.byText(String(format: "%.2f×",
+                                              speed))
             }
     }()
 
     private lazy var speedLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("1.00×")
             .byTextAlignment(.right)
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 14,
+                                        weight: .medium))
     }()
     private var rowTitleLabels: [UILabel] = []
     // 行：按钮
     private lazy var buttonsRow: UIStackView = {
-        UIStackView.jobsMake { _ in }
+        UIStackView
+            .jobsMake { _ in }
             .byAxis(.horizontal)
             .byAlignment(.fill)
             .byDistribution(.fillEqually)
             .bySpacing(12)
-            .addArrangedSubviews(playBtn, pauseBtn, stopBtn, replaceBtn)
+            .addArrangedSubviews(playBtn,
+                                 pauseBtn,
+                                 stopBtn,
+                                 replaceBtn)
     }()
     // 行：循环
     private lazy var loopRow: UIStackView = {
-        makeRow(title: "循环".tr, control: loopSegment)
+        makeRow(title: "循环".tr,
+                control: loopSegment)
     }()
     // 行：进度
     private lazy var progressRow: UIStackView = {
-        makeRow(title: "进度".tr, control: progressSlider)
+        makeRow(title: "进度".tr,
+                control: progressSlider)
     }()
     // 行：速度（右侧数值标签）
     private lazy var speedRow: UIStackView = {
-        makeRow2(title: "速度".tr, left: speedSlider, right: speedLabel)
+        makeRow2(title: "速度".tr,
+                 left: speedSlider,
+                 right: speedLabel)
     }()
     // 垂直面板：
     private lazy var controlsPanel: UIStackView = { [unowned self] in
-        UIStackView.jobsMake { _ in }
+        UIStackView
+            .jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .byDistribution(.fill)
             .bySpacing(12)
-            .byLayoutMargins(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)) // 开启 relative + 边距（按需改）
-            .addArrangedSubviews(buttonsRow, loopRow, progressRow, speedRow)
+            .byLayoutMargins(UIEdgeInsets(top: 0,
+                                          left: 0,
+                                          bottom: 0,
+                                          right: 0)) // 开启 relative + 边距（按需改）
+        .addArrangedSubviews(buttonsRow,
+                             loopRow,
+                             progressRow,
+                             speedRow)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(containerView.snp.bottom).offset(20)
                 make.leading.trailing.equalTo(view.layoutMarginsGuide)
@@ -168,16 +199,14 @@ final class LottieDemoVC: BaseVC {
     }()
     // 容器里的 Lottie 视图（通过 UIView 的 DSL 挂载）
     private lazy var lottieView: LottieAnimationView = { [unowned self] in
-        containerView.byLottieAnimation(
-            initialAnimationName,
-            loop: .loop,
-            speed: CGFloat(speedSlider.value),
-            contentMode: .scaleAspectFit,
-            autoPlay: true,
-            makeConstraints: { make in
-                make.edges.equalToSuperview().inset(12)
-            }
-        )
+        containerView.byLottieAnimation(initialAnimationName,
+                                        loop: .loop,
+                                        speed: CGFloat(speedSlider.value),
+                                        contentMode: .scaleAspectFit,
+                                        autoPlay: true,
+                                        makeConstraints: { make in
+            make.edges.equalToSuperview().inset(12)
+        })
     }()
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -189,36 +218,51 @@ final class LottieDemoVC: BaseVC {
         _ = lottieView
     }
     // MARK: - Helpers（行工厂，用 UIStackView DSL）
-    private func makeRow(title: String, control: UIView) -> UIStackView {
-        let label = UILabel.jobsMake { _ in }.byText(title)
+    private func makeRow(title: String,
+                         control: UIView) -> UIStackView {
+        let label = UILabel
+            .jobsMake { _ in }
+            .byText(title)
         rowTitleLabels.append(label)
-        return UIStackView.jobsMake { _ in }
+        return UIStackView
+            .jobsMake { _ in }
             .byAxis(.horizontal)
             .byAlignment(.center)
             .byDistribution(.fill)
             .bySpacing(12)
-            .addArrangedSubviews(label, control)
+            .addArrangedSubviews(label,
+                                 control)
     }
 
-    private func makeRow2(title: String, left: UIView, right: UIView) -> UIStackView {
-        let label = UILabel.jobsMake { _ in }.byText(title)
+    private func makeRow2(title: String,
+                          left: UIView,
+                          right: UIView) -> UIStackView {
+        let label = UILabel
+            .jobsMake { _ in }
+            .byText(title)
         rowTitleLabels.append(label)
-        return UIStackView.jobsMake { _ in }
+        return UIStackView
+            .jobsMake { _ in }
             .byAxis(.horizontal)
             .byAlignment(.center)
             .byDistribution(.fill)
             .bySpacing(12)
-            .addArrangedSubviews(label, left, right)
+            .addArrangedSubviews(label,
+                                 left,
+                                 right)
     }
 
     private func resolvedLoopMode() -> LottieLoopMode {
         switch loopSegment.selectedSegmentIndex {
         /// 处理 数值 0 分支
-        case 0: return .playOnce
+        case 0:
+            return .playOnce
         /// 处理 数值 1 分支
-        case 1: return .loop
+        case 1:
+            return .loop
         /// 未匹配已知分支时执行兜底处理
-        default: return .autoReverse
+        default:
+            return .autoReverse
         }
     }
 }

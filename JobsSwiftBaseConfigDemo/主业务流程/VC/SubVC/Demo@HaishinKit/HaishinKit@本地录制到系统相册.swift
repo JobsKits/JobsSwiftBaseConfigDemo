@@ -23,6 +23,7 @@ import GKNavigationBarSwift
 import HaishinKit      // HaishinKit / RTMPHaishinKit
 
 final class HKLocalRecordVC: BaseVC {
+
     // MARK: - HaishinKit 管线（2.x 写法）
     /// 采集（摄像头 + 麦克风）都挂在这里
     private let mixer = MediaMixer()
@@ -43,11 +44,13 @@ final class HKLocalRecordVC: BaseVC {
         // 链式封装：添加到 self.view 并用 SnapKit 约束全屏
         v.byAddTo(view) { make in
             make.edges.equalToSuperview()   // 全屏铺满
-        };return v
+        }
+        return v
     }()
     /// 状态文案
     private lazy var statusLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextColor(JobsCor.white)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -60,7 +63,8 @@ final class HKLocalRecordVC: BaseVC {
     }()
     /// 微信风格白色外圈
     private lazy var recordButtonOuterRingView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
             .byBorderColor(JobsCor.white)
             .byBorderWidth(4)
@@ -75,11 +79,16 @@ final class HKLocalRecordVC: BaseVC {
     /// 开始/停止录制按钮
     private lazy var recordButton: UIButton = {
         UIButton.sys()
-            .byTitle("开始录制".tr, for: .normal)
-            .byTitle("停止录制".tr, for: .selected)
-            .byTitleColor(JobsCor.clear, for: .normal)
-            .byTitleColor(JobsCor.clear, for: .selected)
-            .byBackgroundColor(JobsCor.white, for: .normal)
+            .byTitle("开始录制".tr,
+                     for: .normal)
+            .byTitle("停止录制".tr,
+                     for: .selected)
+            .byTitleColor(JobsCor.clear,
+                          for: .normal)
+            .byTitleColor(JobsCor.clear,
+                          for: .selected)
+            .byBackgroundColor(JobsCor.white,
+                               for: .normal)
             .byCornerRadius(32)
             .onTap { [weak self] btn in
                 self?.toggleRecord(btn)
@@ -92,19 +101,21 @@ final class HKLocalRecordVC: BaseVC {
     /// 切换前后摄像头按钮
     private lazy var switchCameraButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(JobsCor.black.withAlphaComponent(0.4), for: .normal)
-            .byImage("camera.rotate".sysImg, for: .normal)
+            .byBackgroundColor(JobsCor.black.withAlphaComponent(0.4),
+                               for: .normal)
+            .byImage("camera.rotate".sysImg,
+                     for: .normal)
             .byCornerRadius(20)
             .onTap { [weak self] _ in
-                guard let self else { return }
-                /// 切换前后摄像头（2.x 写法，不再用 DeviceUtil）
+                guard let self else {
+                    return
+                }
+            /// 切换前后摄像头（2.x 写法，不再用 DeviceUtil）
                 currentPosition = (currentPosition == .back) ? .front : .back
                 onMainAsync(self) { vc in
-                    guard let device = AVCaptureDevice.default(
-                        .builtInWideAngleCamera,
-                        for: .video,
-                        position: self.currentPosition
-                    ) else {
+                    guard let device = AVCaptureDevice.default(.builtInWideAngleCamera,
+                                                               for: .video,
+                                                               position: self.currentPosition) else {
                         print("⚠️ 找不到对应方向摄像头：\(self.currentPosition)")
                         return
                     }
@@ -145,24 +156,28 @@ final class HKLocalRecordVC: BaseVC {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         Task { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             await self.cleanup()
         }
     }
     // MARK: - 导航栏
     private func setupNavigationBar() {
-        jobsSetupGKNav(
-            title: "本地录制到系统相册",
-            leftButton: UIButton.sys()
-                .byFrame(CGRect(x: 0, y: 0, width: 32, height: 32))
-                .byTintColor(JobsCor.white)
-                .byImage("chevron.left".sysImg, for: .normal)
-                .byContentEdgeInsets(.zero)
-                .byTitleEdgeInsets(.zero)
-                .onTap { [weak self] _ in
-                    self?.goBack("")
-                }
-        )
+        jobsSetupGKNav(title: "本地录制到系统相册",
+                       leftButton: UIButton.sys()
+                           .byFrame(CGRect(x: 0,
+                                           y: 0,
+                                           width: 32,
+                                           height: 32))
+                           .byTintColor(JobsCor.white)
+                           .byImage("chevron.left".sysImg,
+                                    for: .normal)
+                           .byContentEdgeInsets(.zero)
+                           .byTitleEdgeInsets(.zero)
+                           .onTap { [weak self] _ in
+                self?.goBack("")
+            })
         gk_navBackgroundColor = JobsCor.black
         gk_navTitleColor = JobsCor.white
         gk_navLineHidden = true
@@ -180,11 +195,9 @@ final class HKLocalRecordVC: BaseVC {
     private func setupAudioSession() {
         let session = AVAudioSession.sharedInstance()
         do {
-            try session.setCategory(
-                .playAndRecord,
-                mode: .videoRecording,
-                options: [.defaultToSpeaker, .allowBluetoothHFP]
-            )
+            try session.setCategory(.playAndRecord,
+                                    mode: .videoRecording,
+                                    options: [.defaultToSpeaker, .allowBluetoothHFP])
             try session.setActive(true)
         } catch {
             print("⚠️ 配置 AVAudioSession 失败：\(error)")
@@ -196,12 +209,10 @@ final class HKLocalRecordVC: BaseVC {
     private func setupCapturePipeline() async {
         // 1. 准备采集设备
         guard
-            let videoDevice = AVCaptureDevice.default(
-                .builtInWideAngleCamera,
-                for: .video,
-                position: currentPosition
-            ),
-            let audioDevice = AVCaptureDevice.default(for: .audio)
+        let videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera,
+                                                  for: .video,
+                                                  position: currentPosition),
+        let audioDevice = AVCaptureDevice.default(for: .audio)
         else {
             statusLabel.byText("❌ 找不到摄像头或麦克风".tr)
             return
@@ -287,7 +298,8 @@ final class HKLocalRecordVC: BaseVC {
             }
             PHPhotoLibrary.shared().performChanges({
                 PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: fileURL)
-            }, completionHandler: { saved, error in
+            },
+                                                   completionHandler: { saved, error in
                 if let error {
                     print("⚠️ 保存到相册失败：\(error)")
                 } else if saved {

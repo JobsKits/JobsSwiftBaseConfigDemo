@@ -11,6 +11,7 @@ import JobsByUIKit
 import JobsSwiftDSL
 
 enum JobsSceneCoordinator {
+
     static let activityType = "com.jobs.scene-delegate-demo"
     static let didChangeNotification = Notification.Name("JobsSceneCoordinatorDidChangeNotification")
     static let sessionIdentifierUserInfoKey = "sessionIdentifier"
@@ -27,10 +28,8 @@ enum JobsSceneCoordinator {
         }
     }()
 
-    static func demoActivity(
-        counter: Int,
-        sourceSession: UISceneSession? = nil
-    ) -> NSUserActivity {
+    static func demoActivity(counter: Int,
+                             sourceSession: UISceneSession? = nil) -> NSUserActivity {
         NSUserActivity.make(activityType: activityType) { activity in
             activity
                 .byTitle("SceneDelegate 多场景 Demo")
@@ -44,15 +43,16 @@ enum JobsSceneCoordinator {
         }
     }
 
-    static func demoActivity(
-        from connectionOptions: UIScene.ConnectionOptions,
-        session: UISceneSession
-    ) -> NSUserActivity? {
+    static func demoActivity(from connectionOptions: UIScene.ConnectionOptions,
+                             session: UISceneSession) -> NSUserActivity? {
         if let activity = connectionOptions.userActivities.first(where: isDemoActivity) {
             return activity
         }
         guard let activity = session.stateRestorationActivity,
-              isDemoActivity(activity) else { return nil };return activity
+              isDemoActivity(activity) else {
+            return nil
+        }
+        return activity
     }
 
     static func isDemoActivity(_ activity: NSUserActivity) -> Bool {
@@ -61,21 +61,27 @@ enum JobsSceneCoordinator {
 
     static func restoredCounter(from activity: NSUserActivity?) -> Int {
         guard let activity,
-              isDemoActivity(activity) else { return 0 }
+              isDemoActivity(activity) else {
+            return 0
+        }
         if let counter = activity.userInfo?[counterUserInfoKey] as? Int {
             return counter
-        };return (activity.userInfo?[counterUserInfoKey] as? NSNumber)?.intValue ?? 0
+        }
+        return (activity.userInfo?[counterUserInfoKey] as? NSNumber)?.intValue ?? 0
     }
 
-    static func counter(for session: UISceneSession, fallback: Int) -> Int {
+    static func counter(for session: UISceneSession,
+                        fallback: Int) -> Int {
         return countersBySessionIdentifier[session.persistentIdentifier] ?? fallback
     }
 
     @discardableResult
-    static func updateCounter(_ counter: Int, for scene: UIWindowScene) -> NSUserActivity {
+    static func updateCounter(_ counter: Int,
+                              for scene: UIWindowScene) -> NSUserActivity {
         let identifier = scene.session.persistentIdentifier
         countersBySessionIdentifier[identifier] = counter
-        let activity = demoActivity(counter: counter, sourceSession: scene.session)
+        let activity = demoActivity(counter: counter,
+                                    sourceSession: scene.session)
         scene.userActivity = activity
         postChange(for: scene.session)
         return activity
@@ -85,7 +91,8 @@ enum JobsSceneCoordinator {
         return eventsBySessionIdentifier[session.persistentIdentifier] ?? []
     }
 
-    static func record(_ event: String, for session: UISceneSession) {
+    static func record(_ event: String,
+                       for session: UISceneSession) {
         let identifier = session.persistentIdentifier
         let time = timeFormatter.string(from: Date())
         var events = eventsBySessionIdentifier[identifier] ?? []
@@ -129,65 +136,56 @@ enum JobsSceneCoordinator {
 
     static func otherOpenSession(excluding session: UISceneSession) -> UISceneSession? {
         return UIApplication.shared.openSessions
-            .filter { $0.role == session.role && $0.persistentIdentifier != session.persistentIdentifier }
-            .sorted { $0.persistentIdentifier < $1.persistentIdentifier }
+            .filter {
+                $0.role == session.role && $0.persistentIdentifier != session.persistentIdentifier
+            }
+            .sorted {
+                $0.persistentIdentifier < $1.persistentIdentifier
+            }
             .first
     }
 
-    static func requestNewDemoScene(
-        from sourceSession: UISceneSession?,
-        completion: @escaping (Error?) -> Void
-    ) {
-        let activity = demoActivity(counter: 0, sourceSession: sourceSession)
+    static func requestNewDemoScene(from sourceSession: UISceneSession?,
+                                    completion: @escaping (Error?) -> Void) {
+        let activity = demoActivity(counter: 0,
+                                    sourceSession: sourceSession)
         if #available(iOS 17.0, *) {
-            let request = UISceneSessionActivationRequest(
-                role: .windowApplication,
-                userActivity: activity
-            )
-            UIApplication.shared.activateSceneSession(for: request, errorHandler: completion)
+            let request = UISceneSessionActivationRequest(role: .windowApplication,
+                                                          userActivity: activity)
+            UIApplication.shared.activateSceneSession(for: request,
+                                                      errorHandler: completion)
         } else {
-            UIApplication.shared.requestSceneSessionActivation(
-                nil,
-                userActivity: activity,
-                options: nil,
-                errorHandler: completion
-            )
+            UIApplication.shared.requestSceneSessionActivation(nil,
+                                                               userActivity: activity,
+                                                               options: nil,
+                                                               errorHandler: completion)
         }
     }
 
-    static func requestActivation(
-        for session: UISceneSession,
-        completion: @escaping (Error?) -> Void
-    ) {
+    static func requestActivation(for session: UISceneSession,
+                                  completion: @escaping (Error?) -> Void) {
         if #available(iOS 17.0, *) {
             let request = UISceneSessionActivationRequest(session: session)
-            UIApplication.shared.activateSceneSession(for: request, errorHandler: completion)
+            UIApplication.shared.activateSceneSession(for: request,
+                                                      errorHandler: completion)
         } else {
-            UIApplication.shared.requestSceneSessionActivation(
-                session,
-                userActivity: nil,
-                options: nil,
-                errorHandler: completion
-            )
+            UIApplication.shared.requestSceneSessionActivation(session,
+                                                               userActivity: nil,
+                                                               options: nil,
+                                                               errorHandler: completion)
         }
     }
 
-    static func requestDestruction(
-        for session: UISceneSession,
-        completion: @escaping (Error?) -> Void
-    ) {
-        UIApplication.shared.requestSceneSessionDestruction(
-            session,
-            options: nil,
-            errorHandler: completion
-        )
+    static func requestDestruction(for session: UISceneSession,
+                                   completion: @escaping (Error?) -> Void) {
+        UIApplication.shared.requestSceneSessionDestruction(session,
+                                                            options: nil,
+                                                            errorHandler: completion)
     }
 
     private static func postChange(for session: UISceneSession) {
-        NotificationCenter.default.post(
-            name: didChangeNotification,
-            object: nil,
-            userInfo: [sessionIdentifierUserInfoKey: session.persistentIdentifier]
-        )
+        NotificationCenter.default.post(name: didChangeNotification,
+                                        object: nil,
+                                        userInfo: [sessionIdentifierUserInfoKey: session.persistentIdentifier])
     }
 }

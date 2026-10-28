@@ -13,6 +13,7 @@ import UIKit
 
 // MARK: - 路径编排
 public extension UIBezierPath {
+
     @discardableResult
     func byMove(to point: CGPoint) -> Self {
         move(to: point)
@@ -31,13 +32,12 @@ public extension UIBezierPath {
                   startAngle: CGFloat,
                   endAngle: CGFloat,
                   clockwise: Bool) -> Self {
-        addArc(
-            withCenter: center,
-            radius: radius,
-            startAngle: startAngle,
-            endAngle: endAngle,
-            clockwise: clockwise
-        );return self
+        addArc(withCenter: center,
+               radius: radius,
+               startAngle: startAngle,
+               endAngle: endAngle,
+               clockwise: clockwise)
+        return self
     }
 
     @discardableResult
@@ -67,7 +67,8 @@ public extension UIBezierPath {
     @discardableResult
     func byFill(with blendMode: CGBlendMode,
                 alpha: CGFloat = 1) -> Self {
-        fill(with: blendMode, alpha: alpha)
+        fill(with: blendMode,
+             alpha: alpha)
         return self
     }
 }

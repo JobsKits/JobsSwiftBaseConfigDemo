@@ -12,7 +12,9 @@ import JobsSwiftDSL
 import SnapKit
 
 public final class JobsSwiftCommentView: UIView {
-    public private(set) var tableView = UITableView(frame: .zero, style: .plain)
+
+    public private(set) var tableView = UITableView(frame: .zero,
+                                                    style: .plain)
     public private(set) var config: JobsSwiftCommentConfig
     public private(set) var comments: [JobsSwiftCommentModel] = []
     public private(set) var isRenderTruncated = false
@@ -91,17 +93,23 @@ public final class JobsSwiftCommentView: UIView {
     }
 }
 
-extension JobsSwiftCommentView: UITableViewDataSource, UITableViewDelegate {
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension JobsSwiftCommentView: UITableViewDataSource,
+                                UITableViewDelegate {
+
+    public func tableView(_ tableView: UITableView,
+                          numberOfRowsInSection section: Int) -> Int {
         renderRows.count
     }
 
     public func tableView(_ tableView: UITableView,
                           cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = renderRows[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: JobsSwiftCommentCell.reuseIdentifier, for: indexPath) as! JobsSwiftCommentCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: JobsSwiftCommentCell.reuseIdentifier,
+                                                 for: indexPath) as! JobsSwiftCommentCell
         cell.replyAction = { [weak self] comment in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             if let replySelectedBlock = self.config.replySelectedBlock {
                 replySelectedBlock(comment)
             } else {
@@ -109,16 +117,21 @@ extension JobsSwiftCommentView: UITableViewDataSource, UITableViewDelegate {
             }
         }
         if row.isMoreRow {
-            cell.updateWithMoreText("展开更多回复", depth: row.depth)
+            cell.updateWithMoreText("展开更多回复",
+                                    depth: row.depth)
         } else {
-            cell.update(with: row.comment, config: config, depth: row.depth, parentComment: row.parentComment)
+            cell.update(with: row.comment,
+                        config: config,
+                        depth: row.depth,
+                        parentComment: row.parentComment)
         }
         return cell
     }
 
     public func tableView(_ tableView: UITableView,
                           didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        tableView.deselectRow(at: indexPath,
+                              animated: true)
         let row = renderRows[indexPath.row]
         if row.isMoreRow {
             expandedRootIDs.insert(row.rootID)
@@ -134,7 +147,9 @@ extension JobsSwiftCommentView: UITableViewDataSource, UITableViewDelegate {
               config.enablesLoadMore,
               !isLoadingMore,
               !noMoreData,
-              scrollView.contentSize.height > scrollView.bounds.height else { return }
+              scrollView.contentSize.height > scrollView.bounds.height else {
+            return
+        }
         let threshold = scrollView.contentSize.height - scrollView.bounds.height - 44
         if scrollView.contentOffset.y > threshold {
             triggerLoadMore()
@@ -143,7 +158,9 @@ extension JobsSwiftCommentView: UITableViewDataSource, UITableViewDelegate {
 }
 
 private extension JobsSwiftCommentView {
+
     struct RenderRow {
+
         let comment: JobsSwiftCommentModel
         let depth: Int
         let parentComment: JobsSwiftCommentModel?
@@ -152,7 +169,9 @@ private extension JobsSwiftCommentView {
     }
 
     func setupViews() {
-        byBackgroundColor(UIColor(r: 0.96 * 255, g: 0.97 * 255, b: 0.99 * 255))
+        byBackgroundColor(UIColor(r: 0.96 * 255,
+                                  g: 0.97 * 255,
+                                  b: 0.99 * 255))
         tableView
             .byDelegate(self)
             .byDataSource(self)
@@ -161,11 +180,15 @@ private extension JobsSwiftCommentView {
             .byEstimatedRowHeight(96)
             .byRowHeight(UITableView.automaticDimension)
             .byKeyboardDismissMode(.onDrag)
-            .byContentInset(UIEdgeInsets(top: 6, left: 0, bottom: 10, right: 0))
+            .byContentInset(UIEdgeInsets(top: 6,
+                                         left: 0,
+                                         bottom: 10,
+                                         right: 0))
             .byEmptyButtonProvider { [weak self] in
-                JobsEmptyAuto.Config.defaultProvider().onTap { [weak self] _ in
-                    self?.pullRefreshTriggered()
-                }
+                JobsEmptyAuto.Config.defaultProvider()
+                    .onTap { [weak self] _ in
+                        self?.pullRefreshTriggered()
+                    }
             }
             .byRegisterCellOnID(CellCls: JobsSwiftCommentCell.self,
                                 ID: JobsSwiftCommentCell.reuseIdentifier)
@@ -180,27 +203,43 @@ private extension JobsSwiftCommentView {
                                        action: #selector(pullRefreshTriggered),
                                        for: .valueChanged)
         loadMoreButton
-            .byFrame(CGRect(x: 0, y: 0, width: 0, height: 54))
-            .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
-            .byTitleColor(UIColor(r: 0.17 * 255, g: 0.43 * 255, b: 0.82 * 255))
-            .byAddTarget(self, action: #selector(loadMoreButtonTapped), for: .touchUpInside)
+            .byFrame(CGRect(x: 0,
+                            y: 0,
+                            width: 0,
+                            height: 54))
+            .byTitleFont(JobsFont.systemFont(ofSize: 14,
+                                             weight: .semibold))
+            .byTitleColor(UIColor(r: 0.17 * 255,
+                                  g: 0.43 * 255,
+                                  b: 0.82 * 255))
+            .byAddTarget(self,
+                         action: #selector(loadMoreButtonTapped),
+                         for: .touchUpInside)
         updateRefreshers()
     }
 
     func rebuildRenderData() {
         renderRows.removeAll(keepingCapacity: true)
         isRenderTruncated = false
-        let rowLimit = max(1, min(config.maxRenderedRows, 10_000))
-        let depthLimit = max(0, min(config.maxReplyDepth, 128))
+        let rowLimit = max(1,
+                           min(config.maxRenderedRows,
+                               10_000))
+        let depthLimit = max(0,
+                             min(config.maxReplyDepth,128))
         let shouldShowChildren = config.mode != .toutiao || comments.count == 1
         for comment in comments {
             guard renderRows.count < rowLimit else {
                 isRenderTruncated = true
                 break
             }
-            renderRows.append(RenderRow(comment: comment, depth: 0, parentComment: nil,
-                                        isMoreRow: false, rootID: comment.messageID))
-            guard shouldShowChildren else { continue }
+            renderRows.append(RenderRow(comment: comment,
+                                        depth: 0,
+                                        parentComment: nil,
+                                        isMoreRow: false,
+                                        rootID: comment.messageID))
+            guard shouldShowChildren else {
+                continue
+            }
             let visibleLimit = effectiveMaxVisibleChildReplyCount()
             let isExpanded = expandedRootIDs.contains(comment.messageID)
             var visibleCount = 0
@@ -219,8 +258,11 @@ private extension JobsSwiftCommentView {
                 }
                 if !isExpanded, visibleCount >= visibleLimit {
                     if renderRows.count < rowLimit {
-                        renderRows.append(RenderRow(comment: comment, depth: 1, parentComment: nil,
-                                                    isMoreRow: true, rootID: comment.messageID))
+                        renderRows.append(RenderRow(comment: comment,
+                                                    depth: 1,
+                                                    parentComment: nil,
+                                                    isMoreRow: true,
+                                                    rootID: comment.messageID))
                     } else {
                         isRenderTruncated = true
                     }
@@ -231,8 +273,10 @@ private extension JobsSwiftCommentView {
                     break
                 }
                 let child = frame.parent.children[frame.index]
-                renderRows.append(RenderRow(comment: child, depth: frame.depth,
-                                            parentComment: frame.parent, isMoreRow: false,
+                renderRows.append(RenderRow(comment: child,
+                                            depth: frame.depth,
+                                            parentComment: frame.parent,
+                                            isMoreRow: false,
                                             rootID: comment.messageID))
                 visibleCount += 1
                 if !child.children.isEmpty {
@@ -243,7 +287,9 @@ private extension JobsSwiftCommentView {
     }
 
     func effectiveMaxVisibleChildReplyCount() -> Int {
-        max(1, min(config.maxVisibleChildReplyCount, 10_000))
+        max(1,
+            min(config.maxVisibleChildReplyCount,
+                10_000))
     }
 
     func shouldEnableRefreshByMode() -> Bool {
@@ -275,7 +321,9 @@ private extension JobsSwiftCommentView {
     }
 
     func triggerLoadMore() {
-        guard shouldEnableRefreshByMode(), config.enablesLoadMore, !isLoadingMore, !noMoreData else { return }
+        guard shouldEnableRefreshByMode(), config.enablesLoadMore, !isLoadingMore, !noMoreData else {
+            return
+        }
         isLoadingMore = true
         updateLoadMoreTitle()
         if let loadMoreBlock = config.loadMoreBlock {

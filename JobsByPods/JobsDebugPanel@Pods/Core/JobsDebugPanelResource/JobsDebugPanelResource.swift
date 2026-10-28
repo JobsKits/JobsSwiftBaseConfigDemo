@@ -10,13 +10,16 @@ import UIKit
 import JobsByUIKit
 
 enum JobsDebugPanelResource {
+
     static let buttonImage: UIImage? = {
         let frameworkBundle = Bundle(for: JobsDebugButtonVC.self)
         let candidates = [frameworkBundle, Bundle.main]
         for candidate in candidates {
-            guard let url = candidate.url(forResource: "JobsDebugPanelResources", withExtension: "bundle"),
+            guard let url = candidate.url(forResource: "JobsDebugPanelResources",
+                                          withExtension: "bundle"),
                   let bundle = Bundle(url: url),
-                  let image = UIImage.make(named: "JobsDebugPanelButton", in: bundle) else {
+                  let image = UIImage.make(named: "JobsDebugPanelButton",
+                                           in: bundle) else {
                 continue
             }
             return image

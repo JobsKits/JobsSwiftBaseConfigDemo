@@ -14,6 +14,7 @@ import UIKit
 #if canImport(JXSegmentedView)
 import JXSegmentedView
 extension JXSegmentedBaseDataSource {
+
     @discardableResult
     public func byItemWidth(_ value: CGFloat) -> Self {
         itemWidth = value
@@ -45,9 +46,13 @@ extension JXSegmentedBaseDataSource {
     }
     /// 选中动画：可顺带改时长
     @discardableResult
-    public func bySelectedAnimable(_ on: Bool = true, duration: TimeInterval? = nil) -> Self {
+    public func bySelectedAnimable(_ on: Bool = true,
+                                   duration: TimeInterval? = nil) -> Self {
         isSelectedAnimable = on
-        if let d = duration { selectedAnimationDuration = d };return self
+        if let d = duration {
+            selectedAnimationDuration = d
+        }
+        return self
     }
 
     @discardableResult
@@ -61,8 +66,13 @@ extension JXSegmentedBaseDataSource {
                                 scale: CGFloat? = nil,
                                 animable: Bool? = nil) -> Self {
         isItemWidthZoomEnabled = enabled
-        if let s = scale { itemWidthSelectedZoomScale = s }
-        if let a = animable { isItemWidthZoomAnimable = a };return self
+        if let s = scale {
+            itemWidthSelectedZoomScale = s
+        }
+        if let a = animable {
+            isItemWidthZoomAnimable = a
+        }
+        return self
     }
     /// 一把梭：把自己挂到 segmentedView，并可设置指示器 + 选中索引
     @discardableResult
@@ -70,7 +80,9 @@ extension JXSegmentedBaseDataSource {
                          selectedIndex: Int = 0,
                          indicators: [JXSegmentedIndicatorProtocol]? = nil) -> Self {
         segmentedView.dataSource = self
-        if let ins = indicators { segmentedView.indicators = ins }
+        if let ins = indicators {
+            segmentedView.indicators = ins
+        }
         reloadData(selectedIndex: selectedIndex)
         segmentedView.reloadData()
         return self
@@ -78,7 +90,8 @@ extension JXSegmentedBaseDataSource {
     /// 纯刷新
     @discardableResult
     public func byReload(selectedIndex: Int = 0) -> Self {
-        reloadData(selectedIndex: selectedIndex); return self
+        reloadData(selectedIndex: selectedIndex)
+        return self
     }
     /// content 宽度：用于 indicatorWidthSameAsItemContent 等场景
     @discardableResult

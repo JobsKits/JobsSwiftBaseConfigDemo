@@ -15,6 +15,7 @@ import JobsSwiftBlock
 
 @available(iOS 14.0, tvOS 14.0, *)
 extension UICollectionViewListCell {
+
     /// 以链式闭包方式配置并设置 `contentConfiguration`
     @discardableResult
     public func byListConfig(_ builder: JobsRetByListContentConfigBlock) -> Self {

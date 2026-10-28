@@ -24,11 +24,13 @@ final class JobsDockingScrollDemoVC: BaseVC {
     private var panStartOffset: CGFloat = 0
     private var panelOffset: CGFloat = 0
     private var bottomOffset: CGFloat {
-        max(240, view.bounds.height / 2 - 100)
+        max(240,
+            view.bounds.height / 2 - 100)
     }
 
     private lazy var topRegionView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemPurple.withAlphaComponent(0.22))
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom)
@@ -38,7 +40,8 @@ final class JobsDockingScrollDemoVC: BaseVC {
     }()
 
     private lazy var usageCard: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBackground.withAlphaComponent(0.88))
             .byCornerRadius(12)
             .byShadowColor(JobsCor.black.withAlphaComponent(0.10))
@@ -52,7 +55,8 @@ final class JobsDockingScrollDemoVC: BaseVC {
     }()
 
     private lazy var usageTitleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("JobsScrollViewVC")
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byTextColor(JobsCor.label)
@@ -63,11 +67,12 @@ final class JobsDockingScrollDemoVC: BaseVC {
     }()
 
     private lazy var usageDescriptionLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText(
-                "演示“只允许在指定 y 区间内上下滑动”的吸附效果："
+            "演示“只允许在指定 y 区间内上下滑动”的吸附效果："
                 + "拖拽绿色区域，上滑释放会吸附到最高点，下滑释放会回到底部初始位置。"
-            )
+        )
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
@@ -79,9 +84,11 @@ final class JobsDockingScrollDemoVC: BaseVC {
     }()
 
     private lazy var topAnchorLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("最高点：上滑后吸附到这里".tr)
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .semibold))
             .byTextColor(JobsCor.systemBlue)
             .byAddTo(topRegionView) { [unowned self] make in
                 make.top.equalTo(usageCard.snp.bottom).offset(18)
@@ -90,9 +97,11 @@ final class JobsDockingScrollDemoVC: BaseVC {
     }()
 
     private lazy var bottomAnchorLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("最低点：下滑释放回到初始位置".tr)
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .semibold))
             .byTextColor(JobsCor.systemOrange)
             .byAddTo(topRegionView) { make in
                 make.left.equalToSuperview().offset(18)
@@ -101,7 +110,8 @@ final class JobsDockingScrollDemoVC: BaseVC {
     }()
 
     private lazy var draggableView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemGreen.withAlphaComponent(0.92))
             .byUserInteractionEnabled(YES)
             .addPanAction { [weak self] gesture in
@@ -118,7 +128,8 @@ final class JobsDockingScrollDemoVC: BaseVC {
     }()
 
     private lazy var dragHintCard: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBackground.withAlphaComponent(0.88))
             .byCornerRadius(12)
             .byAddTo(draggableView) { make in
@@ -130,7 +141,8 @@ final class JobsDockingScrollDemoVC: BaseVC {
     }()
 
     private lazy var dragHintLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("按住绿色区域上下拖动\n上滑吸顶，下滑回到底部".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 16))
             .byTextColor(JobsCor.label)
@@ -144,7 +156,8 @@ final class JobsDockingScrollDemoVC: BaseVC {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         topRegionHeightConstraint?.update(offset: bottomOffset)
-        panelOffset = min(max(0, panelOffset), bottomOffset)
+        panelOffset = min(max(0,panelOffset),
+                          bottomOffset)
         panelTopConstraint?.update(offset: panelOffset)
     }
 
@@ -163,7 +176,9 @@ final class JobsDockingScrollDemoVC: BaseVC {
     }
 
     private func handlePan(_ gesture: UIGestureRecognizer) {
-        guard let pan = gesture as? UIPanGestureRecognizer else { return }
+        guard let pan = gesture as? UIPanGestureRecognizer else {
+            return
+        }
         let translation = pan.translation(in: view)
         switch pan.state {
         /// 记录本次拖动起点
@@ -171,7 +186,9 @@ final class JobsDockingScrollDemoVC: BaseVC {
             panStartOffset = panelOffset
         /// 将绿色区域限制在最高点和最低点之间
         case .changed:
-            panelOffset = min(bottomOffset, max(0, panStartOffset + translation.y))
+            panelOffset = min(bottomOffset,
+                              max(0,
+                                  panStartOffset + translation.y))
             panelTopConstraint?.update(offset: panelOffset)
             view.layoutIfNeeded()
         /// 根据拖动方向吸附到对应端点
@@ -197,14 +214,12 @@ final class JobsDockingScrollDemoVC: BaseVC {
     private func snap(to offset: CGFloat) {
         panelOffset = offset
         panelTopConstraint?.update(offset: offset)
-        UIView.jobsAnimateWithSpring(
-            0.36,
-            dampingRatio: 0.82,
-            initialVelocity: 0.6,
-            options: [.beginFromCurrentState, .allowUserInteraction],
-            animations: { [weak self] in
-                self?.view.layoutIfNeeded()
-            }
-        )
+        UIView.jobsAnimateWithSpring(0.36,
+                                     dampingRatio: 0.82,
+                                     initialVelocity: 0.6,
+                                     options: [.beginFromCurrentState, .allowUserInteraction],
+                                     animations: { [weak self] in
+            self?.view.layoutIfNeeded()
+        })
     }
 }

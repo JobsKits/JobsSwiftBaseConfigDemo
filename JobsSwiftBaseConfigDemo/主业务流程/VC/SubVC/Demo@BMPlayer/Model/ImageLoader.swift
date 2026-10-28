@@ -15,6 +15,7 @@ import UIKit
 import JobsSwiftDSL
 
 final class ImageLoader {
+
     static let shared = ImageLoader()
     private let cache = NSCache<NSURL, UIImage>()
 
@@ -23,13 +24,25 @@ final class ImageLoader {
               into imageView: UIImageView,
               placeholder: UIImage? = nil) -> URLSessionDataTask? {
         imageView.byImage(placeholder)
-        guard let url = url else { return nil }
-        if let cached = cache.object(forKey: url as NSURL) { imageView.byImage(cached); return nil }
+        guard let url = url else {
+            return nil
+        }
+        if let cached = cache.object(forKey: url as NSURL) {
+            imageView.byImage(cached)
+            return nil
+        }
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
             var img: UIImage? = nil
-            if let d = data { img = UIImage(data: d) }
-            if let i = img { self?.cache.setObject(i, forKey: url as NSURL) }
-            DispatchQueue.main.async { imageView.byImage(img ?? placeholder) }
+            if let d = data {
+                img = UIImage(data: d)
+            }
+            if let i = img {
+                self?.cache.setObject(i,
+                                      forKey: url as NSURL)
+            }
+            DispatchQueue.main.async {
+                imageView.byImage(img ?? placeholder)
+            }
         }
         task.resume()
         return task

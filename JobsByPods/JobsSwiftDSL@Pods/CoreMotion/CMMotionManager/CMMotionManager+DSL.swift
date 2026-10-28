@@ -52,7 +52,8 @@ public extension CMMotionManager {
     @discardableResult
     func byStartAccelerometerUpdates(to queue: OperationQueue,
                                      withHandler handler: @escaping CMAccelerometerHandler) -> Self {
-        startAccelerometerUpdates(to: queue, withHandler: handler)
+        startAccelerometerUpdates(to: queue,
+                                  withHandler: handler)
         return self
     }
 
@@ -71,7 +72,8 @@ public extension CMMotionManager {
     @discardableResult
     func byStartGyroUpdates(to queue: OperationQueue,
                             withHandler handler: @escaping CMGyroHandler) -> Self {
-        startGyroUpdates(to: queue, withHandler: handler)
+        startGyroUpdates(to: queue,
+                         withHandler: handler)
         return self
     }
 
@@ -90,7 +92,8 @@ public extension CMMotionManager {
     @discardableResult
     func byStartMagnetometerUpdates(to queue: OperationQueue,
                                     withHandler handler: @escaping CMMagnetometerHandler) -> Self {
-        startMagnetometerUpdates(to: queue, withHandler: handler)
+        startMagnetometerUpdates(to: queue,
+                                 withHandler: handler)
         return self
     }
 
@@ -109,7 +112,8 @@ public extension CMMotionManager {
     @discardableResult
     func byStartDeviceMotionUpdates(to queue: OperationQueue,
                                     withHandler handler: @escaping CMDeviceMotionHandler) -> Self {
-        startDeviceMotionUpdates(to: queue, withHandler: handler)
+        startDeviceMotionUpdates(to: queue,
+                                 withHandler: handler)
         return self
     }
 
@@ -123,7 +127,9 @@ public extension CMMotionManager {
     func byStartDeviceMotionUpdates(using referenceFrame: CMAttitudeReferenceFrame,
                                     to queue: OperationQueue,
                                     withHandler handler: @escaping CMDeviceMotionHandler) -> Self {
-        startDeviceMotionUpdates(using: referenceFrame, to: queue, withHandler: handler)
+        startDeviceMotionUpdates(using: referenceFrame,
+                                 to: queue,
+                                 withHandler: handler)
         return self
     }
 

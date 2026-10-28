@@ -12,13 +12,93 @@ import UIKit
 #endif
 
 import JobsTextTools
+import ObjectiveC
 
 #if canImport(JobsSwiftBaseDefines)
 import JobsSwiftBaseDefines
 #endif
 
+#if canImport(JobsSwiftBaseDefines)
+private var jobsCellAccessoryOriginalStyleKey: UInt8 = 0
+private var jobsCellAccessoryAppliedStyleKey: UInt8 = 0
+#endif
+
 // MARK: - UITableViewCell · 基础状态 & 选择/高亮/编辑
 private extension UITableViewCell {
+
+    func jobsUpdateDisclosureThemeBinding() {
+        #if canImport(JobsSwiftBaseDefines)
+        guard #available(iOS 13.0, tvOS 13.0, *) else {
+            return
+        }
+        let slot = "UITableViewCell.disclosureAppearance"
+        let disclosureTypes: [AccessoryType] = [.disclosureIndicator, .detailDisclosureButton]
+        let usesNativeDisclosure =
+        (accessoryView == nil && disclosureTypes.contains(accessoryType)) ||
+            (editingAccessoryView == nil && disclosureTypes.contains(editingAccessoryType))
+        guard usesNativeDisclosure else {
+            JobsThemeCenter.shared.unbind(self,
+                                          slot: slot)
+            if let originalStyle = objc_getAssociatedObject(self,
+                                                            &jobsCellAccessoryOriginalStyleKey) as? NSNumber {
+                let appliedStyle = objc_getAssociatedObject(self,
+                                                            &jobsCellAccessoryAppliedStyleKey) as? NSNumber
+                if appliedStyle?.intValue == overrideUserInterfaceStyle.rawValue {
+                    overrideUserInterfaceStyle = UIUserInterfaceStyle(rawValue: originalStyle.intValue) ?? .unspecified
+                }
+                objc_setAssociatedObject(self,
+                                         &jobsCellAccessoryOriginalStyleKey,
+                                         nil,
+                                         .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                objc_setAssociatedObject(self,
+                                         &jobsCellAccessoryAppliedStyleKey,
+                                         nil,
+                                         .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            }
+            return
+        }
+        if objc_getAssociatedObject(self,
+                                    &jobsCellAccessoryOriginalStyleKey) == nil {
+            guard overrideUserInterfaceStyle == .unspecified else {
+                return
+            }
+            objc_setAssociatedObject(self,
+                                     &jobsCellAccessoryOriginalStyleKey,
+                                     NSNumber(value: overrideUserInterfaceStyle.rawValue),
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        // 原生箭头依赖 UIKit 外观，需与 App 语义色使用同一主题。
+        JobsThemeCenter.shared.bind(self,
+                                    slot: slot) { object, center in
+            guard let cell = object as? UITableViewCell else {
+                return
+            }
+            let appliedStyle = objc_getAssociatedObject(cell,
+                                                        &jobsCellAccessoryAppliedStyleKey) as? NSNumber
+            if let appliedStyle,
+               appliedStyle.intValue != cell.overrideUserInterfaceStyle.rawValue {
+                center.unbind(cell,
+                              slot: slot)
+                objc_setAssociatedObject(cell,
+                                         &jobsCellAccessoryOriginalStyleKey,
+                                         nil,
+                                         .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                objc_setAssociatedObject(cell,
+                                         &jobsCellAccessoryAppliedStyleKey,
+                                         nil,
+                                         .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                return
+            }
+            let style: UIUserInterfaceStyle = center.isDarkMode ? .dark : .light
+            objc_setAssociatedObject(cell,
+                                     &jobsCellAccessoryAppliedStyleKey,
+                                     NSNumber(value: style.rawValue),
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            cell.overrideUserInterfaceStyle = style
+        }
+        #endif
+    }
+
     func jobsApplyTitleColor(_ color: UIColor) {
         if #available(iOS 14.0, *) {
             _ = byContentConfiguration { cfg in
@@ -41,26 +121,30 @@ private extension UITableViewCell {
 }
 
 extension UITableViewCell {
+
     /// 收口 Cell 子视图配置，保证调用端以 Cell 为唯一链起点。
     @discardableResult
     public func byTextLabel(_ build: (UILabel) -> Void) -> Self {
         if let textLabel {
             build(textLabel)
-        };return self
+        }
+        return self
     }
 
     @discardableResult
     public func byDetailTextLabel(_ build: (UILabel) -> Void) -> Self {
         if let detailTextLabel {
             build(detailTextLabel)
-        };return self
+        }
+        return self
     }
 
     @discardableResult
     public func byImageView(_ build: (UIImageView) -> Void) -> Self {
         if let imageView {
             build(imageView)
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -77,44 +161,54 @@ extension UITableViewCell {
     }
     /// isSelected（支持动画）
     @discardableResult
-    public func bySelected(_ selected: Bool, animated: Bool = false) -> Self {
-        self.setSelected(selected, animated: animated)
+    public func bySelected(_ selected: Bool,
+                           animated: Bool = false) -> Self {
+        self.setSelected(selected,
+                         animated: animated)
         return self
     }
     /// isHighlighted（支持动画）
     @discardableResult
-    public func byHighlighted(_ highlighted: Bool, animated: Bool = false) -> Self {
-        self.setHighlighted(highlighted, animated: animated)
+    public func byHighlighted(_ highlighted: Bool,
+                              animated: Bool = false) -> Self {
+        self.setHighlighted(highlighted,
+                            animated: animated)
         return self
     }
     /// 编辑状态
     @discardableResult
-    public func byEditing(_ editing: Bool, animated: Bool = true) -> Self {
-        self.setEditing(editing, animated: animated)
+    public func byEditing(_ editing: Bool,
+                          animated: Bool = true) -> Self {
+        self.setEditing(editing,
+                        animated: animated)
         return self
     }
     /// accessoryType / accessoryView
     @discardableResult
     public func byAccessoryType(_ type: UITableViewCell.AccessoryType) -> Self {
         self.accessoryType = type
+        jobsUpdateDisclosureThemeBinding()
         return self
     }
 
     @discardableResult
     public func byAccessoryView(_ view: UIView?) -> Self {
         self.accessoryView = view
+        jobsUpdateDisclosureThemeBinding()
         return self
     }
     /// 编辑态 accessory
     @discardableResult
     public func byEditingAccessoryType(_ type: UITableViewCell.AccessoryType) -> Self {
         self.editingAccessoryType = type
+        jobsUpdateDisclosureThemeBinding()
         return self
     }
 
     @discardableResult
     public func byEditingAccessoryView(_ view: UIView?) -> Self {
         self.editingAccessoryView = view
+        jobsUpdateDisclosureThemeBinding()
         return self
     }
     /// 缩进 & 拖拽/重排
@@ -182,6 +276,7 @@ extension UITableViewCell {
 }
 // MARK: - iOS 14+ List Content（文本/副标题/图片 的统一配置）
 extension UITableViewCell {
+
     /// 直接覆盖任意 contentConfiguration。
     @available(iOS 14.0, *)
     @discardableResult
@@ -209,47 +304,63 @@ extension UITableViewCell {
     }
     /// 解析为富文本
     public func byJobsAttributedText(_ text: JobsText?) -> Self {
-        guard let text else { return self }
+        guard let text else {
+            return self
+        }
         if #available(iOS 14.0, *) {
-            return byContentConfiguration { $0.attributedText = text.asAttributed }
+            return byContentConfiguration {
+                $0.attributedText = text.asAttributed
+            }
         } else {
             self.textLabel?.attributedText = text.asAttributed
             return self
-        };
+        }
     }
     /// 解析为普通文本
     public func byJobsText(_ text: JobsText?) -> Self {
-        guard let text else { return self }
+        guard let text else {
+            return self
+        }
         if #available(iOS 14.0, *) {
-            return byContentConfiguration { $0.text = text.asString }
+            return byContentConfiguration {
+                $0.text = text.asString
+            }
         } else {
             self.textLabel?.text = text.asString
             return self
-        };
+        }
     }
     @discardableResult
     public func byText(_ text: String?) -> Self {
         if #available(iOS 14.0, *) {
-            return byContentConfiguration { $0.text = text }
+            return byContentConfiguration {
+                $0.text = text
+            }
         } else {
             self.textLabel?.text = text
             return self
         }
     }
     public func bySecondaryJobsText(_ text: JobsText?) -> Self {
-        guard let text else { return self }
+        guard let text else {
+            return self
+        }
         if #available(iOS 14.0, *) {
-            return byContentConfiguration { $0.secondaryAttributedText = text.asAttributed }
+            return byContentConfiguration {
+                $0.secondaryAttributedText = text.asAttributed
+            }
         } else {
             self.detailTextLabel?.attributedText = text.asAttributed
             return self
-        };
+        }
     }
     /// 富文本标题
     @discardableResult
     public func byAttributedText(_ text: NSAttributedString?) -> Self {
         if #available(iOS 14.0, *) {
-            return byContentConfiguration { $0.attributedText = text }
+            return byContentConfiguration {
+                $0.attributedText = text
+            }
         } else {
             self.textLabel?.attributedText = text
             return self
@@ -259,7 +370,9 @@ extension UITableViewCell {
     @discardableResult
     public func bySecondaryText(_ text: String?) -> Self {
         if #available(iOS 14.0, *) {
-            return byContentConfiguration { $0.secondaryText = text }
+            return byContentConfiguration {
+                $0.secondaryText = text
+            }
         } else {
             byDetailText(text) // 旧系统需要 .subtitle 风格才显示
             return self
@@ -281,7 +394,9 @@ extension UITableViewCell {
     @discardableResult
     public func byAttributedSecondaryText(_ text: NSAttributedString?) -> Self {
         if #available(iOS 14.0, *) {
-            return byContentConfiguration { $0.secondaryAttributedText = text }
+            return byContentConfiguration {
+                $0.secondaryAttributedText = text
+            }
         } else {
             byDetailAttributedText(text)
             return self
@@ -291,7 +406,9 @@ extension UITableViewCell {
     @discardableResult
     public func byImage(_ image: UIImage?) -> Self {
         if #available(iOS 14.0, *) {
-            return byContentConfiguration { $0.image = image }
+            return byContentConfiguration {
+                $0.image = image
+            }
         } else {
             self.imageView?.image = image
             return self
@@ -306,10 +423,11 @@ extension UITableViewCell {
 }
 // MARK: - iOS 14+ 背景配置（分离语义：选中/高亮自动更新）
 extension UITableViewCell {
+
     @available(iOS 14.0, *)
     @discardableResult
     public func byBackgroundConfiguration(_ build: (inout UIBackgroundConfiguration) -> Void,
-                                   automaticallyUpdates: Bool = false) -> Self {
+                                          automaticallyUpdates: Bool = false) -> Self {
         var bg = UIBackgroundConfiguration.listPlainCell()
         build(&bg)
         self.automaticallyUpdatesBackgroundConfiguration = automaticallyUpdates
@@ -325,10 +443,13 @@ extension UITableViewCell {
             if let color {
                 var selected = UIBackgroundConfiguration.listPlainCell()
                 selected.backgroundColor = color
-                self.setHighlighted(self.isHighlighted, animated: false)
-                self.setSelected(self.isSelected, animated: false)
+                self.setHighlighted(self.isHighlighted,
+                                    animated: false)
+                self.setSelected(self.isSelected,
+                                 animated: false)
                 self.selectedBackgroundView = {
-                    return UIView().byBackgroundColor(color)
+                    return UIView()
+                        .byBackgroundColor(color)
                 }()
             } else {
                 self.selectedBackgroundView = nil
@@ -338,6 +459,7 @@ extension UITableViewCell {
 }
 
 extension UITableViewCell {
+
     /// 标题字体
     @discardableResult
     public func byTitleFont(_ font: UIFont) -> Self {
@@ -422,32 +544,42 @@ extension UITableViewCell {
     /// 标题颜色
     @discardableResult
     public func byTitleCor(_ cor: UIColor) -> Self {
-#if canImport(JobsSwiftBaseDefines)
+        #if canImport(JobsSwiftBaseDefines)
         let slot = "UITableViewCell.titleColor"
         if let key = cor.jobsThemeColorKey {
-            JobsThemeCenter.shared.bind(self, slot: slot) { object, center in
-                guard let cell = object as? UITableViewCell else { return }
+            JobsThemeCenter.shared.bind(self,
+                                        slot: slot) { object, center in
+                guard let cell = object as? UITableViewCell else {
+                    return
+                }
                 cell.jobsApplyTitleColor(center.resolvedColor(key))
-            };return self
+            }
+            return self
         }
-        JobsThemeCenter.shared.unbind(self, slot: slot)
-#endif
+        JobsThemeCenter.shared.unbind(self,
+                                      slot: slot)
+        #endif
         jobsApplyTitleColor(cor)
         return self
     }
     /// 副标题颜色
     @discardableResult
     public func byDetailTitleCor(_ cor: UIColor) -> Self {
-#if canImport(JobsSwiftBaseDefines)
+        #if canImport(JobsSwiftBaseDefines)
         let slot = "UITableViewCell.detailTitleColor"
         if let key = cor.jobsThemeColorKey {
-            JobsThemeCenter.shared.bind(self, slot: slot) { object, center in
-                guard let cell = object as? UITableViewCell else { return }
+            JobsThemeCenter.shared.bind(self,
+                                        slot: slot) { object, center in
+                guard let cell = object as? UITableViewCell else {
+                    return
+                }
                 cell.jobsApplyDetailTitleColor(center.resolvedColor(key))
-            };return self
+            }
+            return self
         }
-        JobsThemeCenter.shared.unbind(self, slot: slot)
-#endif
+        JobsThemeCenter.shared.unbind(self,
+                                      slot: slot)
+        #endif
         jobsApplyDetailTitleColor(cor)
         return self
     }

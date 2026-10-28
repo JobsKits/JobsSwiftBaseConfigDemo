@@ -15,7 +15,9 @@ import QuartzCore
 import JobsByUIKit
 
 /// 红、绿双球交叉换位并错峰跳跃的刷新动画视图。
-public final class JobsDouyinRefreshView: UIView, JobsRefreshAnimatorProtocol {
+public final class JobsDouyinRefreshView: UIView,
+                                          JobsRefreshAnimatorProtocol {
+
     public private(set) var config: JobsDouyinRefreshConfig
     public private(set) var isAnimating = false
 
@@ -32,7 +34,8 @@ public final class JobsDouyinRefreshView: UIView, JobsRefreshAnimatorProtocol {
     }
 
     public convenience init(config: JobsDouyinRefreshConfig) {
-        self.init(frame: CGRect(origin: .zero, size: config.indicatorSize))
+        self.init(frame: CGRect(origin: .zero,
+                                size: config.indicatorSize))
         byConfig(config)
     }
 
@@ -56,7 +59,9 @@ public final class JobsDouyinRefreshView: UIView, JobsRefreshAnimatorProtocol {
         guard wantsAnimating,
               window != nil,
               !UIAccessibility.isReduceMotionEnabled,
-              lastAnimationBounds != bounds else { return }
+              lastAnimationBounds != bounds else {
+            return
+        }
         jobs_installAnimations()
     }
 
@@ -70,20 +75,19 @@ public final class JobsDouyinRefreshView: UIView, JobsRefreshAnimatorProtocol {
     public func byConfig(_ config: JobsDouyinRefreshConfig) -> Self {
         let shouldRestart = wantsAnimating
         jobs_removeAnimations()
-        self.config = JobsDouyinRefreshConfig(
-            redColor: config.redColor,
-            greenColor: config.greenColor,
-            dotDiameter: config.dotDiameter,
-            horizontalTravel: config.horizontalTravel,
-            jumpHeight: config.jumpHeight,
-            cycleDuration: config.cycleDuration
-        )
+        self.config = JobsDouyinRefreshConfig(redColor: config.redColor,
+                                              greenColor: config.greenColor,
+                                              dotDiameter: config.dotDiameter,
+                                              horizontalTravel: config.horizontalTravel,
+                                              jumpHeight: config.jumpHeight,
+                                              cycleDuration: config.cycleDuration)
         invalidateIntrinsicContentSize()
         setNeedsLayout()
         if shouldRestart {
             layoutIfNeeded()
             jobs_syncAnimationState()
-        };return self
+        }
+        return self
     }
 
     /// 开始循环；重复调用不会叠加动画。
@@ -129,17 +133,16 @@ public final class JobsDouyinRefreshView: UIView, JobsRefreshAnimatorProtocol {
 
     public func refreshAnimatorApply(phase: JobsRefreshAnimatorPhase,
                                      progress: CGFloat) {
-        let normalizedProgress = min(1, max(0, progress))
+        let normalizedProgress = min(1,
+                                     max(0,progress))
         switch phase {
         /// 下拉过程中渐显并按进度缩放双球
         case .pulling:
             byHidden(false)
             byStop()
                 .byAlpha(0.35 + normalizedProgress * 0.65)
-                .byTransform(CGAffineTransform(
-                    scaleX: 0.72 + normalizedProgress * 0.28,
-                    y: 0.72 + normalizedProgress * 0.28
-                ))
+                .byTransform(CGAffineTransform(scaleX: 0.72 + normalizedProgress * 0.28,
+                                               y: 0.72 + normalizedProgress * 0.28))
         /// 达到阈值时展示完整静态双球
         case .ready:
             byHidden(false)
@@ -170,24 +173,18 @@ public final class JobsDouyinRefreshView: UIView, JobsRefreshAnimatorProtocol {
         accessibilityLabel = "刷新中"
         layer.addSublayer(redDotLayer)
         layer.addSublayer(greenDotLayer)
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(jobs_environmentDidChange),
-            name: UIAccessibility.reduceMotionStatusDidChangeNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(jobs_environmentDidChange),
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(jobs_applicationDidEnterBackground),
-            name: UIApplication.didEnterBackgroundNotification,
-            object: nil
-        )
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(jobs_environmentDidChange),
+                                               name: UIAccessibility.reduceMotionStatusDidChangeNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(jobs_environmentDidChange),
+                                               name: UIApplication.didBecomeActiveNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(jobs_applicationDidEnterBackground),
+                                               name: UIApplication.didEnterBackgroundNotification,
+                                               object: nil)
         jobs_layoutDots()
     }
 
@@ -196,7 +193,9 @@ public final class JobsDouyinRefreshView: UIView, JobsRefreshAnimatorProtocol {
     }
 
     @objc private func jobs_applicationDidEnterBackground() {
-        guard wantsAnimating else { return }
+        guard wantsAnimating else {
+            return
+        }
         jobs_pauseAnimations()
     }
 
@@ -210,10 +209,13 @@ public final class JobsDouyinRefreshView: UIView, JobsRefreshAnimatorProtocol {
                 jobs_layoutDots()
             } else if isAnimating {
                 jobs_pauseAnimations()
-            };return
+            }
+            return
         }
         layoutIfNeeded()
-        guard bounds.width > 0, bounds.height > 0 else { return }
+        guard bounds.width > 0, bounds.height > 0 else {
+            return
+        }
         if redDotLayer.animation(forKey: "jobs.douyin.refresh") == nil ||
             greenDotLayer.animation(forKey: "jobs.douyin.refresh") == nil {
             jobs_installAnimations()
@@ -225,12 +227,17 @@ public final class JobsDouyinRefreshView: UIView, JobsRefreshAnimatorProtocol {
     private func jobs_layoutDots() {
         let diameter = config.dotDiameter
         let midY = bounds.midY
-        let redCenter = CGPoint(x: bounds.midX - config.horizontalTravel / 2, y: midY)
-        let greenCenter = CGPoint(x: bounds.midX + config.horizontalTravel / 2, y: midY)
+        let redCenter = CGPoint(x: bounds.midX - config.horizontalTravel / 2,
+                                y: midY)
+        let greenCenter = CGPoint(x: bounds.midX + config.horizontalTravel / 2,
+                                  y: midY)
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         redDotLayer
-            .byBounds(CGRect(x: 0, y: 0, width: diameter, height: diameter))
+            .byBounds(CGRect(x: 0,
+                             y: 0,
+                             width: diameter,
+                             height: diameter))
             .byPosition(redCenter)
             .byPath(UIBezierPath.make(ovalIn: redDotLayer.bounds).cgPath)
             .byFillColor(config.redColor)
@@ -238,7 +245,10 @@ public final class JobsDouyinRefreshView: UIView, JobsRefreshAnimatorProtocol {
             .byOpacity(1)
             .byZPosition(1)
         greenDotLayer
-            .byBounds(CGRect(x: 0, y: 0, width: diameter, height: diameter))
+            .byBounds(CGRect(x: 0,
+                             y: 0,
+                             width: diameter,
+                             height: diameter))
             .byPosition(greenCenter)
             .byPath(UIBezierPath.make(ovalIn: greenDotLayer.bounds).cgPath)
             .byFillColor(config.greenColor)
@@ -251,52 +261,64 @@ public final class JobsDouyinRefreshView: UIView, JobsRefreshAnimatorProtocol {
     private func jobs_installAnimations() {
         jobs_removeAnimations()
         jobs_layoutDots()
-        let center = CGPoint(x: bounds.midX, y: bounds.midY)
+        let center = CGPoint(x: bounds.midX,
+                             y: bounds.midY)
         let halfTravel = config.horizontalTravel / 2
         let redPositions = [
-            CGPoint(x: center.x - halfTravel, y: center.y),
-            CGPoint(x: center.x, y: center.y - config.jumpHeight),
-            CGPoint(x: center.x + halfTravel, y: center.y),
-            CGPoint(x: center.x, y: center.y + config.jumpHeight * 0.55),
-            CGPoint(x: center.x - halfTravel, y: center.y)
+            CGPoint(x: center.x - halfTravel,
+                    y: center.y),
+            CGPoint(x: center.x,
+                    y: center.y - config.jumpHeight),
+            CGPoint(x: center.x + halfTravel,
+                    y: center.y),
+            CGPoint(x: center.x,
+                    y: center.y + config.jumpHeight * 0.55),
+            CGPoint(x: center.x - halfTravel,
+                    y: center.y)
         ]
         let greenPositions = [
-            CGPoint(x: center.x + halfTravel, y: center.y),
-            CGPoint(x: center.x, y: center.y + config.jumpHeight * 0.55),
-            CGPoint(x: center.x - halfTravel, y: center.y),
-            CGPoint(x: center.x, y: center.y - config.jumpHeight),
-            CGPoint(x: center.x + halfTravel, y: center.y)
+            CGPoint(x: center.x + halfTravel,
+                    y: center.y),
+            CGPoint(x: center.x,
+                    y: center.y + config.jumpHeight * 0.55),
+            CGPoint(x: center.x - halfTravel,
+                    y: center.y),
+            CGPoint(x: center.x,
+                    y: center.y - config.jumpHeight),
+            CGPoint(x: center.x + halfTravel,
+                    y: center.y)
         ]
-        let redAnimation = jobs_animationGroup(
-            positions: redPositions,
-            scales: [0.84, 1.12, 0.84, 0.72, 0.84],
-            opacities: [0.88, 1, 0.88, 0.74, 0.88],
-            zPositions: [1, 2, 1, 0, 1]
-        )
-        let greenAnimation = jobs_animationGroup(
-            positions: greenPositions,
-            scales: [0.84, 0.72, 0.84, 1.12, 0.84],
-            opacities: [0.88, 0.74, 0.88, 1, 0.88],
-            zPositions: [0, 0, 1, 2, 0]
-        )
-        redDotLayer.add(redAnimation, forKey: "jobs.douyin.refresh")
-        greenDotLayer.add(greenAnimation, forKey: "jobs.douyin.refresh")
+        let redAnimation = jobs_animationGroup(positions: redPositions,
+                                               scales: [0.84, 1.12, 0.84, 0.72, 0.84],
+                                               opacities: [0.88, 1, 0.88, 0.74, 0.88],
+                                               zPositions: [1, 2, 1, 0, 1])
+        let greenAnimation = jobs_animationGroup(positions: greenPositions,
+                                                 scales: [0.84, 0.72, 0.84, 1.12, 0.84],
+                                                 opacities: [0.88, 0.74, 0.88, 1, 0.88],
+                                                 zPositions: [0, 0, 1, 2, 0])
+        redDotLayer.add(redAnimation,
+                        forKey: "jobs.douyin.refresh")
+        greenDotLayer.add(greenAnimation,
+                          forKey: "jobs.douyin.refresh")
         lastAnimationBounds = bounds
         pausedTime = 0
         isAnimating = true
     }
 
-    private func jobs_animationGroup(
-        positions: [CGPoint],
-        scales: [CGFloat],
-        opacities: [Float],
-        zPositions: [CGFloat]
-    ) -> CAAnimationGroup {
+    private func jobs_animationGroup(positions: [CGPoint],
+                                     scales: [CGFloat],
+                                     opacities: [Float],
+                                     zPositions: [CGFloat]) -> CAAnimationGroup {
         let keyTimes: [NSNumber] = [0, 0.25, 0.5, 0.75, 1]
-        let timing = CAMediaTimingFunction(controlPoints: 0.45, 0, 0.2, 1)
+        let timing = CAMediaTimingFunction(controlPoints: 0.45,
+                                           0,
+                                           0.2,
+                                           1)
         let position = CAKeyframeAnimation(keyPath: "position")
         position
-            .byValues(positions.map { NSValue(cgPoint: $0) })
+            .byValues(positions.map {
+            NSValue(cgPoint: $0)
+        })
             .byKeyTimes(keyTimes)
             .byTimingFunctions([timing, timing, timing, timing])
         let scale = CAKeyframeAnimation(keyPath: "transform.scale")
@@ -324,8 +346,11 @@ public final class JobsDouyinRefreshView: UIView, JobsRefreshAnimatorProtocol {
 
     private func jobs_pauseAnimations() {
         guard isAnimating,
-              redDotLayer.speed != 0 else { return }
-        pausedTime = redDotLayer.convertTime(CACurrentMediaTime(), from: nil)
+              redDotLayer.speed != 0 else {
+            return
+        }
+        pausedTime = redDotLayer.convertTime(CACurrentMediaTime(),
+                                             from: nil)
         for dotLayer in [redDotLayer, greenDotLayer] {
             dotLayer.speed = 0
             dotLayer.timeOffset = pausedTime
@@ -334,13 +359,16 @@ public final class JobsDouyinRefreshView: UIView, JobsRefreshAnimatorProtocol {
 
     private func jobs_resumeAnimations() {
         guard isAnimating,
-              redDotLayer.speed == 0 else { return }
+              redDotLayer.speed == 0 else {
+            return
+        }
         let pausedTime = redDotLayer.timeOffset
         for dotLayer in [redDotLayer, greenDotLayer] {
             dotLayer.speed = 1
             dotLayer.timeOffset = 0
             dotLayer.beginTime = 0
-            dotLayer.beginTime = dotLayer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
+            dotLayer.beginTime = dotLayer.convertTime(CACurrentMediaTime(),
+                                                      from: nil) - pausedTime
         }
         self.pausedTime = 0
     }

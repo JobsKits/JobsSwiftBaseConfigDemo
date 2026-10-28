@@ -19,10 +19,12 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class UILabelScrollingDemoVC: BaseVC {
+
     private var showsAlternateText = false
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView.jobsMake { _ in }
+        UIScrollView
+            .jobsMake { _ in }
             .byShowsVerticalScrollIndicator(YES)
             .byAlwaysBounceVertical(YES)
             .byAddTo(view) { [unowned self] make in
@@ -36,7 +38,8 @@ final class UILabelScrollingDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalTo(self.scrollView.contentLayoutGuide)
                 make.width.equalTo(self.scrollView.frameLayoutGuide)
@@ -44,10 +47,12 @@ final class UILabelScrollingDemoVC: BaseVC {
     }()
 
     private lazy var introLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("CoreText 完整排版 + CALayer 绘制 + JobsSwiftTimer 驱动。只有文字溢出时才进入滚动管线。")
             .byNumberOfLines(0)
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 14,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { make in
                 make.top.equalToSuperview().offset(20)
@@ -73,17 +78,21 @@ final class UILabelScrollingDemoVC: BaseVC {
     }()
 
     private lazy var continuousLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("UILabel+Scrolling：从标题开头完整滚到结尾，再以固定间距无缝接回开头。")
             .byNumberOfLines(1)
-            .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 16,
+                                        weight: .semibold))
             .byTextColor(JobsCor.label)
             .byAddTo(continuousCardView) { make in
                 make.left.right.equalToSuperview().inset(16)
                 make.centerY.equalToSuperview()
                 make.height.equalTo(30)
             }
-            .byTextScroll(.continuous(speed: 38, spacing: 48, startDelay: 0.8))
+            .byTextScroll(.continuous(speed: 38,
+                                      spacing: 48,
+                                      startDelay: 0.8))
             .byStartTextScroll()
     }()
 
@@ -105,17 +114,21 @@ final class UILabelScrollingDemoVC: BaseVC {
     }()
 
     private lazy var pingPongLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byAttributedString(makePingPongText(alternate: false))
             .byNumberOfLines(1)
-            .byFont(JobsFont.systemFont(ofSize: 16, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 16,
+                                        weight: .regular))
             .byTextColor(JobsCor.label)
             .byAddTo(pingPongCardView) { make in
                 make.left.right.equalToSuperview().inset(16)
                 make.centerY.equalToSuperview()
                 make.height.equalTo(30)
             }
-            .byTextScroll(.pingPong(speed: 30, startDelay: 0.8, edgePause: 0.9))
+            .byTextScroll(.pingPong(speed: 30,
+                                    startDelay: 0.8,
+                                    edgePause: 0.9))
             .byStartTextScroll()
     }()
 
@@ -137,10 +150,12 @@ final class UILabelScrollingDemoVC: BaseVC {
     }()
 
     private lazy var shortLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("短文案：保持 UILabel 原生绘制")
             .byNumberOfLines(1)
-            .byFont(JobsFont.systemFont(ofSize: 16, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 16,
+                                        weight: .regular))
             .byTextColor(JobsCor.label)
             .byAddTo(shortCardView) { make in
                 make.left.right.equalToSuperview().inset(16)
@@ -153,10 +168,14 @@ final class UILabelScrollingDemoVC: BaseVC {
 
     private lazy var pauseButton: UIButton = {
         UIButton.sys()
-            .byTitle("暂停".tr, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byBackgroundColor(JobsCor.systemOrange, for: .normal)
+            .byTitle("暂停".tr,
+                     for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .semibold))
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byBackgroundColor(JobsCor.systemOrange,
+                               for: .normal)
             .byCornerRadius(8)
             .byMasksToBounds(YES)
             .onTap { [weak self] _ in
@@ -167,10 +186,14 @@ final class UILabelScrollingDemoVC: BaseVC {
 
     private lazy var resumeButton: UIButton = {
         UIButton.sys()
-            .byTitle("继续".tr, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
+            .byTitle("继续".tr,
+                     for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .semibold))
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byBackgroundColor(JobsCor.systemGreen,
+                               for: .normal)
             .byCornerRadius(8)
             .byMasksToBounds(YES)
             .onTap { [weak self] _ in
@@ -181,10 +204,14 @@ final class UILabelScrollingDemoVC: BaseVC {
 
     private lazy var switchTextButton: UIButton = {
         UIButton.sys()
-            .byTitle("切换文案".tr, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
+            .byTitle("切换文案".tr,
+                     for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .semibold))
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byBackgroundColor(JobsCor.systemBlue,
+                               for: .normal)
             .byCornerRadius(8)
             .byMasksToBounds(YES)
             .onTap { [weak self] _ in
@@ -193,7 +220,8 @@ final class UILabelScrollingDemoVC: BaseVC {
     }()
 
     private lazy var controlsStackView: UIStackView = {
-        UIStackView.jobsMake { _ in }
+        UIStackView
+            .jobsMake { _ in }
             .byAxis(.horizontal)
             .bySpacing(10)
             .byDistribution(.fillEqually)
@@ -228,7 +256,7 @@ final class UILabelScrollingDemoVC: BaseVC {
         controlsStackView.byVisible(YES)
         if #available(iOS 17.0, tvOS 17.0, *) {
             _ = registerForTraitChanges([UITraitUserInterfaceStyle.self]) {
-                (controller: UILabelScrollingDemoVC, _) in
+            (controller: UILabelScrollingDemoVC, _) in
                 controller.refreshTheme()
             }
         }
@@ -251,13 +279,18 @@ final class UILabelScrollingDemoVC: BaseVC {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         guard #available(iOS 13.0, tvOS 13.0, *),
-              previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) == true else { return }
-        if #available(iOS 17.0, tvOS 17.0, *) { return }
+              previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) == true else {
+            return
+        }
+        if #available(iOS 17.0, tvOS 17.0, *) {
+            return
+        }
         refreshTheme()
     }
 }
 
 private extension UILabelScrollingDemoVC {
+
     func refreshTheme() {
         view.byBackgroundColor(JobsCor.systemGroupedBackground)
         introLabel.byTextColor(JobsCor.secondaryLabel)
@@ -280,42 +313,43 @@ private extension UILabelScrollingDemoVC {
     }
 
     func makeCardView() -> UIView {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
             .byCornerRadius(12)
             .byMasksToBounds(YES)
     }
 
     func makeSectionTitle(_ text: String) -> UILabel {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText(text)
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)
     }
 
     func makePingPongText(alternate: Bool) -> NSAttributedString {
         let prefix = alternate ? "富文本已刷新：" : "CoreText 富文本："
-        let result = NSMutableAttributedString(
-            string: prefix,
-            attributes: [
+        let result = NSMutableAttributedString(string: prefix,
+                                               attributes: [
                 .font: JobsFont.boldSystemFont(ofSize: 16),
                 .foregroundColor: JobsCor.systemPink
-            ]
-        )
-        result.append(NSAttributedString(
-            string: "左右触边后停留并折返，完整保留不同字体、颜色和 Emoji 🚀✨",
-            attributes: [
-                .font: JobsFont.systemFont(ofSize: alternate ? 17 : 16, weight: .regular),
-                .foregroundColor: JobsCor.label
-            ]
-        ));return result
+            ])
+        result.append(NSAttributedString(string: "左右触边后停留并折返，完整保留不同字体、颜色和 Emoji 🚀✨",
+                                         attributes: [
+                    .font: JobsFont.systemFont(ofSize: alternate ? 17 : 16,
+                                               weight: .regular),
+                    .foregroundColor: JobsCor.label
+                ]))
+        return result
     }
 
     func switchText() {
         showsAlternateText.toggle()
         let continuousText = showsAlternateText
-        ? "文案已动态刷新：CoreText 会重新排版一次，后续仍然只移动 CALayer，不在每一帧重复绘制。"
-        : "UILabel+Scrolling：从标题开头完整滚到结尾，再以固定间距无缝接回开头。"
+            ? "文案已动态刷新：CoreText 会重新排版一次，后续仍然只移动 CALayer，不在每一帧重复绘制。"
+            : "UILabel+Scrolling：从标题开头完整滚到结尾，再以固定间距无缝接回开头。"
         continuousLabel
             .byText(continuousText)
             .byReloadTextScroll()

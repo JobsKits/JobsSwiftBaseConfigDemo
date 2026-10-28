@@ -14,23 +14,33 @@ import UIKit
 
 import SnapKit
 
-enum PlayerCenter { static let shared = PlayerCenterImpl() }
+enum PlayerCenter {
+
+    static let shared = PlayerCenterImpl()
+}
 #if canImport(BMPlayer)
 import BMPlayer
 import JobsSwiftDSL
 final class PlayerCenterImpl {
+
     let player = BMPlayer()
     private var currentHost: UIView?
 
     init() {
-        player.backBlock = { [weak self] _ in self?.player.pause() }
+        player.backBlock = { [weak self] _ in
+            self?.player.pause()
+        }
     }
 
     func attach(to host: UIView) {
-        guard host !== currentHost else { return }
+        guard host !== currentHost else {
+            return
+        }
         player.removeFromSuperview()
         player.byAddTo(host)
-        player.snp.remakeConstraints { $0.edges.equalToSuperview() }
+        player.snp.remakeConstraints {
+            $0.edges.equalToSuperview()
+        }
         currentHost = host
     }
 
@@ -41,6 +51,8 @@ final class PlayerCenterImpl {
         player.play()
     }
 
-    func pause() { player.pause() }
+    func pause() {
+        player.pause()
+    }
 }
 #endif

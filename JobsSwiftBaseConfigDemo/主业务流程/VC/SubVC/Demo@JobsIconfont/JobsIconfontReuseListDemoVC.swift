@@ -15,10 +15,12 @@ import SnapKit
 import UIKit
 
 final class JobsIconfontReuseListDemoVC: BaseVC {
+
     private let assets: [JobsIconfontRemoteAsset] = [.logo, .fontBanner, .usageGuide, .invalidURL]
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .plain)
+        UITableView(frame: .zero,
+                    style: .plain)
             .byDataSource(self)
             .byDelegate(self)
             .byRowHeight(74)
@@ -41,25 +43,30 @@ final class JobsIconfontReuseListDemoVC: BaseVC {
     }
 }
 
-extension JobsIconfontReuseListDemoVC: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension JobsIconfontReuseListDemoVC: UITableViewDataSource,
+                                       UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
         80
     }
 
-    func tableView(
-        _ tableView: UITableView,
-        cellForRowAt indexPath: IndexPath
-    ) -> UITableViewCell {
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let asset = assets[indexPath.row % assets.count]
         return tableView
-            .byDequeueReusableCell(withType: JobsIconfontReuseCell.self, for: indexPath)
-            .byAsset(asset, row: indexPath.row)
+            .byDequeueReusableCell(withType: JobsIconfontReuseCell.self,
+                                   for: indexPath)
+            .byAsset(asset,
+                     row: indexPath.row)
     }
 }
 
 private final class JobsIconfontReuseCell: UITableViewCell {
+
     private lazy var iconView: UIImageView = {
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byContentMode(.scaleAspectFit)
             .byCornerRadius(10)
@@ -72,8 +79,10 @@ private final class JobsIconfontReuseCell: UITableViewCell {
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .semibold))
             .byTextColor(JobsCor.label)
             .byAddTo(contentView) { [unowned self] make in
                 make.left.equalTo(iconView.snp.right).offset(14)
@@ -83,8 +92,10 @@ private final class JobsIconfontReuseCell: UITableViewCell {
     }()
 
     private lazy var stateLabel: UILabel = {
-        UILabel.jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 12,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
                 make.left.right.equalTo(titleLabel)
@@ -96,8 +107,10 @@ private final class JobsIconfontReuseCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override init(style: UITableViewCell.CellStyle,
+                  reuseIdentifier: String?) {
+        super.init(style: style,
+                   reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         iconView.byVisible(true)
         titleLabel.byVisible(true)
@@ -111,20 +124,21 @@ private final class JobsIconfontReuseCell: UITableViewCell {
     }
 
     @discardableResult
-    func byAsset(_ asset: JobsIconfontRemoteAsset, row: Int) -> Self {
+    func byAsset(_ asset: JobsIconfontRemoteAsset,
+                 row: Int) -> Self {
         titleLabel.byText("Row \(row + 1)｜\(asset.title)")
-        iconView.byJobsIconfont(
-            asset,
-            targetSize: CGSize(width: 50, height: 50)
-        ) { [weak self] event in
+        iconView.byJobsIconfont(asset,
+                                targetSize: CGSize(width: 50, height: 50)) { [weak self] event in
             switch event {
             case .placeholder:
                 self?.stateLabel.byText("本地占位图")
-            case .success(let loader, let cache):
+            case .success(let loader,
+                          let cache):
                 self?.stateLabel.byText("\(loader.rawValue)｜\(cache ? "缓存" : "网络")")
             case .failure:
                 self?.stateLabel.byText("失败兜底")
             }
-        };return self
+        }
+        return self
     }
 }

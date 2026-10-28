@@ -10,16 +10,21 @@ import UIKit
 import JobsSwiftBaseDefines
 import JobsSwiftDSL
 
-public enum JobsSideDrawerDirection: Int, CaseIterable {
+public enum JobsSideDrawerDirection: Int,
+                                     CaseIterable {
+
     case top, bottom, left, right
 }
 
-public enum JobsSideDrawerContentMode: Int, CaseIterable {
+public enum JobsSideDrawerContentMode: Int,
+                                       CaseIterable {
+
     case following
     case fixed
 }
 
 public final class JobsSideDrawerConfiguration {
+
     public var direction: JobsSideDrawerDirection
     public var contentMode: JobsSideDrawerContentMode
     public var presentedRatio: CGFloat
@@ -53,21 +58,31 @@ public final class JobsSideDrawerConfiguration {
                 onDidClose: (() -> Void)? = nil) {
         self.direction = direction
         self.contentMode = contentMode
-        self.presentedRatio = max(0.1, min(1, presentedRatio))
-        self.animationDuration = max(animationDuration, 0)
+        self.presentedRatio = max(0.1,
+                                  min(1,presentedRatio))
+        self.animationDuration = max(animationDuration,
+                                     0)
         self.dimColor = dimColor
         self.allowsInteractiveTransition = allowsInteractiveTransition
         self.shouldBeginOpeningGesture = shouldBeginOpeningGesture
-        self.interactiveCompletionThreshold = max(0.05, min(0.95, interactiveCompletionThreshold))
-        self.interactiveVelocityThreshold = max(interactiveVelocityThreshold, 0)
-        self.interactiveProjectionTime = max(interactiveProjectionTime, 0)
-        self.interactiveAxisDominanceRatio = max(0, min(1, interactiveAxisDominanceRatio))
+        self.interactiveCompletionThreshold = max(0.05,
+                                                  min(0.95,
+                                                      interactiveCompletionThreshold))
+        self.interactiveVelocityThreshold = max(interactiveVelocityThreshold,
+                                                0)
+        self.interactiveProjectionTime = max(interactiveProjectionTime,
+                                             0)
+        self.interactiveAxisDominanceRatio = max(0,
+                                                 min(1,
+                                                     interactiveAxisDominanceRatio))
         self.onDidClose = onDidClose
     }
 }
 
 public final class JobsSideDrawerVC: UIViewController {
+
     private enum InteractionIntent {
+
         case opening
         case closing
     }
@@ -76,7 +91,9 @@ public final class JobsSideDrawerVC: UIViewController {
     private static let minimumSettlementDuration: TimeInterval = 0.12
 
     // TODO: Legacy static width has no container. Use defaultMenuWidth(in:) for new callers.
-    public static var defaultMenuWidth: CGFloat { UIScreen.main.bounds.width * 0.5 }
+    public static var defaultMenuWidth: CGFloat {
+        UIScreen.main.bounds.width * 0.5
+    }
     public static func defaultMenuWidth(in view: UIView) -> CGFloat {
         return view.bounds.width * 0.5
     }
@@ -90,24 +107,31 @@ public final class JobsSideDrawerVC: UIViewController {
     private let providedMainContentView: UIView?
     /// 子控制器完成父子关系装配后再读取 view，避免导航容器在零尺寸阶段提前布局。
     private lazy var drawerContentView: UIView = {
-        if let providedDrawerContentView { return providedDrawerContentView }
+        if let providedDrawerContentView {
+            return providedDrawerContentView
+        }
         guard let drawerVC else {
             preconditionFailure("JobsSideDrawerVC 缺少抽屉内容")
-        };return drawerVC.view
+        }
+        return drawerVC.view
     }()
     /// 子控制器完成父子关系装配后再读取 view，避免导航容器在零尺寸阶段提前布局。
     private lazy var mainContentView: UIView = {
-        if let providedMainContentView { return providedMainContentView }
+        if let providedMainContentView {
+            return providedMainContentView
+        }
         guard let mainVC else {
             preconditionFailure("JobsSideDrawerVC 缺少主内容")
-        };return mainVC.view
+        }
+        return mainVC.view
     }()
     private let drawerContainerView = UIView.jobsMake { _ in }
     private let contentContainerView = UIView.jobsMake { _ in }
     private lazy var openGesture: UIScreenEdgePanGestureRecognizer = {
         UIScreenEdgePanGestureRecognizer
             .byConfig { [weak self] (gesture: UIScreenEdgePanGestureRecognizer) in
-                self?.updateInteractiveTransition(gesture, intent: .opening)
+                self?.updateInteractiveTransition(gesture,
+                                                  intent: .opening)
             }
             .byDelegate(self)
             .byCancelsTouchesInView(true)
@@ -115,7 +139,8 @@ public final class JobsSideDrawerVC: UIViewController {
     private lazy var closeGesture: UIPanGestureRecognizer = {
         UIPanGestureRecognizer
             .byConfig { [weak self] (gesture: UIPanGestureRecognizer) in
-                self?.updateInteractiveTransition(gesture, intent: .closing)
+                self?.updateInteractiveTransition(gesture,
+                                                  intent: .closing)
             }
             .byDelegate(self)
             .byCancelsTouchesInView(true)
@@ -127,11 +152,14 @@ public final class JobsSideDrawerVC: UIViewController {
     private var transitionGeneration = 0
     private var didInstallContentViews = false
     private lazy var dimControl: UIControl = {
-        let control = UIControl.jobsMake { _ in }
+        let control = UIControl
+            .jobsMake { _ in }
             .byBackgroundColor(configuration.dimColor)
             .byAlpha(0)
             .byHidden(true)
-        control.addTarget(self, action: #selector(closeFromDim), for: .touchUpInside)
+        control.addTarget(self,
+                          action: #selector(closeFromDim),
+                          for: .touchUpInside)
         return control
     }()
 
@@ -143,7 +171,8 @@ public final class JobsSideDrawerVC: UIViewController {
         providedDrawerContentView = nil
         providedMainContentView = nil
         self.configuration = configuration
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil,
+                   bundle: nil)
     }
 
     public convenience init(menuVC: UIViewController,
@@ -152,7 +181,8 @@ public final class JobsSideDrawerVC: UIViewController {
         self.init(drawerViewController: menuVC,
                   mainViewController: mainVC,
                   configuration: .init(presentedRatio: 0.5))
-        requestedMenuWidth = menuWidth.isFinite ? max(0, menuWidth) : nil
+        requestedMenuWidth = menuWidth.isFinite ? max(0,
+                                                      menuWidth) : nil
     }
 
     public init(drawerView: UIView,
@@ -163,11 +193,14 @@ public final class JobsSideDrawerVC: UIViewController {
         providedDrawerContentView = drawerView
         providedMainContentView = mainView
         self.configuration = configuration
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil,
+                   bundle: nil)
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -175,7 +208,8 @@ public final class JobsSideDrawerVC: UIViewController {
         installChildren()
         contentContainerView.byAddTo(view)
         drawerContainerView.byAddTo(view)
-        view.jobs_addGestureRetView(openGesture)
+        view
+            .jobs_addGestureRetView(openGesture)
             .jobs_addGestureRetView(closeGesture)
         updateGestureConfiguration()
     }
@@ -183,7 +217,9 @@ public final class JobsSideDrawerVC: UIViewController {
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         if let requestedMenuWidth, view.bounds.width > 0 {
-            configuration.presentedRatio = min(1, max(0, requestedMenuWidth / view.bounds.width))
+            configuration.presentedRatio = min(1,
+                                               max(0,
+                                                   requestedMenuWidth / view.bounds.width))
         }
         let progress = interactionStartProgress == nil ? (isOpen ? 1 : 0) : currentProgress
         layoutDrawer(progress: progress)
@@ -195,31 +231,41 @@ public final class JobsSideDrawerVC: UIViewController {
         normalizeConfiguration()
         dimControl.byBackgroundColor(configuration.dimColor)
         updateGestureConfiguration()
-        setDrawer(open: isOpen, animated: animated)
+        setDrawer(open: isOpen,
+                  animated: animated)
     }
 
     public func toggleDrawer(animated: Bool = true) {
-        setDrawer(open: !isOpen, animated: animated)
+        setDrawer(open: !isOpen,
+                  animated: animated)
     }
 
     public func openDrawer(animated: Bool = true) {
-        setDrawer(open: true, animated: animated)
+        setDrawer(open: true,
+                  animated: animated)
     }
 
     public func closeDrawer(animated: Bool = true) {
-        setDrawer(open: false, animated: animated)
+        setDrawer(open: false,
+                  animated: animated)
     }
 
     private func installChildren() {
-        if let drawerVC { addChild(drawerVC) }
-        if let mainVC { addChild(mainVC) }
+        if let drawerVC {
+            addChild(drawerVC)
+        }
+        if let mainVC {
+            addChild(mainVC)
+        }
     }
 
     /// 等父容器拿到真实尺寸后再装配导航子控制器，避开 UIKit 的零尺寸临时布局阶段。
     private func installContentViewsIfNeeded() {
         guard !didInstallContentViews,
               view.bounds.width > 0,
-              view.bounds.height > 0 else { return }
+              view.bounds.height > 0 else {
+            return
+        }
         didInstallContentViews = true
         mainContentView.byAddTo(contentContainerView)
         dimControl.byAddTo(contentContainerView)
@@ -233,7 +279,9 @@ public final class JobsSideDrawerVC: UIViewController {
 
     /// 容器旋转或尺寸变化时只更新 frame，不触发子导航栏额外的强制布局。
     private func layoutContentViewsIfNeeded() {
-        guard didInstallContentViews else { return }
+        guard didInstallContentViews else {
+            return
+        }
         mainContentView.byFrame(contentContainerView.bounds)
         drawerContentView.byFrame(drawerContainerView.bounds)
         dimControl.byFrame(contentContainerView.bounds)
@@ -266,49 +314,54 @@ public final class JobsSideDrawerVC: UIViewController {
         transitionGeneration += 1
         let generation = transitionGeneration
         let changes: () -> Void = { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.layoutDrawer(progress: targetProgress)
         }
         let completion: (Bool) -> Void = { [weak self] _ in
             guard let self,
-                  self.transitionGeneration == generation else { return }
+                  self.transitionGeneration == generation else {
+                return
+            }
             self.layoutDrawer(progress: targetProgress)
             self.finishTransition(open: open)
         }
-        UIView.jobsAnimateWithOptions(
-            settlementDuration(from: startProgress,
-                               to: targetProgress,
-                               initialVelocity: initialVelocity),
-            delay: 0,
-            options: [.curveEaseOut, .beginFromCurrentState, .allowUserInteraction],
-            animations: changes,
-            completion: completion
-        )
+        UIView.jobsAnimateWithOptions(settlementDuration(from: startProgress,
+                                                         to: targetProgress,
+                                                         initialVelocity: initialVelocity),
+                                      delay: 0,
+                                      options: [.curveEaseOut, .beginFromCurrentState, .allowUserInteraction],
+                                      animations: changes,
+                                      completion: completion)
     }
 
     private func layoutDrawer(progress: CGFloat) {
         let bounds = view.bounds
-        let progress = max(0, min(1, progress))
+        let progress = max(0,
+                           min(1,progress))
         currentProgress = progress
         let frames = drawerFrames(in: bounds)
         let distance = interactiveDistance()
-        drawerContainerView.byFrame(CGRect(
-            x: frames.hidden.origin.x + (frames.shown.origin.x - frames.hidden.origin.x) * progress,
-            y: frames.hidden.origin.y + (frames.shown.origin.y - frames.hidden.origin.y) * progress,
-            width: frames.shown.width,
-            height: frames.shown.height
-        ))
+        drawerContainerView.byFrame(CGRect(x: frames.hidden.origin.x + (frames.shown.origin.x - frames.hidden.origin.x) * progress,
+                                           y: frames.hidden.origin.y + (frames.shown.origin.y - frames.hidden.origin.y) * progress,
+                                           width: frames.shown.width,
+                                           height: frames.shown.height))
         var contentFrame = bounds
         if configuration.contentMode == .following {
             switch configuration.direction {
             /// 处理 .left 分支
-            case .left: contentFrame.origin.x += distance * progress
+            case .left:
+                contentFrame.origin.x += distance * progress
             /// 处理 .right 分支
-            case .right: contentFrame.origin.x -= distance * progress
+            case .right:
+                contentFrame.origin.x -= distance * progress
             /// 处理 .top 分支
-            case .top: contentFrame.origin.y += distance * progress
+            case .top:
+                contentFrame.origin.y += distance * progress
             /// 处理 .bottom 分支
-            case .bottom: contentFrame.origin.y -= distance * progress
+            case .bottom:
+                contentFrame.origin.y -= distance * progress
             }
         }
         contentContainerView
@@ -325,13 +378,17 @@ public final class JobsSideDrawerVC: UIViewController {
     private func updateGestureConfiguration() {
         switch configuration.direction {
         /// 处理 .left 分支
-        case .left: openGesture.edges = .left
+        case .left:
+            openGesture.edges = .left
         /// 处理 .right 分支
-        case .right: openGesture.edges = .right
+        case .right:
+            openGesture.edges = .right
         /// 处理 .top 分支
-        case .top: openGesture.edges = .top
+        case .top:
+            openGesture.edges = .top
         /// 处理 .bottom 分支
-        case .bottom: openGesture.edges = .bottom
+        case .bottom:
+            openGesture.edges = .bottom
         }
         updateGestureAvailability()
     }
@@ -345,32 +402,41 @@ public final class JobsSideDrawerVC: UIViewController {
     private func interactiveDistance() -> CGFloat {
         let horizontal = configuration.direction == .left || configuration.direction == .right
         let length = horizontal ? view.bounds.width : view.bounds.height
-        return max(length * configuration.presentedRatio, 1)
+        return max(length * configuration.presentedRatio,
+                   1)
     }
 
     private func openingTranslation(for translation: CGPoint) -> CGFloat {
         switch configuration.direction {
         /// 处理 .left 分支
-        case .left: return translation.x
+        case .left:
+            return translation.x
         /// 处理 .right 分支
-        case .right: return -translation.x
+        case .right:
+            return -translation.x
         /// 处理 .top 分支
-        case .top: return translation.y
+        case .top:
+            return translation.y
         /// 处理 .bottom 分支
-        case .bottom: return -translation.y
+        case .bottom:
+            return -translation.y
         }
     }
 
     private func openingVelocity(for velocity: CGPoint) -> CGFloat {
         switch configuration.direction {
         /// 处理 .left 分支
-        case .left: return velocity.x
+        case .left:
+            return velocity.x
         /// 处理 .right 分支
-        case .right: return -velocity.x
+        case .right:
+            return -velocity.x
         /// 处理 .top 分支
-        case .top: return velocity.y
+        case .top:
+            return velocity.y
         /// 处理 .bottom 分支
-        case .bottom: return -velocity.y
+        case .bottom:
+            return -velocity.y
         }
     }
 
@@ -387,7 +453,8 @@ public final class JobsSideDrawerVC: UIViewController {
         /// 合并处理 .ended、.cancelled、.failed 分支
         case .ended, .cancelled, .failed:
             updateInteractionProgress(using: gesture)
-            finishInteraction(using: gesture, intent: intent)
+            finishInteraction(using: gesture,
+                              intent: intent)
         /// 未匹配已知分支时执行兜底处理
         default:
             break
@@ -400,8 +467,11 @@ public final class JobsSideDrawerVC: UIViewController {
 }
 
 extension JobsSideDrawerVC: UIGestureRecognizerDelegate {
+
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        guard let panGesture = gestureRecognizer as? UIPanGestureRecognizer else { return true }
+        guard let panGesture = gestureRecognizer as? UIPanGestureRecognizer else {
+            return true
+        }
         let intent: InteractionIntent = gestureRecognizer === openGesture ? .opening : .closing
         if intent == .opening,
            let shouldBeginOpeningGesture = configuration.shouldBeginOpeningGesture,
@@ -410,41 +480,53 @@ extension JobsSideDrawerVC: UIGestureRecognizerDelegate {
         }
         let velocity = panGesture.velocity(in: view)
         let primaryVelocity = openingVelocity(for: velocity)
-        guard isExpectedDirection(primaryVelocity, for: intent),
-              isPrimaryAxisDominant(for: velocity) else { return false }
+        guard isExpectedDirection(primaryVelocity,
+                                  for: intent),
+              isPrimaryAxisDominant(for: velocity) else {
+            return false
+        }
         if intent == .closing,
            let scrollView = touchedScrollView(for: panGesture),
-           scrollViewCanConsume(velocity: velocity, in: scrollView) {
+           scrollViewCanConsume(velocity: velocity,
+                                in: scrollView) {
             return false
-        };return true
+        }
+        return true
     }
 
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
                                   shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         guard gestureRecognizer === openGesture || gestureRecognizer === closeGesture,
               otherGestureRecognizer.view is UIScrollView,
-              let panGesture = gestureRecognizer as? UIPanGestureRecognizer else { return false }
+              let panGesture = gestureRecognizer as? UIPanGestureRecognizer else {
+            return false
+        }
         let intent: InteractionIntent = gestureRecognizer === openGesture ? .opening : .closing
         let velocity = panGesture.velocity(in: view)
-        return isExpectedDirection(openingVelocity(for: velocity), for: intent)
+        return isExpectedDirection(openingVelocity(for: velocity),
+                                   for: intent)
             && isPrimaryAxisDominant(for: velocity)
     }
 }
 
 private extension JobsSideDrawerVC {
+
     func normalizeConfiguration() {
-        configuration.presentedRatio = max(0.1, min(1, configuration.presentedRatio))
-        configuration.animationDuration = max(configuration.animationDuration, 0)
-        configuration.interactiveCompletionThreshold = max(
-            0.05,
-            min(0.95, configuration.interactiveCompletionThreshold)
-        )
-        configuration.interactiveVelocityThreshold = max(configuration.interactiveVelocityThreshold, 0)
-        configuration.interactiveProjectionTime = max(configuration.interactiveProjectionTime, 0)
-        configuration.interactiveAxisDominanceRatio = max(
-            0,
-            min(1, configuration.interactiveAxisDominanceRatio)
-        )
+        configuration.presentedRatio = max(0.1,
+                                           min(1,
+                                               configuration.presentedRatio))
+        configuration.animationDuration = max(configuration.animationDuration,
+                                              0)
+        configuration.interactiveCompletionThreshold = max(0.05,
+                                                           min(0.95,
+                                                               configuration.interactiveCompletionThreshold))
+        configuration.interactiveVelocityThreshold = max(configuration.interactiveVelocityThreshold,
+                                                         0)
+        configuration.interactiveProjectionTime = max(configuration.interactiveProjectionTime,
+                                                      0)
+        configuration.interactiveAxisDominanceRatio = max(0,
+                                                          min(1,
+                                                              configuration.interactiveAxisDominanceRatio))
     }
 
     func drawerFrames(in bounds: CGRect) -> (shown: CGRect, hidden: CGRect) {
@@ -456,19 +538,28 @@ private extension JobsSideDrawerVC {
         } else {
             shownFrame.size.height = distance
         }
-        if configuration.direction == .right { shownFrame.origin.x = bounds.width - distance }
-        if configuration.direction == .bottom { shownFrame.origin.y = bounds.height - distance }
+        if configuration.direction == .right {
+            shownFrame.origin.x = bounds.width - distance
+        }
+        if configuration.direction == .bottom {
+            shownFrame.origin.y = bounds.height - distance
+        }
         var hiddenFrame = shownFrame
         switch configuration.direction {
         /// 处理 .left 分支
-        case .left: hiddenFrame.origin.x = -distance
+        case .left:
+            hiddenFrame.origin.x = -distance
         /// 处理 .right 分支
-        case .right: hiddenFrame.origin.x = bounds.width
+        case .right:
+            hiddenFrame.origin.x = bounds.width
         /// 处理 .top 分支
-        case .top: hiddenFrame.origin.y = -distance
+        case .top:
+            hiddenFrame.origin.y = -distance
         /// 处理 .bottom 分支
-        case .bottom: hiddenFrame.origin.y = bounds.height
-        };return (shownFrame, hiddenFrame)
+        case .bottom:
+            hiddenFrame.origin.y = bounds.height
+        }
+        return (shownFrame, hiddenFrame)
     }
 
     func stopTransitionAtRenderedProgress() -> CGFloat {
@@ -503,17 +594,23 @@ private extension JobsSideDrawerVC {
             currentOrigin = presentationFrame.origin.y
         }
         let travel = shownOrigin - hiddenOrigin
-        guard abs(travel) > Self.progressEpsilon else { return currentProgress };return max(
-            0,
-            min(1, (currentOrigin - hiddenOrigin) / travel)
-        )
+        guard abs(travel) > Self.progressEpsilon else {
+            return currentProgress
+        }
+        return max(0,
+                   min(1,
+                       (currentOrigin - hiddenOrigin) / travel))
     }
 
     func finishTransition(open: Bool) {
         isAnimatingTransition = false
-        if !open { dimControl.byHidden(true) }
+        if !open {
+            dimControl.byHidden(true)
+        }
         updateGestureAvailability()
-        if !open { configuration.onDidClose?() }
+        if !open {
+            configuration.onDidClose?()
+        }
     }
 
     func settlementDuration(from startProgress: CGFloat,
@@ -521,18 +618,24 @@ private extension JobsSideDrawerVC {
                             initialVelocity: CGFloat) -> TimeInterval {
         let remainingProgress = abs(targetProgress - startProgress)
         let maximumDuration = configuration.animationDuration
-        let minimumDuration = min(Self.minimumSettlementDuration, maximumDuration)
-        var duration = max(minimumDuration, maximumDuration * TimeInterval(remainingProgress))
+        let minimumDuration = min(Self.minimumSettlementDuration,
+                                  maximumDuration)
+        var duration = max(minimumDuration,
+                           maximumDuration * TimeInterval(remainingProgress))
         let velocity = abs(initialVelocity)
         if velocity >= configuration.interactiveVelocityThreshold,
            velocity > 0 {
             let remainingPoints = remainingProgress * interactiveDistance()
             let velocityDuration = TimeInterval(remainingPoints / velocity) * 0.85
-            duration = min(duration, max(minimumDuration, velocityDuration))
+            duration = min(duration,
+                           max(minimumDuration,velocityDuration))
         }
         if UIAccessibility.isReduceMotionEnabled {
-            duration = min(duration, minimumDuration)
-        };return min(duration, maximumDuration)
+            duration = min(duration,
+                           minimumDuration)
+        }
+        return min(duration,
+                   maximumDuration)
     }
 
     private func beginInteraction(intent: InteractionIntent) {
@@ -552,7 +655,9 @@ private extension JobsSideDrawerVC {
     }
 
     func updateInteractionProgress(using gesture: UIPanGestureRecognizer) {
-        guard let startProgress = interactionStartProgress else { return }
+        guard let startProgress = interactionStartProgress else {
+            return
+        }
         let translation = openingTranslation(for: gesture.translation(in: view))
         let progress = startProgress + translation / interactiveDistance()
         layoutDrawer(progress: progress)
@@ -560,7 +665,9 @@ private extension JobsSideDrawerVC {
 
     private func finishInteraction(using gesture: UIPanGestureRecognizer,
                                    intent: InteractionIntent) {
-        guard interactionIntent == intent else { return }
+        guard interactionIntent == intent else {
+            return
+        }
         let velocity = openingVelocity(for: gesture.velocity(in: view))
         let shouldOpen: Bool
         if gesture.state != .ended {
@@ -568,22 +675,20 @@ private extension JobsSideDrawerVC {
         } else if abs(velocity) >= configuration.interactiveVelocityThreshold {
             shouldOpen = velocity > 0
         } else {
-            let projectedProgress = max(
-                0,
-                min(
-                    1,
-                    currentProgress
-                        + velocity / interactiveDistance() * CGFloat(configuration.interactiveProjectionTime)
-                )
-            )
+            let projectedProgress = max(0,
+                                        min(1,
+                                            currentProgress
+                                                + velocity / interactiveDistance() * CGFloat(configuration.interactiveProjectionTime)))
             switch intent {
             /// 处理 .opening 分支
             case .opening:
-                shouldOpen = max(currentProgress, projectedProgress)
+                shouldOpen = max(currentProgress,
+                                 projectedProgress)
                     >= configuration.interactiveCompletionThreshold
             /// 处理 .closing 分支
             case .closing:
-                shouldOpen = min(currentProgress, projectedProgress)
+                shouldOpen = min(currentProgress,
+                                 projectedProgress)
                     > 1 - configuration.interactiveCompletionThreshold
             }
         }
@@ -596,9 +701,11 @@ private extension JobsSideDrawerVC {
                                      for intent: InteractionIntent) -> Bool {
         switch intent {
         /// 处理 .opening 分支
-        case .opening: return openingVelocity > 0
+        case .opening:
+            return openingVelocity > 0
         /// 处理 .closing 分支
-        case .closing: return openingVelocity < 0
+        case .closing:
+            return openingVelocity < 0
         }
     }
 
@@ -611,16 +718,22 @@ private extension JobsSideDrawerVC {
 
     func touchedScrollView(for gesture: UIPanGestureRecognizer) -> UIScrollView? {
         let location = gesture.location(in: view)
-        var touchedView = view.hitTest(location, with: nil)
+        var touchedView = view.hitTest(location,
+                                       with: nil)
         while let currentView = touchedView {
-            if let scrollView = currentView as? UIScrollView { return scrollView }
+            if let scrollView = currentView as? UIScrollView {
+                return scrollView
+            }
             touchedView = currentView.superview
-        };return nil
+        }
+        return nil
     }
 
     func scrollViewCanConsume(velocity: CGPoint,
                               in scrollView: UIScrollView) -> Bool {
-        guard scrollView.isScrollEnabled else { return false }
+        guard scrollView.isScrollEnabled else {
+            return false
+        }
         let horizontal = configuration.direction == .left || configuration.direction == .right
         let axisVelocity = horizontal ? velocity.x : velocity.y
         let contentLength = horizontal ? scrollView.contentSize.width : scrollView.contentSize.height
@@ -634,28 +747,47 @@ private extension JobsSideDrawerVC {
             leadingInset = horizontal ? scrollView.contentInset.left : scrollView.contentInset.top
             trailingInset = horizontal ? scrollView.contentInset.right : scrollView.contentInset.bottom
         }
-        guard contentLength + leadingInset + trailingInset > boundsLength + 1 else { return false }
+        guard contentLength + leadingInset + trailingInset > boundsLength + 1 else {
+            return false
+        }
         let currentOffset = horizontal ? scrollView.contentOffset.x : scrollView.contentOffset.y
         let minimumOffset = -leadingInset
-        let maximumOffset = max(minimumOffset, contentLength - boundsLength + trailingInset)
-        if axisVelocity < 0 { return currentOffset < maximumOffset - 1 }
-        if axisVelocity > 0 { return currentOffset > minimumOffset + 1 };return false
+        let maximumOffset = max(minimumOffset,
+                                contentLength - boundsLength + trailingInset)
+        if axisVelocity < 0 {
+            return currentOffset < maximumOffset - 1
+        }
+        if axisVelocity > 0 {
+            return currentOffset > minimumOffset + 1
+        }
+        return false
     }
 }
 
 public extension UIViewController {
+
     var jobsSideDrawer: JobsSideDrawerVC? {
         var current: UIViewController? = self
         while let controller = current {
-            if let drawer = controller as? JobsSideDrawerVC { return drawer }
+            if let drawer = controller as? JobsSideDrawerVC {
+                return drawer
+            }
             current = controller.parent
-        };return nil
+        }
+        return nil
     }
 
     func jobs_findMainNavFromAncestors(closeDrawer: Bool = true,
                                        animated: Bool = true) -> UINavigationController? {
         if let drawer = jobsSideDrawer {
-            if closeDrawer { drawer.closeDrawer(animated: animated) };return drawer.children.compactMap { $0 as? UINavigationController }.last
-        };return navigationController
+            if closeDrawer {
+                drawer.closeDrawer(animated: animated)
+            }
+            return drawer.children.compactMap {
+                $0 as? UINavigationController
+            }
+                .last
+        }
+        return navigationController
     }
 }

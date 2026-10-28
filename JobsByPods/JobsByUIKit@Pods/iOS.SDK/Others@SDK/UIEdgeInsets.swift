@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 extension UIEdgeInsets {
+
     @discardableResult
     public mutating func byTop(_ value: CGFloat) -> Self {
         top = value

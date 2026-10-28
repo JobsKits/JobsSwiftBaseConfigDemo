@@ -8,6 +8,7 @@
 import Foundation
 
 public struct JobsSwiftCommentModel: Equatable {
+
     public var messageID: String
     public var userAvatar: String
     public var nickname: String
@@ -51,29 +52,31 @@ public struct JobsSwiftCommentModel: Equatable {
                                device: String = "",
                                location: String = "",
                                children: [JobsSwiftCommentModel] = []) -> JobsSwiftCommentModel {
-        JobsSwiftCommentModel(
-            messageID: messageID,
-            userAvatar: userAvatar,
-            nickname: nickname,
-            replyID: replyID,
-            replyUserName: replyUserName,
-            publishTime: publishTime,
-            content: content,
-            device: device,
-            location: location,
-            children: children
-        )
+        JobsSwiftCommentModel(messageID: messageID,
+                              userAvatar: userAvatar,
+                              nickname: nickname,
+                              replyID: replyID,
+                              replyUserName: replyUserName,
+                              publishTime: publishTime,
+                              content: content,
+                              device: device,
+                              location: location,
+                              children: children)
     }
 }
 
 private extension JobsSwiftCommentModel {
+
     static func normalized(_ value: String) -> String {
         value.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     static func normalizedOptional(_ value: String?) -> String? {
         guard let text = value?.trimmingCharacters(in: .whitespacesAndNewlines),
-              !text.isEmpty else { return nil };return text
+              !text.isEmpty else {
+            return nil
+        }
+        return text
     }
 }
 

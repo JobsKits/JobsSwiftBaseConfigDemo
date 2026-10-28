@@ -24,8 +24,11 @@ import PromiseKit
 import GKNavigationBarSwift
 
 final class PromiseKitDemoVC: BaseVC {
+
     // MARK: - Row
-    private enum Row: Int, CaseIterable {
+    private enum Row: Int,
+                      CaseIterable {
+
         case serial
         case parallel
         case fallback
@@ -34,67 +37,86 @@ final class PromiseKitDemoVC: BaseVC {
         var title: String {
             switch self {
             /// 处理 .serial 分支
-            case .serial: "串行依赖：登录 → 用户资料 → 权益"
+            case .serial:
+                "串行依赖：登录 → 用户资料 → 权益"
             /// 处理 .parallel 分支
-            case .parallel: "并发聚合：首页多接口一起拉"
+            case .parallel:
+                "并发聚合：首页多接口一起拉"
             /// 处理 .fallback 分支
-            case .fallback: "失败回退：主链路失败 → recover 缓存"
+            case .fallback:
+                "失败回退：主链路失败 → recover 缓存"
             /// 处理 .partialSuccess 分支
-            case .partialSuccess: "部分成功：when(resolved:)"
+            case .partialSuccess:
+                "部分成功：when(resolved:)"
             /// 处理 .timeoutRace 分支
-            case .timeoutRace: "竞争/超时：race + after"
+            case .timeoutRace:
+                "竞争/超时：race + after"
             }
         }
         var subtitle: String {
             switch self {
             /// 处理 .serial 分支
-            case .serial: "then 把前一个结果自然传给下一个请求"
+            case .serial:
+                "then 把前一个结果自然传给下一个请求"
             /// 处理 .parallel 分支
-            case .parallel: "when(fulfilled:) 解决回调地狱和收口问题"
+            case .parallel:
+                "when(fulfilled:) 解决回调地狱和收口问题"
             /// 处理 .fallback 分支
-            case .fallback: "recover 把兜底逻辑写平，不用层层 else"
+            case .fallback:
+                "recover 把兜底逻辑写平，不用层层 else"
             /// 处理 .partialSuccess 分支
-            case .partialSuccess: "一个失败不影响其它成功结果落地"
+            case .partialSuccess:
+                "一个失败不影响其它成功结果落地"
             /// 处理 .timeoutRace 分支
-            case .timeoutRace: "超时不是到处手写 Timer，而是直接组合"
+            case .timeoutRace:
+                "超时不是到处手写 Timer，而是直接组合"
             }
         }
     }
     // MARK: - Section
-    private enum Section: Int, CaseIterable {
+    private enum Section: Int,
+                          CaseIterable {
+
         case actions
         case logs
         var title: String {
             switch self {
             /// 处理 .actions 分支
-            case .actions: "PromiseKit 场景"
+            case .actions:
+                "PromiseKit 场景"
             /// 处理 .logs 分支
-            case .logs: "运行日志"
+            case .logs:
+                "运行日志"
             }
         }
     }
     // MARK: - Model
     struct User {
+
         let id: Int
         let name: String
     }
 
     struct Benefit {
+
         let level: String
         let points: Int
     }
 
     struct Banner {
+
         let title: String
     }
 
     private struct HomeSummary {
+
         let userName: String
         let unreadCount: Int
         let banners: [Banner]
     }
 
     enum DemoError: Error {
+
         case invalidCredential
         case networkBusy
         case timeout
@@ -104,11 +126,14 @@ final class PromiseKitDemoVC: BaseVC {
     // MARK: - Data
     private let service = MockPromiseService()
     private var logs = [String]() {
-        didSet { tableView.reloadData() }
+        didSet {
+            tableView.reloadData()
+        }
     }
     // MARK: - UI
     private lazy var tipsLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("""
                     PromiseKit 这个库确实不轻，但它有几个 callback / GCD 很难写得这么平的地方：
                     串行依赖、并发聚合、失败回退、部分成功、超时竞争。
@@ -116,7 +141,8 @@ final class PromiseKitDemoVC: BaseVC {
                     """)
             .byTextColor(.darkText)
             .byNumberOfLines(0)
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 14,
+                                        weight: .regular))
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
             .byMasksToBounds(YES)
@@ -131,11 +157,13 @@ final class PromiseKitDemoVC: BaseVC {
     }()
 
     private lazy var loadingLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("Idle")
             .byTextAlignment(.center)
             .byTextColor(JobsCor.white)
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .semibold))
             .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.9))
             .byCornerRadius(18)
             .byMasksToBounds(YES)
@@ -148,7 +176,8 @@ final class PromiseKitDemoVC: BaseVC {
     }()
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
             .byRowHeight(UITableView.automaticDimension)
@@ -162,7 +191,9 @@ final class PromiseKitDemoVC: BaseVC {
             .byEmptyViewProvider { [unowned self] in
                 JobsEmptyView()
                     .byOnTapRetry { [weak self] in
-                        guard let self else { return }
+                        guard let self else {
+                            return
+                        }
                         self.appendLog("点击了空态重试")
                     }
             }
@@ -176,13 +207,17 @@ final class PromiseKitDemoVC: BaseVC {
             .byRefreshHeader(component: JobsDefaultHeader(),
                              container: self,
                              trigger: 66) { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.reloadDemoData()
             }
             .byRefreshFooter(component: JobsDefaultFooter(),
                              container: self,
                              trigger: 66) { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainSync {
                     self.appendLog("Demo 没有真正分页，直接标记 noMoreData")
                     self.tableView.switchRefreshFooter(to: .noMoreData)
@@ -207,6 +242,7 @@ final class PromiseKitDemoVC: BaseVC {
 }
 
 extension PromiseKitDemoVC {
+
     // MARK: - Event
     private func reloadDemoData() {
         onMainSync {
@@ -241,82 +277,124 @@ extension PromiseKitDemoVC {
     // MARK: - Demo 1
     /// 串行依赖：上一个请求的产物给下一个请求继续用
     private func 上一个请求的产物给下一个请求继续用() {
-        setLoading(true, text: "串行中...")
+        setLoading(true,
+                   text: "串行中...")
         firstly {
-            service.login(username: "jobs", password: "123456")
-        }.then { [service] token in
-            service.fetchProfile(token: token)
-        }.then { [service] user in
-            service.fetchBenefits(userId: user.id).map { benefit in
-                (user, benefit)
-            }
-        }.done { [weak self] user, benefit in
-            guard let self else { return }
-            self.appendLog("✅ 串行成功：\(user.name) / \(benefit.level) / \(benefit.points)分")
-        }.catch { [weak self] error in
-            guard let self else { return }
-            self.appendLog("❌ 串行失败：\(error.localizedDescription)")
-        }.finally { [weak self] in
-            guard let self else { return }
-            self.setLoading(false)
+            service.login(username: "jobs",
+                          password: "123456")
         }
+            .then { [service] token in
+                service.fetchProfile(token: token)
+            }
+            .then { [service] user in
+                service.fetchBenefits(userId: user.id).map { benefit in
+                    (user, benefit)
+                }
+            }
+            .done { [weak self] user, benefit in
+                guard let self else {
+                    return
+                }
+                self.appendLog("✅ 串行成功：\(user.name) / \(benefit.level) / \(benefit.points)分")
+            }
+            .catch { [weak self] error in
+                guard let self else {
+                    return
+                }
+                self.appendLog("❌ 串行失败：\(error.localizedDescription)")
+            }
+            .finally { [weak self] in
+                guard let self else {
+                    return
+                }
+                self.setLoading(false)
+            }
     }
     // MARK: - Demo 2
     /// 并发聚合：多个互不依赖的请求同时发，最后一次性收口
     private func 多个互不依赖的请求同时发最后一次性收口() {
-        setLoading(true, text: "并发中...")
+        setLoading(true,
+                   text: "并发中...")
         firstly {
             when(fulfilled:
                 service.fetchCurrentUser(),
-                service.fetchUnreadCount(),
-                service.fetchBanners()
-            )
-        }.map { user, unread, banners in
-            HomeSummary(userName: user.name, unreadCount: unread, banners: banners)
-        }.done { [weak self] summary in
-            guard let self else { return }
-            let bannerTitles = summary.banners.map(\.title).joined(separator: "、")
-            self.appendLog("✅ 并发成功：用户=\(summary.userName)，未读=\(summary.unreadCount)，Banner=[\(bannerTitles)]")
-        }.catch { [weak self] error in
-            guard let self else { return }
-            self.appendLog("❌ 并发失败：\(error.localizedDescription)")
-        }.finally { [weak self] in
-            guard let self else { return }
-            self.setLoading(false)
+                 service.fetchUnreadCount(),
+                 service.fetchBanners())
         }
+            .map { user, unread, banners in
+                HomeSummary(userName: user.name,
+                            unreadCount: unread,
+                            banners: banners)
+            }
+            .done { [weak self] summary in
+                guard let self else {
+                    return
+                }
+                let bannerTitles = summary.banners.map(\.title).joined(separator: "、")
+                self.appendLog("✅ 并发成功：用户=\(summary.userName)，未读=\(summary.unreadCount)，Banner=[\(bannerTitles)]")
+            }
+            .catch { [weak self] error in
+                guard let self else {
+                    return
+                }
+                self.appendLog("❌ 并发失败：\(error.localizedDescription)")
+            }
+            .finally { [weak self] in
+                guard let self else {
+                    return
+                }
+                self.setLoading(false)
+            }
     }
     // MARK: - Demo 3
     /// 失败回退：主链路挂了以后，不把页面打死，直接切缓存
     private func 主链路挂了以后不把页面打死直接切缓存() {
-        setLoading(true, text: "回退中...")
+        setLoading(true,
+                   text: "回退中...")
         firstly {
             service.fetchRemoteConfig(forceFail: true)
-        }.recover { [service] error -> Promise<String> in
-            service.readCachedConfig().map { cached in
-                "[recover from: \(error.localizedDescription)] \(cached)"
-            }
-        }.done { [weak self] config in
-            guard let self else { return }
-            self.appendLog("✅ recover 成功：\(config)")
-        }.catch { [weak self] error in
-            guard let self else { return }
-            self.appendLog("❌ recover 也失败：\(error.localizedDescription)")
-        }.finally { [weak self] in
-            guard let self else { return }
-            self.setLoading(false)
         }
+            .recover { [service] error -> Promise<String> in
+                service.readCachedConfig().map { cached in
+                    "[recover from: \(error.localizedDescription)] \(cached)"
+                }
+            }
+            .done { [weak self] config in
+                guard let self else {
+                    return
+                }
+                self.appendLog("✅ recover 成功：\(config)")
+            }
+            .catch { [weak self] error in
+                guard let self else {
+                    return
+                }
+                self.appendLog("❌ recover 也失败：\(error.localizedDescription)")
+            }
+            .finally { [weak self] in
+                guard let self else {
+                    return
+                }
+                self.setLoading(false)
+            }
     }
     // MARK: - Demo 4
     /// 部分成功：一个接口失败，不影响其它接口的成功结果展示
     private func 一个接口失败不影响其它接口的成功结果展示() {
-        setLoading(true, text: "收集中...")
+        setLoading(true,
+                   text: "收集中...")
         let promises: [Promise<String>] = [
-            service.fetchWidget(name: "推荐位", shouldFail: false),
-            service.fetchWidget(name: "运营角标", shouldFail: true),
-            service.fetchWidget(name: "活动弹窗", shouldFail: false)
+            service.fetchWidget(name: "推荐位",
+                                shouldFail: false),
+            service.fetchWidget(name: "运营角标",
+                                shouldFail: true),
+            service.fetchWidget(name: "活动弹窗",
+                                shouldFail: false)
         ]
         when(resolved: promises).done { [weak self] (results: [Result<String>]) in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             var successLogs = [String]()
             var failureLogs = [String]()
             results.forEach { result in
@@ -339,26 +417,38 @@ extension PromiseKitDemoVC {
     // MARK: - Demo 5
     /// 竞争 / 超时：哪个先完成就用哪个
     private func 哪个先完成就用哪个() {
-        setLoading(true, text: "竞争中...")
+        setLoading(true,
+                   text: "竞争中...")
         let request = service.fetchSlowResource(delay: 2.0)
         let timeout = after(seconds: 1.0).then { () -> Promise<String> in
             Promise(error: DemoError.timeout)
         }
         firstly {
-            race(request, timeout)
-        }.done { [weak self] value in
-            guard let self else { return }
-            self.appendLog("✅ race 成功：\(value)")
-        }.catch { [weak self] error in
-            guard let self else { return }
-            self.appendLog("❌ race 触发超时：\(error.localizedDescription)")
-        }.finally { [weak self] in
-            guard let self else { return }
-            self.setLoading(false)
+            race(request,
+                 timeout)
         }
+            .done { [weak self] value in
+                guard let self else {
+                    return
+                }
+                self.appendLog("✅ race 成功：\(value)")
+            }
+            .catch { [weak self] error in
+                guard let self else {
+                    return
+                }
+                self.appendLog("❌ race 触发超时：\(error.localizedDescription)")
+            }
+            .finally { [weak self] in
+                guard let self else {
+                    return
+                }
+                self.setLoading(false)
+            }
     }
     // MARK: - UI State
-    private func setLoading(_ loading: Bool, text: String = "Idle") {
+    private func setLoading(_ loading: Bool,
+                            text: String = "Idle") {
         onMainSync {
             self.loadingLabel
                 .byVisible(YES)
@@ -370,22 +460,30 @@ extension PromiseKitDemoVC {
     private func appendLog(_ text: String) {
         onMainSync {
             let time = Self.timeFormatter.string(from: Date())
-            self.logs.insert("[\(time)] \(text)", at: 0)
+            self.logs.insert("[\(time)] \(text)",
+                             at: 0)
         }
     }
 
     private static let timeFormatter: DateFormatter = {
-        DateFormatter.jobsMake { _ in }.byDateFormat("HH:mm:ss")
+        DateFormatter
+            .jobsMake { _ in }
+            .byDateFormat("HH:mm:ss")
     }()
 }
 // MARK: - UITableViewDataSource / UITableViewDelegate
-extension PromiseKitDemoVC: UITableViewDataSource, UITableViewDelegate {
+extension PromiseKitDemoVC: UITableViewDataSource,
+                            UITableViewDelegate {
+
     func numberOfSections(in tableView: UITableView) -> Int {
         Section.allCases.count
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let sec = Section(rawValue: section) else { return 0 }
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
+        guard let sec = Section(rawValue: section) else {
+            return 0
+        }
         let count: Int
         switch sec {
         /// 处理 .actions 分支
@@ -394,30 +492,39 @@ extension PromiseKitDemoVC: UITableViewDataSource, UITableViewDelegate {
         /// 处理 .logs 分支
         case .logs:
             count = logs.count
-        };return count
+        }
+        return count
     }
 
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView,
+                   titleForHeaderInSection section: Int) -> String? {
         Section(rawValue: section)?.title
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath,
+                              animated: true)
         guard
-            let section = Section(rawValue: indexPath.section),
-            section == .actions,
-            let row = Row(rawValue: indexPath.row)
-        else { return }
+        let section = Section(rawValue: indexPath.section),
+        section == .actions,
+        let row = Row(rawValue: indexPath.row)
+        else {
+            return
+        }
         runDemo(row)
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = indexPath.section == Section.actions.rawValue ? Row(rawValue: indexPath.row) : nil
         return tableView
-            .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+            .byDequeueReusableCell(withType: UITableViewCell.self,
+                                   for: indexPath)
             .byAccessoryType(row == nil ? .none : .disclosureIndicator)
             .byListConfig {
-                $0.byText(row?.title ?? logs[indexPath.row])
+                $0
+                    .byText(row?.title ?? logs[indexPath.row])
                     .bySecondaryText(row?.subtitle)
                     .byTextLines(0)
                     .byTextLineBreakMode(.byWordWrapping)
@@ -428,7 +535,9 @@ extension PromiseKitDemoVC: UITableViewDataSource, UITableViewDelegate {
 }
 // MARK: - Mock Service
 private final class MockPromiseService {
-    func login(username: String, password: String) -> Promise<String> {
+
+    func login(username: String,
+               password: String) -> Promise<String> {
         Promise { seal in
             after(seconds: 0.6).done {
                 if username == "jobs", password == "123456" {
@@ -447,7 +556,8 @@ private final class MockPromiseService {
                     seal.reject(PromiseKitDemoVC.DemoError.invalidCredential)
                     return
                 }
-                seal.fulfill(.init(id: 9527, name: "Jobs"))
+                seal.fulfill(.init(id: 9527,
+                                   name: "Jobs"))
             }
         }
     }
@@ -455,7 +565,8 @@ private final class MockPromiseService {
     func fetchBenefits(userId: Int) -> Promise<PromiseKitDemoVC.Benefit> {
         Promise { seal in
             after(seconds: 0.4).done {
-                seal.fulfill(.init(level: "VIP", points: 1888))
+                seal.fulfill(.init(level: "VIP",
+                                   points: 1888))
             }
         }
     }
@@ -463,7 +574,8 @@ private final class MockPromiseService {
     func fetchCurrentUser() -> Promise<PromiseKitDemoVC.User> {
         Promise { seal in
             after(seconds: 0.4).done {
-                seal.fulfill(.init(id: 1, name: "Jobs"))
+                seal.fulfill(.init(id: 1,
+                                   name: "Jobs"))
             }
         }
     }
@@ -480,10 +592,10 @@ private final class MockPromiseService {
         Promise { seal in
             after(seconds: 0.8).done {
                 seal.fulfill([
-                    .init(title: "新人礼".tr),
-                    .init(title: "秒杀专区".tr),
-                    .init(title: "会员日".tr)
-                ])
+                        .init(title: "新人礼".tr),
+                        .init(title: "秒杀专区".tr),
+                        .init(title: "会员日".tr)
+                    ])
             }
         }
     }
@@ -508,7 +620,8 @@ private final class MockPromiseService {
         }
     }
 
-    func fetchWidget(name: String, shouldFail: Bool) -> Promise<String> {
+    func fetchWidget(name: String,
+                     shouldFail: Bool) -> Promise<String> {
         Promise { seal in
             after(seconds: 0.35).done {
                 if shouldFail {

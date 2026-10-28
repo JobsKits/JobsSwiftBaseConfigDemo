@@ -13,6 +13,7 @@ import UIKit
 
 // MARK: String 扩展：点语法裁剪 / 校验
 extension String {
+
     /// 去掉首尾空白+换行
     @inlinable
     public var byTrimmed: String {

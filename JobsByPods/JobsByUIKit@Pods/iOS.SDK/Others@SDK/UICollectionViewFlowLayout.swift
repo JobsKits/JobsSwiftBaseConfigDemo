@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 extension UICollectionViewFlowLayout {
+
     // MARK: - Spacing
     @discardableResult
     /// 设置 UICollectionViewFlowLayout 的 minimumLineSpacing（“行间距/主轴相邻组之间的间距”）
@@ -127,22 +128,29 @@ extension UICollectionViewFlowLayout {
     ///   - extraHorizontalInset: 额外左右内边距（除去 sectionInset 外的，比如 contentInset 或你想预留的边距）
     @discardableResult
     public func byGrid(columns: Int,
-                containerWidth: CGFloat,
-                height: CGFloat,
-                extraHorizontalInset: CGFloat = 0) -> Self {
-        guard columns > 0 else { return self }
+                       containerWidth: CGFloat,
+                       height: CGFloat,
+                       extraHorizontalInset: CGFloat = 0) -> Self {
+        guard columns > 0 else {
+            return self
+        }
         let totalInset = sectionInset.left + sectionInset.right + extraHorizontalInset
-        let totalSpacing = minimumInteritemSpacing * CGFloat(max(columns - 1, 0))
+        let totalSpacing = minimumInteritemSpacing * CGFloat(max(columns - 1,
+                                                                 0))
         let w = floor((containerWidth - totalInset - totalSpacing) / CGFloat(columns))
-        self.itemSize = CGSize(width: w, height: height)
+        self.itemSize = CGSize(width: w,
+                               height: height)
         return self
     }
     /// 快捷：常见的卡片列表预设
     /// - oneLineSpacing: 行间距；- interitemSpacing: 列间距；- inset: 分区内边距
     @discardableResult
     public func byPresetCardList(oneLineSpacing: CGFloat = 10,
-                          interitemSpacing: CGFloat = 10,
-                          inset: UIEdgeInsets = .init(top: 10, left: 12, bottom: 10, right: 12)) -> Self {
+                                 interitemSpacing: CGFloat = 10,
+                                 inset: UIEdgeInsets = .init(top: 10,
+                                                             left: 12,
+                                                             bottom: 10,
+                                                             right: 12)) -> Self {
         self.minimumLineSpacing = oneLineSpacing
         self.minimumInteritemSpacing = interitemSpacing
         self.sectionInset = inset
@@ -153,7 +161,8 @@ extension UICollectionViewFlowLayout {
     @discardableResult
     public func byListWithPinnedHeader(_ headerHeight: CGFloat) -> Self {
         self.scrollDirection = .vertical
-        self.headerReferenceSize = .init(width: 0, height: headerHeight)
+        self.headerReferenceSize = .init(width: 0,
+                                         height: headerHeight)
         self.sectionHeadersPinToVisibleBounds = true
         return self
     }

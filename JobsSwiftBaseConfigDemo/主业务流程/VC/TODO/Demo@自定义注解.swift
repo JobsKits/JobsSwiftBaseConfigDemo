@@ -22,37 +22,57 @@ import JobsSPMDemoMacros   // ⬅️ TODO 文件未加入 App Target；宏由 Pa
 
 @EquatableBy("id")
 private struct UserInfo {
+
     let id: Int
     var name: String
 }
 
-final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一致
+final class 自定义注解DemoVC: BaseVC {
+
+    // ⬅️ 与后面扩展保持一致
     private enum Section { case main }
     // MARK: - State
     private var users: [UserInfo] = [
-        .init(id: 1, name: "Alice"),
-        .init(id: 2, name: "Bob"),
-        .init(id: 3, name: "Cindy")
+        .init(id: 1,
+              name: "Alice"),
+        .init(id: 2,
+              name: "Bob"),
+        .init(id: 3,
+              name: "Cindy")
     ]
-    private var rows: Int = 3 { didSet { rows = max(0, rows) } }
+    private var rows: Int = 3 {
+        didSet {
+            rows = max(0,
+                       rows)
+        }
+    }
     // MARK: - UI
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byDataSource(self) // 先占位，后续会被 diffable 覆盖
-            .byDelegate(self)
+        .byDelegate(self)
             .byRegisterCell(UITableViewCell.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
             .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据".tr, for: .normal)
-                    .bySubTitle("点我填充示例数据".tr, for: .normal)
-                    .byImage("tray".sysImg, for: .normal)
+                    .byTitle("暂无数据".tr,
+                             for: .normal)
+                    .bySubTitle("点我填充示例数据".tr,
+                                for: .normal)
+                    .byImage("tray".sysImg,
+                             for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in
-                        guard let self else { return }
-                        self.users = (1...10).map { UserInfo(id: $0, name: "UserInfo \($0)") }
+                        guard let self else {
+                            return
+                        }
+                        self.users = (1 ... 10).map {
+                            UserInfo(id: $0,
+                                     name: "UserInfo \($0)")
+                        }
                         self.rows = self.users.count
                         self.applySnapshot(animated: true)
                     }
@@ -64,33 +84,39 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
                         make.width.lessThanOrEqualTo(host).multipliedBy(0.9)
                     }
             }
-            .byRefreshHeader(
-                component: JobsDefaultHeader(),
-                container: self,
-                trigger: 66
-            ) { [weak self] in
-                guard let self else { return }
+            .byRefreshHeader(component: JobsDefaultHeader(),
+                             container: self,
+                             trigger: 66) { [weak self] in
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
                     self.rows = 20
-                    self.users = (1...self.rows).map { UserInfo(id: $0, name: "UserInfo \($0)") }
+                    self.users = (1 ... self.rows).map {
+                        UserInfo(id: $0,
+                                 name: "UserInfo \($0)")
+                    }
                     self.applySnapshot(animated: true)
                     self.tableView.switchRefreshHeader(to: .normal)
                     self.tableView.switchRefreshFooter(to: .normal)
                 }
             }
-            .byRefreshFooter(
-                component: JobsDefaultFooter(),
-                container: self,
-                trigger: 66
-            ) { [weak self] in
-                guard let self else { return }
+            .byRefreshFooter(component: JobsDefaultFooter(),
+                             container: self,
+                             trigger: 66) { [weak self] in
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
                     if self.rows < 60 {
                         let start = self.rows + 1
                         self.rows += 20
-                        let more = (start...self.rows).map { UserInfo(id: $0, name: "UserInfo \($0)") }
+                        let more = (start ... self.rows).map {
+                            UserInfo(id: $0,
+                                     name: "UserInfo \($0)")
+                        }
                         self.users.append(contentsOf: more)
                         self.applySnapshot(animated: true)
                         self.tableView.switchRefreshFooter(to: .normal)
@@ -111,12 +137,20 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
 
     private lazy var renameButton: UIButton = {
         UIButton.sys()
-            .byTitle("① 改 #2 的 name（id 不变）".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byTitle("① 改 #2 的 name（id 不变）".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .medium))
             .byBackgroundColor(JobsCor.systemBlue)
-            .byContentEdgeInsets(.init(top: 10, left: 12, bottom: 10, right: 12))
-            .onTap { [weak self] _ in self?.renameSameID() }
+            .byContentEdgeInsets(.init(top: 10,
+                                       left: 12,
+                                       bottom: 10,
+                                       right: 12))
+            .onTap { [weak self] _ in
+                self?.renameSameID()
+            }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(10)
                 make.left.equalToSuperview().inset(16)
@@ -125,12 +159,20 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
 
     private lazy var replaceButton: UIButton = {
         UIButton.sys()
-            .byTitle("② 替换 #2（id → 99）".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byTitle("② 替换 #2（id → 99）".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .medium))
             .byBackgroundColor(JobsCor.systemOrange)
-            .byContentEdgeInsets(.init(top: 10, left: 12, bottom: 10, right: 12))
-            .onTap { [weak self] _ in self?.replaceWithNewID() }
+            .byContentEdgeInsets(.init(top: 10,
+                                       left: 12,
+                                       bottom: 10,
+                                       right: 12))
+            .onTap { [weak self] _ in
+                self?.replaceWithNewID()
+            }
             .byAddTo(view) { [unowned self] make in
                 make.centerY.equalTo(self.renameButton)
                 make.left.equalTo(self.renameButton.snp.right).offset(8)
@@ -147,11 +189,14 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
             title: "@EquatableBy(\"id\") × Jobs DSL"
         )
         view.byBackgroundColor(JobsCor.systemBackground)
-        _ = tableView; _ = renameButton; _ = replaceButton
+        _ = tableView
+        _ = renameButton
+        _ = replaceButton
         // Diffable：真正的数据源
         dataSource = UITableViewDiffableDataSource<Section, UserInfo>(tableView: tableView) { tableView, indexPath, item in
             tableView
-                .dequeueReusableCell(withIdentifier: String(describing: UITableViewCell.self), for: indexPath)
+                .dequeueReusableCell(withIdentifier: String(describing: UITableViewCell.self),
+                                     for: indexPath)
                 .byText("ID=\(item.id)")
                 .bySecondaryText(item.name)
                 .bySelectionStyle(.none)
@@ -163,50 +208,81 @@ final class 自定义注解DemoVC: BaseVC {   // ⬅️ 与后面扩展保持一
     }
 
     // MARK: - Snapshot
-    private func applySnapshot(animated: Bool = true, reload: [UserInfo] = []) {
+    private func applySnapshot(animated: Bool = true,
+                               reload: [UserInfo] = []) {
         var snap = NSDiffableDataSourceSnapshot<Section, UserInfo>()
         snap.appendSections([.main])
         let display = Array(users.prefix(rows))
-        snap.appendItems(display, toSection: .main)
-        if !reload.isEmpty { snap.reloadItems(reload) } // 同 id 只重载
-        dataSource.apply(snap, animatingDifferences: animated)
+        snap.appendItems(display,
+                         toSection: .main)
+        if !reload.isEmpty {
+            snap.reloadItems(reload)
+        } // 同 id 只重载
+        dataSource.apply(snap,
+                         animatingDifferences: animated)
     }
 
     // MARK: - Actions
     private func renameSameID() {
-        guard let idx = users.firstIndex(where: { $0.id == 2 }) else { return }
+        guard let idx = users.firstIndex(where: {
+            $0.id == 2
+        }) else {
+            return
+        }
         users[idx].name = "Bob \(Int.random(in: 100...999))"
         applySnapshot(reload: [users[idx]])     // 同 id：Diffable 识别为同一 item → 局部刷新
     }
 
     private func replaceWithNewID() {
-        guard let idx = users.firstIndex(where: { $0.id == 2 }) else { return }
-        let new = UserInfo(id: 99, name: "Bob(NewID)")
+        guard let idx = users.firstIndex(where: {
+            $0.id == 2
+        }) else {
+            return
+        }
+        let new = UserInfo(id: 99,
+                           name: "Bob(NewID)")
         users[idx] = new                         // id 变了：Diffable 识别为新 item → 插入/删除动画
         applySnapshot(animated: true)
     }
 }
 // MARK: - 协议占位实现
 extension 自定义注解DemoVC: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int { 1 }
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { rows }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        1
+    }
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
+        rows
+    }
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // 实际不会走到（由 diffable 提供 cell），但为满足 .byDataSource(self) 保持最小实现
-        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: UITableViewCell.self), for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: UITableViewCell.self),
+                                                 for: indexPath)
         let display = Array(users.prefix(rows))
         if indexPath.row < display.count {
             let u = display[indexPath.row]
-            cell.byText("ID=\(u.id)").bySecondaryText(u.name).bySelectionStyle(.none)
-        };return cell
+            cell
+                .byText("ID=\(u.id)")
+                .bySecondaryText(u.name)
+                .bySelectionStyle(.none)
+        }
+        return cell
     }
 }
 
 extension 自定义注解DemoVC: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
         let display = Array(users.prefix(rows))
-        guard indexPath.row < display.count else { return }
+        guard indexPath.row < display.count else {
+            return
+        }
         let u = display[indexPath.row]
         print("👉 tap UserInfo id=\(u.id), name=\(u.name)")
-        tableView.deselectRow(at: indexPath, animated: true)
+        tableView.deselectRow(at: indexPath,
+                              animated: true)
     }
 }

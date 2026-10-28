@@ -19,28 +19,41 @@ import JobsByUIKit
 import JobsInheritance
 
 // ========== Model ==========
-struct MVVMUser: Decodable { let id: String; let name: String }
+struct MVVMUser: Decodable {
+
+    let id: String
+    let name: String
+}
 
 // ========== Repository ==========
-protocol MVVMUserRepository { func users() async throws -> [MVVMUser] }
+protocol MVVMUserRepository {
+
+    func users() async throws -> [MVVMUser]
+}
 
 final class MVVMMockUserRepo: MVVMUserRepository {
+
     func users() async throws -> [MVVMUser] {
         try await Task.sleep(nanoseconds: 300_000_000)
-        return [.init(id: "1", name: "Alice"),
-                .init(id: "2", name: "Bob"),
-                .init(id: "3", name: "Charlie")]
+        return [.init(id: "1",
+                      name: "Alice"),
+            .init(id: "2",
+                  name: "Bob"),
+            .init(id: "3",
+                  name: "Charlie")]
     }
 }
 
 // ========== ViewState ==========
 enum MVVMUserListState {
+
     case loading
     case content([MVVMUser])
     case error(String)
 }
 // ========== Builder ==========
 enum MVVMBuilder {
+
     @MainActor
     static func build() -> UIViewController {
         let vm = MVVMUserListViewModel(repo: MVVMMockUserRepo())
@@ -50,15 +63,20 @@ enum MVVMBuilder {
 // ========== ViewModel ==========
 @MainActor
 final class MVVMUserListViewModel {
+
     private let repo: MVVMUserRepository
     var onStateChange: ((MVVMUserListState) -> Void)?
 
-    init(repo: MVVMUserRepository) { self.repo = repo }
+    init(repo: MVVMUserRepository) {
+        self.repo = repo
+    }
 
     func load() {
         onStateChange?(.loading)
         Task { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             do {
                 let list = try await repo.users()
                 onStateChange?(.content(list))
@@ -69,21 +87,31 @@ final class MVVMUserListViewModel {
     }
 }
 // ========== ViewController ==========
-final class MVVMUserListVC: BaseVC, UITableViewDataSource, UITableViewDelegate {
+final class MVVMUserListVC: BaseVC,
+                            UITableViewDataSource,
+                            UITableViewDelegate {
+
     private let vm: MVVMUserListViewModel
-    private let tableView = UITableView(frame: .zero, style: .plain)
+    private let tableView = UITableView(frame: .zero,
+                                        style: .plain)
     private var data: [MVVMUser] = []
     private lazy var errorAlertController: UIAlertController = {
-        let alertController = UIAlertController(title: "Error", message: nil, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .default))
+        let alertController = UIAlertController(title: "Error",
+                                                message: nil,
+                                                preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK",
+                                                style: .default))
         return alertController
     }()
 
     init(vm: MVVMUserListViewModel) {
         self.vm = vm
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil,
+                   bundle: nil)
     }
-    required init?(coder: NSCoder) { fatalError("init(coder:) not implemented") }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) not implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -93,9 +121,12 @@ final class MVVMUserListVC: BaseVC, UITableViewDataSource, UITableViewDelegate {
             .byDataSource(self)
             .byDelegate(self)
             .byBackgroundColor(JobsCor.systemBackground)
-        tableView.byAddTo(view); tableView.byFrame(view.bounds)
+        tableView.byAddTo(view)
+        tableView.byFrame(view.bounds)
         vm.onStateChange = { [weak self] state in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             switch state {
             /// 处理 .loading 分支
             case .loading:
@@ -110,7 +141,8 @@ final class MVVMUserListVC: BaseVC, UITableViewDataSource, UITableViewDelegate {
                 self.navigationItem.prompt = nil
                 self.errorAlertController.byMessage(msg)
                 if self.presentedViewController !== self.errorAlertController {
-                    self.present(self.errorAlertController, animated: true)
+                    self.present(self.errorAlertController,
+                                 animated: true)
                 }
             }
         }
@@ -118,9 +150,14 @@ final class MVVMUserListVC: BaseVC, UITableViewDataSource, UITableViewDelegate {
     }
 
     // UITableView
-    func tableView(_ tv: UITableView, numberOfRowsInSection section: Int) -> Int { data.count }
-    func tableView(_ tv: UITableView, cellForRowAt ip: IndexPath) -> UITableViewCell {
-        let c = tv.dequeueReusableCell(withIdentifier: "cell") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
+    func tableView(_ tv: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
+        data.count
+    }
+    func tableView(_ tv: UITableView,
+                   cellForRowAt ip: IndexPath) -> UITableViewCell {
+        let c = tv.dequeueReusableCell(withIdentifier: "cell") ?? UITableViewCell(style: .subtitle,
+                                                                                  reuseIdentifier: "cell")
         let u = data[ip.row]
         return c
             .byText(u.name)
@@ -129,11 +166,13 @@ final class MVVMUserListVC: BaseVC, UITableViewDataSource, UITableViewDelegate {
             .byDetailTitleCor(JobsCor.secondaryLabel)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
     }
-    func tableView(_ tv: UITableView, didSelectRowAt ip: IndexPath) {
+    func tableView(_ tv: UITableView,
+                   didSelectRowAt ip: IndexPath) {
         let u = data[ip.row]
         let vc = BaseVC()
         vc.view.byBackgroundColor(JobsCor.systemBackground)
         vc.byTitle("Detail \(u.name)")
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(vc,
+                                                 animated: true)
     }
 }

@@ -16,8 +16,10 @@ import SnapKit
 
 // ===== BaseWebView 作为 NavBar 宿主：根据显隐重排内部约束 =====
 extension BaseWebView: JobsNavBarHost {
+
     @MainActor
-    public func jobsNavBarDidToggle(enabled: Bool, navBar: JobsNavBar) {
+    public func jobsNavBarDidToggle(enabled: Bool,
+                                    navBar: JobsNavBar) {
         progressView.snp.remakeConstraints { make in
             if enabled {
                 make.top.equalTo(navBar.snp.bottom)

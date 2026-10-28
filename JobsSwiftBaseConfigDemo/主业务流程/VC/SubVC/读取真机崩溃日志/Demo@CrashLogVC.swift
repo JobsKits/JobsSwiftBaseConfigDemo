@@ -25,14 +25,19 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class CrashLogDemoVC: BaseVC {
+
     private let horizontalInset: CGFloat = 12
     private lazy var tv: UITextView = { [unowned self] in
-        UITextView.jobsMake { _ in }
+        UITextView
+            .jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.label)
             .byEditable(false)
             .bySelectable(true)
-            .byTextContainerInset(UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
+            .byTextContainerInset(UIEdgeInsets(top: 8,
+                                               left: 8,
+                                               bottom: 8,
+                                               right: 8))
             .byAddTo(self.view) { [unowned self] make in
                 make.left.equalToSuperview().offset(self.horizontalInset)
                 make.right.equalToSuperview().inset(self.horizontalInset)
@@ -48,38 +53,40 @@ final class CrashLogDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
-        jobsSetupGKNav(
-            title: "Crash Log Viewer",
-            rightButtons: [
+        jobsSetupGKNav(title: "Crash Log Viewer",
+                       rightButtons: [
                 // 复制：复制当前展示的文本（含 header）
                 UIButton.sys()
-                    .byImage("doc.on.doc.fill".sysImg, for: .normal)
+                    .byImage("doc.on.doc.fill".sysImg,
+                             for: .normal)
                     .onTap { [unowned self] _ in
-                        UIPasteboard.general.string = self.tv.text
-                        "复制日志成功✅".tr.toast
-                    },
+                UIPasteboard.general.string = self.tv.text
+                "复制日志成功✅".tr.toast
+            },
                 // 清理：删除并重建空文件
                 UIButton.sys()
-                    .byImage("trash.fill".sysImg, for: .normal)
+                    .byImage("trash.fill".sysImg,
+                             for: .normal)
                     .onTap { [unowned self] _ in
-                        let (ok, msg) = CrashLogCenter.shared.clear()
-                        tv.byText(msg)
-                        (ok ? "日志清理成功✅" : "日志清理失败❌").tr.toast
-                    },
+                let (ok, msg) = CrashLogCenter.shared.clear()
+                tv.byText(msg)
+                (ok ? "日志清理成功✅" : "日志清理失败❌").tr.toast
+            },
                 // 刷新
                 UIButton.sys()
-                    .byImage("arrow.clockwise".sysImg, for: .normal)
+                    .byImage("arrow.clockwise".sysImg,
+                             for: .normal)
                     .onTap { [unowned self] _ in
-                        reloadLog()
-                    }
-            ]
-        )
+                reloadLog()
+            }
+            ])
         tv.byVisible(YES)
         reloadLog()
     }
 }
 
 extension CrashLogDemoVC {
+
     // ================================== Actions ==================================
     private func reloadLog(keyword: String = "") {
         // 尽量读 tail，避免特别大时卡 UI
@@ -89,7 +96,9 @@ extension CrashLogDemoVC {
         } else {
             let filtered = content
                 .components(separatedBy: "\n")
-                .filter { keyword.inStr($0) }
+                .filter {
+                    keyword.inStr($0)
+                }
                 .joined(separator: "\n")
             tv.byText(headerText(keyword: keyword) + filtered)
         }
@@ -108,12 +117,10 @@ extension CrashLogDemoVC {
         }
         header += "didCrashLastRun: \(CrashLogCenter.shared.didCrashLastRun() ? "YES" : "NO")\n"
         if let memory = CrashLogCenter.shared.latestMemorySnapshot() {
-            header += String(
-                format: "memory: %.1f MB (peak %.1f MB, growth %+.1f MB)\n",
-                Double(memory.footprintBytes) / 1024 / 1024,
-                Double(memory.peakFootprintBytes) / 1024 / 1024,
-                Double(memory.growthBytes) / 1024 / 1024
-            )
+            header += String(format: "memory: %.1f MB (peak %.1f MB, growth %+.1f MB)\n",
+                             Double(memory.footprintBytes) / 1024 / 1024,
+                             Double(memory.peakFootprintBytes) / 1024 / 1024,
+                             Double(memory.growthBytes) / 1024 / 1024)
             header += "screen: \(memory.screen)\n"
         }
         if !keyword.isEmpty {

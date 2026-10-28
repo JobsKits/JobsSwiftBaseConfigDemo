@@ -29,12 +29,15 @@ import SnapKit
      </dict>
  */
 public final class BaseWebView: UIView {
+
     // MARK: - 基础配置项（完全通用，无业务常量）
     public var openBlankInPlace: Bool = true
     public var disableSelectionAndCallout: Bool = false
     public var injectDarkStylePatch: Bool = false
     public var isInspectableEnabled: Bool = true {
-        didSet { webView.byInspectable(isInspectableEnabled) }
+        didSet {
+            webView.byInspectable(isInspectableEnabled)
+        }
     }
     /// 远程原生 Bridge 必须显式授权 origin，例如 https://example.com:443。
     public var bridgeReplyTimeout: TimeInterval = 15
@@ -134,12 +137,15 @@ public final class BaseWebView: UIView {
 
     @MainActor
     private func makeWebView(configuration: WKWebViewConfiguration) -> WKWebView {
-        WKWebView(frame: .zero, configuration: configuration)
+        WKWebView(frame: .zero,
+                  configuration: configuration)
             .byNavigationDelegate(self)
             .byUIDelegate(self)
             .byInspectable(isInspectableEnabled)
             .byScrollView { scrollView in
-                scrollView.byAlwaysBounceVertical(true).byRefreshControl(refresher)
+                scrollView
+                    .byAlwaysBounceVertical(true)
+                    .byRefreshControl(refresher)
             }
             .byAddTo(self) { [unowned self] make in
                 make.top.equalTo(self.progressView.snp.bottom)
@@ -151,7 +157,8 @@ public final class BaseWebView: UIView {
     @MainActor
     func updateCreationConfiguration(_ update: () -> Void) {
         guard webView.url == nil, !webView.isLoading else {
-            let error = NSError(domain: "BaseWebView", code: -11,
+            let error = NSError(domain: "BaseWebView",
+                                code: -11,
                                 userInfo: [NSLocalizedDescriptionKey: "Configure WKWebView before loading its first document"])
             lastConfigurationError = error
             onConfigurationError?(error)
@@ -165,7 +172,9 @@ public final class BaseWebView: UIView {
         for name in [bridgeName, consoleName, mobileBridgeName] {
             ucc.removeScriptMessageHandler(forName: name)
         }
-        webView.byNavigationDelegate(nil).byUIDelegate(nil)
+        webView
+            .byNavigationDelegate(nil)
+            .byUIDelegate(nil)
         webView.removeFromSuperview()
         configuration = makeConfiguration()
         webView = makeWebView(configuration: configuration)
@@ -180,14 +189,18 @@ public final class BaseWebView: UIView {
     lazy var refresher: UIRefreshControl = {
         UIRefreshControl.jobsMake { _ in }
             .onJobsChange { [weak self] (_: UIRefreshControl) in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.handlePullToRefresh()
             }
     }()
     /// 强引用 DocumentPicker 代理，避免立刻释放
     var docPickerDelegate: DocumentPickerDelegateProxy?
     // MARK: - Init
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     @MainActor
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -196,11 +209,13 @@ public final class BaseWebView: UIView {
     /// ✅ 推荐构造：在 WKWebView 创建前注入 configuration（确保 websiteDataStore 等初始化参数生效）
     @MainActor
     public convenience init(_ configuration: @escaping jobsByWKWebConfigBlock) {
-        self.init(frame: .zero, configuration: configuration)
+        self.init(frame: .zero,
+                  configuration: configuration)
     }
     /// 带 frame 的注入构造
     @MainActor
-    public init(frame: CGRect = .zero, configuration: jobsByWKWebConfigBlock? = nil) {
+    public init(frame: CGRect = .zero,
+                configuration: jobsByWKWebConfigBlock? = nil) {
         super.init(frame: frame)
         webViewConfigurationHook = configuration
         commonInit()
@@ -248,39 +263,60 @@ public final class BaseWebView: UIView {
 }
 // MARK: - Internal assemble
 private extension BaseWebView {
+
     @MainActor
     func registerMessageHandlers() {
         let ucc = webView.configuration.userContentController
         if #available(iOS 14.0, *) {
             let weakH = WeakScriptMessageHandlerWithReply(target: self)
-            ucc.addScriptMessageHandler(weakH, contentWorld: .page, name: bridgeName)
-            ucc.addScriptMessageHandler(weakH, contentWorld: .page, name: consoleName)
-            ucc.addScriptMessageHandler(weakH, contentWorld: .page, name: mobileBridgeName)
+            ucc.addScriptMessageHandler(weakH,
+                                        contentWorld: .page,
+                                        name: bridgeName)
+            ucc.addScriptMessageHandler(weakH,
+                                        contentWorld: .page,
+                                        name: consoleName)
+            ucc.addScriptMessageHandler(weakH,
+                                        contentWorld: .page,
+                                        name: mobileBridgeName)
         } else {
-            ucc.add(WeakScriptMessageHandler(target: self), name: bridgeName)
-            ucc.add(WeakScriptMessageHandler(target: self), name: consoleName)
-            ucc.add(WeakScriptMessageHandler(target: self), name: mobileBridgeName)
+            ucc.add(WeakScriptMessageHandler(target: self),
+                    name: bridgeName)
+            ucc.add(WeakScriptMessageHandler(target: self),
+                    name: consoleName)
+            ucc.add(WeakScriptMessageHandler(target: self),
+                    name: mobileBridgeName)
         }
     }
 
     @MainActor
     func setupKVO() {
-        kvoEstimatedProgress = webView.observe(\.estimatedProgress, options: [.new]) { [weak self] _, change in
-            guard let self else { return }
-            guard let p = change.newValue else { return }
+        kvoEstimatedProgress = webView.observe(\.estimatedProgress,
+                                               options: [.new]) { [weak self] _, change in
+            guard let self else {
+                return
+            }
+            guard let p = change.newValue else {
+                return
+            }
             onMainAsync { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.progressView.byHidden(p >= 1.0)
-                self.progressView.setProgress(Float(p), animated: true)
+                self.progressView.setProgress(Float(p),
+                                              animated: true)
                 if p >= 1.0 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
-                        guard let self else { return }
+                        guard let self else {
+                            return
+                        }
                         self.progressView.byProgress(0)
                     }
                 }
             }
         }
-        kvoTitle = webView.observe(\.title, options: [.new]) { _, _ in }
+        kvoTitle = webView.observe(\.title,
+                                   options: [.new]) { _, _ in }
     }
 
     @MainActor
@@ -291,16 +327,19 @@ private extension BaseWebView {
 }
 // MARK: - Public API
 public extension BaseWebView {
+
     @discardableResult
     @MainActor
     func loadBy(_ url: URL) -> Self {
         if url.isFileURL {
             let readAccess = url.deletingLastPathComponent()
-            webView.loadFileURL(url, allowingReadAccessTo: readAccess)
+            webView.loadFileURL(url,
+                                allowingReadAccessTo: readAccess)
         } else {
             let req = URLRequest(url: url)
             webView.load(makeNoCache(req))
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -309,7 +348,8 @@ public extension BaseWebView {
         if let url = URL(string: urlString) {
             let req = URLRequest(url: url)
             webView.load(makeNoCache(req))
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -318,7 +358,9 @@ public extension BaseWebView {
                 cachePolicy: URLRequest.CachePolicy = .useProtocolCachePolicy,
                 timeout: TimeInterval = 60) -> Self {
         // ⚠️ 对外签名保留，但内部一律走无缓存策略（忽略传入的 cachePolicy）
-        var req = URLRequest(url: url, cachePolicy: cachePolicy, timeoutInterval: timeout)
+        var req = URLRequest(url: url,
+                             cachePolicy: cachePolicy,
+                             timeoutInterval: timeout)
         req = makeNoCache(req)
         webView.load(req)
         return self
@@ -333,8 +375,10 @@ public extension BaseWebView {
 
     @discardableResult
     @MainActor
-    func loadHTMLBy(_ html: String, baseURL: URL? = nil) -> Self {
-        webView.loadHTMLString(html, baseURL: baseURL)
+    func loadHTMLBy(_ html: String,
+                    baseURL: URL? = nil) -> Self {
+        webView.loadHTMLString(html,
+                               baseURL: baseURL)
         return self
     }
     /// 加载 App Bundle 内的本地 HTML 文件（链式）
@@ -343,22 +387,33 @@ public extension BaseWebView {
     func loadBundleHTMLBy(named name: String,
                           in subdirectory: String? = nil,
                           bundle: Bundle = .main) -> Self {
-        if let url = bundle.url(forResource: name, withExtension: "html", subdirectory: subdirectory) {
+        if let url = bundle.url(forResource: name,
+                                withExtension: "html",
+                                subdirectory: subdirectory) {
             return loadBy(url)
         }
-        if let urls = bundle.urls(forResourcesWithExtension: "html", subdirectory: nil),
-           let url = urls.first(where: { $0.lastPathComponent == "\(name).html" }) {
+        if let urls = bundle.urls(forResourcesWithExtension: "html",
+                                  subdirectory: nil),
+           let url = urls.first(where: {
+            $0.lastPathComponent == "\(name).html"
+        }) {
             return loadBy(url)
         }
         assertionFailure("HTML '\(name).html' not found in bundle")
         return self
     }
 
-    func on(_ name: String, handler: @escaping NativeBlock) { handlers[name] = handler }
-    func off(_ name: String) { handlers.removeValue(forKey: name) }
+    func on(_ name: String,
+            handler: @escaping NativeBlock) {
+        handlers[name] = handler
+    }
+    func off(_ name: String) {
+        handlers.removeValue(forKey: name)
+    }
 
     @MainActor
-    func emitEvent(_ name: String, payload: Any?) {
+    func emitEvent(_ name: String,
+                   payload: Any?) {
         let js = "window.Native && window.Native.emit(\(Self.quote(name)), \(Self.toJSONLiteral(payload)));"
         webView.jobsEval(js)
     }
@@ -368,29 +423,37 @@ public extension BaseWebView {
                 args: [Any] = [],
                 completion: JobsByAnyErrMASendableBlock? = nil) {
         let jsArgs = args.map(Self.toJSONLiteral).joined(separator: ",")
-        webView.jobsEval("\(function)(\(jsArgs));", completion: completion)
+        webView.jobsEval("\(function)(\(jsArgs));",
+                         completion: completion)
     }
 }
 // MARK: - JS eval（Raw + Decodable）
 public extension BaseWebView {
+
     @available(iOS 13.0, *)
     @MainActor
-    func evalAsyncRaw(_ js: String, timeout: TimeInterval = 8) async throws -> Any? {
+    func evalAsyncRaw(_ js: String,
+                      timeout: TimeInterval = 8) async throws -> Any? {
         guard timeout.isFinite, timeout > 0, timeout <= 86_400 else {
-            throw NSError(domain: "BaseWebView", code: -2,
+            throw NSError(domain: "BaseWebView",
+                          code: -2,
                           userInfo: [NSLocalizedDescriptionKey: "JS timeout must be finite and in (0, 86400]"])
         }
         let state = JobsWebEvaluationState()
         let timeoutWork = DispatchWorkItem {
-            state.finish(.failure(NSError(domain: "BaseWebView", code: -1,
-                                         userInfo: [NSLocalizedDescriptionKey: "JS eval timeout"])))
+            state.finish(.failure(NSError(domain: "BaseWebView",
+                                          code: -1,
+                                          userInfo: [NSLocalizedDescriptionKey: "JS eval timeout"])))
         }
-        defer { timeoutWork.cancel() }
+        defer {
+            timeoutWork.cancel()
+        }
         return try await withTaskCancellationHandler(operation: {
             try Task.checkCancellation()
             return try await withCheckedThrowingContinuation { continuation in
                 state.install(continuation)
-                DispatchQueue.main.asyncAfter(deadline: .now() + timeout, execute: timeoutWork)
+                DispatchQueue.main.asyncAfter(deadline: .now() + timeout,
+                                              execute: timeoutWork)
                 webView.jobsEval(js) { value, error in
                     if let error {
                         state.finish(.failure(error))
@@ -399,7 +462,8 @@ public extension BaseWebView {
                     }
                 }
             }
-        }, onCancel: {
+        },
+                                                     onCancel: {
             state.finish(.failure(CancellationError()))
         })
     }
@@ -409,19 +473,26 @@ public extension BaseWebView {
                                  as type: T.Type = T.self,
                                  timeout: TimeInterval = 8,
                                  decoder: JSONDecoder = JSONDecoder.make { _ in }) async throws -> T {
-        let raw = try await evalAsyncRaw(js, timeout: timeout)
-        return try Self.decodeJSResult(raw, as: T.self, decoder: decoder)
+        let raw = try await evalAsyncRaw(js,
+                                         timeout: timeout)
+        return try Self.decodeJSResult(raw,
+                                       as: T.self,
+                                       decoder: decoder)
     }
 }
 // MARK: - Cookies / Selection
 public extension BaseWebView {
+
     @MainActor
-    func setCookies(_ cookies: [HTTPCookie], completion: (jobsByVoidBlock)? = nil) {
+    func setCookies(_ cookies: [HTTPCookie],
+                    completion: (jobsByVoidBlock)? = nil) {
         let store = webView.configuration.websiteDataStore.httpCookieStore
         let group = DispatchGroup()
         cookies.forEach { c in
             group.enter()
-            store.setCookie(c) { group.leave() }
+            store.setCookie(c) {
+                group.leave()
+            }
         }
         group.notify(queue: .main) {
             completion?()
@@ -443,6 +514,7 @@ public extension BaseWebView {
 }
 // MARK: - MobileBridge API
 public extension BaseWebView {
+
     @discardableResult
     @MainActor
     func useMobileBridge(_ cfg: MobileBridgeConfig = .defaults()) -> Self {
@@ -452,7 +524,8 @@ public extension BaseWebView {
     }
 
     @discardableResult
-    func registerMobileAction(_ name: String, _ handler: @escaping MobileActionBlock) -> Self {
+    func registerMobileAction(_ name: String,
+                              _ handler: @escaping MobileActionBlock) -> Self {
         mobileActionHandlers[name] = handler
         return self
     }
@@ -465,6 +538,7 @@ public extension BaseWebView {
 }
 
 private final class JobsWebEvaluationState: @unchecked Sendable {
+
     private let lock = NSLock()
     private var continuation: CheckedContinuation<Any?, Error>?
     private var result: Result<Any?, Error>?

@@ -8,20 +8,21 @@
 
 import Foundation
 
-public struct JobsMarkdownDocument: Hashable, Identifiable, Sendable {
+public struct JobsMarkdownDocument: Hashable,
+                                    Identifiable,
+                                    Sendable {
+
     public let id: String
     public let title: String
     public let relativePath: String
     public let fileURL: URL
     public let contentRootURL: URL
 
-    public init(
-        id: String,
-        title: String,
-        relativePath: String,
-        fileURL: URL,
-        contentRootURL: URL
-    ) {
+    public init(id: String,
+                title: String,
+                relativePath: String,
+                fileURL: URL,
+                contentRootURL: URL) {
         self.id = id
         self.title = title
         self.relativePath = relativePath

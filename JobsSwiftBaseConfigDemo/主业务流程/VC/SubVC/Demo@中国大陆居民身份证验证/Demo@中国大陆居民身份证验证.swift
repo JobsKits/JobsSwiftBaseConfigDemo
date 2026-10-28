@@ -25,8 +25,10 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class CNIDDemoVC: BaseVC {
+
     private lazy var textField: UITextField = {
-        UITextField.jobsMake { _ in }
+        UITextField
+            .jobsMake { _ in }
             .byPlaceholder("请输入身份证号码".tr)
             .byBorderStyle(.roundedRect)
             .byClearButtonMode(.whileEditing)
@@ -42,10 +44,13 @@ final class CNIDDemoVC: BaseVC {
             .byTitle("自动填入示例".tr)
             .byTitleFont(JobsFont.systemFont(ofSize: 15))
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.textField.byText("510105199307315321")
                 self.resultLabel.byText(nil)
-            }.byAddTo(view) { [unowned self] make in
+            }
+            .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(textField.snp.bottom).offset(12)
                 make.centerX.equalToSuperview()
                 make.height.equalTo(36)
@@ -57,19 +62,25 @@ final class CNIDDemoVC: BaseVC {
             .byTitle("开始校验".tr)
             .byTitleFont(JobsFont.boldSystemFont(ofSize: 16))
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 let input = textField.text ?? ""
                 guard !input.isEmpty else {
-                    updateResult("❌ 请输入身份证号码", success: false)
+                    updateResult("❌ 请输入身份证号码",
+                                 success: false)
                     return
                 }
                 do {
                     let normalized = try CNID.validate(input)
-                    updateResult("✅ 校验成功\n标准化结果：\(normalized)", success: true)
+                    updateResult("✅ 校验成功\n标准化结果：\(normalized)",
+                                 success: true)
                 } catch {
-                    updateResult("❌ \(error)", success: false)
+                    updateResult("❌ \(error)",
+                                 success: false)
                 }
-            }.byAddTo(view) { [unowned self] make in
+            }
+            .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(exampleButton.snp.bottom).offset(20)
                 make.centerX.equalToSuperview()
                 make.height.equalTo(44)
@@ -77,7 +88,8 @@ final class CNIDDemoVC: BaseVC {
     }()
 
     private lazy var resultLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextAlignment(.center)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byNumberOfLines(0)
@@ -94,10 +106,13 @@ final class CNIDDemoVC: BaseVC {
         jobsSetupGKNav(
             title: "身份证校验 Demo".tr
         )
-        bgImageView().byImage("唐老鸭".img)
+        bgImageView()
+            .byImage("唐老鸭".img)
         onMainAsync(self) { vc in
-            self.bgImageView().byImage(await "https://picsum.photos/400/300".kfLoadImage(fallbackImage: "唐老鸭".img))
-            self.bgImageView().byImage(await "https://picsum.photos/400/300".sdLoadImage(fallbackImage: "唐老鸭".img))
+            self.bgImageView()
+                .byImage(await "https://picsum.photos/400/300".kfLoadImage(fallbackImage: "唐老鸭".img))
+            self.bgImageView()
+                .byImage(await "https://picsum.photos/400/300".sdLoadImage(fallbackImage: "唐老鸭".img))
         }
         printDemo()// 打印示例
         textField.byAlpha(1) // 输入框
@@ -106,7 +121,8 @@ final class CNIDDemoVC: BaseVC {
         resultLabel.byAlpha(1) // 结果标签
     }
     // MARK: - 更新显示结果
-    private func updateResult(_ text: String, success: Bool) {
+    private func updateResult(_ text: String,
+                              success: Bool) {
         resultLabel
             .byText(text)
             .byTextColor(success ? JobsCor.systemGreen : JobsCor.systemRed)
@@ -114,33 +130,44 @@ final class CNIDDemoVC: BaseVC {
     // MARK: - 打印示例
     private func printDemo() {
         // 1) 普通文本 / 参数混合
-        log("好，世界", 123, true)
+        log("好，世界",
+            123,
+            true)
         // 2) JSON：自动识别 String/Data/字典/数组（默认 pretty + 中文还原）
         log(#"{"key":"\u7231\u60c5"}"#)                 // String JSON
-        log(["user": "张三", "tags": ["iOS","Swift"]])  // 字典/数组
-        log(DataFromNetwork(
-            statusCode: 200,
-            message: "OK",
-            url: URL(string: "https://api.example.com/users")!,
-            headers: ["Content-Type": "application/json"],
-            body: #"{"user":"\u5f20\u4e09","tags":["iOS","Swift"],"ok":true}"#.data(using: .utf8),
-            receivedAt: Date(),
-            retryable: false
-        ))                            // Data
+        log(["user": "张三", "tags": ["iOS", "Swift"]])  // 字典/数组
+        log(DataFromNetwork(statusCode: 200,
+                            message: "OK",
+                            url: URL(string: "https://api.example.com/users")!,
+                            headers: ["Content-Type": "application/json"],
+                            body: #"{"user":"\u5f20\u4e09","tags":["iOS","Swift"],"ok":true}"#.data(using: .utf8),
+                            receivedAt: Date(),
+                            retryable: false))                            // Data
         // 3) 对象：自动反射为 JSON（防环、可控深度）
-        struct User { let id: Int; let name: String }
-        let u = User(id: 1, name: "张三")
+        struct User {
+
+            let id: Int
+            let name: String
+        }
+        let u = User(id: 1,
+                     name: "张三")
         log(u)                      // .auto 下会转对象 JSON
-        log(u, mode: .object)       // 强制对象模式（不走 stringify）
+        log(u,
+            mode: .object)       // 强制对象模式（不走 stringify）
         // 4) 指定级别（仍是一个入口）
-        log("启动完成", level: .info)
-        log("接口慢",  level: .warn)
-        log(["err": "timeout"], level: .error)
-        log(["arr": ["\\u7231\\u60c5", 1]], level: .debug)
+        log("启动完成",
+            level: .info)
+        log("接口慢",
+            level: .warn)
+        log(["err": "timeout"],
+            level: .error)
+        log(["arr": ["\\u7231\\u60c5", 1]],
+            level: .debug)
     }
 }
 // 网络返回模型（引用类型）
 final class DataFromNetwork {
+
     var statusCode: Int
     var message: String
     var url: URL

@@ -9,6 +9,7 @@
 public enum JobsSwiftTimerMgrError: Error,
                                     LocalizedError,
                                     Sendable {
+
     case identifierRequired
     case duplicatedIdentifier(String)
     case notFound(String)
@@ -28,7 +29,9 @@ public enum JobsSwiftTimerMgrError: Error,
     }
 }
 // MARK: - 统一动作
-public enum JobsSwiftTimerMgrAction: Sendable, Equatable {
+public enum JobsSwiftTimerMgrAction: Sendable,
+                                     Equatable {
+
     case start
     case pause
     case resume
@@ -38,6 +41,7 @@ public enum JobsSwiftTimerMgrAction: Sendable, Equatable {
 // MARK: - 去重策略
 /// 当 `identifier` 已存在时的处理策略。
 public enum JobsTimerDedupPolicy: Sendable {
+
     /// 保留旧 timer，直接返回旧对象（不会修改其 handler/config/policy）
     case keepExisting
     /// 替换旧 timer：旧 timer 会 stop + remove，再创建新 timer
@@ -47,6 +51,7 @@ public enum JobsTimerDedupPolicy: Sendable {
 }
 // MARK: - 前后台策略
 public enum JobsTimerBackgroundPolicy: Sendable {
+
     /// 不处理前后台切换
     case ignore
     /// 失去活跃态自动 pause，重新活跃只恢复自动 pause 的 timer
@@ -56,5 +61,6 @@ public enum JobsTimerBackgroundPolicy: Sendable {
 }
 // MARK: - 标识协议（建议用于 Mgr ID 管理）
 public protocol JobsSwiftTimerIdentifiable {
+
     var identifier: String? { get }
 }

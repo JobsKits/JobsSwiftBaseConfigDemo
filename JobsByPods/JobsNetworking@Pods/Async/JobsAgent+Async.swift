@@ -10,15 +10,17 @@ import Foundation
 
 @available(iOS 13.0, *)
 public extension JobsAgent {
-    func send<T: Decodable>(
-        _ request: JobsRequest,
-        as type: T.Type
-    ) async throws -> T {
+
+    func send<T: Decodable>(_ request: JobsRequest,
+                            as type: T.Type) async throws -> T {
         let box = JobsAsyncResultBox<T>()
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
-                guard box.install(continuation) else { return }
-                let token = send(request, as: type) { result in
+                guard box.install(continuation) else {
+                    return
+                }
+                let token = send(request,
+                                 as: type) { result in
                     box.complete(result)
                 }
                 box.install(token)
@@ -28,21 +30,22 @@ public extension JobsAgent {
         }
     }
 
-    func observe<T: Decodable>(
-        _ request: JobsRequest,
-        as type: T.Type
-    ) -> AsyncThrowingStream<(T, JobsResponseSource), Error> {
+    func observe<T: Decodable>(_ request: JobsRequest,
+                               as type: T.Type) -> AsyncThrowingStream<(T, JobsResponseSource), Error> {
         AsyncThrowingStream { continuation in
-            let token = observe(request, as: type, onEvent: { result in
+            let token = observe(request,
+                                as: type,
+                                onEvent: { result in
                 switch result {
-                /// 处理 .success 分支
+                    /// 处理 .success 分支
                 case .success(let tuple):
                     continuation.yield(tuple)
-                /// 处理 .failure 分支
+                    /// 处理 .failure 分支
                 case .failure(let error):
                     continuation.finish(throwing: error)
                 }
-            }, completion: { result in
+            },
+                                completion: { result in
                 if case .failure(let error) = result {
                     continuation.finish(throwing: error)
                 } else {

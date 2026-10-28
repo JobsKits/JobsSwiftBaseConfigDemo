@@ -18,11 +18,13 @@ import JobsSwiftDSL
 import simd
 
 struct Uniforms {
+
     var modelViewProjectionMatrix: float4x4
 }
 
 @MainActor
 public class MetalRenderer: NSObject {
+
     private let device: MTLDevice
     private let commandQueue: MTLCommandQueue?
     private var pipelineState: MTLRenderPipelineState?
@@ -40,7 +42,9 @@ public class MetalRenderer: NSObject {
     public init(device: MTLDevice) {
         self.device = device
         self.commandQueue = device.makeCommandQueue()
-        self.sphere = SphereGeometry(device: device, radius: 1.0, segments: 128)
+        self.sphere = SphereGeometry(device: device,
+                                     radius: 1.0,
+                                     segments: 128)
         self.videoTextureManager = VideoTextureManager(device: device)
         super.init()
         setupMetal()
@@ -65,7 +69,8 @@ public class MetalRenderer: NSObject {
         pipelineState = nil
         renderingError = nil
         guard commandQueue != nil else {
-            reportRenderingFailure(NSError(domain: "JobsBy3rdTools.Metal", code: 1,
+            reportRenderingFailure(NSError(domain: "JobsBy3rdTools.Metal",
+                                           code: 1,
                                            userInfo: [NSLocalizedDescriptionKey: "Metal command queue is unavailable."]))
             return
         }
@@ -78,7 +83,8 @@ public class MetalRenderer: NSObject {
         }
         // 2) fallback：手动找 default.metallib（仍然在 rendererBundle）
         if library == nil,
-           let metallibURL = rendererBundle.url(forResource: "default", withExtension: "metallib") {
+           let metallibURL = rendererBundle.url(forResource: "default",
+                                                withExtension: "metallib") {
             library = try? device.makeLibrary(URL: metallibURL)
         }
         // 3) 最后 fallback：main bundle 默认库（有些静态集成场景会命中）
@@ -86,13 +92,15 @@ public class MetalRenderer: NSObject {
             library = device.makeDefaultLibrary()
         }
         guard let library else {
-            reportRenderingFailure(NSError(domain: "JobsBy3rdTools.Metal", code: 2,
+            reportRenderingFailure(NSError(domain: "JobsBy3rdTools.Metal",
+                                           code: 2,
                                            userInfo: [NSLocalizedDescriptionKey: "Metal shader library is unavailable in the renderer or app bundle."]))
             return
         }
         guard let vertexFunction = library.makeFunction(name: "vertex_main"),
               let fragmentFunction = library.makeFunction(name: "fragment_main") else {
-            reportRenderingFailure(NSError(domain: "JobsBy3rdTools.Metal", code: 3,
+            reportRenderingFailure(NSError(domain: "JobsBy3rdTools.Metal",
+                                           code: 3,
                                            userInfo: [NSLocalizedDescriptionKey: "Required Metal shader functions are missing."]))
             return
         }
@@ -113,7 +121,8 @@ public class MetalRenderer: NSObject {
             .byFragmentFunction(fragmentFunction)
             .byVertexDescriptor(vDesc)
             .byRasterSampleCount(boundView?.sampleCount ?? 4)
-            .byColorAttachment(0, pixelFormat: boundView?.colorPixelFormat ?? .bgra8Unorm)
+            .byColorAttachment(0,
+                               pixelFormat: boundView?.colorPixelFormat ?? .bgra8Unorm)
             .byDepthPixelFormat(boundView?.depthStencilPixelFormat ?? .depth32Float)
         do {
             pipelineState = try device.makeRenderPipelineState(descriptor: rpDesc)
@@ -140,16 +149,19 @@ public class MetalRenderer: NSObject {
         )
         guard depthStencilState != nil, samplerState != nil,
               sphere.vertexBuffer != nil, sphere.indexBuffer != nil else {
-            reportRenderingFailure(NSError(domain: "JobsBy3rdTools.Metal", code: 5,
+            reportRenderingFailure(NSError(domain: "JobsBy3rdTools.Metal",
+                                           code: 5,
                                            userInfo: [NSLocalizedDescriptionKey: "Metal render resource allocation failed."]))
             return
         }
     }
 
     private func setupBuffers() {
-        uniformBuffer = device.makeBuffer(length: MemoryLayout<Uniforms>.stride, options: [])
+        uniformBuffer = device.makeBuffer(length: MemoryLayout<Uniforms>.stride,
+                                          options: [])
         if uniformBuffer == nil {
-            reportRenderingFailure(NSError(domain: "JobsBy3rdTools.Metal", code: 4,
+            reportRenderingFailure(NSError(domain: "JobsBy3rdTools.Metal",
+                                           code: 4,
                                            userInfo: [NSLocalizedDescriptionKey: "Metal uniform buffer allocation failed."]))
         }
     }
@@ -200,14 +212,18 @@ public class MetalRenderer: NSObject {
         return self
     }
     // MARK: - Interaction
-    public func handlePan(_ gesture: UIPanGestureRecognizer, in view: UIView) {
-        cameraController.handlePan(gesture, in: view)
+    public func handlePan(_ gesture: UIPanGestureRecognizer,
+                          in view: UIView) {
+        cameraController.handlePan(gesture,
+                                   in: view)
     }
 }
 // MARK: - MTKViewDelegate
 extension MetalRenderer: MTKViewDelegate {
-    public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        // 如需根据分辨率重建投影，可写在这里
+
+    public func mtkView(_ view: MTKView,
+                        drawableSizeWillChange size: CGSize) {
+    // 如需根据分辨率重建投影，可写在这里
     }
 
     public func draw(in view: MTKView) {
@@ -220,17 +236,25 @@ extension MetalRenderer: MTKViewDelegate {
               let rpd = view.currentRenderPassDescriptor,
               let pso = pipelineState,
               let cmd = commandQueue?.makeCommandBuffer(),
-              let enc = cmd.makeRenderCommandEncoder(descriptor: rpd) else { return }
+              let enc = cmd.makeRenderCommandEncoder(descriptor: rpd) else {
+            return
+        }
         updateUniforms(viewSize: view.drawableSize)
         enc.setRenderPipelineState(pso)
         enc.setDepthStencilState(depthStencilState)
         // 内球渲染建议：不开启剔除或剔除背面；视具体球面顶点绕序
         enc.setCullMode(.none)               // inside sphere 更安全
         enc.setFrontFacing(.counterClockwise)
-        enc.setVertexBuffer(sphere.vertexBuffer, offset: 0, index: 0)
-        enc.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
-        enc.setFragmentSamplerState(samplerState, index: 0)
-        enc.setFragmentTexture(texture, index: 0)
+        enc.setVertexBuffer(sphere.vertexBuffer,
+                            offset: 0,
+                            index: 0)
+        enc.setVertexBuffer(uniformBuffer,
+                            offset: 0,
+                            index: 1)
+        enc.setFragmentSamplerState(samplerState,
+                                    index: 0)
+        enc.setFragmentTexture(texture,
+                               index: 0)
         if let ib = sphere.indexBuffer {
             enc.drawIndexedPrimitives(type: .triangle,
                                       indexCount: sphere.indexCount,
@@ -248,22 +272,38 @@ extension MetalRenderer: MTKViewDelegate {
             return
         }
         let aspect = Float(viewSize.width / viewSize.height)
-        let proj = float4x4(perspectiveProjectionFov: Float.pi / 3, aspectRatio: aspect, nearZ: 0.1, farZ: 100.0)
+        let proj = float4x4(perspectiveProjectionFov: Float.pi / 3,
+                            aspectRatio: aspect,
+                            nearZ: 0.1,
+                            farZ: 100.0)
         let viewM = cameraController.viewMatrix
         let model = float4x4(1.0)
         let mvp = proj * viewM * model
         var u = Uniforms(modelViewProjectionMatrix: mvp)
-        memcpy(uniformBuffer.contents(), &u, MemoryLayout<Uniforms>.stride)
+        memcpy(uniformBuffer.contents(),
+               &u,
+               MemoryLayout<Uniforms>.stride)
     }
 }
 // MARK: - Helpers
 extension float4x4 {
+
     init(_ v: Float) {
-        self.init(
-            SIMD4<Float>(v, 0, 0, 0),
-            SIMD4<Float>(0, v, 0, 0),
-            SIMD4<Float>(0, 0, v, 0),
-            SIMD4<Float>(0, 0, 0, v)
-        )
+        self.init(SIMD4<Float>(v,
+                               0,
+                               0,
+                               0),
+                  SIMD4<Float>(0,
+                               v,
+                               0,
+                               0),
+                  SIMD4<Float>(0,
+                               0,
+                               v,
+                               0),
+                  SIMD4<Float>(0,
+                               0,
+                               0,
+                               v))
     }
 }

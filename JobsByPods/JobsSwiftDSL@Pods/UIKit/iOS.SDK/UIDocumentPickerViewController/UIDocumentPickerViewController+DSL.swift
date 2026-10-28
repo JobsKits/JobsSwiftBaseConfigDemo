@@ -15,61 +15,53 @@ import UniformTypeIdentifiers // iOS 14+
 #endif
 
 extension UIDocumentPickerViewController {
+
     // MARK: Factory (Open / Import)
     /// iOS14+：打开/导入文件（推荐）
     @available(iOS 14.0, *)
-    public static func jobs_opening(
-        _ contentTypes: [UTType],
-        asCopy: Bool = true,
-        allowsMultipleSelection: Bool = false,
-        shouldShowFileExtensions: Bool = true
-    ) -> UIDocumentPickerViewController {
-        UIDocumentPickerViewController(forOpeningContentTypes: contentTypes, asCopy: asCopy)
+    public static func jobs_opening(_ contentTypes: [UTType],
+                                    asCopy: Bool = true,
+                                    allowsMultipleSelection: Bool = false,
+                                    shouldShowFileExtensions: Bool = true) -> UIDocumentPickerViewController {
+        UIDocumentPickerViewController(forOpeningContentTypes: contentTypes,
+                                       asCopy: asCopy)
             .byAllowsMultipleSelection(allowsMultipleSelection)
             .byShouldShowFileExtensions(shouldShowFileExtensions)
     }
     /// 只选 .xlsx（推荐，最精准）
     @available(iOS 14.0, *)
-    public static func jobs_openXLSX(
-        asCopy: Bool = true,
-        allowsMultipleSelection: Bool = false,
-        shouldShowFileExtensions: Bool = true
-    ) -> UIDocumentPickerViewController {
-        jobs_opening(
-            [UTType(filenameExtension: "xlsx") ?? .data],
-            asCopy: asCopy,
-            allowsMultipleSelection: allowsMultipleSelection,
-            shouldShowFileExtensions: shouldShowFileExtensions
-        )
+    public static func jobs_openXLSX(asCopy: Bool = true,
+                                     allowsMultipleSelection: Bool = false,
+                                     shouldShowFileExtensions: Bool = true) -> UIDocumentPickerViewController {
+        jobs_opening([UTType(filenameExtension: "xlsx") ?? .data],
+                     asCopy: asCopy,
+                     allowsMultipleSelection: allowsMultipleSelection,
+                     shouldShowFileExtensions: shouldShowFileExtensions)
     }
     /// 常规“表格类”（Numbers/Excel 等更泛）
     @available(iOS 14.0, *)
-    public static func jobs_openSpreadsheet(
-        asCopy: Bool = true,
-        allowsMultipleSelection: Bool = false,
-        shouldShowFileExtensions: Bool = true
-    ) -> UIDocumentPickerViewController {
-        jobs_opening(
-            [.spreadsheet],
-            asCopy: asCopy,
-            allowsMultipleSelection: allowsMultipleSelection,
-            shouldShowFileExtensions: shouldShowFileExtensions
-        )
+    public static func jobs_openSpreadsheet(asCopy: Bool = true,
+                                            allowsMultipleSelection: Bool = false,
+                                            shouldShowFileExtensions: Bool = true) -> UIDocumentPickerViewController {
+        jobs_opening([.spreadsheet],
+                     asCopy: asCopy,
+                     allowsMultipleSelection: allowsMultipleSelection,
+                     shouldShowFileExtensions: shouldShowFileExtensions)
     }
     // MARK: Factory (Export)
     /// iOS14+：导出/移动文件
     @available(iOS 14.0, *)
-    public static func jobs_exporting(
-        _ urls: [URL],
-        asCopy: Bool = false,
-        shouldShowFileExtensions: Bool = true
-    ) -> UIDocumentPickerViewController {
-        UIDocumentPickerViewController(forExporting: urls, asCopy: asCopy)
+    public static func jobs_exporting(_ urls: [URL],
+                                      asCopy: Bool = false,
+                                      shouldShowFileExtensions: Bool = true) -> UIDocumentPickerViewController {
+        UIDocumentPickerViewController(forExporting: urls,
+                                       asCopy: asCopy)
             .byShouldShowFileExtensions(shouldShowFileExtensions)
     }
 }
 // MARK: - 直接赋值@单参数
 extension UIDocumentPickerViewController {
+
     @discardableResult
     public func byDelegate(_ v: UIDocumentPickerDelegate?) -> Self {
         self.delegate = v
@@ -96,6 +88,7 @@ extension UIDocumentPickerViewController {
 }
 // MARK: - 闭包重载@单参数
 extension UIDocumentPickerViewController {
+
     @discardableResult
     public func byDelegate(_ builder: () -> UIDocumentPickerDelegate?) -> Self {
         self.delegate = builder()

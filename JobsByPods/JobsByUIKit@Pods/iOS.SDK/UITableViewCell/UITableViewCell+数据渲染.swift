@@ -16,18 +16,28 @@ import JobsSwiftBaseDefines
 
 @MainActor
 public extension ViewDataProtocol where Self: UITableViewCell {
+
     @discardableResult
     func byData(_ any: Any?) -> Self {
-        guard let cfg = any as? JobsBaseCellConfig else { return self }
+        guard let cfg = any as? JobsBaseCellConfig else {
+            return self
+        }
         if #available(iOS 14.0, *) {
             return self
                 .byJobsText(cfg.title)
                 .bySecondaryJobsText(cfg.detail)
                 .byImage(cfg.image)
         } else {
-            if let title = cfg.title { textLabel?.byJobsAttributedText(title) }
-            if let detail = cfg.detail { detailTextLabel?.byJobsAttributedText(detail) }
-            if let image = cfg.image { imageView?.byImage(image) };return self
+            if let title = cfg.title {
+                textLabel?.byJobsAttributedText(title)
+            }
+            if let detail = cfg.detail {
+                detailTextLabel?.byJobsAttributedText(detail)
+            }
+            if let image = cfg.image {
+                imageView?.byImage(image)
+            }
+            return self
         }
     }
 }

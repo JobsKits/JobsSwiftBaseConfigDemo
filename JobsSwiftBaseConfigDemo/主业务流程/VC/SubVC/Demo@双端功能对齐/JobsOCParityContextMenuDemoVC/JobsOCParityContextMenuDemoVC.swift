@@ -32,7 +32,8 @@ final class JobsContextMenuDemoVC: BaseVC {
     private var selectedIndex = 0
 
     private lazy var headerLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("選擇場館".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byTextColor(JobsCor.label)
@@ -41,7 +42,8 @@ final class JobsContextMenuDemoVC: BaseVC {
     }()
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
             .byRowHeight(58)
@@ -62,16 +64,20 @@ final class JobsContextMenuDemoVC: BaseVC {
     }
 }
 
-extension JobsContextMenuDemoVC: UITableViewDataSource, UITableViewDelegate {
+extension JobsContextMenuDemoVC: UITableViewDataSource,
+                                 UITableViewDelegate {
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
         venues.count
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let reuseIdentifier = "JobsContextMenuCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier)
-            ?? UITableViewCell(style: .default, reuseIdentifier: reuseIdentifier)
+            ?? UITableViewCell(style: .default,
+                               reuseIdentifier: reuseIdentifier)
         return cell
             .byText(venues[indexPath.row])
             .byTitleFont(JobsFont.systemFont(ofSize: 16))
@@ -82,38 +88,41 @@ extension JobsContextMenuDemoVC: UITableViewDataSource, UITableViewDelegate {
             .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
         selectedIndex = indexPath.row
         tableView.byReloadData()
     }
 
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView,
+                   viewForHeaderInSection section: Int) -> UIView? {
         headerLabel
     }
 
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView,
+                   heightForHeaderInSection section: Int) -> CGFloat {
         54
     }
 
-    func tableView(
-        _ tableView: UITableView,
-        contextMenuConfigurationForRowAt indexPath: IndexPath,
-        point: CGPoint
-    ) -> UIContextMenuConfiguration? {
-        UIContextMenuConfiguration(
-            identifier: indexPath as NSIndexPath,
-            previewProvider: {
-                JobsContextMenuPreviewVC(row: indexPath.row)
-            },
-            actionProvider: { _ in
-                let action1 = UIAction(title: "Action 1", image: "1.circle".sysImg) { _ in
-                    "Action 1 · \(self.venues[indexPath.row])".toast
-                }
-                let action2 = UIAction(title: "Action 2", image: "2.circle".sysImg) { _ in
-                    "Action 2 · \(self.venues[indexPath.row])".toast
-                };return UIMenu(title: self.venues[indexPath.row], children: [action1, action2])
+    func tableView(_ tableView: UITableView,
+                   contextMenuConfigurationForRowAt indexPath: IndexPath,
+                   point: CGPoint) -> UIContextMenuConfiguration? {
+        UIContextMenuConfiguration(identifier: indexPath as NSIndexPath,
+                                   previewProvider: {
+            JobsContextMenuPreviewVC(row: indexPath.row)
+        },
+                                   actionProvider: { _ in
+            let action1 = UIAction(title: "Action 1",
+                                   image: "1.circle".sysImg) { _ in
+                "Action 1 · \(self.venues[indexPath.row])".toast
             }
-        )
+            let action2 = UIAction(title: "Action 2",
+                                   image: "2.circle".sysImg) { _ in
+                "Action 2 · \(self.venues[indexPath.row])".toast
+            }
+            return UIMenu(title: self.venues[indexPath.row],
+                          children: [action1, action2])
+        })
     }
 }
 
@@ -122,7 +131,8 @@ private final class JobsContextMenuPreviewVC: BaseVC {
     private let row: Int
 
     private lazy var previewLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("Preview for row \(row)")
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byTextColor(JobsCor.label)
@@ -136,8 +146,10 @@ private final class JobsContextMenuPreviewVC: BaseVC {
 
     init(row: Int) {
         self.row = row
-        super.init(nibName: nil, bundle: nil)
-        preferredContentSize = CGSize(width: 220, height: 160)
+        super.init(nibName: nil,
+                   bundle: nil)
+        preferredContentSize = CGSize(width: 220,
+                                      height: 160)
     }
 
     required init?(coder: NSCoder) {

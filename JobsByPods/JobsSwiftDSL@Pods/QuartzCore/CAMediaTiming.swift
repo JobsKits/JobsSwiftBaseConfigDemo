@@ -8,6 +8,7 @@
 import QuartzCore
 
 extension CAMediaTiming where Self: AnyObject {
+
     // beginTime
     @discardableResult
     public func byBeginTime(_ value: CFTimeInterval) -> Self {

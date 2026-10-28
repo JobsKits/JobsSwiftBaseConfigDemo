@@ -13,12 +13,15 @@ import UIKit
 
 // MARK: 是实现 UILabel 的左右内边距，让文字和边框之间留点空隙，解决系统 UILabel 没有 padding 的问题
 final class JobsPaddedLabel: UILabel {
+
     @IBInspectable var horizontalPadding: CGFloat = 0
     @IBInspectable var verticalPadding: CGFloat = 0
 
     private var insets: UIEdgeInsets {
-        UIEdgeInsets(top: verticalPadding, left: horizontalPadding,
-                     bottom: verticalPadding, right: horizontalPadding)
+        UIEdgeInsets(top: verticalPadding,
+                     left: horizontalPadding,
+                     bottom: verticalPadding,
+                     right: horizontalPadding)
     }
 
     override func drawText(in rect: CGRect) {
@@ -34,7 +37,8 @@ final class JobsPaddedLabel: UILabel {
 
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         // 让 AutoLayout / 手算尺寸都准确
-        let target = CGRect(origin: .zero, size: size).inset(by: insets).size
+        let target = CGRect(origin: .zero,
+                            size: size).inset(by: insets).size
         var s = super.sizeThatFits(target)
         s.width  += insets.left + insets.right
         s.height += insets.top  + insets.bottom

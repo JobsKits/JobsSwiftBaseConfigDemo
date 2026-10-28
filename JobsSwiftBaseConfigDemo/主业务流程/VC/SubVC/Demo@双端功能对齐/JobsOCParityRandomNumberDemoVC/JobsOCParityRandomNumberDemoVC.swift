@@ -20,38 +20,82 @@ import SnapKit
 final class JobsRandomNumberDemoVC: BaseVC {
 
     private struct RandomDemoItem {
+
         let title: String
         let range: String
         let generator: () -> Int
     }
 
     private let items: [RandomDemoItem] = [
-        .init(title: "JobsBaseRandomNoContainBorderValue(20)", range: "0 ≤ n < 20", generator: { Int.random(in: 0..<20) }),
-        .init(title: "JobsBaseRandomContainBorderValue(30)", range: "0 ≤ n ≤ 30", generator: { Int.random(in: 0...30) }),
-        .init(title: "JobsBaseRandomOffsetValueWithNoContainBorderValue(4, 9)", range: "4 ≤ n < 9", generator: { Int.random(in: 4..<9) }),
-        .init(title: "JobsBaseRandomOffsetValueWithContainBorderValue(4, 9)", range: "4 ≤ n ≤ 9", generator: { Int.random(in: 4...9) }),
-        .init(title: "JobsRandomNumber(2, 9)", range: "2 ≤ n ≤ 9", generator: { Int.random(in: 2...9) }),
-        .init(title: "JobsRandomXY(3, 7)", range: "3 ≤ n ≤ 7", generator: { Int.random(in: 3...7) }),
-        .init(title: "JobsRandom0_100()", range: "0 ≤ n < 100", generator: { Int.random(in: 0..<100) }),
-        .init(title: "JobsRandom0__100()", range: "0 ≤ n ≤ 100", generator: { Int.random(in: 0...100) }),
-        .init(title: "JobsRandom100_200()", range: "100 ≤ n < 200", generator: { Int.random(in: 100..<200) }),
-        .init(title: "JobsRandom100__200()", range: "100 ≤ n ≤ 200", generator: { Int.random(in: 100...200) })
+        .init(title: "JobsBaseRandomNoContainBorderValue(20)",
+              range: "0 ≤ n < 20",
+              generator: {
+            Int.random(in: 0 ..< 20)
+        }),
+        .init(title: "JobsBaseRandomContainBorderValue(30)",
+              range: "0 ≤ n ≤ 30",
+              generator: {
+            Int.random(in: 0 ... 30)
+        }),
+        .init(title: "JobsBaseRandomOffsetValueWithNoContainBorderValue(4, 9)",
+              range: "4 ≤ n < 9",
+              generator: {
+            Int.random(in: 4 ..< 9)
+        }),
+        .init(title: "JobsBaseRandomOffsetValueWithContainBorderValue(4, 9)",
+              range: "4 ≤ n ≤ 9",
+              generator: {
+            Int.random(in: 4 ... 9)
+        }),
+        .init(title: "JobsRandomNumber(2, 9)",
+              range: "2 ≤ n ≤ 9",
+              generator: {
+            Int.random(in: 2 ... 9)
+        }),
+        .init(title: "JobsRandomXY(3, 7)",
+              range: "3 ≤ n ≤ 7",
+              generator: {
+            Int.random(in: 3 ... 7)
+        }),
+        .init(title: "JobsRandom0_100()",
+              range: "0 ≤ n < 100",
+              generator: {
+            Int.random(in: 0 ..< 100)
+        }),
+        .init(title: "JobsRandom0__100()",
+              range: "0 ≤ n ≤ 100",
+              generator: {
+            Int.random(in: 0 ... 100)
+        }),
+        .init(title: "JobsRandom100_200()",
+              range: "100 ≤ n < 200",
+              generator: {
+            Int.random(in: 100 ..< 200)
+        }),
+        .init(title: "JobsRandom100__200()",
+              range: "100 ≤ n ≤ 200",
+              generator: {
+            Int.random(in: 100 ... 200)
+        })
     ]
 
     private var values: [Int] = []
 
     private lazy var refreshButton: UIButton = {
         UIButton.sys()
-            .byImage("arrow.clockwise".sysImg, for: .normal)
+            .byImage("arrow.clockwise".sysImg,
+                     for: .normal)
             .byTintColor(JobsCor.label)
-            .byBackgroundColor(JobsCor.clear, for: .normal)
+            .byBackgroundColor(JobsCor.clear,
+                               for: .normal)
             .onTap { [weak self] _ in
                 self?.reloadRandomValues()
             }
     }()
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
             .byRowHeight(78)
@@ -69,51 +113,64 @@ final class JobsRandomNumberDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
-        jobsSetupGKNav(title: "随机数测试模块".tr, rightButtons: [refreshButton])
+        jobsSetupGKNav(title: "随机数测试模块".tr,
+                       rightButtons: [refreshButton])
         tableView.byVisible(YES)
         reloadRandomValues()
     }
 
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
+    override func touchesEnded(_ touches: Set<UITouch>,
+                               with event: UIEvent?) {
+        super.touchesEnded(touches,
+                           with: event)
         reloadRandomValues()
     }
 
     private func reloadRandomValues() {
-        values = items.map { $0.generator() }
+        values = items.map {
+            $0.generator()
+        }
         tableView.byReloadData()
     }
 
     private func reloadRandomValue(at indexPath: IndexPath) {
         guard items.indices.contains(indexPath.row),
-              values.indices.contains(indexPath.row) else { return }
+              values.indices.contains(indexPath.row) else {
+            return
+        }
         let oldValue = values[indexPath.row]
         var newValue = oldValue
         repeat {
             newValue = items[indexPath.row].generator()
         } while newValue == oldValue
         values[indexPath.row] = newValue
-        tableView.byReloadRows(at: [indexPath], with: .automatic)
+        tableView.byReloadRows(at: [indexPath],
+                               with: .automatic)
     }
 }
 
-extension JobsRandomNumberDemoVC: UITableViewDataSource, UITableViewDelegate {
+extension JobsRandomNumberDemoVC: UITableViewDataSource,
+                                  UITableViewDelegate {
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
         items.count
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let reuseIdentifier = "JobsRandomNumberCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier)
-            ?? UITableViewCell(style: .subtitle, reuseIdentifier: reuseIdentifier)
+            ?? UITableViewCell(style: .subtitle,
+                               reuseIdentifier: reuseIdentifier)
         let item = items[indexPath.row]
         let value = values.indices.contains(indexPath.row)
             ? values[indexPath.row]
             : item.generator()
         return cell
             .byText(item.title)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .semibold))
             .byTitleCor(JobsCor.label)
             .byTitleNumberOfLines(0)
             .byDetailText("\(item.range)   结果：\(value)")
@@ -124,7 +181,8 @@ extension JobsRandomNumberDemoVC: UITableViewDataSource, UITableViewDelegate {
             .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
         reloadRandomValue(at: indexPath)
     }
 }

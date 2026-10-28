@@ -10,14 +10,21 @@ import UIKit
 private final class JobsAppDoorBundleToken: NSObject { }
 
 public enum JobsAppDoorResource {
+
     public static var bundle: Bundle {
         let sourceBundle = Bundle(for: JobsAppDoorBundleToken.self)
-        guard let bundleURL = sourceBundle.url(forResource: "JobsAppDoorResources", withExtension: "bundle"),
-              let resourceBundle = Bundle(url: bundleURL) else { return sourceBundle };return resourceBundle
+        guard let bundleURL = sourceBundle.url(forResource: "JobsAppDoorResources",
+                                               withExtension: "bundle"),
+              let resourceBundle = Bundle(url: bundleURL) else {
+            return sourceBundle
+        }
+        return resourceBundle
     }
 
     public static func image(named name: String) -> UIImage? {
-        UIImage(named: name, in: bundle, compatibleWith: nil)
+        UIImage(named: name,
+                in: bundle,
+                compatibleWith: nil)
             ?? UIImage(named: name)
     }
 
@@ -30,23 +37,21 @@ public enum JobsAppDoorResource {
         let resource = resourceName as NSString
         let ext = resource.pathExtension
         let name = resource.deletingPathExtension
-        return bundle.url(
-            forResource: name,
-            withExtension: ext.isEmpty ? nil : ext
-        )
+        return bundle.url(forResource: name,
+                          withExtension: ext.isEmpty ? nil : ext)
     }
 
     public static func text(_ key: String) -> String {
-        NSLocalizedString(
-            key,
-            tableName: "JobsAppDoor",
-            bundle: bundle,
-            value: key,
-            comment: ""
-        )
+        NSLocalizedString(key,
+                          tableName: "JobsAppDoor",
+                          bundle: bundle,
+                          value: key,
+                          comment: "")
     }
 
     public static func countdownText(seconds: Int) -> String {
-        String(format: text("还剩 %ld 秒"), locale: Locale.current, seconds)
+        String(format: text("还剩 %ld 秒"),
+               locale: Locale.current,
+               seconds)
     }
 }

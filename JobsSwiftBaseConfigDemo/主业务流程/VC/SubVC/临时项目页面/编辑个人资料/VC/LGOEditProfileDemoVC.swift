@@ -28,6 +28,7 @@ import BRPickerViewSwift
 
 // MARK: - 行模型
 private enum EditProfileRow: CaseIterable {
+
     case avatar
     case nickname
     case gender
@@ -40,21 +41,29 @@ private enum EditProfileRow: CaseIterable {
     var title: JobsText {
         switch self {
         /// 处理 .avatar 分支
-        case .avatar:     return "头像"
+        case .avatar:
+            return "头像"
         /// 处理 .nickname 分支
-        case .nickname:   return "昵称"
+        case .nickname:
+            return "昵称"
         /// 处理 .gender 分支
-        case .gender:     return "性别"
+        case .gender:
+            return "性别"
         /// 处理 .sign 分支
-        case .sign:       return "签名"
+        case .sign:
+            return "签名"
         /// 处理 .birthday 分支
-        case .birthday:   return "生日"
+        case .birthday:
+            return "生日"
         /// 处理 .emotion 分支
-        case .emotion:    return "情感"
+        case .emotion:
+            return "情感"
         /// 处理 .hometown 分支
-        case .hometown:   return "家乡"
+        case .hometown:
+            return "家乡"
         /// 处理 .profession 分支
-        case .profession: return "职业"
+        case .profession:
+            return "职业"
         }
     }
     /// ❤️ 这里的字段“detail”，既可以是String类型，也可以是NSAttributedString类型。合二为一
@@ -66,15 +75,16 @@ private enum EditProfileRow: CaseIterable {
         /// 处理 .nickname 分支
         case .nickname:
             return JobsText(JobsRichText.make([
-                JobsRichRun(
-                    .text("等级达到2级才能修改昵称"))
-                    .font(JobsFont.systemFont(ofSize: 14))
-                    .color(JobsCor.systemRed),
-                JobsRichRun(
-                    .text("Eric"))
-                    .font(JobsFont.systemFont(ofSize: 14, weight: .semibold))
-                    .color(JobsCor.secondaryLabel)
-            ]))
+                        JobsRichRun(
+                            .text("等级达到2级才能修改昵称"))
+                            .font(JobsFont.systemFont(ofSize: 14))
+                            .color(JobsCor.systemRed),
+                        JobsRichRun(
+                            .text("Eric"))
+                            .font(JobsFont.systemFont(ofSize: 14,
+                                                      weight: .semibold))
+                            .color(JobsCor.secondaryLabel)
+                    ]))
         /// 处理 .gender 分支
         case .gender:
             return "female"
@@ -98,12 +108,15 @@ private enum EditProfileRow: CaseIterable {
 }
 
 final class LGOEditProfileDemoVC: BaseVC {
+
     private let sections: [[EditProfileRow]] = [
         [.avatar, .nickname, .gender, .sign],
         [.birthday, .emotion, .hometown, .profession]
     ]
     private var birthdayDate = Calendar.current.date(
-        from: DateComponents(year: 2025, month: 9, day: 22)
+        from: DateComponents(year: 2025,
+                             month: 9,
+                             day: 22)
     ) ?? Date()
 
     private static func applyAdaptivePickerTheme(_ theme: BRPickerTheme) {
@@ -119,7 +132,8 @@ final class LGOEditProfileDemoVC: BaseVC {
     }
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .plain)
+        UITableView(frame: .zero,
+                    style: .plain)
             .byBackgroundColor(JobsCor.systemGroupedBackground)
             .byDataSource(self)
             .byDelegate(self)
@@ -147,9 +161,10 @@ final class LGOEditProfileDemoVC: BaseVC {
                 Self.applyAdaptivePickerTheme(theme)
             }
             .byToolbar { cfg in
-                cfg.byTitle("")
-                   .byCancelText("取消")
-                   .byConfirmText("完成")
+                cfg
+                    .byTitle("")
+                    .byCancelText("取消")
+                    .byConfirmText("完成")
             }
             .byResult { value in
                 let idx = ["女", "男", "不想透露"].firstIndex(of: value) ?? -1
@@ -165,9 +180,10 @@ final class LGOEditProfileDemoVC: BaseVC {
                 Self.applyAdaptivePickerTheme(theme)
             }
             .byToolbar { cfg in
-                cfg.byTitle("")
-                   .byCancelText("取消")
-                   .byConfirmText("完成")
+                cfg
+                    .byTitle("")
+                    .byCancelText("取消")
+                    .byConfirmText("完成")
             }
             .byResult { value in
                 ("单列：\(value)（index=?）").toast
@@ -178,26 +194,32 @@ final class LGOEditProfileDemoVC: BaseVC {
         BRSystemDatePicker()
             .byTitle("出生日".tr)
             .bySelectDate(birthdayDate)
-            .byMinDate(Calendar.current.date(byAdding: .year, value: -80, to: Date()))
+            .byMinDate(Calendar.current.date(byAdding: .year,
+                                             value: -80,
+                                             to: Date()))
             .byMaxDate(Date())
             .byMinuteInterval(1)
             .byTheme { theme in
                 Self.applyAdaptivePickerTheme(theme)
             }
             .byToolbar { cfg in
-                cfg.byTitle("出生日".tr)
-                   .byCancelText("取消")
-                   .byConfirmText("完成")
+                cfg
+                    .byTitle("出生日".tr)
+                    .byCancelText("取消")
+                    .byConfirmText("完成")
             }
             .byResult { [weak self] dt in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 birthdayDate = dt
-                if let section = sections.firstIndex(where: { $0.contains(.birthday) }),
+                if let section = sections.firstIndex(where: {
+                    $0.contains(.birthday)
+                }),
                    let row = sections[section].firstIndex(of: .birthday) {
-                    tableView.byReloadRows(
-                        at: [IndexPath(row: row, section: section)],
-                        with: .none
-                    )
+                    tableView.byReloadRows(at: [IndexPath(row: row,
+                                                          section: section)],
+                                           with: .none)
                 }
             }
     }()
@@ -211,47 +233,56 @@ final class LGOEditProfileDemoVC: BaseVC {
 }
 // MARK: - UITableViewDataSource
 extension LGOEditProfileDemoVC: UITableViewDataSource {
+
     func numberOfSections(in tableView: UITableView) -> Int {
         sections.count
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
         sections[section].count
     }
 
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let row = sections[indexPath.section][indexPath.row]
+        let row = sections[indexPath.section] [indexPath.row]
         switch row {
         /// 处理 .avatar 分支
         case .avatar:
-            return tableView.byDequeueReusableCell(
-                withType: AvatarCell.self,
-                for: indexPath
-            ).byData(JobsBaseCellConfig(title: row.title))
+            return tableView
+                .byDequeueReusableCell(withType: AvatarCell.self,
+                                       for: indexPath)
+                .byData(JobsBaseCellConfig(title: row.title))
         /// 未匹配已知分支时执行兜底处理
         default:
             let detail = row == .birthday
-                ? JobsText(fmt(birthdayDate, "yyyy-MM-dd"))
+                ? JobsText(fmt(birthdayDate,"yyyy-MM-dd"))
                 : row.detail
-            return tableView.byDequeueReusableCell(withType: BaseTableViewCellByValue1.self, for: indexPath)
+            return tableView
+                .byDequeueReusableCell(withType: BaseTableViewCellByValue1.self,
+                                       for: indexPath)
                 .byTitleFont(JobsFont.systemFont(ofSize: 16))
                 .byDetailTitleFont((JobsFont.systemFont(ofSize: 14)))
                 .bySelectionStyle(.none)
                 .byAccessoryType(.disclosureIndicator)
-                .bySeparatorInset(.init(top: 0, left: 16, bottom: 0, right: 16))
+                .bySeparatorInset(.init(top: 0,
+                                        left: 16,
+                                        bottom: 0,
+                                        right: 16))
                 .byTitleCor(JobsCor.label)
                 .byDetailTitleCor(JobsCor.secondaryLabel)
                 .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
-                .byData(JobsBaseCellConfig(title: row.title, detail: detail))
+                .byData(JobsBaseCellConfig(title: row.title,
+                                           detail: detail))
         }
     }
 }
 // MARK: - UITableViewDelegate
 extension LGOEditProfileDemoVC: UITableViewDelegate {
+
     func tableView(_ tableView: UITableView,
                    heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let row = sections[indexPath.section][indexPath.row]
+        let row = sections[indexPath.section] [indexPath.row]
         return row == .avatar ? 72 : 52
     }
 
@@ -262,78 +293,83 @@ extension LGOEditProfileDemoVC: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView,
                    viewForHeaderInSection section: Int) -> UIView? {
-        UIView.jobsMake { _ in }.byBackgroundColor(JobsCor.clear)
+        UIView
+            .jobsMake { _ in }
+            .byBackgroundColor(JobsCor.clear)
     }
 
-    func tipsGrantPermission(){
-        SwiftEntryKit.display(
-            entry: TipsGrantPermissionView().onConfirm {
-                print("去开启")
-                SwiftEntryKit.dismiss(.all)
-            },
-            using: makeEKAttributes().bySize(width: .constant(value: 326.w), height: .constant(value: 226.h))
-        )
+    func tipsGrantPermission() {
+        SwiftEntryKit.display(entry: TipsGrantPermissionView().onConfirm {
+            print("去开启")
+            SwiftEntryKit.dismiss(.all)
+        },
+                              using: makeEKAttributes()
+                                  .bySize(width: .constant(value: 326.w),
+                                          height: .constant(value: 226.h)))
     }
 
     func tableView(_ tableView: UITableView,
                    didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        let row = sections[indexPath.section][indexPath.row]
+        tableView.deselectRow(at: indexPath,
+                              animated: true)
+        let row = sections[indexPath.section] [indexPath.row]
         switch row {
         /// 处理 .avatar 分支
         case .avatar:
-            SwiftEntryKit.display(
-                entry: PhotoPermissionAlertView()
-                    .onLimited {
-                        print("有限访问")
-                        SwiftEntryKit.dismiss{ [weak self] in
-                            guard let self else { return }
-                            tipsGrantPermission()
+            SwiftEntryKit.display(entry: PhotoPermissionAlertView()
+                .onLimited {
+                    print("有限访问")
+                    SwiftEntryKit.dismiss { [weak self] in
+                        guard let self else {
+                            return
                         }
+                        tipsGrantPermission()
                     }
-                    .onFull {
-                        print("全部允许")
-                        SwiftEntryKit.dismiss()
-                    }
-                    .onDeny {
-                        print("不允许")
-                        SwiftEntryKit.dismiss()
-                    },
-                using: makeEKAttributes().bySize(width: .constant(value: 340.w), height: .constant(value: 217.h))
-            )
-//            SwiftEntryKit.display(
-//                entry: TipsGrantPermissionView().onConfirm {
-//                    print("去开启")
-//                    SwiftEntryKit.dismiss(.all)
-//                },
-//                using: makeEKAttributes().bySize(width: .constant(value: 326.w), height: .constant(value: 206.h))
+                }
+                .onFull {
+                    print("全部允许")
+                    SwiftEntryKit.dismiss()
+                }
+                .onDeny {
+                    print("不允许")
+                    SwiftEntryKit.dismiss()
+                },
+                                  using: makeEKAttributes()
+                                      .bySize(width: .constant(value: 340.w),
+                                              height: .constant(value: 217.h)))
+        //            SwiftEntryKit.display(
+        //                entry: TipsGrantPermissionView().onConfirm {
+        //                    print("去开启")
+        //                    SwiftEntryKit.dismiss(.all)
+        //                },
+        //                using: makeEKAttributes().bySize(width: .constant(value: 326.w), height: .constant(value: 206.h))
         /// 处理 .nickname 分支
         case .nickname:
             LGOEditNicknameVC()
                 .byData("https://www.baidu.com")
                 .byPush(self)
-                .byCompletion { print("❤️结束❤️ fromBottom") }
+                .byCompletion {
+                    print("❤️结束❤️ fromBottom")
+                }
         /// 处理 .gender 分支
         case .gender:
             self.eduPicker.byPresent(in: self.view)
         /// 处理 .sign 分支
         case .sign:
-            SwiftEntryKit.display(
-                entry: PhotoPermissionAlertView()
-                    .onLimited {
-                        print("有限访问")
-                        SwiftEntryKit.dismiss()
-                    }
-                    .onFull {
-                        print("全部允许")
-                        SwiftEntryKit.dismiss()
-                    }
-                    .onDeny {
-                        print("不允许")
-                        SwiftEntryKit.dismiss()
-                    },
-                using: makeEKAttributes()
-            )
+            SwiftEntryKit.display(entry: PhotoPermissionAlertView()
+                .onLimited {
+                    print("有限访问")
+                    SwiftEntryKit.dismiss()
+                }
+                .onFull {
+                    print("全部允许")
+                    SwiftEntryKit.dismiss()
+                }
+                .onDeny {
+                    print("不允许")
+                    SwiftEntryKit.dismiss()
+                },
+                                  using: makeEKAttributes())
         /// 处理 .birthday 分支
         case .birthday:
             dateSysDatePicker
@@ -347,29 +383,29 @@ extension LGOEditProfileDemoVC: UITableViewDelegate {
             "可能这个最后要被取消".tr.toast
         /// 处理 .profession 分支
         case .profession:
-            SwiftEntryKit.display(
-                entry: PhotoPermissionAlertView()
-                    .onLimited {
-                        print("有限访问")
-                        SwiftEntryKit.dismiss()
-                    }
-                    .onFull {
-                        print("全部允许")
-                        SwiftEntryKit.dismiss()
-                    }
-                    .onDeny {
-                        print("不允许")
-                        SwiftEntryKit.dismiss()
-                    },
-                using: makeEKAttributes()
-            )
+            SwiftEntryKit.display(entry: PhotoPermissionAlertView()
+                .onLimited {
+                    print("有限访问")
+                    SwiftEntryKit.dismiss()
+                }
+                .onFull {
+                    print("全部允许")
+                    SwiftEntryKit.dismiss()
+                }
+                .onDeny {
+                    print("不允许")
+                    SwiftEntryKit.dismiss()
+                },
+                                  using: makeEKAttributes())
         }
     }
 }
 // MARK: - 头像 cell
 public final class AvatarCell: UITableViewCell {
+
     private lazy var avatarView: UIImageView = {
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds()
             .jobs_setImage("https://picsum.photos/200",
@@ -382,7 +418,7 @@ public final class AvatarCell: UITableViewCell {
             .byAddTo(contentView) { [unowned self] make in
                 make.size.equalTo(CGSize(width: 44, height: 44))
                 make.centerY.equalToSuperview()
-                // 预留 disclosureIndicator 的空间
+            // 预留 disclosureIndicator 的空间
                 make.trailing.equalToSuperview().inset(16)
             }
     }()
@@ -391,19 +427,27 @@ public final class AvatarCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: .default, reuseIdentifier: reuseIdentifier)
+    override init(style: UITableViewCell.CellStyle,
+                  reuseIdentifier: String?) {
+        super.init(style: .default,
+                   reuseIdentifier: reuseIdentifier)
         byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
         contentView.byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
-        textLabel?.byFont(JobsFont.systemFont(ofSize: 16)).byTextColor(JobsCor.label)
-        detailTextLabel?.byFont(JobsFont.systemFont(ofSize: 14)).byTextColor(JobsCor.secondaryLabel)
+        textLabel?
+            .byFont(JobsFont.systemFont(ofSize: 16))
+            .byTextColor(JobsCor.label)
+        detailTextLabel?
+            .byFont(JobsFont.systemFont(ofSize: 14))
+            .byTextColor(JobsCor.secondaryLabel)
         avatarView.byVisible(YES)
     }
 
     @discardableResult
     /// 富文本的优先级比普通文本高。即，如果同时设置富文本和普通文本，优先展示富文本
     func byData(_ any: Any?) -> Self {
-        guard let cfg = any as? JobsBaseCellConfig else { return self }
+        guard let cfg = any as? JobsBaseCellConfig else {
+            return self
+        }
         if let title = cfg.title {
             textLabel?.byJobsAttributedText(title)
         }
@@ -412,6 +456,7 @@ public final class AvatarCell: UITableViewCell {
         }
         if let image = cfg.image {
             avatarView.byImage(image)
-        };return self
+        }
+        return self
     }
 }

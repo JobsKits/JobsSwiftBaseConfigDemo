@@ -8,7 +8,9 @@
 import Foundation
 
 /// 业务层使用的不可变外设快照，不直接泄露 CBPeripheral。
-public struct JobsBluetoothPeripheral: Hashable, Sendable {
+public struct JobsBluetoothPeripheral: Hashable,
+                                       Sendable {
+
     public let identifier: UUID
     public let name: String
     public let RSSI: Int

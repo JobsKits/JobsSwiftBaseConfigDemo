@@ -21,6 +21,7 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsSwiftCalendarDemoVC: BaseVC {
+
     private lazy var dayFormatter: DateFormatter = {
         let formatter = DateFormatter.jobsMake { _ in }
         formatter
@@ -72,7 +73,8 @@ final class JobsSwiftCalendarDemoVC: BaseVC {
         calendar.appearance.headerMinimumDissolvedAlpha = 0
         calendar.appearance.headerDateFormat = "yyyy年MM月"
         calendar.appearance.caseOptions = [.headerUsesUpperCase]
-        calendar.appearance.headerTitleFont = JobsFont.systemFont(ofSize: 20, weight: .regular)
+        calendar.appearance.headerTitleFont = JobsFont.systemFont(ofSize: 20,
+                                                                  weight: .regular)
         calendar.appearance.headerTitleColor = JobsCor.label
         calendar
             .byBackgroundColor(JobsCor.secondarySystemBackground)
@@ -87,13 +89,16 @@ final class JobsSwiftCalendarDemoVC: BaseVC {
                 make.left.equalToSuperview().offset(16)
                 make.right.equalToSuperview().offset(-16)
                 make.height.equalTo(380)
-            };return calendar
+            }
+        return calendar
     }()
 
     private lazy var selectedLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("请选择日期".tr)
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
             .byTextAlignment(.center)
@@ -120,11 +125,14 @@ final class JobsSwiftCalendarDemoVC: BaseVC {
 }
 
 extension JobsSwiftCalendarDemoVC: JobsSwiftCalendarDataSource {
-    func calendar(_ calendar: JobsSwiftCalendar, titleFor date: Date) -> String? {
+
+    func calendar(_ calendar: JobsSwiftCalendar,
+                  titleFor date: Date) -> String? {
         dayFormatter.string(from: date)
     }
 
-    func calendar(_ calendar: JobsSwiftCalendar, subtitleFor date: Date) -> String? {
+    func calendar(_ calendar: JobsSwiftCalendar,
+                  subtitleFor date: Date) -> String? {
         holidayMap[holidayFormatter.string(from: date)]
     }
 
@@ -136,12 +144,14 @@ extension JobsSwiftCalendarDemoVC: JobsSwiftCalendarDataSource {
         Foundation.Calendar.current.startOfDay(for: Date(timeIntervalSinceNow: 365 * 24 * 60 * 60))
     }
 
-    func calendar(_ calendar: JobsSwiftCalendar, numberOfEventsFor date: Date) -> Int {
+    func calendar(_ calendar: JobsSwiftCalendar,
+                  numberOfEventsFor date: Date) -> Int {
         holidayMap[holidayFormatter.string(from: date)] == nil ? 0 : 1
     }
 }
 
 extension JobsSwiftCalendarDemoVC: JobsSwiftCalendarDelegate {
+
     func calendar(_ calendar: JobsSwiftCalendar,
                   didSelect date: Date,
                   atMonthPosition monthPosition: JobsSwiftCalendarMonthPosition) {
@@ -165,6 +175,7 @@ extension JobsSwiftCalendarDemoVC: JobsSwiftCalendarDelegate {
 }
 
 extension JobsSwiftCalendarDemoVC: JobsSwiftCalendarDelegateAppearance {
+
     func calendar(_ calendar: JobsSwiftCalendar,
                   appearance: JobsSwiftCalendarAppearance,
                   selectionColorFor date: Date) -> UIColor? {

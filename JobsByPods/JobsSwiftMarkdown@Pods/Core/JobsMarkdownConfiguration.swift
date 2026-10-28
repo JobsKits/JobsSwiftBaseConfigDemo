@@ -8,13 +8,16 @@
 
 import Foundation
 
-public enum JobsMarkdownAppearance: String, CaseIterable {
+public enum JobsMarkdownAppearance: String,
+                                    CaseIterable {
+
     case automatic
     case light
     case dark
 }
 
 public struct JobsMarkdownConfiguration {
+
     public var appearance: JobsMarkdownAppearance
     public var fontScale: Double
     public var showsTableOfContents: Bool
@@ -25,19 +28,18 @@ public struct JobsMarkdownConfiguration {
     public var allowsRemoteContent: Bool
     public var customCSS: String
 
-    public init(
-        appearance: JobsMarkdownAppearance = .automatic,
-        fontScale: Double = 1,
-        showsTableOfContents: Bool = true,
-        showsCodeCopyButton: Bool = true,
-        rendersMermaid: Bool = true,
-        rendersMath: Bool = true,
-        sanitizesHTML: Bool = true,
-        allowsRemoteContent: Bool = true,
-        customCSS: String = ""
-    ) {
+    public init(appearance: JobsMarkdownAppearance = .automatic,
+                fontScale: Double = 1,
+                showsTableOfContents: Bool = true,
+                showsCodeCopyButton: Bool = true,
+                rendersMermaid: Bool = true,
+                rendersMath: Bool = true,
+                sanitizesHTML: Bool = true,
+                allowsRemoteContent: Bool = true,
+                customCSS: String = "") {
         self.appearance = appearance
-        self.fontScale = fontScale.isFinite ? min(max(fontScale, 0.75), 2) : 1
+        self.fontScale = fontScale.isFinite ? min(max(fontScale,0.75),
+                                                  2) : 1
         self.showsTableOfContents = showsTableOfContents
         self.showsCodeCopyButton = showsCodeCopyButton
         self.rendersMermaid = rendersMermaid

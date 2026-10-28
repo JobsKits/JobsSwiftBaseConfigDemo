@@ -8,6 +8,7 @@
 import Foundation
 
 public enum LanguageMode: Equatable {
+
     case system
     case custom(String)
 }
@@ -36,5 +37,6 @@ public func loadLanguageMode() -> LanguageMode {
     guard let code = ud.string(forKey: languageCodeKey),
           !code.isEmpty else {
         return .system
-    };return .custom(code)
+    }
+    return .custom(code)
 }

@@ -13,6 +13,7 @@ import UIKit
 
 // MARK: - init
 extension UIButton {
+
     public convenience init(x: CGFloat,
                             y: CGFloat,
                             w: CGFloat,
@@ -23,7 +24,9 @@ extension UIButton {
                                 y: y,
                                 width: w,
                                 height: h))
-        addTarget(target, action: action, for: .touchUpInside)
+        addTarget(target,
+                  action: action,
+                  for: .touchUpInside)
     }
     @available(iOS 7.0, *)
     public static func sys() -> UIButton {

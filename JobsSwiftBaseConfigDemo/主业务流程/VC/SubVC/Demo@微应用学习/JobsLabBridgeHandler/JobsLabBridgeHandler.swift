@@ -11,7 +11,9 @@ import JobsByUIKit
 
 /// Hybrid 从“大网页”演进到可注册、独立发布的微应用；Bridge 是网页请求宿主能力的窄接口。
 /// 正式接入须验证离线包签名/版本、来源、参数、权限和调用频率，不能把任意 JS 映射成 selector。
-final class JobsLabBridgeHandler: NSObject, WKScriptMessageHandler {
+final class JobsLabBridgeHandler: NSObject,
+                                  WKScriptMessageHandler {
+
     weak var webView: WKWebView?
     var onResult: ((String) -> Void)?
 
@@ -26,7 +28,8 @@ final class JobsLabBridgeHandler: NSObject, WKScriptMessageHandler {
         }
         let result = handle(message.body)
         guard let data = try? JSONSerialization.data(withJSONObject: ["ok": result.ok, "message": result.message]),
-              let json = String(data: data, encoding: .utf8) else {
+              let json = String(data: data,
+                                encoding: .utf8) else {
             onResult?(result.message)
             return
         }

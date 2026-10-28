@@ -20,6 +20,7 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsViewPushDemoVC: BaseVC {
+
     private lazy var demoPanel = JobsViewPushDemoPanel()
     private lazy var directionControl: UISegmentedControl = {
         UISegmentedControl(items: ["上".tr, "下".tr, "左".tr, "右".tr])
@@ -36,9 +37,11 @@ final class JobsViewPushDemoVC: BaseVC {
     }()
 
     private lazy var ratioLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("覆盖比例：65%".tr)
-            .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 16,
+                                        weight: .semibold))
             .byTextColor(JobsCor.label)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(directionControl.snp.bottom).offset(28)
@@ -47,7 +50,8 @@ final class JobsViewPushDemoVC: BaseVC {
     }()
 
     private lazy var ratioSlider: UISlider = {
-        UISlider.jobsMake { _ in }
+        UISlider
+            .jobsMake { _ in }
             .byMinimumValue(0.25)
             .byMaximumValue(1)
             .byValue(0.65)
@@ -61,7 +65,8 @@ final class JobsViewPushDemoVC: BaseVC {
     }()
 
     private lazy var tipLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("推出后可沿来路拖动退出；比例不足 100% 时，点击露出的底层区域也会退出。".tr)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -74,9 +79,12 @@ final class JobsViewPushDemoVC: BaseVC {
 
     private lazy var pushButton: UIButton = {
         UIButton.sys()
-            .byTitle("Push BView", for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 18, weight: .bold))
+            .byTitle("Push BView",
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 18,
+                                             weight: .bold))
             .byBackgroundColor(JobsCor.systemBlue)
             .byCornerRadius(12)
             .onTap { [weak self] _ in
@@ -102,27 +110,28 @@ final class JobsViewPushDemoVC: BaseVC {
 }
 
 private extension JobsViewPushDemoVC {
+
     var selectedDirection: JobsViewPushDirection {
         switch directionControl.selectedSegmentIndex {
         /// 处理 数值 0 分支
-        case 0: return .top
+        case 0:
+            return .top
         /// 处理 数值 1 分支
-        case 1: return .bottom
+        case 1:
+            return .bottom
         /// 处理 数值 2 分支
-        case 2: return .left
+        case 2:
+            return .left
         /// 未匹配已知分支时执行兜底处理
-        default: return .right
+        default:
+            return .right
         }
     }
 
     func pushDemoView() {
-        let presentation = view.jobsPush(
-            demoPanel,
-            configuration: JobsViewPushConfiguration(
-                direction: selectedDirection,
-                presentedRatio: CGFloat(ratioSlider.value)
-            )
-        )
+        let presentation = view.jobsPush(demoPanel,
+                                         configuration: JobsViewPushConfiguration(direction: selectedDirection,
+                                                                                  presentedRatio: CGFloat(ratioSlider.value)))
         demoPanel.closeHandler = { [weak presentation] in
             presentation?.dismiss()
         }
@@ -130,13 +139,16 @@ private extension JobsViewPushDemoVC {
 }
 
 private final class JobsViewPushDemoPanel: UIView {
+
     var closeHandler: (() -> Void)?
 
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("BView")
             .byTextAlignment(.center)
-            .byFont(JobsFont.systemFont(ofSize: 32, weight: .black))
+            .byFont(JobsFont.systemFont(ofSize: 32,
+                                        weight: .black))
             .byTextColor(JobsCor.white)
             .byAddTo(self) { make in
                 make.center.equalToSuperview()
@@ -145,9 +157,12 @@ private final class JobsViewPushDemoPanel: UIView {
 
     private lazy var closeButton: UIButton = {
         UIButton.sys()
-            .byTitle("主动退出".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTitle("主动退出".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .semibold))
             .byBorderColor(JobsCor.white)
             .byBorderWidth(1)
             .byCornerRadius(10)

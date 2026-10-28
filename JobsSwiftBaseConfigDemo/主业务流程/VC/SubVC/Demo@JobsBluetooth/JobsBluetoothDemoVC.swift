@@ -21,6 +21,7 @@ import GKNavigationBarSwift
 
 /// JobsBluetooth 全能力目录。真实设备和 Mock 设备共用同一套上层调用。
 final class JobsBluetoothDemoVC: BaseVC {
+
     private let features = [
         "蓝牙状态与权限", "扫描配置", "扫描过滤与去重", "实时 RSSI", "单设备连接", "多设备并发连接",
         "Service / Characteristic / Descriptor 浏览", "Read", "Write With Response", "Write Without Response",
@@ -30,15 +31,20 @@ final class JobsBluetoothDemoVC: BaseVC {
         "OTA 扩展接口", "未知协议占位接入"
     ]
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
             .byRowHeight(76)
             .byRegisterCell(UITableViewCell.self)
             .byBackgroundColor(JobsCor.systemGroupedBackground)
             .byAddTo(view) { [unowned self] make in
-                if view.jobs_hasVisibleTopBar() { make.top.equalTo(gk_navigationBar.snp.bottom) }
-                else { make.top.equalTo(view.safeAreaLayoutGuide.snp.top) }
+                if view.jobs_hasVisibleTopBar() {
+                    make.top.equalTo(gk_navigationBar.snp.bottom)
+                }
+                else {
+                    make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                }
                 make.left.right.bottom.equalToSuperview()
             }
     }()
@@ -51,19 +57,29 @@ final class JobsBluetoothDemoVC: BaseVC {
     }
 }
 
-extension JobsBluetoothDemoVC: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { features.count }
+extension JobsBluetoothDemoVC: UITableViewDataSource,
+                               UITableViewDelegate {
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
+        features.count
+    }
+
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let title = "\(indexPath.row + 1). \(features[indexPath.row])"
         let subTitle = indexPath.row == 21 ? "进入详情页，模拟器可直接运行" : "进入独立功能详情页"
         return tableView
-            .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+            .byDequeueReusableCell(withType: UITableViewCell.self,
+                                   for: indexPath)
             .byContentConfiguration { content in
                 content = UIListContentConfiguration
-                    .jobsSubtitleCell(text: title, secondary: subTitle)
-                    .byTextFont(JobsFont.systemFont(ofSize: 17, weight: .semibold))
-                    .bySecondaryFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+                    .jobsSubtitleCell(text: title,
+                                      secondary: subTitle)
+                    .byTextFont(JobsFont.systemFont(ofSize: 17,
+                                                    weight: .semibold))
+                    .bySecondaryFont(JobsFont.systemFont(ofSize: 13,
+                                                         weight: .regular))
                     .byTextLines(1)
                     .bySecondaryLines(1)
                     .byPrimarySecondaryVerticalPadding(3)
@@ -74,12 +90,12 @@ extension JobsBluetoothDemoVC: UITableViewDataSource, UITableViewDelegate {
             .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        navigationController?.pushViewController(
-            JobsBluetoothFeatureDemoVC(featureIndex: indexPath.row,
-                                       featureTitle: features[indexPath.row]),
-            animated: true
-        )
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath,
+                              animated: true)
+        navigationController?.pushViewController(JobsBluetoothFeatureDemoVC(featureIndex: indexPath.row,
+                                                                            featureTitle: features[indexPath.row]),
+                                                 animated: true)
     }
 }

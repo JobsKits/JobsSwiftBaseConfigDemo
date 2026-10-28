@@ -23,52 +23,78 @@ import UIKit
 /// - `Sendable`: 可在并发环境中安全传递。
 /// - `Equatable`: 支持等值比较。
 /// - `Comparable`: 支持大小比较（基于内部秒数）。
-public struct JobsPeriod: Sendable, Equatable, Comparable {
+public struct JobsPeriod: Sendable,
+                          Equatable,
+                          Comparable {
+
     /// 以秒为单位的底层时间间隔。
     public let timeInterval: TimeInterval
     /// 是否为 0 秒。
-    public var isZero: Bool { timeInterval == 0 }
+    public var isZero: Bool {
+        timeInterval == 0
+    }
     /// 表示 0 秒的时间段。
-    public static var zero: JobsPeriod { JobsPeriod(0) }
+    public static var zero: JobsPeriod {
+        JobsPeriod(0)
+    }
     /// 基于内部秒数进行大小比较。
-    public static func < (lhs: JobsPeriod, rhs: JobsPeriod) -> Bool {
+    public static func < (lhs: JobsPeriod,
+                          rhs: JobsPeriod) -> Bool {
         lhs.timeInterval < rhs.timeInterval
     }
     /// 使用给定的秒数初始化 `JobsPeriod`。
     /// 会将负数钳制为 0，确保时间段不为负值。
     public init(_ timeInterval: TimeInterval) {
-        self.timeInterval = timeInterval.isFinite ? min(max(0, timeInterval), 1_000_000_000) : 0
+        self.timeInterval = timeInterval.isFinite ? min(max(0,timeInterval),
+                                                        1_000_000_000) : 0
     }
 }
 // MARK: - JobsPeriod 便利扩展
 public extension JobsPeriod {
+
     /// 常用时间段预定义
-    static var millisecond: JobsPeriod { JobsPeriod(0.001) }
-    static var second: JobsPeriod { JobsPeriod(1) }
-    static var minute: JobsPeriod { JobsPeriod(60) }
-    static var hour: JobsPeriod { JobsPeriod(3600) }
-    static var day: JobsPeriod { JobsPeriod(86400) }
+    static var millisecond: JobsPeriod {
+        JobsPeriod(0.001)
+    }
+    static var second: JobsPeriod {
+        JobsPeriod(1)
+    }
+    static var minute: JobsPeriod {
+        JobsPeriod(60)
+    }
+    static var hour: JobsPeriod {
+        JobsPeriod(3600)
+    }
+    static var day: JobsPeriod {
+        JobsPeriod(86400)
+    }
 
     /// 数学运算支持
-    static func + (lhs: JobsPeriod, rhs: JobsPeriod) -> JobsPeriod {
+    static func + (lhs: JobsPeriod,
+                   rhs: JobsPeriod) -> JobsPeriod {
         JobsPeriod(lhs.timeInterval + rhs.timeInterval)
     }
 
-    static func - (lhs: JobsPeriod, rhs: JobsPeriod) -> JobsPeriod {
+    static func - (lhs: JobsPeriod,
+                   rhs: JobsPeriod) -> JobsPeriod {
         JobsPeriod(lhs.timeInterval - rhs.timeInterval)
     }
 
-    static func * (lhs: JobsPeriod, rhs: Double) -> JobsPeriod {
+    static func * (lhs: JobsPeriod,
+                   rhs: Double) -> JobsPeriod {
         JobsPeriod(lhs.timeInterval * rhs)
     }
 
-    static func / (lhs: JobsPeriod, rhs: Double) -> JobsPeriod {
+    static func / (lhs: JobsPeriod,
+                   rhs: Double) -> JobsPeriod {
         JobsPeriod(lhs.timeInterval / rhs)
     }
 }
 /// JobsPlan@系列任务计划
 /// 定义了任务执行的时间序列，支持一次性、重复、延迟等多种调度策略
-public struct JobsPlan: Sequence, Sendable {
+public struct JobsPlan: Sequence,
+                        Sendable {
+
     public typealias Element = JobsPeriod
     private let builder: @Sendable () -> AnyIterator<JobsPeriod>
 
@@ -78,22 +104,23 @@ public struct JobsPlan: Sequence, Sendable {
 }
 
 extension JobsPlan {
+
     public static func make(_ builder: @escaping @Sendable () -> AnyIterator<JobsPeriod>) -> JobsPlan {
         JobsPlan(builder: builder)
     }
 
-    public static func every(
-        _ interval: JobsPeriod,
-        initialDelay: JobsPeriod = .zero,
-        repeatCount: Int? = nil,
-        fireImmediately: Bool = false
-    ) -> JobsPlan {
+    public static func every(_ interval: JobsPeriod,
+                             initialDelay: JobsPeriod = .zero,
+                             repeatCount: Int? = nil,
+                             fireImmediately: Bool = false) -> JobsPlan {
         JobsPlan.make {
             var emitted = 0
             var hasEmittedImmediate = !fireImmediately
             var shouldEmitInitialDelay = !initialDelay.isZero
             return AnyIterator {
-                if let repeatCount, emitted >= repeatCount { return nil }
+                if let repeatCount, emitted >= repeatCount {
+                    return nil
+                }
                 emitted += 1
                 if fireImmediately && !hasEmittedImmediate {
                     hasEmittedImmediate = true
@@ -102,7 +129,8 @@ extension JobsPlan {
                 if shouldEmitInitialDelay {
                     shouldEmitInitialDelay = false
                     return initialDelay
-                };return interval
+                }
+                return interval
             }
         }
     }
@@ -111,7 +139,9 @@ extension JobsPlan {
         JobsPlan.make {
             var fired = false
             return AnyIterator {
-                guard !fired else { return nil }
+                guard !fired else {
+                    return nil
+                }
                 fired = true
                 return delay
             }
@@ -121,7 +151,8 @@ extension JobsPlan {
     /// - Parameter date: 目标执行日期
     /// - Returns: JobsPlan
     public static func at(_ date: Date) -> JobsPlan {
-        let interval = Swift.max(0, date.timeIntervalSinceNow)
+        let interval = Swift.max(0,
+                                 date.timeIntervalSinceNow)
         return after(JobsPeriod(interval))
     }
 
@@ -141,7 +172,9 @@ extension JobsPlan {
             let rhs = other.makeIterator()
             var useRHS = false
             return AnyIterator {
-                if !useRHS, let next = lhs.next() { return next }
+                if !useRHS, let next = lhs.next() {
+                    return next
+                }
                 useRHS = true
                 return rhs.next()
             }
@@ -150,31 +183,43 @@ extension JobsPlan {
 
     @discardableResult
     public func `do`(action: @escaping @Sendable () -> Void) -> JobsTask {
-        JobsTask(plan: self, queue: .main) { _ in action() }
+        JobsTask(plan: self,
+                 queue: .main) { _ in
+            action()
+        }
     }
 
     @discardableResult
-    public func `do`(queue: DispatchQueue, action: @escaping @Sendable () -> Void) -> JobsTask {
-        JobsTask(plan: self, queue: queue) { _ in action() }
+    public func `do`(queue: DispatchQueue,
+                     action: @escaping @Sendable () -> Void) -> JobsTask {
+        JobsTask(plan: self,
+                 queue: queue) { _ in
+            action()
+        }
     }
 
     @discardableResult
-    public func `do`(mode: RunLoop.Mode, action: @escaping @Sendable () -> Void) -> JobsTask {
-        JobsTask(plan: self, queue: .main, runLoopMode: mode) { _ in action() }
+    public func `do`(mode: RunLoop.Mode,
+                     action: @escaping @Sendable () -> Void) -> JobsTask {
+        JobsTask(plan: self,
+                 queue: .main,
+                 runLoopMode: mode) { _ in
+            action()
+        }
     }
 }
 // MARK: - JobsPlan Async Support
 extension JobsPlan {
+
     /// 创建异步执行的任务
     /// - Parameter action: 异步执行的闭包
     /// - Returns: JobsTask
     @discardableResult
-    public func doAsync(
-        queue: DispatchQueue = .main,
-        priority: TaskPriority = .medium,
-        action: @escaping @Sendable () async -> Void
-    ) -> JobsTask {
-        JobsTask(plan: self, queue: queue) { task in
+    public func doAsync(queue: DispatchQueue = .main,
+                        priority: TaskPriority = .medium,
+                        action: @escaping @Sendable () async -> Void) -> JobsTask {
+        JobsTask(plan: self,
+                 queue: queue) { task in
             task.launchAsync(priority: priority) {
                 await action()
             }
@@ -184,12 +229,11 @@ extension JobsPlan {
     /// - Parameter action: 异步执行的闭包，接收 JobsTask 参数
     /// - Returns: JobsTask
     @discardableResult
-    public func doAsync(
-        queue: DispatchQueue = .main,
-        priority: TaskPriority = .medium,
-        action: @escaping @Sendable (JobsTask) async -> Void
-    ) -> JobsTask {
-        JobsTask(plan: self, queue: queue) { task in
+    public func doAsync(queue: DispatchQueue = .main,
+                        priority: TaskPriority = .medium,
+                        action: @escaping @Sendable (JobsTask) async -> Void) -> JobsTask {
+        JobsTask(plan: self,
+                 queue: queue) { task in
             task.launchAsync(priority: priority) {
                 await action(task)
             }
@@ -202,12 +246,12 @@ extension JobsPlan {
     ///   - action: 异步执行的闭包
     /// - Returns: JobsTask
     @discardableResult
-    public func doAsync(
-        mode: RunLoop.Mode,
-        priority: TaskPriority = .medium,
-        action: @escaping @Sendable () async -> Void
-    ) -> JobsTask {
-        JobsTask(plan: self, queue: .main, runLoopMode: mode) { task in
+    public func doAsync(mode: RunLoop.Mode,
+                        priority: TaskPriority = .medium,
+                        action: @escaping @Sendable () async -> Void) -> JobsTask {
+        JobsTask(plan: self,
+                 queue: .main,
+                 runLoopMode: mode) { task in
             task.launchAsync(priority: priority) {
                 await action()
             }
@@ -216,6 +260,7 @@ extension JobsPlan {
 }
 /// 带标签的任务执行
 public struct TaggedTaskExecution: Sendable {
+
     /// 任务标签
     public let tag: String
     /// 执行信息
@@ -223,6 +268,7 @@ public struct TaggedTaskExecution: Sendable {
 }
 /// 任务执行信息
 public struct TaskExecution: Sendable {
+
     /// 执行计数
     public let count: Int
     /// 执行时间
@@ -234,6 +280,7 @@ public struct TaskExecution: Sendable {
 }
 /// 任务性能指标
 public struct JobsTaskMetrics: Sendable {
+
     /// 总执行次数
     public let totalExecutions: Int
     /// 任务创建时间
@@ -251,11 +298,15 @@ public struct JobsTaskMetrics: Sendable {
 
     /// 计算平均执行频率（次/秒）
     public var executionRate: Double? {
-        guard totalExecutions > 0, totalDuration > 0 else { return nil };return Double(totalExecutions) / totalDuration
+        guard totalExecutions > 0, totalDuration > 0 else {
+            return nil
+        }
+        return Double(totalExecutions) / totalDuration
     }
 }
 /// 任务状态变化
 public struct JobsTaskStatusChange: Sendable {
+
     /// 任务标签
     public let tag: String
     /// 旧状态（nil 表示新添加）
@@ -265,16 +316,24 @@ public struct JobsTaskStatusChange: Sendable {
     /// 变化时间
     public let timestamp: Date
     /// 是否为新任务
-    public var isNew: Bool { oldStatus == nil && newStatus != nil }
+    public var isNew: Bool {
+        oldStatus == nil && newStatus != nil
+    }
     /// 是否被移除
-    public var isRemoved: Bool { newStatus == nil }
+    public var isRemoved: Bool {
+        newStatus == nil
+    }
     /// 是否为状态转换
-    public var isTransition: Bool { oldStatus != nil && newStatus != nil }
+    public var isTransition: Bool {
+        oldStatus != nil && newStatus != nil
+    }
 }
 // MARK: - JobsSwiftTaskCenter@枚举
 /// JobsTaskType - 任务类型枚举
 /// 定义了不同的任务调度策略
-public enum JobsTaskType: Sendable, Equatable {
+public enum JobsTaskType: Sendable,
+                          Equatable {
+
     case priority    // 优先级队列
     case queue       // FIFO 队列
     case stack       // LIFO 栈
@@ -283,7 +342,9 @@ public enum JobsTaskType: Sendable, Equatable {
 }
 /// JobsTaskStatus - Jobs 系列任务状态枚举
 /// 定义了任务在其生命周期中可能处于的各种状态
-public enum JobsTaskStatus: Sendable, Equatable {
+public enum JobsTaskStatus: Sendable,
+                            Equatable {
+
     case expire      // 过期
     case suspend     // 暂停
     case prepare     // 准备
@@ -307,7 +368,9 @@ public enum JobsTaskStatus: Sendable, Equatable {
     }
 }
 
-public enum JobsTaskLifecycle: Sendable, Equatable {
+public enum JobsTaskLifecycle: Sendable,
+                               Equatable {
+
     case idle
     case running
     case suspended
@@ -336,10 +399,12 @@ public enum JobsTaskLifecycle: Sendable, Equatable {
 }
 // MARK: - JobsSwiftTaskCenter@协议
 public protocol JobsTaskInfoable {
+
     var taskID: String { get }
 }
 #if os(iOS) || os(tvOS)
 public protocol TaskForApplicationStatusDelegate: AnyObject {
+
     func applicationStatusDidChanged(_ state: UIApplication.State)
 }
 #endif

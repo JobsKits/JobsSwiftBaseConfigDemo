@@ -18,8 +18,10 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 public class JobsNavBar: UIView {
+
     // MARK: - Style
     public struct Style {
+
         public var usesSafeAreaTopInset: Bool = true
         public var contentHeight: CGFloat = 44
         public var backgroundColor: UIColor = JobsCor.secondarySystemBackground
@@ -34,7 +36,9 @@ public class JobsNavBar: UIView {
     public var backButtonLayout: BackButtonLayout? {
         didSet {
             // 回调变更时，仅重排约束（不再重复 addSubview）
-            if oldValue == nil, backButtonLayout == nil { return }
+            if oldValue == nil, backButtonLayout == nil {
+                return
+            }
             rebuildBackButton()
         }
     }
@@ -63,20 +67,24 @@ public class JobsNavBar: UIView {
     }
 
     public var titleProvider: JobsRetAttributedString? {
-        didSet { refreshTitle() }
+        didSet {
+            refreshTitle()
+        }
     }
 
     public var onBack: jobsByVoidBlock?
     // ===== 懒加载子视图（外部可直接链式修改，比如 navBar.hairline.byVisible(true））=====
     public private(set) lazy var backgroundView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byAddTo(self) { v, make in
                 make.edges.equalToSuperview()
             }
     }()
 
     public private(set) lazy var hairline: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byVisible(!style.hairlineHidden)
             .byBackgroundColor(style.hairlineColor)
             .byAddTo(self) { v, make in
@@ -86,21 +94,24 @@ public class JobsNavBar: UIView {
     }()
 
     public private(set) lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byNumberOfLines(1)
             .byTextAlignment(.center)
             .byAddTo(self) { [unowned self] v, make in
-                /// 具体约束在 relayoutTitleConstraints() 里统一处理
+        /// 具体约束在 relayoutTitleConstraints() 里统一处理
             }
     }()
     private var _leftContainerH: Constraint?
     public private(set) lazy var leftContainer: UIView = {
-        UIView.jobsMake { _ in }.byAddTo(self) { [unowned self] v, make in
-            make.left.equalTo(safeAreaLayoutGuide.snp.left).offset(8)
-            make.bottom.equalToSuperview() // 贴底
-            _leftContainerH = make.height.equalTo(self.style.contentHeight).constraint // 固定“内容区”高
-            make.width.greaterThanOrEqualTo(36)
-        }
+        UIView
+            .jobsMake { _ in }
+            .byAddTo(self) { [unowned self] v, make in
+                make.left.equalTo(safeAreaLayoutGuide.snp.left).offset(8)
+                make.bottom.equalToSuperview() // 贴底
+                _leftContainerH = make.height.equalTo(self.style.contentHeight).constraint // 固定“内容区”高
+                make.width.greaterThanOrEqualTo(36)
+            }
     }()
 
     public private(set) var leftButton: UIButton?
@@ -130,12 +141,17 @@ public class JobsNavBar: UIView {
         }
     }
 
-    deinit { kvoTitle?.invalidate() }
+    deinit {
+        kvoTitle?.invalidate()
+    }
     // MARK: - Public helpers
     /// 主动刷新全部
     @MainActor
     public func jobsNavBarRefresh() {
-        _ = backgroundView; _ = hairline; _ = titleLabel; _ = leftContainer
+        _ = backgroundView
+        _ = hairline
+        _ = titleLabel
+        _ = leftContainer
         rebuildBackButton()
         refreshTitle()
         setNeedsLayout()
@@ -143,21 +159,18 @@ public class JobsNavBar: UIView {
     /// 绑定 WebView 标题（也可以自定义 titleProvider 覆盖）
     // 小工具：统一标题样式
     private static func _jobsMakeTitleAttr(_ text: String) -> NSAttributedString {
-        return NSAttributedString(
-            string: text,
-            attributes: [
-                .font: JobsFont.systemFont(ofSize: 17, weight: .semibold),
+        return NSAttributedString(string: text,
+                                  attributes: [
+                .font: JobsFont.systemFont(ofSize: 17,
+                                           weight: .semibold),
                 .foregroundColor: JobsCor.label
-            ]
-        )
+            ])
     }
     public static var loadingTitle: String = "加载中..."
     @MainActor
-    public func bind(
-        webView: WKWebView,
-        defaultTitle: String? = nil,
-        preferHostWhenEmpty: Bool = true
-    ) {
+    public func bind(webView: WKWebView,
+                     defaultTitle: String? = nil,
+                     preferHostWhenEmpty: Bool = true) {
         let fallback = defaultTitle ?? Self.loadingTitle
         self.titleProvider = { [weak webView] in
             guard let wv = webView else {
@@ -175,8 +188,11 @@ public class JobsNavBar: UIView {
             return Self._jobsMakeTitleAttr(fallback)
         }
         kvoTitle?.invalidate()
-        kvoTitle = webView.observe(\.title, options: [.new]) { [weak self] _, _ in
-            onMainAsync(self) { vc in self?.refreshTitle() }
+        kvoTitle = webView.observe(\.title,
+                                   options: [.new]) { [weak self] _, _ in
+            onMainAsync(self) { vc in
+                self?.refreshTitle()
+            }
         }
         refreshTitle()
     }
@@ -233,16 +249,24 @@ public class JobsNavBar: UIView {
             providedBtn.byAddTo(leftContainer)
             // 基础属性（不涉及布局）
             providedBtn.byContentVerticalAlignment(.center)
-            providedBtn.setContentHuggingPriority(.required, for: .vertical)
-            providedBtn.setContentCompressionResistancePriority(.required, for: .vertical)
+            providedBtn.setContentHuggingPriority(.required,
+                                                  for: .vertical)
+            providedBtn.setContentCompressionResistancePriority(.required,
+                                                                for: .vertical)
             // 事件（避免重复加 target：先移除旧引用已 removeFromSuperview，这里安全）
-            providedBtn.onTap { [weak self] _ in self?.backTapped() }
+            providedBtn.onTap { [weak self] _ in
+                self?.backTapped()
+            }
         }
-        guard let btn = leftButton else { return }
+        guard let btn = leftButton else {
+            return
+        }
         // 3) 安装/更新约束：首次 make，之后 remake（不再使用 byAddTo，避免重复 add）
         let install: (_ make: ConstraintMaker) -> Void = { [unowned self] make in
             if let L = self.backButtonLayout {
-                L(self, btn, make)
+                L(self,
+                  btn,
+                  make)
             } else {
                 make.left.equalToSuperview().inset(0)
                 make.top.equalToSuperview().inset(6)
@@ -265,52 +289,69 @@ public class JobsNavBar: UIView {
             onBack()
         } else {
             debugOnly {  // 仅 Debug 执行
-                JobsSwiftMessageToast.show("Hello", duration: 0.8)
+                JobsSwiftMessageToast.show("Hello",
+                                           duration: 0.8)
             }
         }
     }
     // MARK: - Layout / Safe Area
     public override var intrinsicContentSize: CGSize {
         let top = style.usesSafeAreaTopInset ? safeAreaInsets.top : 0
-        return .init(width: UIView.noIntrinsicMetric, height: top + style.contentHeight)
+        return .init(width: UIView.noIntrinsicMetric,
+                     height: top + style.contentHeight)
     }
 
     public override func safeAreaInsetsDidChange() {
         super.safeAreaInsetsDidChange()
-        if style.usesSafeAreaTopInset { invalidateIntrinsicContentSize() }
+        if style.usesSafeAreaTopInset {
+            invalidateIntrinsicContentSize()
+        }
         setNeedsLayout()
     }
 }
 @MainActor
 public extension JobsNavBar.Style {
+
     /// 是否占用宿主的 safeArea 顶部内边距
     @discardableResult
     func byUsesSafeAreaTopInset(_ on: Bool = true) -> Self {
-        var c = self; c.usesSafeAreaTopInset = on; return c
+        var c = self
+        c.usesSafeAreaTopInset = on
+        return c
     }
     /// 内容区高度（不含安全区）
     @discardableResult
     func byContentHeight(_ height: CGFloat) -> Self {
-        var c = self; c.contentHeight = height; return c
+        var c = self
+        c.contentHeight = height
+        return c
     }
     /// 背景色
     @discardableResult
     func byBackgroundColor(_ color: UIColor) -> Self {
-        var c = self; c.backgroundColor = color; return c
+        var c = self
+        c.backgroundColor = color
+        return c
     }
     /// 发丝线颜色
     @discardableResult
     func byHairlineColor(_ color: UIColor) -> Self {
-        var c = self; c.hairlineColor = color; return c
+        var c = self
+        c.hairlineColor = color
+        return c
     }
     /// 是否隐藏发丝线
     @discardableResult
     func byHairlineHidden(_ hidden: Bool = true) -> Self {
-        var c = self; c.hairlineHidden = hidden; return c
+        var c = self
+        c.hairlineHidden = hidden
+        return c
     }
     /// 标题是否居中
     @discardableResult
     func byTitleAlignmentCenter(_ centered: Bool = true) -> Self {
-        var c = self; c.titleAlignmentCenter = centered; return c
+        var c = self
+        c.titleAlignmentCenter = centered
+        return c
     }
 }

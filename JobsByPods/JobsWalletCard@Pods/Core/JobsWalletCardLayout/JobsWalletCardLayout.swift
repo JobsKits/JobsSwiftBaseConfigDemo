@@ -14,6 +14,7 @@ import UIKit
 import JobsByUIKit
 
 public final class JobsWalletCardLayout: UICollectionViewLayout {
+
     public weak var layoutDelegate: JobsWalletCardLayoutDelegate?
     public private(set) var expansionMode: JobsWalletCardExpansionMode = .individual
     public private(set) var expandedIndexPath: IndexPath?
@@ -34,10 +35,11 @@ public final class JobsWalletCardLayout: UICollectionViewLayout {
         super.init(coder: coder)
     }
 
-    public func toggle(at indexPath: IndexPath, animated: Bool = true) {
+    public func toggle(at indexPath: IndexPath,
+                       animated: Bool = true) {
         updateState({
             switch self.expansionMode {
-            /// 单卡模式只撑开当前卡片与下一张卡片之间的间距
+                /// 单卡模式只撑开当前卡片与下一张卡片之间的间距
             case .individual:
                 guard let collectionView = self.collectionView,
                       indexPath.item < collectionView.numberOfItems(inSection: indexPath.section) - 1 else {
@@ -52,27 +54,32 @@ public final class JobsWalletCardLayout: UICollectionViewLayout {
                     self.expandedIndexPath = indexPath
                     self.isExpanded = true
                 }
-            /// 全部模式由任意卡片统一切换全部开合状态
+                /// 全部模式由任意卡片统一切换全部开合状态
             case .all:
                 self.isExpanded.toggle()
                 self.expandedIndexPath = self.isExpanded ? indexPath : nil
             }
-        }, animated: animated)
+        },
+                    animated: animated)
     }
 
     public func collapse(animated: Bool = true) {
-        guard isExpanded || expandedIndexPath != nil else { return }
+        guard isExpanded || expandedIndexPath != nil else {
+            return
+        }
         updateState({
             self.expandedIndexPath = nil
             self.isExpanded = false
-        }, animated: animated)
+        },
+                    animated: animated)
     }
 
     public func isActive(at indexPath: IndexPath) -> Bool {
         isExpanded && expandedIndexPath == indexPath
     }
 
-    private func updateState(_ changes: @escaping () -> Void, animated: Bool) {
+    private func updateState(_ changes: @escaping () -> Void,
+                             animated: Bool) {
         guard let collectionView else {
             changes()
             invalidateLayout()
@@ -88,20 +95,23 @@ public final class JobsWalletCardLayout: UICollectionViewLayout {
             invalidateLayout()
             return
         }
-        UIView.jobsTransition(
-            with: collectionView,
-            duration: 0.25,
-            options: .transitionCrossDissolve,
-            animations: animations
-        )
+        UIView.jobsTransition(with: collectionView,
+                              duration: 0.25,
+                              options: .transitionCrossDissolve,
+                              animations: animations)
     }
 
     private func shouldExpandGap(before indexPath: IndexPath) -> Bool {
-        guard isExpanded, indexPath.item > 0 else { return false }
+        guard isExpanded, indexPath.item > 0 else {
+            return false
+        }
         switch expansionMode {
         /// 单卡模式只展开激活卡片后面的一个间距
         case .individual:
-            guard let expandedIndexPath else { return false };return expandedIndexPath.section == indexPath.section &&
+            guard let expandedIndexPath else {
+                return false
+            }
+            return expandedIndexPath.section == indexPath.section &&
                 expandedIndexPath.item + 1 == indexPath.item
         /// 全部模式展开所有卡片之间的间距
         case .all:
@@ -111,36 +121,38 @@ public final class JobsWalletCardLayout: UICollectionViewLayout {
 
     public override func prepare() {
         super.prepare()
-        guard let collectionView else { return }
+        guard let collectionView else {
+            return
+        }
         cachedAttributes.removeAll()
         contentHeight = 0
         let width = collectionView.bounds.width
         var yOffset: CGFloat = 0
         let numberOfSections = collectionView.numberOfSections
-        for section in 0..<numberOfSections {
+        for section in 0 ..< numberOfSections {
             let headerHeight = layoutDelegate?
-                .collectionView(collectionView, reusableHeaderHeightFor: section) ?? 0
+                .collectionView(collectionView,
+                                reusableHeaderHeightFor: section) ?? 0
             if headerHeight > 0 {
-                let indexPath = IndexPath(item: 0, section: section)
-                let attributes = UICollectionViewLayoutAttributes(
-                    forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                    with: indexPath
-                )
-                attributes.frame = CGRect(
-                    x: 0,
-                    y: yOffset,
-                    width: width,
-                    height: headerHeight
-                )
+                let indexPath = IndexPath(item: 0,
+                                          section: section)
+                let attributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                                                  with: indexPath)
+                attributes.frame = CGRect(x: 0,
+                                          y: yOffset,
+                                          width: width,
+                                          height: headerHeight)
                 cachedAttributes.append(attributes)
                 yOffset = attributes.frame.maxY + headerItemSpacing
             }
             let itemCount = collectionView.numberOfItems(inSection: section)
-            for item in 0..<itemCount {
-                let indexPath = IndexPath(item: item, section: section)
+            for item in 0 ..< itemCount {
+                let indexPath = IndexPath(item: item,
+                                          section: section)
                 let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
                 attributes.zIndex = item * 2
-                let itemSize = CGSize(width: width - 2 * padding, height: itemHeight)
+                let itemSize = CGSize(width: width - 2 * padding,
+                                      height: itemHeight)
                 let gapAdjustment: CGFloat
                 if item == 0 {
                     gapAdjustment = 0
@@ -149,39 +161,41 @@ public final class JobsWalletCardLayout: UICollectionViewLayout {
                 } else {
                     gapAdjustment = overlap
                 }
-                attributes.frame = CGRect(
-                    origin: CGPoint(x: padding, y: yOffset - gapAdjustment),
-                    size: itemSize
-                )
+                attributes.frame = CGRect(origin: CGPoint(x: padding,
+                                                          y: yOffset - gapAdjustment),
+                                          size: itemSize)
                 cachedAttributes.append(attributes)
                 yOffset = attributes.frame.maxY
             }
             let footerHeight = layoutDelegate?
-                .collectionView(collectionView, reusableFooterHeightFor: section) ?? 0
+                .collectionView(collectionView,
+                                reusableFooterHeightFor: section) ?? 0
             if footerHeight > 0 {
-                let indexPath = IndexPath(item: max(0, itemCount - 1), section: section)
-                let attributes = UICollectionViewLayoutAttributes(
-                    forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
-                    with: indexPath
-                )
-                attributes.frame = CGRect(
-                    x: 0,
-                    y: yOffset,
-                    width: width,
-                    height: footerHeight
-                )
+                let indexPath = IndexPath(item: max(0,
+                                                    itemCount - 1),
+                                          section: section)
+                let attributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+                                                                  with: indexPath)
+                attributes.frame = CGRect(x: 0,
+                                          y: yOffset,
+                                          width: width,
+                                          height: footerHeight)
                 cachedAttributes.append(attributes)
                 yOffset = attributes.frame.maxY
             }
-        };contentHeight = yOffset + collectionView.adjustedContentInset.bottom + 8
+        }
+        contentHeight = yOffset + collectionView.adjustedContentInset.bottom + 8
     }
 
     public override var collectionViewContentSize: CGSize {
-        CGSize(width: collectionView?.bounds.width ?? 0, height: contentHeight)
+        CGSize(width: collectionView?.bounds.width ?? 0,
+               height: contentHeight)
     }
 
     public override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        cachedAttributes.filter { $0.frame.intersects(rect) }
+        cachedAttributes.filter {
+            $0.frame.intersects(rect)
+        }
     }
 
     public override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
@@ -191,7 +205,7 @@ public final class JobsWalletCardLayout: UICollectionViewLayout {
     }
 
     public override func layoutAttributesForSupplementaryView(ofKind elementKind: String,
-                                                               at indexPath: IndexPath)
+                                                              at indexPath: IndexPath)
     -> UICollectionViewLayoutAttributes? {
         cachedAttributes.first {
             $0.representedElementKind == elementKind && $0.indexPath == indexPath
@@ -199,14 +213,20 @@ public final class JobsWalletCardLayout: UICollectionViewLayout {
     }
 
     public override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
-        guard let collectionView else { return true };return abs(newBounds.width - collectionView.bounds.width) > 0.5
+        guard let collectionView else {
+            return true
+        }
+        return abs(newBounds.width - collectionView.bounds.width) > 0.5
     }
 }
 
 public extension JobsWalletCardLayout {
+
     @discardableResult
     func byExpansionMode(_ mode: JobsWalletCardExpansionMode) -> Self {
-        guard expansionMode != mode else { return self }
+        guard expansionMode != mode else {
+            return self
+        }
         expansionMode = mode
         expandedIndexPath = nil
         isExpanded = false

@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 extension DateFormatter {
+
     // MARK: - Format / Template
     /// 直接指定 dateFormat（自定义格式优先于 dateStyle/timeStyle）
     @discardableResult
@@ -22,8 +23,11 @@ extension DateFormatter {
     /// iOS/macOS 会按本地化模板生成 format（适合“年/月/日/时区/星期”等可本地化展示）
     @available(iOS 8.0, tvOS 9.0, macOS 10.10, *)
     @discardableResult
-    public func byLocalizedTemplate(_ template: String, locale: Locale? = nil) -> Self {
-        if let locale { self.locale = locale }
+    public func byLocalizedTemplate(_ template: String,
+                                    locale: Locale? = nil) -> Self {
+        if let locale {
+            self.locale = locale
+        }
         self.setLocalizedDateFormatFromTemplate(template)
         return self
     }
@@ -32,22 +36,31 @@ extension DateFormatter {
     @discardableResult
     public func byDateStyle(_ style: DateFormatter.Style) -> Self {
         self.dateStyle = style
-        if style != .none { self.dateFormat = nil };return self
+        if style != .none {
+            self.dateFormat = nil
+        }
+        return self
     }
     /// 单独设置 timeStyle；当启用样式（!= .none）时会清掉自定义 dateFormat
     @discardableResult
     public func byTimeStyle(_ style: DateFormatter.Style) -> Self {
         self.timeStyle = style
-        if style != .none { self.dateFormat = nil };return self
+        if style != .none {
+            self.dateFormat = nil
+        }
+        return self
     }
     /// 仍保留一个组合便捷写法（内部逻辑与单独写一致）
     @discardableResult
     public func byStyles(date: DateFormatter.Style = .none,
-                  time: DateFormatter.Style = .none) -> Self {
+                         time: DateFormatter.Style = .none) -> Self {
         self.dateStyle = date
         self.timeStyle = time
         // ⚠️ 只有启用样式时才清掉自定义 format
-        if date != .none || time != .none { self.dateFormat = nil };return self
+        if date != .none || time != .none {
+            self.dateFormat = nil
+        }
+        return self
     }
     // MARK: - Locale / Calendar / TimeZone
     @discardableResult

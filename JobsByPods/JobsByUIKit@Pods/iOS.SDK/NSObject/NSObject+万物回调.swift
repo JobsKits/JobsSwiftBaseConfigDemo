@@ -33,15 +33,15 @@ import JobsSwiftBlock
  */
 private var JobsVoidCallbackKey: UInt8 = 0
 extension NSObject {
+
     /// 设置统一 Void 回调
     @discardableResult
     public func jobsByVoidCallback(_ block: @escaping jobsByVoidBlock) -> Self {
-        objc_setAssociatedObject(
-            self,
-            &JobsVoidCallbackKey,
-            block,
-            .OBJC_ASSOCIATION_COPY_NONATOMIC
-        );return self
+        objc_setAssociatedObject(self,
+                                 &JobsVoidCallbackKey,
+                                 block,
+                                 .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        return self
     }
     /// 执行统一 Void 回调
     public func jobsValueVoidCallback() {
@@ -50,16 +50,16 @@ extension NSObject {
     /// 清空统一 Void 回调
     @discardableResult
     public func jobsRemoveVoidCallback() -> Self {
-        objc_setAssociatedObject(
-            self,
-            &JobsVoidCallbackKey,
-            nil,
-            .OBJC_ASSOCIATION_COPY_NONATOMIC
-        );return self
+        objc_setAssociatedObject(self,
+                                 &JobsVoidCallbackKey,
+                                 nil,
+                                 .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        return self
     }
     /// 读取统一 Void 回调
     public var jobsVoidCallback: jobsByVoidBlock? {
-        objc_getAssociatedObject(self, &JobsVoidCallbackKey) as? jobsByVoidBlock
+        objc_getAssociatedObject(self,
+                                 &JobsVoidCallbackKey) as? jobsByVoidBlock
     }
 }
 // MARK: (Any) -> Void
@@ -82,15 +82,15 @@ extension NSObject {
  */
 private var JobsAnyVoidCallbackKey: UInt8 = 0
 extension NSObject {
+
     /// 设置统一单入参回调（入参1个，不规定类型）
     @discardableResult
     public func jobsByAnyVoidCallback(_ block: @escaping jobsByAnyVoidBlock) -> Self {
-        objc_setAssociatedObject(
-            self,
-            &JobsAnyVoidCallbackKey,
-            block,
-            .OBJC_ASSOCIATION_COPY_NONATOMIC
-        );return self
+        objc_setAssociatedObject(self,
+                                 &JobsAnyVoidCallbackKey,
+                                 block,
+                                 .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        return self
     }
     /// 执行统一单入参回调（入参1个，不规定类型）
     public func jobsValueAnyVoidCallback(_ value: Any) {
@@ -99,16 +99,16 @@ extension NSObject {
     /// 清空统一单入参回调
     @discardableResult
     public func jobsRemoveAnyVoidCallback() -> Self {
-        objc_setAssociatedObject(
-            self,
-            &JobsAnyVoidCallbackKey,
-            nil,
-            .OBJC_ASSOCIATION_COPY_NONATOMIC
-        );return self
+        objc_setAssociatedObject(self,
+                                 &JobsAnyVoidCallbackKey,
+                                 nil,
+                                 .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        return self
     }
     /// 读取统一单入参回调
     public var jobsAnyVoidCallback: jobsByAnyVoidBlock? {
-        objc_getAssociatedObject(self, &JobsAnyVoidCallbackKey) as? jobsByAnyVoidBlock
+        objc_getAssociatedObject(self,
+                                 &JobsAnyVoidCallbackKey) as? jobsByAnyVoidBlock
     }
 }
 // MARK: ([Any]) -> Void
@@ -132,15 +132,15 @@ extension NSObject {
  */
 private var JobsAnyArgsVoidCallbackKey: UInt8 = 0
 extension NSObject {
+
     /// 设置统一多入参回调（入参任意，不定参数）
     @discardableResult
     public func jobsByAnyArgsVoidCallback(_ block: @escaping jobsByAnyArgsVoidBlock) -> Self {
-        objc_setAssociatedObject(
-            self,
-            &JobsAnyArgsVoidCallbackKey,
-            block,
-            .OBJC_ASSOCIATION_COPY_NONATOMIC
-        );return self
+        objc_setAssociatedObject(self,
+                                 &JobsAnyArgsVoidCallbackKey,
+                                 block,
+                                 .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        return self
     }
     /// 执行统一多入参回调（可变参数版）
     public func jobsValueAnyArgsVoidCallback(_ values: Any...) {
@@ -153,16 +153,16 @@ extension NSObject {
     /// 清空统一多入参回调
     @discardableResult
     public func jobsRemoveAnyArgsVoidCallback() -> Self {
-        objc_setAssociatedObject(
-            self,
-            &JobsAnyArgsVoidCallbackKey,
-            nil,
-            .OBJC_ASSOCIATION_COPY_NONATOMIC
-        );return self
+        objc_setAssociatedObject(self,
+                                 &JobsAnyArgsVoidCallbackKey,
+                                 nil,
+                                 .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        return self
     }
     /// 读取统一多入参回调
     public var jobsAnyArgsVoidCallback: jobsByAnyArgsVoidBlock? {
-        objc_getAssociatedObject(self, &JobsAnyArgsVoidCallbackKey) as? jobsByAnyArgsVoidBlock
+        objc_getAssociatedObject(self,
+                                 &JobsAnyArgsVoidCallbackKey) as? jobsByAnyArgsVoidBlock
     }
 }
 // MARK: - (Any) -> Any
@@ -196,36 +196,44 @@ extension NSObject {
  */
 private var JobsTransformCallbackKey: UInt8 = 0
 extension NSObject {
+
     /// 设置统一泛型转换回调（入参1个，类型T；出参1个，类型T）
     @discardableResult
     public func jobsByTransformCallback<T>(_ block: @escaping (T) -> T) -> Self {
         let wrapped: jobsByAnyTransformBlock = { value in
-            guard let typedValue = value as? T else { return value };return block(typedValue)
+            guard let typedValue = value as? T else {
+                return value
+            }
+            return block(typedValue)
         }
-        objc_setAssociatedObject(
-            self,
-            &JobsTransformCallbackKey,
-            wrapped,
-            .OBJC_ASSOCIATION_COPY_NONATOMIC
-        );return self
+        objc_setAssociatedObject(self,
+                                 &JobsTransformCallbackKey,
+                                 wrapped,
+                                 .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        return self
     }
     /// 执行统一泛型转换回调（入参1个，类型T；出参1个，类型T）
     public func jobsValueTransformCallback<T>(_ value: T) -> T {
-        guard let block = jobsTransformCallback else { return value }
-        guard let result = block(value) as? T else { return value };return result
+        guard let block = jobsTransformCallback else {
+            return value
+        }
+        guard let result = block(value) as? T else {
+            return value
+        }
+        return result
     }
     /// 清空统一泛型转换回调
     @discardableResult
     public func jobsRemoveTransformCallback() -> Self {
-        objc_setAssociatedObject(
-            self,
-            &JobsTransformCallbackKey,
-            nil,
-            .OBJC_ASSOCIATION_COPY_NONATOMIC
-        );return self
+        objc_setAssociatedObject(self,
+                                 &JobsTransformCallbackKey,
+                                 nil,
+                                 .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        return self
     }
     /// 读取统一泛型转换回调（类型擦除后）
     public var jobsTransformCallback: jobsByAnyTransformBlock? {
-        objc_getAssociatedObject(self, &JobsTransformCallbackKey) as? jobsByAnyTransformBlock
+        objc_getAssociatedObject(self,
+                                 &JobsTransformCallbackKey) as? jobsByAnyTransformBlock
     }
 }

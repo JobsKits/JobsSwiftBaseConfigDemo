@@ -12,6 +12,7 @@ import JobsSwiftTimer
 /// 提供基于计划（Plan）的可取消、可暂停/恢复的定时任务执行能力
 /// 线程安全：使用 NSLock 保护内部状态，标记为 @unchecked Sendable
 public final class JobsTask: @unchecked Sendable {
+
     public typealias Lifecycle = JobsTaskLifecycle
     public typealias Action = @Sendable (JobsTask) -> Void
     public typealias LifecycleObserver = @Sendable (JobsTaskLifecycle) -> Void
@@ -30,6 +31,7 @@ public final class JobsTask: @unchecked Sendable {
     private var _executionCount: Int = 0
     private var _estimatedNextExecutionDate: Date?
     private struct Waiter {
+
         let target: Int?
         let continuation: CheckedContinuation<Int, Never>
     }
@@ -49,55 +51,74 @@ public final class JobsTask: @unchecked Sendable {
 
     public var lifecycle: JobsTaskLifecycle {
         lock.lock()
-        defer { lock.unlock() };return state
+        defer {
+            lock.unlock()
+        }
+        return state
     }
 
     public var executionCount: Int {
         lock.lock()
-        defer { lock.unlock() };return _executionCount
+        defer {
+            lock.unlock()
+        }
+        return _executionCount
     }
 
     public var estimatedNextExecutionDate: Date? {
         lock.lock()
-        defer { lock.unlock() };return _estimatedNextExecutionDate
+        defer {
+            lock.unlock()
+        }
+        return _estimatedNextExecutionDate
     }
 
-    public var isRunning: Bool { lifecycle == .running }
-    public var isSuspended: Bool { lifecycle == .suspended }
-    public var isCancelled: Bool { lifecycle == .cancelled }
-    public var isFinished: Bool { lifecycle == .finished }
+    public var isRunning: Bool {
+        lifecycle == .running
+    }
+    public var isSuspended: Bool {
+        lifecycle == .suspended
+    }
+    public var isCancelled: Bool {
+        lifecycle == .cancelled
+    }
+    public var isFinished: Bool {
+        lifecycle == .finished
+    }
 
     public var actionCount: Int {
         lock.lock()
-        defer { lock.unlock() };return actions.count
+        defer {
+            lock.unlock()
+        }
+        return actions.count
     }
 
     /// 获取任务的性能指标
     public var metrics: JobsTaskMetrics {
         lock.lock()
-        defer { lock.unlock() }
+        defer {
+            lock.unlock()
+        }
         let totalDuration = Date().timeIntervalSince(creationDate)
         var averageInterval: TimeInterval?
         if _executionCount > 1, let first = firstExecutionDate, let last = lastExecutionDate {
             let executionDuration = last.timeIntervalSince(first)
             averageInterval = executionDuration / Double(_executionCount - 1)
-        };return JobsTaskMetrics(
-            totalExecutions: _executionCount,
-            creationDate: creationDate,
-            firstExecutionDate: firstExecutionDate,
-            lastExecutionDate: lastExecutionDate,
-            totalDuration: totalDuration,
-            averageInterval: averageInterval,
-            currentLifecycle: state
-        )
+        }
+        return JobsTaskMetrics(totalExecutions: _executionCount,
+                               creationDate: creationDate,
+                               firstExecutionDate: firstExecutionDate,
+                               lastExecutionDate: lastExecutionDate,
+                               totalDuration: totalDuration,
+                               averageInterval: averageInterval,
+                               currentLifecycle: state)
     }
 
-    public init(
-        plan: JobsPlan,
-        queue: DispatchQueue? = nil,
-        runLoopMode: RunLoop.Mode? = nil,
-        action: @escaping Action
-    ) {
+    public init(plan: JobsPlan,
+                queue: DispatchQueue? = nil,
+                runLoopMode: RunLoop.Mode? = nil,
+                action: @escaping Action) {
         self.iterator = plan.makeIterator()
         self.queue = queue ?? .main
         self.runLoopMode = runLoopMode
@@ -112,6 +133,7 @@ public final class JobsTask: @unchecked Sendable {
 }
 
 extension JobsTask {
+
     @discardableResult
     public func addAction(_ action: @escaping Action) -> UUID {
         let id = UUID()
@@ -148,20 +170,27 @@ extension JobsTask {
     @discardableResult
     public func onError(_ handler: @escaping ErrorHandler) -> Self {
         lock.lock()
-        defer { lock.unlock() }
+        defer {
+            lock.unlock()
+        }
         errorHandler = handler
         return self
     }
 
     public func suspend() {
         let timer: JobsSwiftTimerProtocol?
-        let didChange = updateState(to: .suspended, allowed: { $0 == .running })
+        let didChange = updateState(to: .suspended,
+                                    allowed: {
+            $0 == .running
+        })
         lock.lock()
         timer = self.timer
         // 暂停时清除预估时间，因为恢复时间未知
         _estimatedNextExecutionDate = nil
         lock.unlock()
-        guard didChange else { return }
+        guard didChange else {
+            return
+        }
         timer?.pause()
     }
 
@@ -179,9 +208,12 @@ extension JobsTask {
                 _estimatedNextExecutionDate = Date().adding(next)
             }
             lock.unlock()
-            observers.forEach { $0(.running) }
+            observers.forEach {
+                $0(.running)
+            }
             if let next {
-                installTimer(after: next, generation: token)
+                installTimer(after: next,
+                             generation: token)
             } else {
                 currentTimer?.resume()
             }
@@ -215,9 +247,15 @@ extension JobsTask {
         suspendedNextInterval = nil
         lock.unlock()
         timerToStop?.stop()
-        handles.forEach { $0.cancel() }
-        pending.forEach { $0.continuation.resume(returning: count) }
-        observers.forEach { $0(.cancelled) }
+        handles.forEach {
+            $0.cancel()
+        }
+        pending.forEach {
+            $0.continuation.resume(returning: count)
+        }
+        observers.forEach {
+            $0(.cancelled)
+        }
     }
 
     /// 立即执行所有已注册的 action
@@ -264,14 +302,24 @@ extension JobsTask {
             lastExecutionDate = now
             let snapshot = Array(actions.values)
             lock.unlock()
-            snapshot.forEach { $0(self) }
+            snapshot.forEach {
+                $0(self)
+            }
             lock.lock()
             activeSynchronousExecutions -= 1
             let count = _executionCount
-            let reached = waiters.filter { $0.value.target.map { count >= $0 } ?? false }
-            reached.keys.forEach { waiters.removeValue(forKey: $0) }
+            let reached = waiters.filter {
+                $0.value.target.map {
+                    count >= $0
+                } ?? false
+            }
+            reached.keys.forEach {
+                waiters.removeValue(forKey: $0)
+            }
             lock.unlock()
-            reached.values.forEach { $0.continuation.resume(returning: count) }
+            reached.values.forEach {
+                $0.continuation.resume(returning: count)
+            }
             finishIfDrained()
         }
     }
@@ -286,7 +334,9 @@ extension JobsTask {
             state = .finished
             let observers = Array(lifecycleObservers.values)
             lock.unlock()
-            observers.forEach { $0(.finished) }
+            observers.forEach {
+                $0(.finished)
+            }
             return
         }
         state = .running
@@ -295,8 +345,11 @@ extension JobsTask {
         _estimatedNextExecutionDate = Date().adding(next)
         let observers = Array(lifecycleObservers.values)
         lock.unlock()
-        observers.forEach { $0(.running) }
-        installTimer(after: next, generation: generation)
+        observers.forEach {
+            $0(.running)
+        }
+        installTimer(after: next,
+                     generation: generation)
     }
 
     private func scheduleNextExecution() {
@@ -326,28 +379,30 @@ extension JobsTask {
         lock.unlock()
         oldTimer?.stop()
         if !suspended {
-            installTimer(after: next, generation: generation)
+            installTimer(after: next,
+                         generation: generation)
         }
     }
 
-    private func installTimer(after interval: JobsPeriod, generation: UInt64) {
+    private func installTimer(after interval: JobsPeriod,
+                              generation: UInt64) {
         if runLoopMode != nil && !Thread.isMainThread {
             DispatchQueue.main.async { [weak self] in
-                self?.installTimer(after: interval, generation: generation)
+                self?.installTimer(after: interval,
+                                   generation: generation)
             }
             return
         }
-        let config = JobsSwiftTimerConfig(
-            interval: interval.timeInterval,
-            repeats: false,
-            queue: queue,
-            runLoop: .main,
-            runLoopMode: runLoopMode ?? .common,
-            pauseInBackground: false,
-            autoManageAppState: false
-        )
+        let config = JobsSwiftTimerConfig(interval: interval.timeInterval,
+                                          repeats: false,
+                                          queue: queue,
+                                          runLoop: .main,
+                                          runLoopMode: runLoopMode ?? .common,
+                                          pauseInBackground: false,
+                                          autoManageAppState: false)
         let kind: JobsTimerKind = runLoopMode == nil ? .gcd : .runLoop
-        let oneShot = JobsTimer(kind: kind, config: config) { [weak self] in
+        let oneShot = JobsTimer(kind: kind,
+                                config: config) { [weak self] in
             self?.handleTimerFired(generation: generation)
         }
         lock.lock()
@@ -378,16 +433,16 @@ extension JobsTask {
         lock.lock()
         shouldContinue = state == .running && self.generation == generation
         lock.unlock()
-        guard shouldContinue else { return }
+        guard shouldContinue else {
+            return
+        }
         executeNow()
         scheduleNextExecution()
     }
 
     /// 将异步业务句柄纳入任务生命周期；自然 finished 直到所有业务结束才发布。
-    func launchAsync(
-        priority: TaskPriority,
-        action: @escaping @Sendable () async -> Void
-    ) {
+    func launchAsync(priority: TaskPriority,
+                     action: @escaping @Sendable () async -> Void) {
         let id = UUID()
         lock.lock()
         guard !state.isTerminated else {
@@ -436,15 +491,17 @@ extension JobsTask {
         waiters.removeAll()
         let count = _executionCount
         lock.unlock()
-        pending.forEach { $0.continuation.resume(returning: count) }
-        observers.forEach { $0(.finished) }
+        pending.forEach {
+            $0.continuation.resume(returning: count)
+        }
+        observers.forEach {
+            $0(.finished)
+        }
     }
 
     @discardableResult
-    private func updateState(
-        to newState: JobsTaskLifecycle,
-        allowed: (JobsTaskLifecycle) -> Bool
-    ) -> Bool {
+    private func updateState(to newState: JobsTaskLifecycle,
+                             allowed: (JobsTaskLifecycle) -> Bool) -> Bool {
         let observers: [LifecycleObserver]
         lock.lock()
         guard allowed(state), state != newState else {
@@ -458,12 +515,16 @@ extension JobsTask {
         }
         observers = Array(lifecycleObservers.values)
         lock.unlock()
-        observers.forEach { $0(newState) };return true
+        observers.forEach {
+            $0(newState)
+        }
+        return true
     }
 }
 
 // MARK: - JobsTask Async/Await/AsyncSequence Support
 extension JobsTask {
+
     /// 达到次数、任务终止或 waiter 自身取消时返回实际新增次数。取消 waiter 不取消任务。
     @discardableResult
     public func wait(forExecutions count: Int) async -> Int {
@@ -473,7 +534,8 @@ extension JobsTask {
         let initial = executionCount
         let (sum, overflow) = initial.addingReportingOverflow(count)
         let current = await waitForCount(target: overflow ? Int.max : sum)
-        return max(0, current - initial)
+        return max(0,
+                   current - initial)
     }
 
     @discardableResult
@@ -509,12 +571,15 @@ extension JobsTask {
             await withCheckedContinuation { continuation in
                 lock.lock()
                 let count = _executionCount
-                if Task.isCancelled || state.isTerminated || target.map({ count >= $0 }) == true {
+                if Task.isCancelled || state.isTerminated || target.map({
+                    count >= $0
+                }) == true {
                     lock.unlock()
                     continuation.resume(returning: count)
                     return
                 }
-                waiters[id] = Waiter(target: target, continuation: continuation)
+                waiters[id] = Waiter(target: target,
+                                     continuation: continuation)
                 lock.unlock()
             }
         } onCancel: {
@@ -529,6 +594,7 @@ extension JobsTask {
 
 // MARK: - JobsTask Combinators (组合器)
 extension JobsTask {
+
     /// 等待多个任务全部完成
     /// - Parameter tasks: 要等待的任务数组
     /// - Returns: 所有任务完成时返回
@@ -569,18 +635,24 @@ extension JobsTask {
     /// 取消多个任务
     /// - Parameter tasks: 要取消的任务数组
     public static func cancelAll(_ tasks: [JobsTask]) {
-        tasks.forEach { $0.cancel() }
+        tasks.forEach {
+            $0.cancel()
+        }
     }
 
     /// 暂停多个任务
     /// - Parameter tasks: 要暂停的任务数组
     public static func suspendAll(_ tasks: [JobsTask]) {
-        tasks.forEach { $0.suspend() }
+        tasks.forEach {
+            $0.suspend()
+        }
     }
 
     /// 恢复多个任务
     /// - Parameter tasks: 要恢复的任务数组
     public static func resumeAll(_ tasks: [JobsTask]) {
-        tasks.forEach { $0.resume() }
+        tasks.forEach {
+            $0.resume()
+        }
     }
 }

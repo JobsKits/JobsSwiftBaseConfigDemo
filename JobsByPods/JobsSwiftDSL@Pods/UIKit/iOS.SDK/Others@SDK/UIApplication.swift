@@ -16,6 +16,7 @@ import UIKit
 #if os(iOS)
 @available(iOS 10.3, *)
 public extension UIApplication {
+
     /// 是否支持通过公开 API 切换到工程内预置的备用 AppIcon。
     var jobsSupportsAlternateIcons: Bool {
         supportsAlternateIcons
@@ -30,7 +31,8 @@ public extension UIApplication {
     @discardableResult
     func byAlternateIconName(_ alternateIconName: String?,
                              completionHandler: ((Error?) -> Void)? = nil) -> Self {
-        setAlternateIconName(alternateIconName, completionHandler: completionHandler)
+        setAlternateIconName(alternateIconName,
+                             completionHandler: completionHandler)
         return self
     }
 }

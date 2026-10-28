@@ -24,6 +24,7 @@ import GKNavigationBarSwift
 import JXSegmentedView
 
 final class CashbackRootVC: BaseVC {
+
     // MARK: - Data
     private let segments = ["活动".tr, "任务".tr, "VIP".tr, "利息宝".tr, "返水".tr]
     // MARK: - Segment DataSource（懒加载 + 链式）
@@ -32,12 +33,16 @@ final class CashbackRootVC: BaseVC {
             .byTitles(segments)
             .byTitleNormalColor(JobsCor.secondaryLabel)
             .byTitleSelectedColor(JobsCor.systemOrange)
-            .byTitleNormalFont(JobsFont.systemFont(ofSize: 16, weight: .regular))
-            .byTitleSelectedFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTitleNormalFont(JobsFont.systemFont(ofSize: 16,
+                                                   weight: .regular))
+            .byTitleSelectedFont(JobsFont.systemFont(ofSize: 16,
+                                                     weight: .semibold))
             .byTitleColorGradientEnabled(true)
-            // 推荐：用 CoreText 测宽，规避 NSString/AttributedString 在少数环境下的崩
-            .byWidthForTitle { [unowned self] title in
-                jobsCTTextWidth(title, font: segmentedDataSource.titleNormalFont, traitCollection: traitCollection)
+        // 推荐：用 CoreText 测宽，规避 NSString/AttributedString 在少数环境下的崩
+        .byWidthForTitle { [unowned self] title in
+                jobsCTTextWidth(title,
+                                font: segmentedDataSource.titleNormalFont,
+                                traitCollection: traitCollection)
             }
     }()
     // MARK: - Indicator（懒加载 + 链式）
@@ -69,7 +74,8 @@ final class CashbackRootVC: BaseVC {
     }()
     // 顶部分隔线
     private lazy var segmentedHairline: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.separator)
             .byAddTo(segmentedView) { make in
                 make.bottom.leading.trailing.equalToSuperview()
@@ -79,12 +85,14 @@ final class CashbackRootVC: BaseVC {
     // MARK: - ListContainer（懒加载 + 链式）
     private lazy var listContainer: JXSegmentedListContainerView = {
         JXSegmentedListContainerView.make(dataSource: self)             // 工厂方法
-            .byPagingEnabled(true)
+        .byPagingEnabled(true)
             .byBounces(false)
-            .byShowsIndicators(horizontal: false, vertical: false)
+            .byShowsIndicators(horizontal: false,
+                               vertical: false)
             .byNeverAdjustContentInset()
-            .byBind(to: segmentedView, defaultIndex: 4)                  // 绑定并设置默认选中“返水”
-            .byAddTo(view) { [unowned self] make in
+            .byBind(to: segmentedView,
+                    defaultIndex: 4)                  // 绑定并设置默认选中“返水”
+        .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(segmentedView.snp.bottom)
                 make.leading.trailing.bottom.equalToSuperview()
             }
@@ -104,6 +112,7 @@ final class CashbackRootVC: BaseVC {
 extension CashbackRootVC: JXSegmentedViewDelegate {}
 // MARK: - JXSegmentedListContainerViewDataSource
 extension CashbackRootVC: JXSegmentedListContainerViewDataSource {
+
     func numberOfLists(in listContainerView: JXSegmentedListContainerView) -> Int {
         segments.count
     }

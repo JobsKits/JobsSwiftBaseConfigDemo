@@ -26,6 +26,7 @@ import RxDataSources
 import GKNavigationBarSwift
 
 final class RxDataSourcesDemoVC: BaseVC {
+
     // MARK: - Data
     private typealias TVSection = SectionModel<String, String>
     private typealias CVSection = SectionModel<String, String>
@@ -42,9 +43,10 @@ final class RxDataSourcesDemoVC: BaseVC {
 
     // ============================== TableView ==============================
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
-            // ⚠️ 不要 .byDataSource(self)（RxDataSources 会接管 dataSource）
-            .byDelegate(self)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
+        // ⚠️ 不要 .byDataSource(self)（RxDataSources 会接管 dataSource）
+        .byDelegate(self)
             .byRegisterCell(BaseTableViewCellByDefault.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
@@ -52,9 +54,12 @@ final class RxDataSourcesDemoVC: BaseVC {
             .byContentInsetTop(8)
             .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据".tr, for: .normal)
-                    .bySubTitle("点我填充示例数据".tr, for: .normal)
-                    .byImage("tray".sysImg, for: .normal)
+                    .byTitle("暂无数据".tr,
+                             for: .normal)
+                    .bySubTitle("点我填充示例数据".tr,
+                                for: .normal)
+                    .byImage("tray".sysImg,
+                             for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in
                         self?.fillTableDemoData(count: 10)
@@ -70,7 +75,9 @@ final class RxDataSourcesDemoVC: BaseVC {
             .byRefreshHeader(component: JobsDefaultHeader(),
                              container: self,
                              trigger: 66) { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     try? await Task.sleep(nanoseconds: 800_000_000)
                     self.rows = 20
@@ -82,7 +89,9 @@ final class RxDataSourcesDemoVC: BaseVC {
             .byRefreshFooter(component: JobsDefaultFooter(),
                              container: self,
                              trigger: 66) { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     try? await Task.sleep(nanoseconds: 800_000_000)
                     if self.rows < 60 {
@@ -103,27 +112,35 @@ final class RxDataSourcesDemoVC: BaseVC {
 
     // ============================== Collection Layout ==============================
     private lazy var flowLayout: UICollectionViewFlowLayout = {
-        UICollectionViewFlowLayout.jobsMake { _ in }
+        UICollectionViewFlowLayout
+            .jobsMake { _ in }
             .byScrollDirection(.vertical)
             .byMinimumLineSpacing(10)
             .byMinimumInteritemSpacing(10)
-            .bySectionInset(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
+            .bySectionInset(UIEdgeInsets(top: 10,
+                                         left: 12,
+                                         bottom: 10,
+                                         right: 12))
     }()
 
     // ============================== CollectionView ==============================
     private lazy var collectionView: UICollectionView = {
-        UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
-            // ⚠️ 不要 .byDataSource(self)（RxDataSources 会接管 dataSource）
-            .byDelegate(self)
+        UICollectionView(frame: .zero,
+                         collectionViewLayout: flowLayout)
+        // ⚠️ 不要 .byDataSource(self)（RxDataSources 会接管 dataSource）
+        .byDelegate(self)
             .byRegisterCell(HCell.self)
             .byBackgroundView(nil)
             .byDragInteractionEnabled(false)
             .byContentInsetTop(8)
             .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据".tr, for: .normal)
-                    .bySubTitle("点我填充示例数据".tr, for: .normal)
-                    .byImage(UIImage(systemName: "square.grid.2x2"), for: .normal)
+                    .byTitle("暂无数据".tr,
+                             for: .normal)
+                    .bySubTitle("点我填充示例数据".tr,
+                                for: .normal)
+                    .byImage(UIImage(systemName: "square.grid.2x2"),
+                             for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in
                         self?.fillCollectionDemoData(count: 12)
@@ -139,7 +156,9 @@ final class RxDataSourcesDemoVC: BaseVC {
             .byRefreshHeader(component: JobsDefaultHeader(),
                              container: self,
                              trigger: 66) { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     try? await Task.sleep(nanoseconds: 800_000_000)
                     self.rows = 20
@@ -151,7 +170,9 @@ final class RxDataSourcesDemoVC: BaseVC {
             .byRefreshFooter(component: JobsDefaultFooter(),
                              container: self,
                              trigger: 66) { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     try? await Task.sleep(nanoseconds: 800_000_000)
                     if self.rows < 60 {
@@ -172,22 +193,24 @@ final class RxDataSourcesDemoVC: BaseVC {
 
     // MARK: - RxDataSources
     private lazy var tableDataSource: RxTableViewSectionedReloadDataSource<TVSection> = {
-        .init(
-            configureCell: { _, tv, indexPath, item in
-                tv.byDequeueReusableCell(withType: BaseTableViewCellByDefault.self,for: indexPath)
+        .init(configureCell: { _, tv, indexPath, item in
+                tv
+                    .byDequeueReusableCell(withType: BaseTableViewCellByDefault.self,
+                                           for: indexPath)
                     .byData(item)
                     .onResult { _ in }
             },
-            titleForHeaderInSection: { ds, idx in
+              titleForHeaderInSection: { ds, idx in
                 ds.sectionModels[idx].model
-            }
-        )
+            })
     }()
 
     private lazy var collectionDataSource: RxCollectionViewSectionedReloadDataSource<CVSection> = {
         .init(
             configureCell: { _, cv, indexPath, item in
-                cv.byDequeueCell(HCell.self, for: indexPath)
+                cv
+                    .byDequeueCell(HCell.self,
+                                   for: indexPath)
                     .byData(item)
                     .onResult { _ in }
             }
@@ -224,7 +247,9 @@ final class RxDataSourcesDemoVC: BaseVC {
             .distinctUntilChanged()
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] idx in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 let showTable = (idx == 0)
                 self.tableView.byVisible(showTable)
                 self.collectionView.byVisible(!showTable)
@@ -233,13 +258,15 @@ final class RxDataSourcesDemoVC: BaseVC {
         // 点击事件（table/collection 都演示）
         tableView.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
-                self?.tableView.deselectRow(at: indexPath, animated: true)
+                self?.tableView.deselectRow(at: indexPath,
+                                            animated: true)
                 print("✅ table didSelect: \(indexPath)")
             })
             .disposed(by: bag)
         collectionView.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
-                self?.collectionView.deselectItem(at: indexPath, animated: true)
+                self?.collectionView.deselectItem(at: indexPath,
+                                                  animated: true)
                 print("✅ collection didSelect: \(indexPath)")
             })
             .disposed(by: bag)
@@ -258,10 +285,15 @@ final class RxDataSourcesDemoVC: BaseVC {
 
     // MARK: - Demo Data
     private func fillTableDemoData(count: Int) {
-        let items = (1...count).map { "Row \($0)" }
+        let items = (1 ... count).map {
+            "Row \($0)"
+        }
         let sections: [TVSection] = [
-            TVSection(model: "Section A", items: Array(items.prefix(count / 2))),
-            TVSection(model: "Section B", items: Array(items.suffix(max(0, count - count / 2))))
+            TVSection(model: "Section A",
+                      items: Array(items.prefix(count / 2))),
+            TVSection(model: "Section B",
+                      items: Array(items.suffix(max(0,
+                                                    count - count / 2))))
         ]
         tableRelay.accept(sections)
         // ⚠️ 空态/刷新状态依赖 reload 的话就补这一句
@@ -269,9 +301,12 @@ final class RxDataSourcesDemoVC: BaseVC {
     }
 
     private func fillCollectionDemoData(count: Int) {
-        let items = (1...count).map { "Item \($0)" }
+        let items = (1 ... count).map {
+            "Item \($0)"
+        }
         let sections: [CVSection] = [
-            CVSection(model: "Grid", items: items)
+            CVSection(model: "Grid",
+                      items: items)
         ]
         collectionRelay.accept(sections)
         // ⚠️ 同理
@@ -281,22 +316,29 @@ final class RxDataSourcesDemoVC: BaseVC {
 
 // MARK: - UITableViewDelegate
 extension RxDataSourcesDemoVC: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { 64 }
+
+    func tableView(_ tableView: UITableView,
+                   heightForRowAt indexPath: IndexPath) -> CGFloat {
+        64
+    }
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
 extension RxDataSourcesDemoVC: UICollectionViewDelegateFlowLayout {
+
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard let layout = collectionViewLayout as? UICollectionViewFlowLayout else {
-            return CGSize(width: 100, height: 64)
+            return CGSize(width: 100,
+                          height: 64)
         }
         let inset = layout.sectionInset
         let spacing = layout.minimumInteritemSpacing
         let columns: CGFloat = 2
         let totalH = inset.left + inset.right + (columns - 1) * spacing
         let w = floor((collectionView.bounds.width - totalH) / columns)
-        return CGSize(width: w, height: 64)
+        return CGSize(width: w,
+                      height: 64)
     }
 }

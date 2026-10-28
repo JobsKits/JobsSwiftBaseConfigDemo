@@ -8,6 +8,7 @@
 import UIKit
 
 enum JobsMicroAppLabRoute {
+
     /// 仅 Debug 验证使用：-JobsMicroAppDemo microapp/session/mpaas/sandbox/pwa，不改变正常 App 入口。
     static func debugLaunchController() -> UIViewController? {
         #if DEBUG

@@ -11,20 +11,62 @@ import JobsSwiftDSL
 
 // ================================== SafeDefault：类型级默认值 ==================================
 public protocol SafeDefault {
+
     static var defaultValue: Self { get }
 }
 
-extension String: SafeDefault { public static var defaultValue: String { "" } }
-extension Int: SafeDefault { public static var defaultValue: Int { 0 } }
-extension Double: SafeDefault { public static var defaultValue: Double { 0 } }
-extension Float: SafeDefault { public static var defaultValue: Float { 0 } }
-extension Bool: SafeDefault { public static var defaultValue: Bool { false } }
-extension Decimal: SafeDefault { public static var defaultValue: Decimal { 0 } }
-extension Date: SafeDefault { public static var defaultValue: Date { .distantPast } }
+extension String: SafeDefault {
+
+    public static var defaultValue: String {
+        ""
+    }
+}
+extension Int: SafeDefault {
+
+    public static var defaultValue: Int {
+        0
+    }
+}
+extension Double: SafeDefault {
+
+    public static var defaultValue: Double {
+        0
+    }
+}
+extension Float: SafeDefault {
+
+    public static var defaultValue: Float {
+        0
+    }
+}
+extension Bool: SafeDefault {
+
+    public static var defaultValue: Bool {
+        false
+    }
+}
+extension Decimal: SafeDefault {
+
+    public static var defaultValue: Decimal {
+        0
+    }
+}
+extension Date: SafeDefault {
+
+    public static var defaultValue: Date {
+        .distantPast
+    }
+}
 /// about:blank 稳定可解析的占位 URL
-extension URL: SafeDefault { public static var defaultValue: URL { URL(string: "about:blank")! } }
+extension URL: SafeDefault {
+
+    public static var defaultValue: URL {
+        URL(string: "about:blank")!
+    }
+}
 // ================================== 事件上报中心 ==================================
 public enum SafeCodableEvent {
+
     /// 发生了宽松转换
     case coerced(from: String, to: String, codingPath: [String], rawSample: String?)
     /// 落到默认值（非 Optional）
@@ -34,16 +76,20 @@ public enum SafeCodableEvent {
 }
 
 public protocol SafeCodableReporting: AnyObject {
+
     func report(_ event: SafeCodableEvent)
 }
 
 public final class SafeCodableReportCenter {
+
     private static let lock = NSLock()
     private static var reporter: SafeCodableReporting?
     public static var shared: SafeCodableReporting? {
         get {
             lock.lock()
-            defer { lock.unlock() }
+            defer {
+                lock.unlock()
+            }
             return reporter
         }
         set {
@@ -58,7 +104,9 @@ public final class SafeCodableReportCenter {
 }
 // ================================== 配置（全局 + 轻覆写） ==================================
 /// decoderStrategy 保留 JSONDecoder 原生策略；宽松回退统一按 automatic。
-public enum SafeCodableTimestampUnit: Sendable, Equatable {
+public enum SafeCodableTimestampUnit: Sendable,
+                                      Equatable {
+
     case decoderStrategy
     case seconds
     case milliseconds
@@ -66,12 +114,14 @@ public enum SafeCodableTimestampUnit: Sendable, Equatable {
 }
 
 public extension CodingUserInfoKey {
+
     static let safeCodableConfig = CodingUserInfoKey(rawValue: "jobs.safeCodable.config")!
     /// [String: SafeCodableTimestampUnit]，字段路径以点拼接，例如 user.createdAt。
     static let safeCodableTimestampUnits = CodingUserInfoKey(rawValue: "jobs.safeCodable.timestampUnits")!
 }
 
 public struct SafeCodableConfig {
+
     // 字符串处理
     public var trimStrings: Bool = true
     // 类型间宽松转换
@@ -98,8 +148,12 @@ public struct SafeCodableConfig {
     public var boolFalseLiterals: Set<String> = ["false", "no", "n", "off", "0"]
     // 上报
     public var reporter: SafeCodableReporting? {
-        get { SafeCodableReportCenter.shared }
-        set { SafeCodableReportCenter.shared = newValue }
+        get {
+            SafeCodableReportCenter.shared
+        }
+        set {
+            SafeCodableReportCenter.shared = newValue
+        }
     }
     public init() {}
     /// 全局共享配置（解码时读取）
@@ -108,7 +162,9 @@ public struct SafeCodableConfig {
     public static var shared: SafeCodableConfig {
         get {
             lock.lock()
-            defer { lock.unlock() }
+            defer {
+                lock.unlock()
+            }
             return storage
         }
         set {
@@ -123,7 +179,10 @@ public struct SafeCodableConfig {
     fileprivate static func resolved(for decoder: Decoder) -> SafeCodableConfig {
         var config = decoder.userInfo[.safeCodableConfig] as? SafeCodableConfig ?? shared
         let units = decoder.userInfo[.safeCodableTimestampUnits] as? [String: SafeCodableTimestampUnit]
-        let path = decoder.codingPath.map { $0.stringValue }.joined(separator: ".")
+        let path = decoder.codingPath.map {
+            $0.stringValue
+        }
+            .joined(separator: ".")
         if let unit = units?[path] {
             config.timestampUnit = unit
         }
@@ -133,7 +192,9 @@ public struct SafeCodableConfig {
 // ================================== 工具：编码路径 & 报告 ==================================
 @inline(__always)
 private func codingPathStrings(_ decoder: Decoder) -> [String] {
-    decoder.codingPath.map { $0.stringValue }
+    decoder.codingPath.map {
+        $0.stringValue
+    }
 }
 
 @inline(__always)
@@ -142,6 +203,7 @@ private func report(_ event: SafeCodableEvent) {
 }
 // 小工具：共享 ISO8601 格式器（减少分配）
 private enum _DateParsers {
+
     static let lock = NSLock()
     static let iso8601: ISO8601DateFormatter = {
         let f = ISO8601DateFormatter.jobsMake { _ in }
@@ -152,6 +214,7 @@ private enum _DateParsers {
 // ================================== SafeCodable：非 Optional 包装器 ==================================
 @propertyWrapper
 public struct SafeCodable<T: Codable & SafeDefault>: Codable {
+
     public var wrappedValue: T
 
     // 轻覆写项（默认解码期不使用，见下方说明）
@@ -171,22 +234,24 @@ public struct SafeCodable<T: Codable & SafeDefault>: Codable {
         let value: T
         if container.decodeNil() {
             value = T.defaultValue
-            report(.defaulted(expected: "\(T.self)", codingPath: codingPath, reason: "null"))
+            report(.defaulted(expected: "\(T.self)",
+                              codingPath: codingPath,
+                              reason: "null"))
         } else if (T.self != Date.self || cfg.timestampUnit == .decoderStrategy),
                   let v = try? container.decode(T.self) {
             value = v
-        } else if let v: T = coerce(
-            T.self,
-            from: container,
-            cfg: cfg,
-            codingPath: codingPath,
+        } else if let v: T = coerce(T.self,
+                                    from: container,
+                                    cfg: cfg,
+                                    codingPath: codingPath,
             // 解码阶段不读取 self；按全局策略处理
-            treatEmptyURLNil: cfg.treatEmptyStringAsNilForURL
-        ) {
+                                    treatEmptyURLNil: cfg.treatEmptyStringAsNilForURL) {
             value = v
         } else {
             value = T.defaultValue
-            report(.defaulted(expected: "\(T.self)", codingPath: codingPath, reason: "coercion-failed"))
+            report(.defaulted(expected: "\(T.self)",
+                              codingPath: codingPath,
+                              reason: "coercion-failed"))
         }
         // 统一在最后初始化所有存储属性
         self.wrappedValue = value
@@ -202,6 +267,7 @@ public struct SafeCodable<T: Codable & SafeDefault>: Codable {
 // ================================== SafeCodableOptional：Optional 版本 ==================================
 @propertyWrapper
 public struct SafeCodableOptional<T: Codable & SafeDefault>: Codable {
+
     public var wrappedValue: T?
     private let localTreatEmptyStringAsNilForURL: Bool?
     public init(wrappedValue: T? = nil,
@@ -221,17 +287,17 @@ public struct SafeCodableOptional<T: Codable & SafeDefault>: Codable {
         } else if (T.self != Date.self || cfg.timestampUnit == .decoderStrategy),
                   let v = try? container.decode(T.self) {
             value = v
-        } else if let v: T = coerce(
-            T.self,
-            from: container,
-            cfg: cfg,
-            codingPath: codingPath,
-            treatEmptyURLNil: cfg.treatEmptyStringAsNilForURL
-        ) {
+        } else if let v: T = coerce(T.self,
+                                    from: container,
+                                    cfg: cfg,
+                                    codingPath: codingPath,
+                                    treatEmptyURLNil: cfg.treatEmptyStringAsNilForURL) {
             value = v
         } else {
             value = nil
-            report(.failed(expected: "\(T?.self)", codingPath: codingPath, reason: "coercion-failed"))
+            report(.failed(expected: "\(T?.self)",
+                           codingPath: codingPath,
+                           reason: "coercion-failed"))
         }
         self.wrappedValue = value
         self.localTreatEmptyStringAsNilForURL = nil
@@ -247,86 +313,125 @@ public struct SafeCodableOptional<T: Codable & SafeDefault>: Codable {
     }
 }
 // ================================== 核心：宽松转换实现 ==================================
-private func coerce<T: Codable>(
-    _ type: T.Type,
-    from container: SingleValueDecodingContainer,
-    cfg: SafeCodableConfig,
-    codingPath: [String],
-    treatEmptyURLNil: Bool
-) -> T? where T: SafeDefault {
+private func coerce<T: Codable>(_ type: T.Type,
+                                from container: SingleValueDecodingContainer,
+                                cfg: SafeCodableConfig,
+                                codingPath: [String],
+                                treatEmptyURLNil: Bool) -> T? where T: SafeDefault {
     // —— 优先尝试字符串 ——
     if var s = try? container.decode(String.self) {
         if cfg.trimStrings {
             s = s.trimmingCharacters(in: .whitespacesAndNewlines)
         }
-        if let v: T = fromString(s, cfg: cfg, codingPath: codingPath, treatEmptyURLNil: treatEmptyURLNil) {
+        if let v: T = fromString(s,
+                                 cfg: cfg,
+                                 codingPath: codingPath,
+                                 treatEmptyURLNil: treatEmptyURLNil) {
             return v
         }
     }
     // —— 再尝试数值/布尔 ——
     if let i = try? container.decode(Int.self),
-       let v: T = fromInt(i, cfg: cfg, codingPath: codingPath) { return v }
+       let v: T = fromInt(i,
+                          cfg: cfg,
+                          codingPath: codingPath) {
+        return v
+    }
 
     if let d = try? container.decode(Double.self),
-       let v: T = fromDouble(d, cfg: cfg, codingPath: codingPath) { return v }
+       let v: T = fromDouble(d,
+                             cfg: cfg,
+                             codingPath: codingPath) {
+        return v
+    }
 
     if let b = try? container.decode(Bool.self),
-       let v: T = fromBool(b, cfg: cfg, codingPath: codingPath) { return v };return nil
+       let v: T = fromBool(b,
+                           cfg: cfg,
+                           codingPath: codingPath) {
+        return v
+    }
+    return nil
 }
 
-private func fromString<T: SafeDefault & Codable>(
-    _ s: String,
-    cfg: SafeCodableConfig,
-    codingPath: [String],
-    treatEmptyURLNil: Bool
-) -> T? {
+private func fromString<T: SafeDefault & Codable>(_ s: String,
+                                                  cfg: SafeCodableConfig,
+                                                  codingPath: [String],
+                                                  treatEmptyURLNil: Bool) -> T? {
     switch T.self {
     /// 处理 String.Type 类型分支
     case is String.Type:
-        report(.coerced(from: "String", to: "\(T.self)", codingPath: codingPath, rawSample: s))
+        report(.coerced(from: "String",
+                        to: "\(T.self)",
+                        codingPath: codingPath,
+                        rawSample: s))
         return (s as! T)
     /// 处理 Int.Type 类型分支
     case is Int.Type where cfg.allowStringToNumber:
         if let v = Int(s) {
-            report(.coerced(from: "String", to: "Int", codingPath: codingPath, rawSample: s))
+            report(.coerced(from: "String",
+                            to: "Int",
+                            codingPath: codingPath,
+                            rawSample: s))
             return (v as! T)
         }
     /// 处理 Double.Type 类型分支
     case is Double.Type where cfg.allowStringToNumber:
         if let v = Double(s), v.isFinite {
-            report(.coerced(from: "String", to: "Double", codingPath: codingPath, rawSample: s))
+            report(.coerced(from: "String",
+                            to: "Double",
+                            codingPath: codingPath,
+                            rawSample: s))
             return (v as! T)
         }
     /// 处理 Float.Type 类型分支
     case is Float.Type where cfg.allowStringToNumber:
         if let v = Float(s), v.isFinite {
-            report(.coerced(from: "String", to: "Float", codingPath: codingPath, rawSample: s))
+            report(.coerced(from: "String",
+                            to: "Float",
+                            codingPath: codingPath,
+                            rawSample: s))
             return (v as! T)
         }
     /// 处理 Decimal.Type 类型分支
     case is Decimal.Type where cfg.allowStringToNumber:
         if let v = Decimal(string: s) {
-            report(.coerced(from: "String", to: "Decimal", codingPath: codingPath, rawSample: s))
+            report(.coerced(from: "String",
+                            to: "Decimal",
+                            codingPath: codingPath,
+                            rawSample: s))
             return (v as! T)
         }
     /// 处理 Bool.Type 类型分支
     case is Bool.Type where cfg.allowStringToBool:
         let lowered = s.lowercased()
         if cfg.boolTrueLiterals.contains(lowered) {
-            report(.coerced(from: "String", to: "Bool(true)", codingPath: codingPath, rawSample: s))
+            report(.coerced(from: "String",
+                            to: "Bool(true)",
+                            codingPath: codingPath,
+                            rawSample: s))
             return (true as! T)
         }
         if cfg.boolFalseLiterals.contains(lowered) {
-            report(.coerced(from: "String", to: "Bool(false)", codingPath: codingPath, rawSample: s))
+            report(.coerced(from: "String",
+                            to: "Bool(false)",
+                            codingPath: codingPath,
+                            rawSample: s))
             return (false as! T)
         }
         // 数字串 → Bool
         if let i = Int(s) {
-            report(.coerced(from: "String(number)", to: "Bool(\(i != 0))", codingPath: codingPath, rawSample: s))
+            report(.coerced(from: "String(number)",
+                            to: "Bool(\(i != 0))",
+                            codingPath: codingPath,
+                            rawSample: s))
             return ((i != 0) as! T)
         }
         if let d = Double(s), d.isFinite {
-            report(.coerced(from: "String(number)", to: "Bool(\(d != 0))", codingPath: codingPath, rawSample: s))
+            report(.coerced(from: "String(number)",
+                            to: "Bool(\(d != 0))",
+                            codingPath: codingPath,
+                            rawSample: s))
             return ((d != 0) as! T)
         }
     /// 处理 Date.Type 类型分支
@@ -337,7 +442,10 @@ private func fromString<T: SafeDefault & Codable>(
             let parsed = _DateParsers.iso8601.date(from: s)
             _DateParsers.lock.unlock()
             if let v = parsed {
-                report(.coerced(from: "String(ISO8601)", to: "Date", codingPath: codingPath, rawSample: s))
+                report(.coerced(from: "String(ISO8601)",
+                                to: "Date",
+                                codingPath: codingPath,
+                                rawSample: s))
                 return (v as! T)
             }
         }
@@ -345,14 +453,21 @@ private func fromString<T: SafeDefault & Codable>(
         if cfg.allowCustomDateFormats {
             for fmt in cfg.customDateFormatters {
                 if let v = fmt.date(from: s) {
-                    report(.coerced(from: "String(DateFormatter:\(fmt.dateFormat ?? ""))", to: "Date", codingPath: codingPath, rawSample: s))
+                    report(.coerced(from: "String(DateFormatter:\(fmt.dateFormat ?? ""))",
+                                    to: "Date",
+                                    codingPath: codingPath,
+                                    rawSample: s))
                     return (v as! T)
                 }
             }
         }
         // 3) 字符串数字时间戳
         if cfg.allowStringifiedTimestamp, let ts = Double(s) {
-            if let v: T = fromDouble(ts, cfg: cfg, codingPath: codingPath) { return v }
+            if let v: T = fromDouble(ts,
+                                     cfg: cfg,
+                                     codingPath: codingPath) {
+                return v
+            }
         }
     /// 处理 URL.Type 类型分支
     case is URL.Type where cfg.allowURLFromString:
@@ -361,24 +476,29 @@ private func fromString<T: SafeDefault & Codable>(
             return nil
         }
         if let url = URL(string: s) {
-            report(.coerced(from: "String", to: "URL", codingPath: codingPath, rawSample: s))
+            report(.coerced(from: "String",
+                            to: "URL",
+                            codingPath: codingPath,
+                            rawSample: s))
             return (url as! T)
         }
     /// 未匹配已知分支时执行兜底处理
     default:
         break
-    };return nil
+    }
+    return nil
 }
 
-private func fromInt<T: SafeDefault & Codable>(
-    _ i: Int,
-    cfg: SafeCodableConfig,
-    codingPath: [String]
-) -> T? {
+private func fromInt<T: SafeDefault & Codable>(_ i: Int,
+                                               cfg: SafeCodableConfig,
+                                               codingPath: [String]) -> T? {
     switch T.self {
     /// 处理 String.Type 类型分支
     case is String.Type where cfg.allowNumberToString:
-        report(.coerced(from: "Int", to: "String", codingPath: codingPath, rawSample: "\(i)"))
+        report(.coerced(from: "Int",
+                        to: "String",
+                        codingPath: codingPath,
+                        rawSample: "\(i)"))
         return (String(i) as! T)
     /// 处理 Int.Type 类型分支
     case is Int.Type:
@@ -394,32 +514,41 @@ private func fromInt<T: SafeDefault & Codable>(
         return (Decimal(i) as! T)
     /// 处理 Bool.Type 类型分支
     case is Bool.Type where cfg.allowNumberToBool:
-        report(.coerced(from: "Int", to: "Bool(\(i != 0))", codingPath: codingPath, rawSample: "\(i)"))
+        report(.coerced(from: "Int",
+                        to: "Bool(\(i != 0))",
+                        codingPath: codingPath,
+                        rawSample: "\(i)"))
         return ((i != 0) as! T)
     /// 处理 Date.Type 类型分支
     case is Date.Type:
-        if let date = timestampDate(Double(i), cfg: cfg) {
-            report(.coerced(from: "Int(timestamp)", to: "Date", codingPath: codingPath, rawSample: "\(i)"))
+        if let date = timestampDate(Double(i),
+                                    cfg: cfg) {
+            report(.coerced(from: "Int(timestamp)",
+                            to: "Date",
+                            codingPath: codingPath,
+                            rawSample: "\(i)"))
             return (date as! T)
         }
     /// 未匹配已知分支时执行兜底处理
     default:
         break
-    };return nil
+    }
+    return nil
 }
 
-private func fromDouble<T: SafeDefault & Codable>(
-    _ d: Double,
-    cfg: SafeCodableConfig,
-    codingPath: [String]
-) -> T? {
+private func fromDouble<T: SafeDefault & Codable>(_ d: Double,
+                                                  cfg: SafeCodableConfig,
+                                                  codingPath: [String]) -> T? {
     guard d.isFinite else {
         return nil
     }
     switch T.self {
     /// 处理 String.Type 类型分支
     case is String.Type where cfg.allowNumberToString:
-        report(.coerced(from: "Double", to: "String", codingPath: codingPath, rawSample: "\(d)"))
+        report(.coerced(from: "Double",
+                        to: "String",
+                        codingPath: codingPath,
+                        rawSample: "\(d)"))
         return (String(d) as! T)
     /// 处理 Int.Type 类型分支
     case is Int.Type:
@@ -447,21 +576,30 @@ private func fromDouble<T: SafeDefault & Codable>(
         return (value as! T)
     /// 处理 Bool.Type 类型分支
     case is Bool.Type where cfg.allowNumberToBool:
-        report(.coerced(from: "Double", to: "Bool(\(d != 0))", codingPath: codingPath, rawSample: "\(d)"))
+        report(.coerced(from: "Double",
+                        to: "Bool(\(d != 0))",
+                        codingPath: codingPath,
+                        rawSample: "\(d)"))
         return ((d != 0) as! T)
     /// 处理 Date.Type 类型分支
     case is Date.Type:
-        if let date = timestampDate(d, cfg: cfg) {
-            report(.coerced(from: "Double(timestamp)", to: "Date", codingPath: codingPath, rawSample: "\(d)"))
+        if let date = timestampDate(d,
+                                    cfg: cfg) {
+            report(.coerced(from: "Double(timestamp)",
+                            to: "Date",
+                            codingPath: codingPath,
+                            rawSample: "\(d)"))
             return (date as! T)
         }
     /// 未匹配已知分支时执行兜底处理
     default:
         break
-    };return nil
+    }
+    return nil
 }
 
-private func timestampDate(_ value: Double, cfg: SafeCodableConfig) -> Date? {
+private func timestampDate(_ value: Double,
+                           cfg: SafeCodableConfig) -> Date? {
     guard value.isFinite else {
         return nil
     }
@@ -490,21 +628,22 @@ private func timestampDate(_ value: Double, cfg: SafeCodableConfig) -> Date? {
         }
     }
     // Date 可存储极大 Double，但日期格式化/日历无法可靠消费超出 1…9999 年的数据。
-    guard (-62_135_596_800...253_402_300_799).contains(seconds) else {
+    guard (-62_135_596_800 ... 253_402_300_799).contains(seconds) else {
         return nil
     }
     return Date(timeIntervalSince1970: seconds)
 }
 
-private func fromBool<T: SafeDefault & Codable>(
-    _ b: Bool,
-    cfg: SafeCodableConfig,
-    codingPath: [String]
-) -> T? {
+private func fromBool<T: SafeDefault & Codable>(_ b: Bool,
+                                                cfg: SafeCodableConfig,
+                                                codingPath: [String]) -> T? {
     switch T.self {
     /// 处理 String.Type 类型分支
     case is String.Type where cfg.allowBoolToString:
-        report(.coerced(from: "Bool", to: "String", codingPath: codingPath, rawSample: "\(b)"))
+        report(.coerced(from: "Bool",
+                        to: "String",
+                        codingPath: codingPath,
+                        rawSample: "\(b)"))
         return ((b ? "true" : "false") as! T)
     /// 处理 Int.Type 类型分支
     case is Int.Type where cfg.allowBoolToNumber:
@@ -524,7 +663,8 @@ private func fromBool<T: SafeDefault & Codable>(
     /// 未匹配已知分支时执行兜底处理
     default:
         break
-    };return nil
+    }
+    return nil
 }
 
 /**

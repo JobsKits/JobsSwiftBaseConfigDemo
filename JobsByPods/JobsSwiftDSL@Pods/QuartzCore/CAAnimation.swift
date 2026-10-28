@@ -8,6 +8,7 @@
 import QuartzCore
 
 extension CAAnimation {
+
     /// timingFunction
     @discardableResult
     public func byTimingFunction(_ function: CAMediaTimingFunction?) -> Self {
@@ -27,7 +28,7 @@ extension CAAnimation {
         return self
     }
     /// preferredFrameRateRange（跟系统可用性保持一致）
-    @available(iOS 15.0,*)
+    @available(iOS 15.0, *)
     @discardableResult
     public func byPreferredFrameRateRange(_ range: CAFrameRateRange) -> Self {
         self.preferredFrameRateRange = range

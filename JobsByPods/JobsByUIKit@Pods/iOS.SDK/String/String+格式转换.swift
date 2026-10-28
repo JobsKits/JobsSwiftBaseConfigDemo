@@ -15,11 +15,13 @@ import JobsSwiftDSL
 
 // MARK: 字符串相关格式的（通用）转换
 extension String {
+
     /// String 转 Int
     public func intValue() -> Int? {
         guard let num = NumberFormatter().number(from: self) else {
             return nil
-        };return num.intValue
+        }
+        return num.intValue
     }
 
     public func toInt() -> Int {
@@ -29,31 +31,35 @@ extension String {
     public func toInt64() -> Int64? {
         guard let num = NumberFormatter().number(from: self) else {
             return nil
-        };return num.int64Value
+        }
+        return num.int64Value
     }
     /// String 转 Double
     public func toDouble() -> Double? {
         let formatter = NumberFormatter()
             .byLocale(Locale(identifier: "en_US_POSIX")) // 固定使用 . 作为小数点
-            .byNumberStyle(.decimal)
+        .byNumberStyle(.decimal)
             .byGroupingSeparator(",")                   // 千分位逗号
-            .byDecimalSeparator(".")                    // 小数点 .
+        .byDecimalSeparator(".")                    // 小数点 .
         return formatter.number(from: self.trimmingCharacters(in: .whitespacesAndNewlines))?.doubleValue
     }
     /// String 转 Double
-    public func toDouble(_ max: Int, _ min: Int) -> Double? {
+    public func toDouble(_ max: Int,
+                         _ min: Int) -> Double? {
         let format = NumberFormatter()
             .byMaximumFractionDigits(max)
             .byMinimumFractionDigits(min)
         guard let num = format.number(from: self) else {
             return nil
-        };return num.doubleValue
+        }
+        return num.doubleValue
     }
     /// String 转 Float
     public func toFloat() -> Float? {
         guard let num = NumberFormatter().number(from: self) else {
             return nil
-        };return num.floatValue
+        }
+        return num.floatValue
     }
     /// String 转 Bool
     public func toBool() -> Bool? {
@@ -83,6 +89,7 @@ extension String {
     }
     /// 转富文本并附加属性
     public func rich(_ attrs: [NSAttributedString.Key: Any]) -> NSAttributedString {
-        NSAttributedString(string: self, attributes: attrs)
+        NSAttributedString(string: self,
+                           attributes: attrs)
     }
 }

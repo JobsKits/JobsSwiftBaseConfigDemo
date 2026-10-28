@@ -16,6 +16,7 @@ import SnapKit
 import JobsSwiftDSL
 
 public final class BRPickerPanel: UIView {
+
     public var strongOwner: AnyObject?
     var onDismiss: (() -> Void)?
     private var isDismissing = false
@@ -37,7 +38,9 @@ public final class BRPickerPanel: UIView {
         addSubview(panelView)
         panelView.addSubview(toolbar)
         panelView.addSubview(contentContainer)
-        dimmingControl.addTarget(self, action: #selector(tapMask), for: .touchUpInside)
+        dimmingControl.addTarget(self,
+                                 action: #selector(tapMask),
+                                 for: .touchUpInside)
         // Accessibility
         isAccessibilityElement = false
         dimmingControl.isAccessibilityElement = true
@@ -45,7 +48,9 @@ public final class BRPickerPanel: UIView {
         applyTheme()
     }
 
-    required init?(coder: NSCoder) { fatalError() }
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
 
     public func applyTheme() {
         backgroundColor = .clear
@@ -58,8 +63,10 @@ public final class BRPickerPanel: UIView {
         toolbar.titleLabel
             .byTextColor(theme.titleColor)
             .byFont(theme.titleFont)
-        toolbar.cancelButton.setTitleColor(theme.buttonColor, for: .normal)
-        toolbar.confirmButton.setTitleColor(theme.buttonColor, for: .normal)
+        toolbar.cancelButton.setTitleColor(theme.buttonColor,
+                                           for: .normal)
+        toolbar.confirmButton.setTitleColor(theme.buttonColor,
+                                            for: .normal)
         toolbar.cancelButton.titleLabel?.font = theme.buttonFont
         toolbar.confirmButton.titleLabel?.font = theme.buttonFont
     }
@@ -70,8 +77,10 @@ public final class BRPickerPanel: UIView {
                                  onCancel: @escaping () -> Void,
                                  onConfirm: @escaping () -> Void) {
         toolbar.titleLabel.byText(title)
-        toolbar.cancelButton.setTitle(cancelText, for: .normal)
-        toolbar.confirmButton.setTitle(confirmText, for: .normal)
+        toolbar.cancelButton.setTitle(cancelText,
+                                      for: .normal)
+        toolbar.confirmButton.setTitle(confirmText,
+                                       for: .normal)
         toolbar.onCancel = onCancel
         toolbar.onConfirm = onConfirm
         toolbar.cancelButton.accessibilityLabel = cancelText
@@ -79,7 +88,9 @@ public final class BRPickerPanel: UIView {
     }
 
     public func embed(_ view: UIView) {
-        contentContainer.subviews.forEach { $0.removeFromSuperview() }
+        contentContainer.subviews.forEach {
+            $0.removeFromSuperview()
+        }
         contentContainer.addSubview(view)
         view.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -102,11 +113,15 @@ public final class BRPickerPanel: UIView {
         let finalFrame = finalPanelFrame()
         panelView.byFrame(finalFrame)
         layoutPanelSubviews()
-        animator.animateIn(panel: panelView, dimming: dimmingControl, finalFrame: finalFrame)
+        animator.animateIn(panel: panelView,
+                           dimming: dimmingControl,
+                           finalFrame: finalFrame)
     }
 
     public func dismiss() {
-        guard !isDismissing else { return }
+        guard !isDismissing else {
+            return
+        }
         isDismissing = true
         onDismiss?()
         onDismiss = nil
@@ -116,8 +131,12 @@ public final class BRPickerPanel: UIView {
             return
         }
         let finalFrame = finalPanelFrame()
-        animator.animateOut(panel: panelView, dimming: dimmingControl, finalFrame: finalFrame) { [weak self] in
-            guard let self else { return }
+        animator.animateOut(panel: panelView,
+                            dimming: dimmingControl,
+                            finalFrame: finalFrame) { [weak self] in
+            guard let self else {
+                return
+            }
             self.strongOwner = nil
             self.removeFromSuperview()
         }
@@ -141,7 +160,9 @@ public final class BRPickerPanel: UIView {
             hasEnteredWindow = true
             return
         }
-        guard hasEnteredWindow, !isDismissing else { return }
+        guard hasEnteredWindow, !isDismissing else {
+            return
+        }
         checkDepartureAfterReparenting()
     }
 
@@ -149,15 +170,20 @@ public final class BRPickerPanel: UIView {
         // 同步重挂载先离窗再入窗；下一轮仍离窗才结束这次展示。
         DispatchQueue.main.async { [self] in
             guard !isDismissing,
-                  superview == nil || hasEnteredWindow && window == nil else { return }
+                  superview == nil || hasEnteredWindow && window == nil else {
+                return
+            }
             dismiss()
         }
     }
 
     private func finalPanelFrame() -> CGRect {
         let desired = theme.toolBarHeight + theme.pickerHeight + safeAreaInsets.bottom + theme.panelBottomOffset
-        let maxH = theme.maxPanelHeight ?? min(bounds.height * 0.75, 560)
-        panelHeight = min(max(desired, theme.toolBarHeight + 140), maxH)
+        let maxH = theme.maxPanelHeight ?? min(bounds.height * 0.75,
+                                               560)
+        panelHeight = min(max(desired,
+                              theme.toolBarHeight + 140),
+                          maxH)
         return CGRect(x: 0,
                       y: bounds.height - panelHeight + theme.panelBottomOffset,
                       width: bounds.width,
@@ -166,14 +192,17 @@ public final class BRPickerPanel: UIView {
 
     private func layoutPanelSubviews() {
         let safe = panelView.safeAreaInsets
-        let width = max(0, panelView.bounds.width - safe.left - safe.right)
-        toolbar.byFrame(CGRect(x: safe.left, y: 0, width: width, height: theme.toolBarHeight))
-        contentContainer.byFrame(CGRect(
-            x: safe.left,
-            y: theme.toolBarHeight,
-            width: width,
-            height: max(0, panelView.bounds.height - theme.toolBarHeight - safe.bottom)
-        ))
+        let width = max(0,
+                        panelView.bounds.width - safe.left - safe.right)
+        toolbar.byFrame(CGRect(x: safe.left,
+                               y: 0,
+                               width: width,
+                               height: theme.toolBarHeight))
+        contentContainer.byFrame(CGRect(x: safe.left,
+                                        y: theme.toolBarHeight,
+                                        width: width,
+                                        height: max(0,
+                                                    panelView.bounds.height - theme.toolBarHeight - safe.bottom)))
     }
 
     public override func safeAreaInsetsDidChange() {
@@ -192,17 +221,24 @@ public final class BRPickerPanel: UIView {
     }
 
     @objc private func tapMask() {
-        if theme.tapMaskToDismiss { dismiss() }
+        if theme.tapMaskToDismiss {
+            dismiss()
+        }
     }
 
     private static func defaultHostView() -> UIView? {
         if #available(iOS 13.0, *) {
-            let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+            let scenes = UIApplication.shared.connectedScenes.compactMap {
+                $0 as? UIWindowScene
+            }
             for scene in scenes {
-                if let win = scene.windows.first(where: { $0.isKeyWindow }) {
+                if let win = scene.windows.first(where: {
+                    $0.isKeyWindow
+                }) {
                     return win
                 }
-            };return scenes.first?.windows.first
+            }
+            return scenes.first?.windows.first
         } else {
             return UIApplication.shared.keyWindow
         }

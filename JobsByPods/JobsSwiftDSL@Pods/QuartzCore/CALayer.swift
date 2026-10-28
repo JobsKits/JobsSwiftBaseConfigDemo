@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 extension CALayer {
+
     // MARK: - 几何 & 变换
     @discardableResult
     public func byBounds(_ bounds: CGRect) -> Self {
@@ -93,26 +94,34 @@ extension CALayer {
     }
 
     @discardableResult
-    public func byInsertSublayer(_ layer: CALayer, at index: UInt32) -> Self {
-        insertSublayer(layer, at: index)
+    public func byInsertSublayer(_ layer: CALayer,
+                                 at index: UInt32) -> Self {
+        insertSublayer(layer,
+                       at: index)
         return self
     }
 
     @discardableResult
-    public func byInsertSublayer(_ layer: CALayer, below sibling: CALayer?) -> Self {
-        insertSublayer(layer, below: sibling)
+    public func byInsertSublayer(_ layer: CALayer,
+                                 below sibling: CALayer?) -> Self {
+        insertSublayer(layer,
+                       below: sibling)
         return self
     }
 
     @discardableResult
-    public func byInsertSublayer(_ layer: CALayer, above sibling: CALayer?) -> Self {
-        insertSublayer(layer, above: sibling)
+    public func byInsertSublayer(_ layer: CALayer,
+                                 above sibling: CALayer?) -> Self {
+        insertSublayer(layer,
+                       above: sibling)
         return self
     }
 
     @discardableResult
-    public func byReplaceSublayer(_ old: CALayer, with newLayer: CALayer) -> Self {
-        replaceSublayer(old, with: newLayer)
+    public func byReplaceSublayer(_ old: CALayer,
+                                  with newLayer: CALayer) -> Self {
+        replaceSublayer(old,
+                        with: newLayer)
         return self
     }
 
@@ -278,9 +287,9 @@ extension CALayer {
 
     @discardableResult
     public func byShadow(color: UIColor,
-                  opacity: Float = 0.5,
-                  offset: CGSize = .zero,
-                  radius: CGFloat = 3) -> Self {
+                         opacity: Float = 0.5,
+                         offset: CGSize = .zero,
+                         radius: CGFloat = 3) -> Self {
         self.shadowColor = color.cgColor
         self.shadowOpacity = opacity
         self.shadowOffset = offset

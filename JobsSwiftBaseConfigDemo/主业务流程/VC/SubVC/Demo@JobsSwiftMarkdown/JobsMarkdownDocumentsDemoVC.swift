@@ -18,13 +18,15 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsMarkdownDocumentsDemoVC: BaseVC {
+
     private static let reuseIdentifier = "JobsMarkdownDocumentCell"
     private var catalog: JobsMarkdownCatalog?
     private var allDocuments: [JobsMarkdownDocument] = []
     private var visibleDocuments: [JobsMarkdownDocument] = []
     private var catalogError: Error?
     private lazy var searchBar: UISearchBar = {
-        let searchBar = UISearchBar.jobsMake { _ in }
+        let searchBar = UISearchBar
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBackground)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
@@ -43,7 +45,8 @@ final class JobsMarkdownDocumentsDemoVC: BaseVC {
         return searchBar
     }()
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byBackgroundColor(JobsCor.systemGroupedBackground)
             .byDataSource(self)
             .byDelegate(self)
@@ -59,10 +62,8 @@ final class JobsMarkdownDocumentsDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemGroupedBackground)
         jobsSetupGKNav(title: "Markdown 文档浏览器".tr)
-        tableView.register(
-            JobsMarkdownDocumentCell.self,
-            forCellReuseIdentifier: Self.reuseIdentifier
-        )
+        tableView.register(JobsMarkdownDocumentCell.self,
+                           forCellReuseIdentifier: Self.reuseIdentifier)
         jobsLoadCatalog()
         searchBar.byVisible(YES)
         tableView.byVisible(YES)
@@ -70,6 +71,7 @@ final class JobsMarkdownDocumentsDemoVC: BaseVC {
 }
 
 private extension JobsMarkdownDocumentsDemoVC {
+
     func jobsLoadCatalog() {
         do {
             let catalog = try JobsMarkdownCatalog.bundled()
@@ -102,42 +104,45 @@ private extension JobsMarkdownDocumentsDemoVC {
 }
 
 extension JobsMarkdownDocumentsDemoVC: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        max(visibleDocuments.count, catalogError == nil ? 0 : 1)
+
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
+        max(visibleDocuments.count,
+            catalogError == nil ? 0 : 1)
     }
 
-    func tableView(
-        _ tableView: UITableView,
-        cellForRowAt indexPath: IndexPath
-    ) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(
-            withIdentifier: Self.reuseIdentifier,
-            for: indexPath
-        ) as! JobsMarkdownDocumentCell
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Self.reuseIdentifier,
+                                                 for: indexPath) as! JobsMarkdownDocumentCell
         guard catalogError == nil else {
             return cell.byError(catalogError?.localizedDescription ?? "Markdown 文档清单读取失败".tr)
-        };return cell.byDocument(visibleDocuments[indexPath.row])
+        }
+        return cell.byDocument(visibleDocuments[indexPath.row])
     }
 }
 
 extension JobsMarkdownDocumentsDemoVC: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath,
+                              animated: true)
         guard catalogError == nil,
               visibleDocuments.indices.contains(indexPath.row),
-              let catalog else { return }
-        navigationController?.pushViewController(
-            JobsMarkdownDocumentDemoVC(
-                document: visibleDocuments[indexPath.row],
-                catalog: catalog
-            ),
-            animated: true
-        )
+              let catalog else {
+            return
+        }
+        navigationController?.pushViewController(JobsMarkdownDocumentDemoVC(document: visibleDocuments[indexPath.row],
+                                                                            catalog: catalog),
+                                                 animated: true)
     }
 }
 
 extension JobsMarkdownDocumentsDemoVC: UISearchBarDelegate {
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+
+    func searchBar(_ searchBar: UISearchBar,
+                   textDidChange searchText: String) {
         jobsApplySearch(searchText)
     }
 
@@ -147,10 +152,15 @@ extension JobsMarkdownDocumentsDemoVC: UISearchBarDelegate {
 }
 
 private final class JobsMarkdownDocumentCell: UITableViewCell {
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+    override init(style: UITableViewCell.CellStyle,
+                  reuseIdentifier: String?) {
+        super.init(style: style,
+                   reuseIdentifier: reuseIdentifier)
         bySelectedBackgroundView(
-            UIView.jobsMake { _ in }.byBackgroundColor(JobsCor.tertiarySystemBackground)
+            UIView
+                .jobsMake { _ in }
+                .byBackgroundColor(JobsCor.tertiarySystemBackground)
         )
     }
 
@@ -166,10 +176,9 @@ private final class JobsMarkdownDocumentCell: UITableViewCell {
         content.textProperties.color = JobsCor.label
         content.secondaryTextProperties.color = JobsCor.secondaryLabel
         content.secondaryTextProperties.numberOfLines = 2
-        contentConfiguration = content
-        accessoryType = .disclosureIndicator
-        selectionStyle = .default
-        return self
+        return byContentConfiguration(content)
+            .byAccessoryType(.disclosureIndicator)
+            .bySelectionStyle(.default)
     }
 
     @discardableResult
@@ -180,14 +189,14 @@ private final class JobsMarkdownDocumentCell: UITableViewCell {
         content.textProperties.color = JobsCor.systemRed
         content.secondaryTextProperties.color = JobsCor.secondaryLabel
         content.secondaryTextProperties.numberOfLines = 0
-        contentConfiguration = content
-        accessoryType = .none
-        selectionStyle = .none
-        return self
+        return byContentConfiguration(content)
+            .byAccessoryType(.none)
+            .bySelectionStyle(.none)
     }
 }
 
 private final class JobsMarkdownDocumentDemoVC: BaseVC {
+
     private let document: JobsMarkdownDocument
     private let catalog: JobsMarkdownCatalog
     private let initialAnchor: String?
@@ -204,15 +213,14 @@ private final class JobsMarkdownDocumentDemoVC: BaseVC {
             }
     }()
 
-    init(
-        document: JobsMarkdownDocument,
-        catalog: JobsMarkdownCatalog,
-        initialAnchor: String? = nil
-    ) {
+    init(document: JobsMarkdownDocument,
+         catalog: JobsMarkdownCatalog,
+         initialAnchor: String? = nil) {
         self.document = document
         self.catalog = catalog
         self.initialAnchor = initialAnchor
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil,
+                   bundle: nil)
         byTitle(document.title.isEmpty ? "Markdown" : document.title)
     }
 
@@ -230,14 +238,20 @@ private final class JobsMarkdownDocumentDemoVC: BaseVC {
 }
 
 extension JobsMarkdownDocumentDemoVC: JobsMarkdownViewDelegate {
+
     func markdownViewDidFinishRendering(_ markdownView: JobsMarkdownView) {
-        guard let initialAnchor, !initialAnchor.isEmpty else { return }
-        markdownView.scrollToAnchor(initialAnchor, animated: false)
+        guard let initialAnchor, !initialAnchor.isEmpty else {
+            return
+        }
+        markdownView.scrollToAnchor(initialAnchor,
+                                    animated: false)
     }
 
-    func markdownView(_ markdownView: JobsMarkdownView, didRequestOpen url: URL) {
+    func markdownView(_ markdownView: JobsMarkdownView,
+                      didRequestOpen url: URL) {
         if url.isFileURL {
-            var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+            var components = URLComponents(url: url,
+                                           resolvingAgainstBaseURL: false)
             let anchor = components?.fragment
             components?.fragment = nil
             if let documentURL = components?.url,
@@ -245,21 +259,19 @@ extension JobsMarkdownDocumentDemoVC: JobsMarkdownViewDelegate {
                 if linkedDocument.id == document.id, let anchor {
                     markdownView.scrollToAnchor(anchor)
                 } else {
-                    navigationController?.pushViewController(
-                        JobsMarkdownDocumentDemoVC(
-                            document: linkedDocument,
-                            catalog: catalog,
-                            initialAnchor: anchor
-                        ),
-                        animated: true
-                    )
+                    navigationController?.pushViewController(JobsMarkdownDocumentDemoVC(document: linkedDocument,
+                                                                                        catalog: catalog,
+                                                                                        initialAnchor: anchor),
+                                                             animated: true)
                 }
-            };return
+            }
+            return
         }
         UIApplication.shared.open(url)
     }
 
-    func markdownView(_ markdownView: JobsMarkdownView, didFail error: Error) {
+    func markdownView(_ markdownView: JobsMarkdownView,
+                      didFail error: Error) {
         error.localizedDescription.toast
     }
 }

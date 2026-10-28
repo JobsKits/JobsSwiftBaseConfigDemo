@@ -9,15 +9,18 @@
 import UIKit
 
 final class JobsDebugOverlayWindow: UIWindow {
+
     weak var hostWindow: UIWindow?
 
-    static func make(scene: UIWindowScene, host: UIWindow) -> JobsDebugOverlayWindow {
+    static func make(scene: UIWindowScene,
+                     host: UIWindow) -> JobsDebugOverlayWindow {
         let window = JobsDebugOverlayWindow(windowScene: scene)
         return window.byHostWindow(host)
     }
 
     static func make(host: UIWindow) -> JobsDebugOverlayWindow {
-        return JobsDebugOverlayWindow(frame: host.bounds).byHostWindow(host)
+        return JobsDebugOverlayWindow(frame: host.bounds)
+            .byHostWindow(host)
     }
 
     @discardableResult
@@ -30,12 +33,15 @@ final class JobsDebugOverlayWindow: UIWindow {
         return false
     }
 
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+    override func hitTest(_ point: CGPoint,
+                          with event: UIEvent?) -> UIView? {
         guard let controller = rootViewController as? JobsDebugButtonVC,
-              controller.containsButton(point, from: self) else {
+              controller.containsButton(point,
+                                        from: self) else {
             return nil
         }
-        return super.hitTest(point, with: event)
+        return super.hitTest(point,
+                             with: event)
     }
 }
 #endif

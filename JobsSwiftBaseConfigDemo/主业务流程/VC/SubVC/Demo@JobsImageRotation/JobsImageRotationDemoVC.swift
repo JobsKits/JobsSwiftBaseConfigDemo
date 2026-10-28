@@ -20,8 +20,10 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsImageRotationDemoVC: BaseVC {
+
     private lazy var descriptionLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("无刻度、固定时针，仅分针绕圆心旋转；方向与速度由外界传入。".tr)
             .byFont(JobsFont.systemFont(ofSize: 15))
             .byTextColor(JobsCor.secondaryLabel)
@@ -44,10 +46,8 @@ final class JobsImageRotationDemoVC: BaseVC {
     }()
 
     private lazy var counterclockwiseClockView: JobsClockIconView = {
-        JobsClockIconView(
-            direction: .counterclockwise,
-            interval: 0.05
-        )
+        JobsClockIconView(direction: .counterclockwise,
+                          interval: 0.05)
             .byTintColor(JobsCor.systemPurple)
             .byAddTo(view) { [unowned self] make in
                 make.top.size.equalTo(self.clockwiseClockView)
@@ -56,9 +56,11 @@ final class JobsImageRotationDemoVC: BaseVC {
     }()
 
     private lazy var clockwiseLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("默认顺时针 · 6 秒/周".tr)
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
             .byAddTo(view) { [unowned self] make in
@@ -68,9 +70,11 @@ final class JobsImageRotationDemoVC: BaseVC {
     }()
 
     private lazy var counterclockwiseLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("逆时针 · 3 秒/周".tr)
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
             .byAddTo(view) { [unowned self] make in
@@ -80,51 +84,57 @@ final class JobsImageRotationDemoVC: BaseVC {
     }()
 
     private lazy var startButton: UIButton = {
-        makeControlButton(title: "开始".tr, backgroundColor: JobsCor.systemGreen) { [weak self] _ in
+        makeControlButton(title: "开始".tr,
+                          backgroundColor: JobsCor.systemGreen) { [weak self] _ in
             self?.startRotations()
         }
-        .byAddTo(view) { [unowned self] make in
-            make.top.equalTo(clockwiseLabel.snp.bottom).offset(28)
-            make.left.equalToSuperview().offset(24)
-            make.height.equalTo(44)
-        }
+            .byAddTo(view) { [unowned self] make in
+                make.top.equalTo(clockwiseLabel.snp.bottom).offset(28)
+                make.left.equalToSuperview().offset(24)
+                make.height.equalTo(44)
+            }
     }()
 
     private lazy var pauseButton: UIButton = {
-        makeControlButton(title: "暂停".tr, backgroundColor: JobsCor.systemOrange) { [weak self] _ in
+        makeControlButton(title: "暂停".tr,
+                          backgroundColor: JobsCor.systemOrange) { [weak self] _ in
             self?.pauseRotations()
         }
-        .byAddTo(view) { [unowned self] make in
-            make.top.width.height.equalTo(startButton)
-            make.left.equalTo(startButton.snp.right).offset(12)
-            make.right.equalToSuperview().inset(24)
-        }
+            .byAddTo(view) { [unowned self] make in
+                make.top.width.height.equalTo(startButton)
+                make.left.equalTo(startButton.snp.right).offset(12)
+                make.right.equalToSuperview().inset(24)
+            }
     }()
 
     private lazy var resumeButton: UIButton = {
-        makeControlButton(title: "继续".tr, backgroundColor: JobsCor.systemBlue) { [weak self] _ in
+        makeControlButton(title: "继续".tr,
+                          backgroundColor: JobsCor.systemBlue) { [weak self] _ in
             self?.resumeRotations()
         }
-        .byAddTo(view) { [unowned self] make in
-            make.top.equalTo(startButton.snp.bottom).offset(12)
-            make.left.width.height.equalTo(startButton)
-        }
+            .byAddTo(view) { [unowned self] make in
+                make.top.equalTo(startButton.snp.bottom).offset(12)
+                make.left.width.height.equalTo(startButton)
+            }
     }()
 
     private lazy var stopButton: UIButton = {
-        makeControlButton(title: "停止并复位".tr, backgroundColor: JobsCor.systemRed) { [weak self] _ in
+        makeControlButton(title: "停止并复位".tr,
+                          backgroundColor: JobsCor.systemRed) { [weak self] _ in
             self?.stopRotations()
         }
-        .byAddTo(view) { [unowned self] make in
-            make.top.width.height.equalTo(resumeButton)
-            make.left.right.equalTo(pauseButton)
-        }
+            .byAddTo(view) { [unowned self] make in
+                make.top.width.height.equalTo(resumeButton)
+                make.left.right.equalTo(pauseButton)
+            }
     }()
 
     private lazy var statusLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("等待开始".tr)
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 14,
+                                        weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
             .byAddTo(view) { [unowned self] make in
@@ -148,7 +158,9 @@ final class JobsImageRotationDemoVC: BaseVC {
             resumeButton,
             stopButton,
             statusLabel
-        ].forEach { $0.byVisible(YES) }
+        ].forEach {
+            $0.byVisible(YES)
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -163,15 +175,17 @@ final class JobsImageRotationDemoVC: BaseVC {
 }
 
 private extension JobsImageRotationDemoVC {
-    func makeControlButton(
-        title: String,
-        backgroundColor: UIColor,
-        action: @escaping (UIButton) -> Void
-    ) -> UIButton {
+
+    func makeControlButton(title: String,
+                           backgroundColor: UIColor,
+                           action: @escaping (UIButton) -> Void) -> UIButton {
         UIButton.sys()
-            .byTitle(title, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
-            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitle(title,
+                     for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .semibold))
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
             .byBackgroundColor(backgroundColor)
             .byCornerRadius(10)
             .onTap(action)

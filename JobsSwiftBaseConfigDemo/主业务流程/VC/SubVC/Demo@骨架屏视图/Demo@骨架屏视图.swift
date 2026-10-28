@@ -23,12 +23,14 @@ import GKNavigationBarSwift
 
 // MARK: - 数据模型
 struct User {
+
     let name: String
     let detail: String
     let color: UIColor
 }
 // MARK: - Demo VC
 final class SkeletonViewDemoVC: BaseVC {
+
     // 状态
     private var data: [User] = []
     private var isLoading = true
@@ -39,7 +41,8 @@ final class SkeletonViewDemoVC: BaseVC {
     private let slideAnim = SkeletonAnimationBuilder().makeSlidingAnimation(withDirection: .leftRight)
     // UI
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byBackgroundColor(JobsCor.systemGroupedBackground)
             .bySeparatorStyle(.none)
             .byRowHeight(UITableView.automaticDimension)
@@ -60,38 +63,44 @@ final class SkeletonViewDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        jobsSetupGKNav(
-            title: "Demo@骨架屏视图".tr,
-            rightButtons: [
+        jobsSetupGKNav(title: "Demo@骨架屏视图".tr,
+                       rightButtons: [
                 UIButton.sys()
-                    /// 按钮图片@图文关系
-                    .byImage("arrow.clockwise.circle".sysImg, for: .normal)
-                    .byImage("arrow.clockwise.circle.fill".sysImg, for: .selected)
-                    /// 事件触发@点按
-                    .onTap { [weak self] sender in
-                        guard let self else { return }
-                        sender.byToggleSelected()
-                        // 重新进入加载状态
-                        startSkeleton()
-                        simulateFetch()
-                    },
+                /// 按钮图片@图文关系
+                .byImage("arrow.clockwise.circle".sysImg,
+                         for: .normal)
+                    .byImage("arrow.clockwise.circle.fill".sysImg,
+                             for: .selected)
+                /// 事件触发@点按
+                .onTap { [weak self] sender in
+                guard let self else {
+                    return
+                }
+                sender.byToggleSelected()
+                    // 重新进入加载状态
+                startSkeleton()
+                simulateFetch()
+            },
                 UIButton.sys()
-                    /// 按钮图片@图文关系
-                    .byImage("waveform.path.ecg".sysImg, for: .normal)
-                    .byImage("waveform.path.ecg".sysImg, for: .selected)
-                    /// 事件触发@点按
-                    .onTap { [weak self] sender in
-                        guard let self else { return }
-                        sender.byToggleSelected()
-                        // 动画模式在渐变滑动 & 脉冲之间切换
-                        useGradient.toggle()
-                        if isLoading {
-                            tableView.hideSkeleton()
-                            startSkeleton()
-                        }
-                    }
-            ]
-        )
+                /// 按钮图片@图文关系
+                .byImage("waveform.path.ecg".sysImg,
+                         for: .normal)
+                    .byImage("waveform.path.ecg".sysImg,
+                             for: .selected)
+                /// 事件触发@点按
+                .onTap { [weak self] sender in
+                guard let self else {
+                    return
+                }
+                sender.byToggleSelected()
+                    // 动画模式在渐变滑动 & 脉冲之间切换
+                useGradient.toggle()
+                if isLoading {
+                    tableView.hideSkeleton()
+                    startSkeleton()
+                }
+            }
+            ])
         view
             .byBackgroundColor(JobsCor.systemBackground)
             .bySkeletonable(YES) // 容器也打标，避免传导问题
@@ -105,38 +114,54 @@ final class SkeletonViewDemoVC: BaseVC {
     }
 }
 // MARK: - UITableViewDataSource / UITableViewDelegate
-extension SkeletonViewDemoVC: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { data.count }
-    func numberOfSections(in tableView: UITableView) -> Int { 1 }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let c = tableView.byDequeueReusableCell(withType: SkeletonUserCell.self, for: indexPath)
+extension SkeletonViewDemoVC: UITableViewDataSource,
+                              UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
+        data.count
+    }
+    func numberOfSections(in tableView: UITableView) -> Int {
+        1
+    }
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let c = tableView.byDequeueReusableCell(withType: SkeletonUserCell.self,
+                                                for: indexPath)
         if !isLoading {
             c.configure(with: data[indexPath.row])
-        };return c
+        }
+        return c
     }
 }
 // MARK: - Skeleton 数据源（关键）
 extension SkeletonViewDemoVC: SkeletonTableViewDataSource {
+
     // 骨架期的占位行数
-    func numSections(in collectionSkeletonView: UITableView) -> Int { 1 }
-    func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {8}
-    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
+    func numSections(in collectionSkeletonView: UITableView) -> Int {
+        1
+    }
+    func collectionSkeletonView(_ skeletonView: UITableView,
+                                numberOfRowsInSection section: Int) -> Int {
+        8
+    }
+    func collectionSkeletonView(_ skeletonView: UITableView,
+                                cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
         String(describing: SkeletonUserCell.self)
     }
 }
 
 extension SkeletonViewDemoVC {
+
     // MARK: - Skeleton 显隐
     private func startSkeleton() {
         isLoading = true
         if useGradient {
             // 渐变骨架：用 builder/sliding
             let anim = GradientDirection.leftRight.slidingAnimation()
-            tableView.showAnimatedGradientSkeleton(
-                usingGradient: gradient,
-                animation: anim,
-                transition: .crossDissolve(0.2)
-            )
+            tableView.showAnimatedGradientSkeleton(usingGradient: gradient,
+                                                   animation: anim,
+                                                   transition: .crossDissolve(0.2))
         } else {
             // 纯色骨架：直接用内置“脉冲”，不要 builder
             tableView.showAnimatedSkeleton(transition: .crossDissolve(0.2))
@@ -144,14 +169,17 @@ extension SkeletonViewDemoVC {
     }
 
     private func stopSkeletonAndReload() {
-        tableView.hideSkeleton(reloadDataAfter: true, transition: .crossDissolve(0.25))
+        tableView.hideSkeleton(reloadDataAfter: true,
+                               transition: .crossDissolve(0.25))
         isLoading = false
     }
     // MARK: - 模拟网络
     private func simulateFetch() {
         // 2 秒后给数据
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.data = Self.mockUsers(count: 20)
             self.stopSkeletonAndReload()
         }
@@ -167,12 +195,11 @@ extension SkeletonViewDemoVC {
         func randColor() -> UIColor {
             let all: [UIColor] = [JobsCor.systemBlue, JobsCor.systemTeal, JobsCor.systemPink, JobsCor.systemOrange, JobsCor.systemPurple, JobsCor.systemGreen, JobsCor.systemIndigo, JobsCor.systemRed]
             return all.randomElement() ?? JobsCor.systemGray
-        };return (0..<count).map { i in
-            .init(
-                name: names[i % names.count],
-                detail: descs[i % descs.count],
-                color: randColor()
-            )
+        }
+        return (0 ..< count).map { i in
+            .init(name: names[i % names.count],
+                  detail: descs[i % descs.count],
+                  color: randColor())
         }
     }
 }

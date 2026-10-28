@@ -15,6 +15,7 @@ import ObjectiveC
 
 // MARK: - DSL
 extension UIScrollView {
+
     @discardableResult
     public func byScrollTargetWeak(_ target: AnyObject) -> Self {
         let p = jobs_scrollBlocksProxy()!   // 你现有的 scroll proxy getter
@@ -29,7 +30,8 @@ extension UIScrollView {
         p.target = target
         if delegate == nil {
             jobs_setDelegateMuxIfNeeded(primary: nil)
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -75,7 +77,9 @@ extension UIScrollView {
     }
 }
 // MARK: - Proxy (UIScrollViewDelegate Block化)
-private final class JobsScrollViewBlocksProxy: NSObject, UIScrollViewDelegate {
+private final class JobsScrollViewBlocksProxy: NSObject,
+                                               UIScrollViewDelegate {
+
     weak var target: AnyObject?
 
     var willBeginDragging: ((AnyObject, UIScrollView) -> Void)?
@@ -87,88 +91,128 @@ private final class JobsScrollViewBlocksProxy: NSObject, UIScrollViewDelegate {
     var didScrollToTop: ((AnyObject, UIScrollView) -> Void)?
 
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        guard let t = target else { return }
-        willBeginDragging?(t, scrollView)
+        guard let t = target else {
+            return
+        }
+        willBeginDragging?(t,
+                           scrollView)
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard let t = target else { return }
-        didScroll?(t, scrollView)
+        guard let t = target else {
+            return
+        }
+        didScroll?(t,
+                   scrollView)
     }
 
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        guard let t = target else { return }
-        didEndDragging?(t, scrollView, decelerate)
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView,
+                                  willDecelerate decelerate: Bool) {
+        guard let t = target else {
+            return
+        }
+        didEndDragging?(t,
+                        scrollView,
+                        decelerate)
     }
 
     func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
-        guard let t = target else { return }
-        willBeginDecelerating?(t, scrollView)
+        guard let t = target else {
+            return
+        }
+        willBeginDecelerating?(t,
+                               scrollView)
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        guard let t = target else { return }
-        didEndDecelerating?(t, scrollView)
+        guard let t = target else {
+            return
+        }
+        didEndDecelerating?(t,
+                            scrollView)
     }
 
     func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
-        guard let t = target else { return true };return scrollViewShouldScrollToTop?(t, scrollView) ?? true
+        guard let t = target else {
+            return true
+        }
+        return scrollViewShouldScrollToTop?(t,
+                                            scrollView) ?? true
     }
 
     func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
-        guard let t = target else { return }
-        didScrollToTop?(t, scrollView)
+        guard let t = target else {
+            return
+        }
+        didScrollToTop?(t,
+                        scrollView)
     }
 }
 // MARK: - Delegate Multiplexer（把 scroll 回调分发出去）
 private final class JobsScrollDelegateMux: NSObject {
+
     private weak var primary: NSObject?
     private weak var scroll: JobsScrollViewBlocksProxy?
 
-    init(primary: NSObject?, scroll: JobsScrollViewBlocksProxy?) {
+    init(primary: NSObject?,
+         scroll: JobsScrollViewBlocksProxy?) {
         self.primary = primary
         self.scroll = scroll
         super.init()
     }
 
     override func responds(to aSelector: Selector!) -> Bool {
-        if let s = scroll, s.responds(to: aSelector) { return true }
-        if let p = primary, p.responds(to: aSelector) { return true };return super.responds(to: aSelector)
+        if let s = scroll, s.responds(to: aSelector) {
+            return true
+        }
+        if let p = primary, p.responds(to: aSelector) {
+            return true
+        }
+        return super.responds(to: aSelector)
     }
 
     override func forwardingTarget(for aSelector: Selector!) -> Any? {
-        if let s = scroll, s.responds(to: aSelector) { return s }
-        if let p = primary, p.responds(to: aSelector) { return p };return super.forwardingTarget(for: aSelector)
+        if let s = scroll, s.responds(to: aSelector) {
+            return s
+        }
+        if let p = primary, p.responds(to: aSelector) {
+            return p
+        }
+        return super.forwardingTarget(for: aSelector)
     }
 }
 // MARK: - Associated
 private enum JobsScrollViewBlocksAssociatedKeys {
+
     static var scrollProxyKey = "jobs.scrollview.blocks.proxy.key"
     static var delegateMuxKey = "jobs.scrollview.blocks.delegate.mux.key"
 }
 
 extension UIScrollView {
+
     private func jobs_scrollBlocksProxy(createIfNeeded: Bool = true) -> JobsScrollViewBlocksProxy? {
-        if let p = objc_getAssociatedObject(self, &JobsScrollViewBlocksAssociatedKeys.scrollProxyKey) as? JobsScrollViewBlocksProxy {
+        if let p = objc_getAssociatedObject(self,
+                                            &JobsScrollViewBlocksAssociatedKeys.scrollProxyKey) as? JobsScrollViewBlocksProxy {
             return p
         }
-        guard createIfNeeded else { return nil }
+        guard createIfNeeded else {
+            return nil
+        }
         let p = JobsScrollViewBlocksProxy()
-        objc_setAssociatedObject(
-            self,
-            &JobsScrollViewBlocksAssociatedKeys.scrollProxyKey,
-            p,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-        );return p
+        objc_setAssociatedObject(self,
+                                 &JobsScrollViewBlocksAssociatedKeys.scrollProxyKey,
+                                 p,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return p
     }
 
     public func jobs_setDelegateMuxIfNeeded(primary: NSObject?) {
-        let mux = JobsScrollDelegateMux(primary: primary, scroll: jobs_scrollBlocksProxy()!)
-        objc_setAssociatedObject(
-            self,
-            &JobsScrollViewBlocksAssociatedKeys.delegateMuxKey,
-            mux,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-        );delegate = mux as? UIScrollViewDelegate
+        let mux = JobsScrollDelegateMux(primary: primary,
+                                        scroll: jobs_scrollBlocksProxy()!)
+        objc_setAssociatedObject(self,
+                                 &JobsScrollViewBlocksAssociatedKeys.delegateMuxKey,
+                                 mux,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        delegate = mux as? UIScrollViewDelegate
     }
 }

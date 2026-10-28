@@ -13,6 +13,7 @@ import Foundation
 /// 来源：https://help.aliyun.com/zh/document_detail/106682.html
 /// 来源：https://help.aliyun.com/zh/document_detail/170125.html
 final class JobsLocalMiniPlatformAdapter: JobsMiniPlatformAdapter {
+
     private(set) var currentUser: String?
     private let registeredAppID = "jobs.learning.microapp"
 
@@ -44,6 +45,7 @@ final class JobsLocalMiniPlatformAdapter: JobsMiniPlatformAdapter {
     }
 
     enum PlatformError: LocalizedError {
+
         case loginRequired
         case unregisteredApp
         case missingPackage

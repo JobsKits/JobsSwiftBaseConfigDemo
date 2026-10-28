@@ -40,6 +40,7 @@
 "/JobsByPods/JobsSwiftComment@Pods/README.md" filter=jobs-markdown-toc
 "/JobsByPods/JobsSwiftCountryCodeCtrl@Pods/README.md" filter=jobs-markdown-toc
 "/JobsByPods/JobsSwiftDSL@Pods/README.md" filter=jobs-markdown-toc
+"/JobsByPods/JobsSwiftDeviceGuard@Pods/README.md" filter=jobs-markdown-toc
 "/JobsByPods/JobsSwiftExcel@Pods/README.md" filter=jobs-markdown-toc
 "/JobsByPods/JobsSwiftGraphicCaptcha@Pods/README.md" filter=jobs-markdown-toc
 "/JobsByPods/JobsSwiftLinkageMenuView@Pods/README.md" filter=jobs-markdown-toc
@@ -111,4 +112,5 @@
 "/SwiftDoc.md/\347\233\264\346\222\255\346\216\250\346\265\201:\346\213\211\346\265\201@Swift5x.md/\343\200\220MacOS\343\200\221\351\205\215\347\275\256\346\234\254\345\234\260\347\232\204\347\233\264\346\222\255\346\234\215\345\212\241\345\231\250.md/\343\200\220MacOS\343\200\221\351\205\215\347\275\256\346\234\254\345\234\260\347\232\204\347\233\264\346\222\255\346\234\215\345\212\241\345\231\250.md" filter=jobs-markdown-toc
 "/SwiftDoc.md/\351\205\215\347\275\256info.md/\351\205\215\347\275\256info.plist.md" filter=jobs-markdown-toc
 "/Unity/iOS\351\241\271\347\233\256\351\233\206\346\210\220Unity.md/iOS\351\241\271\347\233\256\351\233\206\346\210\220Unity.md" filter=jobs-markdown-toc
+"/JobsSwiftBaseConfigDemo/启动入口/JobsDeviceLaunchGate/README.md" filter=jobs-markdown-toc
 # jobs-markdown-toc:end

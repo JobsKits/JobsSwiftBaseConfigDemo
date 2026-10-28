@@ -9,6 +9,7 @@ import Foundation
 import JobsSwiftTaskCenter
 
 public struct JobsWorkerChange<Value>: Sendable where Value: Sendable {
+
     public let oldValue: Value
     public let newValue: Value
     public let date: Date
@@ -29,6 +30,7 @@ public struct JobsWorkerChange<Value>: Sendable where Value: Sendable {
 }
 
 public struct JobsAnyWorkerChange: Sendable {
+
     public let oldValue: AnySendableBox
     public let newValue: AnySendableBox
     public let date: Date
@@ -48,7 +50,9 @@ public struct JobsAnyWorkerChange: Sendable {
     }
 }
 
-public struct AnySendableBox: @unchecked Sendable, CustomStringConvertible {
+public struct AnySendableBox: @unchecked Sendable,
+                              CustomStringConvertible {
+
     public let value: Any
 
     /// 类型擦除仅接收已满足 Sendable 的值，不接受任意可变 Any。
@@ -62,6 +66,7 @@ public struct AnySendableBox: @unchecked Sendable, CustomStringConvertible {
 }
 
 public enum JobsWorkerMode: Sendable {
+
     case ever
     case once
     case debounce(delay: JobsPeriod)
@@ -72,11 +77,13 @@ public enum JobsWorkerMode: Sendable {
 }
 
 public protocol JobsWorkerDisposable: AnyObject {
+
     var isDisposed: Bool { get }
     func dispose()
 }
 
 public protocol JobsValueListenable: AnyObject {
+
     associatedtype Value: Sendable
     var sourceID: UUID { get }
     var sourceName: String? { get }
@@ -87,6 +94,7 @@ public protocol JobsValueListenable: AnyObject {
 }
 
 public protocol JobsAnyValueListenable: AnyObject {
+
     var sourceID: UUID { get }
     var sourceName: String? { get }
     var currentAnyValue: AnySendableBox { get }

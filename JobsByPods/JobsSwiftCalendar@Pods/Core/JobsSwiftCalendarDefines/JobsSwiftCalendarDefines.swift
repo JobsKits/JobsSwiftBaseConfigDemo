@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 public enum JobsSwiftCalendarMonthPosition {
+
     case notFound
     case previous
     case current
@@ -19,17 +20,20 @@ public enum JobsSwiftCalendarMonthPosition {
 }
 
 public enum JobsSwiftCalendarScope {
+
     case month
     case week
 }
 
 public enum JobsSwiftCalendarPlaceholderType {
+
     case none
     case fillHeadTail
     case fillSixRows
 }
 
 public struct JobsSwiftCalendarCaseOptions: OptionSet {
+
     public let rawValue: UInt
 
     public init(rawValue: UInt) {
@@ -43,30 +47,55 @@ public struct JobsSwiftCalendarCaseOptions: OptionSet {
 }
 
 public protocol JobsSwiftCalendarDataSource: AnyObject {
-    func calendar(_ calendar: JobsSwiftCalendar, titleFor date: Date) -> String?
-    func calendar(_ calendar: JobsSwiftCalendar, subtitleFor date: Date) -> String?
-    func calendar(_ calendar: JobsSwiftCalendar, imageFor date: Date) -> UIImage?
+
+    func calendar(_ calendar: JobsSwiftCalendar,
+                  titleFor date: Date) -> String?
+    func calendar(_ calendar: JobsSwiftCalendar,
+                  subtitleFor date: Date) -> String?
+    func calendar(_ calendar: JobsSwiftCalendar,
+                  imageFor date: Date) -> UIImage?
     func minimumDate(for calendar: JobsSwiftCalendar) -> Date
     func maximumDate(for calendar: JobsSwiftCalendar) -> Date
     func calendar(_ calendar: JobsSwiftCalendar,
                   cellFor date: Date,
                   atMonthPosition position: JobsSwiftCalendarMonthPosition) -> JobsSwiftCalendarDayCell?
-    func calendar(_ calendar: JobsSwiftCalendar, numberOfEventsFor date: Date) -> Int
+    func calendar(_ calendar: JobsSwiftCalendar,
+                  numberOfEventsFor date: Date) -> Int
 }
 
 public extension JobsSwiftCalendarDataSource {
-    func calendar(_ calendar: JobsSwiftCalendar, titleFor date: Date) -> String? { nil }
-    func calendar(_ calendar: JobsSwiftCalendar, subtitleFor date: Date) -> String? { nil }
-    func calendar(_ calendar: JobsSwiftCalendar, imageFor date: Date) -> UIImage? { nil }
-    func minimumDate(for calendar: JobsSwiftCalendar) -> Date { Date.distantPast }
-    func maximumDate(for calendar: JobsSwiftCalendar) -> Date { Date.distantFuture }
+
+    func calendar(_ calendar: JobsSwiftCalendar,
+                  titleFor date: Date) -> String? {
+        nil
+    }
+    func calendar(_ calendar: JobsSwiftCalendar,
+                  subtitleFor date: Date) -> String? {
+        nil
+    }
+    func calendar(_ calendar: JobsSwiftCalendar,
+                  imageFor date: Date) -> UIImage? {
+        nil
+    }
+    func minimumDate(for calendar: JobsSwiftCalendar) -> Date {
+        Date.distantPast
+    }
+    func maximumDate(for calendar: JobsSwiftCalendar) -> Date {
+        Date.distantFuture
+    }
     func calendar(_ calendar: JobsSwiftCalendar,
                   cellFor date: Date,
-                  atMonthPosition position: JobsSwiftCalendarMonthPosition) -> JobsSwiftCalendarDayCell? { nil }
-    func calendar(_ calendar: JobsSwiftCalendar, numberOfEventsFor date: Date) -> Int { 0 }
+                  atMonthPosition position: JobsSwiftCalendarMonthPosition) -> JobsSwiftCalendarDayCell? {
+        nil
+    }
+    func calendar(_ calendar: JobsSwiftCalendar,
+                  numberOfEventsFor date: Date) -> Int {
+        0
+    }
 }
 
 public protocol JobsSwiftCalendarDelegate: AnyObject {
+
     func calendar(_ calendar: JobsSwiftCalendar,
                   shouldSelect date: Date,
                   atMonthPosition monthPosition: JobsSwiftCalendarMonthPosition) -> Bool
@@ -90,15 +119,20 @@ public protocol JobsSwiftCalendarDelegate: AnyObject {
 }
 
 public extension JobsSwiftCalendarDelegate {
+
     func calendar(_ calendar: JobsSwiftCalendar,
                   shouldSelect date: Date,
-                  atMonthPosition monthPosition: JobsSwiftCalendarMonthPosition) -> Bool { true }
+                  atMonthPosition monthPosition: JobsSwiftCalendarMonthPosition) -> Bool {
+        true
+    }
     func calendar(_ calendar: JobsSwiftCalendar,
                   didSelect date: Date,
                   atMonthPosition monthPosition: JobsSwiftCalendarMonthPosition) {}
     func calendar(_ calendar: JobsSwiftCalendar,
                   shouldDeselect date: Date,
-                  atMonthPosition monthPosition: JobsSwiftCalendarMonthPosition) -> Bool { true }
+                  atMonthPosition monthPosition: JobsSwiftCalendarMonthPosition) -> Bool {
+        true
+    }
     func calendar(_ calendar: JobsSwiftCalendar,
                   didDeselect date: Date,
                   atMonthPosition monthPosition: JobsSwiftCalendarMonthPosition) {}
@@ -113,6 +147,7 @@ public extension JobsSwiftCalendarDelegate {
 }
 
 public protocol JobsSwiftCalendarDelegateAppearance: AnyObject {
+
     func calendar(_ calendar: JobsSwiftCalendar,
                   appearance: JobsSwiftCalendarAppearance,
                   titleDefaultColorFor date: Date) -> UIColor?
@@ -128,16 +163,25 @@ public protocol JobsSwiftCalendarDelegateAppearance: AnyObject {
 }
 
 public extension JobsSwiftCalendarDelegateAppearance {
+
     func calendar(_ calendar: JobsSwiftCalendar,
                   appearance: JobsSwiftCalendarAppearance,
-                  titleDefaultColorFor date: Date) -> UIColor? { nil }
+                  titleDefaultColorFor date: Date) -> UIColor? {
+        nil
+    }
     func calendar(_ calendar: JobsSwiftCalendar,
                   appearance: JobsSwiftCalendarAppearance,
-                  titleSelectionColorFor date: Date) -> UIColor? { nil }
+                  titleSelectionColorFor date: Date) -> UIColor? {
+        nil
+    }
     func calendar(_ calendar: JobsSwiftCalendar,
                   appearance: JobsSwiftCalendarAppearance,
-                  subtitleDefaultColorFor date: Date) -> UIColor? { nil }
+                  subtitleDefaultColorFor date: Date) -> UIColor? {
+        nil
+    }
     func calendar(_ calendar: JobsSwiftCalendar,
                   appearance: JobsSwiftCalendarAppearance,
-                  selectionColorFor date: Date) -> UIColor? { nil }
+                  selectionColorFor date: Date) -> UIColor? {
+        nil
+    }
 }

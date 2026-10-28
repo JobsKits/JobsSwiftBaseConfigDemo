@@ -17,6 +17,7 @@ import JobsSwiftBaseDefines
 @MainActor
 // MARK: - 直接赋值@单参数
 extension UIViewController {
+
     // ================================== 标题 / 背景 ==================================
     @discardableResult
     public func byTitle(_ title: String?) -> Self {
@@ -26,7 +27,9 @@ extension UIViewController {
 
     @discardableResult
     public func byBackgroundColor(_ color: UIColor) -> Self {
-        if viewIfLoaded == nil { loadViewIfNeeded() }
+        if viewIfLoaded == nil {
+            loadViewIfNeeded()
+        }
         view.byBackgroundColor(color)
         return self
     }
@@ -87,7 +90,8 @@ extension UIViewController {
             assertionFailure("iOS 11+ 请使用 UIScrollView.contentInsetAdjustmentBehavior")
         } else {
             self.automaticallyAdjustsScrollViewInsets = flag
-        };return self
+        }
+        return self
     }
     // ================================== 状态栏 / 外观 ==================================
     @available(iOS 13.0, *)
@@ -114,6 +118,7 @@ extension UIViewController {
 @MainActor
 // MARK: - 闭包重载@单参数
 extension UIViewController {
+
     @discardableResult
     public func byView(_ builder: (UIView) -> Void) -> Self {
         builder(view)
@@ -128,7 +133,9 @@ extension UIViewController {
 
     @discardableResult
     public func byBackgroundColor(_ builder: () -> UIColor) -> Self {
-        if viewIfLoaded == nil { loadViewIfNeeded() }
+        if viewIfLoaded == nil {
+            loadViewIfNeeded()
+        }
         self.view.backgroundColor = builder()
         return self
     }
@@ -190,7 +197,8 @@ extension UIViewController {
             assertionFailure("iOS 11+ 请使用 UIScrollView.contentInsetAdjustmentBehavior")
         } else {
             self.automaticallyAdjustsScrollViewInsets = flag
-        };return self
+        }
+        return self
     }
 
     @available(iOS 13.0, *)
@@ -217,10 +225,13 @@ extension UIViewController {
 
 @MainActor
 extension UIViewController {
+
     // ================================== Segue ==================================
     @discardableResult
-    public func byPerformSegue(_ identifier: String, sender: Any? = nil) -> Self {
-        self.performSegue(withIdentifier: identifier, sender: sender)
+    public func byPerformSegue(_ identifier: String,
+                               sender: Any? = nil) -> Self {
+        self.performSegue(withIdentifier: identifier,
+                          sender: sender)
         return self
     }
     // ================================== Modal 展示 / 解散 ==================================
@@ -253,7 +264,8 @@ extension UIViewController {
     @discardableResult
     public func byDismiss(animated: Bool = true,
                           completion: (jobsByVoidBlock)? = nil) -> Self {
-        self.dismiss(animated: animated, completion: completion)
+        self.dismiss(animated: animated,
+                     completion: completion)
         return self
     }
     // ================================== Content Size / Layout ==================================
@@ -262,14 +274,18 @@ extension UIViewController {
     }
     // ================================== show / showDetail（安全命名） ==================================
     @discardableResult
-    public func byShow(_ vc: UIViewController, sender: Any? = nil) -> Self {
-        self.show(vc, sender: sender)
+    public func byShow(_ vc: UIViewController,
+                       sender: Any? = nil) -> Self {
+        self.show(vc,
+                  sender: sender)
         return self
     }
 
     @discardableResult
-    public func byShowDetail(_ vc: UIViewController, sender: Any? = nil) -> Self {
-        self.showDetailViewController(vc, sender: sender)
+    public func byShowDetail(_ vc: UIViewController,
+                             sender: Any? = nil) -> Self {
+        self.showDetailViewController(vc,
+                                      sender: sender)
         return self
     }
 
@@ -290,7 +306,9 @@ extension UIViewController {
                            into container: UIView? = nil,
                            layout: (jobsByViewBlock)? = nil) -> Self {
         self.addChild(child)
-        if viewIfLoaded == nil { loadViewIfNeeded() }
+        if viewIfLoaded == nil {
+            loadViewIfNeeded()
+        }
         let host = container ?? self.view!
         host.addSubview(child.view)
         layout?(child.view)
@@ -308,19 +326,25 @@ extension UIViewController {
 
     @discardableResult
     public func removeFromParentVC() -> Self {
-        guard parent != nil else { return self }
+        guard parent != nil else {
+            return self
+        }
         self.willMove(toParent: nil)
         self.view.removeFromSuperview()
         self.removeFromParent()
         return self
     }
 
-    public var jobs_hasParent: Bool { self.parent != nil }
+    public var jobs_hasParent: Bool {
+        self.parent != nil
+    }
     // ================================== 滚动联动（iOS15+） ==================================
     @available(iOS 15.0, *)
     @discardableResult
-    public func byContentScrollView(_ scrollView: UIScrollView?, for edge: NSDirectionalRectEdge) -> Self {
-        self.setContentScrollView(scrollView, for: edge)
+    public func byContentScrollView(_ scrollView: UIScrollView?,
+                                    for edge: NSDirectionalRectEdge) -> Self {
+        self.setContentScrollView(scrollView,
+                                  for: edge)
         return self
     }
 

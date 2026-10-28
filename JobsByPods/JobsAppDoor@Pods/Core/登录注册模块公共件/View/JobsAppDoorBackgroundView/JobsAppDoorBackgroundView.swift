@@ -13,8 +13,10 @@ import JobsSwiftDSL
 import SnapKit
 
 final class JobsAppDoorBackgroundView: UIView {
+
     private lazy var imageView: UIImageView = {
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(true)
             .byAddTo(self) { make in
@@ -23,7 +25,8 @@ final class JobsAppDoorBackgroundView: UIView {
     }()
 
     private lazy var dimView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.black.withAlphaComponent(0.08))
             .byAddTo(self) { make in
                 make.edges.equalToSuperview()
@@ -74,7 +77,8 @@ final class JobsAppDoorBackgroundView: UIView {
             stopVideo()
         /// 处理循环视频背景分支
         case .video:
-            let screenRatio = bounds.height / max(bounds.width, 1)
+            let screenRatio = bounds.height / max(bounds.width,
+                                                  1)
             let resourceName = screenRatio > 2
                 ? configuration.notchVideoResourceName
                 : configuration.compactVideoResourceName
@@ -85,7 +89,8 @@ final class JobsAppDoorBackgroundView: UIView {
                 stopVideo()
                 return
             }
-            prepareVideo(url: url, muted: configuration.videoMuted)
+            prepareVideo(url: url,
+                         muted: configuration.videoMuted)
             loadedResourceName = resourceName
         }
     }
@@ -99,11 +104,15 @@ final class JobsAppDoorBackgroundView: UIView {
     }
 
     var currentVolume: Float {
-        guard let player else { return 0 };return player.isMuted ? 0 : player.volume
+        guard let player else {
+            return 0
+        }
+        return player.isMuted ? 0 : player.volume
     }
 
     func setVolume(_ volume: Float) {
-        let value = min(max(volume, 0), 1)
+        let value = min(max(volume,0),
+                        1)
         player?.volume = value
         player?.isMuted = value <= 0.001
     }
@@ -111,7 +120,9 @@ final class JobsAppDoorBackgroundView: UIView {
 }
 
 private extension JobsAppDoorBackgroundView {
-    func prepareVideo(url: URL, muted: Bool) {
+
+    func prepareVideo(url: URL,
+                      muted: Bool) {
         stopVideo()
         let player = AVPlayer(url: url)
         player.actionAtItemEnd = .none
@@ -119,14 +130,13 @@ private extension JobsAppDoorBackgroundView {
         let playerLayer = AVPlayerLayer(player: player)
         playerLayer.videoGravity = .resizeAspectFill
         playerLayer.byFrame(bounds)
-        layer.insertSublayer(playerLayer, below: dimView.layer)
+        layer.insertSublayer(playerLayer,
+                             below: dimView.layer)
         self.player = player
         self.playerLayer = playerLayer
-        playbackObserver = NotificationCenter.default.addObserver(
-            forName: .AVPlayerItemDidPlayToEndTime,
-            object: player.currentItem,
-            queue: .main
-        ) { [weak player] _ in
+        playbackObserver = NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime,
+                                                                  object: player.currentItem,
+                                                                  queue: .main) { [weak player] _ in
             player?.seek(to: .zero)
             player?.play()
         }

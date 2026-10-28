@@ -12,9 +12,13 @@ import UIKit
 #endif
 
 extension UIFont {
+
     public enum Avenir {
+
         public static func Black(_ size: CGFloat) -> UIFont {
-            UIFont(name: "Avenir-Black", size: size) ?? .systemFont(ofSize: size, weight: .black)
+            UIFont(name: "Avenir-Black",
+                   size: size) ?? .systemFont(ofSize: size,
+                                              weight: .black)
         }
     }
 }

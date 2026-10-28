@@ -16,6 +16,7 @@ import JobsSwiftBlock
 
 // MARK: - 关联对象 Key（用 UInt8 的地址唯一标识）
 private enum _JobsNavBarAO {
+
     static var bar:  UInt8 = 0
     static var conf: UInt8 = 0
 }
@@ -23,7 +24,9 @@ private enum _JobsNavBarAO {
 #if canImport(SnapKit)
 import SnapKit
 extension UIView {
+
     public struct JobsNavBarConfig {
+
         public var enabled: Bool = false
         public var style: JobsNavBar.Style = .init()
         public var titleProvider: JobsRetAttributedString? = nil          // nil -> 隐藏标题；不设=由宿主决定
@@ -37,40 +40,43 @@ extension UIView {
 #endif
 // MARK: - 公开：取到当前视图身上的 NavBar（只读）
 extension UIView {
+
     public var jobsNavBar: JobsNavBar? {
-        objc_getAssociatedObject(self, &_JobsNavBarAO.bar) as? JobsNavBar
+        objc_getAssociatedObject(self,
+                                 &_JobsNavBarAO.bar) as? JobsNavBar
     }
     /// 是否存在可见的“导航栏类视图”（优先 GKNavigationBar，其次 UINavigationBar）
     /// - Parameter deep: 是否递归遍历整棵子树（默认 true）
     public func jobs_hasVisibleTopBar(deep: Bool = true) -> Bool {
-    #if canImport(GKNavigationBarSwift)
+        #if canImport(GKNavigationBarSwift)
         return jobs_existingTopBar(deep: deep) != nil
-    #else
+        #else
         return false
-    #endif
+        #endif
     }
 }
 // MARK: - 私有：配置读写 + 应用
 @MainActor
 extension UIView {
+
     private var _jobsNavBarConfig: JobsNavBarConfig {
-        get { (objc_getAssociatedObject(self, &_JobsNavBarAO.conf) as? JobsNavBarConfig) ?? .init() }
+        get {
+            (objc_getAssociatedObject(self,
+                                      &_JobsNavBarAO.conf) as? JobsNavBarConfig) ?? .init()
+        }
         set {
-            objc_setAssociatedObject(
-                self,
-                &_JobsNavBarAO.conf,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self,
+                                     &_JobsNavBarAO.conf,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
     private func _setJobsNavBar(_ bar: JobsNavBar?) {
-        objc_setAssociatedObject(
-            self,
-            &_JobsNavBarAO.bar,
-            bar,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-        )
+        objc_setAssociatedObject(self,
+                                 &_JobsNavBarAO.bar,
+                                 bar,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
     private func _applyNavBarConfig() {
@@ -91,22 +97,28 @@ extension UIView {
             // ✅ 透传外层 backButtonLayout（触发 didSet -> 只重排约束，不重复 add）
             bar.backButtonLayout = cfg.backButtonLayout
             // 返回行为
-            if let onBack = cfg.onBack { bar.onBack = onBack }
+            if let onBack = cfg.onBack {
+                bar.onBack = onBack
+            }
             // 布局 NavBar 本体（与返回键无关）
             bar.snp.remakeConstraints { make in
                 if let L = cfg.layout {
-                    L(bar, make, self)
+                    L(bar,
+                      make,
+                      self)
                 } else {
                     make.top.equalTo(self.safeAreaLayoutGuide.snp.top)
                     make.left.right.equalToSuperview()
                 }
             }
-            (self as? JobsNavBarHost)?.jobsNavBarDidToggle(enabled: true, navBar: bar)
+            (self as? JobsNavBarHost)?.jobsNavBarDidToggle(enabled: true,
+                                                           navBar: bar)
         } else {
             if let bar = jobsNavBar {
                 bar.removeFromSuperview()
                 _setJobsNavBar(nil)
-                (self as? JobsNavBarHost)?.jobsNavBarDidToggle(enabled: false, navBar: bar)
+                (self as? JobsNavBarHost)?.jobsNavBarDidToggle(enabled: false,
+                                                               navBar: bar)
             }
         }
     }
@@ -114,6 +126,7 @@ extension UIView {
 // MARK: - UIView 链式 DSL（任何 UIView 均可使用）
 @MainActor
 extension UIView {
+
     @discardableResult
     public func byNavBarEnabled(_ on: Bool = true) -> Self {
         var c = _jobsNavBarConfig

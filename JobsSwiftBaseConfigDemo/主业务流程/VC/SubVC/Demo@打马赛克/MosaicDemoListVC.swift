@@ -20,37 +20,47 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class MosaicDemoListVC: BaseVC {
-    private enum Row: Int, CaseIterable {
+
+    private enum Row: Int,
+                      CaseIterable {
+
         case wholeImage
         case brush
         var title: String {
             switch self {
             /// 处理 .wholeImage 分支
-            case .wholeImage: return "整图粗细马赛克"
+            case .wholeImage:
+                return "整图粗细马赛克"
             /// 处理 .brush 分支
-            case .brush: return "手势涂抹马赛克"
+            case .brush:
+                return "手势涂抹马赛克"
             }
         }
         var subtitle: String {
             switch self {
             /// 处理 .wholeImage 分支
-            case .wholeImage: return "右侧拖动开关控制马赛克块大小，图片经 SDWebImage 封装加载"
+            case .wholeImage:
+                return "右侧拖动开关控制马赛克块大小，图片经 SDWebImage 封装加载"
             /// 处理 .brush 分支
-            case .brush: return "右上角开关开启后，手指划过的位置局部马赛克，图片经 Kingfisher 封装加载"
+            case .brush:
+                return "右上角开关开启后，手指划过的位置局部马赛克，图片经 Kingfisher 封装加载"
             }
         }
         var vcType: UIViewController.Type {
             switch self {
             /// 处理 .wholeImage 分支
-            case .wholeImage: return MosaicWholeImageDemoVC.self
+            case .wholeImage:
+                return MosaicWholeImageDemoVC.self
             /// 处理 .brush 分支
-            case .brush: return MosaicBrushDemoVC.self
+            case .brush:
+                return MosaicBrushDemoVC.self
             }
         }
     }
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
             .bySeparatorStyle(.singleLine)
@@ -74,8 +84,11 @@ final class MosaicDemoListVC: BaseVC {
     }
 }
 // MARK: - UITableViewDataSource, UITableViewDelegate
-extension MosaicDemoListVC: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension MosaicDemoListVC: UITableViewDataSource,
+                            UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
         Row.allCases.count
     }
 
@@ -83,20 +96,26 @@ extension MosaicDemoListVC: UITableViewDataSource, UITableViewDelegate {
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = Row.allCases[indexPath.row]
         return tableView
-            .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+            .byDequeueReusableCell(withType: UITableViewCell.self,
+                                   for: indexPath)
             .byAccessoryType(.disclosureIndicator)
             .byListConfig {
-                $0.byText(row.title)
+                $0
+                    .byText(row.title)
                     .bySecondaryText(row.subtitle)
-                    .byTextFont(JobsFont.systemFont(ofSize: 17, weight: .semibold))
-                    .bySecondaryFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+                    .byTextFont(JobsFont.systemFont(ofSize: 17,
+                                                    weight: .semibold))
+                    .bySecondaryFont(JobsFont.systemFont(ofSize: 13,
+                                                         weight: .regular))
                     .bySecondaryLines(0)
             }
     }
 
     func tableView(_ tableView: UITableView,
                    didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        Row.allCases[indexPath.row].vcType.init().byPush(self)
+        tableView.deselectRow(at: indexPath,
+                              animated: true)
+        Row.allCases[indexPath.row].vcType.init()
+            .byPush(self)
     }
 }

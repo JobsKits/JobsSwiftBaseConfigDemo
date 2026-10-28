@@ -24,6 +24,7 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsCountdownDemoVC: BaseVC {
+
     /// 是否正在倒计时这个状态除了本页使用以外，也要防止App闪退，所以需要实时记录在UserDefaults
     /// 倒计时剩余的时间，也需要用UserDefaults进行存取，防止App闪退
     /// 只有倒计时正在进行中的状态时，有剩余的时间（数据来源：UserDefaults存取，如果为0，则用默认值）
@@ -37,7 +38,8 @@ final class JobsCountdownDemoVC: BaseVC {
             UserDefaults.standard.bool(forKey: isCountdownTimeKey)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: isCountdownTimeKey)
+            UserDefaults.standard.set(newValue,
+                                      forKey: isCountdownTimeKey)
         }
     }
 
@@ -52,12 +54,14 @@ final class JobsCountdownDemoVC: BaseVC {
             return value > 0 ? value : defaultCountdownTime
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: countdownTimeKey)
+            UserDefaults.standard.set(newValue,
+                                      forKey: countdownTimeKey)
         }
     }
     /// 外层滚动视图
     private lazy var scrollView: UIScrollView = { [unowned self] in
-        UIScrollView.jobsMake { _ in }
+        UIScrollView
+            .jobsMake { _ in }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom).offset(10)
                 make.left.right.bottom.equalTo(view.safeAreaLayoutGuide)
@@ -65,7 +69,8 @@ final class JobsCountdownDemoVC: BaseVC {
     }()
     /// 内容容器，用来放所有标题和按钮
     private lazy var contentView: UIView = { [unowned self] in
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalToSuperview()
                 make.width.equalTo(scrollView.snp.width)
@@ -74,44 +79,57 @@ final class JobsCountdownDemoVC: BaseVC {
     /// 另一种方式@创建倒计时按钮
     private lazy var startButton: UIButton = {
         UIButton.sys()
-            .byTitle("开始".tr, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 22, weight: .bold))
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
+            .byTitle("开始".tr,
+                     for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 22,
+                                             weight: .bold))
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byBackgroundColor(JobsCor.systemBlue,
+                               for: .normal)
             .byCornerRadius(10)
             .byMasksToBounds(true)
-            // 每 tick：更新时间 & 最近触发时间
-            .onCountdownTick({ button, remain, total, kind in
-                /// TODO
+        // 每 tick：更新时间 & 最近触发时间
+        .onCountdownTick({ button, remain, total, kind in
+            /// TODO
             })
-            // 状态变化：驱动控制键（暂停/继续/Fire/停止）的可用与配色
-            .onTimerStateChange({ [weak self] button, old, new in
-                guard let self else { return }
-                /// TODO
+        // 状态变化：驱动控制键（暂停/继续/Fire/停止）的可用与配色
+        .onTimerStateChange({ [weak self] button, old, new in
+                guard let self else {
+                    return
+                }
+            /// TODO
             })
-            // 点击开始：不传 total => 正计时
-            .onTap { [weak self] btn in
-                guard let self else { return }
-                /// 正/倒计时配置
+        // 点击开始：不传 total => 正计时
+        .onTap { [weak self] btn in
+                guard let self else {
+                    return
+                }
+            /// 正/倒计时配置
                 guard isCountdownTime else {
-                    btn.startTimer(
-                        total: 60,// ❤️ 这里的参数如果不传（nil） => 则为正计时
-                        interval: 1,
-                        kind: nil) { [weak self] btn in
-                            guard let self else { return }
-                            isCountdownTime = YES
-                                            /// TODO
-                        };return
+                    btn.startTimer(total: 60,// ❤️ 这里的参数如果不传（nil） => 则为正计时
+                                   interval: 1,
+                                   kind: nil) { [weak self] btn in
+                        guard let self else {
+                            return
+                        }
+                        isCountdownTime = YES
+                /// TODO
+                    }
+                    return
                 }
             }
             .byAddTo(view) { [unowned self] make in
-                /// TODO
+        /// TODO
             }
     }()
     // MARK: - 1️⃣ 基础 60s（控制台打印）
     @available(iOS 15.0, *)
     private lazy var title1Label: UILabel = { [unowned self] in
-        UILabel.jobsMake { _ in }.byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .semibold))
             .byText("1️⃣ 基础 60s（控制台打印）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
@@ -123,14 +141,20 @@ final class JobsCountdownDemoVC: BaseVC {
     @available(iOS 15.0, *)
     private lazy var button1Basic: UIButton = { [unowned self] in
         UIButton.sys()
-            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
-            .byTitle("获取验证码".tr, for: .normal)
-            .byTitle("获取验证码".tr, for: .selected)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleColor(JobsCor.white, for: .selected)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
-            /// 倒计时按钮核心配置
-            .byCountdown { cfg in
+            .byBackgroundColor(JobsCor.systemBlue,
+                               for: .normal)
+            .byTitle("获取验证码".tr,
+                     for: .normal)
+            .byTitle("获取验证码".tr,
+                     for: .selected)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .selected)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
+        /// 倒计时按钮核心配置
+        .byCountdown { cfg in
                 cfg.mode = .down(from: 60)
                 cfg.renderConfiguration = { sec, base in
                     var c = base
@@ -141,8 +165,8 @@ final class JobsCountdownDemoVC: BaseVC {
                     print("🕒 倒计时运行中: \(sec)s")
                 }
             }
-            /// 把「点击按钮」和「启动倒计时」自动绑定起来
-            .byCountdownOnTapAuto()
+        /// 把「点击按钮」和「启动倒计时」自动绑定起来
+        .byCountdownOnTapAuto()
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title1Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -152,8 +176,10 @@ final class JobsCountdownDemoVC: BaseVC {
     // MARK: - 2️⃣ 每秒闪烁（背景交替颜色）
     @available(iOS 15.0, *)
     private lazy var title2Label: UILabel = { [unowned self] in
-        UILabel.jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .semibold))
             .byText("2️⃣ 每秒换色闪烁".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
@@ -165,14 +191,20 @@ final class JobsCountdownDemoVC: BaseVC {
     @available(iOS 15.0, *)
     private lazy var button2Flash: UIButton = { [unowned self] in
         UIButton.sys()
-            .byBackgroundColor(JobsCor.systemTeal, for: .normal)
-            .byTitle("开始闪烁倒计时".tr, for: .normal)
-            .byTitle("开始闪烁倒计时".tr, for: .selected)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleColor(JobsCor.white, for: .selected)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
-            /// 倒计时按钮核心配置
-            .byCountdown { cfg in
+            .byBackgroundColor(JobsCor.systemTeal,
+                               for: .normal)
+            .byTitle("开始闪烁倒计时".tr,
+                     for: .normal)
+            .byTitle("开始闪烁倒计时".tr,
+                     for: .selected)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .selected)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
+        /// 倒计时按钮核心配置
+        .byCountdown { cfg in
                 cfg.mode = .down(from: 20)
                 cfg.renderConfiguration = { sec, base in
                     var c = base
@@ -184,8 +216,8 @@ final class JobsCountdownDemoVC: BaseVC {
                     print("💡 闪烁中：\(sec)")
                 }
             }
-            /// 把「点击按钮」和「启动倒计时」自动绑定起来
-            .byCountdownOnTapAuto()
+        /// 把「点击按钮」和「启动倒计时」自动绑定起来
+        .byCountdownOnTapAuto()
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title2Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -195,8 +227,10 @@ final class JobsCountdownDemoVC: BaseVC {
     // MARK: - 3️⃣ 0.5s 间隔上数
     @available(iOS 15.0, *)
     private lazy var title3Label: UILabel = { [unowned self] in
-        UILabel.jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .semibold))
             .byText("3️⃣ 上数到 10（0.5s 间隔）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
@@ -208,14 +242,20 @@ final class JobsCountdownDemoVC: BaseVC {
     @available(iOS 15.0, *)
     private lazy var button3Up: UIButton = { [unowned self] in
         UIButton.sys()
-            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
-            .byTitle("0.5s 起步".tr, for: .normal)
-            .byTitle("0.5s 起步".tr, for: .selected)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleColor(JobsCor.white, for: .selected)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
-            /// 倒计时按钮核心配置
-            .byCountdown { cfg in
+            .byBackgroundColor(JobsCor.systemGreen,
+                               for: .normal)
+            .byTitle("0.5s 起步".tr,
+                     for: .normal)
+            .byTitle("0.5s 起步".tr,
+                     for: .selected)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .selected)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
+        /// 倒计时按钮核心配置
+        .byCountdown { cfg in
                 cfg.mode = .up(to: 10)
                 cfg.interval = 0.5
                 cfg.renderConfiguration = { sec, base in
@@ -227,8 +267,8 @@ final class JobsCountdownDemoVC: BaseVC {
                     print("⚡️ 进度: \(sec)/10")
                 }
             }
-            /// 把「点击按钮」和「启动倒计时」自动绑定起来
-            .byCountdownOnTapAuto()
+        /// 把「点击按钮」和「启动倒计时」自动绑定起来
+        .byCountdownOnTapAuto()
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title3Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -238,7 +278,10 @@ final class JobsCountdownDemoVC: BaseVC {
     // MARK: - 4️⃣ 进入即渲染（renderOnInit）
     @available(iOS 15.0, *)
     private lazy var title4Label: UILabel = { [unowned self] in
-        UILabel.jobsMake { _ in }.byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .semibold))
             .byText("4️⃣ 进入即渲染（renderOnInit）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
@@ -250,14 +293,20 @@ final class JobsCountdownDemoVC: BaseVC {
     @available(iOS 15.0, *)
     private lazy var button4RenderOnInit: UIButton = { [unowned self] in
         UIButton.sys()
-            .byBackgroundColor(JobsCor.systemIndigo, for: .normal)
-            .byTitle("进入已显示".tr, for: .normal)
-            .byTitle("进入已显示".tr, for: .selected)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleColor(JobsCor.white, for: .selected)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
-            /// 倒计时按钮核心配置
-            .byCountdown { cfg in
+            .byBackgroundColor(JobsCor.systemIndigo,
+                               for: .normal)
+            .byTitle("进入已显示".tr,
+                     for: .normal)
+            .byTitle("进入已显示".tr,
+                     for: .selected)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .selected)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
+        /// 倒计时按钮核心配置
+        .byCountdown { cfg in
                 cfg.mode = .down(from: 10)
                 cfg.renderOnInit = true
                 cfg.renderConfiguration = { sec, base in
@@ -266,8 +315,8 @@ final class JobsCountdownDemoVC: BaseVC {
                     return c
                 }
             }
-            /// 把「点击按钮」和「启动倒计时」自动绑定起来
-            .byCountdownOnTapAuto()
+        /// 把「点击按钮」和「启动倒计时」自动绑定起来
+        .byCountdownOnTapAuto()
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title4Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -277,8 +326,10 @@ final class JobsCountdownDemoVC: BaseVC {
     // MARK: - 5️⃣ 富文本标题（JobsRichText）
     @available(iOS 15.0, *)
     private lazy var title5Label: UILabel = { [unowned self] in
-        UILabel.jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .semibold))
             .byText("5️⃣ 富文本标题（JobsRichText）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
@@ -290,14 +341,20 @@ final class JobsCountdownDemoVC: BaseVC {
     @available(iOS 15.0, *)
     private lazy var button5RichText: UIButton = { [unowned self] in
         UIButton.sys()
-            .byBackgroundColor(JobsCor.systemPurple, for: .normal)
-            .byTitle("富文本倒计时".tr, for: .normal)
-            .byTitle("富文本倒计时".tr, for: .selected)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleColor(JobsCor.white, for: .selected)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
-            /// 倒计时按钮核心配置
-            .byCountdown { cfg in
+            .byBackgroundColor(JobsCor.systemPurple,
+                               for: .normal)
+            .byTitle("富文本倒计时".tr,
+                     for: .normal)
+            .byTitle("富文本倒计时".tr,
+                     for: .selected)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .selected)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
+        /// 倒计时按钮核心配置
+        .byCountdown { cfg in
                 cfg.mode = .down(from: 15)
                 cfg.renderConfiguration = { sec, base in
                     var c = base
@@ -306,25 +363,29 @@ final class JobsCountdownDemoVC: BaseVC {
                         $0.lineSpacing = 1.5
                     }
                     let runs: [JobsRichRun] = [
-                        JobsRichRun(.text("剩余 "))
-                            .font(JobsFont.systemFont(ofSize: 16, weight: .semibold))
-                            .color(JobsCor.systemBlue),
-                        JobsRichRun(.text("\(sec)"))
-                            .font(JobsFont.monospacedDigitSystemFont(ofSize: 16, weight: .bold))
-                            .color(JobsCor.systemBlue)
-                            .underline(.single, color: JobsCor.systemBlue),
-                        JobsRichRun(.text(" s"))
-                            .font(JobsFont.systemFont(ofSize: 16))
-                            .color(JobsCor.systemBlue)
-                    ]
-                    let ns = JobsRichText.make(runs, paragraphStyle: ps)
+                    JobsRichRun(.text("剩余 "))
+                        .font(JobsFont.systemFont(ofSize: 16,
+                                                  weight: .semibold))
+                        .color(JobsCor.systemBlue),
+                    JobsRichRun(.text("\(sec)"))
+                        .font(JobsFont.monospacedDigitSystemFont(ofSize: 16,
+                                                                 weight: .bold))
+                        .color(JobsCor.systemBlue)
+                        .underline(.single,
+                                   color: JobsCor.systemBlue),
+                    JobsRichRun(.text(" s"))
+                        .font(JobsFont.systemFont(ofSize: 16))
+                        .color(JobsCor.systemBlue)
+                ]
+                    let ns = JobsRichText.make(runs,
+                                               paragraphStyle: ps)
                     c.title = nil
                     c.attributedTitle = AttributedString(ns)
                     return c
                 }
             }
-            /// 把「点击按钮」和「启动倒计时」自动绑定起来
-            .byCountdownOnTapAuto()
+        /// 把「点击按钮」和「启动倒计时」自动绑定起来
+        .byCountdownOnTapAuto()
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title5Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -334,8 +395,10 @@ final class JobsCountdownDemoVC: BaseVC {
     // MARK: - 6️⃣ 图标附件 + 文本富文本
     @available(iOS 15.0, *)
     private lazy var title6Label: UILabel = { [unowned self] in
-        UILabel.jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .semibold))
             .byText("6️⃣ 附件 + 文本富文本".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
@@ -347,35 +410,46 @@ final class JobsCountdownDemoVC: BaseVC {
     @available(iOS 15.0, *)
     private lazy var button6Attachment: UIButton = { [unowned self] in
         UIButton.sys()
-            .byBackgroundColor(JobsCor.systemPink, for: .normal)
-            .byTitle("附件说明".tr, for: .normal)
-            .byTitle("附件说明".tr, for: .selected)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleColor(JobsCor.white, for: .selected)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
-            /// 倒计时按钮核心配置
-            .byCountdown { cfg in
+            .byBackgroundColor(JobsCor.systemPink,
+                               for: .normal)
+            .byTitle("附件说明".tr,
+                     for: .normal)
+            .byTitle("附件说明".tr,
+                     for: .selected)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .selected)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
+        /// 倒计时按钮核心配置
+        .byCountdown { cfg in
                 cfg.mode = .down(from: 8)
                 cfg.renderConfiguration = { sec, base in
                     var c = base
                     let att = jobsMakeTextAttachment {
-                        $0.image = "paperclip".sysImg(UIImage.SymbolConfiguration(pointSize: 14, weight: .medium))
+                        $0.image = "paperclip".sysImg(UIImage.SymbolConfiguration(pointSize: 14,
+                                                                                  weight: .medium))
                     }
                     let runs: [JobsRichRun] = [
-                        JobsRichRun(.attachment(att, CGSize(width: 14, height: 14))),
-                        JobsRichRun(.text(" 附件 \(sec)s"))
-                            .font(JobsFont.systemFont(ofSize: 14))
-                            .color(JobsCor.white)
-                    ]
-                    let ps = jobsMakeParagraphStyle { $0.alignment = .center }
-                    let ns = JobsRichText.make(runs, paragraphStyle: ps)
+                    JobsRichRun(.attachment(att,
+                                            CGSize(width: 14, height: 14))),
+                    JobsRichRun(.text(" 附件 \(sec)s"))
+                        .font(JobsFont.systemFont(ofSize: 14))
+                        .color(JobsCor.white)
+                ]
+                    let ps = jobsMakeParagraphStyle {
+                        $0.alignment = .center
+                    }
+                    let ns = JobsRichText.make(runs,
+                                               paragraphStyle: ps)
                     c.title = nil
                     c.attributedTitle = AttributedString(ns)
                     return c
                 }
             }
-            /// 把「点击按钮」和「启动倒计时」自动绑定起来
-            .byCountdownOnTapAuto()
+        /// 把「点击按钮」和「启动倒计时」自动绑定起来
+        .byCountdownOnTapAuto()
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title6Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
@@ -385,7 +459,10 @@ final class JobsCountdownDemoVC: BaseVC {
     // MARK: - 7️⃣ 运行中允许点击（弹 Toast 提示）
     @available(iOS 15.0, *)
     private lazy var title7Label: UILabel = { [unowned self] in
-        UILabel.jobsMake { _ in }.byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .semibold))
             .byText("7️⃣ 运行中允许点击（弹 Toast 提示）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
@@ -397,14 +474,20 @@ final class JobsCountdownDemoVC: BaseVC {
     @available(iOS 15.0, *)
     private lazy var button7Tappable: UIButton = { [unowned self] in
         UIButton.sys()
-            .byBackgroundColor(JobsCor.systemOrange, for: .normal)
-            .byTitle("运行可点".tr, for: .normal)
-            .byTitle("运行可点".tr, for: .selected)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleColor(JobsCor.white, for: .selected)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
-            /// 倒计时按钮核心配置
-            .byCountdown { cfg in
+            .byBackgroundColor(JobsCor.systemOrange,
+                               for: .normal)
+            .byTitle("运行可点".tr,
+                     for: .normal)
+            .byTitle("运行可点".tr,
+                     for: .selected)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .selected)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
+        /// 倒计时按钮核心配置
+        .byCountdown { cfg in
                 cfg.mode = .down(from: 12)
                 cfg.clickableWhileRunning = true
                 cfg.onTapWhileRunning = { btn, _ in
@@ -416,21 +499,24 @@ final class JobsCountdownDemoVC: BaseVC {
                     return c
                 }
             }
-            /// 把「点击按钮」和「启动倒计时」自动绑定起来
-//            .byCountdownOnTapAuto()
-            .onTap { [weak self] sender in
+        /// 把「点击按钮」和「启动倒计时」自动绑定起来
+        //            .byCountdownOnTapAuto()
+        .onTap { [weak self] sender in
                 guard let self = self,
                       let ctrl = sender.jobsCountdownController
-                else { return }
+            else {
+                    return
+                }
                 if ctrl.isRunning {
-                    // 正在跑
+                // 正在跑
                     if ctrl.config.clickableWhileRunning {
-                        ctrl.config.onTapWhileRunning?(sender, ctrl.config)
+                        ctrl.config.onTapWhileRunning?(sender,
+                                                       ctrl.config)
                     } else {
-                        // 不可点就直接吞掉点击
+                // 不可点就直接吞掉点击
                     }
                 } else {
-                    // 未运行 -> 开始
+                // 未运行 -> 开始
                     ctrl.start()
                 }
             }
@@ -438,7 +524,7 @@ final class JobsCountdownDemoVC: BaseVC {
                 make.top.equalTo(title7Label.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(46)
-                // 最后一个顺便把 contentView 的 bottom 撑开，保证 Scroll 正常滚动
+            // 最后一个顺便把 contentView 的 bottom 撑开，保证 Scroll 正常滚动
                 make.bottom.equalTo(contentView.snp.bottom).offset(-24)
             }
     }()
@@ -465,7 +551,8 @@ final class JobsCountdownDemoVC: BaseVC {
             title7Label.byVisible(YES)
             button7Tappable.byVisible(YES)
         } else {
-            UILabel.jobsMake { _ in }
+            UILabel
+                .jobsMake { _ in }
                 .byText("需要 iOS 15+ 的 UIButton.Configuration".tr)
                 .byTextColor(JobsCor.secondaryLabel)
                 .byTextAlignment(.center)

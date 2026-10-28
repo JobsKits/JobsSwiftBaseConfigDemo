@@ -15,6 +15,7 @@ import UIKit
 import JXSegmentedView
 // MARK: - RainbowLine
 extension JXSegmentedIndicatorRainbowLineView {
+
     @discardableResult
     public func byIndicatorColors(_ v: [UIColor]) -> Self {
         indicatorColors = v

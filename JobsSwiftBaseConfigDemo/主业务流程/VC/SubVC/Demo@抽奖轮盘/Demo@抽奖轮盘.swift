@@ -21,40 +21,45 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class LuckyWheelDemoVC: BaseVC {
+
     private lazy var wheelView: LuckyWheelView = {
         LuckyWheelView()
             .bySegments([
                 .init(text: "一等奖".tr,
-                      textFont: JobsFont.systemFont(ofSize: 12, weight: .medium),
+                      textFont: JobsFont.systemFont(ofSize: 12,
+                                                    weight: .medium),
                       textColor: .randomColor(),
                       backgroundColor: .randomColor(),
                       placeholderImage: "globe".sysImg,
-                      imageURLString:"https://picsum.photos/30"),
+                      imageURLString: "https://picsum.photos/30"),
                 .init(text: "二等奖".tr,
-                      textFont: JobsFont.systemFont(ofSize: 12, weight: .medium),
+                      textFont: JobsFont.systemFont(ofSize: 12,
+                                                    weight: .medium),
                       textColor: .randomColor(),
                       backgroundColor: .randomColor(),
                       placeholderImage: "plus".sysImg,
-                      imageURLString:"https://picsum.photos/30"),
+                      imageURLString: "https://picsum.photos/30"),
                 .init(text: "三等奖".tr,
-                      textFont: JobsFont.systemFont(ofSize: 12, weight: .medium),
+                      textFont: JobsFont.systemFont(ofSize: 12,
+                                                    weight: .medium),
                       textColor: .randomColor(),
                       backgroundColor: .randomColor(),
                       placeholderImage: "message".sysImg,
-                      imageURLString:"https://picsum.photos/30"),
+                      imageURLString: "https://picsum.photos/30"),
                 .init(text: "谢谢参与".tr,
-                      textFont: JobsFont.systemFont(ofSize: 12, weight: .medium),
+                      textFont: JobsFont.systemFont(ofSize: 12,
+                                                    weight: .medium),
                       textColor: .randomColor(),
                       backgroundColor: .randomColor(),
                       placeholderImage: "tray".sysImg,
-                      imageURLString:"https://picsum.photos/30"),
+                      imageURLString: "https://picsum.photos/30"),
             ])
             .byPointerDirection(.right) // 停止锚点作为中奖结果
-            .bySpinDuration(3.0)
+        .bySpinDuration(3.0)
             .byInitialVelocity(25.0)
             .byPanRotationEnabled(true)
             .onSegmentTap { segment in
-                /// 短按和旋转停止后的中奖结果
+            /// 短按和旋转停止后的中奖结果
                 "🍀 短按扇形 \(String(describing: segment.text?.rnl))".toast
             }
             .onSegmentLongPress { segment, gr in
@@ -71,21 +76,23 @@ final class LuckyWheelDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
-        jobsSetupGKNav(
-            title: "抽奖转盘".tr,
-            rightButtons: [
+        jobsSetupGKNav(title: "抽奖转盘".tr,
+                       rightButtons: [
                 UIButton.sys()
-                    /// 按钮图片@图文关系
-                    .byImage("pause.circle.fill".sysImg, for: .normal)
-                    .byImage("pause.circle.fill".sysImg, for: .selected)
-                    /// 事件触发@点按
-                    .onTap { [weak self] sender in
-                        guard let self else { return }
-                        sender.byToggleSelected()
-                        wheelView.stopSpin()
-                    }
-            ]
-        )
+                /// 按钮图片@图文关系
+                .byImage("pause.circle.fill".sysImg,
+                         for: .normal)
+                    .byImage("pause.circle.fill".sysImg,
+                             for: .selected)
+                /// 事件触发@点按
+                .onTap { [weak self] sender in
+                guard let self else {
+                    return
+                }
+                sender.byToggleSelected()
+                wheelView.stopSpin()
+            }
+            ])
         wheelView.byVisible(YES)
     }
 }

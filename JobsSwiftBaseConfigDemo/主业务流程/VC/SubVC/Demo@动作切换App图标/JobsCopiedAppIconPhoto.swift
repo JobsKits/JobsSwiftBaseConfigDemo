@@ -7,7 +7,10 @@
 
 import Foundation
 
-struct JobsCopiedAppIconPhoto: Codable, Hashable, Identifiable {
+struct JobsCopiedAppIconPhoto: Codable,
+                               Hashable,
+                               Identifiable {
+
     let id: UUID
     let fileName: String
     let createdAt: Date

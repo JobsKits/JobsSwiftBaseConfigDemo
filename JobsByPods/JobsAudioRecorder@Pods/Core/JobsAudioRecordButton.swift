@@ -15,6 +15,7 @@ import JobsSwiftTimer
 import JobsSwiftDSL
 
 public final class JobsAudioRecordButton: UIButton {
+
     public var duration: TimeInterval = 60
     public var minimumValidDuration: TimeInterval = 3
     public var onBegin: (() -> Bool)?
@@ -42,7 +43,8 @@ public final class JobsAudioRecordButton: UIButton {
     private func commonInit() {
         backgroundColor = JobsCor.clear
         accessibilityLabel = "按住录音"
-        layer.insertSublayer(innerLayer, at: 0)
+        layer.insertSublayer(innerLayer,
+                             at: 0)
         layer.addSublayer(outerRingLayer)
         outerRingLayer
             .byFillColor(JobsCor.clear)
@@ -50,9 +52,15 @@ public final class JobsAudioRecordButton: UIButton {
             .byLineWidth(4)
             .byLineCap(.round)
         innerLayer.byFillColor(JobsCor.white)
-        addTarget(self, action: #selector(touchDown), for: .touchDown)
-        addTarget(self, action: #selector(touchUpInside), for: .touchUpInside)
-        addTarget(self, action: #selector(touchCancelled), for: [.touchDragExit, .touchCancel, .touchUpOutside])
+        addTarget(self,
+                  action: #selector(touchDown),
+                  for: .touchDown)
+        addTarget(self,
+                  action: #selector(touchUpInside),
+                  for: .touchUpInside)
+        addTarget(self,
+                  action: #selector(touchCancelled),
+                  for: [.touchDragExit, .touchCancel, .touchUpOutside])
     }
 
 
@@ -60,13 +68,17 @@ public final class JobsAudioRecordButton: UIButton {
         super.layoutSubviews()
         outerRingLayer.byFrame(bounds)
         innerLayer.byFrame(bounds)
-        outerRingLayer.byPath(UIBezierPath.make(ovalIn: bounds.insetBy(dx: 4, dy: 4)).cgPath)
-        innerLayer.byPath(UIBezierPath.make(ovalIn: bounds.insetBy(dx: 14, dy: 14)).cgPath)
+        outerRingLayer.byPath(UIBezierPath.make(ovalIn: bounds.insetBy(dx: 4,
+                                                                       dy: 4)).cgPath)
+        innerLayer.byPath(UIBezierPath.make(ovalIn: bounds.insetBy(dx: 14,
+                                                                   dy: 14)).cgPath)
         byFuseOuterRingLayoutIfNeeded()
     }
 
     @objc private func touchDown() {
-        guard !active, duration.isFinite, duration > 0, minimumValidDuration.isFinite, minimumValidDuration >= 0 else { return }
+        guard !active, duration.isFinite, duration > 0, minimumValidDuration.isFinite, minimumValidDuration >= 0 else {
+            return
+        }
         active = true
         guard onBegin?() ?? true else {
             active = false
@@ -75,38 +87,40 @@ public final class JobsAudioRecordButton: UIButton {
         activeMinimumDuration = minimumValidDuration
         recordingStartedAt = ProcessInfo.processInfo.systemUptime
         accessibilityLabel = "松开保存"
-        let normalizedDuration = max(1, duration)
-        let thresholdProgress = max(
-            0,
-            min(1, activeMinimumDuration / normalizedDuration)
-        )
-        byFusePressStart(
-            ringConfig: JobsFuseOuterRingConfig(
-                lineWidth: 4,
-                strokeColor: JobsCor.systemRed,
-                trackColor: nil,
-                growDuration: normalizedDuration,
-                repeatsWhileHolding: false,
-                retreatDuration: 0.22,
-                fadeOutDuration: 0.06,
-                inset: 2,
-                startsFromTop: true,
-                thresholdProgress: thresholdProgress,
-                thresholdColor: JobsCor.white
-            ),
-            scale: 1.08
-        )
+        let normalizedDuration = max(1,
+                                     duration)
+        let thresholdProgress = max(0,
+                                    min(1,
+                                        activeMinimumDuration / normalizedDuration))
+        byFusePressStart(ringConfig: JobsFuseOuterRingConfig(lineWidth: 4,
+                                                             strokeColor: JobsCor.systemRed,
+                                                             trackColor: nil,
+                                                             growDuration: normalizedDuration,
+                                                             repeatsWhileHolding: false,
+                                                             retreatDuration: 0.22,
+                                                             fadeOutDuration: 0.06,
+                                                             inset: 2,
+                                                             startsFromTop: true,
+                                                             thresholdProgress: thresholdProgress,
+                                                             thresholdColor: JobsCor.white),
+                         scale: 1.08)
         let countdown = JobsSwiftTimerCountdown(duration: normalizedDuration)
-        countdown.onFinished = { [weak self] _ in self?.finish(automatically: true) }
+        countdown.onFinished = { [weak self] _ in
+            self?.finish(automatically: true)
+        }
         self.countdown = countdown
         countdown.start()
     }
 
-    @objc private func touchUpInside() { finish(automatically: false) }
+    @objc private func touchUpInside() {
+        finish(automatically: false)
+    }
 
     public override func didMoveToWindow() {
         super.didMoveToWindow()
-        if window == nil { cancelRecording() }
+        if window == nil {
+            cancelRecording()
+        }
     }
 
     /// 页面复用或退出时终止当前按住录音。
@@ -115,15 +129,20 @@ public final class JobsAudioRecordButton: UIButton {
     }
 
     @objc private func touchCancelled() {
-        guard active else { return }
+        guard active else {
+            return
+        }
         active = false
         resetVisuals()
         onCancel?()
     }
 
     private func finish(automatically: Bool) {
-        guard active else { return }
-        let recordedDuration = max(0, ProcessInfo.processInfo.systemUptime - recordingStartedAt)
+        guard active else {
+            return
+        }
+        let recordedDuration = max(0,
+                                   ProcessInfo.processInfo.systemUptime - recordingStartedAt)
         let tooShort = recordedDuration < activeMinimumDuration
         active = false
         resetVisuals()

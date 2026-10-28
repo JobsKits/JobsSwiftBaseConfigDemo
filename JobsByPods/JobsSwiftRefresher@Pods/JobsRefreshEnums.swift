@@ -14,11 +14,13 @@ import UIKit
 // MARK: - Core types
 @MainActor
 public enum JobsAxis {
+
     case vertical, horizontal
 }
 
 @MainActor
 public enum JobsPosition {
+
     case header      // top
     case footer      // bottom
     case left
@@ -26,26 +28,31 @@ public enum JobsPosition {
     public var axis: JobsAxis {
         switch self {
         /// 合并处理 .header、.footer 分支
-        case .header, .footer: return .vertical
+        case .header, .footer:
+            return .vertical
         /// 合并处理 .left、.right 分支
-        case .left, .right:    return .horizontal
+        case .left, .right:
+            return .horizontal
         }
     }
 }
 
 @MainActor
 public enum JobsRefreshRole: Equatable {
+
     case refresh
     case loadMore
 }
 
 @MainActor
 public protocol JobsRefreshRoleConfigurable: AnyObject {
+
     var refreshRole: JobsRefreshRole { get set }
 }
 
 @MainActor
 public enum JobsRefreshHorizontalMode: Equatable {
+
     /// 横向向右拉 = 刷新；横向向左拉 = 加载更多
     case refreshRightLoadLeft
     /// 横向向右拉 = 加载更多；横向向左拉 = 刷新
@@ -61,11 +68,11 @@ public enum JobsRefreshHorizontalMode: Equatable {
             return .loadMore
         /// 合并处理 .refreshRightLoadLeft、.loadRightRefreshLeft 分支
         case (.refreshRightLoadLeft, .left),
-             (.loadRightRefreshLeft, .right):
+        (.loadRightRefreshLeft, .right):
             return .refresh
         /// 合并处理 .refreshRightLoadLeft、.loadRightRefreshLeft 分支
         case (.refreshRightLoadLeft, .right),
-             (.loadRightRefreshLeft, .left):
+        (.loadRightRefreshLeft, .left):
             return .loadMore
         }
     }
@@ -73,6 +80,7 @@ public enum JobsRefreshHorizontalMode: Equatable {
 
 @MainActor
 public enum JobsState: Equatable {
+
     case idle                       // 初始/重置
     case pulling(progress: CGFloat) // 拖拽进行中（0...1）
     case ready                      // 达到阈值，松手即可触发
@@ -86,6 +94,7 @@ public enum JobsState: Equatable {
 
 @MainActor
 public enum JobsSwitch {
+
     case refreshing
     case normal
     case failed
@@ -96,6 +105,7 @@ public enum JobsSwitch {
 
 @MainActor
 public struct JobsRefreshFeedback {
+
     public let enablesHaptics: Bool
     public let soundFileName: String?
 
@@ -116,6 +126,7 @@ public struct JobsRefreshFeedback {
 // 3) 两者都没设置时回退普通菊花
 @MainActor
 public enum JobsLottieLoopMode: Equatable {
+
     case loop
     case playOnce
     case autoReverse
@@ -123,6 +134,7 @@ public enum JobsLottieLoopMode: Equatable {
 
 @MainActor
 public struct JobsLottieSetting: Equatable {
+
     /// 动画资源名：推荐不带扩展名（"loading"）。也支持 "xxx.json" / "folder/xxx.json"。
     public var animationName: String
     /// 资源所在 bundle（默认 .main）
@@ -142,6 +154,7 @@ public struct JobsLottieSetting: Equatable {
 
 @MainActor
 public enum JobsLottiePreference: Equatable {
+
     /// 继承全局（全局没配置则回退菊花）
     case inherit
     /// 强制禁用（即使全局有配置也回退菊花）
@@ -161,11 +174,13 @@ public enum JobsLottiePreference: Equatable {
 /// 视图可被 DSL/Proxy 注入 per-slot Lottie 配置。
 @MainActor
 public protocol JobsLottieConfigurable: AnyObject {
+
     var lottiePreference: JobsLottiePreference { get set }
 }
 /// 全局默认（可选）：单独设置优先级更高。
 @MainActor
 public enum JobsLottieConfig {
+
     private static var _global: JobsLottiePreference = .inherit
 
     public static var global: JobsLottiePreference {
@@ -188,6 +203,7 @@ public enum JobsLottieConfig {
 // MARK: - Image / GIF / Network frames
 @MainActor
 public enum JobsRefreshImageSource: Equatable {
+
     /// Bundle 内的 gif 文件名，支持带或不带 `.gif`。
     case gif(name: String, bundle: Bundle)
     /// 多张静态图轮播，`interval` 是单帧时长。
@@ -198,6 +214,7 @@ public enum JobsRefreshImageSource: Equatable {
 
 @MainActor
 public struct JobsRefreshImageSetting: Equatable {
+
     public var source: JobsRefreshImageSource
 
     public init(source: JobsRefreshImageSource) {
@@ -207,34 +224,41 @@ public struct JobsRefreshImageSetting: Equatable {
 
 @MainActor
 public enum JobsRefreshImagePreference: Equatable {
+
     case inherit
     case disabled
     case custom(JobsRefreshImageSetting)
 
     public static func gif(_ name: String,
                            bundle: Bundle = .main) -> JobsRefreshImagePreference {
-        .custom(.init(source: .gif(name: name, bundle: bundle)))
+        .custom(.init(source: .gif(name: name,
+                                   bundle: bundle)))
     }
 
     public static func frames(_ names: [String],
                               bundle: Bundle = .main,
                               interval: TimeInterval = 0.08) -> JobsRefreshImagePreference {
-        .custom(.init(source: .frames(names: names, bundle: bundle, interval: interval)))
+        .custom(.init(source: .frames(names: names,
+                                      bundle: bundle,
+                                      interval: interval)))
     }
 
     public static func network(_ url: URL,
                                placeholderName: String? = nil) -> JobsRefreshImagePreference {
-        .custom(.init(source: .network(url: url, placeholderName: placeholderName)))
+        .custom(.init(source: .network(url: url,
+                                       placeholderName: placeholderName)))
     }
 }
 
 @MainActor
 public protocol JobsRefreshImageConfigurable: AnyObject {
+
     var imagePreference: JobsRefreshImagePreference { get set }
 }
 
 @MainActor
 public enum JobsRefreshImageConfig {
+
     private static var _global: JobsRefreshImagePreference = .inherit
 
     public static var global: JobsRefreshImagePreference {

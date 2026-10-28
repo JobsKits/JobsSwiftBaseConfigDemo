@@ -16,6 +16,7 @@ import JobsSwiftBaseDefines
 #if canImport(Kingfisher)
 import Kingfisher
 extension URL {
+
     // ================================== iOS 13+ async/await 入口 ==================================
     #if swift(>=5.5) && canImport(_Concurrency)
     @available(iOS 13.0, tvOS 13.0, *)
@@ -37,12 +38,16 @@ extension URL {
         }
         // 本地文件
         if isFileURL {
-            if let img = UIImage(contentsOfFile: path) { return img }
+            if let img = UIImage(contentsOfFile: path) {
+                return img
+            }
             throw KFError.notFound
         }
         // Bundle 资源兜底：取最后路径名（无扩展）
         let name = deletingPathExtension().lastPathComponent
-        if let img = UIImage(named: name) { return img }
+        if let img = UIImage(named: name) {
+            return img
+        }
         throw KFError.notFound
     }
     #endif
@@ -58,15 +63,25 @@ extension URL {
                 case .failure(let err):
                     completion(.failure(err))
                 }
-            };return
+            }
+            return
         }
         if isFileURL {
-            if let img = UIImage(contentsOfFile: path) { completion(.success(img)) }
-            else { completion(.failure(KFError.notFound)) };return
+            if let img = UIImage(contentsOfFile: path) {
+                completion(.success(img))
+            }
+            else {
+                completion(.failure(KFError.notFound))
+            }
+            return
         }
         let name = deletingPathExtension().lastPathComponent
-        if let img = UIImage(named: name) { completion(.success(img)) }
-        else { completion(.failure(KFError.notFound)) }
+        if let img = UIImage(named: name) {
+            completion(.success(img))
+        }
+        else {
+            completion(.failure(KFError.notFound))
+        }
     }
 }
 #endif

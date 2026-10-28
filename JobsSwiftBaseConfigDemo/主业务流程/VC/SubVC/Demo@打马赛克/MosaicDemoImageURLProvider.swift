@@ -8,5 +8,6 @@
 import Foundation
 
 enum MosaicDemoImageURLProvider {
+
     static let sampleImage = "https://picsum.photos/900/1200"
 }

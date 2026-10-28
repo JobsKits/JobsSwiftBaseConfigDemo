@@ -15,9 +15,12 @@ import WebKit
 
 // ===== BaseWebView 专属：Web 配置 DSL =====
 extension BaseWebView {
+
     @discardableResult
     public func byAllowedHosts(_ hosts: [String]) -> Self {
-        allowedHosts = Set(hosts.map { $0.lowercased() })
+        allowedHosts = Set(hosts.map {
+            $0.lowercased()
+        })
         return self
     }
 
@@ -40,7 +43,8 @@ extension BaseWebView {
         injectDarkStylePatch = enable
         if enable {
             injectDarkCSS()
-        };return self
+        }
+        return self
     }
     /// ✅ 按请求动态提供 UA 后缀；返回 nil = 系统默认 UA；非空 = 通过 applicationNameForUserAgent 追加
     @discardableResult
@@ -65,7 +69,9 @@ extension BaseWebView {
     @discardableResult
     @MainActor
     public func byWebsiteDataStore(_ store: WKWebsiteDataStore) -> Self {
-        updateCreationConfiguration { overrideWebsiteDataStore = store }
+        updateCreationConfiguration {
+            overrideWebsiteDataStore = store
+        }
         return self
     }
     /// 使用持久化数据仓库（共享 Cookie/缓存）
@@ -84,13 +90,17 @@ extension BaseWebView {
     @discardableResult
     @MainActor
     public func byWebViewConfiguration(_ hook: @escaping (WKWebViewConfiguration) -> Void) -> Self {
-        updateCreationConfiguration { webViewConfigurationHook = hook }
+        updateCreationConfiguration {
+            webViewConfigurationHook = hook
+        }
         return self
     }
 
     @discardableResult
     public func byBridgeAllowedOrigins(_ origins: [String]) -> Self {
-        bridgeAllowedOrigins = Set(origins.map { $0.lowercased() })
+        bridgeAllowedOrigins = Set(origins.map {
+            $0.lowercased()
+        })
         return self
     }
 

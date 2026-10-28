@@ -25,30 +25,33 @@ import GKNavigationBarSwift
 #if canImport(BMPlayer)
 import BMPlayer
 final class PlayerLocalVC: BaseVC {
+
     // MARK: - 懒加载：播放器
     private lazy var player: BMPlayer = { [unowned self] in
         BMPlayer()
-            .byResource(BMPlayerResource(
-                name: "welcome_video",
-                definitions: [
-                    BMPlayerResourceDefinition(
-                        url: "welcome_video.mp4".bundleMediaURLRequire,
-                        definition: "本地"
-                    )
+            .byResource(BMPlayerResource(name: "welcome_video",
+                                         definitions: [
+                    BMPlayerResourceDefinition(url: "welcome_video.mp4".bundleMediaURLRequire,
+                                               definition: "本地")
                 ],
-                cover: nil,
-                subtitles: nil
-            ), definitionIndex: 0, autoPlay: true)
+                                         cover: nil,
+                                         subtitles: nil),
+                        definitionIndex: 0,
+                        autoPlay: true)
             .byVideoGravity(.resizeAspect)      // 需要铺满可改 .resizeAspectFill
-            .byPanGestureEnabled(true)
+        .byPanGestureEnabled(true)
             .byBack { [weak self] isFull in
-                guard let self else { return }
-                if !isFull { self.navigationController?.popViewController(animated: true) }
+                guard let self else {
+                    return
+                }
+                if !isFull {
+                    self.navigationController?.popViewController(animated: true)
+                }
             }
             .byAddTo(view) { [unowned self] make in
                 if self.view.jobs_hasVisibleTopBar() {
                     make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
-//                    make.left.right.bottom.equalToSuperview()
+                //                    make.left.right.bottom.equalToSuperview()
                     make.left.right.equalToSuperview()
                     make.height.equalTo(400)
                 } else {

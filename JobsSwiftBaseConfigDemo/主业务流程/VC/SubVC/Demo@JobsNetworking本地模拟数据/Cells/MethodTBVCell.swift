@@ -17,6 +17,7 @@ import JobsSwiftBaseDefines
 import JobsSwiftDSL
 
 final class MethodTBVCell: UITableViewCell {
+
     @discardableResult
     func byData(_ item: MethodDemoItem) -> Self {
         byText("\(item.methodType.title) Demo")
@@ -30,10 +31,13 @@ final class MethodTBVCell: UITableViewCell {
     // TODO: The legacy class method has no table view context; use cellSizeByData(_:in:) for sizing.
     @available(*, deprecated, message: "Use cellSizeByData(_:in:) with the table view.")
     static func cellSizeByData(_ data: Any?) -> CGSize {
-        return CGSize(width: UIScreen.main.bounds.width, height: 88)
+        return CGSize(width: UIScreen.main.bounds.width,
+                      height: 88)
     }
 
-    static func cellSizeByData(_ data: Any?, in view: UIView) -> CGSize {
-        return CGSize(width: view.bounds.width, height: 88)
+    static func cellSizeByData(_ data: Any?,
+                               in view: UIView) -> CGSize {
+        return CGSize(width: view.bounds.width,
+                      height: 88)
     }
 }

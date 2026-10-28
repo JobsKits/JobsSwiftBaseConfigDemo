@@ -24,12 +24,14 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class TimerDemoVC: BaseVC {
+
     // MARK: - Layout 常量
     let horizontalInset: CGFloat = 40
     let selectorHorizontalInset: CGFloat = 8
     let spacing: CGFloat = 12
     // MARK: - TimerState（旧文件依赖 TimerState，这里完整补齐）
     private enum TimerState {
+
         case idle
         case running
         case paused
@@ -50,21 +52,29 @@ final class TimerDemoVC: BaseVC {
     private var countdownRemaining: TimeInterval = 0
     // MARK: - Segmented（选择计时器内核）
     private lazy var kindSelector = UISegmentedControl(items: ["NSTimer".tr,
-                                                               "GCD".tr,
-                                                               "DisplayLink".tr,
-                                                               "RunLoop".tr])
+            "GCD".tr,
+            "DisplayLink".tr,
+            "RunLoop".tr])
         .bySelectedSegmentIndex(1) // 默认 GCD
+    .byTitleTextAttributes([
+            .font: JobsFont.systemFont(ofSize: 12,
+                                       weight: .semibold)
+        ],
+                           for: .normal)
         .byTitleTextAttributes([
-            .font: JobsFont.systemFont(ofSize: 12, weight: .semibold)
-        ], for: .normal)
-        .byTitleTextAttributes([
-            .font: JobsFont.systemFont(ofSize: 12, weight: .semibold)
-        ], for: .selected)
+            .font: JobsFont.systemFont(ofSize: 12,
+                                       weight: .semibold)
+        ],
+                               for: .selected)
         .onJobsChange { [weak self] (seg: UISegmentedControl) in
-            guard let strongSelf = self else { return }
+            guard let strongSelf = self else {
+                return
+            }
             onMainAsync(self) { vc in
                 let mapping: [JobsTimerKind] = [.foundation, .gcd, .displayLink, .runLoop]
-                let idx = max(0, min(seg.selectedSegmentIndex, mapping.count - 1))
+                let idx = max(0,
+                              min(seg.selectedSegmentIndex,
+                                  mapping.count - 1))
                 strongSelf.currentKind = mapping[idx]
                 strongSelf.rebuildActiveTimersForNewKind()
             }
@@ -77,9 +87,11 @@ final class TimerDemoVC: BaseVC {
         }
 
     // MARK: - 最近一次触发时间
-    private lazy var lastFireLabel = UILabel.jobsMake { _ in }
+    private lazy var lastFireLabel = UILabel
+        .jobsMake { _ in }
         .byText("Last: -")
-        .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 14, weight: .regular))
+        .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 14,
+                                                   weight: .regular))
         .byTextColor(JobsCor.secondaryLabel)
         .byTextAlignment(.center)
         .byAddTo(view) { [unowned self] make in
@@ -88,7 +100,8 @@ final class TimerDemoVC: BaseVC {
         }
 
     // MARK: - 步长输入框（修改 interval）
-    private lazy var intervalField = UITextField.jobsMake { _ in }
+    private lazy var intervalField = UITextField
+        .jobsMake { _ in }
         .byText("1.0")
         .byKeyboardType(.decimalPad)
         .byBorderStyle(.roundedRect)
@@ -100,17 +113,20 @@ final class TimerDemoVC: BaseVC {
             make.right.equalToSuperview().inset(40)
             make.height.equalTo(40)
         }
-        // 输入时仅更新内存值，不重建（避免频繁抖动）
-        .onJobsEvent(.editingChanged) { [weak self] (tf: UITextField) in
-            self?.applyIntervalFromField(tf, commit: false)
+    // 输入时仅更新内存值，不重建（避免频繁抖动）
+    .onJobsEvent(.editingChanged) { [weak self] (tf: UITextField) in
+            self?.applyIntervalFromField(tf,
+                                         commit: false)
         }
-        // 结束编辑后：若有正在运行/暂停的计时器，立即“停旧并用新步长重启”（重建）
-        .onJobsEvent(.editingDidEnd) { [weak self] (tf: UITextField) in
-            self?.applyIntervalFromField(tf, commit: true)
+    // 结束编辑后：若有正在运行/暂停的计时器，立即“停旧并用新步长重启”（重建）
+    .onJobsEvent(.editingDidEnd) { [weak self] (tf: UITextField) in
+            self?.applyIntervalFromField(tf,
+                                         commit: true)
         }
 
     // MARK: - 倒计时峰值输入框（只允许数字）
-    private lazy var countdownField = UITextField.jobsMake { _ in }
+    private lazy var countdownField = UITextField
+        .jobsMake { _ in }
         .byText("10")
         .byKeyboardType(.numberPad)
         .byBorderStyle(.roundedRect)
@@ -126,14 +142,20 @@ final class TimerDemoVC: BaseVC {
     // MARK: - 开始按钮（正计时）
     private lazy var startButton: UIButton = {
         UIButton.sys()
-            .byTitle("开始".tr, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 22, weight: .bold))
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
+            .byTitle("开始".tr,
+                     for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 22,
+                                             weight: .bold))
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byBackgroundColor(JobsCor.systemBlue,
+                               for: .normal)
             .byCornerRadius(10)
             .byMasksToBounds(true)
             .onTap { [weak self] _ in
-                guard let strongSelf = self else { return }
+                guard let strongSelf = self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     strongSelf.lastFireLabel.byText("Last: -")
                     strongSelf.startCountUp()
@@ -147,45 +169,45 @@ final class TimerDemoVC: BaseVC {
             }
     }()
     // MARK: - 控制键：暂停 / 继续 / Fire / 停止
-    private lazy var pauseButton = makeActionButton(
-        title: "暂停".tr,
-        titleColor: JobsCor.systemBlue,
-        subtitle: "悬空"
-    ) { [weak self] _ in
-        guard let strongSelf = self else { return }
+    private lazy var pauseButton = makeActionButton(title: "暂停".tr,
+                                                    titleColor: JobsCor.systemBlue,
+                                                    subtitle: "悬空") { [weak self] _ in
+        guard let strongSelf = self else {
+            return
+        }
         onMainAsync(self) { vc in
             strongSelf.pauseAll()
         }
     }
 
-    private lazy var resumeButton = makeActionButton(
-        title: "继续".tr,
-        titleColor: JobsCor.systemBlue,
-        subtitle: "恢复计时"
-    ) { [weak self] _ in
-        guard let strongSelf = self else { return }
+    private lazy var resumeButton = makeActionButton(title: "继续".tr,
+                                                     titleColor: JobsCor.systemBlue,
+                                                     subtitle: "恢复计时") { [weak self] _ in
+        guard let strongSelf = self else {
+            return
+        }
         onMainAsync(self) { vc in
             strongSelf.resumeAll()
         }
     }
 
-    private lazy var fireButton = makeActionButton(
-        title: "Fire",
-        titleColor: JobsCor.systemTeal,
-        subtitle: "触发并销毁"
-    ) { [weak self] _ in
-        guard let strongSelf = self else { return }
+    private lazy var fireButton = makeActionButton(title: "Fire",
+                                                   titleColor: JobsCor.systemTeal,
+                                                   subtitle: "触发并销毁") { [weak self] _ in
+        guard let strongSelf = self else {
+            return
+        }
         onMainAsync(self) { vc in
             strongSelf.fireOnceAll()
         }
     }
 
-    private lazy var stopButton = makeActionButton(
-        title: "停止".tr,
-        titleColor: JobsCor.systemRed,
-        subtitle: "销毁(无回调)"
-    ) { [weak self] _ in
-        guard let strongSelf = self else { return }
+    private lazy var stopButton = makeActionButton(title: "停止".tr,
+                                                   titleColor: JobsCor.systemRed,
+                                                   subtitle: "销毁(无回调)") { [weak self] _ in
+        guard let strongSelf = self else {
+            return
+        }
         onMainAsync(self) { vc in
             strongSelf.stopAll()
         }
@@ -193,7 +215,8 @@ final class TimerDemoVC: BaseVC {
 
     // MARK: - 说明 Fire 与 Stop 的区别
     private lazy var hintLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("Fire：触发回调后销毁定时器；\n停止：销毁但不触发回调。".tr)
             .byFont(JobsFont.systemFont(ofSize: 12))
             .byTextColor(JobsCor.secondaryLabel)
@@ -208,15 +231,21 @@ final class TimerDemoVC: BaseVC {
     // MARK: - 倒计时演示按钮
     private lazy var countdownButton: UIButton = {
         UIButton.sys()
-            .byTitle("获取验证码".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
+            .byTitle("获取验证码".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byBackgroundColor(JobsCor.systemGreen,
+                               for: .normal)
             .onTap { [weak self] btn in
-                guard let strongSelf = self else { return }
+                guard let strongSelf = self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     let total = strongSelf.parseCountdownTotal(10)
                     strongSelf.startCountDown(total: total)
-                    btn.byTitle("还剩 \(total)s", for: .normal)
+                    btn.byTitle("还剩 \(total)s",
+                                for: .normal)
                 }
             }
             .byAddTo(view) { [unowned self] make in
@@ -252,6 +281,7 @@ final class TimerDemoVC: BaseVC {
 }
 
 extension TimerDemoVC {
+
     // MARK: - 布局（生命周期按钮依次纵向排列）
     private func layoutButtons() {
         startButton.byAlpha(1)
@@ -273,17 +303,17 @@ extension TimerDemoVC {
     private func makeTimer(kind: JobsTimerKind,
                            interval: TimeInterval,
                            handler: @escaping JobsTimerCallback) -> JobsSwiftTimerProtocol {
-        let cfg = JobsSwiftTimerConfig(
-            interval: max(0.000_001, interval),
-            repeats: true,
-            tolerance: 0,
-            queue: .main,
-            runLoop: .main,
-            runLoopMode: .common,
-            pauseInBackground: true,
-            autoManageAppState: true
-        )
-        return JobsTimer(kind: kind, config: cfg, handler: handler)
+        let cfg = JobsSwiftTimerConfig(interval: max(0.000_001,interval),
+                                       repeats: true,
+                                       tolerance: 0,
+                                       queue: .main,
+                                       runLoop: .main,
+                                       runLoopMode: .common,
+                                       pauseInBackground: true,
+                                       autoManageAppState: true)
+        return JobsTimer(kind: kind,
+                         config: cfg,
+                         handler: handler)
     }
 
     // MARK: - 正计时：Start
@@ -295,17 +325,25 @@ extension TimerDemoVC {
         elapsed = 0
         countUpState = .running
         updateControlButtons(by: .running)
-        startButton.byTitle("0.0s", for: .normal)
+        startButton.byTitle("0.0s",
+                            for: .normal)
         lastFireLabel.byText("Last: -")
         let kind = currentKind
         let interval = intervalSec
-        let t = makeTimer(kind: kind, interval: interval) { [weak self] in
+        let t = makeTimer(kind: kind,
+                          interval: interval) { [weak self] in
             // ✅ Swift 6 / Sendable 同等待遇：冻结 + MainActor
-            guard let strongSelf = self else { return }
+            guard let strongSelf = self else {
+                return
+            }
             onMainAsync(self) { vc in
-                guard strongSelf.countUpState == .running else { return }
+                guard strongSelf.countUpState == .running else {
+                    return
+                }
                 strongSelf.elapsed += interval
-                strongSelf.startButton.byTitle(String(format: "%.1fs", strongSelf.elapsed), for: .normal)
+                strongSelf.startButton.byTitle(String(format: "%.1fs",
+                                                      strongSelf.elapsed),
+                                               for: .normal)
                 strongSelf.lastFireLabel.byText("Last: " + fmt(Date()))
             }
         }
@@ -318,23 +356,30 @@ extension TimerDemoVC {
     private func startCountDown(total: Int) {
         countdownTimer?.stop()
         countdownTimer = nil
-        countdownTotal = TimeInterval(max(1, total))
+        countdownTotal = TimeInterval(max(1,total))
         countdownRemaining = countdownTotal
         countdownState = .running
         updateControlButtons(by: .running)
-        countdownButton.byTitle("还剩 \(Int(countdownRemaining))s", for: .normal)
+        countdownButton.byTitle("还剩 \(Int(countdownRemaining))s",
+                                for: .normal)
         lastFireLabel.byText("Last: -")
         let kind = currentKind
         let interval = intervalSec
-        let t = makeTimer(kind: kind, interval: interval) { [weak self] in
+        let t = makeTimer(kind: kind,
+                          interval: interval) { [weak self] in
             // ✅ Swift 6 / Sendable 同等待遇：冻结 + MainActor
-            guard let strongSelf = self else { return }
+            guard let strongSelf = self else {
+                return
+            }
             onMainAsync(self) { vc in
-                guard strongSelf.countdownState == .running else { return }
+                guard strongSelf.countdownState == .running else {
+                    return
+                }
                 strongSelf.countdownRemaining -= interval
                 if strongSelf.countdownRemaining <= 0 {
                     strongSelf.countdownRemaining = 0
-                    strongSelf.countdownButton.byTitle("获取验证码".tr, for: .normal)
+                    strongSelf.countdownButton.byTitle("获取验证码".tr,
+                                                       for: .normal)
                     strongSelf.lastFireLabel.byText("Last: " + fmt(Date()))
                     print("✅ [\(strongSelf.currentKind)] 倒计时完成")
                     strongSelf.countdownTimer?.stop()
@@ -343,8 +388,10 @@ extension TimerDemoVC {
                     strongSelf.syncGlobalStateAfterStop()
                     return
                 }
-                let remainInt = max(0, Int(ceil(strongSelf.countdownRemaining)))
-                strongSelf.countdownButton.byTitle("还剩 \(remainInt)s", for: .normal)
+                let remainInt = max(0,
+                                    Int(ceil(strongSelf.countdownRemaining)))
+                strongSelf.countdownButton.byTitle("还剩 \(remainInt)s",
+                                                   for: .normal)
                 strongSelf.lastFireLabel.byText("Last: " + fmt(Date()))
                 print("⏱️ [\(strongSelf.currentKind)] \(remainInt)/\(Int(strongSelf.countdownTotal))")
             }
@@ -386,19 +433,24 @@ extension TimerDemoVC {
         // 手动触发一次“正计时 tick”
         if countUpState == .running {
             elapsed += intervalSec
-            startButton.byTitle(String(format: "%.1fs", elapsed), for: .normal)
+            startButton.byTitle(String(format: "%.1fs",
+                                       elapsed),
+                                for: .normal)
             lastFireLabel.byText("Last: " + fmt(Date()))
         }
         // 手动触发一次“倒计时 tick”
         if countdownState == .running {
             countdownRemaining -= intervalSec
-            let remainInt = max(0, Int(ceil(countdownRemaining)))
+            let remainInt = max(0,
+                                Int(ceil(countdownRemaining)))
             if remainInt <= 0 {
                 countdownRemaining = 0
-                countdownButton.byTitle("获取验证码".tr, for: .normal)
+                countdownButton.byTitle("获取验证码".tr,
+                                        for: .normal)
                 print("✅ [\(currentKind)] 倒计时完成（Fire）")
             } else {
-                countdownButton.byTitle("还剩 \(remainInt)s", for: .normal)
+                countdownButton.byTitle("还剩 \(remainInt)s",
+                                        for: .normal)
             }
             lastFireLabel.byText("Last: " + fmt(Date()))
         }
@@ -422,16 +474,18 @@ extension TimerDemoVC {
         countdownState = .stopped
         updateControlButtons(by: .stopped)
         // UI 复位（按你原 demo 习惯：start 允许再次点击）
-        startButton.byTitle("开始".tr, for: .normal)
+        startButton.byTitle("开始".tr,
+                            for: .normal)
         if countdownState == .stopped {
-            countdownButton.byTitle("获取验证码".tr, for: .normal)
+            countdownButton.byTitle("获取验证码".tr,
+                                    for: .normal)
         }
     }
 
     @MainActor
     private func syncGlobalStateAfterStop() {
         let runningOrPaused =
-            (countUpState == .running || countUpState == .paused) ||
+        (countUpState == .running || countUpState == .paused) ||
             (countdownState == .running || countdownState == .paused)
         if !runningOrPaused {
             updateControlButtons(by: .idle)
@@ -461,12 +515,19 @@ extension TimerDemoVC {
             updateControlButtons(by: .running)
             let kind = currentKind
             let interval = intervalSec
-            let t = makeTimer(kind: kind, interval: interval) { [weak self] in
-                guard let strongSelf = self else { return }
+            let t = makeTimer(kind: kind,
+                              interval: interval) { [weak self] in
+                guard let strongSelf = self else {
+                    return
+                }
                 onMainAsync(self) { vc in
-                    guard strongSelf.countUpState == .running else { return }
+                    guard strongSelf.countUpState == .running else {
+                        return
+                    }
                     strongSelf.elapsed += interval
-                    strongSelf.startButton.byTitle(String(format: "%.1fs", strongSelf.elapsed), for: .normal)
+                    strongSelf.startButton.byTitle(String(format: "%.1fs",
+                                                          strongSelf.elapsed),
+                                                   for: .normal)
                     strongSelf.lastFireLabel.byText("Last: " + fmt(Date()))
                 }
             }
@@ -487,14 +548,20 @@ extension TimerDemoVC {
             updateControlButtons(by: .running)
             let kind = currentKind
             let interval = intervalSec
-            let t = makeTimer(kind: kind, interval: interval) { [weak self] in
-                guard let strongSelf = self else { return }
+            let t = makeTimer(kind: kind,
+                              interval: interval) { [weak self] in
+                guard let strongSelf = self else {
+                    return
+                }
                 onMainAsync(self) { vc in
-                    guard strongSelf.countdownState == .running else { return }
+                    guard strongSelf.countdownState == .running else {
+                        return
+                    }
                     strongSelf.countdownRemaining -= interval
                     if strongSelf.countdownRemaining <= 0 {
                         strongSelf.countdownRemaining = 0
-                        strongSelf.countdownButton.byTitle("获取验证码".tr, for: .normal)
+                        strongSelf.countdownButton.byTitle("获取验证码".tr,
+                                                           for: .normal)
                         strongSelf.lastFireLabel.byText("Last: " + fmt(Date()))
                         print("✅ [\(strongSelf.currentKind)] 倒计时完成")
                         strongSelf.countdownTimer?.stop()
@@ -503,8 +570,10 @@ extension TimerDemoVC {
                         strongSelf.syncGlobalStateAfterStop()
                         return
                     }
-                    let remainInt = max(0, Int(ceil(strongSelf.countdownRemaining)))
-                    strongSelf.countdownButton.byTitle("还剩 \(remainInt)s", for: .normal)
+                    let remainInt = max(0,
+                                        Int(ceil(strongSelf.countdownRemaining)))
+                    strongSelf.countdownButton.byTitle("还剩 \(remainInt)s",
+                                                       for: .normal)
                     strongSelf.lastFireLabel.byText("Last: " + fmt(Date()))
                 }
             }
@@ -520,63 +589,107 @@ extension TimerDemoVC {
     // MARK: - 控制键 UI（由 VC 状态驱动）
     @MainActor
     private func updateControlButtons(by state: TimerState) {
-        func set(_ btn: UIButton, _ enabled: Bool, _ color: UIColor) {
-            btn.byAlpha(enabled ? 1.0 : 0.5)
+        func set(_ btn: UIButton,
+                 _ enabled: Bool,
+                 _ color: UIColor) {
+            btn
+                .byAlpha(enabled ? 1.0 : 0.5)
                 .byUserInteractionEnabled(enabled)
-                .byBackgroundColor(color, for: .normal)
+                .byBackgroundColor(color,
+                                   for: .normal)
                 .bySetNeedsUpdateConfiguration()
         }
         switch state {
         /// 合并处理 .idle、.stopped 分支
         case .idle, .stopped:
-            set(startButton,  true,  JobsCor.systemBlue)
-            set(pauseButton,  false, JobsCor.systemGray3)
-            set(resumeButton, false, JobsCor.systemGray3)
-            set(fireButton,   false, JobsCor.systemGray3)
-            set(stopButton,   false, JobsCor.systemGray3)
+            set(startButton,
+                true,
+                JobsCor.systemBlue)
+            set(pauseButton,
+                false,
+                JobsCor.systemGray3)
+            set(resumeButton,
+                false,
+                JobsCor.systemGray3)
+            set(fireButton,
+                false,
+                JobsCor.systemGray3)
+            set(stopButton,
+                false,
+                JobsCor.systemGray3)
         /// 处理 .running 分支
         case .running:
-            set(startButton,  false, JobsCor.systemGray3)
-            set(pauseButton,  true,  JobsCor.systemBlue)
-            set(resumeButton, false, JobsCor.systemGray3)
-            set(fireButton,   true,  JobsCor.systemTeal)
-            set(stopButton,   true,  JobsCor.systemRed)
+            set(startButton,
+                false,
+                JobsCor.systemGray3)
+            set(pauseButton,
+                true,
+                JobsCor.systemBlue)
+            set(resumeButton,
+                false,
+                JobsCor.systemGray3)
+            set(fireButton,
+                true,
+                JobsCor.systemTeal)
+            set(stopButton,
+                true,
+                JobsCor.systemRed)
         /// 处理 .paused 分支
         case .paused:
-            set(startButton,  false, JobsCor.systemGray3)
-            set(pauseButton,  false, JobsCor.systemGray3)
-            set(resumeButton, true,  JobsCor.systemBlue)
-            set(fireButton,   true,  JobsCor.systemTeal)
-            set(stopButton,   true,  JobsCor.systemRed)
+            set(startButton,
+                false,
+                JobsCor.systemGray3)
+            set(pauseButton,
+                false,
+                JobsCor.systemGray3)
+            set(resumeButton,
+                true,
+                JobsCor.systemBlue)
+            set(fireButton,
+                true,
+                JobsCor.systemTeal)
+            set(stopButton,
+                true,
+                JobsCor.systemRed)
         }
     }
     // MARK: - 工具：构造次级按钮
-    private func makeActionButton(
-        title: String,
-        titleFont: UIFont = JobsFont.systemFont(ofSize: 16, weight: .semibold),
-        titleColor: UIColor,
-        subtitle: String? = nil,
-        subtitleFont: UIFont = JobsFont.systemFont(ofSize: 11, weight: .regular),
-        subtitleColor: UIColor = JobsCor.white.withAlphaComponent(0.85),
-        _ action: @escaping (UIButton) -> Void
-    ) -> UIButton {
+    private func makeActionButton(title: String,
+                                  titleFont: UIFont = JobsFont.systemFont(ofSize: 16,
+                                                                          weight: .semibold),
+                                  titleColor: UIColor,
+                                  subtitle: String? = nil,
+                                  subtitleFont: UIFont = JobsFont.systemFont(ofSize: 11,
+                                                                             weight: .regular),
+                                  subtitleColor: UIColor = JobsCor.white.withAlphaComponent(0.85),
+                                  _ action: @escaping (UIButton) -> Void) -> UIButton {
         UIButton.sys()
-            .byTitle(title, for: .normal)
+            .byTitle(title,
+                     for: .normal)
             .byTitleFont(titleFont)
-            .byTitleColor(JobsCor.white, for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
             .byAdoptConfigurationIfAvailable()
-            .bySubTitle(subtitle, for: .normal)
-            .bySubTitleFont(subtitleFont, for: .normal)
-            .bySubTitleColor(subtitleColor, for: .normal)
-            .byBackgroundColor(titleColor, for: .normal)
+            .bySubTitle(subtitle,
+                        for: .normal)
+            .bySubTitleFont(subtitleFont,
+                            for: .normal)
+            .bySubTitleColor(subtitleColor,
+                             for: .normal)
+            .byBackgroundColor(titleColor,
+                               for: .normal)
             .byCornerRadius(10)
             .byMasksToBounds(true)
-            .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
+            .byContentEdgeInsets(UIEdgeInsets(top: 8,
+                                              left: 10,
+                                              bottom: 8,
+                                              right: 10))
             .onTap(action)
     }
 
     // MARK: - 步长解析 & 应用（commit=true 时，重建并沿用“当前模式+新步长+当前内核”）
-    private func applyIntervalFromField(_ t: UITextField, commit: Bool) {
+    private func applyIntervalFromField(_ t: UITextField,
+                                        commit: Bool) {
         let v = (t.text ?? "").trimmingCharacters(in: .whitespaces)
         if let x = Double(v), x > 0 {
             intervalSec = x
@@ -584,7 +697,9 @@ extension TimerDemoVC {
             intervalSec = 1.0
             t.byText("1.0")
         }
-        guard commit else { return }
+        guard commit else {
+            return
+        }
         onMainAsync(self) { vc in
             self.rebuildActiveTimersForNewInterval()
         }
@@ -592,6 +707,7 @@ extension TimerDemoVC {
     // MARK: - 工具
     private func parseCountdownTotal(_ time: Int) -> Int {
         let v = (countdownField.text ?? "").trimmingCharacters(in: .whitespaces)
-        return max(1, Int(v) ?? time)
+        return max(1,
+                   Int(v) ?? time)
     }
 }

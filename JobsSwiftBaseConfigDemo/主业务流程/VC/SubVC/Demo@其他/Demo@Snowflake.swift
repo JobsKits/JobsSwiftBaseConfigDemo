@@ -23,10 +23,13 @@ import JobsSwiftBaseTools
 import JobsTextTools
 
 final class SnowflakeDemoVC: BaseVC {
-    private let general = SnowflakeSwift(IDCID: 4, machineID: 30)
+
+    private let general = SnowflakeSwift(IDCID: 4,
+                                         machineID: 30)
     // 结果展示
     private lazy var resultLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("未开始".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
@@ -44,22 +47,39 @@ final class SnowflakeDemoVC: BaseVC {
     // 生成按钮
     private lazy var genButton: UIButton = {
         UIButton.sys()
-            .byTitle("开始生成".tr, for: .normal)
-            .byTitle("生成中…".tr, for: .selected)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
-            .byContentEdgeInsets(.init(top: 12, left: 16, bottom: 12, right: 16))
+            .byTitle("开始生成".tr,
+                     for: .normal)
+            .byTitle("生成中…".tr,
+                     for: .selected)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .semibold))
+            .byContentEdgeInsets(.init(top: 12,
+                                       left: 16,
+                                       bottom: 12,
+                                       right: 16))
             .byBackgroundColor(JobsCor.systemBlue)
             .byCornerRadius(12)
             .byMasksToBounds(YES)
-            .byImage("bolt.fill".sysImg, for: .normal)
+            .byImage("bolt.fill".sysImg,
+                     for: .normal)
             .byImagePlacement(.leading)
-            .byTitleEdgeInsets(.init(top: 0, left: 6, bottom: 0, right: -6))
+            .byTitleEdgeInsets(.init(top: 0,
+                                     left: 6,
+                                     bottom: 0,
+                                     right: -6))
             .byCornerBadgeText("NEW") { cfg in
-                cfg.byOffset(.init(horizontal: -8, vertical: 8))
-                    .byInset(.init(top: 2, left: 6, bottom: 2, right: 6))
+                cfg
+                    .byOffset(.init(horizontal: -8,
+                                    vertical: 8))
+                    .byInset(.init(top: 2,
+                                   left: 6,
+                                   bottom: 2,
+                                   right: 6))
                     .byBackgroundColor(JobsCor.systemRed)
-                    .byFont(JobsFont.systemFont(ofSize: 11, weight: .bold))
+                    .byFont(JobsFont.systemFont(ofSize: 11,
+                                                weight: .bold))
             }
             .onTap { [weak self] _ in
                 self?.runBenchmark()
@@ -81,7 +101,9 @@ final class SnowflakeDemoVC: BaseVC {
 
     // MARK: - 生成逻辑（放后台，避免卡 UI）
     private func runBenchmark() {
-        guard genButton.jobs_effectiveState != .selected else { return } // 防抖
+        guard genButton.jobs_effectiveState != .selected else {
+            return
+        } // 防抖
         genButton
             .bySelected(true)
             .byUserInteractionEnabled(false)
@@ -91,16 +113,18 @@ final class SnowflakeDemoVC: BaseVC {
         // UI 先更新一次
         resultLabel.byText("开始：\(startTS)\n正在生成 \(total) 个 ID…")
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             var lastID: UInt64 = 0
             var failCount = 0
-            for _ in 0..<total {
+            for _ in 0 ..< total {
                 if let id = self.general.nextID() {
                     lastID = id
-                    // 如需打印更多信息，可解注：
-                    // _ = self.general.time(id: id)
-                    // _ = self.general.IDC(id: id)
-                    // _ = self.general.machine(id: id)
+                // 如需打印更多信息，可解注：
+                // _ = self.general.time(id: id)
+                // _ = self.general.IDC(id: id)
+                // _ = self.general.machine(id: id)
                 } else {
                     failCount &+= 1
                 }
@@ -114,7 +138,8 @@ final class SnowflakeDemoVC: BaseVC {
                     .byUserInteractionEnabled(true)
                 var text = ""
                 text += "开始：\(startTS)\n结束：\(endTS)\n"
-                text += String(format: "耗时：%.3f s\n", elapsed)
+                text += String(format: "耗时：%.3f s\n",
+                               elapsed)
                 text += "总数：\(total)\n失败：\(failCount)\n"
                 text += "最后一个ID：\(lastID)"
                 self.resultLabel.byText(text)

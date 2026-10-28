@@ -10,6 +10,7 @@ import Foundation
 /// 提供便捷的任务创建、配置和管理接口
 
 public final class JobsTaskCenterComponent: @unchecked Sendable {
+
     public let task: JobsTask
     public let configuration: Configuration
 
@@ -41,13 +42,16 @@ public final class JobsTaskCenterComponent: @unchecked Sendable {
         task.lifecycle
     }
 
-    private init(task: JobsTask, configuration: Configuration, tag: String? = nil) {
+    private init(task: JobsTask,
+                 configuration: Configuration,
+                 tag: String? = nil) {
         self.task = task
         self.configuration = configuration
         self.storedTag = tag
     }
     /// 便利初始化器
-    public init(task: JobsTask, configuration: Configuration) {
+    public init(task: JobsTask,
+                configuration: Configuration) {
         self.task = task
         self.configuration = configuration
         self.storedTag = nil
@@ -55,26 +59,27 @@ public final class JobsTaskCenterComponent: @unchecked Sendable {
 }
 
 extension JobsTaskCenterComponent {
+
     private static func millisecondsClamped(from seconds: Int) -> Int {
         let (value, overflow) = seconds.multipliedReportingOverflow(by: 1000)
-        return overflow ? (seconds > 0 ? Int.max : 0) : max(0, value)
+        return overflow ? (seconds > 0 ? Int.max : 0) : max(0,
+                                                            value)
     }
 
     public struct Configuration: Sendable {
+
         public var interval: JobsPeriod
         public var initialDelay: JobsPeriod
         public var repeatCount: Int?
         public var queue: DispatchQueue
         public var runLoopMode: RunLoop.Mode?
         public var fireImmediately: Bool
-        public init(
-            interval: JobsPeriod,
-            initialDelay: JobsPeriod = .zero,
-            repeatCount: Int? = nil,
-            queue: DispatchQueue = .main,
-            runLoopMode: RunLoop.Mode? = nil,
-            fireImmediately: Bool = false
-        ) {
+        public init(interval: JobsPeriod,
+                    initialDelay: JobsPeriod = .zero,
+                    repeatCount: Int? = nil,
+                    queue: DispatchQueue = .main,
+                    runLoopMode: RunLoop.Mode? = nil,
+                    fireImmediately: Bool = false) {
             self.interval = interval
             self.initialDelay = initialDelay
             self.repeatCount = repeatCount
@@ -85,139 +90,114 @@ extension JobsTaskCenterComponent {
     }
 
     @discardableResult
-    public static func schedule(
-        configuration: Configuration,
-        action: @escaping () -> Void
-    ) -> JobsTaskCenterComponent {
-        JobsTaskCenterComponent(
-            task: makeTask(
-                with: JobsPlan.every(
-                    configuration.interval,
-                    initialDelay: configuration.initialDelay,
-                    repeatCount: configuration.repeatCount,
-                    fireImmediately: configuration.fireImmediately
-                ),
-                queue: configuration.queue,
-                runLoopMode: configuration.runLoopMode,
-                action: action),
-            configuration: configuration)
+    public static func schedule(configuration: Configuration,
+                                action: @escaping () -> Void) -> JobsTaskCenterComponent {
+        JobsTaskCenterComponent(task: makeTask(with: JobsPlan.every(configuration.interval,
+                                                                    initialDelay: configuration.initialDelay,
+                                                                    repeatCount: configuration.repeatCount,
+                                                                    fireImmediately: configuration.fireImmediately),
+                                               queue: configuration.queue,
+                                               runLoopMode: configuration.runLoopMode,
+                                               action: action),
+                                configuration: configuration)
     }
 
     @discardableResult
-    public static func createOneShotTask(
-        milliseconds: Int,
-        queue: DispatchQueue = .main,
-        runLoopMode: RunLoop.Mode? = nil,
-        taskBlock: @escaping () -> Void
-    ) -> JobsTaskCenterComponent {
+    public static func createOneShotTask(milliseconds: Int,
+                                         queue: DispatchQueue = .main,
+                                         runLoopMode: RunLoop.Mode? = nil,
+                                         taskBlock: @escaping () -> Void) -> JobsTaskCenterComponent {
         let delay = milliseconds.milliseconds
-        let config = Configuration(
-            interval: delay,
-            initialDelay: delay,
-            repeatCount: 1,
-            queue: queue,
-            runLoopMode: runLoopMode,
-            fireImmediately: false
-        )
+        let config = Configuration(interval: delay,
+                                   initialDelay: delay,
+                                   repeatCount: 1,
+                                   queue: queue,
+                                   runLoopMode: runLoopMode,
+                                   fireImmediately: false)
         let plan = JobsPlan.after(delay)
         let task = makeTask(with: plan,
                             queue: queue,
                             runLoopMode: runLoopMode,
                             action: taskBlock)
-        return JobsTaskCenterComponent(task: task, configuration: config)
+        return JobsTaskCenterComponent(task: task,
+                                       configuration: config)
     }
 
     @discardableResult
-    public static func createOneShotTask(
-        seconds: Int,
-        queue: DispatchQueue = .main,
-        runLoopMode: RunLoop.Mode? = nil,
-        taskBlock: @escaping () -> Void
-    ) -> JobsTaskCenterComponent {
-        createOneShotTask(
-            milliseconds: millisecondsClamped(from: seconds),
-            queue: queue,
-            runLoopMode: runLoopMode,
-            taskBlock: taskBlock
-        )
+    public static func createOneShotTask(seconds: Int,
+                                         queue: DispatchQueue = .main,
+                                         runLoopMode: RunLoop.Mode? = nil,
+                                         taskBlock: @escaping () -> Void) -> JobsTaskCenterComponent {
+        createOneShotTask(milliseconds: millisecondsClamped(from: seconds),
+                          queue: queue,
+                          runLoopMode: runLoopMode,
+                          taskBlock: taskBlock)
     }
 
-    public static func createRunLoopTask(
-        runloop mode: RunLoop.Mode,
-        milliseconds: Int,
-        initialDelay: Int = 0,
-        repeatCount: Int? = nil,
-        fireImmediately: Bool = false,
-        taskBlock: @escaping () -> Void
-    ) -> JobsTaskCenterComponent {
-        schedule(configuration: Configuration(
-            interval: milliseconds.milliseconds,
-            initialDelay: initialDelay.milliseconds,
-            repeatCount: repeatCount,
-            queue: .main,
-            runLoopMode: mode,
-            fireImmediately: fireImmediately
-        ), action: taskBlock)
+    public static func createRunLoopTask(runloop mode: RunLoop.Mode,
+                                         milliseconds: Int,
+                                         initialDelay: Int = 0,
+                                         repeatCount: Int? = nil,
+                                         fireImmediately: Bool = false,
+                                         taskBlock: @escaping () -> Void) -> JobsTaskCenterComponent {
+        schedule(configuration: Configuration(interval: milliseconds.milliseconds,
+                                              initialDelay: initialDelay.milliseconds,
+                                              repeatCount: repeatCount,
+                                              queue: .main,
+                                              runLoopMode: mode,
+                                              fireImmediately: fireImmediately),
+                 action: taskBlock)
     }
 
-    public static func createRunLoopTask(
-        runloop mode: RunLoop.Mode,
-        seconds: Int,
-        initialDelay: Int = 0,
-        repeatCount: Int? = nil,
-        fireImmediately: Bool = false,
-        taskBlock: @escaping () -> Void
-    ) -> JobsTaskCenterComponent {
-        createRunLoopTask(
-            runloop: mode,
-            milliseconds: millisecondsClamped(from: seconds),
-            initialDelay: millisecondsClamped(from: initialDelay),
-            repeatCount: repeatCount,
-            fireImmediately: fireImmediately,
-            taskBlock: taskBlock
-        )
+    public static func createRunLoopTask(runloop mode: RunLoop.Mode,
+                                         seconds: Int,
+                                         initialDelay: Int = 0,
+                                         repeatCount: Int? = nil,
+                                         fireImmediately: Bool = false,
+                                         taskBlock: @escaping () -> Void) -> JobsTaskCenterComponent {
+        createRunLoopTask(runloop: mode,
+                          milliseconds: millisecondsClamped(from: seconds),
+                          initialDelay: millisecondsClamped(from: initialDelay),
+                          repeatCount: repeatCount,
+                          fireImmediately: fireImmediately,
+                          taskBlock: taskBlock)
     }
 
-    public static func createTimerTask(
-        milliseconds: Int,
-        queue: DispatchQueue = .main,
-        initialDelay: Int = 0,
-        repeatCount: Int? = nil,
-        fireImmediately: Bool = false,
-        taskBlock: @escaping () -> Void
-    ) -> JobsTaskCenterComponent {
-        let config = Configuration(
-            interval: milliseconds.milliseconds,
-            initialDelay: initialDelay.milliseconds,
-            repeatCount: repeatCount,
-            queue: queue,
-            runLoopMode: nil,
-            fireImmediately: fireImmediately
-        )
-        return schedule(configuration: config, action: taskBlock)
+    public static func createTimerTask(milliseconds: Int,
+                                       queue: DispatchQueue = .main,
+                                       initialDelay: Int = 0,
+                                       repeatCount: Int? = nil,
+                                       fireImmediately: Bool = false,
+                                       taskBlock: @escaping () -> Void) -> JobsTaskCenterComponent {
+        let config = Configuration(interval: milliseconds.milliseconds,
+                                   initialDelay: initialDelay.milliseconds,
+                                   repeatCount: repeatCount,
+                                   queue: queue,
+                                   runLoopMode: nil,
+                                   fireImmediately: fireImmediately)
+        return schedule(configuration: config,
+                        action: taskBlock)
     }
 
-    public static func createTimerTask(
-        seconds: Int,
-        queue: DispatchQueue = .main,
-        initialDelay: Int = 0,
-        repeatCount: Int? = nil,
-        fireImmediately: Bool = false,
-        taskBlock: @escaping () -> Void
-    ) -> JobsTaskCenterComponent {
-        createTimerTask(
-            milliseconds: millisecondsClamped(from: seconds),
-            queue: queue,
-            initialDelay: millisecondsClamped(from: initialDelay),
-            repeatCount: repeatCount,
-            fireImmediately: fireImmediately,
-            taskBlock: taskBlock
-        )
+    public static func createTimerTask(seconds: Int,
+                                       queue: DispatchQueue = .main,
+                                       initialDelay: Int = 0,
+                                       repeatCount: Int? = nil,
+                                       fireImmediately: Bool = false,
+                                       taskBlock: @escaping () -> Void) -> JobsTaskCenterComponent {
+        createTimerTask(milliseconds: millisecondsClamped(from: seconds),
+                        queue: queue,
+                        initialDelay: millisecondsClamped(from: initialDelay),
+                        repeatCount: repeatCount,
+                        fireImmediately: fireImmediately,
+                        taskBlock: taskBlock)
     }
 
     @discardableResult
     public func appendTask(action: @escaping () -> Void) -> UUID {
-        return task.addAction { _ in action() }
+        return task.addAction { _ in
+            action()
+        }
     }
 
     @discardableResult
@@ -251,13 +231,12 @@ extension JobsTaskCenterComponent {
     }
 
     @discardableResult
-    public func attach(
-        tag: String,
-        manager: JobsTaskManager = .default,
-        autoResume: Bool = true,
-        executeImmediately: Bool = false
-    ) -> JobsTaskItem {
-        let item = JobsTaskItem(task: task, tag: tag)
+    public func attach(tag: String,
+                       manager: JobsTaskManager = .default,
+                       autoResume: Bool = true,
+                       executeImmediately: Bool = false) -> JobsTaskItem {
+        let item = JobsTaskItem(task: task,
+                                tag: tag)
         manager.addTask(task: item)
         if autoResume {
             manager.resume(by: tag)
@@ -269,23 +248,23 @@ extension JobsTaskCenterComponent {
         return item
     }
 
-    private static func makeTask(
-        with plan: JobsPlan,
-        queue: DispatchQueue,
-        runLoopMode: RunLoop.Mode?,
-        action: @escaping () -> Void
-    ) -> JobsTask {
+    private static func makeTask(with plan: JobsPlan,
+                                 queue: DispatchQueue,
+                                 runLoopMode: RunLoop.Mode?,
+                                 action: @escaping () -> Void) -> JobsTask {
         guard let mode = runLoopMode else {
             return plan.do(queue: queue) {
                 action()
             }
-        };return plan.do(mode: mode) {
+        }
+        return plan.do(mode: mode) {
             action()
         }
     }
 }
 
 extension JobsTaskCenterComponent {
+
     /// 链式设置标签
     /// - Parameter tag: 任务标签
     /// - Returns: self
@@ -338,20 +317,20 @@ extension JobsTaskCenterComponent {
     ///   - executeImmediately: 是否立即执行
     /// - Returns: self
     @discardableResult
-    public func byAttach(
-        tag: String,
-        manager: JobsTaskManager = .default,
-        autoResume: Bool = true,
-        executeImmediately: Bool = false
-    ) -> Self {
+    public func byAttach(tag: String,
+                         manager: JobsTaskManager = .default,
+                         autoResume: Bool = true,
+                         executeImmediately: Bool = false) -> Self {
         attach(tag: tag,
                manager: manager,
                autoResume: autoResume,
-               executeImmediately: executeImmediately);return self
+               executeImmediately: executeImmediately)
+        return self
     }
 }
 // MARK: - JobsTaskCenterComponent Async Support
 extension JobsTaskCenterComponent {
+
     /// 创建异步定时任务
     /// - Parameters:
     ///   - seconds: 间隔秒数
@@ -362,30 +341,27 @@ extension JobsTaskCenterComponent {
     ///   - priority: 任务优先级
     ///   - taskBlock: 异步任务闭包
     /// - Returns: JobsTaskCenterComponent
-    public static func createAsyncTimerTask(
-        seconds: Int,
-        queue: DispatchQueue = .main,
-        initialDelay: Int = 0,
-        repeatCount: Int? = nil,
-        fireImmediately: Bool = false,
-        priority: TaskPriority = .medium,
-        taskBlock: @escaping @Sendable () async -> Void
-    ) -> JobsTaskCenterComponent {
-        let config = Configuration(
-            interval: seconds.seconds,
-            initialDelay: initialDelay.seconds,
-            repeatCount: repeatCount,
-            queue: queue,
-            runLoopMode: nil,
-            fireImmediately: fireImmediately
-        )
-        let task = JobsPlan.every(
-            config.interval,
-            initialDelay: config.initialDelay,
-            repeatCount: config.repeatCount,
-            fireImmediately: config.fireImmediately
-        ).doAsync(queue: queue, priority: priority, action: taskBlock)
-        return JobsTaskCenterComponent(task: task, configuration: config)
+    public static func createAsyncTimerTask(seconds: Int,
+                                            queue: DispatchQueue = .main,
+                                            initialDelay: Int = 0,
+                                            repeatCount: Int? = nil,
+                                            fireImmediately: Bool = false,
+                                            priority: TaskPriority = .medium,
+                                            taskBlock: @escaping @Sendable () async -> Void) -> JobsTaskCenterComponent {
+        let config = Configuration(interval: seconds.seconds,
+                                   initialDelay: initialDelay.seconds,
+                                   repeatCount: repeatCount,
+                                   queue: queue,
+                                   runLoopMode: nil,
+                                   fireImmediately: fireImmediately)
+        let task = JobsPlan.every(config.interval,
+                                  initialDelay: config.initialDelay,
+                                  repeatCount: config.repeatCount,
+                                  fireImmediately: config.fireImmediately).doAsync(queue: queue,
+                                                                                   priority: priority,
+                                                                                   action: taskBlock)
+        return JobsTaskCenterComponent(task: task,
+                                       configuration: config)
     }
     /// 创建异步一次性任务
     /// - Parameters:
@@ -394,26 +370,22 @@ extension JobsTaskCenterComponent {
     ///   - priority: 任务优先级
     ///   - taskBlock: 异步任务闭包
     /// - Returns: JobsTaskCenterComponent
-    public static func createAsyncOneShotTask(
-        seconds: Int,
-        queue: DispatchQueue = .main,
-        priority: TaskPriority = .medium,
-        taskBlock: @escaping @Sendable () async -> Void
-    ) -> JobsTaskCenterComponent {
+    public static func createAsyncOneShotTask(seconds: Int,
+                                              queue: DispatchQueue = .main,
+                                              priority: TaskPriority = .medium,
+                                              taskBlock: @escaping @Sendable () async -> Void) -> JobsTaskCenterComponent {
         let delay = seconds.seconds
-        let config = Configuration(
-            interval: delay,
-            initialDelay: delay,
-            repeatCount: 1,
-            queue: queue,
-            runLoopMode: nil,
-            fireImmediately: false
-        )
-        let task = JobsPlan.after(delay).doAsync(
-            queue: queue,
-            priority: priority,
-            action: taskBlock
-        );return JobsTaskCenterComponent(task: task, configuration: config)
+        let config = Configuration(interval: delay,
+                                   initialDelay: delay,
+                                   repeatCount: 1,
+                                   queue: queue,
+                                   runLoopMode: nil,
+                                   fireImmediately: false)
+        let task = JobsPlan.after(delay).doAsync(queue: queue,
+                                                 priority: priority,
+                                                 action: taskBlock)
+        return JobsTaskCenterComponent(task: task,
+                                       configuration: config)
     }
     /// 等待任务执行指定次数
     /// - Parameter count: 执行次数
@@ -435,6 +407,7 @@ extension JobsTaskCenterComponent {
 }
 // MARK: - JobsTaskCenterComponent.Configuration@DSL
 extension JobsTaskCenterComponent.Configuration {
+
     /// 链式设置时间间隔
     /// - Parameter interval: 时间间隔
     /// - Returns: 新的 Configuration

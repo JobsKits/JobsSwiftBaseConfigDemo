@@ -8,11 +8,13 @@
 import Foundation
 
 public enum JobsOpenMode {
+
     case inApp
     case externalBrowser
 }
 
 public final class JobsOpenConfiguration {
+
     public var url: URL
     public var mode: JobsOpenMode
     public var title: String?
@@ -21,13 +23,11 @@ public final class JobsOpenConfiguration {
     public var completion: ((Bool) -> Void)?
     public var pageLoadCompletion: ((Result<URL, Error>) -> Void)?
 
-    public init(
-        url: URL = URL(string: "http://www.baidu.com")!,
-        mode: JobsOpenMode = .inApp,
-        title: String? = nil,
-        animated: Bool = true,
-        completion: ((Bool) -> Void)? = nil
-    ) {
+    public init(url: URL = URL(string: "http://www.baidu.com")!,
+                mode: JobsOpenMode = .inApp,
+                title: String? = nil,
+                animated: Bool = true,
+                completion: ((Bool) -> Void)? = nil) {
         self.url = url
         self.mode = mode
         self.title = title
@@ -36,15 +36,17 @@ public final class JobsOpenConfiguration {
         self.pageLoadCompletion = nil
     }
 
-    public convenience init(
-        url: URL = URL(string: "http://www.baidu.com")!,
-        mode: JobsOpenMode = .inApp,
-        title: String? = nil,
-        animated: Bool = true,
-        pageLoadCompletion: ((Result<URL, Error>) -> Void)?,
-        completion: ((Bool) -> Void)? = nil
-    ) {
-        self.init(url: url, mode: mode, title: title, animated: animated, completion: completion)
+    public convenience init(url: URL = URL(string: "http://www.baidu.com")!,
+                            mode: JobsOpenMode = .inApp,
+                            title: String? = nil,
+                            animated: Bool = true,
+                            pageLoadCompletion: ((Result<URL, Error>) -> Void)?,
+                            completion: ((Bool) -> Void)? = nil) {
+        self.init(url: url,
+                  mode: mode,
+                  title: title,
+                  animated: animated,
+                  completion: completion)
         self.pageLoadCompletion = pageLoadCompletion
     }
 

@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 public struct JobsWalletCardModel {
+
     public let bankName: String
     public let lastDigits: String
     public let holder: String

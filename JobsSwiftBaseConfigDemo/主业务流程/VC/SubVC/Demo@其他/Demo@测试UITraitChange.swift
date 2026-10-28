@@ -24,12 +24,15 @@ import GKNavigationBarSwift
 
 // MARK: - Demo VC（iOS 17+ 使用 UITraitChangeObservable + 内置调试按钮）
 final class TraitChangeDemoVC: BaseVC {
+
     // MARK: UI（全部懒加载，byAddTo + SnapKit）
     private lazy var titleLabel : UILabel = {
-        UILabel.jobsMake { _ in }.byText("Trait 变化监听 Demo".tr)
+        UILabel
+            .jobsMake { _ in }
+            .byText("Trait 变化监听 Demo".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byTextAlignment(.natural)              // ✅ 新增
-            .byTextColor(JobsCor.label)
+        .byTextColor(JobsCor.label)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom).offset(10)
                 make.leading.trailing.equalToSuperview().inset(16)
@@ -37,7 +40,8 @@ final class TraitChangeDemoVC: BaseVC {
     }()
 
     private lazy var subtitleLabel : UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("本页演示 iOS 17+ 的 UITraitChangeObservable：深浅色、Dynamic Type、Size Class、布局方向、Scale/Gamut 变化触发后，只刷新真正受影响的 UI。".tr)
             .byNumberOfLines(0)
             .byTextColor(JobsCor.secondaryLabel)
@@ -48,20 +52,22 @@ final class TraitChangeDemoVC: BaseVC {
             }
     }()
 
-    private lazy var infoLabel :UILabel = {
-        UILabel.jobsMake { _ in }
+    private lazy var infoLabel : UILabel = {
+        UILabel
+            .jobsMake { _ in }
             .byNumberOfLines(0)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byTextAlignment(.natural)              // ✅ 新增
-            .byAddTo(view) { [unowned self] make in
+        .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.subtitleLabel.snp.bottom).offset(12)
                 make.leading.trailing.equalToSuperview().inset(16)
             }
     }()
 
     private lazy var swatch : UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byCornerRadius(12)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.infoLabel.snp.bottom).offset(16)
@@ -79,7 +85,8 @@ final class TraitChangeDemoVC: BaseVC {
     }()
     /// 尺寸类切换时改变轴向
     private lazy var stack : UIStackView = {
-        UIStackView.jobsMake { _ in }
+        UIStackView
+            .jobsMake { _ in }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.swatch.snp.bottom).offset(16)
                 make.leading.trailing.equalToSuperview().inset(16)
@@ -87,24 +94,27 @@ final class TraitChangeDemoVC: BaseVC {
     }()
 
     private lazy var leftBox : UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byCornerRadius(10)
             .byAddTo(stack) { _ in }
     }()
 
     private lazy var rightBox : UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byCornerRadius(10)
             .byAddTo(stack) { _ in }
     }()
 
-    private lazy var dynamicText :UILabel = {
-        UILabel.jobsMake { _ in }
+    private lazy var dynamicText : UILabel = {
+        UILabel
+            .jobsMake { _ in }
             .byText("Dynamic Type 预览：系统字号变化会触发 preferredFont 刷新。".tr)
             .byNumberOfLines(0)
             .byTextColor(JobsCor.label)
             .byTextAlignment(.natural)              // ✅ 新增
-            .byAddTo(view) { [unowned self] make in
+        .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.stack.snp.bottom).offset(16)
                 make.leading.trailing.equalToSuperview().inset(16)
                 make.bottom.lessThanOrEqualTo(self.view.safeAreaLayoutGuide.snp.bottom).inset(16)
@@ -117,8 +127,12 @@ final class TraitChangeDemoVC: BaseVC {
     private var _traitTokensBox: Any?
     @available(iOS 17.0, *)
     private var traitTokens: [UITraitChangeRegistration] {
-        get { (_traitTokensBox as? [UITraitChangeRegistration]) ?? [] }
-        set { _traitTokensBox = newValue }
+        get {
+            (_traitTokensBox as? [UITraitChangeRegistration]) ?? []
+        }
+        set {
+            _traitTokensBox = newValue
+        }
     }
 
     @available(iOS 17.0, *)
@@ -133,29 +147,39 @@ final class TraitChangeDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
-        jobsSetupGKNav(
-            title: "Traits (iOS 17+)",
-            leftButton: UIButton.sys()
-                .byFrame(CGRect(x: 0, y: 0, width: 74.w, height: 36.h))
-                .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.18))
-                .byCornerRadius(18)
-                .byTintColor(JobsCor.systemBlue)
-                .byImage("chevron.left".sysImg, for: .normal)
-                .byTitle("返回".tr, for: .normal)
-                .byTitleColor(JobsCor.systemBlue, for: .normal)
-                .onTap { [weak self] _ in
-                    guard let self else { return }
-                    self.goBack("")
+        jobsSetupGKNav(title: "Traits (iOS 17+)",
+                       leftButton: UIButton.sys()
+                           .byFrame(CGRect(x: 0,
+                                           y: 0,
+                                           width: 74.w,
+                                           height: 36.h))
+                           .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.18))
+                           .byCornerRadius(18)
+                           .byTintColor(JobsCor.systemBlue)
+                           .byImage("chevron.left".sysImg,
+                                    for: .normal)
+                           .byTitle("返回".tr,
+                                    for: .normal)
+                           .byTitleColor(JobsCor.systemBlue,
+                                         for: .normal)
+                           .onTap { [weak self] _ in
+                guard let self else {
+                    return
                 }
-        )
+                self.goBack("")
+            })
         // 组装 UI
         swatch.layer.addSublayer(gradientLayer)
         stack
             .byAxis(.horizontal)
             .byDistribution(.fillEqually)
             .bySpacing(12)
-        leftBox.snp.makeConstraints { make in make.height.equalTo(80) }
-        rightBox.snp.makeConstraints { make in make.height.equalTo(80) }
+        leftBox.snp.makeConstraints { make in
+            make.height.equalTo(80)
+        }
+        rightBox.snp.makeConstraints { make in
+            make.height.equalTo(80)
+        }
         // 初次同步
         configureForCurrentTraits()
         // iOS 17+：注册式监听（按需精确注册，避免全量刷新）
@@ -195,6 +219,7 @@ final class TraitChangeDemoVC: BaseVC {
 }
 
 extension TraitChangeDemoVC {
+
     // MARK: - 初始与按模块更新
     private func configureForCurrentTraits() {
         updateColors()
@@ -211,13 +236,19 @@ extension TraitChangeDemoVC {
         let c1: UIColor
         let c2: UIColor
         if style == .dark {
-            c1 = UIColor(gray: 255, alpha: 0.12)
-            c2 = UIColor(gray: 255, alpha: 0.28)
+            c1 = UIColor(gray: 255,
+                         alpha: 0.12)
+            c2 = UIColor(gray: 255,
+                         alpha: 0.28)
             leftBox.byBackgroundColor(JobsCor.tertiarySystemFill)
             rightBox.byBackgroundColor(JobsCor.quaternarySystemFill)
         } else {
-            c1 = UIColor(r: 0.95 * 255, g: 0.95 * 255, b: 255)
-            c2 = UIColor(r: 0.85 * 255, g: 0.90 * 255, b: 255)
+            c1 = UIColor(r: 0.95 * 255,
+                         g: 0.95 * 255,
+                         b: 255)
+            c2 = UIColor(r: 0.85 * 255,
+                         g: 0.90 * 255,
+                         b: 255)
             leftBox.byBackgroundColor(JobsCor.systemFill)
             rightBox.byBackgroundColor(JobsCor.secondarySystemFill)
         }
@@ -256,24 +287,27 @@ extension TraitChangeDemoVC {
         view.semanticContentAttribute  = attr
         stack.semanticContentAttribute = attr
         swatch.semanticContentAttribute = attr
-        // 如需更明显效果，强制让 stack 在演示时用横向（见下面注释）
-        // stack.axis = .horizontal
+    // 如需更明显效果，强制让 stack 在演示时用横向（见下面注释）
+    // stack.axis = .horizontal
     }
 
     private func rerenderRasterizedStuff() {
-        // 若有按 scale/gamut 缓存的位图资源，这里重建
-        // 示例：按当前 traits 取图（如果 Asset 配置了外观/Size Class 变体）
-        // imageView.image = UIImage(named: "card_bg", in: nil, compatibleWith: traitCollection)
+    // 若有按 scale/gamut 缓存的位图资源，这里重建
+    // 示例：按当前 traits 取图（如果 Asset 配置了外观/Size Class 变体）
+    // imageView.image = UIImage(named: "card_bg", in: nil, compatibleWith: traitCollection)
     }
     // MARK: - Helpers
     private func gamutString(_ g: UIDisplayGamut) -> String {
         switch g {
         /// 处理 .P3 分支
-        case .P3:   return "P3"
+        case .P3:
+            return "P3"
         /// 处理 .SRGB 分支
-        case .SRGB: return "sRGB"
+        case .SRGB:
+            return "sRGB"
         /// 未匹配已知分支时执行兜底处理
-        default:    return "Unspecified"
+        default:
+            return "Unspecified"
         }
     }
 }

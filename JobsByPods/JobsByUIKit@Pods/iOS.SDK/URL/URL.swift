@@ -12,9 +12,13 @@ import UIKit
 #endif
 
 extension URL {
+
     /// 是否 http/https 远程资源
     public var isHTTPRemote: Bool {
-        guard let s = scheme?.lowercased() else { return false };return s == "http" || s == "https"
+        guard let s = scheme?.lowercased() else {
+            return false
+        }
+        return s == "http" || s == "https"
     }
     /// 同步获取图片：仅本地/文件可用；远程 URL 不支持同步返回，直接给空图并打印提示
     public var img: UIImage {

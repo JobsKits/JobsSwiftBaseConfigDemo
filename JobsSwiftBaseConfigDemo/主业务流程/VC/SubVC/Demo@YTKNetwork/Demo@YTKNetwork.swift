@@ -24,35 +24,49 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class YTKNetworkDemoVC: BaseVC {
+
     private var currentChainRequest: YTKChainRequest?
     /// 输出日志
     private lazy var logTextView: UITextView = {
-        UITextView.jobsMake { _ in }
+        UITextView
+            .jobsMake { _ in }
             .byEditable(NO)
-            .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 12,
+                                                  weight: .regular))
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byTextColor(JobsCor.label)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview().inset(16)
                 make.bottom.equalToSuperview().inset(26)
                 make.height.equalTo(view.safeAreaLayoutGuide).multipliedBy(0.5)
-        }
+            }
     }()
     /// 单请求按钮：GET /ip
     private lazy var singleRequestButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
-            .byTitle("单请求：GET /ip".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
-            .byContentEdgeInsets(.init(top: 10, left: 12, bottom: 10, right: 12))
+            .byBackgroundColor(JobsCor.systemGreen,
+                               for: .normal)
+            .byTitle("单请求：GET /ip".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .medium))
+            .byContentEdgeInsets(.init(top: 10,
+                                       left: 12,
+                                       bottom: 10,
+                                       right: 12))
             .byTapSound("Sound.wav")
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 appendLog("👉 单请求：GET /ip")
                 GetIpRequest()
                     .bySuccess({ [weak self] (request: YTKBaseRequest) in
-                        guard let self = self,let r = request as? GetIpRequest else { return }
+                        guard let self = self, let r = request as? GetIpRequest else {
+                            return
+                        }
                         self.appendLog("✅ 成功：IP = \(r.ip ?? "nil")")
                         self.appendLog("响应 JSON = \(String(describing: r.responseJSONObject))")
                         request.clearCompletionBlock()
@@ -60,7 +74,7 @@ final class YTKNetworkDemoVC: BaseVC {
                     .byFailure({ [weak self] (request: YTKBaseRequest) in
                         self?.appendLog("❌ 失败：\(String(describing: request.error))")
                         request.clearCompletionBlock()
-                }).start()
+                    }).start()
             }
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
@@ -75,22 +89,33 @@ final class YTKNetworkDemoVC: BaseVC {
     /// 批量请求按钮：GET /ip + GET /headers
     private lazy var batchRequestButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
-            .byTitle("批量：IP + Headers".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
-            .byContentEdgeInsets(.init(top: 10, left: 12, bottom: 10, right: 12))
+            .byBackgroundColor(JobsCor.systemBlue,
+                               for: .normal)
+            .byTitle("批量：IP + Headers".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .medium))
+            .byContentEdgeInsets(.init(top: 10,
+                                       left: 12,
+                                       bottom: 10,
+                                       right: 12))
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 appendLog("👉 批量请求：GET /ip + GET /headers")
                 YTKBatchRequest(request: [GetIpRequest(), GetHeadersRequest()])
                     .bySuccess({ [weak self] (batchRequest: YTKBatchRequest) in
-                        guard let self = self else { return }
+                        guard let self = self else {
+                            return
+                        }
                         let array = batchRequest.requestArray
                         guard array.count == 2,
                               let ip      = array[0] as? GetIpRequest,
                               let headers = array[1] as? GetHeadersRequest
-                        else {
+                    else {
                             self.appendLog("⚠️ 批量成功但解析 requestArray 失败")
                             return
                         }
@@ -101,7 +126,7 @@ final class YTKNetworkDemoVC: BaseVC {
                     .byFailure({ [weak self] (batchRequest: YTKBatchRequest) in
                         self?.appendLog("❌ 批量失败：\(String(describing: batchRequest.failedRequest?.error))")
                         batchRequest.clearCompletionBlock()
-                }).start()
+                    }).start()
             }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.singleRequestButton.snp.bottom).offset(12)
@@ -112,13 +137,22 @@ final class YTKNetworkDemoVC: BaseVC {
     /// 链式请求按钮：POST /post → GET /headers
     private lazy var chainRequestButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(JobsCor.systemOrange, for: .normal)
-            .byTitle("链式：POST → GET".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
-            .byContentEdgeInsets(.init(top: 10, left: 12, bottom: 10, right: 12))
+            .byBackgroundColor(JobsCor.systemOrange,
+                               for: .normal)
+            .byTitle("链式：POST → GET".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .medium))
+            .byContentEdgeInsets(.init(top: 10,
+                                       left: 12,
+                                       bottom: 10,
+                                       right: 12))
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 appendLog("👉 链式请求：POST /post → GET /headers")
                 currentChainRequest = YTKChainRequest()
                     .byAdd(PostJsonRequest(payload: [
@@ -128,7 +162,8 @@ final class YTKNetworkDemoVC: BaseVC {
                     ])) { chainRequest, baseReq in
                         _ = baseReq as? PostJsonRequest
                         let headersReq = GetHeadersRequest()
-                        chainRequest.add(headersReq, callback: nil)
+                        chainRequest.add(headersReq,
+                                         callback: nil)
                     }
                     .byDelegate(self)
                     .byStart()
@@ -142,31 +177,46 @@ final class YTKNetworkDemoVC: BaseVC {
     /// 上传头像按钮：Multipart POST /post
     private lazy var uploadButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(JobsCor.systemPurple, for: .normal)
-            .byTitle("上传头像：Multipart".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
-            .byContentEdgeInsets(.init(top: 10, left: 12, bottom: 10, right: 12))
+            .byBackgroundColor(JobsCor.systemPurple,
+                               for: .normal)
+            .byTitle("上传头像：Multipart".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .medium))
+            .byContentEdgeInsets(.init(top: 10,
+                                       left: 12,
+                                       bottom: 10,
+                                       right: 12))
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 appendLog("👉 上传头像：POST /post (Multipart)")
-                // 造一张纯色图
-                UploadAvatarRequest(image: UIGraphicsImageRenderer(size: CGSize(width: 80, height: 80))
+            // 造一张纯色图
+                UploadAvatarRequest(image: UIGraphicsImageRenderer(size: CGSize(width: 80,
+                                                                                height: 80))
                     .image { ctx in
                         JobsCor.systemPink.setFill()
-                        ctx.fill(CGRect(x: 0, y: 0, width: 80, height: 80))
+                        ctx.fill(CGRect(x: 0,
+                                        y: 0,
+                                        width: 80,
+                                        height: 80))
                     })
                     .bySuccess({ [weak self] (request: YTKBaseRequest) in
-                    guard let self = self else { return }
-                    self.appendLog("✅ 上传成功")
-                    self.appendLog("响应 JSON = \(String(describing: request.responseJSONObject))")
-                    request.clearCompletionBlock()
-                })
-                .byFailure({ [weak self] (request: YTKBaseRequest) in
-                    self?.appendLog("❌ 上传失败：\(String(describing: request.error))")
-                    request.clearCompletionBlock()
-                })
-                .start()
+                        guard let self = self else {
+                            return
+                        }
+                        self.appendLog("✅ 上传成功")
+                        self.appendLog("响应 JSON = \(String(describing: request.responseJSONObject))")
+                        request.clearCompletionBlock()
+                    })
+                    .byFailure({ [weak self] (request: YTKBaseRequest) in
+                        self?.appendLog("❌ 上传失败：\(String(describing: request.error))")
+                        request.clearCompletionBlock()
+                    })
+                    .start()
             }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.chainRequestButton.snp.bottom).offset(12)
@@ -191,19 +241,22 @@ final class YTKNetworkDemoVC: BaseVC {
     private func appendLog(_ text: String) {
         let line = "[\(Date())] \(text)\n"
         logTextView.text.append(line)
-        let location = max(0, logTextView.text.count - 1)
-        let range = NSRange(location: location, length: 1)
+        let location = max(0,
+                           logTextView.text.count - 1)
+        let range = NSRange(location: location,
+                            length: 1)
         logTextView.scrollRangeToVisible(range)
         print(line)
     }
 }
 // MARK: - YTKChainRequestDelegate
 extension YTKNetworkDemoVC: YTKChainRequestDelegate {
+
     func chainRequestFinished(_ chainRequest: YTKChainRequest) {
         guard let last = chainRequest.requestArray().last as? GetHeadersRequest else {
             appendLog("⚠️ 链式成功但取不到最后一个请求")
             return
-        };
+        }
         // po last.responseString!
         // quicktype person.json --lang swift -o Person.swift
         appendLog("✅ 链式成功，最终 Headers = \(last.headers ?? [:])")
@@ -216,7 +269,9 @@ extension YTKNetworkDemoVC: YTKChainRequestDelegate {
             return
         }
         do {
-            let person = try JSONDecoder.make { _ in }.decode(Person.self, from: data)
+            let person = try JSONDecoder.make { _ in }
+                .decode(Person.self,
+                        from: data)
             let h = person.headers
             appendLog("✅ JSON 解析成功")
             appendLog("Accept = \(h.accept)")

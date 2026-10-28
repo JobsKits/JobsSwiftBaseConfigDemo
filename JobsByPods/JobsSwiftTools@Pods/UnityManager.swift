@@ -20,7 +20,9 @@ import JobsSwiftTimer
 // 这里就不用 `import UnityFramework` 了
 /// 统一管理 Unity 的加载 / 展示 / 关闭
 final class UnityManager: NSObject {
+
     private enum RuntimeState {
+
         case idle
         case starting
         case running
@@ -56,7 +58,8 @@ final class UnityManager: NSObject {
     /// 确保拿到一个可用的 UnityFramework 实例
     @discardableResult
     private func loadUnityFramework() -> UnityFramework? {
-        assert(Thread.isMainThread, "Unity Runtime 必须在主线程加载。")
+        assert(Thread.isMainThread,
+               "Unity Runtime 必须在主线程加载。")
         guard !didQuitPermanently else {
             print("❌ Unity 已完全退出，本次 App 进程内不能再次启动。")
             return nil
@@ -66,7 +69,8 @@ final class UnityManager: NSObject {
             // 补一下 window 引用（防止外面先拿）
             if unityWindow == nil {
                 unityWindow = ufw.appController()?.window
-            };return ufw
+            }
+            return ufw
         }
         // 记录 Unity 接管前的宿主窗口
         if hostWindow == nil {
@@ -88,8 +92,8 @@ final class UnityManager: NSObject {
         }
         // 2. 拿主类实例
         guard
-            let cls = bundle.principalClass as? UnityFramework.Type,
-            let ufw = cls.getInstance()
+        let cls = bundle.principalClass as? UnityFramework.Type,
+        let ufw = cls.getInstance()
         else {
             print("❌ 无法拿到 UnityFramework 实例")
             return nil
@@ -105,11 +109,9 @@ final class UnityManager: NSObject {
             }
             let argc = Int32(CommandLine.argc)
             let argv = CommandLine.unsafeArgv
-            ufw.runEmbedded(
-                withArgc: argc,
-                argv: argv,
-                appLaunchOpts: nil
-            )
+            ufw.runEmbedded(withArgc: argc,
+                            argv: argv,
+                            appLaunchOpts: nil)
             needsRunEmbedded = false
         }
         // 4. 缓存 Unity 引用
@@ -122,11 +124,10 @@ final class UnityManager: NSObject {
     /// - Parameters:
     ///   - autoCloseAfter: 多少秒之后自动关闭（nil 或 <=0 表示不自动关）
     ///   - unloadOnClose: `true` 回收大部分内存；`false` 暂停并隐藏，避免下次重复启动。
-    func showUnity(
-        autoCloseAfter seconds: TimeInterval? = nil,
-        unloadOnClose: Bool = true
-    ) {
-        assert(Thread.isMainThread, "Unity Runtime 必须在主线程展示。")
+    func showUnity(autoCloseAfter seconds: TimeInterval? = nil,
+                   unloadOnClose: Bool = true) {
+        assert(Thread.isMainThread,
+               "Unity Runtime 必须在主线程展示。")
         guard runtimeState != .starting, runtimeState != .unloading else {
             print("⚠️ Unity 正在启动或卸载，已忽略重复展示请求。")
             return
@@ -144,20 +145,23 @@ final class UnityManager: NSObject {
         ufw.showUnityWindow()
         unityWindow = ufw.appController()?.window
         runtimeState = .running
-        setupAutoCloseTimer(after: seconds, unloadOnClose: unloadOnClose)
+        setupAutoCloseTimer(after: seconds,
+                            unloadOnClose: unloadOnClose)
     }
     /// 方便保持之前的调用写法：from 参数实际上可以忽略
-    func showUnity(
-        from _: UIViewController,
-        autoCloseAfter seconds: TimeInterval? = nil,
-        unloadOnClose: Bool = true
-    ) {
-        showUnity(autoCloseAfter: seconds, unloadOnClose: unloadOnClose)
+    func showUnity(from _: UIViewController,
+                   autoCloseAfter seconds: TimeInterval? = nil,
+                   unloadOnClose: Bool = true) {
+        showUnity(autoCloseAfter: seconds,
+                  unloadOnClose: unloadOnClose)
     }
     /// 仅隐藏 Unity 的窗口，不卸载引擎（下次可以秒开）
     func hideUnity() {
-        assert(Thread.isMainThread, "Unity Runtime 必须在主线程隐藏。")
-        guard runtimeState != .unloading else { return }
+        assert(Thread.isMainThread,
+               "Unity Runtime 必须在主线程隐藏。")
+        guard runtimeState != .unloading else {
+            return
+        }
         autoCloseTimer?.stop()
         autoCloseTimer = nil
         ufw?.pause(true)
@@ -167,10 +171,13 @@ final class UnityManager: NSObject {
     }
     /// 触发 Unity 的卸载流程（真正释放在 `unityDidUnload` 里完成）
     func unloadUnity() {
-        assert(Thread.isMainThread, "Unity Runtime 必须在主线程卸载。")
+        assert(Thread.isMainThread,
+               "Unity Runtime 必须在主线程卸载。")
         autoCloseTimer?.stop()
         autoCloseTimer = nil
-        guard runtimeState != .unloading else { return }
+        guard runtimeState != .unloading else {
+            return
+        }
         guard let ufw else {
             runtimeState = .idle
             return
@@ -179,26 +186,24 @@ final class UnityManager: NSObject {
         ufw.unloadApplication()  // 异步，结束后会回调 unityDidUnload
     }
     // MARK: - JobsTimer 自动关闭
-    private func setupAutoCloseTimer(
-        after seconds: TimeInterval?,
-        unloadOnClose: Bool
-    ) {
+    private func setupAutoCloseTimer(after seconds: TimeInterval?,
+                                     unloadOnClose: Bool) {
         autoCloseTimer?.stop()
         autoCloseTimer = nil
-        guard let seconds, seconds > 0 else { return }
-        let config = JobsSwiftTimerConfig(
-            interval: seconds,
-            repeats: false,
-            tolerance: 0.01,
-            queue: .main
-        )
+        guard let seconds, seconds > 0 else {
+            return
+        }
+        let config = JobsSwiftTimerConfig(interval: seconds,
+                                          repeats: false,
+                                          tolerance: 0.01,
+                                          queue: .main)
         // 可以按需换成 .gcd / .displayLink / .runLoopCore
-        let timer: JobsSwiftTimerProtocol = JobsTimer(
-            kind: .foundation,
-            config: config
-        ) { [weak self] in
+        let timer: JobsSwiftTimerProtocol = JobsTimer(kind: .foundation,
+                                                      config: config) { [weak self] in
             Task { @MainActor [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 if unloadOnClose {
                     self.unloadUnity()
                 } else {
@@ -211,19 +216,17 @@ final class UnityManager: NSObject {
     }
     // MARK: - 兼容之前的 API（名字不改，内部用全屏）
     /// 以前的“嵌入容器”接口，现在其实就是全屏 Unity + 自动关闭
-    func attachUnity(
-        into _: UIView,
-        from host: UIViewController,
-        autoCloseAfter seconds: TimeInterval? = nil,
-        unloadOnClose: Bool = true
-    ) {
-        showUnity(from: host, autoCloseAfter: seconds, unloadOnClose: unloadOnClose)
+    func attachUnity(into _: UIView,
+                     from host: UIViewController,
+                     autoCloseAfter seconds: TimeInterval? = nil,
+                     unloadOnClose: Bool = true) {
+        showUnity(from: host,
+                  autoCloseAfter: seconds,
+                  unloadOnClose: unloadOnClose)
     }
     /// 以前的 detach 接口：根据需要选择只隐藏还是卸载
-    func detachUnity(
-        from _: UIViewController,
-        unload: Bool = true
-    ) {
+    func detachUnity(from _: UIViewController,
+                     unload: Bool = true) {
         if unload {
             unloadUnity()
         } else {
@@ -233,20 +236,26 @@ final class UnityManager: NSObject {
 }
 // MARK: - UnityFrameworkListener
 extension UnityManager: UnityFrameworkListener {
+
     /// Unity 调用了 unloadApplication 之后会回调这里
     func unityDidUnload(_ notification: Notification!) {
-        finishUnityTeardown(message: "✅ Unity did unload", canRestart: true)
+        finishUnityTeardown(message: "✅ Unity did unload",
+                            canRestart: true)
     }
 
     func unityDidQuit(_ notification: Notification!) {
-        finishUnityTeardown(message: "✅ Unity did quit", canRestart: false)
+        finishUnityTeardown(message: "✅ Unity did quit",
+                            canRestart: false)
     }
 
-    private func finishUnityTeardown(message: String, canRestart: Bool) {
+    private func finishUnityTeardown(message: String,
+                                     canRestart: Bool) {
         if !Thread.isMainThread {
             DispatchQueue.main.async { [weak self] in
-                self?.finishUnityTeardown(message: message, canRestart: canRestart)
-            };return
+                self?.finishUnityTeardown(message: message,
+                                          canRestart: canRestart)
+            }
+            return
         }
         print(message)
         autoCloseTimer?.stop()
@@ -266,24 +275,34 @@ extension UnityManager: UnityFrameworkListener {
 #else
 /// 模拟器空壳：保证编译通过（不依赖 UnityFramework）
 final class UnityManager: NSObject {
+
     static let shared = UnityManager()
-    private override init() { super.init() }
+    private override init() {
+        super.init()
+    }
 
     private(set) var isRunning = false
 
-    func showUnity(autoCloseAfter _: TimeInterval? = nil, unloadOnClose _: Bool = true) {
+    func showUnity(autoCloseAfter _: TimeInterval? = nil,
+                   unloadOnClose _: Bool = true) {
         print("⚠️ Unity 不支持模拟器，已跳过。")
     }
 
-    func showUnity(from _: UIViewController, autoCloseAfter _: TimeInterval? = nil, unloadOnClose _: Bool = true) {
+    func showUnity(from _: UIViewController,
+                   autoCloseAfter _: TimeInterval? = nil,
+                   unloadOnClose _: Bool = true) {
         print("⚠️ Unity 不支持模拟器，已跳过。")
     }
 
     func hideUnity() {}
     func unloadUnity() {}
 
-    func attachUnity(into _: UIView, from _: UIViewController, autoCloseAfter _: TimeInterval? = nil, unloadOnClose _: Bool = true) {}
-    func detachUnity(from _: UIViewController, unload _: Bool = true) {}
+    func attachUnity(into _: UIView,
+                     from _: UIViewController,
+                     autoCloseAfter _: TimeInterval? = nil,
+                     unloadOnClose _: Bool = true) {}
+    func detachUnity(from _: UIViewController,
+                     unload _: Bool = true) {}
 }
 
 #endif

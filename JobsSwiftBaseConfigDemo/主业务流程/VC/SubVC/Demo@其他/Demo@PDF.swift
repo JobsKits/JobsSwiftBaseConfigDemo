@@ -23,6 +23,7 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class PDFDemoVC: BaseVC {
+
     // MARK: - Config
     private let resourceName: String = "Terms of Use"
     private let fileExtension: String = "pdf"
@@ -32,10 +33,14 @@ final class PDFDemoVC: BaseVC {
 
     private lazy var previousPageButton: UIButton = {
         UIButton.sys()
-            .byTitle("上一页".tr, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 8, weight: .medium))
-            .byImage("chevron.up.circle".sysImg, for: .normal)
-            .byImage("chevron.up.circle.fill".sysImg, for: .selected)
+            .byTitle("上一页".tr,
+                     for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 8,
+                                             weight: .medium))
+            .byImage("chevron.up.circle".sysImg,
+                     for: .normal)
+            .byImage("chevron.up.circle.fill".sysImg,
+                     for: .selected)
             .byImagePlacement(.top)
             .onTap { [weak self] _ in
                 self?.pdfView.goToPreviousPage(nil)
@@ -47,10 +52,14 @@ final class PDFDemoVC: BaseVC {
 
     private lazy var nextPageButton: UIButton = {
         UIButton.sys()
-            .byTitle("下一页".tr, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 8, weight: .medium))
-            .byImage("chevron.down.circle".sysImg, for: .normal)
-            .byImage("chevron.down.circle.fill".sysImg, for: .selected)
+            .byTitle("下一页".tr,
+                     for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 8,
+                                             weight: .medium))
+            .byImage("chevron.down.circle".sysImg,
+                     for: .normal)
+            .byImage("chevron.down.circle.fill".sysImg,
+                     for: .selected)
             .byImagePlacement(.top)
             .onTap { [weak self] _ in
                 self?.pdfView.goToNextPage(nil)
@@ -62,25 +71,34 @@ final class PDFDemoVC: BaseVC {
 
     private lazy var shareButton: UIButton = {
         UIButton.sys()
-            .byTitle("分享".tr, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 8, weight: .medium))
-            .byImage("globe".sysImg, for: .normal)
-            .byImage("globe".sysImg, for: .selected)
+            .byTitle("分享".tr,
+                     for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 8,
+                                             weight: .medium))
+            .byImage("globe".sysImg,
+                     for: .normal)
+            .byImage("globe".sysImg,
+                     for: .selected)
             .byImagePlacement(.top)
             .onTap { [weak self] _ in
-                guard let self, let url = loadedURL else { return }
-                shareViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                guard let self, let url = loadedURL else {
+                    return
+                }
+                shareViewController = UIActivityViewController(activityItems: [url],
+                                                               applicationActivities: nil)
                 shareViewController?.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItems?.first
                 if let shareViewController {
-                    present(shareViewController, animated: true)
+                    present(shareViewController,
+                            animated: true)
                 }
             }
     }()
 
     private lazy var pdfView: PDFView = {
-        PDFView.jobsMake { _ in }
+        PDFView
+            .jobsMake { _ in }
             .byAutoScales(NO) // 交给我们手动控制
-            .byDisplayMode(.singlePageContinuous)
+        .byDisplayMode(.singlePageContinuous)
             .byDisplayDirection(.vertical)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byAddTo(view) { [unowned self] make in
@@ -91,11 +109,15 @@ final class PDFDemoVC: BaseVC {
     }()
 
     private lazy var thumbnailView: PDFThumbnailView = { [unowned self] in
-        PDFThumbnailView.jobsMake { _ in }
+        PDFThumbnailView
+            .jobsMake { _ in }
             .byLayoutMode(.horizontal)
             .byThumbnailSize(CGSize(width: 60, height: 80))
             .byBackgroundColor(JobsCor.tertiarySystemBackground)
-            .byContentInset(UIEdgeInsets(top: 6, left: 8, bottom: 6, right: 8))
+            .byContentInset(UIEdgeInsets(top: 6,
+                                         left: 8,
+                                         bottom: 6,
+                                         right: 8))
             .byAddTo(view) { [unowned self] make in
                 make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
                 make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
@@ -106,33 +128,42 @@ final class PDFDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
-        jobsSetupGKNav(title: "PDF", rightButtons: [previousPageButton, nextPageButton, shareButton])
+        jobsSetupGKNav(title: "PDF",
+                       rightButtons: [previousPageButton, nextPageButton, shareButton])
         thumbnailView.byPDFView(to: pdfView)
         loadDocumentOrFail()
     }
     /// 布局后再校准一次
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        pdfView.byFitScale(max: 4.0)
+        pdfView
+            .byFitScale(max: 4.0)
             .byFitNow(maxScale: 4.0)
     }
     /// 可选增强（避免旋转后又变样）：
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
+    override func viewWillTransition(to size: CGSize,
+                                     with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size,
+                                 with: coordinator)
         coordinator.animate(alongsideTransition: { _ in
             let fit = self.pdfView.scaleFactorForSizeToFit
             self.pdfView.minScaleFactor = fit
-            self.pdfView.maxScaleFactor = max(fit, 4.0)
+            self.pdfView.maxScaleFactor = max(fit,
+                                              4.0)
             self.pdfView.scaleFactor   = fit
         })
     }
     // MARK: - Load
     private func loadDocumentOrFail() {
-        let bundleURL = Bundle.main.url(forResource: resourceName, withExtension: fileExtension)
+        let bundleURL = Bundle.main.url(forResource: resourceName,
+                                        withExtension: fileExtension)
         var docsURL: URL?
-        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+        if let dir = FileManager.default.urls(for: .documentDirectory,
+                                              in: .userDomainMask).first {
             let candidate = dir.appendingPathComponent("\(resourceName).\(fileExtension)")
-            if FileManager.default.fileExists(atPath: candidate.path) { docsURL = candidate }
+            if FileManager.default.fileExists(atPath: candidate.path) {
+                docsURL = candidate
+            }
         }
         guard let url = bundleURL ?? docsURL else {
             "未找到 \(resourceName).\(fileExtension)\n请将文件放入 Bundle 或 Documents 目录。".toast
@@ -145,6 +176,8 @@ final class PDFDemoVC: BaseVC {
         loadedURL = url
         document = doc
         pdfView.byDocument(doc)
-        if let first = doc.page(at: 0) { pdfView.go(to: first) }
+        if let first = doc.page(at: 0) {
+            pdfView.go(to: first)
+        }
     }
 }

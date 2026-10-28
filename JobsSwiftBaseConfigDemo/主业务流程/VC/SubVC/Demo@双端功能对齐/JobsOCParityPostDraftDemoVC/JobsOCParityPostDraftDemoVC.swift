@@ -24,7 +24,9 @@ import UniformTypeIdentifiers
 
 final class JobsPostDraftDemoVC: BaseVC {
 
-    private struct Draft: Codable, Equatable {
+    private struct Draft: Codable,
+                          Equatable {
+
         let text: String
         let images: [String]
         let videoPath: String?
@@ -38,14 +40,18 @@ final class JobsPostDraftDemoVC: BaseVC {
     private var imageButtons: [UIButton] = []
     private var gridHeightConstraint: Constraint?
     private var lastMediaGridWidth: CGFloat = 0
-    private var snapshot = Draft(text: "", images: [], videoPath: nil)
+    private var snapshot = Draft(text: "",
+                                 images: [],
+                                 videoPath: nil)
     private var previousInteractivePopEnabled = true
 
     private lazy var backButton: UIButton = {
         UIButton.sys()
-            .byImage("chevron.left".sysImg, for: .normal)
+            .byImage("chevron.left".sysImg,
+                     for: .normal)
             .byTintColor(JobsCor.label)
-            .byBackgroundColor(JobsCor.clear, for: .normal)
+            .byBackgroundColor(JobsCor.clear,
+                               for: .normal)
             .onTap { [weak self] _ in
                 self?.handleBack()
             }
@@ -53,10 +59,13 @@ final class JobsPostDraftDemoVC: BaseVC {
 
     private lazy var publishButton: UIButton = {
         UIButton.sys()
-            .byTitle("发布".tr, for: .normal)
+            .byTitle("发布".tr,
+                     for: .normal)
             .byTitleFont(JobsFont.boldSystemFont(ofSize: 14))
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byBackgroundColor(JobsCor.systemBlue,
+                               for: .normal)
             .byCornerRadius(16)
             .onTap { [weak self] _ in
                 self?.publish()
@@ -64,7 +73,8 @@ final class JobsPostDraftDemoVC: BaseVC {
     }()
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView.jobsMake { _ in }
+        UIScrollView
+            .jobsMake { _ in }
             .byAlwaysBounceVertical(YES)
             .byShowsVerticalScrollIndicator(false)
             .byAddTo(view) { [unowned self] make in
@@ -74,7 +84,8 @@ final class JobsPostDraftDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalTo(scrollView.contentLayoutGuide)
                 make.width.equalTo(scrollView.frameLayoutGuide)
@@ -82,12 +93,16 @@ final class JobsPostDraftDemoVC: BaseVC {
     }()
 
     private lazy var postTextView: UITextView = {
-        UITextView.jobsMake { _ in }
+        UITextView
+            .jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.label)
             .byDelegate(self)
             .byBackgroundColor(JobsCor.systemBackground)
-            .byTextContainerInset(UIEdgeInsets(top: 12, left: 12, bottom: 24, right: 12))
+            .byTextContainerInset(UIEdgeInsets(top: 12,
+                                               left: 12,
+                                               bottom: 24,
+                                               right: 12))
             .byAddTo(contentView) { make in
                 make.top.left.right.equalToSuperview()
                 make.height.equalTo(101)
@@ -95,7 +110,8 @@ final class JobsPostDraftDemoVC: BaseVC {
     }()
 
     private lazy var placeholderLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("撩骚内容，写在这里哦~".tr)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.placeholderText)
@@ -106,7 +122,8 @@ final class JobsPostDraftDemoVC: BaseVC {
     }()
 
     private lazy var countLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("0/\(maximumTextCount)")
             .byFont(JobsFont.systemFont(ofSize: 11))
             .byTextColor(JobsCor.secondaryLabel)
@@ -116,11 +133,12 @@ final class JobsPostDraftDemoVC: BaseVC {
     }()
 
     private lazy var tipsLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText(
-                "1、内容不允许出现纯数字，英文字母；\n"
+            "1、内容不允许出现纯数字，英文字母；\n"
                 + "2、图片/视频(图片最多9张/仅上传一段视频，大小不超100M)。"
-            )
+        )
             .byFont(JobsFont.systemFont(ofSize: 12))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
@@ -133,7 +151,8 @@ final class JobsPostDraftDemoVC: BaseVC {
     }()
 
     private lazy var mediaGridView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBackground)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(tipsLabel.snp.bottom).offset(12)
@@ -145,9 +164,11 @@ final class JobsPostDraftDemoVC: BaseVC {
 
     private lazy var addImageButton: UIButton = {
         UIButton.sys()
-            .byImage("plus".sysImg, for: .normal)
+            .byImage("plus".sysImg,
+                     for: .normal)
             .byTintColor(JobsCor.secondaryLabel)
-            .byBackgroundColor(JobsCor.systemGray6, for: .normal)
+            .byBackgroundColor(JobsCor.systemGray6,
+                               for: .normal)
             .byCornerRadius(8)
             .byBorderWidth(1)
             .byBorderColor(JobsCor.separator)
@@ -157,7 +178,8 @@ final class JobsPostDraftDemoVC: BaseVC {
     }()
 
     private lazy var deleteZoneLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("拖到这里删除".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 16))
             .byTextColor(JobsCor.white)
@@ -185,11 +207,9 @@ final class JobsPostDraftDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
-        jobsSetupGKNav(
-            title: "图文发帖编辑与草稿存取".tr,
-            leftButton: backButton,
-            rightButtons: [publishButton]
-        )
+        jobsSetupGKNav(title: "图文发帖编辑与草稿存取".tr,
+                       leftButton: backButton,
+                       rightButtons: [publishButton])
         scrollView.byVisible(YES)
         contentView.byVisible(YES)
         postTextView.byVisible(YES)
@@ -229,8 +249,11 @@ final class JobsPostDraftDemoVC: BaseVC {
             "最多选择 \(maximumImageCount) 张图片".toast
             return
         }
-        pickFromPhotoLibrary(maxSelection: availableCount, imagesOnly: true) { [weak self] selectedImages in
-            guard let self else { return }
+        pickFromPhotoLibrary(maxSelection: availableCount,
+                             imagesOnly: true) { [weak self] selectedImages in
+            guard let self else {
+                return
+            }
             images.append(contentsOf: selectedImages.prefix(availableCount))
             reloadMediaGrid()
             refreshState()
@@ -238,19 +261,21 @@ final class JobsPostDraftDemoVC: BaseVC {
     }
 
     private func chooseMedia() {
-        let alertController = UIAlertController(
-            title: "选择媒体".tr,
-            message: "最多 9 张图片，或仅选择 1 段不超过 100M 的视频".tr,
-            preferredStyle: .actionSheet
-        )
-        alertController.addAction(UIAlertAction(title: "选择图片".tr, style: .default) { [weak self] _ in
+        let alertController = UIAlertController(title: "选择媒体".tr,
+                                                message: "最多 9 张图片，或仅选择 1 段不超过 100M 的视频".tr,
+                                                preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: "选择图片".tr,
+                                                style: .default) { [weak self] _ in
             self?.chooseImages()
         })
-        alertController.addAction(UIAlertAction(title: "选择视频".tr, style: .default) { [weak self] _ in
+        alertController.addAction(UIAlertAction(title: "选择视频".tr,
+                                                style: .default) { [weak self] _ in
             self?.chooseVideo()
         })
-        alertController.addAction(UIAlertAction(title: "取消".tr, style: .cancel))
-        alertController.byPresent(self, anchor: .view(addImageButton))
+        alertController.addAction(UIAlertAction(title: "取消".tr,
+                                                style: .cancel))
+        alertController.byPresent(self,
+                                  anchor: .view(addImageButton))
     }
 
     private func chooseVideo() {
@@ -268,20 +293,23 @@ final class JobsPostDraftDemoVC: BaseVC {
     }
 
     private func reloadMediaGrid() {
-        imageButtons.forEach { $0.removeFromSuperview() }
+        imageButtons.forEach {
+            $0.removeFromSuperview()
+        }
         if let videoURL {
-            let videoButton = makeMediaButton(
-                image: makeVideoThumbnail(videoURL) ?? "video.fill".sysImg,
-                tag: -1
-            )
+            let videoButton = makeMediaButton(image: makeVideoThumbnail(videoURL) ?? "video.fill".sysImg,
+                                              tag: -1)
             videoButton
-                .byTitle("▶︎", for: .normal)
+                .byTitle("▶︎",
+                         for: .normal)
                 .byTitleFont(JobsFont.boldSystemFont(ofSize: 34))
-                .byTitleColor(JobsCor.white, for: .normal)
+                .byTitleColor(JobsCor.white,
+                              for: .normal)
             imageButtons = [videoButton]
         } else {
             imageButtons = images.enumerated().map { index, image in
-                makeMediaButton(image: image, tag: index)
+                makeMediaButton(image: image,
+                                tag: index)
             }
         }
         imageButtons.forEach(mediaGridView.addSubview)
@@ -291,7 +319,8 @@ final class JobsPostDraftDemoVC: BaseVC {
         } else {
             addImageButton.removeFromSuperview()
         }
-        let side = max(0, (mediaGridView.bounds.width - 16) / 3)
+        let side = max(0,
+                       (mediaGridView.bounds.width - 16) / 3)
         let allViews: [UIView] = imageButtons + (showsAddButton ? [addImageButton] : [])
         allViews.enumerated().forEach { index, cellView in
             let row = index / 3
@@ -302,13 +331,16 @@ final class JobsPostDraftDemoVC: BaseVC {
                 make.width.height.equalTo(side)
             }
         }
-        let rowCount = max(1, Int(ceil(Double(allViews.count) / 3.0)))
+        let rowCount = max(1,
+                           Int(ceil(Double(allViews.count) / 3.0)))
         gridHeightConstraint?.update(offset: CGFloat(rowCount) * side + CGFloat(rowCount - 1) * 8)
     }
 
     private func handleImagePan(_ gesture: UIGestureRecognizer) {
         guard let pan = gesture as? UIPanGestureRecognizer,
-              let button = pan.view as? UIButton else { return }
+              let button = pan.view as? UIButton else {
+            return
+        }
         let translation = pan.translation(in: view)
         switch pan.state {
         /// 显示删除区并将当前图片提到最上层
@@ -318,10 +350,12 @@ final class JobsPostDraftDemoVC: BaseVC {
             mediaGridView.bringSubviewToFront(button)
         /// 图片跟随手指拖动
         case .changed:
-            button.byTransform(CGAffineTransform(translationX: translation.x, y: translation.y))
+            button.byTransform(CGAffineTransform(translationX: translation.x,
+                                                 y: translation.y))
         /// 进入删除区则删除，否则回到原位
         case .ended:
-            let buttonFrame = button.convert(button.bounds, to: view)
+            let buttonFrame = button.convert(button.bounds,
+                                             to: view)
             if buttonFrame.intersects(deleteZoneLabel.frame) {
                 if button.tag == -1 {
                     videoURL = nil
@@ -345,23 +379,24 @@ final class JobsPostDraftDemoVC: BaseVC {
     }
 
     private func restoreImageButton(_ button: UIButton) {
-        UIView.jobsAnimateWithSpring(
-            0.30,
-            dampingRatio: 0.80,
-            initialVelocity: 0.7,
-            options: [.beginFromCurrentState],
-            animations: {
-                button.byTransform(.identity)
-            }
-        )
+        UIView.jobsAnimateWithSpring(0.30,
+                                     dampingRatio: 0.80,
+                                     initialVelocity: 0.7,
+                                     options: [.beginFromCurrentState],
+                                     animations: {
+            button.byTransform(.identity)
+        })
     }
 
-    private func makeMediaButton(image: UIImage?, tag: Int) -> UIButton {
+    private func makeMediaButton(image: UIImage?,
+                                 tag: Int) -> UIButton {
         UIButton.sys()
             .byTag(tag)
-            .byImage(image, for: .normal)
+            .byImage(image,
+                     for: .normal)
             .byImageViewContentMode(.scaleAspectFill)
-            .byBackgroundColor(JobsCor.systemGray6, for: .normal)
+            .byBackgroundColor(JobsCor.systemGray6,
+                               for: .normal)
             .byCornerRadius(8)
             .byClipsToBounds()
             .addPanAction { [weak self] gesture in
@@ -372,10 +407,12 @@ final class JobsPostDraftDemoVC: BaseVC {
     private func makeVideoThumbnail(_ url: URL) -> UIImage? {
         let generator = AVAssetImageGenerator(asset: AVAsset(url: url))
         generator.appliesPreferredTrackTransform = true
-        guard let cgImage = try? generator.copyCGImage(
-            at: CMTime(seconds: 0.2, preferredTimescale: 600),
-            actualTime: nil
-        ) else { return nil };return UIImage(cgImage: cgImage)
+        guard let cgImage = try? generator.copyCGImage(at: CMTime(seconds: 0.2,
+                                                                  preferredTimescale: 600),
+                                                       actualTime: nil) else {
+            return nil
+        }
+        return UIImage(cgImage: cgImage)
     }
 
     private func refreshState() {
@@ -385,15 +422,14 @@ final class JobsPostDraftDemoVC: BaseVC {
         let canPublish = textCount > 0 || !images.isEmpty || videoURL != nil
         publishButton
             .byEnabled(canPublish)
-            .byBackgroundColor(
-                canPublish ? JobsCor.systemBlue : JobsCor.systemGray3,
-                for: .normal
-            )
+            .byBackgroundColor(canPublish ? JobsCor.systemBlue : JobsCor.systemGray3,
+                               for: .normal)
     }
 
     private func loadDraft() {
         guard let data = UserDefaults.standard.data(forKey: draftKey),
-              let draft = try? JSONDecoder.make { _ in }.decode(Draft.self, from: data) else {
+              let draft = try? JSONDecoder.make { _ in }.decode(Draft.self,
+                                                                from: data) else {
             snapshot = currentDraft()
             return
         }
@@ -409,19 +445,18 @@ final class JobsPostDraftDemoVC: BaseVC {
     }
 
     private func currentDraft() -> Draft {
-        Draft(
-            text: postTextView.text ?? "",
-            images: images.compactMap { image in
-                (image.pngData() ?? image.jpegData(compressionQuality: 0.88))?.base64EncodedString()
-            },
-            videoPath: videoURL?.path
-        )
+        Draft(text: postTextView.text ?? "",
+              images: images.compactMap { image in
+            (image.pngData() ?? image.jpegData(compressionQuality: 0.88))?.base64EncodedString()
+        },
+              videoPath: videoURL?.path)
     }
 
     private func saveDraft() {
         let draft = currentDraft()
         if let data = try? JSONEncoder.make { _ in }.encode(draft) {
-            UserDefaults.standard.set(data, forKey: draftKey)
+            UserDefaults.standard.set(data,
+                                      forKey: draftKey)
             snapshot = draft
         }
     }
@@ -431,13 +466,15 @@ final class JobsPostDraftDemoVC: BaseVC {
     }
 
     private func publish() {
-        guard publishButton.isEnabled else { return }
+        guard publishButton.isEnabled else {
+            return
+        }
         let content = postTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
         let isPureASCIIAlphaNumeric = !content.isEmpty && content.unicodeScalars.allSatisfy { scalar in
             let value = scalar.value
-            return (48...57).contains(value)
-                || (65...90).contains(value)
-                || (97...122).contains(value)
+            return (48 ... 57).contains(value)
+                || (65 ... 90).contains(value)
+                || (97 ... 122).contains(value)
         }
         guard !isPureASCIIAlphaNumeric else {
             "内容不允许为纯数字或英文字母".toast
@@ -454,16 +491,16 @@ final class JobsPostDraftDemoVC: BaseVC {
             navigationController?.popViewController(animated: YES)
             return
         }
-        let alertController = UIAlertController(
-            title: "提示".tr,
-            message: "是否将当前内容保存为草稿？".tr,
-            preferredStyle: .alert
-        )
-        alertController.addAction(UIAlertAction(title: "不保存".tr, style: .destructive) { [weak self] _ in
+        let alertController = UIAlertController(title: "提示".tr,
+                                                message: "是否将当前内容保存为草稿？".tr,
+                                                preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "不保存".tr,
+                                                style: .destructive) { [weak self] _ in
             self?.clearDraft()
             self?.navigationController?.popViewController(animated: YES)
         })
-        alertController.addAction(UIAlertAction(title: "保存".tr, style: .default) { [weak self] _ in
+        alertController.addAction(UIAlertAction(title: "保存".tr,
+                                                style: .default) { [weak self] _ in
             self?.saveDraft()
             self?.navigationController?.popViewController(animated: YES)
         })
@@ -473,14 +510,17 @@ final class JobsPostDraftDemoVC: BaseVC {
 
 extension JobsPostDraftDemoVC: UITextViewDelegate {
 
-    func textView(
-        _ textView: UITextView,
-        shouldChangeTextIn range: NSRange,
-        replacementText text: String
-    ) -> Bool {
+    func textView(_ textView: UITextView,
+                  shouldChangeTextIn range: NSRange,
+                  replacementText text: String) -> Bool {
         guard let current = textView.text,
-              let swiftRange = Range(range, in: current) else { return false };return current
-            .replacingCharacters(in: swiftRange, with: text)
+              let swiftRange = Range(range,
+                                     in: current) else {
+            return false
+        }
+        return current
+            .replacingCharacters(in: swiftRange,
+                                 with: text)
             .count <= maximumTextCount
     }
 
@@ -491,33 +531,39 @@ extension JobsPostDraftDemoVC: UITextViewDelegate {
 
 extension JobsPostDraftDemoVC: PHPickerViewControllerDelegate {
 
-    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+    func picker(_ picker: PHPickerViewController,
+                didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: YES)
         guard let provider = results.first?.itemProvider,
-              provider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) else { return }
+              provider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) else {
+            return
+        }
         provider.loadFileRepresentation(forTypeIdentifier: UTType.movie.identifier) { [weak self] temporaryURL, _ in
-            guard let self, let temporaryURL else { return }
+            guard let self, let temporaryURL else {
+                return
+            }
             let fileSize = (try? temporaryURL.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0
             guard fileSize <= 100 * 1024 * 1024 else {
                 DispatchQueue.main.async {
                     "视频大小不能超过 100M".toast
-                };return
+                }
+                return
             }
             do {
-                let directory = try FileManager.default.url(
-                    for: .applicationSupportDirectory,
-                    in: .userDomainMask,
-                    appropriateFor: nil,
-                    create: true
-                ).appendingPathComponent("JobsPostDraftDemo", isDirectory: true)
-                try FileManager.default.createDirectory(
-                    at: directory,
-                    withIntermediateDirectories: true
-                )
+                let directory = try FileManager.default.url(for: .applicationSupportDirectory,
+                                                            in: .userDomainMask,
+                                                            appropriateFor: nil,
+                                                            create: true).appendingPathComponent("JobsPostDraftDemo",
+                                                                                                 isDirectory: true)
+                try FileManager.default.createDirectory(at: directory,
+                                                        withIntermediateDirectories: true)
                 let destination = directory.appendingPathComponent("\(UUID().uuidString).mov")
-                try FileManager.default.copyItem(at: temporaryURL, to: destination)
+                try FileManager.default.copyItem(at: temporaryURL,
+                                                 to: destination)
                 DispatchQueue.main.async { [weak self] in
-                    guard let self else { return }
+                    guard let self else {
+                        return
+                    }
                     videoURL = destination
                     reloadMediaGrid()
                     refreshState()

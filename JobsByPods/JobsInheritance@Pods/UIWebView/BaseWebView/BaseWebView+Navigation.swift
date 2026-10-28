@@ -16,21 +16,25 @@ import WebKit
 import JobsSwiftDSL
 
 extension BaseWebView: WKNavigationDelegate {
+
     @MainActor
-    public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+    public func webView(_ webView: WKWebView,
+                        didStartProvisionalNavigation navigation: WKNavigation!) {
         bridgePageGeneration &+= 1
         progressView.byHidden(false)
     }
 
     @MainActor
-    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    public func webView(_ webView: WKWebView,
+                        didFinish navigation: WKNavigation!) {
         // 真实 UA 回传给前端
         webView.evaluateJavaScript("navigator.userAgent") { [weak self] v, _ in
             let ua = v as? String ?? ""
-            self?.emitEvent("nativeReady", payload: [
-                "ua": ua,
-                "title": webView.title ?? ""
-            ])
+            self?.emitEvent("nativeReady",
+                            payload: [
+                    "ua": ua,
+                    "title": webView.title ?? ""
+                ])
         }
         // 如果外部在当前视图上装了 NavBar 且未自定义标题，则默认绑定 webView.title
         if let nb = self.jobsNavBar, nb.titleProvider == nil {
@@ -58,7 +62,9 @@ extension BaseWebView: WKNavigationDelegate {
         let standardSchemes: Set<String> = ["http", "https", "file", "about", "data", "javascript"]
         if !standardSchemes.contains(scheme) || externalSchemes.contains(scheme) {
             if UIApplication.shared.canOpenURL(url) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                UIApplication.shared.open(url,
+                                          options: [:],
+                                          completionHandler: nil)
             }
             decisionHandler(.cancel)
             return
@@ -114,7 +120,9 @@ extension BaseWebView: WKNavigationDelegate {
             if openBlankInPlace {
                 webView.load(makeNoCache(action.request))
             } else {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                UIApplication.shared.open(url,
+                                          options: [:],
+                                          completionHandler: nil)
             }
             decisionHandler(.cancel)
             return
@@ -141,6 +149,7 @@ extension BaseWebView: WKNavigationDelegate {
 }
 // MARK: - Safari
 private extension BaseWebView {
+
     @MainActor
     func presentSafari(with url: URL) {
         SFSafariViewController(url: url)

@@ -21,61 +21,48 @@ import JobsWalletCard
 import SnapKit
 
 final class JobsWalletCardEffectDemoVC: BaseVC {
+
     private let expansionMode: JobsWalletCardExpansionMode
     private let navigationTitle: String
     private lazy var walletCardView: JobsWalletCardView = { [unowned self] in
         JobsWalletCardView()
             .byExpansionMode(expansionMode)
             .byCards([
-                JobsWalletCardModel(
-                    bankName: "上海银行".tr,
-                    lastDigits: "7895",
-                    holder: "Jobs",
-                    brand: "VISA",
-                    gradientColors: [JobsCor.systemPurple, JobsCor.systemBlue]
-                ),
-                JobsWalletCardModel(
-                    bankName: "国泰世华".tr,
-                    lastDigits: "2345",
-                    holder: "Jobs",
-                    brand: "Mastercard",
-                    gradientColors: [JobsCor.systemPink, JobsCor.systemOrange]
-                ),
-                JobsWalletCardModel(
-                    bankName: "台湾银行".tr,
-                    lastDigits: "7654",
-                    holder: "Jobs",
-                    brand: "VISA",
-                    gradientColors: [JobsCor.systemTeal, JobsCor.systemBlue]
-                ),
-                JobsWalletCardModel(
-                    bankName: "嘉华银行".tr,
-                    lastDigits: "2345",
-                    holder: "Jobs",
-                    brand: "UnionPay",
-                    gradientColors: [JobsCor.systemIndigo, JobsCor.systemTeal]
-                ),
-                JobsWalletCardModel(
-                    bankName: "包头银行".tr,
-                    lastDigits: "7654",
-                    holder: "Jobs",
-                    brand: "Debit",
-                    gradientColors: [JobsCor.systemGreen, JobsCor.systemTeal]
-                ),
-                JobsWalletCardModel(
-                    bankName: "成都银行".tr,
-                    lastDigits: "2345",
-                    holder: "Jobs",
-                    brand: "Credit",
-                    gradientColors: [JobsCor.systemRed, JobsCor.systemOrange]
-                ),
-                JobsWalletCardModel(
-                    bankName: "南充商业银行".tr,
-                    lastDigits: "7654",
-                    holder: "Jobs",
-                    brand: "VISA",
-                    gradientColors: [JobsCor.systemBlue, JobsCor.systemGreen]
-                )
+                JobsWalletCardModel(bankName: "上海银行".tr,
+                                    lastDigits: "7895",
+                                    holder: "Jobs",
+                                    brand: "VISA",
+                                    gradientColors: [JobsCor.systemPurple, JobsCor.systemBlue]),
+                JobsWalletCardModel(bankName: "国泰世华".tr,
+                                    lastDigits: "2345",
+                                    holder: "Jobs",
+                                    brand: "Mastercard",
+                                    gradientColors: [JobsCor.systemPink, JobsCor.systemOrange]),
+                JobsWalletCardModel(bankName: "台湾银行".tr,
+                                    lastDigits: "7654",
+                                    holder: "Jobs",
+                                    brand: "VISA",
+                                    gradientColors: [JobsCor.systemTeal, JobsCor.systemBlue]),
+                JobsWalletCardModel(bankName: "嘉华银行".tr,
+                                    lastDigits: "2345",
+                                    holder: "Jobs",
+                                    brand: "UnionPay",
+                                    gradientColors: [JobsCor.systemIndigo, JobsCor.systemTeal]),
+                JobsWalletCardModel(bankName: "包头银行".tr,
+                                    lastDigits: "7654",
+                                    holder: "Jobs",
+                                    brand: "Debit",
+                                    gradientColors: [JobsCor.systemGreen, JobsCor.systemTeal]),
+                JobsWalletCardModel(bankName: "成都银行".tr,
+                                    lastDigits: "2345",
+                                    holder: "Jobs",
+                                    brand: "Credit",
+                                    gradientColors: [JobsCor.systemRed, JobsCor.systemOrange]),
+                JobsWalletCardModel(bankName: "南充商业银行".tr,
+                                    lastDigits: "7654",
+                                    holder: "Jobs",
+                                    brand: "VISA",
+                                    gradientColors: [JobsCor.systemBlue, JobsCor.systemGreen])
             ])
             .bySectionTitle("我的银行卡".tr)
             .bySectionSubtitle("点击银行卡，可展开查看".tr)
@@ -95,7 +82,8 @@ final class JobsWalletCardEffectDemoVC: BaseVC {
          navigationTitle: String) {
         self.expansionMode = expansionMode
         self.navigationTitle = navigationTitle
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil,
+                   bundle: nil)
     }
 
     required init?(coder: NSCoder) {

@@ -17,10 +17,14 @@ import JobsSwiftDSL
 import SnapKit
 
 final class JobsCopiedAppIconPhotoCell: UITableViewCell {
-    private static let dateFormatter = DateFormatter.jobsMake { _ in }.byDateFormat("yyyy-MM-dd HH:mm")
+
+    private static let dateFormatter = DateFormatter
+        .jobsMake { _ in }
+        .byDateFormat("yyyy-MM-dd HH:mm")
 
     private lazy var photoImageView: UIImageView = {
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.tertiarySystemBackground)
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(YES)
@@ -35,8 +39,10 @@ final class JobsCopiedAppIconPhotoCell: UITableViewCell {
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .semibold))
             .byTextColor(JobsCor.label)
             .byNumberOfLines(1)
             .byAddTo(contentView) { [unowned self] make in
@@ -47,8 +53,10 @@ final class JobsCopiedAppIconPhotoCell: UITableViewCell {
     }()
 
     private lazy var detailLabel: UILabel = {
-        UILabel.jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 12,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(2)
             .byAddTo(contentView) { [unowned self] make in
@@ -61,8 +69,10 @@ final class JobsCopiedAppIconPhotoCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override init(style: UITableViewCell.CellStyle,
+                  reuseIdentifier: String?) {
+        super.init(style: style,
+                   reuseIdentifier: reuseIdentifier)
         self.byBackgroundColor(JobsCor.secondarySystemBackground)
         photoImageView.byVisible(YES)
         titleLabel.byVisible(YES)
@@ -85,7 +95,7 @@ final class JobsCopiedAppIconPhotoCell: UITableViewCell {
         titleLabel.byText(Self.dateFormatter.string(from: photo.createdAt))
         detailLabel.byText(
             "\(photo.pixelWidth) × \(photo.pixelHeight)" +
-            (isCurrent ? " · 当前演示照片".tr : " · 点按切换演示照片".tr)
+                (isCurrent ? " · 当前演示照片".tr : " · 点按切换演示照片".tr)
         )
         self.byAccessoryType(isCurrent ? .checkmark : .none)
         return self

@@ -19,37 +19,47 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class HomeLinkageDemoListVC: BaseVC {
-    private enum Row: Int, CaseIterable {
+
+    private enum Row: Int,
+                      CaseIterable {
+
         case cashback
         case linkageMenu
         var title: String {
             switch self {
             /// 处理 .cashback 分支
-            case .cashback: return "🏠 首页联动"
+            case .cashback:
+                return "🏠 首页联动"
             /// 处理 .linkageMenu 分支
-            case .linkageMenu: return "🧭 首页联动切换子页面@Pod"
+            case .linkageMenu:
+                return "🧭 首页联动切换子页面@Pod"
             }
         }
         var subtitle: String {
             switch self {
             /// 处理 .cashback 分支
-            case .cashback: return "JXSegmentedView 页签联动示例"
+            case .cashback:
+                return "JXSegmentedView 页签联动示例"
             /// 处理 .linkageMenu 分支
-            case .linkageMenu: return "JobsSwiftLinkageMenuView 子页面切换示例"
+            case .linkageMenu:
+                return "JobsSwiftLinkageMenuView 子页面切换示例"
             }
         }
         var vcType: UIViewController.Type {
             switch self {
             /// 处理 .cashback 分支
-            case .cashback: return CashbackRootVC.self
+            case .cashback:
+                return CashbackRootVC.self
             /// 处理 .linkageMenu 分支
-            case .linkageMenu: return JobsSwiftLinkageMenuViewDemoVC.self
+            case .linkageMenu:
+                return JobsSwiftLinkageMenuViewDemoVC.self
             }
         }
     }
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
             .bySeparatorStyle(.singleLine)
@@ -73,8 +83,11 @@ final class HomeLinkageDemoListVC: BaseVC {
     }
 }
 // MARK: - UITableViewDataSource, UITableViewDelegate
-extension HomeLinkageDemoListVC: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension HomeLinkageDemoListVC: UITableViewDataSource,
+                                 UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
         Row.allCases.count
     }
 
@@ -82,20 +95,26 @@ extension HomeLinkageDemoListVC: UITableViewDataSource, UITableViewDelegate {
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = Row.allCases[indexPath.row]
         return tableView
-            .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+            .byDequeueReusableCell(withType: UITableViewCell.self,
+                                   for: indexPath)
             .byAccessoryType(.disclosureIndicator)
             .byListConfig {
-                $0.byText(row.title)
+                $0
+                    .byText(row.title)
                     .bySecondaryText(row.subtitle)
-                    .byTextFont(JobsFont.systemFont(ofSize: 17, weight: .semibold))
-                    .bySecondaryFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+                    .byTextFont(JobsFont.systemFont(ofSize: 17,
+                                                    weight: .semibold))
+                    .bySecondaryFont(JobsFont.systemFont(ofSize: 13,
+                                                         weight: .regular))
                     .bySecondaryLines(0)
             }
     }
 
     func tableView(_ tableView: UITableView,
                    didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        Row.allCases[indexPath.row].vcType.init().byPush(self)
+        tableView.deselectRow(at: indexPath,
+                              animated: true)
+        Row.allCases[indexPath.row].vcType.init()
+            .byPush(self)
     }
 }

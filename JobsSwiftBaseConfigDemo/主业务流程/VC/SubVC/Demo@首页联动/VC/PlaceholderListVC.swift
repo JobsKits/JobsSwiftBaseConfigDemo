@@ -19,16 +19,28 @@ import JobsSwiftBaseDefines
 import SnapKit
 import JXSegmentedView
 
-final class PlaceholderListVC: BaseVC, JXSegmentedListContainerViewListDelegate {
+final class PlaceholderListVC: BaseVC,
+                               JXSegmentedListContainerViewListDelegate {
+
     private let titleText: String
-    init(title: String) { self.titleText = title; super.init(nibName: nil, bundle: nil) }
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    init(title: String) {
+        self.titleText = title
+        super.init(nibName: nil,
+                   bundle: nil)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     private lazy var tipLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("这里是「\(titleText)」示例页面")
-            .byFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 16,
+                                        weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
-            .byAddTo(view) { make in make.center.equalToSuperview() }
+            .byAddTo(view) { make in
+                make.center.equalToSuperview()
+            }
     }()
 
     override func viewDidLoad() {
@@ -37,5 +49,7 @@ final class PlaceholderListVC: BaseVC, JXSegmentedListContainerViewListDelegate 
         tipLabel.byVisible(YES)
     }
 
-    func listView() -> UIView { view }
+    func listView() -> UIView {
+        view
+    }
 }

@@ -10,6 +10,7 @@ import Foundation
 
 @MainActor
 final class VideoTextureDisplayLinkTarget: NSObject {
+
     private weak var manager: VideoTextureManager?
 
     init(manager: VideoTextureManager) {

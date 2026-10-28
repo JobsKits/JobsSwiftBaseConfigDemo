@@ -9,7 +9,11 @@
 import UIKit
 import ObjectiveC
 
-public struct JobsThemeStyle: RawRepresentable, Codable, Hashable, Sendable {
+public struct JobsThemeStyle: RawRepresentable,
+                              Codable,
+                              Hashable,
+                              Sendable {
+
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -20,7 +24,11 @@ public struct JobsThemeStyle: RawRepresentable, Codable, Hashable, Sendable {
     public static let dark = JobsThemeStyle(rawValue: "dark")
 }
 
-public struct JobsThemeColorKey: RawRepresentable, Codable, Hashable, Sendable {
+public struct JobsThemeColorKey: RawRepresentable,
+                                 Codable,
+                                 Hashable,
+                                 Sendable {
+
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -40,7 +48,11 @@ public struct JobsThemeColorKey: RawRepresentable, Codable, Hashable, Sendable {
     public static let textPlaceholder = JobsThemeColorKey(rawValue: "text.placeholder")
 }
 
-public struct JobsThemeImageKey: RawRepresentable, Codable, Hashable, Sendable {
+public struct JobsThemeImageKey: RawRepresentable,
+                                 Codable,
+                                 Hashable,
+                                 Sendable {
+
     public let rawValue: String
 
     public init(rawValue: String) {
@@ -51,10 +63,12 @@ public struct JobsThemeImageKey: RawRepresentable, Codable, Hashable, Sendable {
 }
 
 public extension Notification.Name {
+
     static let JobsThemeDidChange = Notification.Name("JobsThemeDidChange")
 }
 
 public enum JobsThemeError: LocalizedError {
+
     case resourceNotFound(String)
     case invalidPacket
     case unknownStyle(String)
@@ -72,27 +86,34 @@ public enum JobsThemeError: LocalizedError {
 }
 
 private struct JobsThemePacket: Decodable {
+
     let defaultTheme: String
     let themes: [String: JobsThemePayload]
 }
 
 private struct JobsThemePayload: Decodable {
+
     let colors: [String: String]
     let images: [String: String]
 
-    private enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String,
+                             CodingKey {
+
         case colors
         case images
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        colors = try container.decodeIfPresent([String: String].self, forKey: .colors) ?? [:]
-        images = try container.decodeIfPresent([String: String].self, forKey: .images) ?? [:]
+        colors = try container.decodeIfPresent([String: String].self,
+                                               forKey: .colors) ?? [:]
+        images = try container.decodeIfPresent([String: String].self,
+                                               forKey: .images) ?? [:]
     }
 }
 
 private final class JobsThemeBindingBox {
+
     let apply: (AnyObject, JobsThemeCenter) -> Void
 
     init(apply: @escaping (AnyObject, JobsThemeCenter) -> Void) {
@@ -101,6 +122,7 @@ private final class JobsThemeBindingBox {
 }
 
 private final class JobsThemeBindingStore {
+
     var boxes = [String: JobsThemeBindingBox]()
 }
 
@@ -108,26 +130,29 @@ private var jobsThemeColorKeyAssociatedKey: UInt8 = 0
 private var jobsThemeImageKeyAssociatedKey: UInt8 = 0
 
 public extension UIColor {
+
     var jobsThemeColorKey: JobsThemeColorKey? {
-        objc_getAssociatedObject(self, &jobsThemeColorKeyAssociatedKey) as? JobsThemeColorKey
+        objc_getAssociatedObject(self,
+                                 &jobsThemeColorKeyAssociatedKey) as? JobsThemeColorKey
     }
 }
 
 public extension UIImage {
+
     var jobsThemeImageKey: JobsThemeImageKey? {
-        objc_getAssociatedObject(self, &jobsThemeImageKeyAssociatedKey) as? JobsThemeImageKey
+        objc_getAssociatedObject(self,
+                                 &jobsThemeImageKeyAssociatedKey) as? JobsThemeImageKey
     }
 }
 
 public final class JobsThemeCenter {
+
     public static let shared = JobsThemeCenter()
 
     private let stateLock = NSLock()
     private let defaultsKey = "JobsTheme.currentStyle"
-    private let bindings = NSMapTable<AnyObject, JobsThemeBindingStore>(
-        keyOptions: .weakMemory,
-        valueOptions: .strongMemory
-    )
+    private let bindings = NSMapTable<AnyObject, JobsThemeBindingStore>(keyOptions: .weakMemory,
+                                                                        valueOptions: .strongMemory)
     private var packet: JobsThemePacket?
     private var resourceBundle = Bundle.main
     private var style = JobsThemeStyle.light
@@ -150,17 +175,21 @@ public final class JobsThemeCenter {
     public func configure(resource name: String,
                           fileExtension: String = "json",
                           bundle: Bundle = .main) throws -> JobsThemeStyle {
-        guard let url = bundle.url(forResource: name, withExtension: fileExtension) else {
+        guard let url = bundle.url(forResource: name,
+                                   withExtension: fileExtension) else {
             throw JobsThemeError.resourceNotFound("\(name).\(fileExtension)")
         }
         let data = try Data(contentsOf: url)
-        let decoded = try JSONDecoder().decode(JobsThemePacket.self, from: data)
+        let decoded = try JSONDecoder().decode(JobsThemePacket.self,
+                                               from: data)
         guard !decoded.themes.isEmpty,
               decoded.themes[decoded.defaultTheme] != nil else {
             throw JobsThemeError.invalidPacket
         }
         let savedStyle = UserDefaults.standard.string(forKey: defaultsKey)
-        let initialStyle = savedStyle.flatMap { decoded.themes[$0] == nil ? nil : $0 }
+        let initialStyle = savedStyle.flatMap {
+            decoded.themes[$0] == nil ? nil : $0
+        }
             ?? decoded.defaultTheme
         let configuredStyle = JobsThemeStyle(rawValue: initialStyle)
         stateLock.lock()
@@ -190,14 +219,13 @@ public final class JobsThemeCenter {
             return current
         }
         style = newStyle
-        UserDefaults.standard.set(newStyle.rawValue, forKey: defaultsKey)
+        UserDefaults.standard.set(newStyle.rawValue,
+                                  forKey: defaultsKey)
         stateLock.unlock()
         applyBindings()
-        NotificationCenter.default.post(
-            name: .JobsThemeDidChange,
-            object: self,
-            userInfo: ["style": newStyle.rawValue]
-        )
+        NotificationCenter.default.post(name: .JobsThemeDidChange,
+                                        object: self,
+                                        userInfo: ["style": newStyle.rawValue])
         return newStyle
     }
 
@@ -208,12 +236,10 @@ public final class JobsThemeCenter {
 
     public func color(_ key: JobsThemeColorKey) -> UIColor {
         let color = resolvedColor(key)
-        objc_setAssociatedObject(
-            color,
-            &jobsThemeColorKeyAssociatedKey,
-            key,
-            .OBJC_ASSOCIATION_RETAIN
-        )
+        objc_setAssociatedObject(color,
+                                 &jobsThemeColorKeyAssociatedKey,
+                                 key,
+                                 .OBJC_ASSOCIATION_RETAIN)
         return color
     }
 
@@ -226,17 +252,18 @@ public final class JobsThemeCenter {
            let color = Self.color(from: value) {
             return color
         }
-        return Self.fallbackColor(for: key, style: current)
+        return Self.fallbackColor(for: key,
+                                  style: current)
     }
 
     public func image(_ key: JobsThemeImageKey) -> UIImage? {
-        guard let image = resolvedImage(key) else { return nil }
-        objc_setAssociatedObject(
-            image,
-            &jobsThemeImageKeyAssociatedKey,
-            key,
-            .OBJC_ASSOCIATION_RETAIN
-        )
+        guard let image = resolvedImage(key) else {
+            return nil
+        }
+        objc_setAssociatedObject(image,
+                                 &jobsThemeImageKeyAssociatedKey,
+                                 key,
+                                 .OBJC_ASSOCIATION_RETAIN)
         return image
     }
 
@@ -244,19 +271,25 @@ public final class JobsThemeCenter {
         stateLock.lock()
         let current = style
         let value = packet?.themes[style.rawValue]?.images[key.rawValue]
-            ?? Self.fallbackImageName(for: key, style: current)
+            ?? Self.fallbackImageName(for: key,
+                                      style: current)
         let bundle = resourceBundle
         stateLock.unlock()
-        guard let value else { return nil }
+        guard let value else {
+            return nil
+        }
         if value.hasPrefix("sf:") {
             if #available(iOS 13.0, tvOS 13.0, *) {
                 return UIImage(systemName: String(value.dropFirst(3)))
-            };return nil
+            }
+            return nil
         }
         let assetName = value.hasPrefix("asset:")
             ? String(value.dropFirst(6))
             : value
-        return UIImage(named: assetName, in: bundle, compatibleWith: nil)
+        return UIImage(named: assetName,
+                       in: bundle,
+                       compatibleWith: nil)
     }
 
     public func bind(_ object: AnyObject,
@@ -264,26 +297,38 @@ public final class JobsThemeCenter {
                      apply: @escaping (AnyObject, JobsThemeCenter) -> Void) {
         guard Thread.isMainThread else {
             DispatchQueue.main.async { [weak self, weak object] in
-                guard let self, let object else { return }
-                self.bind(object, slot: slot, apply: apply)
+                guard let self, let object else {
+                    return
+                }
+                self.bind(object,
+                          slot: slot,
+                          apply: apply)
             }
             return
         }
         let store = bindings.object(forKey: object) ?? JobsThemeBindingStore()
         store.boxes[slot] = JobsThemeBindingBox(apply: apply)
-        bindings.setObject(store, forKey: object)
-        apply(object, self)
+        bindings.setObject(store,
+                           forKey: object)
+        apply(object,
+              self)
     }
 
-    public func unbind(_ object: AnyObject, slot: String) {
+    public func unbind(_ object: AnyObject,
+                       slot: String) {
         guard Thread.isMainThread else {
             DispatchQueue.main.async { [weak self, weak object] in
-                guard let self, let object else { return }
-                self.unbind(object, slot: slot)
+                guard let self, let object else {
+                    return
+                }
+                self.unbind(object,
+                            slot: slot)
             }
             return
         }
-        guard let store = bindings.object(forKey: object) else { return }
+        guard let store = bindings.object(forKey: object) else {
+            return
+        }
         store.boxes.removeValue(forKey: slot)
         if store.boxes.isEmpty {
             bindings.removeObject(forKey: object)
@@ -300,7 +345,9 @@ public final class JobsThemeCenter {
         let objects = bindings.keyEnumerator().allObjects
         let snapshot = objects.map { object -> (AnyObject, [(String, JobsThemeBindingBox)]) in
             let target = object as AnyObject
-            let boxes = bindings.object(forKey: target)?.boxes.map { ($0.key, $0.value) } ?? []
+            let boxes = bindings.object(forKey: target)?.boxes.map {
+                ($0.key, $0.value)
+            } ?? []
             return (target, boxes)
         }
         for (object, boxes) in snapshot {
@@ -308,7 +355,8 @@ public final class JobsThemeCenter {
                 guard bindings.object(forKey: object)?.boxes[slot] === box else {
                     continue
                 }
-                box.apply(object, self)
+                box.apply(object,
+                          self)
             }
         }
     }
@@ -316,15 +364,22 @@ public final class JobsThemeCenter {
     private static func color(from value: String) -> UIColor? {
         let hex = value
             .trimmingCharacters(in: .whitespacesAndNewlines)
-            .replacingOccurrences(of: "#", with: "")
+            .replacingOccurrences(of: "#",
+                                  with: "")
         guard hex.count == 6 || hex.count == 8,
-              let number = UInt64(hex, radix: 16) else { return nil }
+              let number = UInt64(hex,
+                                  radix: 16) else {
+            return nil
+        }
         let hasAlpha = hex.count == 8
         let red = CGFloat((number >> (hasAlpha ? 24 : 16)) & 0xFF) / 255
         let green = CGFloat((number >> (hasAlpha ? 16 : 8)) & 0xFF) / 255
         let blue = CGFloat((number >> (hasAlpha ? 8 : 0)) & 0xFF) / 255
         let alpha = hasAlpha ? CGFloat(number & 0xFF) / 255 : 1
-        return UIColor(red: red, green: green, blue: blue, alpha: alpha)
+        return UIColor(red: red,
+                       green: green,
+                       blue: blue,
+                       alpha: alpha)
     }
 
     private static func fallbackColor(for key: JobsThemeColorKey,
@@ -335,40 +390,83 @@ public final class JobsThemeCenter {
             return darkModeEnabled ? .black : .white
         case .backgroundSecondary:
             return darkModeEnabled
-                ? UIColor(red: 0x1C / 255, green: 0x1C / 255, blue: 0x1E / 255, alpha: 1)
-                : UIColor(red: 0xF2 / 255, green: 0xF2 / 255, blue: 0xF7 / 255, alpha: 1)
+                ? UIColor(red: 0x1C / 255,
+                          green: 0x1C / 255,
+                          blue: 0x1E / 255,
+                          alpha: 1)
+                : UIColor(red: 0xF2 / 255,
+                          green: 0xF2 / 255,
+                          blue: 0xF7 / 255,
+                          alpha: 1)
         case .backgroundTertiary:
             return darkModeEnabled
-                ? UIColor(red: 0x2C / 255, green: 0x2C / 255, blue: 0x2E / 255, alpha: 1)
+                ? UIColor(red: 0x2C / 255,
+                          green: 0x2C / 255,
+                          blue: 0x2E / 255,
+                          alpha: 1)
                 : .white
         case .backgroundGrouped:
-            return darkModeEnabled ? .black : UIColor(white: 0xF2 / 255, alpha: 1)
+            return darkModeEnabled ? .black : UIColor(white: 0xF2 / 255,
+                                                      alpha: 1)
         case .backgroundGroupedSecondary:
             return darkModeEnabled
-                ? UIColor(red: 0x1C / 255, green: 0x1C / 255, blue: 0x1E / 255, alpha: 1)
+                ? UIColor(red: 0x1C / 255,
+                          green: 0x1C / 255,
+                          blue: 0x1E / 255,
+                          alpha: 1)
                 : .white
         case .backgroundGroupedTertiary:
             return darkModeEnabled
-                ? UIColor(red: 0x2C / 255, green: 0x2C / 255, blue: 0x2E / 255, alpha: 1)
-                : UIColor(red: 0xF2 / 255, green: 0xF2 / 255, blue: 0xF7 / 255, alpha: 1)
+                ? UIColor(red: 0x2C / 255,
+                          green: 0x2C / 255,
+                          blue: 0x2E / 255,
+                          alpha: 1)
+                : UIColor(red: 0xF2 / 255,
+                          green: 0xF2 / 255,
+                          blue: 0xF7 / 255,
+                          alpha: 1)
         case .textPrimary:
             return darkModeEnabled ? .white : .black
         case .textSecondary:
             return darkModeEnabled
-                ? UIColor(red: 0xEB / 255, green: 0xEB / 255, blue: 0xF5 / 255, alpha: 0.6)
-                : UIColor(red: 0x3C / 255, green: 0x3C / 255, blue: 0x43 / 255, alpha: 0.6)
+                ? UIColor(red: 0xEB / 255,
+                          green: 0xEB / 255,
+                          blue: 0xF5 / 255,
+                          alpha: 0.6)
+                : UIColor(red: 0x3C / 255,
+                          green: 0x3C / 255,
+                          blue: 0x43 / 255,
+                          alpha: 0.6)
         case .textTertiary:
             return darkModeEnabled
-                ? UIColor(red: 0xEB / 255, green: 0xEB / 255, blue: 0xF5 / 255, alpha: 0.3)
-                : UIColor(red: 0x3C / 255, green: 0x3C / 255, blue: 0x43 / 255, alpha: 0.3)
+                ? UIColor(red: 0xEB / 255,
+                          green: 0xEB / 255,
+                          blue: 0xF5 / 255,
+                          alpha: 0.3)
+                : UIColor(red: 0x3C / 255,
+                          green: 0x3C / 255,
+                          blue: 0x43 / 255,
+                          alpha: 0.3)
         case .textQuaternary:
             return darkModeEnabled
-                ? UIColor(red: 0xEB / 255, green: 0xEB / 255, blue: 0xF5 / 255, alpha: 0.18)
-                : UIColor(red: 0x3C / 255, green: 0x3C / 255, blue: 0x43 / 255, alpha: 0.18)
+                ? UIColor(red: 0xEB / 255,
+                          green: 0xEB / 255,
+                          blue: 0xF5 / 255,
+                          alpha: 0.18)
+                : UIColor(red: 0x3C / 255,
+                          green: 0x3C / 255,
+                          blue: 0x43 / 255,
+                          alpha: 0.18)
         case .textPlaceholder:
             return darkModeEnabled
-                ? UIColor(red: 0xEB / 255, green: 0xEB / 255, blue: 0xF5 / 255, alpha: 0.3)
-                : UIColor(red: 0x3C / 255, green: 0x3C / 255, blue: 0x43 / 255, alpha: 0.3)
+                ? UIColor(red: 0xEB / 255,
+                          green: 0xEB / 255,
+                          blue: 0xF5 / 255,
+                          alpha: 0.3)
+                : UIColor(red: 0x3C / 255,
+                          green: 0x3C / 255,
+                          blue: 0x43 / 255,
+                          alpha: 0.3)
         default:
             return .clear
         }
@@ -376,7 +474,9 @@ public final class JobsThemeCenter {
 
     private static func fallbackImageName(for key: JobsThemeImageKey,
                                           style: JobsThemeStyle) -> String? {
-        guard key == .themeToggle else { return nil }
+        guard key == .themeToggle else {
+            return nil
+        }
         return style == .dark ? "sf:sun.max.circle.fill" : "sf:moon.circle.fill"
     }
 }

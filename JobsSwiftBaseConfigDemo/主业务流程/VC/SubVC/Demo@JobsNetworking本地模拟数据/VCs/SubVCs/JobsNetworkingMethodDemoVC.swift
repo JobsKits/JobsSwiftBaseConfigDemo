@@ -21,27 +21,37 @@ import SnapKit
 import GKNavigationBarSwift
 
 class JobsNetworkingMethodDemoVC: BaseVC {
+
     let item: MethodDemoItem
     let service = DemoService.shared
 
     var requestPreviewText = "还没有请求内容" {
-        didSet { requestPreviewTextView.byText(requestPreviewText) }
+        didSet {
+            requestPreviewTextView.byText(requestPreviewText)
+        }
     }
 
     var statusText = "点击按钮发起请求" {
-        didSet { statusLabel.byText("状态：\(statusText)") }
+        didSet {
+            statusLabel.byText("状态：\(statusText)")
+        }
     }
 
     var renderResultText = "还没有结果" {
-        didSet { renderTextView.byText(renderResultText) }
+        didSet {
+            renderTextView.byText(renderResultText)
+        }
     }
 
     var rawResponseText = "还没有响应" {
-        didSet { rawTextView.byText(rawResponseText) }
+        didSet {
+            rawTextView.byText(rawResponseText)
+        }
     }
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView.jobsMake { _ in }
+        UIScrollView
+            .jobsMake { _ in }
             .byShowsVerticalScrollIndicator(NO)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
@@ -54,7 +64,8 @@ class JobsNetworkingMethodDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalTo(self.scrollView.contentLayoutGuide)
                 make.width.equalTo(self.scrollView.frameLayoutGuide)
@@ -62,7 +73,8 @@ class JobsNetworkingMethodDemoVC: BaseVC {
     }()
 
     private lazy var introLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText(item.subTitle)
             .byFont(JobsFont.boldSystemFont(ofSize: 22))
             .byNumberOfLines(0)
@@ -73,9 +85,11 @@ class JobsNetworkingMethodDemoVC: BaseVC {
     }()
 
     private lazy var pathLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("接口：\(item.path)")
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .medium))
             .byNumberOfLines(0)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(introLabel.snp.bottom).offset(12)
@@ -84,7 +98,8 @@ class JobsNetworkingMethodDemoVC: BaseVC {
     }()
 
     private lazy var statusLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("状态：\(statusText)")
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
@@ -96,11 +111,14 @@ class JobsNetworkingMethodDemoVC: BaseVC {
 
     private lazy var requestButton: UIButton = {
         UIButton.sys()
-            .byTitle("发起请求".tr, for: .normal)
+            .byTitle("发起请求".tr,
+                     for: .normal)
             .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.12))
             .byCornerRadius(10)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.sendRequest(triggerError: false)
             }
             .byAddTo(contentView) { [unowned self] make in
@@ -112,11 +130,14 @@ class JobsNetworkingMethodDemoVC: BaseVC {
 
     private lazy var errorButton: UIButton = {
         UIButton.sys()
-            .byTitle("触发错误".tr, for: .normal)
+            .byTitle("触发错误".tr,
+                     for: .normal)
             .byBackgroundColor(JobsCor.systemRed.withAlphaComponent(0.12))
             .byCornerRadius(10)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.sendRequest(triggerError: true)
             }
             .byAddTo(contentView) { [unowned self] make in
@@ -180,11 +201,14 @@ class JobsNetworkingMethodDemoVC: BaseVC {
             }
     }()
 
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     init(item: MethodDemoItem) {
         self.item = item
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil,
+                   bundle: nil)
     }
 
     override func viewDidLoad() {
@@ -208,14 +232,19 @@ class JobsNetworkingMethodDemoVC: BaseVC {
 }
 
 extension JobsNetworkingMethodDemoVC {
+
     func debugRequestByURLSession() {
         let url = URL(string: "http://127.0.0.1:18080/api/get/dashboard?tab=overview&client=swift-demo")!
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             print("===== URLSession Debug =====")
-            print("error =", error as Any)
-            print("response =", response as Any)
-            if let data, let text = String(data: data, encoding: .utf8) {
-                print("body =", text)
+            print("error =",
+                  error as Any)
+            print("response =",
+                  response as Any)
+            if let data, let text = String(data: data,
+                                           encoding: .utf8) {
+                print("body =",
+                      text)
             }
         }
         task.resume()
@@ -239,8 +268,12 @@ extension JobsNetworkingMethodDemoVC {
                     underlying = \(underlying)
                     """
                 /// 处理 .http 分支
-                case let .http(statusCode, data):
-                    let raw = data.flatMap { String(data: $0, encoding: .utf8) } ?? "<empty>"
+                case let .http(statusCode,
+                               data):
+                    let raw = data.flatMap {
+                        String(data: $0,
+                               encoding: .utf8)
+                    } ?? "<empty>"
                     message = """
                     JobsError.http
                     statusCode = \(statusCode)
@@ -248,8 +281,12 @@ extension JobsNetworkingMethodDemoVC {
                     \(raw)
                     """
                 /// 处理 .server 分支
-                case let .server(statusCode, data):
-                    let raw = data.flatMap { String(data: $0, encoding: .utf8) } ?? "<empty>"
+                case let .server(statusCode,
+                                 data):
+                    let raw = data.flatMap {
+                        String(data: $0,
+                               encoding: .utf8)
+                    } ?? "<empty>"
                     message = """
                     JobsError.server
                     statusCode = \(statusCode)
@@ -257,8 +294,12 @@ extension JobsNetworkingMethodDemoVC {
                     \(raw)
                     """
                 /// 处理 .decode 分支
-                case let .decode(underlying, data):
-                    let raw = data.flatMap { String(data: $0, encoding: .utf8) } ?? "<empty>"
+                case let .decode(underlying,
+                                 data):
+                    let raw = data.flatMap {
+                        String(data: $0,
+                               encoding: .utf8)
+                    } ?? "<empty>"
                     message = """
                     JobsError.decode
                     underlying = \(underlying)
@@ -266,8 +307,13 @@ extension JobsNetworkingMethodDemoVC {
                     \(raw)
                     """
                 /// 处理 .business 分支
-                case let .business(code, msg, data):
-                    let raw = data.flatMap { String(data: $0, encoding: .utf8) } ?? "<empty>"
+                case let .business(code,
+                                   msg,
+                                   data):
+                    let raw = data.flatMap {
+                        String(data: $0,
+                               encoding: .utf8)
+                    } ?? "<empty>"
                     message = """
                     JobsError.business
                     code = \(code)
@@ -298,7 +344,9 @@ extension JobsNetworkingMethodDemoVC {
                     """
                 }
                 onMainSync { [weak self] in
-                    guard let self else { return }
+                    guard let self else {
+                        return
+                    }
                     self.statusText = "\(self.item.methodType.title) 请求异常"
                     self.renderResultText = message
                     self.rawResponseText = message
@@ -311,7 +359,9 @@ extension JobsNetworkingMethodDemoVC {
                 localized = \(error.localizedDescription)
                 """
                 onMainSync { [weak self] in
-                    guard let self else { return }
+                    guard let self else {
+                        return
+                    }
                     self.statusText = "\(self.item.methodType.title) 请求异常"
                     self.renderResultText = message
                     self.rawResponseText = message
@@ -321,7 +371,8 @@ extension JobsNetworkingMethodDemoVC {
         }
     }
 
-    func handleSuccess(render: String, raw: String) {
+    func handleSuccess(render: String,
+                       raw: String) {
         statusText = "\(item.methodType.title) 请求成功"
         renderResultText = render
         rawResponseText = raw
@@ -345,16 +396,19 @@ extension JobsNetworkingMethodDemoVC {
     }
 
     private func sectionTitleLabel(_ text: String) -> UILabel {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText(text)
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byNumberOfLines(1)
     }
 
     private func sectionTextView() -> UITextView {
-        UITextView.jobsMake { _ in }
+        UITextView
+            .jobsMake { _ in }
             .byTextColor(JobsCor.label)
-            .byFont(JobsFont.monospacedSystemFont(ofSize: 13, weight: .regular))
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 13,
+                                                  weight: .regular))
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
             .byBorderColor(JobsCor.separator)
@@ -362,7 +416,7 @@ extension JobsNetworkingMethodDemoVC {
             .byEditable(NO)
             .byScrollEnabled(NO)
             .onResult { view in
-                /// TODO
+        /// TODO
             }
     }
 }

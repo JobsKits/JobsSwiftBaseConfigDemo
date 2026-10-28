@@ -20,7 +20,9 @@ import SnapKit
 /// 本页 HTTPS 入口是检测工具，未预置受信任服务器；检测不到 SW 时会如实显示，不宣称已有离线能力。
 /// 来源：https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerContainer/register
 /// 来源：https://webkit.org/blog/10882/app-bound-domains/
-final class JobsPWADemoVC: JobsMicroAppLabBaseVC, WKNavigationDelegate {
+final class JobsPWADemoVC: JobsMicroAppLabBaseVC,
+                           WKNavigationDelegate {
+
     override var lessonTitle: String {
         return "PWA / 离线资源"
     }
@@ -35,7 +37,8 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC, WKNavigationDelegate {
 
     private lazy var addressField: UITextField = {
         let field = UITextField.jobsMake { field in
-            field.byPlaceholder("https://你的域名/pwa/index.html")
+            field
+                .byPlaceholder("https://你的域名/pwa/index.html")
                 .byPlaceholderColor(JobsCor.label)
                 .byBorderStyle(.roundedRect)
                 .byKeyboardType(.URL)
@@ -52,24 +55,28 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC, WKNavigationDelegate {
                 }
         }
         // 占位富文本可能持有已解析颜色，跟随有效主题重设，不依赖私有 placeholder label 是否已创建。
-        JobsThemeCenter.shared.bind(field, slot: "microAppLab.pwaFieldAppearance") { object, center in
+        JobsThemeCenter.shared.bind(field,
+                                    slot: "microAppLab.pwaFieldAppearance") { object, center in
             guard let field = object as? UITextField else {
                 return
             }
-            field.byTextColor(center.resolvedColor(.textPrimary))
+            field
+                .byTextColor(center.resolvedColor(.textPrimary))
                 .byBackgroundColor(center.resolvedColor(.backgroundPrimary))
                 .byPlaceholderColor(center.resolvedColor(.textPrimary))
         }
         return field
     }()
-    private lazy var openButton: UIButton = lessonButton("打开", identifier: "lab.pwaOpen") { [weak self] in
+    private lazy var openButton: UIButton = lessonButton("打开",
+                                                         identifier: "lab.pwaOpen") { [weak self] in
         self?.openRemotePWA()
     }
     private lazy var webView: WKWebView = {
         WKWebView.make(configuration: WKWebViewConfiguration.make { configuration in
             configuration.byWebsiteDataStore(.nonPersistent())
         }) { web in
-            web.byNavigationDelegate(self)
+            web
+                .byNavigationDelegate(self)
                 .byInspectable(true)
                 .byAddTo(stageView) { [unowned self] make in
                     make.top.equalTo(addressField.snp.bottom).offset(6)
@@ -77,16 +84,20 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC, WKNavigationDelegate {
                 }
         }
     }()
-    private lazy var offlineButton: UIButton = lessonButton("加载 App 内置离线包", identifier: "lab.pwaOffline") { [weak self] in
+    private lazy var offlineButton: UIButton = lessonButton("加载 App 内置离线包",
+                                                            identifier: "lab.pwaOffline") { [weak self] in
         self?.loadOfflinePackage()
     }
-    private lazy var inspectButton: UIButton = lessonButton("检测当前 SW / Cache 状态", identifier: "lab.pwaInspect") { [weak self] in
+    private lazy var inspectButton: UIButton = lessonButton("检测当前 SW / Cache 状态",
+                                                            identifier: "lab.pwaInspect") { [weak self] in
         self?.inspectPWA()
     }
-    private lazy var refreshButton: UIButton = lessonButton("普通刷新当前页面", identifier: "lab.pwaReload") { [weak self] in
+    private lazy var refreshButton: UIButton = lessonButton("普通刷新当前页面",
+                                                            identifier: "lab.pwaReload") { [weak self] in
         self?.webView.byReload()
     }
-    private lazy var resetButton: UIButton = lessonButton("清空此练习容器缓存并恢复内置包", identifier: "lab.pwaReset") { [weak self] in
+    private lazy var resetButton: UIButton = lessonButton("清空此练习容器缓存并恢复内置包",
+                                                          identifier: "lab.pwaReset") { [weak self] in
         self?.resetContainer()
     }
 
@@ -105,7 +116,9 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC, WKNavigationDelegate {
     private func loadOfflinePackage() {
         navigationGeneration += 1
         showingBundled = true
-        displayBundledPage("index.html", in: webView, fittingContent: true)
+        displayBundledPage("index.html",
+                           in: webView,
+                           fittingContent: true)
         record("Native 离线包：从 App Bundle 加载，不依赖网络，不注册 Service Worker。")
     }
 
@@ -147,7 +160,10 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC, WKNavigationDelegate {
           return JSON.stringify(result,null,2);
         })()
         """
-        webView.callAsyncJavaScript(script, arguments: [:], in: nil, in: WKContentWorld.page) { [weak self] result in
+        webView.callAsyncJavaScript(script,
+                                    arguments: [:],
+                                    in: nil,
+                                    in: WKContentWorld.page) { [weak self] result in
             guard let self else {
                 return
             }
@@ -167,7 +183,7 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC, WKNavigationDelegate {
         let generation = navigationGeneration
         webView.byStopLoading()
         webView.configuration.websiteDataStore.removeData(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(),
-                                                         modifiedSince: .distantPast) { [weak self] in
+                                                          modifiedSince: .distantPast) { [weak self] in
             guard let self, self.navigationGeneration == generation else {
                 return
             }
@@ -180,20 +196,25 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC, WKNavigationDelegate {
         guard isViewLoaded, showingBundled else {
             return
         }
-        applyWebTheme(webView, isDark: isDark)
+        applyWebTheme(webView,
+                      isDark: isDark)
     }
 
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    func webView(_ webView: WKWebView,
+                 didFinish navigation: WKNavigation!) {
         navigationGeneration += 1
         if showingBundled {
-            applyWebTheme(webView, isDark: JobsThemeCenter.shared.isDarkMode)
+            applyWebTheme(webView,
+                          isDark: JobsThemeCenter.shared.isDarkMode)
             record("内置离线包加载完成：index.html + manifest.webmanifest + sw.js。file:// 不注册 SW。")
         } else {
             record("HTTPS 页面加载完成；点击检测查看实际 SW / Cache 状态。")
         }
     }
 
-    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+    func webView(_ webView: WKWebView,
+                 didFailProvisionalNavigation navigation: WKNavigation!,
+                 withError error: Error) {
         guard (error as NSError).code != NSURLErrorCancelled else {
             return
         }
@@ -205,7 +226,8 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC, WKNavigationDelegate {
         loadOfflinePackage()
     }
 
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
+    func webView(_ webView: WKWebView,
+                 decidePolicyFor navigationAction: WKNavigationAction,
                  decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let url = navigationAction.request.url else {
             decisionHandler(.cancel)

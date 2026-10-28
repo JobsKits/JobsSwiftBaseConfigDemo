@@ -8,6 +8,7 @@
 import Foundation
 
 public final class JobsObservable<Value>: @unchecked Sendable where Value: Sendable {
+
     public typealias Observer = @Sendable (JobsWorkerChange<Value>) -> Void
 
     private let lock = NSLock()
@@ -32,16 +33,22 @@ public final class JobsObservable<Value>: @unchecked Sendable where Value: Senda
     }
 
     deinit {
-        upstreamDisposers.forEach { $0() }
+        upstreamDisposers.forEach {
+            $0()
+        }
     }
 
     public var value: Value {
         get {
             lock.lock()
-            defer { lock.unlock() };return storage
+            defer {
+                lock.unlock()
+            }
+            return storage
         }
         set {
-            _setValue(newValue, shouldNotify: true)
+            _setValue(newValue,
+                      shouldNotify: true)
         }
     }
 
@@ -72,7 +79,8 @@ public final class JobsObservable<Value>: @unchecked Sendable where Value: Senda
 
     @discardableResult
     public func acceptSilently(_ newValue: Value) -> Self {
-        _setValue(newValue, shouldNotify: false)
+        _setValue(newValue,
+                  shouldNotify: false)
         return self
     }
 
@@ -89,8 +97,12 @@ public final class JobsObservable<Value>: @unchecked Sendable where Value: Senda
         newValue = copy
         snapshot = Array(observers.values)
         lock.unlock()
-        let change = JobsWorkerChange(oldValue: oldValue, newValue: newValue)
-        snapshot.forEach { $0(change) };return self
+        let change = JobsWorkerChange(oldValue: oldValue,
+                                      newValue: newValue)
+        snapshot.forEach {
+            $0(change)
+        }
+        return self
     }
 
     @discardableResult
@@ -100,8 +112,12 @@ public final class JobsObservable<Value>: @unchecked Sendable where Value: Senda
         lock.lock()
         snapshot = Array(observers.values)
         lock.unlock()
-        let change = JobsWorkerChange(oldValue: current, newValue: current)
-        snapshot.forEach { $0(change) };return self
+        let change = JobsWorkerChange(oldValue: current,
+                                      newValue: current)
+        snapshot.forEach {
+            $0(change)
+        }
+        return self
     }
 
     private func _setValue(_ newValue: Value,
@@ -111,16 +127,20 @@ public final class JobsObservable<Value>: @unchecked Sendable where Value: Senda
         lock.lock()
         let old = storage
         storage = newValue
-        change = .init(oldValue: old, newValue: newValue)
+        change = .init(oldValue: old,
+                       newValue: newValue)
         snapshot = shouldNotify ? Array(observers.values) : []
         lock.unlock()
-        snapshot.forEach { $0(change) }
+        snapshot.forEach {
+            $0(change)
+        }
     }
 }
 
 extension JobsObservable: JobsValueListenable {}
 
 extension JobsObservable: JobsAnyValueListenable {
+
     public var currentAnyValue: AnySendableBox {
         AnySendableBox(currentValue)
     }
@@ -128,7 +148,9 @@ extension JobsObservable: JobsAnyValueListenable {
     @discardableResult
     public func observeAny(_ observer: @escaping @Sendable (JobsAnyWorkerChange) -> Void) -> UUID {
         observe { [weak self] change in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             observer(
                 .init(oldValue: AnySendableBox(change.oldValue),
                       newValue: AnySendableBox(change.newValue),

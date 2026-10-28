@@ -15,6 +15,7 @@ import UIKit
 import JXSegmentedView
 // MARK: - DotDataSource
 extension JXSegmentedDotDataSource {
+
     @discardableResult
     public func byDotStates(_ v: [Bool]) -> Self {
         dotStates = v

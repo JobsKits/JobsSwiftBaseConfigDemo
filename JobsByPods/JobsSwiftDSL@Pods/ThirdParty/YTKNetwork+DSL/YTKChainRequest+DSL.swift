@@ -12,7 +12,9 @@ import JobsSwiftBlock
 import YTKNetwork
 import AFNetworking
 /// 内部代理：把 delegate 回调转成闭包
-private final class JobsChainDelegateProxy: NSObject, YTKChainRequestDelegate {
+private final class JobsChainDelegateProxy: NSObject,
+                                            YTKChainRequestDelegate {
+
     weak var realDelegate: YTKChainRequestDelegate?
     var successBlock: JobsYTKChainSuccess?
     var failureBlock: JobsYTKChainFailure?
@@ -25,16 +27,20 @@ private final class JobsChainDelegateProxy: NSObject, YTKChainRequestDelegate {
 
     func chainRequestFailed(_ chainRequest: YTKChainRequest,
                             failedBaseRequest request: YTKBaseRequest) {
-        failureBlock?(chainRequest, request)
-        realDelegate?.chainRequestFailed?(chainRequest, failedBaseRequest: request)
+        failureBlock?(chainRequest,
+                      request)
+        realDelegate?.chainRequestFailed?(chainRequest,
+                                          failedBaseRequest: request)
     }
 }
 /// 关联对象 key
 private var kJobsChainProxyKey: UInt8 = 0
 private extension YTKChainRequest {
+
     /// 取 / 创建 代理
     var jobs_proxy: JobsChainDelegateProxy {
-        if let proxy = objc_getAssociatedObject(self, &kJobsChainProxyKey) as? JobsChainDelegateProxy {
+        if let proxy = objc_getAssociatedObject(self,
+                                                &kJobsChainProxyKey) as? JobsChainDelegateProxy {
             return proxy
         }
         let proxy = JobsChainDelegateProxy()
@@ -49,6 +55,7 @@ private extension YTKChainRequest {
 }
 
 public extension YTKChainRequest {
+
     // MARK: - 基本配置
     /// 配置业务 delegate（闭包仍然生效，proxy 会转发）
     @discardableResult
@@ -67,7 +74,10 @@ public extension YTKChainRequest {
     /// 一次性加一批 accessory
     @discardableResult
     func byAccessories(_ accessories: [YTKRequestAccessory]) -> Self {
-        accessories.forEach { self.add($0) };return self
+        accessories.forEach {
+            self.add($0)
+        }
+        return self
     }
     // MARK: - 链步骤
     /// 添加一步请求 + 可选回调
@@ -76,16 +86,23 @@ public extension YTKChainRequest {
                callback: JobsYTKChainStepCallback? = nil) -> Self {
         if let cb = callback {
             self.add(request) { chain, baseReq in
-                cb(chain, baseReq)          // 这里两个参数都不是 Optional，直接用
+                cb(chain,
+                   baseReq)          // 这里两个参数都不是 Optional，直接用
             }
         } else {
-            self.add(request, callback: nil)
-        };return self
+            self.add(request,
+                     callback: nil)
+        }
+        return self
     }
     /// 批量添加步骤（全部不需要 step 回调）
     @discardableResult
     func byAdd(_ requests: [YTKBaseRequest]) -> Self {
-        requests.forEach { self.add($0, callback: nil) };return self
+        requests.forEach {
+            self.add($0,
+                     callback: nil)
+        }
+        return self
     }
     // MARK: - 全局成功 / 失败回调
     /// 整条链成功
@@ -107,7 +124,7 @@ public extension YTKChainRequest {
     /// 同时设置成功 / 失败
     @discardableResult
     func byJobsVoidBlock(success: JobsYTKChainSuccess? = nil,
-                      failure: JobsYTKChainFailure? = nil) -> Self {
+                         failure: JobsYTKChainFailure? = nil) -> Self {
         let proxy = jobs_proxy
         proxy.successBlock = success
         proxy.failureBlock = failure

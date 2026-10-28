@@ -16,12 +16,14 @@ import JobsToast
 import SnapKit
 
 final class JobsSceneDelegateDemoVC: BaseVC {
+
     private let restorationActivity: NSUserActivity?
     private weak var currentScene: UIWindowScene?
     private var counter: Int
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView.jobsMake { _ in }
+        UIScrollView
+            .jobsMake { _ in }
             .byAlwaysBounceVertical(YES)
             .byShowsVerticalScrollIndicator(NO)
             .byAddTo(view) { [unowned self] make in
@@ -35,7 +37,8 @@ final class JobsSceneDelegateDemoVC: BaseVC {
     }()
 
     private lazy var contentStackView: UIStackView = {
-        UIStackView.jobsMake { _ in }
+        UIStackView
+            .jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .byDistribution(.fill)
@@ -56,9 +59,11 @@ final class JobsSceneDelegateDemoVC: BaseVC {
     private lazy var sessionLabel: UILabel = makeCardLabel()
 
     private lazy var counterLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextColor(JobsCor.systemBlue)
-            .byFont(UIFont.monospacedDigitSystemFont(ofSize: 28, weight: .bold))
+            .byFont(UIFont.monospacedDigitSystemFont(ofSize: 28,
+                                                     weight: .bold))
             .byTextAlignment(.center)
             .byNumberOfLines(1)
     }()
@@ -70,31 +75,36 @@ final class JobsSceneDelegateDemoVC: BaseVC {
     }()
 
     private lazy var incrementButton: UIButton = {
-        makeButton(title: "当前 Scene +1", color: JobsCor.systemBlue) { [weak self] in
+        makeButton(title: "当前 Scene +1",
+                   color: JobsCor.systemBlue) { [weak self] in
             self?.incrementCounter()
         }
     }()
 
     private lazy var newSceneButton: UIButton = {
-        makeButton(title: "新建 Scene 窗口", color: JobsCor.systemGreen) { [weak self] in
+        makeButton(title: "新建 Scene 窗口",
+                   color: JobsCor.systemGreen) { [weak self] in
             self?.requestNewScene()
         }
     }()
 
     private lazy var activateSceneButton: UIButton = {
-        makeButton(title: "激活另一个 Scene", color: JobsCor.systemOrange) { [weak self] in
+        makeButton(title: "激活另一个 Scene",
+                   color: JobsCor.systemOrange) { [weak self] in
             self?.activateOtherScene()
         }
     }()
 
     private lazy var refreshButton: UIButton = {
-        makeButton(title: "刷新会话快照", color: JobsCor.systemGray) { [weak self] in
+        makeButton(title: "刷新会话快照",
+                   color: JobsCor.systemGray) { [weak self] in
             self?.requestSnapshotRefresh()
         }
     }()
 
     private lazy var closeSceneButton: UIButton = {
-        makeButton(title: "关闭当前 Scene", color: JobsCor.systemRed) { [weak self] in
+        makeButton(title: "关闭当前 Scene",
+                   color: JobsCor.systemRed) { [weak self] in
             self?.closeCurrentScene()
         }
     }()
@@ -110,10 +120,12 @@ final class JobsSceneDelegateDemoVC: BaseVC {
     }()
 
     private lazy var logLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("等待 Scene 生命周期事件…".tr)
             .byTextColor(JobsCor.secondaryLabel)
-            .byFont(UIFont.monospacedSystemFont(ofSize: 12, weight: .regular))
+            .byFont(UIFont.monospacedSystemFont(ofSize: 12,
+                                                weight: .regular))
             .byNumberOfLines(0)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
@@ -123,7 +135,8 @@ final class JobsSceneDelegateDemoVC: BaseVC {
     init(restorationActivity: NSUserActivity? = nil) {
         self.restorationActivity = restorationActivity
         counter = JobsSceneCoordinator.restoredCounter(from: restorationActivity)
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil,
+                   bundle: nil)
     }
 
     required init?(coder: NSCoder) {
@@ -141,12 +154,10 @@ final class JobsSceneDelegateDemoVC: BaseVC {
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "SceneDelegate 多场景".tr)
         setupContent()
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(sceneCoordinatorDidChange(_:)),
-            name: JobsSceneCoordinator.didChangeNotification,
-            object: nil
-        )
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(sceneCoordinatorDidChange(_:)),
+                                               name: JobsSceneCoordinator.didChangeNotification,
+                                               object: nil)
         updateCounterLabel()
     }
 
@@ -157,14 +168,17 @@ final class JobsSceneDelegateDemoVC: BaseVC {
     }
 
     func sceneRestorationActivity() -> NSUserActivity? {
-        guard let currentScene else { return restorationActivity };return JobsSceneCoordinator.updateCounter(
-            counter,
-            for: currentScene
-        )
+        guard let currentScene else {
+            return restorationActivity
+        }
+        return JobsSceneCoordinator.updateCounter(counter,
+                                                  for: currentScene)
     }
 
     func restoreSceneInteractionState(with activity: NSUserActivity) {
-        guard JobsSceneCoordinator.isDemoActivity(activity) else { return }
+        guard JobsSceneCoordinator.isDemoActivity(activity) else {
+            return
+        }
         counter = JobsSceneCoordinator.restoredCounter(from: activity)
         if isViewLoaded {
             persistCounter()
@@ -174,48 +188,56 @@ final class JobsSceneDelegateDemoVC: BaseVC {
 }
 
 private extension JobsSceneDelegateDemoVC {
+
     func setupContent() {
         let architectureTitleLabel = makeSectionTitleLabel("进程与场景的职责边界")
         let runtimeTitleLabel = makeSectionTitleLabel("当前运行环境")
         let stateTitleLabel = makeSectionTitleLabel("Scene 独立状态与恢复")
         let actionTitleLabel = makeSectionTitleLabel("场景会话操作")
         contentStackView.byAddArrangedSubviews([
-            architectureTitleLabel,
-            introLabel,
-            runtimeTitleLabel,
-            supportLabel,
-            sessionLabel,
-            stateTitleLabel,
-            stateTipLabel,
-            counterLabel,
-            incrementButton,
-            actionTitleLabel,
-            actionTipLabel,
-            newSceneButton,
-            activateSceneButton,
-            refreshButton,
-            closeSceneButton,
-            logTitleLabel,
-            logLabel
-        ])
+                architectureTitleLabel,
+                introLabel,
+                runtimeTitleLabel,
+                supportLabel,
+                sessionLabel,
+                stateTitleLabel,
+                stateTipLabel,
+                counterLabel,
+                incrementButton,
+                actionTitleLabel,
+                actionTipLabel,
+                newSceneButton,
+                activateSceneButton,
+                refreshButton,
+                closeSceneButton,
+                logTitleLabel,
+                logLabel
+            ])
 
         [incrementButton, newSceneButton, activateSceneButton, refreshButton, closeSceneButton]
-            .forEach { $0.snp.makeConstraints { $0.height.equalTo(44) } }
+            .forEach {
+                $0.snp.makeConstraints {
+                    $0.height.equalTo(44)
+                }
+            }
         logLabel.snp.makeConstraints { make in
             make.height.greaterThanOrEqualTo(180)
         }
     }
 
     func makeSectionTitleLabel(_ text: String) -> UILabel {
-        return UILabel.jobsMake { _ in }
+        return UILabel
+            .jobsMake { _ in }
             .byText(text.tr)
             .byTextColor(JobsCor.label)
-            .byFont(JobsFont.systemFont(ofSize: 18, weight: .bold))
+            .byFont(JobsFont.systemFont(ofSize: 18,
+                                        weight: .bold))
             .byNumberOfLines(1)
     }
 
     func makeBodyLabel(_ text: String) -> UILabel {
-        return UILabel.jobsMake { _ in }
+        return UILabel
+            .jobsMake { _ in }
             .byText(text.tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -223,35 +245,41 @@ private extension JobsSceneDelegateDemoVC {
     }
 
     func makeCardLabel() -> UILabel {
-        return UILabel.jobsMake { _ in }
+        return UILabel
+            .jobsMake { _ in }
             .byTextColor(JobsCor.label)
-            .byFont(UIFont.monospacedSystemFont(ofSize: 13, weight: .regular))
+            .byFont(UIFont.monospacedSystemFont(ofSize: 13,
+                                                weight: .regular))
             .byNumberOfLines(0)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
             .byClipsToBounds(YES)
     }
 
-    func makeButton(
-        title: String,
-        color: UIColor,
-        action: @escaping () -> Void
-    ) -> UIButton {
+    func makeButton(title: String,
+                    color: UIColor,
+                    action: @escaping () -> Void) -> UIButton {
         return UIButton.sys()
             .byConfiguration(
-                UIButton.Configuration.filled()
-                    .byTitle(title.tr)
-                    .byBaseBackgroundColor(color)
-                    .byCornerStyle(.medium)
-            )
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
-            .onTap { _ in action() }
+            UIButton.Configuration.filled()
+                .byTitle(title.tr)
+                .byBaseBackgroundColor(color)
+                .byCornerStyle(.medium)
+        )
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .semibold))
+            .onTap { _ in
+                action()
+            }
     }
 
     func bindCurrentSceneIfNeeded() {
-        guard let scene = view.window?.windowScene else { return }
+        guard let scene = view.window?.windowScene else {
+            return
+        }
         currentScene = scene
-        counter = JobsSceneCoordinator.counter(for: scene.session, fallback: counter)
+        counter = JobsSceneCoordinator.counter(for: scene.session,
+                                               fallback: counter)
         persistCounter()
     }
 
@@ -266,7 +294,8 @@ private extension JobsSceneDelegateDemoVC {
             updateCounterLabel()
             return
         }
-        _ = JobsSceneCoordinator.updateCounter(counter, for: currentScene)
+        _ = JobsSceneCoordinator.updateCounter(counter,
+                                               for: currentScene)
         currentScene.title = "Scene Demo · \(JobsSceneCoordinator.shortIdentifier(for: currentScene.session))"
         updateCounterLabel()
     }
@@ -283,7 +312,8 @@ private extension JobsSceneDelegateDemoVC {
         JobsSceneCoordinator.requestNewDemoScene(from: currentScene?.session) { [weak self] error in
             DispatchQueue.main.async {
                 if let error {
-                    self?.showMessage(title: "新建 Scene 失败", message: error.localizedDescription)
+                    self?.showMessage(title: "新建 Scene 失败",
+                                      message: error.localizedDescription)
                 }
                 self?.refreshSnapshot(requestSystemRefresh: false)
             }
@@ -306,7 +336,8 @@ private extension JobsSceneDelegateDemoVC {
         JobsSceneCoordinator.requestActivation(for: otherSession) { [weak self] error in
             DispatchQueue.main.async {
                 if let error {
-                    self?.showMessage(title: "激活 Scene 失败", message: error.localizedDescription)
+                    self?.showMessage(title: "激活 Scene 失败",
+                                      message: error.localizedDescription)
                 }
                 self?.refreshSnapshot(requestSystemRefresh: false)
             }
@@ -329,7 +360,8 @@ private extension JobsSceneDelegateDemoVC {
         JobsSceneCoordinator.requestDestruction(for: session) { [weak self] error in
             DispatchQueue.main.async {
                 if let error {
-                    self?.showMessage(title: "关闭 Scene 失败", message: error.localizedDescription)
+                    self?.showMessage(title: "关闭 Scene 失败",
+                                      message: error.localizedDescription)
                 }
             }
         }
@@ -344,7 +376,9 @@ private extension JobsSceneDelegateDemoVC {
     }
 
     func refreshSnapshot(requestSystemRefresh: Bool) {
-        guard isViewLoaded else { return }
+        guard isViewLoaded else {
+            return
+        }
         let application = UIApplication.shared
         let connectedCount = application.connectedScenes.count
         let openCount = application.openSessions.count
@@ -370,7 +404,8 @@ private extension JobsSceneDelegateDemoVC {
         )
         if requestSystemRefresh {
             application.requestSceneSessionRefresh(session)
-            JobsSceneCoordinator.record("请求系统刷新 SceneSession", for: session)
+            JobsSceneCoordinator.record("请求系统刷新 SceneSession",
+                                        for: session)
             showToast("会话快照已刷新")
         }
         let events = JobsSceneCoordinator.events(for: session)
@@ -390,19 +425,23 @@ private extension JobsSceneDelegateDemoVC {
     func sceneCoordinatorDidChange(_ notification: Notification) {
         guard let session = currentScene?.session,
               notification.userInfo?[JobsSceneCoordinator.sessionIdentifierUserInfoKey] as? String
-                == session.persistentIdentifier else { return }
+                  == session.persistentIdentifier else {
+            return
+        }
         refreshSnapshot(requestSystemRefresh: false)
     }
 
-    func showMessage(title: String, message: String) {
-        present(
-            UIAlertController(title: title.tr, message: message.tr, preferredStyle: .alert)
-                .byAddOK("知道了".tr),
-            animated: true
-        )
+    func showMessage(title: String,
+                     message: String) {
+        present(UIAlertController(title: title.tr,
+                                  message: message.tr,
+                                  preferredStyle: .alert)
+            .byAddOK("知道了".tr),
+                animated: true)
     }
 
     func showToast(_ text: String) {
-        JobsToast.show(text: text.tr, in: view.window)
+        JobsToast.show(text: text.tr,
+                       in: view.window)
     }
 }

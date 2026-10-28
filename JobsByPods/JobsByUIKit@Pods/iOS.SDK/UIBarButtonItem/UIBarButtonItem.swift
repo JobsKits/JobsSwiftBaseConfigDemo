@@ -19,6 +19,7 @@ import JobsSwiftDSL
 private var _barItemActionKey: UInt8 = 0
 // MARK: - Block 事件 + 工厂 + 链式
 extension UIBarButtonItem {
+
     // ========= 1) 事件：不用 #selector，iOS14+ 用 primaryAction，以下自动处理 =========
     /// 绑定点击回调（替代 #selector）
     @discardableResult
@@ -26,23 +27,26 @@ extension UIBarButtonItem {
         if #available(iOS 14.0, *) {
             // iOS14+：优先使用 UIAction，不需要 target/action
             self.primaryAction = UIAction { [weak self] _ in
-                guard let item = self else { return }
+                guard let item = self else {
+                    return
+                }
                 block(item)
             }
         } else {
             // iOS14-：内部 target/action 兜底，但对外仍是 block
-            objc_setAssociatedObject(
-                self,
-                &_barItemActionKey,
-                block,
-                .OBJC_ASSOCIATION_COPY_NONATOMIC)
+            objc_setAssociatedObject(self,
+                                     &_barItemActionKey,
+                                     block,
+                                     .OBJC_ASSOCIATION_COPY_NONATOMIC)
             self.target = self
             self.action  = #selector(_jobs_handleAction(_:))
-        };return self
+        }
+        return self
     }
 
     @objc private func _jobs_handleAction(_ sender: Any) {
-        if let block = objc_getAssociatedObject(self, &_barItemActionKey) as? jobsByBarBtnItemBlock {
+        if let block = objc_getAssociatedObject(self,
+                                                &_barItemActionKey) as? jobsByBarBtnItemBlock {
             block(self)
         }
     }
@@ -92,7 +96,8 @@ extension UIBarButtonItem {
         } else {
             return UIBarButtonItem(barButtonSystemItem: .fixedSpace,
                                    target: nil,
-                                   action: nil).byWidth(width)
+                                   action: nil)
+                .byWidth(width)
         }
     }
     // ========= 3) 链式：按一贯风格补常用点语法 =========
@@ -116,23 +121,35 @@ extension UIBarButtonItem {
     /// iOS16+ 控制隐藏
     @discardableResult
     public func byHidden(_ hidden: Bool) -> Self {
-        if #available(iOS 16.0, *) { self.isHidden = hidden };return self
+        if #available(iOS 16.0, *) {
+            self.isHidden = hidden
+        }
+        return self
     }
     /// iOS15+ 选择态主行为
     @discardableResult
     public func byChangesSelectionAsPrimaryAction(_ enable: Bool) -> Self {
-        if #available(iOS 15.0, *) { self.changesSelectionAsPrimaryAction = enable };return self
+        if #available(iOS 15.0, *) {
+            self.changesSelectionAsPrimaryAction = enable
+        }
+        return self
     }
     /// iOS15+ 选择态
     @discardableResult
     public func bySelected(_ selected: Bool) -> Self {
-        if #available(iOS 15.0, *) { self.isSelected = selected };return self
+        if #available(iOS 15.0, *) {
+            self.isSelected = selected
+        }
+        return self
     }
     /// iOS14+ 直接挂菜单
     @available(iOS 13.0, *)
     @discardableResult
     public func byMenu(_ menu: UIMenu?) -> Self {
-        if #available(iOS 14.0, *) { self.menu = menu };return self
+        if #available(iOS 14.0, *) {
+            self.menu = menu
+        }
+        return self
     }
     /// iOS16+ 优先级
     @discardableResult
@@ -143,8 +160,10 @@ extension UIBarButtonItem {
     }
     /// 标题位置微调（兼容老系统）
     @discardableResult
-    public func byTitleOffset(_ offset: UIOffset, for metrics: UIBarMetrics = .default) -> Self {
-        setTitlePositionAdjustment(offset, for: metrics)
+    public func byTitleOffset(_ offset: UIOffset,
+                              for metrics: UIBarMetrics = .default) -> Self {
+        setTitlePositionAdjustment(offset,
+                                   for: metrics)
         return self
     }
 }

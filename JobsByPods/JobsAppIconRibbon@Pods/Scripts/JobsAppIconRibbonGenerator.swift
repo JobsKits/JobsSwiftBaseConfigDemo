@@ -10,6 +10,7 @@ import Foundation
 import ImageIO
 
 private enum RibbonGeneratorError: LocalizedError {
+
     case invalidArguments
     case missingConfiguration(String)
     case missingSource(String)
@@ -41,6 +42,7 @@ private enum RibbonGeneratorError: LocalizedError {
 }
 
 private struct RibbonGeneratorOptions {
+
     let projectRoot: URL
     let configurationFile: URL
     let buildConfiguration: String
@@ -64,6 +66,7 @@ private struct RibbonGeneratorOptions {
 }
 
 private struct RibbonConfiguration {
+
     let sourceAppIconSet: URL
     let outputAppIconSet: URL
     let text: String
@@ -85,9 +88,13 @@ private struct RibbonConfiguration {
             throw RibbonGeneratorError.missingSource(sourceAppIconSet.path)
         }
 
-        let outputPrefix = values["OUTPUT_NAME_PREFIX"].flatMap { $0.isEmpty ? nil : $0 } ?? "JobsAppIconRibbon"
+        let outputPrefix = values["OUTPUT_NAME_PREFIX"].flatMap {
+            $0.isEmpty ? nil : $0
+        } ?? "JobsAppIconRibbon"
         let safeConfiguration = options.buildConfiguration
-            .replacingOccurrences(of: "[^A-Za-z0-9_-]", with: "-", options: .regularExpression)
+            .replacingOccurrences(of: "[^A-Za-z0-9_-]",
+                                  with: "-",
+                                  options: .regularExpression)
         outputAppIconSet = sourceAppIconSet.deletingLastPathComponent()
             .appendingPathComponent("\(outputPrefix)-\(safeConfiguration).appiconset")
 
@@ -100,27 +107,40 @@ private struct RibbonConfiguration {
         if let customText = values["RIBBON_TEXT"], !customText.isEmpty {
             text = customText
         } else if uppercasedConfiguration.contains("DEBUG") {
-            text = values["DEBUG_TEXT"].flatMap { $0.isEmpty ? nil : $0 } ?? "DEBUG"
+            text = values["DEBUG_TEXT"].flatMap {
+                $0.isEmpty ? nil : $0
+            } ?? "DEBUG"
         } else if uppercasedConfiguration.contains("RELEASE") {
-            text = values["RELEASE_TEXT"].flatMap { $0.isEmpty ? nil : $0 } ?? "RELEASE"
+            text = values["RELEASE_TEXT"].flatMap {
+                $0.isEmpty ? nil : $0
+            } ?? "RELEASE"
         } else {
             let key = "TEXT_" + uppercasedConfiguration
-                .replacingOccurrences(of: "[^A-Z0-9]", with: "_", options: .regularExpression)
-            text = values[key].flatMap { $0.isEmpty ? nil : $0 } ?? uppercasedConfiguration
+                .replacingOccurrences(of: "[^A-Z0-9]",
+                                      with: "_",
+                                      options: .regularExpression)
+            text = values[key].flatMap {
+                $0.isEmpty ? nil : $0
+            } ?? uppercasedConfiguration
         }
 
         backgroundColor = try Self.color(from: values["BACKGROUND_COLOR"] ?? "#8B4513")
         textColor = try Self.color(from: values["TEXT_COLOR"] ?? "#FFFFFF")
-        fontName = values["FONT_NAME"].flatMap { $0.isEmpty ? nil : $0 } ?? "HelveticaNeue-Bold"
+        fontName = values["FONT_NAME"].flatMap {
+            $0.isEmpty ? nil : $0
+        } ?? "HelveticaNeue-Bold"
         let ratio = Double(values["FONT_SIZE_RATIO"] ?? "0.105") ?? 0.105
-        fontSizeRatio = CGFloat(ratio.isFinite && ratio > 0 ? min(1, ratio) : 0.105)
+        fontSizeRatio = CGFloat(ratio.isFinite && ratio > 0 ? min(1,ratio) : 0.105)
     }
 
     private static func parseConfiguration(at url: URL) throws -> [String: String] {
-        let content = try String(contentsOf: url, encoding: .utf8)
+        let content = try String(contentsOf: url,
+                                 encoding: .utf8)
         return content.split(whereSeparator: \Character.isNewline).reduce(into: [:]) { result, line in
             let text = line.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !text.isEmpty, !text.hasPrefix("#"), let separator = text.firstIndex(of: "=") else { return }
+            guard !text.isEmpty, !text.hasPrefix("#"), let separator = text.firstIndex(of: "=") else {
+                return
+            }
             let key = String(text[..<separator]).trimmingCharacters(in: .whitespaces)
             var value = String(text[text.index(after: separator)...]).trimmingCharacters(in: .whitespaces)
             if value.count >= 2,
@@ -134,7 +154,8 @@ private struct RibbonConfiguration {
 
     private static func color(from value: String) throws -> NSColor {
         let hex = value.trimmingCharacters(in: CharacterSet(charactersIn: "#"))
-        guard hex.count == 6 || hex.count == 8, let number = UInt64(hex, radix: 16) else {
+        guard hex.count == 6 || hex.count == 8, let number = UInt64(hex,
+                                                                    radix: 16) else {
             throw RibbonGeneratorError.invalidColor(value)
         }
         let hasAlpha = hex.count == 8
@@ -142,11 +163,15 @@ private struct RibbonConfiguration {
         let green = CGFloat((number >> (hasAlpha ? 16 : 8)) & 0xFF) / 255
         let blue = CGFloat((number >> (hasAlpha ? 8 : 0)) & 0xFF) / 255
         let alpha = hasAlpha ? CGFloat(number & 0xFF) / 255 : 1
-        return NSColor(deviceRed: red, green: green, blue: blue, alpha: alpha)
+        return NSColor(deviceRed: red,
+                       green: green,
+                       blue: blue,
+                       alpha: alpha)
     }
 }
 
 private final class JobsAppIconRibbonGenerator {
+
     private let configuration: RibbonConfiguration
     private let fileManager = FileManager.default
     private var stagingDirectory: URL?
@@ -170,19 +195,27 @@ private final class JobsAppIconRibbonGenerator {
             try? fileManager.removeItem(at: staging)
             stagingDirectory = nil
         }
-        try fileManager.createDirectory(at: staging, withIntermediateDirectories: true)
-        try fileManager.copyItem(at: contentsURL, to: staging.appendingPathComponent("Contents.json"))
+        try fileManager.createDirectory(at: staging,
+                                        withIntermediateDirectories: true)
+        try fileManager.copyItem(at: contentsURL,
+                                 to: staging.appendingPathComponent("Contents.json"))
 
         var renderedFiles = Set<String>()
         for image in images {
-            guard let filename = image["filename"] as? String, renderedFiles.insert(filename).inserted else { continue }
+            guard let filename = image["filename"] as? String, renderedFiles.insert(filename).inserted else {
+                continue
+            }
             try render(filename: filename)
         }
-        guard !renderedFiles.isEmpty else { throw RibbonGeneratorError.missingSource(contentsURL.path) }
+        guard !renderedFiles.isEmpty else {
+            throw RibbonGeneratorError.missingSource(contentsURL.path)
+        }
         if fileManager.fileExists(atPath: configuration.outputAppIconSet.path) {
-            _ = try fileManager.replaceItemAt(configuration.outputAppIconSet, withItemAt: staging)
+            _ = try fileManager.replaceItemAt(configuration.outputAppIconSet,
+                                              withItemAt: staging)
         } else {
-            try fileManager.moveItem(at: staging, to: configuration.outputAppIconSet)
+            try fileManager.moveItem(at: staging,
+                                     to: configuration.outputAppIconSet)
         }
         print("✔ AppIcon 绶带已生成：\(configuration.outputAppIconSet.path)")
         print("  文案：\(configuration.text)｜背景：\(configuration.backgroundColor)｜字体：\(configuration.fontName)")
@@ -190,38 +223,47 @@ private final class JobsAppIconRibbonGenerator {
 
     private func render(filename: String) throws {
         guard filename == (filename as NSString).lastPathComponent, filename != "..", !filename.isEmpty,
-              let stagingDirectory else { throw RibbonGeneratorError.unsafeOutput(filename) }
+              let stagingDirectory else {
+            throw RibbonGeneratorError.unsafeOutput(filename)
+        }
         let sourceURL = configuration.sourceAppIconSet.appendingPathComponent(filename)
         guard sourceURL.resolvingSymlinksInPath().deletingLastPathComponent() == configuration.sourceAppIconSet.resolvingSymlinksInPath() else {
             throw RibbonGeneratorError.unsafeOutput(filename)
         }
         let outputURL = stagingDirectory.appendingPathComponent(filename)
-        guard let imageSource = CGImageSourceCreateWithURL(sourceURL as CFURL, nil),
-              let sourceCGImage = CGImageSourceCreateImageAtIndex(imageSource, 0, nil) else {
+        guard let imageSource = CGImageSourceCreateWithURL(sourceURL as CFURL,
+                                                           nil),
+              let sourceCGImage = CGImageSourceCreateImageAtIndex(imageSource,
+                                                                  0,
+                                                                  nil) else {
             throw RibbonGeneratorError.invalidImage(sourceURL.path)
         }
 
         let width = sourceCGImage.width
         let height = sourceCGImage.height
         let colorSpace = CGColorSpaceCreateDeviceRGB()
-        guard let bitmapContext = CGContext(
-            data: nil,
-            width: width,
-            height: height,
-            bitsPerComponent: 8,
-            bytesPerRow: width * 4,
-            space: colorSpace,
-            bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue
-        ) else {
+        guard let bitmapContext = CGContext(data: nil,
+                                            width: width,
+                                            height: height,
+                                            bitsPerComponent: 8,
+                                            bytesPerRow: width * 4,
+                                            space: colorSpace,
+                                            bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue) else {
             throw RibbonGeneratorError.invalidImage(sourceURL.path)
         }
 
-        let canvas = NSRect(x: 0, y: 0, width: width, height: height)
-        let context = NSGraphicsContext(cgContext: bitmapContext, flipped: false)
+        let canvas = NSRect(x: 0,
+                            y: 0,
+                            width: width,
+                            height: height)
+        let context = NSGraphicsContext(cgContext: bitmapContext,
+                                        flipped: false)
         NSGraphicsContext.saveGraphicsState()
         NSGraphicsContext.current = context
-        bitmapContext.draw(sourceCGImage, in: canvas)
-        drawRibbon(in: canvas, context: bitmapContext)
+        bitmapContext.draw(sourceCGImage,
+                           in: canvas)
+        drawRibbon(in: canvas,
+                   context: bitmapContext)
         context.flushGraphics()
         NSGraphicsContext.restoreGraphicsState()
 
@@ -230,30 +272,42 @@ private final class JobsAppIconRibbonGenerator {
         }
         let isJPEG = outputURL.pathExtension.lowercased().hasPrefix("jp")
         let uniformType = (isJPEG ? "public.jpeg" : "public.png") as CFString
-        guard let destination = CGImageDestinationCreateWithURL(outputURL as CFURL, uniformType, 1, nil) else {
+        guard let destination = CGImageDestinationCreateWithURL(outputURL as CFURL,
+                                                                uniformType,
+                                                                1,
+                                                                nil) else {
             throw RibbonGeneratorError.invalidImage(outputURL.path)
         }
         let properties = isJPEG ? [kCGImageDestinationLossyCompressionQuality: 0.98] as CFDictionary : nil
-        CGImageDestinationAddImage(destination, outputImage, properties)
+        CGImageDestinationAddImage(destination,
+                                   outputImage,
+                                   properties)
         guard CGImageDestinationFinalize(destination) else {
             throw RibbonGeneratorError.invalidImage(outputURL.path)
         }
     }
 
-    private func drawRibbon(in canvas: NSRect, context: CGContext) {
+    private func drawRibbon(in canvas: NSRect,
+                            context: CGContext) {
         let width = canvas.width
         let height = canvas.height
         let path = NSBezierPath()
-        path.move(to: NSPoint(x: width * 0.50, y: height))
-        path.line(to: NSPoint(x: width * 0.72, y: height))
-        path.line(to: NSPoint(x: width, y: height * 0.72))
-        path.line(to: NSPoint(x: width, y: height * 0.50))
+        path.move(to: NSPoint(x: width * 0.50,
+                              y: height))
+        path.line(to: NSPoint(x: width * 0.72,
+                              y: height))
+        path.line(to: NSPoint(x: width,
+                              y: height * 0.72))
+        path.line(to: NSPoint(x: width,
+                              y: height * 0.50))
         path.close()
         configuration.backgroundColor.setFill()
         path.fill()
 
-        let fontSize = max(3, min(width, height) * configuration.fontSizeRatio)
-        let font = NSFont(name: configuration.fontName, size: fontSize) ?? NSFont.boldSystemFont(ofSize: fontSize)
+        let fontSize = max(3,
+                           min(width,height) * configuration.fontSizeRatio)
+        let font = NSFont(name: configuration.fontName,
+                          size: fontSize) ?? NSFont.boldSystemFont(ofSize: fontSize)
         let attributes: [NSAttributedString.Key: Any] = [
             .font: font,
             .foregroundColor: configuration.textColor
@@ -261,12 +315,12 @@ private final class JobsAppIconRibbonGenerator {
         let text = configuration.text as NSString
         let textSize = text.size(withAttributes: attributes)
         context.saveGState()
-        context.translateBy(x: width * 0.80, y: height * 0.80)
+        context.translateBy(x: width * 0.80,
+                            y: height * 0.80)
         context.rotate(by: -.pi / 4)
-        text.draw(
-            at: NSPoint(x: -textSize.width / 2, y: -textSize.height / 2),
-            withAttributes: attributes
-        )
+        text.draw(at: NSPoint(x: -textSize.width / 2,
+                              y: -textSize.height / 2),
+                  withAttributes: attributes)
         context.restoreGState()
     }
 }
@@ -276,6 +330,7 @@ do {
     let configuration = try RibbonConfiguration(options: options)
     try JobsAppIconRibbonGenerator(configuration: configuration).run()
 } catch {
-    fputs("✖ \(error.localizedDescription)\n", stderr)
+    fputs("✖ \(error.localizedDescription)\n",
+          stderr)
     exit(1)
 }

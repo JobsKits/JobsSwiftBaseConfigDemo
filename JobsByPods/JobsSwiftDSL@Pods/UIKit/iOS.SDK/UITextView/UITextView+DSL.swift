@@ -15,6 +15,7 @@ import JobsSwiftBaseDefines
 
 // MARK: - 直接赋值@单参数
 extension UITextView {
+
     // MARK: 文本基础属性
     @discardableResult
     public func byText(_ string: String?) -> Self {
@@ -26,11 +27,13 @@ extension UITextView {
     public func byTextColor(_ color: UIColor) -> Self {
         let slot = "UITextView.textColor"
         if let key = color.jobsThemeColorKey {
-            JobsThemeCenter.shared.bind(self, slot: slot) { object, center in
+            JobsThemeCenter.shared.bind(self,
+                                        slot: slot) { object, center in
                 (object as? UITextView)?.textColor = center.resolvedColor(key)
             }
         } else {
-            JobsThemeCenter.shared.unbind(self, slot: slot)
+            JobsThemeCenter.shared.unbind(self,
+                                          slot: slot)
             textColor = color
         }
         return self
@@ -185,12 +188,15 @@ extension UITextView {
     /// DSL：专门给 lineFragmentPadding 赋值（更短）
     @discardableResult
     public func byLineFragmentPadding(_ padding: CGFloat) -> Self {
-        return byTextContainer { $0.lineFragmentPadding = padding }
+        return byTextContainer {
+            $0.lineFragmentPadding = padding
+        }
     }
 }
 
 // MARK: - 闭包重载@单参数
 extension UITextView {
+
     @discardableResult
     public func byText(_ builder: () -> String?) -> Self {
         self.text = builder()
@@ -353,11 +359,14 @@ extension UITextView {
 
     @discardableResult
     public func byLineFragmentPadding(_ builder: () -> CGFloat) -> Self {
-        return byTextContainer { $0.lineFragmentPadding = builder() }
+        return byTextContainer {
+            $0.lineFragmentPadding = builder()
+        }
     }
 }
 
 extension UITextView {
+
     // MARK: 滚动与范围
     @discardableResult
     public func byScrollToVisible(range: NSRange) -> Self {
@@ -368,7 +377,9 @@ extension UITextView {
     @discardableResult
     public func byTextContainer(_ block: (NSTextContainer) -> Void) -> Self {
         #if os(OSX)
-        guard let tc = self.textContainer else { return self }
+        guard let tc = self.textContainer else {
+            return self
+        }
         block(tc)
         #else
         block(self.textContainer)
@@ -377,24 +388,27 @@ extension UITextView {
     }
     // MARK: 统一的圆角边框样式（跨 iOS 版本）
     @discardableResult
-    public func byRoundedBorder(
-        color: UIColor = JobsCor.systemGray4,
-        width: CGFloat = 1,
-        radius: CGFloat = 8,
-        background: UIColor? = nil
-    ) -> Self {
-        layer.byBorderColor(color)
+    public func byRoundedBorder(color: UIColor = JobsCor.systemGray4,
+                                width: CGFloat = 1,
+                                radius: CGFloat = 8,
+                                background: UIColor? = nil) -> Self {
+        layer
+            .byBorderColor(color)
             .byBorderWidth(width)
             .byCornerRadius(radius)
             .byMasksToBounds(true)
-        if let bg = background { backgroundColor = bg };return self
+        if let bg = background {
+            backgroundColor = bg
+        }
+        return self
     }
     // MARK: 类似“bezel”的外观（简易版）
     @discardableResult
     public func byBezelLike(
         radius: CGFloat = 8
     ) -> Self {
-        layer.byBorderColor(JobsCor.separator)
+        layer
+            .byBorderColor(JobsCor.separator)
             .byBorderWidth(1)
             .byCornerRadius(radius)
             .byMasksToBounds(true)

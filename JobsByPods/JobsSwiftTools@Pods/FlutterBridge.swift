@@ -25,6 +25,7 @@ import FlutterPluginRegistrant
 
 @MainActor
 public final class FlutterBridge {
+
     public static let shared = FlutterBridge()
     private init() {}
     // MARK: - Config
@@ -50,7 +51,8 @@ public final class FlutterBridge {
     public func setup(engine: FlutterEngine) {
         if let current = self.engine, current !== engine {
             for id in Array(callbacks.keys) {
-                finishSession(id, payload: ["requestId": id, "status": "cancelled", "reason": "engineReplaced"])
+                finishSession(id,
+                              payload: ["requestId": id, "status": "cancelled", "reason": "engineReplaced"])
             }
             channel?.setMethodCallHandler(nil)
             channel = nil
@@ -63,15 +65,13 @@ public final class FlutterBridge {
     }
     // MARK: - Present
     @discardableResult
-    public func presentFlutter(
-        from host: UIResponder?,
-        route: String = "/page",
-        arguments: Payload = [:],
-        animated: Bool = true,
-        policy: JobsPresentPolicy = .ignoreIfBusy,
-        configure: Configure? = nil,
-        completion: @escaping Completion
-    ) -> String {
+    public func presentFlutter(from host: UIResponder?,
+                               route: String = "/page",
+                               arguments: Payload = [:],
+                               animated: Bool = true,
+                               policy: JobsPresentPolicy = .ignoreIfBusy,
+                               configure: Configure? = nil,
+                               completion: @escaping Completion) -> String {
         let requestId = normalizedRequestId(from: arguments)
         guard callbacks[requestId] == nil else {
             completion(["requestId": requestId, "status": "error", "reason": "duplicateRequestId"])
@@ -79,30 +79,31 @@ public final class FlutterBridge {
         }
         callbacks[requestId] = completion
         installTimeout(for: requestId)
-        guard let flutterVC = makeFlutterVC(
-            requestId: requestId,
-            route: route,
-            arguments: arguments,
-            configure: configure
-        ) else {
-            finishSession(requestId, payload: ["requestId": requestId, "status": "error", "reason": "engineUnavailable"])
+        guard let flutterVC = makeFlutterVC(requestId: requestId,
+                                            route: route,
+                                            arguments: arguments,
+                                            configure: configure) else {
+            finishSession(requestId,
+                          payload: ["requestId": requestId, "status": "error", "reason": "engineUnavailable"])
             return requestId
         }
         DispatchQueue.main.async {
-            flutterVC.byPresent(host, animated: animated, policy: policy, jobsByVoidBlock: nil)
-        };return requestId
+            flutterVC.byPresent(host,
+                                animated: animated,
+                                policy: policy,
+                                jobsByVoidBlock: nil)
+        }
+        return requestId
     }
     // MARK: - Push
     @discardableResult
-    func pushFlutter(
-        from host: UIResponder?,
-        route: String = "/page",
-        arguments: Payload = [:],
-        duration: CFTimeInterval = 0.32,
-        timing: CAMediaTimingFunctionName = .easeInEaseOut,
-        configure: Configure? = nil,
-        completion: @escaping Completion
-    ) -> String {
+    func pushFlutter(from host: UIResponder?,
+                     route: String = "/page",
+                     arguments: Payload = [:],
+                     duration: CFTimeInterval = 0.32,
+                     timing: CAMediaTimingFunctionName = .easeInEaseOut,
+                     configure: Configure? = nil,
+                     completion: @escaping Completion) -> String {
         let requestId = normalizedRequestId(from: arguments)
         guard callbacks[requestId] == nil else {
             completion(["requestId": requestId, "status": "error", "reason": "duplicateRequestId"])
@@ -110,35 +111,44 @@ public final class FlutterBridge {
         }
         callbacks[requestId] = completion
         installTimeout(for: requestId)
-        guard let flutterVC = makeFlutterVC(
-            requestId: requestId,
-            route: route,
-            arguments: arguments,
-            configure: configure
-        ) else {
-            finishSession(requestId, payload: ["requestId": requestId, "status": "error", "reason": "engineUnavailable"])
+        guard let flutterVC = makeFlutterVC(requestId: requestId,
+                                            route: route,
+                                            arguments: arguments,
+                                            configure: configure) else {
+            finishSession(requestId,
+                          payload: ["requestId": requestId, "status": "error", "reason": "engineUnavailable"])
             return requestId
         }
         DispatchQueue.main.async {
-            flutterVC.byPush(host, duration: duration, timing: timing)
-        };return requestId
+            flutterVC.byPush(host,
+                             duration: duration,
+                             timing: timing)
+        }
+        return requestId
     }
 
     // MARK: - Private
-    private func makeFlutterVC(
-        requestId: String,
-        route: String,
-        arguments: Payload,
-        configure: Configure?
-    ) -> FlutterViewController? {
+    private func makeFlutterVC(requestId: String,
+                               route: String,
+                               arguments: Payload,
+                               configure: Configure?) -> FlutterViewController? {
         let engine = ensureEngineReady()
-        guard runEngineIfNeeded(engine) else { return nil }
+        guard runEngineIfNeeded(engine) else {
+            return nil
+        }
         installChannelIfNeeded(engine)
-        guard let channel else { return nil }
-        guard engine.viewController == nil else { return nil }
-        let vc = JobsManagedFlutterViewController(engine: engine, nibName: nil, bundle: nil)
+        guard let channel else {
+            return nil
+        }
+        guard engine.viewController == nil else {
+            return nil
+        }
+        let vc = JobsManagedFlutterViewController(engine: engine,
+                                                  nibName: nil,
+                                                  bundle: nil)
         vc.onNativeClose = { [weak self] in
-            self?.finishSession(requestId, payload: ["requestId": requestId, "status": "cancelled", "reason": "nativeDismissed"])
+            self?.finishSession(requestId,
+                                payload: ["requestId": requestId, "status": "cancelled", "reason": "nativeDismissed"])
         }
         configure?(vc)
         vcBoxes[requestId] = WeakBox(vc)
@@ -148,10 +158,16 @@ public final class FlutterBridge {
         pendingOpenArgs[requestId] = args
         // ✅ 等真正显示后再发 open（时序稳）
         _ = vc.byCompletion { [weak self] in
-            guard let self else { return }
-            guard let openArgs = self.pendingOpenArgs.removeValue(forKey: requestId) else { return }
-            channel.invokeMethod("open", arguments: openArgs)
-        };return vc
+            guard let self else {
+                return
+            }
+            guard let openArgs = self.pendingOpenArgs.removeValue(forKey: requestId) else {
+                return
+            }
+            channel.invokeMethod("open",
+                                 arguments: openArgs)
+        }
+        return vc
     }
 
     private func ensureEngineReady() -> FlutterEngine {
@@ -170,39 +186,52 @@ public final class FlutterBridge {
     @discardableResult
     private func runEngineIfNeeded(_ engine: FlutterEngine) -> Bool {
         let key = ObjectIdentifier(engine)
-        if startedEngines.contains(key) { return true }
+        if startedEngines.contains(key) {
+            return true
+        }
         let started = engine.run()
-        if started { startedEngines.insert(key) }
+        if started {
+            startedEngines.insert(key)
+        }
         return started
     }
 
     private func registerPluginsIfNeeded(_ engine: FlutterEngine) {
         let key = ObjectIdentifier(engine)
-        if registeredEngines.contains(key) { return }
+        if registeredEngines.contains(key) {
+            return
+        }
         registeredEngines.insert(key)
         GeneratedPluginRegistrant.register(with: engine)
     }
 
     private func installChannelIfNeeded(_ engine: FlutterEngine) {
-        if channel != nil, channelEngine === engine { return }
+        if channel != nil, channelEngine === engine {
+            return
+        }
         channel?.setMethodCallHandler(nil)
         channelEngine = engine
-        let ch = FlutterMethodChannel(name: channelName, binaryMessenger: engine.binaryMessenger)
+        let ch = FlutterMethodChannel(name: channelName,
+                                      binaryMessenger: engine.binaryMessenger)
         channel = ch
         ch.setMethodCallHandler { [weak self] call, result in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             switch call.method {
             /// 处理 "result" 分支
             case "result":
                 let payload = (call.arguments as? Payload) ?? [:]
                 let requestId = (payload["requestId"] as? String) ?? ""
-                self.finishSession(requestId, payload: payload)
+                self.finishSession(requestId,
+                                   payload: payload)
                 result(true)
             /// 处理 "close" 分支
             case "close":
                 let payload = (call.arguments as? Payload) ?? [:]
                 let requestId = (payload["requestId"] as? String) ?? ""
-                self.finishSession(requestId, payload: ["requestId": requestId, "status": "cancelled", "reason": "flutterClosed"])
+                self.finishSession(requestId,
+                                   payload: ["requestId": requestId, "status": "cancelled", "reason": "flutterClosed"])
                 result(true)
             /// 未匹配已知分支时执行兜底处理
             default:
@@ -212,16 +241,22 @@ public final class FlutterBridge {
     }
 
     private func installTimeout(for requestId: String) {
-        let timeout = resultTimeout.isFinite ? max(1, min(86_400, resultTimeout)) : 300
+        let timeout = resultTimeout.isFinite ? max(1,
+                                                   min(86_400,resultTimeout)) : 300
         let work = DispatchWorkItem { [weak self] in
-            self?.finishSession(requestId, payload: ["requestId": requestId, "status": "error", "reason": "timeout"])
+            self?.finishSession(requestId,
+                                payload: ["requestId": requestId, "status": "error", "reason": "timeout"])
         }
         timeouts[requestId] = work
-        DispatchQueue.main.asyncAfter(deadline: .now() + timeout, execute: work)
+        DispatchQueue.main.asyncAfter(deadline: .now() + timeout,
+                                      execute: work)
     }
 
-    private func finishSession(_ requestId: String, payload: Payload) {
-        guard let completion = callbacks.removeValue(forKey: requestId) else { return }
+    private func finishSession(_ requestId: String,
+                               payload: Payload) {
+        guard let completion = callbacks.removeValue(forKey: requestId) else {
+            return
+        }
         timeouts.removeValue(forKey: requestId)?.cancel()
         closeFlutterPage(requestId: requestId)
         completion(payload)
@@ -232,7 +267,9 @@ public final class FlutterBridge {
         let vc = vcBoxes[requestId]?.value
         // 注意：这里再清理，别提前清掉
         vcBoxes.removeValue(forKey: requestId)
-        guard let vc else { return }
+        guard let vc else {
+            return
+        }
         // present 场景
         if vc.presentingViewController != nil {
             vc.dismiss(animated: true)
@@ -244,7 +281,8 @@ public final class FlutterBridge {
                 nav.dismiss(animated: true)
             } else {
                 nav.popViewController(animated: true)
-            };return
+            }
+            return
         }
         vc.dismiss(animated: true)
     }
@@ -255,6 +293,7 @@ public final class FlutterBridge {
     }
 }
 private final class JobsManagedFlutterViewController: FlutterViewController {
+
     var onNativeClose: (() -> Void)?
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -270,6 +309,9 @@ private final class JobsManagedFlutterViewController: FlutterViewController {
 
 // MARK: - WeakBox
 private final class WeakBox<T: AnyObject> {
+
     weak var value: T?
-    init(_ value: T?) { self.value = value }
+    init(_ value: T?) {
+        self.value = value
+    }
 }

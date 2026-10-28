@@ -19,7 +19,9 @@ import JobsSwiftFoundation
 import JobsSwiftBaseDefines
 import SnapKit
 
-final class MomentPostCell: UITableViewCell, UITextViewDelegate {
+final class MomentPostCell: UITableViewCell,
+                            UITextViewDelegate {
+
     // callbacks (✅ 回调把 cell 自己带出去)
     typealias CellVoidCallback = (MomentPostCell) -> Void
     typealias CellIntCallback  = (MomentPostCell, Int) -> Void
@@ -34,11 +36,17 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     // 合并：同一帧只触发一次
     private var pendingHeightUpdate = false
     private func requestHeightUpdateOnce() {
-        guard layoutMode == .estimated_autoDimension else { return }
-        guard !pendingHeightUpdate else { return }
+        guard layoutMode == .estimated_autoDimension else {
+            return
+        }
+        guard !pendingHeightUpdate else {
+            return
+        }
         pendingHeightUpdate = true
         DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.pendingHeightUpdate = false
             self.onNeedHeightUpdate?(self) // ✅ 带 cell
         }
@@ -50,7 +58,8 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     // constraints
     private var mediaHeightConstraint: Constraint?
     private lazy var card: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
             .byCornerRadius(12)
             .byMasksToBounds(YES)
@@ -62,7 +71,8 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     }()
 
     private lazy var avatar: UIImageView = {
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.tertiarySystemFill)
             .byCornerRadius(20)
             .byMasksToBounds(YES)
@@ -74,7 +84,8 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     }()
 
     private lazy var rightStack: UIStackView = {
-        UIStackView.jobsMake { _ in }
+        UIStackView
+            .jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .byDistribution(.fill)
@@ -90,18 +101,22 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
                 make.right.equalToSuperview().inset(12)
                 make.bottom.equalToSuperview().inset(12)
             }
-            .byCustomSpacing(8, after: contentTextView)
-            .byCustomSpacing(8, after: bottomBar)
+            .byCustomSpacing(8,
+                             after: contentTextView)
+            .byCustomSpacing(8,
+                             after: bottomBar)
     }()
 
     private lazy var nameLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byFont(JobsFont.boldSystemFont(ofSize: 15))
             .byTextColor(JobsCor.label)
     }()
     /// ✅ 用 UITextView 做“末尾内联 全文/收起”
     private lazy var contentTextView: UITextView = {
-        UITextView.jobsMake { _ in }
+        UITextView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
             .byEditable(NO)
             .byScrollEnabled(NO)
@@ -123,11 +138,16 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     private lazy var mediaView: MomentMediaView = {
         MomentMediaView()
             .byOnTap { [weak self] idx in
-                guard let self else { return }
-                self.onTapMedia?(self, idx) // ✅ 带 cell
+                guard let self else {
+                    return
+                }
+                self.onTapMedia?(self,
+                                 idx) // ✅ 带 cell
             }
             .byOnHeightChanged { [weak self] h in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.mediaHeightConstraint?.update(offset: h)
                 self.requestHeightUpdateOnce()
             }
@@ -137,14 +157,16 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     }()
     /// ✅ bottomBar：不要在这里触发 timeLabel/like/comment 的 lazy
     private lazy var bottomBar: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byAdd { make in
                 make.height.equalTo(22)
             }
     }()
 
     private lazy var timeLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 12))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(bottomBar) { make in
@@ -154,12 +176,18 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
 
     private lazy var commentButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(JobsCor.clear, for: .normal)
-            .byTitle("评论".tr, for: .normal)
-            .byTitleColor(JobsCor.systemBlue, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
+            .byBackgroundColor(JobsCor.clear,
+                               for: .normal)
+            .byTitle("评论".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.systemBlue,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 13,
+                                             weight: .medium))
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.onCommentTapped?(self) // ✅ 带 cell
             }
             .byAddTo(bottomBar) { make in
@@ -169,12 +197,18 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
 
     private lazy var likeButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(JobsCor.clear, for: .normal)
-            .byTitle("赞".tr, for: .normal)
-            .byTitleColor(JobsCor.systemBlue, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
+            .byBackgroundColor(JobsCor.clear,
+                               for: .normal)
+            .byTitle("赞".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.systemBlue,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 13,
+                                             weight: .medium))
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.onLikeTapped?(self) // ✅ 带 cell
             }
             .byAddTo(bottomBar) { make in
@@ -184,14 +218,16 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     }()
     /// ✅ commentsBG：不要在这里触发 commentsStack 的 lazy
     private lazy var commentsBG: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(8)
             .byMasksToBounds(YES)
     }()
 
     private lazy var commentsStack: UIStackView = {
-        UIStackView.jobsMake { _ in }
+        UIStackView
+            .jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .byDistribution(.fill)
@@ -201,9 +237,13 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
             }
     }()
     // ============================== Init ==============================
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    override init(style: UITableViewCell.CellStyle,
+                  reuseIdentifier: String?) {
+        super.init(style: style,
+                   reuseIdentifier: reuseIdentifier)
         self.byBackgroundColor(JobsCor.clear)
         contentView.byBackgroundColor(JobsCor.clear)
         card.byVisible(YES)
@@ -234,9 +274,12 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
         mediaHeightConstraint?.update(offset: 0)
         mediaView.render([])
         timeLabel.byText(nil)
-        likeButton.byTitle("赞".tr, for: .normal)
+        likeButton.byTitle("赞".tr,
+                           for: .normal)
         commentsBG.byVisible(false)
-        commentsStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        commentsStack.arrangedSubviews.forEach {
+            $0.removeFromSuperview()
+        }
     }
 
     override func layoutSubviews() {
@@ -250,7 +293,8 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
     }
     // ============================== byData ==============================
     @discardableResult
-    func byData(_ post: MomentPost, layoutMode: TimelineLayoutMode) -> Self {
+    func byData(_ post: MomentPost,
+                layoutMode: TimelineLayoutMode) -> Self {
         self.layoutMode = layoutMode
         self.currentPost = post
         nameLabel.byText(post.name)
@@ -271,17 +315,20 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
             mediaView.render([])
         } else {
             mediaView.byVisible(true)
-            let rightW = max(0, rightStack.bounds.width > 0 ? rightStack.bounds.width : estimatedRightWidth())
-            let h = MomentMediaView.height(for: post.media, width: rightW)
+            let rightW = max(0,
+                             rightStack.bounds.width > 0 ? rightStack.bounds.width : estimatedRightWidth())
+            let h = MomentMediaView.height(for: post.media,
+                                           width: rightW)
             mediaHeightConstraint?.update(offset: h)
             mediaView.render(post.media)
         }
         // bottom
         timeLabel.byText(post.timeText)
         let likeTitle = post.isLiked
-        ? "已赞".tr + String(post.likeCount)
-        : (post.likeCount > 0 ? "赞".tr + String(post.likeCount) : "赞".tr)
-        likeButton.byTitle(likeTitle, for: .normal)
+            ? "已赞".tr + String(post.likeCount)
+            : (post.likeCount > 0 ? "赞".tr + String(post.likeCount) : "赞".tr)
+        likeButton.byTitle(likeTitle,
+                           for: .normal)
         // comments
         rebuildComments(post.comments)
         requestHeightUpdateOnce()
@@ -308,17 +355,25 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
         if URL.absoluteString == Self.toggleURL.absoluteString {
             onToggleExpand?(self) // ✅ 带 cell
             return false
-        };return true
+        }
+        return true
     }
 
     private func rebuildContentTextIfNeeded() {
-        guard let post = currentPost else { return }
-        let width = max(0, rightStack.bounds.width > 0 ? rightStack.bounds.width : estimatedRightWidth())
-        guard width > 0 else { return }
+        guard let post = currentPost else {
+            return
+        }
+        let width = max(0,
+                        rightStack.bounds.width > 0 ? rightStack.bounds.width : estimatedRightWidth())
+        guard width > 0 else {
+            return
+        }
         let base = makeBaseText(post: post)
         let maxLines = 3
         // 是否需要“全文”
-        let fullFits = TextKitMeasure.fits(base, width: width, maxLines: maxLines)
+        let fullFits = TextKitMeasure.fits(base,
+                                           width: width,
+                                           maxLines: maxLines)
         needsToggle = !fullFits
         if !needsToggle {
             contentTextView.byAttributedText(base)
@@ -331,31 +386,42 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
             contentTextView.byAttributedText(expanded)
         } else {
             // 折叠：做一个“能容纳 …全文 的 3 行截断”
-            let collapsed = makeCollapsedText(base: base, width: width, maxLines: maxLines)
+            let collapsed = makeCollapsedText(base: base,
+                                              width: width,
+                                              maxLines: maxLines)
             contentTextView.byAttributedText(collapsed)
         }
     }
 
     private func makeBaseText(post: MomentPost) -> NSAttributedString {
-        if let rich = post.richText { return rich };return NSAttributedString(string: post.text, attributes: [
-            .font: JobsFont.systemFont(ofSize: 14),
-            .foregroundColor: JobsCor.label
-        ])
+        if let rich = post.richText {
+            return rich
+        }
+        return NSAttributedString(string: post.text,
+                                  attributes: [
+                .font: JobsFont.systemFont(ofSize: 14),
+                .foregroundColor: JobsCor.label
+            ])
     }
 
     private func makeToggleToken(title: String) -> NSAttributedString {
-        NSMutableAttributedString(string: title, attributes: [
-            .font: JobsFont.systemFont(ofSize: 14),
-            .foregroundColor: JobsCor.systemBlue,
-            .link: Self.toggleURL
-        ])
+        NSMutableAttributedString(string: title,
+                                  attributes: [
+                .font: JobsFont.systemFont(ofSize: 14),
+                .foregroundColor: JobsCor.systemBlue,
+                .link: Self.toggleURL
+            ])
     }
 
-    private func makeCollapsedText(base: NSAttributedString, width: CGFloat, maxLines: Int) -> NSAttributedString {
-        let tail = NSMutableAttributedString(string: "…", attributes: [
-            .font: JobsFont.systemFont(ofSize: 14),
-            .foregroundColor: JobsCor.label
-        ]).byAdd(makeToggleToken(title: "全文".tr))
+    private func makeCollapsedText(base: NSAttributedString,
+                                   width: CGFloat,
+                                   maxLines: Int) -> NSAttributedString {
+        let tail = NSMutableAttributedString(string: "…",
+                                             attributes: [
+                .font: JobsFont.systemFont(ofSize: 14),
+                .foregroundColor: JobsCor.label
+            ])
+            .byAdd(makeToggleToken(title: "全文".tr))
         // binary search 最长前缀，使“前缀 + …全文”能在 maxLines 内完整展示
         let fullLen = base.length
         var lo = 0
@@ -366,7 +432,9 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
             let prefix = base.attributedSubstring(from: NSRange(location: 0, length: mid))
             let candidate = NSMutableAttributedString(attributedString: prefix)
             candidate.append(tail)
-            if TextKitMeasure.fits(candidate, width: width, maxLines: maxLines) {
+            if TextKitMeasure.fits(candidate,
+                                   width: width,
+                                   maxLines: maxLines) {
                 best = mid
                 lo = mid + 1
             } else {
@@ -374,11 +442,14 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
             }
         }
         let prefix = base.attributedSubstring(from: NSRange(location: 0, length: best))
-        return NSMutableAttributedString(attributedString: prefix).byAdd(tail)
+        return NSMutableAttributedString(attributedString: prefix)
+            .byAdd(tail)
     }
     // ============================== Comments ==============================
     private func rebuildComments(_ list: [MomentComment]) {
-        commentsStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        commentsStack.arrangedSubviews.forEach {
+            $0.removeFromSuperview()
+        }
         guard !list.isEmpty else {
             commentsBG.byVisible(false)
             return
@@ -386,90 +457,102 @@ final class MomentPostCell: UITableViewCell, UITextViewDelegate {
         commentsBG.byVisible(true)
         for c in list {
             commentsStack.addArrangedSubview(
-                UILabel.jobsMake { _ in }
+                UILabel
+                    .jobsMake { _ in }
                     .byNumberOfLines(0)
                     .byFont(JobsFont.systemFont(ofSize: 13))
                     .byTextColor(JobsCor.label)
                     .byAttributedString(
-                        NSMutableAttributedString(
-                            string: "\(c.user)：",
-                            attributes: [
-                                .font: JobsFont.systemFont(ofSize: 13, weight: .semibold),
-                                .foregroundColor: JobsCor.label
-                            ]
-                        )
-                        .byAdd(NSAttributedString(
-                            string: c.text,
-                            attributes: [
+                    NSMutableAttributedString(string: "\(c.user)：",
+                                              attributes: [
+                            .font: JobsFont.systemFont(ofSize: 13,
+                                                       weight: .semibold),
+                            .foregroundColor: JobsCor.label
+                        ])
+                        .byAdd(NSAttributedString(string: c.text,
+                                                  attributes: [
                                 .font: JobsFont.systemFont(ofSize: 13),
                                 .foregroundColor: JobsCor.label
-                            ]
-                        ))))
+                            ]))))
         }
     }
     // ============================== Avatar ==============================
     private func setAvatar(_ urlString: String) {
-        avatar.jobs_setImage(
-            urlString,
-            shimmerConfig: nil,
-            targetSize: CGSize(width: 40, height: 40)
-        )
+        avatar.jobs_setImage(urlString,
+                             shimmerConfig: nil,
+                             targetSize: CGSize(width: 40, height: 40))
     }
     // ============================== Utils ==============================
     private func estimatedRightWidth() -> CGFloat {
         let tableW = contentView.bounds.width
-        return max(0, tableW - (24 + 24 + 40 + 10 + 12))
+        return max(0,
+                   tableW - (24 + 24 + 40 + 10 + 12))
     }
     // ============================== Height Formula ==============================
-    static func heightFormula(for post: MomentPost, tableWidth: CGFloat) -> CGFloat {
+    static func heightFormula(for post: MomentPost,
+                              tableWidth: CGFloat) -> CGFloat {
         let outer: CGFloat = 8 + 8 + 12 + 12
-        let contentW = max(0, tableWidth - (24 + 24 + 40 + 10 + 12))
+        let contentW = max(0,
+                           tableWidth - (24 + 24 + 40 + 10 + 12))
         var heights: [CGFloat] = []
         heights.append(JobsFont.boldSystemFont(ofSize: 15).lineHeight)
         let fullTextCount = post.richText?.string.count ?? post.text.count
         let likelyNeedsMore = fullTextCount > 60
         let textH: CGFloat = {
             if let rich = post.richText {
-                let h = rich.boundingHeight(width: contentW, fontFallback: JobsFont.systemFont(ofSize: 14))
+                let h = rich.boundingHeight(width: contentW,
+                                            fontFallback: JobsFont.systemFont(ofSize: 14))
                 if likelyNeedsMore && !post.isExpanded {
-                    return min(h, ceil(JobsFont.systemFont(ofSize: 14).lineHeight * 3))
+                    return min(h,
+                               ceil(JobsFont.systemFont(ofSize: 14).lineHeight * 3))
                 }
                 // expanded：粗略按真实高度算
                 return h + (likelyNeedsMore ? ceil(JobsFont.systemFont(ofSize: 14).lineHeight) : 0)
             } else {
-                let h = post.text.boundingHeight(width: contentW, font: JobsFont.systemFont(ofSize: 14))
+                let h = post.text.boundingHeight(width: contentW,
+                                                 font: JobsFont.systemFont(ofSize: 14))
                 if likelyNeedsMore && !post.isExpanded {
-                    return min(h, ceil(JobsFont.systemFont(ofSize: 14).lineHeight * 3))
-                };return h + (likelyNeedsMore ? ceil(JobsFont.systemFont(ofSize: 14).lineHeight) : 0)
+                    return min(h,
+                               ceil(JobsFont.systemFont(ofSize: 14).lineHeight * 3))
+                }
+                return h + (likelyNeedsMore ? ceil(JobsFont.systemFont(ofSize: 14).lineHeight) : 0)
             }
         }()
         heights.append(textH)
         if !post.media.isEmpty {
-            heights.append(MomentMediaView.height(for: post.media, width: contentW))
+            heights.append(MomentMediaView.height(for: post.media,
+                                                  width: contentW))
         }
         heights.append(22) // bottomBar
         if !post.comments.isEmpty {
-            let commentsW = max(0, contentW - 16)
+            let commentsW = max(0,
+                                contentW - 16)
             var commentsH: CGFloat = 16
             for (idx, c) in post.comments.enumerated() {
-                let attr = NSMutableAttributedString(
-                    string: "\(c.user)：",
-                    attributes: [.font: JobsFont.systemFont(ofSize: 13, weight: .semibold)]
-                )
-                attr.append(NSAttributedString(string: c.text, attributes: [.font: JobsFont.systemFont(ofSize: 13)]))
-                commentsH += attr.boundingHeight(width: commentsW, fontFallback: JobsFont.systemFont(ofSize: 13))
-                if idx != post.comments.count - 1 { commentsH += 6 }
+                let attr = NSMutableAttributedString(string: "\(c.user)：",
+                                                     attributes: [.font: JobsFont.systemFont(ofSize: 13,
+                                                                                             weight: .semibold)])
+                attr.append(NSAttributedString(string: c.text,
+                                               attributes: [.font: JobsFont.systemFont(ofSize: 13)]))
+                commentsH += attr.boundingHeight(width: commentsW,
+                                                 fontFallback: JobsFont.systemFont(ofSize: 13))
+                if idx != post.comments.count - 1 {
+                    commentsH += 6
+                }
             }
             heights.append(commentsH)
         }
         let spacing: CGFloat = 6
-        let spacingSum = CGFloat(max(0, heights.count - 1)) * spacing
-        let stackH = heights.reduce(0, +) + spacingSum
-        return ceil(outer + max(40, stackH) + 1)
+        let spacingSum = CGFloat(max(0,
+                                     heights.count - 1)) * spacing
+        let stackH = heights.reduce(0,
+                                    +) + spacingSum
+        return ceil(outer + max(40,stackH) + 1)
     }
 }
 // MARK: - DSL
 extension MomentPostCell {
+
     @discardableResult
     func byOnTapMedia(_ cb: CellIntCallback?) -> Self {
         onTapMedia = cb

@@ -19,32 +19,35 @@ import JobsSwiftDSL
 import SnapKit
 
 final class JobsCopiedAppIconPhotosVC: BaseVC {
+
     var onSelectionChanged: ((JobsCopiedAppIconPhoto?) -> Void)?
 
     private let photoStore = JobsCopiedAppIconPhotoStore.shared
     private var photos: [JobsCopiedAppIconPhoto] = []
     private var selectedPhotoIDs: Set<UUID> = []
     private var isEditingPhotos = false {
-        didSet { applyEditingState() }
+        didSet {
+            applyEditingState()
+        }
     }
 
     private lazy var editButton: UIButton = {
         UIButton.sys()
             .byConfiguration(
-                UIButton.Configuration.plain()
-                    .byBaseForegroundColor(JobsCor.label)
-                    .byContentInsets(.zero)
-            )
-            .byImage("pencil".sysImg, for: .normal)
-            .byImage("checkmark".sysImg, for: .selected)
-            .byPreferredSymbolConfiguration(
-                UIImage.SymbolConfiguration(pointSize: 17, weight: .semibold),
-                forImageIn: .normal
-            )
-            .byPreferredSymbolConfiguration(
-                UIImage.SymbolConfiguration(pointSize: 17, weight: .semibold),
-                forImageIn: .selected
-            )
+            UIButton.Configuration.plain()
+                .byBaseForegroundColor(JobsCor.label)
+                .byContentInsets(.zero)
+        )
+            .byImage("pencil".sysImg,
+                     for: .normal)
+            .byImage("checkmark".sysImg,
+                     for: .selected)
+            .byPreferredSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 17,
+                                                                        weight: .semibold),
+                                            forImageIn: .normal)
+            .byPreferredSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 17,
+                                                                        weight: .semibold),
+                                            forImageIn: .selected)
             .onTap { [weak self] _ in
                 self?.isEditingPhotos.toggle()
             }
@@ -57,9 +60,12 @@ final class JobsCopiedAppIconPhotosVC: BaseVC {
         UIButton.sys()
             .byTitle("全部删除".tr)
             .byTitleColor(JobsCor.systemRed)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .medium))
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.isEditingPhotos ? self.confirmDeleteSelectedPhotos() : self.confirmDeleteAllPhotos()
             }
             .byAdd { make in
@@ -68,16 +74,19 @@ final class JobsCopiedAppIconPhotosVC: BaseVC {
     }()
 
     private lazy var emptyStateLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("还没有照片副本\n请返回上页，从相册选择并复制一张照片。".tr)
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
             .byNumberOfLines(0)
     }()
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byBackgroundColor(JobsCor.systemGroupedBackground)
             .byDataSource(self)
             .byDelegate(self)
@@ -110,8 +119,10 @@ final class JobsCopiedAppIconPhotosVC: BaseVC {
 }
 
 private extension JobsCopiedAppIconPhotosVC {
+
     func configureNavigationBar() {
-        jobsSetupGKNav(title: "已复制的照片".tr, rightButtons: [deleteButton])
+        jobsSetupGKNav(title: "已复制的照片".tr,
+                       rightButtons: [deleteButton])
         if let backItem = gk_navLeftBarButtonItem {
             gk_navLeftBarButtonItem = nil
             gk_navLeftBarButtonItems = [
@@ -131,7 +142,9 @@ private extension JobsCopiedAppIconPhotosVC {
     }
 
     func applyEditingState() {
-        guard isViewLoaded else { return }
+        guard isViewLoaded else {
+            return
+        }
         selectedPhotoIDs.removeAll()
         tableView.byEditing(isEditingPhotos)
         editButton.bySelected(isEditingPhotos)
@@ -151,9 +164,12 @@ private extension JobsCopiedAppIconPhotosVC {
     }
 
     func confirmDeleteSelectedPhotos() {
-        guard !selectedPhotoIDs.isEmpty else { return }
+        guard !selectedPhotoIDs.isEmpty else {
+            return
+        }
         UIAlertController
-            .makeAlert("删除所选照片？".tr, "将从 App 私有目录永久删除 \(selectedPhotoIDs.count) 张照片副本。".tr)
+            .makeAlert("删除所选照片？".tr,
+                       "将从 App 私有目录永久删除 \(selectedPhotoIDs.count) 张照片副本。".tr)
             .byAddCancel()
             .byAddDestructive("删除".tr) { [weak self] _ in
                 self?.deleteSelectedPhotos()
@@ -162,9 +178,12 @@ private extension JobsCopiedAppIconPhotosVC {
     }
 
     func confirmDeleteAllPhotos() {
-        guard !photos.isEmpty else { return }
+        guard !photos.isEmpty else {
+            return
+        }
         UIAlertController
-            .makeAlert("全部删除？".tr, "将从 App 私有目录永久删除全部 \(photos.count) 张照片副本。".tr)
+            .makeAlert("全部删除？".tr,
+                       "将从 App 私有目录永久删除全部 \(photos.count) 张照片副本。".tr)
             .byAddCancel()
             .byAddDestructive("全部删除".tr) { [weak self] _ in
                 self?.deleteAllPhotos()
@@ -196,14 +215,18 @@ private extension JobsCopiedAppIconPhotosVC {
 
     func showDeletionError(_ error: Error) {
         UIAlertController
-            .makeAlert("删除失败".tr, error.localizedDescription)
+            .makeAlert("删除失败".tr,
+                       error.localizedDescription)
             .byAddOK()
             .byPresent(self)
     }
 }
 
-extension JobsCopiedAppIconPhotosVC: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension JobsCopiedAppIconPhotosVC: UITableViewDataSource,
+                                     UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
         photos.count
     }
 
@@ -211,16 +234,18 @@ extension JobsCopiedAppIconPhotosVC: UITableViewDataSource, UITableViewDelegate 
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let photo = photos[indexPath.row]
         return tableView
-            .byDequeueReusableCell(withType: JobsCopiedAppIconPhotoCell.self, for: indexPath)
-            .byPhoto(
-                photo,
-                image: photoStore.image(for: photo),
-                isCurrent: photo.id == photoStore.selectedPhotoID
-            )
+            .byDequeueReusableCell(withType: JobsCopiedAppIconPhotoCell.self,
+                                   for: indexPath)
+            .byPhoto(photo,
+                     image: photoStore.image(for: photo),
+                     isCurrent: photo.id == photoStore.selectedPhotoID)
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard photos.indices.contains(indexPath.row) else { return }
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
+        guard photos.indices.contains(indexPath.row) else {
+            return
+        }
         let photo = photos[indexPath.row]
         if isEditingPhotos {
             selectedPhotoIDs.insert(photo.id)
@@ -233,8 +258,11 @@ extension JobsCopiedAppIconPhotosVC: UITableViewDataSource, UITableViewDelegate 
         }
     }
 
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        guard isEditingPhotos, photos.indices.contains(indexPath.row) else { return }
+    func tableView(_ tableView: UITableView,
+                   didDeselectRowAt indexPath: IndexPath) {
+        guard isEditingPhotos, photos.indices.contains(indexPath.row) else {
+            return
+        }
         selectedPhotoIDs.remove(photos[indexPath.row].id)
         updateNavigationButtons()
     }
@@ -249,7 +277,8 @@ extension JobsCopiedAppIconPhotosVC: UITableViewDataSource, UITableViewDelegate 
         true
     }
 
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    func tableView(_ tableView: UITableView,
+                   canEditRowAt indexPath: IndexPath) -> Bool {
         true
     }
 }

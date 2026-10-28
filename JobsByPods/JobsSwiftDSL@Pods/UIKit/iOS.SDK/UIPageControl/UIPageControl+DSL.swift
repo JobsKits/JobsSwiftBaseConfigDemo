@@ -13,6 +13,7 @@ import UIKit
 
 // MARK: - 直接赋值@单参数
 extension UIPageControl {
+
     @discardableResult
     public func byNumberOfPages(_ count: Int) -> Self {
         self.numberOfPages = count
@@ -39,6 +40,7 @@ extension UIPageControl {
 }
 // MARK: - 闭包重载@单参数
 extension UIPageControl {
+
     @discardableResult
     public func byNumberOfPages(_ builder: () -> Int) -> Self {
         self.numberOfPages = builder()

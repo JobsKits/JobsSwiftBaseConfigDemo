@@ -13,23 +13,20 @@ import UIKit
 
 @available(iOS 13.0, tvOS 13.0, *)
 public extension UIAction {
-    static func make(
-        title: String,
-        image: UIImage? = nil,
-        identifier: UIAction.Identifier? = nil,
-        discoverabilityTitle: String? = nil,
-        attributes: UIMenuElement.Attributes = [],
-        state: UIMenuElement.State = .off,
-        handler: @escaping UIActionHandler
-    ) -> UIAction {
-        UIAction(
-            title: title,
-            image: image,
-            identifier: identifier,
-            discoverabilityTitle: discoverabilityTitle,
-            attributes: attributes,
-            state: state,
-            handler: handler
-        )
+
+    static func make(title: String,
+                     image: UIImage? = nil,
+                     identifier: UIAction.Identifier? = nil,
+                     discoverabilityTitle: String? = nil,
+                     attributes: UIMenuElement.Attributes = [],
+                     state: UIMenuElement.State = .off,
+                     handler: @escaping UIActionHandler) -> UIAction {
+        UIAction(title: title,
+                 image: image,
+                 identifier: identifier,
+                 discoverabilityTitle: discoverabilityTitle,
+                 attributes: attributes,
+                 state: state,
+                 handler: handler)
     }
 }

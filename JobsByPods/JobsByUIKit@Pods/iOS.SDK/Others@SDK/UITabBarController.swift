@@ -12,15 +12,18 @@ import UIKit
 #endif
 
 extension UITabBarController {
+
     @discardableResult
     public func byViewControllersByAnimated(_ controllers: [UIViewController]) -> Self {
-        self.setViewControllers(controllers, animated: true)
+        self.setViewControllers(controllers,
+                                animated: true)
         return self
     }
 
     @discardableResult
     public func byViewControllers(_ controllers: [UIViewController]) -> Self {
-        self.setViewControllers(controllers, animated: false)
+        self.setViewControllers(controllers,
+                                animated: false)
         return self
     }
 

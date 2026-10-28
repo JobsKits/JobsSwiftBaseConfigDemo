@@ -17,21 +17,29 @@ import JobsSwiftBaseDefines
 
 // MARK: - UITextField 输入监听
 extension UITextField {
+
     /// 输入监听（默认不限制）
     /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
     @discardableResult
     public func byOnInput(limit: Int? = nil,
                           _ callback: @escaping (_ char: String,
-                                                 _ value: String,
-                                                 _ mode: JobsTextInputMode,
-                                                 _ isLimited: Bool,
-                                                 _ text: String,
-                                                 _ tv: UITextField) -> Void) -> Self {
+            _ value: String,
+            _ mode: JobsTextInputMode,
+            _ isLimited: Bool,
+            _ text: String,
+            _ tv: UITextField) -> Void) -> Self {
         let obs = jobs_textInputObserver
         obs.limit = limit
         obs.onInput = { [weak self] char, value, mode, isLimited in
-            guard let self else { return }
-            callback(char, value, mode, isLimited, self.text ?? "", self)
+            guard let self else {
+                return
+            }
+            callback(char,
+                     value,
+                     mode,
+                     isLimited,
+                     self.text ?? "",
+                     self)
         }
         let proxy = installDelegateProxyIfNeeded()
         proxy.forward = obs
@@ -60,7 +68,9 @@ extension UITextField {
     }
 }
 // MARK: - UITextField 系统的删除键监听
-public final class UITextFieldDelegateProxy: NSObject, UITextFieldDelegate {
+public final class UITextFieldDelegateProxy: NSObject,
+                                             UITextFieldDelegate {
+
     /// 负责“输入监听”的真实 delegate（你的 jobs_textInputObserver）
     weak var forward: UITextFieldDelegate?
     /// jobs_textInputObserver 用来转发的“原 delegate”
@@ -69,17 +79,28 @@ public final class UITextFieldDelegateProxy: NSObject, UITextFieldDelegate {
     var shouldClear: ((UITextField) -> Bool)?
     // 关键：把没实现的 delegate 方法全转发给 forward
     public override func forwardingTarget(for aSelector: Selector!) -> Any? {
-        if let forward, forward.responds(to: aSelector) { return forward };return super.forwardingTarget(for: aSelector)
+        if let forward, forward.responds(to: aSelector) {
+            return forward
+        }
+        return super.forwardingTarget(for: aSelector)
     }
 
     public override func responds(to aSelector: Selector!) -> Bool {
-        if super.responds(to: aSelector) { return true }
-        if let forward, forward.responds(to: aSelector) { return true };return false
+        if super.responds(to: aSelector) {
+            return true
+        }
+        if let forward, forward.responds(to: aSelector) {
+            return true
+        }
+        return false
     }
 
     // 我们只拦截 clear
     public func textFieldShouldClear(_ textField: UITextField) -> Bool {
-        if let shouldClear { return shouldClear(textField) };return forward?.textFieldShouldClear?(textField)
+        if let shouldClear {
+            return shouldClear(textField)
+        }
+        return forward?.textFieldShouldClear?(textField)
             ?? original?.textFieldShouldClear?(textField)
             ?? true
     }
@@ -87,12 +108,17 @@ public final class UITextFieldDelegateProxy: NSObject, UITextFieldDelegate {
 
 private var tfProxyKey: UInt8 = 0
 public extension UITextField {
+
     var textFieldDelegateProxy: UITextFieldDelegateProxy {
-        if let p = objc_getAssociatedObject(self, &tfProxyKey) as? UITextFieldDelegateProxy {
+        if let p = objc_getAssociatedObject(self,
+                                            &tfProxyKey) as? UITextFieldDelegateProxy {
             return p
         }
         let p = UITextFieldDelegateProxy()
-        objc_setAssociatedObject(self, &tfProxyKey, p, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(self,
+                                 &tfProxyKey,
+                                 p,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return p
     }
     /// 确保 proxy 是 delegate（永远不被覆盖）
@@ -103,7 +129,8 @@ public extension UITextField {
             // 记录当时的 delegate 作为 original，供 obs 转发
             p.original = delegate
             delegate = p
-        };return p
+        }
+        return p
     }
     /// 链式监听系统 clear
     @discardableResult

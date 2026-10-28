@@ -22,6 +22,7 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class AnimationEffectLabelDemoVC: BaseVC {
+
     // MARK: - Config
     private let horizontalInset: CGFloat = 16
     private let cardInset: CGFloat = 16
@@ -31,7 +32,8 @@ final class AnimationEffectLabelDemoVC: BaseVC {
     private let defaultEnd: Double = 0
     // MARK: - UI
     private lazy var cardView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(16)
             .byAddTo(view) { [unowned self] make in
@@ -46,14 +48,17 @@ final class AnimationEffectLabelDemoVC: BaseVC {
     }()
 
     private lazy var valueLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextAlignment(.center)
-            .byFont(JobsFont.systemFont(ofSize: 52, weight: .bold))
+            .byFont(JobsFont.systemFont(ofSize: 52,
+                                        weight: .bold))
             .byTextColor(JobsCor.label)
             .byText("\(Int(defaultStart))")
             .byNumberOfLines(1)
-            /// 配置@数字动效
-            .byAnimatedTextNumber(duration: 0.9, minimumInterval: 1.0 / 60.0)
+        /// 配置@数字动效
+        .byAnimatedTextNumber(duration: 0.9,
+                              minimumInterval: 1.0 / 60.0)
             .byAddTo(cardView) { [unowned self] make in
                 make.top.equalToSuperview().offset(24)
                 make.left.equalToSuperview().offset(self.cardInset)
@@ -62,7 +67,8 @@ final class AnimationEffectLabelDemoVC: BaseVC {
     }()
 
     private lazy var hintLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextAlignment(.center)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)
@@ -92,22 +98,28 @@ final class AnimationEffectLabelDemoVC: BaseVC {
                     .byReturnKeyType(.next)
                     .byClearButtonMode(.whileEditing)
                     .onShouldClear { [weak self] tf in
-                        guard let self else { return true }
+                        guard let self else {
+                            return true
+                        }
                         self.syncStartTextToLabel("\(Int(defaultStart))")
-//                        self.startTF.textField.byText("")
+                    //                        self.startTF.textField.byText("")
                         return true                   // true 允许清空；false 拦截
                     }
-                    /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
-                    .byOnInput(limit: 20) { [weak self] char, value, mode, isLimited ,text ,tf in
-                        // text 就是当前 UITextField.text（保证不是 nil，空就是 ""）
-                        // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
-                        // char：删除/回车时为 ""
-                        // mode：space/delete/return/normal
-                        // isLimited：是否设置了限制（limit != nil）
-                        guard let self else { return }
-                        // 去空格 + 只保留数字格式
+                /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+                .byOnInput(limit: 20) { [weak self] char, value, mode, isLimited , text , tf in
+                    // text 就是当前 UITextField.text（保证不是 nil，空就是 ""）
+                    // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+                    // char：删除/回车时为 ""
+                    // mode：space/delete/return/normal
+                    // isLimited：是否设置了限制（limit != nil）
+                        guard let self else {
+                            return
+                        }
+                    // 去空格 + 只保留数字格式
                         let trimmed = value.trimmingCharacters(in: .whitespaces)
-                        if trimmed != value { self.startTF.byText(trimmed) }
+                        if trimmed != value {
+                            self.startTF.byText(trimmed)
+                        }
                         self.filterNumericInPlace(self.startTF.textField)
                         self.syncStartTextToLabel(value)
                     }
@@ -126,7 +138,7 @@ final class AnimationEffectLabelDemoVC: BaseVC {
             .byMasksToBounds(YES)
             .byClipsToBounds(YES)
             .byCornerRadius(4.h)
-        }()
+    }()
     /// 终点输入框（placeholder=0）
     private lazy var endTF: JobsTextField = {
         JobsTextField()
@@ -142,16 +154,20 @@ final class AnimationEffectLabelDemoVC: BaseVC {
                     .byKeyboardType(.default)
                     .byReturnKeyType(.next)
                     .byClearButtonMode(.whileEditing)
-                    /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
-                    .byOnInput(limit: 20) { [weak self] char, value, mode, isLimited ,text ,tf in
-                        // text 就是当前 UITextField.text（保证不是 nil，空就是 ""）
-                        // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
-                        // char：删除/回车时为 ""
-                        // mode：space/delete/return/normal
-                        // isLimited：是否设置了限制（limit != nil）
-                        guard let self else { return }
+                /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+                .byOnInput(limit: 20) { [weak self] char, value, mode, isLimited , text , tf in
+                    // text 就是当前 UITextField.text（保证不是 nil，空就是 ""）
+                    // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+                    // char：删除/回车时为 ""
+                    // mode：space/delete/return/normal
+                    // isLimited：是否设置了限制（limit != nil）
+                        guard let self else {
+                            return
+                        }
                         let trimmed = value.trimmingCharacters(in: .whitespaces)
-                        if trimmed != value { self.endTF.byText(trimmed) }
+                        if trimmed != value {
+                            self.endTF.byText(trimmed)
+                        }
                         self.filterNumericInPlace(self.endTF.textField)
                     }
             })
@@ -171,20 +187,25 @@ final class AnimationEffectLabelDemoVC: BaseVC {
             .byMasksToBounds(YES)
             .byClipsToBounds(YES)
             .byCornerRadius(4.h)
-        }()
+    }()
     // MARK: - Buttons
     private lazy var startBtn: UIButton = {
         UIButton.sys()
-            .byTitle("启动".tr, for: .normal)
-            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
-            .byTitleColor(JobsCor.systemRed, for: .normal)
-            /// 普通@点按事件触发
-            .onTap { [weak self] _ in
-                guard let self else { return }
+            .byTitle("启动".tr,
+                     for: .normal)
+            .byBackgroundColor(JobsCor.systemGreen,
+                               for: .normal)
+            .byTitleColor(JobsCor.systemRed,
+                          for: .normal)
+        /// 普通@点按事件触发
+        .onTap { [weak self] _ in
+                guard let self else {
+                    return
+                }
                 self.view.endEditing(true)
                 let startRaw = (self.startTF.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
                 let endRaw   = (self.endTF.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-                // 规则：允许为空（走 fallback），但只要非空就必须是纯数字
+            // 规则：允许为空（走 fallback），但只要非空就必须是纯数字
                 if !startRaw.isEmpty && !startRaw.isPureNumber {
                     "❌ 起点不是纯数字：\(startRaw)".toast
                     return
@@ -193,22 +214,23 @@ final class AnimationEffectLabelDemoVC: BaseVC {
                     "❌ 终点不是纯数字：\(endRaw)".toast
                     return
                 }
-                let startValue = self.parseValue(startRaw, fallback: self.defaultStart)
-                let endValue   = self.parseValue(endRaw,   fallback: self.defaultEnd)
+                let startValue = self.parseValue(startRaw,
+                                                 fallback: self.defaultStart)
+                let endValue   = self.parseValue(endRaw,
+                                                 fallback: self.defaultEnd)
                 let endText = self.formatTargetText(endValue)
                 if endText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    "❌ 目标值为空".tr.toast; return
+                    "❌ 目标值为空".tr.toast
+                    return
                 }
-                /// 启动@数字动效
+            /// 启动@数字动效
                 self.valueLabel
                     .byStopAnimatedTextNumber()
-                    .byAnimatedTextNumber(
-                        start: startValue,
-                        step: nil,
-                        duration: 0.9,
-                        minimumInterval: 1.0 / 60.0,
-                        completion: nil
-                    )
+                    .byAnimatedTextNumber(start: startValue,
+                                          step: nil,
+                                          duration: 0.9,
+                                          minimumInterval: 1.0 / 60.0,
+                                          completion: nil)
                     .byStartAnimatedTextNumber(endText)
             }
             .byAddTo(view) { [unowned self] make in
@@ -220,12 +242,17 @@ final class AnimationEffectLabelDemoVC: BaseVC {
 
     private lazy var stopBtn: UIButton = {
         UIButton.sys()
-            .byTitle("停止".tr, for: .normal)
-            .byBackgroundColor(JobsCor.systemOrange, for: .normal)
-            .byTitleColor(JobsCor.systemBlue, for: .normal)
-            /// 普通@点按事件触发
-            .onTap { [weak self] _ in
-                guard let self else { return }
+            .byTitle("停止".tr,
+                     for: .normal)
+            .byBackgroundColor(JobsCor.systemOrange,
+                               for: .normal)
+            .byTitleColor(JobsCor.systemBlue,
+                          for: .normal)
+        /// 普通@点按事件触发
+        .onTap { [weak self] _ in
+                guard let self else {
+                    return
+                }
                 self.valueLabel.byStopAnimatedTextNumber()
             }
             .byAddTo(view) { [unowned self] make in
@@ -256,6 +283,7 @@ final class AnimationEffectLabelDemoVC: BaseVC {
 }
 
 extension AnimationEffectLabelDemoVC {
+
     // MARK: - Helpers
     private func syncStartTextToLabel(_ str: String?) {
         let raw = (str ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
@@ -290,17 +318,24 @@ extension AnimationEffectLabelDemoVC {
                 result.append(ch)
                 continue
             }
-        };return result
+        }
+        return result
     }
 
-    private func parseValue(_ text: String?, fallback: Double) -> Double {
+    private func parseValue(_ text: String?,
+                            fallback: Double) -> Double {
         let t = (text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-        if t.isEmpty { return fallback };return Double(t) ?? fallback
+        if t.isEmpty {
+            return fallback
+        }
+        return Double(t) ?? fallback
     }
     /// 终点展示：整数不带小数；小数保留 2 位（你想保留“输入的原始小数位数”也能做）
     private func formatTargetText(_ value: Double) -> String {
         if value.rounded() == value {
             return "\(Int(value))"
-        };return String(format: "%.2f", value)
+        }
+        return String(format: "%.2f",
+                      value)
     }
 }

@@ -16,17 +16,21 @@ import JobsSwiftBlock
 import JobsSwiftBaseDefines
 
 extension WKWebView {
+
     /// 带配置的创建入口；WebsiteDataStore 必须在 WebView 创建前注入。
     public static func make(configuration: WKWebViewConfiguration,
                             configure: (WKWebView) -> Void = { _ in }) -> WKWebView {
-        let webView = WKWebView(frame: .zero, configuration: configuration)
+        let webView = WKWebView(frame: .zero,
+                                configuration: configuration)
         configure(webView)
         return webView
     }
 
     @discardableResult
-    public func byLoadFileURL(_ url: URL, allowingReadAccessTo directory: URL) -> Self {
-        loadFileURL(url, allowingReadAccessTo: directory)
+    public func byLoadFileURL(_ url: URL,
+                              allowingReadAccessTo directory: URL) -> Self {
+        loadFileURL(url,
+                    allowingReadAccessTo: directory)
         return self
     }
 
@@ -50,7 +54,9 @@ extension WKWebView {
 
     @discardableResult
     public func loadURL(_ urlString: String) -> Self {
-        guard let url = URL(string: urlString) else { return self }
+        guard let url = URL(string: urlString) else {
+            return self
+        }
         let request = URLRequest(url: url)
         self.load(request)
         return self
@@ -65,16 +71,21 @@ extension WKWebView {
     /// - Parameter enabled: 是否开启；传 nil 时不做任何处理
     @discardableResult
     public func byInspectable(_ enabled: Bool? = true) -> Self {
-        guard let enabled else { return self }
+        guard let enabled else {
+            return self
+        }
         if #available(iOS 16.4, *) {
             isInspectable = enabled
-        };return self
+        }
+        return self
     }
     /// 设置 customUserAgent
     /// - Parameter userAgent: 传 nil 时不做处理
     @discardableResult
     public func byCustomUserAgent(_ userAgent: String? = nil) -> Self {
-        guard let userAgent else { return self }
+        guard let userAgent else {
+            return self
+        }
         self.customUserAgent = userAgent
         return self
     }
@@ -109,20 +120,25 @@ extension WKWebView {
             configuration.defaultWebpagePreferences.allowsContentJavaScript = enabled
         } else {
             configuration.preferences.javaScriptEnabled = enabled
-        };return self
+        }
+        return self
     }
 }
 @MainActor
 extension WKWebView {
+
     /// fire-and-forget：不关心回调
     public func jobsEval(_ js: String) {
         if #available(iOS 15.0, *) {
             onMainAsync { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 try? await self.evaluateJavaScript(js)
             }
         } else {
-            self.evaluateJavaScript(js, completionHandler: nil)
+            self.evaluateJavaScript(js,
+                                    completionHandler: nil)
         }
     }
     /// 带回调（@Sendable 友好）
@@ -130,16 +146,21 @@ extension WKWebView {
                          completion: JobsByAnyErrMASendableBlock?) {
         if #available(iOS 15.0, *) {
             onMainAsync { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 do {
                     let result = try await self.evaluateJavaScript(js)
-                    completion?(result, nil)
+                    completion?(result,
+                                nil)
                 } catch {
-                    completion?(nil, error)
+                    completion?(nil,
+                                error)
                 }
             }
         } else {
-            self.evaluateJavaScript(js, completionHandler: completion)
+            self.evaluateJavaScript(js,
+                                    completionHandler: completion)
         }
     }
 }

@@ -15,6 +15,7 @@ import UIKit
 import JXSegmentedView
 // MARK: - TitleOrImageDataSource
 extension JXSegmentedTitleOrImageDataSource {
+
     /// 选中态的图片信息（支持 imageName / URL 等，按官方 DataSource 定义）
     @discardableResult
     public func bySelectedImageInfos(_ v: [String?]?) -> Self {

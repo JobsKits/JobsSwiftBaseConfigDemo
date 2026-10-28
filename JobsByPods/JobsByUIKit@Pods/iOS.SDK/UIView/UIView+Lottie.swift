@@ -18,14 +18,24 @@ import JobsSwiftDSL
 import SnapKit
 import Lottie
 public extension UIView {
+
     // 关联存储：挂载在任意 UIView 上的唯一 LottieAnimationView（够用了；要多实例你可以自行扩展一个池）
     private struct _JobsLottieAssoc {
+
         static var viewKey: UInt8 = 0
     }
     /// 当前挂载在该视图上的 Lottie 动画视图
     var jobs_lottieView: LottieAnimationView? {
-        get { objc_getAssociatedObject(self, &_JobsLottieAssoc.viewKey) as? LottieAnimationView }
-        set { objc_setAssociatedObject(self, &_JobsLottieAssoc.viewKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        get {
+            objc_getAssociatedObject(self,
+                                     &_JobsLottieAssoc.viewKey) as? LottieAnimationView
+        }
+        set {
+            objc_setAssociatedObject(self,
+                                     &_JobsLottieAssoc.viewKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
     // MARK: 入口：按资源名创建并挂载
     /// 在当前 UIView 上创建并挂载一个 Lottie 动画（默认贴满父视图）
@@ -41,19 +51,20 @@ public extension UIView {
     ///   - configure: 最后补充配置（可选）
     /// - Returns: 新建并已挂载的 LottieAnimationView（链式继续 .play() 等）
     @discardableResult
-    public func byLottieAnimation(
-        _ name: String,
-        bundle: Bundle = .main,
-        loop: LottieLoopMode = .loop,
-        speed: CGFloat = 1.0,
-        contentMode: UIView.ContentMode = .scaleAspectFit,
-        backgroundBehavior: LottieBackgroundBehavior = .pauseAndRestore,
-        autoPlay: Bool = false,
-        makeConstraints: ((ConstraintMaker) -> Void)? = { $0.edges.equalToSuperview() },
-        configure: ((LottieAnimationView) -> Void)? = nil
-    ) -> LottieAnimationView {
+    public func byLottieAnimation(_ name: String,
+                                  bundle: Bundle = .main,
+                                  loop: LottieLoopMode = .loop,
+                                  speed: CGFloat = 1.0,
+                                  contentMode: UIView.ContentMode = .scaleAspectFit,
+                                  backgroundBehavior: LottieBackgroundBehavior = .pauseAndRestore,
+                                  autoPlay: Bool = false,
+                                  makeConstraints: ((ConstraintMaker) -> Void)? = {
+        $0.edges.equalToSuperview()
+    },
+                                  configure: ((LottieAnimationView) -> Void)? = nil) -> LottieAnimationView {
         // 1) 创建
-        let lottieView = LottieAnimationView(name: name, bundle: bundle)
+        let lottieView = LottieAnimationView(name: name,
+                                             bundle: bundle)
             .bySpeed(speed)
             .byLoop(loop)
             .byLottieContentMode(contentMode)
@@ -70,21 +81,24 @@ public extension UIView {
         // 4) 记录引用
         self.jobs_lottieView = lottieView
         // 5) 自动播放（可选）
-        if autoPlay { lottieView.play() };return lottieView
+        if autoPlay {
+            lottieView.play()
+        }
+        return lottieView
     }
     // MARK: 入口（重载）：直接传 LottieAnimation
     /// 你也可以先用 `LottieAnimation.named(...)` 自行解析，再走这个重载
     @discardableResult
-    public func byLottieAnimation(
-        _ animation: LottieAnimation,
-        loop: LottieLoopMode = .loop,
-        speed: CGFloat = 1.0,
-        contentMode: UIView.ContentMode = .scaleAspectFit,
-        backgroundBehavior: LottieBackgroundBehavior = .pauseAndRestore,
-        autoPlay: Bool = false,
-        makeConstraints: ((ConstraintMaker) -> Void)? = { $0.edges.equalToSuperview() },
-        configure: ((LottieAnimationView) -> Void)? = nil
-    ) -> LottieAnimationView {
+    public func byLottieAnimation(_ animation: LottieAnimation,
+                                  loop: LottieLoopMode = .loop,
+                                  speed: CGFloat = 1.0,
+                                  contentMode: UIView.ContentMode = .scaleAspectFit,
+                                  backgroundBehavior: LottieBackgroundBehavior = .pauseAndRestore,
+                                  autoPlay: Bool = false,
+                                  makeConstraints: ((ConstraintMaker) -> Void)? = {
+        $0.edges.equalToSuperview()
+    },
+                                  configure: ((LottieAnimationView) -> Void)? = nil) -> LottieAnimationView {
         let lottieView = LottieAnimationView(animation: animation)
         lottieView.loopMode = loop
         lottieView.animationSpeed = speed
@@ -98,7 +112,10 @@ public extension UIView {
         }
         configure?(lottieView)
         self.jobs_lottieView = lottieView
-        if autoPlay { lottieView.play() };return lottieView
+        if autoPlay {
+            lottieView.play()
+        }
+        return lottieView
     }
     // MARK: - UIView 层便捷控制（保持语义链式）
     @discardableResult
@@ -116,20 +133,32 @@ public extension UIView {
     @discardableResult
     public func lottieStop(resetToBeginning: Bool = false) -> Self {
         jobs_lottieView?.stop()
-        if resetToBeginning { jobs_lottieView?.currentProgress = 0 };return self
+        if resetToBeginning {
+            jobs_lottieView?.currentProgress = 0
+        }
+        return self
     }
     /// 设置进度（0~1）
     @discardableResult
     public func lottieProgress(_ progress: CGFloat) -> Self {
-        jobs_lottieView?.currentProgress = min(max(progress, 0), 1)
+        jobs_lottieView?.currentProgress = min(max(progress,0),
+                                               1)
         return self
     }
     /// 替换动画资源（保留其他播放参数）
     @discardableResult
-    public func lottieReplace(name: String, bundle: Bundle = .main, autoPlay: Bool = false) -> Self {
-        guard let v = jobs_lottieView else { return self }
-        v.animation = LottieAnimation.named(name, bundle: bundle)
-        if autoPlay { v.play() };return self
+    public func lottieReplace(name: String,
+                              bundle: Bundle = .main,
+                              autoPlay: Bool = false) -> Self {
+        guard let v = jobs_lottieView else {
+            return self
+        }
+        v.animation = LottieAnimation.named(name,
+                                            bundle: bundle)
+        if autoPlay {
+            v.play()
+        }
+        return self
     }
     /// 卸载当前挂载的 Lottie 视图
     @discardableResult
@@ -141,14 +170,24 @@ public extension UIView {
 }
 // MARK: - LottieAnimationView 小型 DSL（可选：增强链式体验）
 public extension LottieAnimationView {
-    @discardableResult
-    func byLoop(_ mode: LottieLoopMode) -> Self { loopMode = mode; return self }
 
     @discardableResult
-    func bySpeed(_ value: CGFloat) -> Self { animationSpeed = value; return self }
+    func byLoop(_ mode: LottieLoopMode) -> Self {
+        loopMode = mode
+        return self
+    }
 
     @discardableResult
-    func byLottieContentMode(_ mode: UIView.ContentMode) -> Self { contentMode = mode; return self }
+    func bySpeed(_ value: CGFloat) -> Self {
+        animationSpeed = value
+        return self
+    }
+
+    @discardableResult
+    func byLottieContentMode(_ mode: UIView.ContentMode) -> Self {
+        contentMode = mode
+        return self
+    }
 
     @discardableResult
     func byBackgroundBehavior(_ behavior: LottieBackgroundBehavior) -> Self {

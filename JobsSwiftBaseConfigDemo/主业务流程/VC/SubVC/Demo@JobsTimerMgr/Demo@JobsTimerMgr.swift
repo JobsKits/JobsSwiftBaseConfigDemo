@@ -25,15 +25,20 @@ import SnapKit
 import GKNavigationBarSwift
 
 // MARK: - Demo Timer ID
-private enum JobsTimerMgrDemoID: String, JobsSwiftTimerIdentifiable {
+private enum JobsTimerMgrDemoID: String,
+                                 JobsSwiftTimerIdentifiable {
+
     case A_pauseResume
     case B_cancelInBackground
     case C_oneShot
 
-    var identifier: String? { "com.jobs.demo.timer.\(rawValue)" }
+    var identifier: String? {
+        "com.jobs.demo.timer.\(rawValue)"
+    }
 }
 // MARK: - UI Bridge（规避 @Sendable 闭包直接抓 VC）
 private final class JobsTimerMgrDemoUIBridge: @unchecked Sendable {
+
     weak var vc: JobsTimerMgrDemoVC?
 
     private var aCount = 0
@@ -89,6 +94,7 @@ private final class JobsTimerMgrDemoUIBridge: @unchecked Sendable {
 }
 // MARK: - VC
 final class JobsTimerMgrDemoVC: BaseVC {
+
     private let horizontalInset: CGFloat = 16
     private let sectionGap: CGFloat = 14
     private let buttonHeight: CGFloat = 48
@@ -101,7 +107,8 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private var aAutoPausedInBackground = false
     // MARK: - UI
     private lazy var scrollView: UIScrollView = {
-        UIScrollView.jobsMake { _ in }
+        UIScrollView
+            .jobsMake { _ in }
             .byAlwaysBounceVertical(YES)
             .byShowsVerticalScrollIndicator(NO)
             .byBackgroundColor(JobsCor.clear)
@@ -116,7 +123,8 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalTo(self.scrollView.contentLayoutGuide)
@@ -125,25 +133,28 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var heroTitleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("一个管理器，统一驾驭三种计时内核".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 23))
             .byTextColor(JobsCor.label)
             .byNumberOfLines(0)
-            .byAddTo(contentView) {[unowned self] make in
+            .byAddTo(contentView) { [unowned self] make in
                 make.top.equalToSuperview().offset(20)
                 make.left.right.equalToSuperview().inset(self.horizontalInset)
             }
     }()
 
     private lazy var heroDetailLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText(
-                "JobsSwiftTimerMgr 的价值不是“再造一个 Timer”，而是给 GCD、DisplayLink、NSTimer 加上统一的 identifier 管理、去重替换、暂停恢复、后台策略和集中清理。下面按步骤操作，状态与日志会同步变化。".tr
-            )
+            "JobsSwiftTimerMgr 的价值不是“再造一个 Timer”，而是给 GCD、DisplayLink、NSTimer 加上统一的 identifier 管理、去重替换、暂停恢复、后台策略和集中清理。下面按步骤操作，状态与日志会同步变化。".tr
+        )
             .byNumberOfLines(0)
             .byLineBreakMode(.byWordWrapping)
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 14,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(self.heroTitleLabel.snp.bottom).offset(8)
@@ -158,9 +169,11 @@ final class JobsTimerMgrDemoVC: BaseVC {
         }
 
     private lazy var guideTitleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("这个 Demo 要证明什么？".tr)
-            .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
+            .byFont(JobsFont.systemFont(ofSize: 16,
+                                        weight: .bold))
             .byTextColor(JobsCor.label)
             .byAddTo(guideCard) { make in
                 make.top.equalToSuperview().offset(16)
@@ -169,16 +182,18 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var guideDetailLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText(
-                "① 同一个 identifier 只保留一个 Timer，新建时可原位替换旧实例。\n" +
+            "① 同一个 identifier 只保留一个 Timer，新建时可原位替换旧实例。\n" +
                 "② A 支持暂停 / 恢复，并能区分“手动暂停”和“后台自动暂停”。\n" +
                 "③ B 进入后台后直接停止并从管理器移除。\n" +
                 "④ OneShot 只触发一次，完成后自动清理。"
-            )
+        )
             .byNumberOfLines(0)
             .byLineBreakMode(.byWordWrapping)
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 14,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(guideCard) { [unowned self] make in
                 make.top.equalTo(self.guideTitleLabel.snp.bottom).offset(8)
@@ -194,9 +209,11 @@ final class JobsTimerMgrDemoVC: BaseVC {
         }
 
     private lazy var kindTitleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("先选择 A 的计时内核".tr)
-            .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
+            .byFont(JobsFont.systemFont(ofSize: 16,
+                                        weight: .bold))
             .byTextColor(JobsCor.label)
             .byAddTo(kindCard) { make in
                 make.top.equalToSuperview().offset(16)
@@ -205,11 +222,13 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var kindDetailLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("选择只影响 A；点击“同 ID 替换 A”会切换到下一个内核，但 identifier 保持不变。".tr)
             .byNumberOfLines(0)
             .byLineBreakMode(.byWordWrapping)
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(kindCard) { [unowned self] make in
                 make.top.equalTo(self.kindTitleLabel.snp.bottom).offset(6)
@@ -231,10 +250,12 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var kindFootnoteLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("当前 GCD：适合普通周期任务，按秒观察最直观。".tr)
             .byNumberOfLines(0)
-            .byFont(JobsFont.systemFont(ofSize: 12, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 12,
+                                        weight: .medium))
             .byTextColor(JobsCor.systemBlue)
             .byAddTo(kindCard) { [unowned self] make in
                 make.top.equalTo(self.kindSegment.snp.bottom).offset(8)
@@ -250,9 +271,11 @@ final class JobsTimerMgrDemoVC: BaseVC {
         }
 
     private lazy var statusTitleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("实时实验状态".tr)
-            .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
+            .byFont(JobsFont.systemFont(ofSize: 16,
+                                        weight: .bold))
             .byTextColor(JobsCor.label)
             .byAddTo(statusCard) { make in
                 make.top.equalToSuperview().offset(16)
@@ -261,11 +284,13 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     fileprivate lazy var statusLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("等待开始：先创建 A + B，再按下面的实验顺序操作。".tr)
             .byNumberOfLines(0)
             .byLineBreakMode(.byWordWrapping)
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(statusCard) { [unowned self] make in
                 make.top.equalTo(self.statusTitleLabel.snp.bottom).offset(6)
@@ -278,11 +303,13 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private lazy var oneShotMetricView: UIView = makeMetricView()
 
     fileprivate lazy var countALabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("A 持续任务\n0 次")
             .byNumberOfLines(2)
             .byTextAlignment(.center)
-            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 13, weight: .semibold))
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 13,
+                                                       weight: .semibold))
             .byTextColor(JobsCor.label)
             .byAddTo(aMetricView) { make in
                 make.edges.equalToSuperview().inset(6)
@@ -290,11 +317,13 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     fileprivate lazy var countBLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("B 后台取消\n0 次")
             .byNumberOfLines(2)
             .byTextAlignment(.center)
-            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 13, weight: .semibold))
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 13,
+                                                       weight: .semibold))
             .byTextColor(JobsCor.label)
             .byAddTo(bMetricView) { make in
                 make.edges.equalToSuperview().inset(6)
@@ -302,11 +331,13 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     fileprivate lazy var oneShotLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("一次性任务\n未启动")
             .byNumberOfLines(2)
             .byTextAlignment(.center)
-            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 13, weight: .semibold))
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 13,
+                                                       weight: .semibold))
             .byTextColor(JobsCor.label)
             .byAddTo(oneShotMetricView) { make in
                 make.edges.equalToSuperview().inset(6)
@@ -347,9 +378,12 @@ final class JobsTimerMgrDemoVC: BaseVC {
         }
 
     private lazy var createBtn: UIButton = { [unowned self] in
-        makeActionButton("创建 A + B", color: JobsCor.systemGreen)
+        makeActionButton("创建 A + B",
+                         color: JobsCor.systemGreen)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     vc.createTimers()
                 }
@@ -357,9 +391,12 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var replaceABtn: UIButton = { [unowned self] in
-        makeActionButton("同 ID 替换 A", color: JobsCor.systemBlue)
+        makeActionButton("同 ID 替换 A",
+                         color: JobsCor.systemBlue)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     vc.replaceA()
                 }
@@ -400,9 +437,12 @@ final class JobsTimerMgrDemoVC: BaseVC {
         }
 
     private lazy var pauseABtn: UIButton = { [unowned self] in
-        makeActionButton("手动暂停 A", color: JobsCor.systemOrange)
+        makeActionButton("手动暂停 A",
+                         color: JobsCor.systemOrange)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     vc.pauseA()
                 }
@@ -410,9 +450,12 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var resumeABtn: UIButton = { [unowned self] in
-        makeActionButton("恢复 A", color: JobsCor.systemTeal)
+        makeActionButton("恢复 A",
+                         color: JobsCor.systemTeal)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     vc.resumeA()
                 }
@@ -453,9 +496,12 @@ final class JobsTimerMgrDemoVC: BaseVC {
         }
 
     private lazy var oneShotBtn: UIButton = { [unowned self] in
-        makeActionButton("启动 2 秒任务", color: JobsCor.systemIndigo)
+        makeActionButton("启动 2 秒任务",
+                         color: JobsCor.systemIndigo)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     vc.startOneShot()
                 }
@@ -463,9 +509,12 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var cancelOneShotBtn: UIButton = { [unowned self] in
-        makeActionButton("取消并移除", color: JobsCor.systemPurple)
+        makeActionButton("取消并移除",
+                         color: JobsCor.systemPurple)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     vc.cancelOneShot()
                 }
@@ -506,9 +555,12 @@ final class JobsTimerMgrDemoVC: BaseVC {
         }
 
     private lazy var dumpIdsBtn: UIButton = { [unowned self] in
-        makeActionButton("查看活跃 ID", color: JobsCor.systemGray)
+        makeActionButton("查看活跃 ID",
+                         color: JobsCor.systemGray)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     vc.dumpIDs()
                 }
@@ -516,9 +568,12 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var stopAllBtn: UIButton = { [unowned self] in
-        makeActionButton("停止并清空全部", color: JobsCor.systemRed)
+        makeActionButton("停止并清空全部",
+                         color: JobsCor.systemRed)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     vc.stopAll()
                 }
@@ -546,9 +601,11 @@ final class JobsTimerMgrDemoVC: BaseVC {
         }
 
     private lazy var logTitleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("实验日志".tr)
-            .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
+            .byFont(JobsFont.systemFont(ofSize: 16,
+                                        weight: .bold))
             .byTextColor(JobsCor.label)
             .byAddTo(logCard) { [unowned self] make in
                 make.top.equalToSuperview().offset(16)
@@ -560,11 +617,17 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private lazy var clearLogBtn: UIButton = {
         UIButton.sys()
             .byTitle("清除日志".tr)
-            .byTitleFont(JobsFont.systemFont(ofSize: 12, weight: .semibold))
+            .byTitleFont(JobsFont.systemFont(ofSize: 12,
+                                             weight: .semibold))
             .byTitleColor(JobsCor.systemRed)
-            .byContentEdgeInsets(.init(top: 6, left: 12, bottom: 6, right: 12))
+            .byContentEdgeInsets(.init(top: 6,
+                                       left: 12,
+                                       bottom: 6,
+                                       right: 12))
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     vc.clearLog()
                 }
@@ -577,10 +640,12 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var logHintLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("每次操作、前后台切换和 Manager 状态变化都会记录在这里。".tr)
             .byNumberOfLines(0)
-            .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 12,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(logCard) { [unowned self] make in
                 make.top.equalTo(self.logTitleLabel.snp.bottom).offset(5)
@@ -589,12 +654,17 @@ final class JobsTimerMgrDemoVC: BaseVC {
     }()
 
     private lazy var logView: UITextView = {
-        UITextView.jobsMake { _ in }
+        UITextView
+            .jobsMake { _ in }
             .byEditable(NO)
-            .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 12,
+                                                  weight: .regular))
             .byBackgroundColor(JobsCor.tertiarySystemGroupedBackground)
             .byCornerRadius(10)
-            .byTextContainerInset(.init(top: 10, left: 10, bottom: 10, right: 10))
+            .byTextContainerInset(.init(top: 10,
+                                        left: 10,
+                                        bottom: 10,
+                                        right: 10))
             .byText("")
             .byAddTo(logCard) { [unowned self] make in
                 make.top.equalTo(self.logHintLabel.snp.bottom).offset(10)
@@ -621,7 +691,9 @@ final class JobsTimerMgrDemoVC: BaseVC {
             oneShotTitleLabel, oneShotDetailLabel, oneShotButtonsStackView,
             managerTitleLabel, managerDetailLabel, managerButtonsStackView,
             logTitleLabel, clearLogBtn, logHintLabel, logView
-        ].forEach { $0.byVisible(YES) }
+        ].forEach {
+            $0.byVisible(YES)
+        }
         updateKindDescription()
         appendLog("页面已就绪：建议按“实验 1 → 实验 2 → 实验 3 → 实验 4”的顺序操作。")
         installAppStateObservers()
@@ -640,30 +712,40 @@ final class JobsTimerMgrDemoVC: BaseVC {
         #if canImport(UIKit)
         let nc = NotificationCenter.default
         observers.append(
-            nc.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main) { [weak self] _ in
-                self?.handleEnterBackgroundLike()
-            }
+            nc.addObserver(forName: UIApplication.willResignActiveNotification,
+                           object: nil,
+                           queue: .main) { [weak self] _ in
+            self?.handleEnterBackgroundLike()
+        }
         )
         observers.append(
-            nc.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) { [weak self] _ in
-                self?.handleEnterBackgroundLike()
-            }
+            nc.addObserver(forName: UIApplication.didEnterBackgroundNotification,
+                           object: nil,
+                           queue: .main) { [weak self] _ in
+            self?.handleEnterBackgroundLike()
+        }
         )
         observers.append(
-            nc.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: .main) { [weak self] _ in
-                self?.handleEnterForegroundLike()
-            }
+            nc.addObserver(forName: UIApplication.willEnterForegroundNotification,
+                           object: nil,
+                           queue: .main) { [weak self] _ in
+            self?.handleEnterForegroundLike()
+        }
         )
         observers.append(
-            nc.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
-                self?.handleEnterForegroundLike()
-            }
+            nc.addObserver(forName: UIApplication.didBecomeActiveNotification,
+                           object: nil,
+                           queue: .main) { [weak self] _ in
+            self?.handleEnterForegroundLike()
+        }
         )
         #endif
     }
 
     private func uninstallAppStateObservers() {
-        observers.forEach { NotificationCenter.default.removeObserver($0) }
+        observers.forEach {
+            NotificationCenter.default.removeObserver($0)
+        }
         observers.removeAll()
     }
 
@@ -674,7 +756,8 @@ final class JobsTimerMgrDemoVC: BaseVC {
         if JobsSwiftTimerMgr.shared.timer(for: aID) != nil {
             if !aManuallyPaused {
                 do {
-                    _ = try JobsSwiftTimerMgr.shared.act(.pause, identifier: aID)
+                    _ = try JobsSwiftTimerMgr.shared.act(.pause,
+                                                         identifier: aID)
                     aAutoPausedInBackground = true
                     uiBridge.log("进入后台：A 自动暂停 ✅")
                 } catch {
@@ -688,7 +771,8 @@ final class JobsTimerMgrDemoVC: BaseVC {
         let bID = JobsTimerMgrDemoID.B_cancelInBackground.identifier!
         if JobsSwiftTimerMgr.shared.timer(for: bID) != nil {
             do {
-                _ = try JobsSwiftTimerMgr.shared.act(.cancel, identifier: bID)
+                _ = try JobsSwiftTimerMgr.shared.act(.cancel,
+                                                     identifier: bID)
                 uiBridge.log("进入后台：B 已停止并从 Manager 移除 ✅")
             } catch {
                 uiBridge.log("进入后台：B 取消失败 ❌ \(error)")
@@ -704,7 +788,8 @@ final class JobsTimerMgrDemoVC: BaseVC {
         if JobsSwiftTimerMgr.shared.timer(for: aID) != nil {
             if aAutoPausedInBackground && !aManuallyPaused {
                 do {
-                    _ = try JobsSwiftTimerMgr.shared.act(.resume, identifier: aID)
+                    _ = try JobsSwiftTimerMgr.shared.act(.resume,
+                                                         identifier: aID)
                     aAutoPausedInBackground = false
                     uiBridge.log("回到前台：A 从后台自动暂停中恢复 ✅")
                 } catch {
@@ -714,8 +799,8 @@ final class JobsTimerMgrDemoVC: BaseVC {
         }
         uiBridge.setStatus(
             aManuallyPaused
-            ? "已回到前台：A 仍保持手动暂停，不会被误恢复。"
-            : "已回到前台：如果 A 曾被后台自动暂停，现在已经恢复。"
+                ? "已回到前台：A 仍保持手动暂停，不会被误恢复。"
+                : "已回到前台：如果 A 曾被后台自动暂停，现在已经恢复。"
         )
     }
 
@@ -731,25 +816,24 @@ final class JobsTimerMgrDemoVC: BaseVC {
         do {
             let kindA = selectedKindForA()
             let intervalA: TimeInterval = (kindA == .displayLink) ? (1.0 / 30.0) : 1.0
-            let cfgA = JobsSwiftTimerConfig(
-                interval: intervalA,
-                repeats: true,
-                tolerance: 0.01,
-                queue: .main,
-                runLoop: .main,
-                runLoopMode: .common,
-                pauseInBackground: false,     // 由 VC 管
-                autoManageAppState: false     // manager 会强制 false，这里显式写清楚
+            let cfgA = JobsSwiftTimerConfig(interval: intervalA,
+                                            repeats: true,
+                                            tolerance: 0.01,
+                                            queue: .main,
+                                            runLoop: .main,
+                                            runLoopMode: .common,
+                                            pauseInBackground: false,     // 由 VC 管
+                                            autoManageAppState: false     // manager 会强制 false，这里显式写清楚
             )
-            let tA = try JobsSwiftTimerMgr.shared.create(
-                kind: kindA,
-                identifier: JobsTimerMgrDemoID.A_pauseResume.identifier!,
-                config: cfgA,
-                dedupPolicy: .replace
-            ) { [uiBridge] in
+            let tA = try JobsSwiftTimerMgr.shared.create(kind: kindA,
+                                                         identifier: JobsTimerMgrDemoID.A_pauseResume.identifier!,
+                                                         config: cfgA,
+                                                         dedupPolicy: .replace) { [uiBridge] in
                 // ✅ tick handler 是 @Sendable：不要直接碰 VC/UI，走 bridge + MainActor
                 Task { @MainActor [weak self] in
-                    guard self != nil else { return }
+                    guard self != nil else {
+                        return
+                    }
                     uiBridge.incA()
                 }
             }
@@ -760,24 +844,22 @@ final class JobsTimerMgrDemoVC: BaseVC {
         }
         // B：cancel（进后台 stop+remove）
         do {
-            let cfgB = JobsSwiftTimerConfig(
-                interval: 0.7,
-                repeats: true,
-                tolerance: 0.01,
-                queue: .main,
-                runLoop: .main,
-                runLoopMode: .common,
-                pauseInBackground: false,
-                autoManageAppState: false
-            )
-            let tB = try JobsSwiftTimerMgr.shared.create(
-                kind: .gcd,
-                identifier: JobsTimerMgrDemoID.B_cancelInBackground.identifier!,
-                config: cfgB,
-                dedupPolicy: .replace
-            ) { [uiBridge] in
+            let cfgB = JobsSwiftTimerConfig(interval: 0.7,
+                                            repeats: true,
+                                            tolerance: 0.01,
+                                            queue: .main,
+                                            runLoop: .main,
+                                            runLoopMode: .common,
+                                            pauseInBackground: false,
+                                            autoManageAppState: false)
+            let tB = try JobsSwiftTimerMgr.shared.create(kind: .gcd,
+                                                         identifier: JobsTimerMgrDemoID.B_cancelInBackground.identifier!,
+                                                         config: cfgB,
+                                                         dedupPolicy: .replace) { [uiBridge] in
                 Task { @MainActor [weak self] in
-                    guard self != nil else { return }
+                    guard self != nil else {
+                        return
+                    }
                     uiBridge.incB()
                 }
             }
@@ -803,24 +885,22 @@ final class JobsTimerMgrDemoVC: BaseVC {
         let interval: TimeInterval = (newKind == .displayLink) ? (1.0 / 30.0) : 1.0
         uiBridge.setStatus("正在保留同一个 identifier，并把 A 替换为 \(newKind) 内核…")
         do {
-            let cfg = JobsSwiftTimerConfig(
-                interval: interval,
-                repeats: true,
-                tolerance: 0.01,
-                queue: .main,
-                runLoop: .main,
-                runLoopMode: .common,
-                pauseInBackground: false,
-                autoManageAppState: false
-            )
-            let t = try JobsSwiftTimerMgr.shared.create(
-                kind: newKind,
-                identifier: id,
-                config: cfg,
-                dedupPolicy: .replace
-            ) { [uiBridge] in
+            let cfg = JobsSwiftTimerConfig(interval: interval,
+                                           repeats: true,
+                                           tolerance: 0.01,
+                                           queue: .main,
+                                           runLoop: .main,
+                                           runLoopMode: .common,
+                                           pauseInBackground: false,
+                                           autoManageAppState: false)
+            let t = try JobsSwiftTimerMgr.shared.create(kind: newKind,
+                                                        identifier: id,
+                                                        config: cfg,
+                                                        dedupPolicy: .replace) { [uiBridge] in
                 Task { @MainActor [weak self] in
-                    guard self != nil else { return }
+                    guard self != nil else {
+                        return
+                    }
                     uiBridge.incA()
                 }
             }
@@ -842,7 +922,8 @@ final class JobsTimerMgrDemoVC: BaseVC {
             return
         }
         do {
-            _ = try JobsSwiftTimerMgr.shared.act(.pause, identifier: id)
+            _ = try JobsSwiftTimerMgr.shared.act(.pause,
+                                                 identifier: id)
             aManuallyPaused = true
             aAutoPausedInBackground = false
             uiBridge.log("A 已手动暂停 ✅ 回到前台时不会被自动恢复")
@@ -862,7 +943,8 @@ final class JobsTimerMgrDemoVC: BaseVC {
             return
         }
         do {
-            _ = try JobsSwiftTimerMgr.shared.act(.resume, identifier: id)
+            _ = try JobsSwiftTimerMgr.shared.act(.resume,
+                                                 identifier: id)
             aManuallyPaused = false
             uiBridge.log("A 已恢复 ✅")
             uiBridge.setStatus("A 已恢复运行，计数会继续增长。")
@@ -878,29 +960,26 @@ final class JobsTimerMgrDemoVC: BaseVC {
         uiBridge.setOneShot("一次性任务\n等待触发…")
         uiBridge.setStatus("一次性任务已启动，约 2 秒后只触发一次。")
         do {
-            let cfg = JobsSwiftTimerConfig(
-                interval: 2.0,
-                repeats: false,
-                tolerance: 0.01,
-                queue: .main,
-                runLoop: .main,
-                runLoopMode: .common,
-                pauseInBackground: false,
-                autoManageAppState: false
-            )
+            let cfg = JobsSwiftTimerConfig(interval: 2.0,
+                                           repeats: false,
+                                           tolerance: 0.01,
+                                           queue: .main,
+                                           runLoop: .main,
+                                           runLoopMode: .common,
+                                           pauseInBackground: false,
+                                           autoManageAppState: false)
             // repeats=false：tick 一次后内部会 stop；我们这里再 cancel 做 remove
-            let t = try JobsSwiftTimerMgr.shared.create(
-                kind: .gcd,
-                identifier: id,
-                config: cfg,
-                dedupPolicy: .replace
-            ) { [uiBridge] in
+            let t = try JobsSwiftTimerMgr.shared.create(kind: .gcd,
+                                                        identifier: id,
+                                                        config: cfg,
+                                                        dedupPolicy: .replace) { [uiBridge] in
                 // 立刻 stop+remove
                 onMainAsync(self) { vc in
                     uiBridge.log("一次性任务已触发 ✅ repeats=false")
                     uiBridge.setOneShot("一次性任务\n已触发 ✅")
                     do {
-                        _ = try JobsSwiftTimerMgr.shared.act(.cancel, identifier: id)
+                        _ = try JobsSwiftTimerMgr.shared.act(.cancel,
+                                                             identifier: id)
                         uiBridge.setOneShot("一次性任务\n完成并移除")
                         uiBridge.setStatus("一次性任务已完成，并从 Manager 中自动移除。")
                     } catch {
@@ -928,7 +1007,8 @@ final class JobsTimerMgrDemoVC: BaseVC {
             return
         }
         do {
-            _ = try JobsSwiftTimerMgr.shared.act(.cancel, identifier: id)
+            _ = try JobsSwiftTimerMgr.shared.act(.cancel,
+                                                 identifier: id)
             uiBridge.log("一次性任务已取消并移除 ✅")
             uiBridge.setOneShot("一次性任务\n已取消并移除")
             uiBridge.setStatus("一次性任务已在触发前停止，并从 Manager 中移除。")
@@ -945,12 +1025,14 @@ final class JobsTimerMgrDemoVC: BaseVC {
             JobsTimerMgrDemoID.B_cancelInBackground.identifier!,
             JobsTimerMgrDemoID.C_oneShot.identifier!
         ]
-        let alive = ids.filter { JobsSwiftTimerMgr.shared.timer(for: $0) != nil }
+        let alive = ids.filter {
+            JobsSwiftTimerMgr.shared.timer(for: $0) != nil
+        }
         uiBridge.log("当前活跃 ID：\(alive)")
         uiBridge.setStatus(
             alive.isEmpty
-            ? "Manager 当前没有托管任何 Demo Timer。"
-            : "Manager 当前托管 \(alive.count) 个 Demo Timer，详情见日志。"
+                ? "Manager 当前没有托管任何 Demo Timer。"
+                : "Manager 当前托管 \(alive.count) 个 Demo Timer，详情见日志。"
         )
     }
 
@@ -975,52 +1057,69 @@ final class JobsTimerMgrDemoVC: BaseVC {
 
     @MainActor
     fileprivate func appendLog(_ s: String) {
-        let t = ISO8601DateFormatter.jobsMake { _ in }.string(from: Date())
+        let t = ISO8601DateFormatter.jobsMake { _ in }
+            .string(from: Date())
         let line = "[\(t)] \(s)\n"
         logView.byText((logView.text ?? "") + line)
-        let bottom = NSRange(location: max(0, (logView.text as NSString).length - 1), length: 1)
+        let bottom = NSRange(location: max(0,
+                                           (logView.text as NSString).length - 1),
+                             length: 1)
         logView.scrollRangeToVisible(bottom)
     }
 
     // MARK: - Helpers
     private func makeCard() -> UIView {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
             .byCornerRadius(16)
     }
 
     private func makeMetricView() -> UIView {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.tertiarySystemGroupedBackground)
             .byCornerRadius(12)
     }
 
     private func makeSectionTitle(_ text: String) -> UILabel {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText(text.tr)
             .byNumberOfLines(0)
-            .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
+            .byFont(JobsFont.systemFont(ofSize: 16,
+                                        weight: .bold))
             .byTextColor(JobsCor.label)
     }
 
     private func makeSectionDetail(_ text: String) -> UILabel {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText(text.tr)
             .byNumberOfLines(0)
             .byLineBreakMode(.byWordWrapping)
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
     }
 
-    private func makeActionButton(_ title: String, color: UIColor) -> UIButton {
+    private func makeActionButton(_ title: String,
+                                  color: UIColor) -> UIButton {
         UIButton.sys()
-            .byBackgroundColor(color, for: .normal)
-            .byTitle(title.tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+            .byBackgroundColor(color,
+                               for: .normal)
+            .byTitle(title.tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 14,
+                                             weight: .semibold))
             .byTitleAdjustsFontSizeToFitWidth(YES)
             .byTitleMinimumScaleFactor(0.75)
-            .byContentEdgeInsets(.init(top: 10, left: 8, bottom: 10, right: 8))
+            .byContentEdgeInsets(.init(top: 10,
+                                       left: 8,
+                                       bottom: 10,
+                                       right: 8))
             .byCornerRadius(12)
     }
 
@@ -1041,24 +1140,31 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private func selectedKindForA() -> JobsTimerKind {
         switch kindSegment.selectedSegmentIndex {
         /// 处理 数值 1 分支
-        case 1: return .displayLink
+        case 1:
+            return .displayLink
         /// 处理 数值 2 分支
-        case 2: return .foundation
+        case 2:
+            return .foundation
         /// 未匹配已知分支时执行兜底处理
-        default: return .gcd
+        default:
+            return .gcd
         }
     }
 
     private func nextKind(_ kind: JobsTimerKind) -> JobsTimerKind {
         switch kind {
         /// 处理 .gcd 分支
-        case .gcd: return .displayLink
+        case .gcd:
+            return .displayLink
         /// 处理 .displayLink 分支
-        case .displayLink: return .foundation
+        case .displayLink:
+            return .foundation
         /// 处理 .foundation 分支
-        case .foundation: return .gcd
+        case .foundation:
+            return .gcd
         /// 未匹配已知分支时执行兜底处理
-        default: return .gcd
+        default:
+            return .gcd
         }
     }
 }

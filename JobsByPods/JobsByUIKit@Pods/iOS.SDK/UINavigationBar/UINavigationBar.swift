@@ -15,6 +15,7 @@ import JobsSwiftBlock
 
 // MARK: - 直接赋值@单参数
 extension UINavigationBar {
+
     /// barStyle（.default / .black 等）
     @discardableResult
     public func byBarStyle(_ style: UIBarStyle) -> Self {
@@ -38,7 +39,8 @@ extension UINavigationBar {
     public func byPrefersLargeTitles(_ enable: Bool) -> Self {
         if #available(iOS 11.0, *) {
             self.prefersLargeTitles = enable
-        };return self
+        }
+        return self
     }
     /// 请求的行为风格（iOS16+）
     @available(iOS 15.0, *)
@@ -46,7 +48,8 @@ extension UINavigationBar {
     public func byPreferredBehavioralStyle(_ style: UIBehavioralStyle) -> Self {
         if #available(iOS 16.0, *) {
             self.preferredBehavioralStyle = style
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -93,7 +96,8 @@ extension UINavigationBar {
     public func byCompactScrollEdgeAppearance(_ appearance: UINavigationBarAppearance?) -> Self {
         if #available(iOS 15.0, *) {
             self.compactScrollEdgeAppearance = appearance
-        };return self
+        }
+        return self
     }
     /// 用同一个 appearance 套到所有状态
     @available(iOS 13.0, *)
@@ -104,11 +108,13 @@ extension UINavigationBar {
         self.compactAppearance = appearance
         if #available(iOS 15.0, *) {
             self.compactScrollEdgeAppearance = appearance
-        };return self
+        }
+        return self
     }
 }
 // MARK: - 闭包重载@单参数
 extension UINavigationBar {
+
     @discardableResult
     public func byBarStyle(_ builder: () -> UIBarStyle) -> Self {
         self.barStyle = builder()
@@ -131,7 +137,8 @@ extension UINavigationBar {
     public func byPrefersLargeTitles(_ builder: () -> Bool) -> Self {
         if #available(iOS 11.0, *) {
             self.prefersLargeTitles = builder()
-        };return self
+        }
+        return self
     }
 
     @available(iOS 15.0, *)
@@ -139,7 +146,8 @@ extension UINavigationBar {
     public func byPreferredBehavioralStyle(_ builder: () -> UIBehavioralStyle) -> Self {
         if #available(iOS 16.0, *) {
             self.preferredBehavioralStyle = builder()
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -186,7 +194,8 @@ extension UINavigationBar {
     public func byCompactScrollEdgeAppearance(_ builder: () -> UINavigationBarAppearance?) -> Self {
         if #available(iOS 15.0, *) {
             self.compactScrollEdgeAppearance = builder()
-        };return self
+        }
+        return self
     }
 
     @available(iOS 13.0, *)
@@ -198,11 +207,13 @@ extension UINavigationBar {
         self.compactAppearance = appearance
         if #available(iOS 15.0, *) {
             self.compactScrollEdgeAppearance = appearance
-        };return self
+        }
+        return self
     }
 }
 
 extension UINavigationBar {
+
     // ================================== 标题 attributes（旧 API，兼容 iOS13-） ==================================
     @discardableResult
     public func byLegacyTitleFont(_ font: UIFont?) -> Self {
@@ -211,7 +222,8 @@ extension UINavigationBar {
             attrs[.font] = font
         } else {
             attrs.removeValue(forKey: .font)
-        };titleTextAttributes = attrs
+        }
+        titleTextAttributes = attrs
         return self
     }
 
@@ -222,7 +234,8 @@ extension UINavigationBar {
             attrs[.foregroundColor] = color
         } else {
             attrs.removeValue(forKey: .foregroundColor)
-        };titleTextAttributes = attrs
+        }
+        titleTextAttributes = attrs
         return self
     }
 
@@ -234,8 +247,10 @@ extension UINavigationBar {
                 attrs[.font] = font
             } else {
                 attrs.removeValue(forKey: .font)
-            };largeTitleTextAttributes = attrs
-        };return self
+            }
+            largeTitleTextAttributes = attrs
+        }
+        return self
     }
 
     @discardableResult
@@ -246,14 +261,17 @@ extension UINavigationBar {
                 attrs[.foregroundColor] = color
             } else {
                 attrs.removeValue(forKey: .foregroundColor)
-            };largeTitleTextAttributes = attrs
-        };return self
+            }
+            largeTitleTextAttributes = attrs
+        }
+        return self
     }
     /// 垂直方向标题偏移（iOS13- 用得多）
     @discardableResult
     public func byTitleVerticalOffset(_ offset: CGFloat,
                                       for metrics: UIBarMetrics = .default) -> Self {
-        setTitleVerticalPositionAdjustment(offset, for: metrics)
+        setTitleVerticalPositionAdjustment(offset,
+                                           for: metrics)
         return self
     }
     // ================================== 背景 & 阴影（老 API） ==================================
@@ -261,7 +279,8 @@ extension UINavigationBar {
     @discardableResult
     public func byBackgroundImage(_ image: UIImage?,
                                   for metrics: UIBarMetrics = .default) -> Self {
-        setBackgroundImage(image, for: metrics)
+        setBackgroundImage(image,
+                           for: metrics)
         return self
     }
     /// 背景图片（带 barPosition）
@@ -269,12 +288,15 @@ extension UINavigationBar {
     public func byBackgroundImage(_ image: UIImage?,
                                   for position: UIBarPosition,
                                   metrics: UIBarMetrics = .default) -> Self {
-        setBackgroundImage(image, for: position, barMetrics: metrics)
+        setBackgroundImage(image,
+                           for: position,
+                           barMetrics: metrics)
         return self
     }
     /// 返回按钮指示图标
     @discardableResult
-    public func byBackIndicator(_ image: UIImage?, mask: UIImage? = nil) -> Self {
+    public func byBackIndicator(_ image: UIImage?,
+                                mask: UIImage? = nil) -> Self {
         backIndicatorImage = image
         backIndicatorTransitionMaskImage = mask ?? image
         return self
@@ -288,7 +310,8 @@ extension UINavigationBar {
             let appearance = standardAppearance          // @NSCopying：这里拿到的是 copy
             builder(appearance)
             standardAppearance = appearance
-        };return self
+        }
+        return self
     }
     /// 配置 compactAppearance@闭包版（紧凑高度）
     @available(iOS 13.0, *)
@@ -298,7 +321,8 @@ extension UINavigationBar {
             let appearance = compactAppearance ?? standardAppearance
             builder(appearance)
             compactAppearance = appearance
-        };return self
+        }
+        return self
     }
     /// 配置 scrollEdgeAppearance@闭包版（滚动到边缘时）
     @available(iOS 13.0, *)
@@ -308,7 +332,8 @@ extension UINavigationBar {
             let appearance = scrollEdgeAppearance ?? standardAppearance
             builder(appearance)
             scrollEdgeAppearance = appearance
-        };return self
+        }
+        return self
     }
     /// 配置 compactScrollEdgeAppearance@闭包版（紧凑 + 滚动到边缘）
     @available(iOS 13.0, *)
@@ -321,7 +346,8 @@ extension UINavigationBar {
                 ?? standardAppearance
             builder(appearance)
             compactScrollEdgeAppearance = appearance
-        };return self
+        }
+        return self
     }
     /// 一次把同一个appearance套到所有状态@闭包版（常用）
     @available(iOS 13.0, *)
@@ -336,13 +362,15 @@ extension UINavigationBar {
             if #available(iOS 15.0, *) {
                 compactScrollEdgeAppearance = appearance
             }
-        };return self
+        }
+        return self
     }
     /// 批量设置 items
     @discardableResult
     public func byItems(_ items: [UINavigationItem]?,
-                 animated: Bool = false) -> Self {
-        setItems(items, animated: animated)
+                        animated: Bool = false) -> Self {
+        setItems(items,
+                 animated: animated)
         return self
     }
 }

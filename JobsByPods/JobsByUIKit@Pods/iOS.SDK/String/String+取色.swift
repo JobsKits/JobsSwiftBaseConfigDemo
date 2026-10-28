@@ -26,6 +26,7 @@ import JobsSwiftBaseDefines
  "垃圾".cor(JobsCor.black) // 非法 → black
  */
 extension String {
+
     /// 支持格式：
     /// "#RRGGBB" / "RRGGBB" / "0xRRGGBB"
     /// "#RGB"   / "RGB"
@@ -38,33 +39,40 @@ extension String {
     /// - 若格式非法，直接返回红色（作为错误兜底）
     public var cor: UIColor {
         guard let (rgb, alpha) = jobsParseHexColor(self),
-              let color = UIColor(hexString: rgb, alpha: alpha) else {
+              let color = UIColor(hexString: rgb,
+                                  alpha: alpha) else {
             return JobsCor.red
-        };return color
+        }
+        return color
     }
     /// 带 alpha 的版本
     /// - 若格式非法，返回对应 alpha 的红色
     /// - 若字符串本身带 AARRGGBB，则优先用字符串里的 alpha
     public func cor(alpha explicitAlpha: CGFloat) -> UIColor {
         let defaultAlpha = explicitAlpha
-        guard let (rgb, parsedAlpha) = jobsParseHexColor(self, defaultAlpha: defaultAlpha),
-              let color = UIColor(hexString: rgb, alpha: parsedAlpha) else {
+        guard let (rgb, parsedAlpha) = jobsParseHexColor(self,
+                                                         defaultAlpha: defaultAlpha),
+              let color = UIColor(hexString: rgb,
+                                  alpha: parsedAlpha) else {
             return JobsCor.red.withAlphaComponent(explicitAlpha)
-        };return color
+        }
+        return color
     }
     /// 指定兜底颜色版本（你要自定义 fallback 就用这个）
     public func cor(_ fallback: UIColor) -> UIColor {
         guard let (rgb, alpha) = jobsParseHexColor(self),
-              let color = UIColor(hexString: rgb, alpha: alpha) else {
+              let color = UIColor(hexString: rgb,
+                                  alpha: alpha) else {
             return fallback
-        };return color
+        }
+        return color
     }
 }
 // MARK: - 字符串校验规定格式@取色
 fileprivate func jobsParseHexColor(_ raw: String,
                                    defaultAlpha: CGFloat = 1.0) -> (rgbHex: String, alpha: CGFloat)? {
     var hex = raw.trimmingCharacters(in: .whitespacesAndNewlines)
-                 .lowercased()
+        .lowercased()
     // 前缀处理
     if hex.hasPrefix("#") {
         hex.removeFirst()
@@ -74,15 +82,21 @@ fileprivate func jobsParseHexColor(_ raw: String,
     // 3 位压缩格式：RGB -> RRGGBB
     if hex.count == 3 {
         let r = hex[hex.startIndex]
-        let g = hex[hex.index(hex.startIndex, offsetBy: 1)]
-        let b = hex[hex.index(hex.startIndex, offsetBy: 2)]
+        let g = hex[hex.index(hex.startIndex,
+                              offsetBy: 1)]
+        let b = hex[hex.index(hex.startIndex,
+                              offsetBy: 2)]
         hex = "\(r)\(r)\(g)\(g)\(b)\(b)"
     }
     // 只接受 6 / 8 位
-    guard hex.count == 6 || hex.count == 8 else { return nil }
+    guard hex.count == 6 || hex.count == 8 else {
+        return nil
+    }
     // 只允许 0-9a-f
     let validChars = CharacterSet(charactersIn: "0123456789abcdef")
-    guard hex.unicodeScalars.allSatisfy({ validChars.contains($0) }) else {
+    guard hex.unicodeScalars.allSatisfy({
+        validChars.contains($0)
+    }) else {
         return nil
     }
 
@@ -93,7 +107,10 @@ fileprivate func jobsParseHexColor(_ raw: String,
         // AARRGGBB：前 2 位是 alpha，后 6 位是 RRGGBB
         let aStr = String(hex.prefix(2))
         let rgb  = String(hex.suffix(6))
-        guard let aInt = UInt8(aStr, radix: 16) else { return nil }
+        guard let aInt = UInt8(aStr,
+                               radix: 16) else {
+            return nil
+        }
         let alpha = CGFloat(aInt) / 255.0
         return (rgbHex: rgb, alpha: alpha)
     }

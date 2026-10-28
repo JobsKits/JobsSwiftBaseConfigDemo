@@ -18,19 +18,32 @@ import JobsImageTools
 import SnapKit
 import GKNavigationBarSwift
 
-final class MosaicWholeImageDemoVC: MosaicBaseDemoVC, UIGestureRecognizerDelegate {
-    override var pageTitle: String { "整图粗细马赛克" }
-    override var preferredLoader: JobsImageLoaderPreference { .sdwebimage }
+final class MosaicWholeImageDemoVC: MosaicBaseDemoVC,
+                                    UIGestureRecognizerDelegate {
+
+    override var pageTitle: String {
+        "整图粗细马赛克"
+    }
+    override var preferredLoader: JobsImageLoaderPreference {
+        .sdwebimage
+    }
 
     private var renderVersion = 0
 
     private lazy var thicknessButton: UIButton = {
         UIButton.sys()
-            .byFrame(CGRect(x: 0, y: 0, width: 32.w, height: 32.h))
-            .byImage("slider.vertical.3".sysImg, for: .normal)
-            .byImage("slider.vertical.3".sysImg, for: .selected)
+            .byFrame(CGRect(x: 0,
+                            y: 0,
+                            width: 32.w,
+                            height: 32.h))
+            .byImage("slider.vertical.3".sysImg,
+                     for: .normal)
+            .byImage("slider.vertical.3".sysImg,
+                     for: .selected)
             .onTap { [weak self] sender in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 sender.byToggleSelected()
                 let isSelected = sender.isSelected
                 self.toggleThicknessControl(isSelected)
@@ -58,9 +71,13 @@ final class MosaicWholeImageDemoVC: MosaicBaseDemoVC, UIGestureRecognizerDelegat
     private lazy var dismissThicknessControlTapGesture: UITapGestureRecognizer = {
         UITapGestureRecognizer
             .byConfig { [weak self] (gesture: UITapGestureRecognizer) in
-                guard let self, self.thicknessButton.isSelected else { return }
+                guard let self, self.thicknessButton.isSelected else {
+                    return
+                }
                 let location = gesture.location(in: self.thicknessControl)
-                guard self.thicknessControl.bounds.contains(location) == false else { return }
+                guard self.thicknessControl.bounds.contains(location) == false else {
+                    return
+                }
                 self.thicknessButton.bySelected(false)
                 self.toggleThicknessControl(false)
             }
@@ -77,10 +94,8 @@ final class MosaicWholeImageDemoVC: MosaicBaseDemoVC, UIGestureRecognizerDelegat
         [thicknessButton]
     }
 
-    func gestureRecognizer(
-        _ gestureRecognizer: UIGestureRecognizer,
-        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
-    ) -> Bool {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         gestureRecognizer === dismissThicknessControlTapGesture ||
             otherGestureRecognizer === dismissThicknessControlTapGesture
     }
@@ -89,30 +104,36 @@ final class MosaicWholeImageDemoVC: MosaicBaseDemoVC, UIGestureRecognizerDelegat
         if visible {
             thicknessControl.byHidden(false)
         }
-        UIView.jobsAnimateWithCompletion(
-            0.2,
-            animations: { [weak self] in
-                self?.thicknessControl.byAlpha(visible ? 1 : 0)
-            },
-            completion: { [weak self] _ in
-                guard let self,
-                      visible == false,
-                      self.thicknessButton.isSelected == false else { return }
-                self.thicknessControl.byHidden(true)
+        UIView.jobsAnimateWithCompletion(0.2,
+                                         animations: { [weak self] in
+            self?.thicknessControl.byAlpha(visible ? 1 : 0)
+        },
+                                         completion: { [weak self] _ in
+            guard let self,
+                  visible == false,
+                  self.thicknessButton.isSelected == false else {
+                return
             }
-        )
+            self.thicknessControl.byHidden(true)
+        })
     }
 
     private func applyMosaic(blockSize: CGFloat) {
-        guard let originalImage else { return }
+        guard let originalImage else {
+            return
+        }
         renderVersion += 1
         let currentVersion = renderVersion
         hasEdited = true
-        loadingLabel.byText("马赛克处理中...".tr).byHidden(false)
+        loadingLabel
+            .byText("马赛克处理中...".tr)
+            .byHidden(false)
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             let image = originalImage.jobs_mosaicPixelated(blockSize: blockSize)
             DispatchQueue.main.async {
-                guard let self, self.renderVersion == currentVersion else { return }
+                guard let self, self.renderVersion == currentVersion else {
+                    return
+                }
                 self.imageView.byImage(image)
                 self.loadingLabel.byHidden(true)
             }

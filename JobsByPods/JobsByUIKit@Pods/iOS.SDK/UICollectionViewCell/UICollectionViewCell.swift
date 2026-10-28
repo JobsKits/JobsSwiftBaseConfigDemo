@@ -17,6 +17,7 @@ import JobsSwiftDSL
 
 // MARK: - 直接赋值@单参数
 extension UICollectionViewCell {
+
     // MARK: - autoUpdate@Configuration (iOS 14+)
     /// iOS14+: 是否自动根据状态更新 contentConfiguration
     @available(iOS 14.0, *)
@@ -48,6 +49,7 @@ extension UICollectionViewCell {
 }
 // MARK: - 闭包重载@单参数
 extension UICollectionViewCell {
+
     @available(iOS 14.0, *)
     @discardableResult
     public func byAutomaticallyUpdatesContentConfiguration(_ builder: () -> Bool) -> Self {
@@ -73,10 +75,12 @@ extension UICollectionViewCell {
 }
 
 extension UICollectionViewCell {
+
     // MARK: - state@selected / highlighted
     /// 选中状态（可选动画）
     @discardableResult
-    public func bySelected(_ selected: Bool, animated: Bool = false) -> Self {
+    public func bySelected(_ selected: Bool,
+                           animated: Bool = false) -> Self {
         // 没有 setSelected(_:animated:) 接口，直接赋值 + 可选动画过渡
         if animated {
             UIView.transition(with: contentView,
@@ -86,11 +90,13 @@ extension UICollectionViewCell {
             }
         } else {
             self.isSelected = selected
-        };return self
+        }
+        return self
     }
     /// 高亮状态（可选动画）
     @discardableResult
-    public func byHighlighted(_ highlighted: Bool, animated: Bool = false) -> Self {
+    public func byHighlighted(_ highlighted: Bool,
+                              animated: Bool = false) -> Self {
         if animated {
             UIView.transition(with: contentView,
                               duration: 0.15,
@@ -99,7 +105,8 @@ extension UICollectionViewCell {
             }
         } else {
             self.isHighlighted = highlighted
-        };return self
+        }
+        return self
     }
     // MARK: - autoUpdate@Configuration (iOS 14+)
     /// iOS14+: 主内容配置（UIListContentConfiguration）
@@ -110,7 +117,7 @@ extension UICollectionViewCell {
         // UICollectionViewCell 没有 defaultContentConfiguration；
         // UICollectionViewListCell 才有。做个兜底：
         var cfg = (self as? UICollectionViewListCell)?.defaultContentConfiguration()
-                  ?? UIListContentConfiguration.cell()      // ✅ 通用基准
+            ?? UIListContentConfiguration.cell()      // ✅ 通用基准
         build(&cfg)
         self.automaticallyUpdatesContentConfiguration = automaticallyUpdates
         self.contentConfiguration = cfg
@@ -161,8 +168,10 @@ extension UICollectionViewCell {
             }
         }
         if let selected {
-            self.selectedBackgroundView = UIView().byBackgroundColor(selected)
-        };return self
+            self.selectedBackgroundView = UIView()
+                .byBackgroundColor(selected)
+        }
+        return self
     }
     // MARK: - invalidate@Configuration (iOS 14+)
     /// iOS14+: 请求按当前状态更新配置（系统会合并请求时机）

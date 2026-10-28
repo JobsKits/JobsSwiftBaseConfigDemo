@@ -12,15 +12,18 @@ import UIKit
 #endif
 
 extension UISlider {
+
     @discardableResult
     public func byValueByAnimated(_ value: Float) -> Self {
-        self.setValue(value, animated: true)
+        self.setValue(value,
+                      animated: true)
         return self
     }
 
     @discardableResult
     public func byValue(_ value: Float) -> Self {
-        self.setValue(value, animated: false)
+        self.setValue(value,
+                      animated: false)
         return self
     }
 

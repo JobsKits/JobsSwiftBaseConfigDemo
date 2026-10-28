@@ -20,6 +20,7 @@ import SnapKit
 import Kingfisher
 import JobsByUIKit
 final class KFBtnCVCell: UICollectionViewCell {
+
     private lazy var coverButton: UIButton = {
         UIButton.custom()
             .byAddTo(contentView) { make in
@@ -27,17 +28,19 @@ final class KFBtnCVCell: UICollectionViewCell {
             }
     }()
 
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     override init(frame: CGRect) {
         super.init(frame: frame)
         coverButton.byVisible(YES)
-        /// 写在外层，不要在Cell里面配置。仅此作为提示模板
-//        contentView.byCornerRadius(8)
-//            .byMasksToBounds(YES)
-//        layer.byCornerRadius(8)
-//            .byMasksToBounds(NO)
-//            .byBorderWidth(1)
-//            .byBorderColor(JobsCor.clear)
+    /// 写在外层，不要在Cell里面配置。仅此作为提示模板
+    //        contentView.byCornerRadius(8)
+    //            .byMasksToBounds(YES)
+    //        layer.byCornerRadius(8)
+    //            .byMasksToBounds(NO)
+    //            .byBorderWidth(1)
+    //            .byBorderColor(JobsCor.clear)
     }
     /// 覆盖在Cell上的按钮设置为不可用，那么手势将执行以下方法
     override var isSelected: Bool {
@@ -51,50 +54,69 @@ final class KFBtnCVCell: UICollectionViewCell {
 }
 // MARK: ViewDataProtocol
 extension KFBtnCVCell {
+
     @discardableResult
-    func byData(_ model: JobsBtnCellModel, _ index: Int? = nil) -> Self {
+    func byData(_ model: JobsBtnCellModel,
+                _ index: Int? = nil) -> Self {
         coverButton
-            /// 主标题
-            .byTitle(model.title, for: .normal)
-            .byTitle(model.titleSelected, for: .selected)
-            .byTitleColor(model.titleCor, for: .normal)
-            .byTitleColor(model.titleCorSelected, for: .selected)
+        /// 主标题
+        .byTitle(model.title,
+                 for: .normal)
+            .byTitle(model.titleSelected,
+                     for: .selected)
+            .byTitleColor(model.titleCor,
+                          for: .normal)
+            .byTitleColor(model.titleCorSelected,
+                          for: .selected)
             .byTitleFont(model.titleFont)
-            .byTitleFont(model.titleFont,for: .selected)
-            /// 副标题
-            .bySubTitle(model.subTitle, for: .normal)
-            .bySubTitle(model.subTitleSelected, for: .selected)
-            .bySubTitleColor(model.subTitleCor, for: .normal)
-            .bySubTitleColor(model.subTitleCorSelected, for: .selected)
+            .byTitleFont(model.titleFont,
+                         for: .selected)
+        /// 副标题
+        .bySubTitle(model.subTitle,
+                    for: .normal)
+            .bySubTitle(model.subTitleSelected,
+                        for: .selected)
+            .bySubTitleColor(model.subTitleCor,
+                             for: .normal)
+            .bySubTitleColor(model.subTitleCorSelected,
+                             for: .selected)
             .bySubTitleFont(model.subTitleFont)
-            .bySubTitleFont(model.subTitleFontSelected,for: .selected)
-            /// 前景图
-            .byImage(model.image, for: .normal)
-            .byImage(model.imageSelected, for: .selected)
-            .byImagePlacement(model.placement,padding: model.padding)
+            .bySubTitleFont(model.subTitleFontSelected,
+                            for: .selected)
+        /// 前景图
+        .byImage(model.image,
+                 for: .normal)
+            .byImage(model.imageSelected,
+                     for: .selected)
+            .byImagePlacement(model.placement,
+                              padding: model.padding)
             .kf_imageURL(model.imageURL)
             .kf_placeholderImage(model.imagePlaceholder)
             .kf_options([
                 .processor(DownsamplingImageProcessor(size: CGSize(width: 500, height: 200))),
                 .cacheOriginalImage,
                 .transition(.fade(0.25)),
-                .retryStrategy(DelayRetryStrategy(maxRetryCount: 2, retryInterval: .seconds(1)))
+                .retryStrategy(DelayRetryStrategy(maxRetryCount: 2,
+                                                  retryInterval: .seconds(1)))
             ])
             .kf_normalLoad() // 之前是配置项，这里才是真正决定渲染背景图/前景图
-            /// 背景图
-            .byBackgroundColor(model.bgCor, for: .normal)
-            .byBackgroundColor(model.bgCorSelected, for: .selected)
+        /// 背景图
+        .byBackgroundColor(model.bgCor,
+                           for: .normal)
+            .byBackgroundColor(model.bgCorSelected,
+                               for: .selected)
             .kf_imageURL(model.bgImageURL)
             .kf_placeholderImage(model.bgImagePlaceholder)
             .kf_options([
                 .processor(DownsamplingImageProcessor(size: CGSize(width: 500, height: 200))),
                 .cacheOriginalImage,
                 .transition(.fade(0.25)),
-                .retryStrategy(DelayRetryStrategy(maxRetryCount: 2, retryInterval: .seconds(1)))
+                .retryStrategy(DelayRetryStrategy(maxRetryCount: 2,
+                                                  retryInterval: .seconds(1)))
             ])
             .kf_bgNormalLoad()// 之前是配置项，这里才是真正决定渲染背景图/前景图
-            /// 其他
-            .byContentEdgeInsets(model.edgeInsets)
+        /// 其他
+        .byContentEdgeInsets(model.edgeInsets)
             .bySelected(model.selected)
             .byEnabled(model.enabled)
             .byUserInteractionEnabled(model.userInteractionEnabled)

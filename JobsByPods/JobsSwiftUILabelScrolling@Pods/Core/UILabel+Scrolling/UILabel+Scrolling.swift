@@ -9,7 +9,9 @@ import UIKit
 import ObjectiveC
 import JobsSwiftDSL
 
-public enum JobsLabelTextDisplayMode: Int, Sendable {
+public enum JobsLabelTextDisplayMode: Int,
+                                      Sendable {
+
     /// 固定单行，必要时缩小字号。
     case scaleToFit
     /// 固定单行，尾部省略。
@@ -21,16 +23,16 @@ public enum JobsLabelTextDisplayMode: Int, Sendable {
 }
 
 private enum JobsUILabelScrollingAssociatedKey {
+
     static var controller: UInt8 = 0
     static var textDisplayMode: UInt8 = 0
 }
 
 private extension UILabel {
+
     var jobs_existingScrollController: JobsLabelScrollController? {
-        objc_getAssociatedObject(
-            self,
-            &JobsUILabelScrollingAssociatedKey.controller
-        ) as? JobsLabelScrollController
+        objc_getAssociatedObject(self,
+                                 &JobsUILabelScrollingAssociatedKey.controller) as? JobsLabelScrollController
     }
 
     var jobs_scrollController: JobsLabelScrollController {
@@ -38,37 +40,34 @@ private extension UILabel {
             return controller
         }
         let controller = JobsLabelScrollController(label: self)
-        objc_setAssociatedObject(
-            self,
-            &JobsUILabelScrollingAssociatedKey.controller,
-            controller,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-        );return controller
+        objc_setAssociatedObject(self,
+                                 &JobsUILabelScrollingAssociatedKey.controller,
+                                 controller,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return controller
     }
 }
 
 public extension UILabel {
+
     /// 用统一枚举配置 UILabel 的四种定尺寸文字展示策略。
     @discardableResult
-    func byTextDisplayMode(
-        _ mode: JobsLabelTextDisplayMode,
-        minimumScaleFactor: CGFloat = 0.5,
-        maximumNumberOfLines: Int = 2,
-        scrollConfiguration: JobsLabelScrollConfiguration = .continuous()
-    ) -> Self {
-        objc_setAssociatedObject(
-            self,
-            &JobsUILabelScrollingAssociatedKey.textDisplayMode,
-            mode.rawValue,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-        )
+    func byTextDisplayMode(_ mode: JobsLabelTextDisplayMode,
+                           minimumScaleFactor: CGFloat = 0.5,
+                           maximumNumberOfLines: Int = 2,
+                           scrollConfiguration: JobsLabelScrollConfiguration = .continuous()) -> Self {
+        objc_setAssociatedObject(self,
+                                 &JobsUILabelScrollingAssociatedKey.textDisplayMode,
+                                 mode.rawValue,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         switch mode {
         /// 处理 .scaleToFit 分支
         case .scaleToFit:
             byStopTextScroll()
                 .byNumberOfLines(1)
                 .byAdjustsFontSizeToFitWidth(true)
-                .byMinimumScaleFactor(min(max(0.01, minimumScaleFactor), 1))
+                .byMinimumScaleFactor(min(max(0.01,minimumScaleFactor),
+                                          1))
                 .byLineBreakMode(.byTruncatingTail)
         /// 处理 .singleLineTailTruncation 分支
         case .singleLineTailTruncation:
@@ -80,7 +79,7 @@ public extension UILabel {
         /// 处理 .multiLineTailTruncation 分支
         case .multiLineTailTruncation:
             byStopTextScroll()
-                .byNumberOfLines(max(2, maximumNumberOfLines))
+                .byNumberOfLines(max(2,maximumNumberOfLines))
                 .byAdjustsFontSizeToFitWidth(false)
                 .byMinimumScaleFactor(1)
                 .byLineBreakMode(.byTruncatingTail)
@@ -92,16 +91,16 @@ public extension UILabel {
                 .byLineBreakMode(.byClipping)
                 .byTextScroll(scrollConfiguration)
                 .byStartTextScroll()
-        };return self
+        }
+        return self
     }
 
     var jobs_textDisplayMode: JobsLabelTextDisplayMode {
-        guard let rawValue = objc_getAssociatedObject(
-            self,
-            &JobsUILabelScrollingAssociatedKey.textDisplayMode
-        ) as? Int else {
+        guard let rawValue = objc_getAssociatedObject(self,
+                                                      &JobsUILabelScrollingAssociatedKey.textDisplayMode) as? Int else {
             return .singleLineTailTruncation
-        };return JobsLabelTextDisplayMode(rawValue: rawValue) ?? .singleLineTailTruncation
+        }
+        return JobsLabelTextDisplayMode(rawValue: rawValue) ?? .singleLineTailTruncation
     }
 
     /// 配置滚动参数，不自动启动。

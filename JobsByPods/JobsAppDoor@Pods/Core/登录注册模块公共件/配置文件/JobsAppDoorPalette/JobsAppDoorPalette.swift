@@ -10,6 +10,7 @@ import JobsSwiftBaseDefines
 import JobsSwiftDSL
 
 enum JobsAppDoorPalette {
+
     static let panelBackground = JobsCor.black.withAlphaComponent(0.5984)
     static let cardBackground = JobsCor.black.withAlphaComponent(0.9007)
     static let fieldStroke = JobsCor.white.withAlphaComponent(0.9007)

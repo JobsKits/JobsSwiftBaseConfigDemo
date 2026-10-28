@@ -22,6 +22,7 @@ import RxSwift
 import RxCocoa
 private var kKeyboardHeightKey: UInt8 = 0
 public extension UIView {
+
     /// 监听当前视图所处界面的键盘可见高度（单位：pt）
     /// - 说明：
     ///   - 当键盘显示/隐藏/高度变化时发出事件
@@ -29,7 +30,8 @@ public extension UIView {
     ///   - 已做去重（distinctUntilChanged）与主线程派发
     var keyboardHeight: Observable<CGFloat> {
         // 缓存：确保同一视图多次访问用同一个 Observable
-        if let cached = objc_getAssociatedObject(self, &kKeyboardHeightKey) as? Observable<CGFloat> {
+        if let cached = objc_getAssociatedObject(self,
+                                                 &kKeyboardHeightKey) as? Observable<CGFloat> {
             return cached
         }
         // 通知源
@@ -46,37 +48,52 @@ public extension UIView {
             let endInView: CGRect = {
                 if let win = window {
                     if let scene = win.windowScene {
-                        return self.convert(frame, from: scene.screen.coordinateSpace)
+                        return self.convert(frame,
+                                            from: scene.screen.coordinateSpace)
                     }
-                    let rInWin = win.convert(frame, from: nil)
-                    return self.convert(rInWin, from: win)
+                    let rInWin = win.convert(frame,
+                                             from: nil)
+                    return self.convert(rInWin,
+                                        from: win)
                 } else {
                     // 没有 window 时退化处理
-                    return self.convert(frame, from: nil)
+                    return self.convert(frame,
+                                        from: nil)
                 }
             }()
             // 视图底部到键盘顶部的重叠高度
             let intersection = self.bounds.intersection(endInView)
             let overlap = intersection.isNull ? 0 : intersection.height
             // 扣除底部安全区，得到真正需要上移/留白的高度
-            let adjusted = max(0, overlap - self.safeAreaInsets.bottom)
+            let adjusted = max(0,
+                               overlap - self.safeAreaInsets.bottom)
             return adjusted.rounded(.towardZero) // 避免细微浮点波动
         }
         // 三类事件合并：
         // - show / changeFrame：计算高度
         // - hide：高度归零
         let showOrChange = Observable
-            .merge(willShow, willChangeFrame)
-            .map { height(from: $0) }
+            .merge(willShow,
+                   willChangeFrame)
+            .map {
+                height(from: $0)
+            }
         let hide = willHide
-            .map { _ in CGFloat(0) }
+            .map { _ in
+                CGFloat(0)
+            }
         let stream = Observable
-            .merge(showOrChange, hide)
+            .merge(showOrChange,
+                   hide)
             .distinctUntilChanged()
             .observe(on: MainScheduler.instance)
-            // 保证多订阅者共享一个上游订阅；最后一个订阅者取消后自动释放
-            .share(replay: 1, scope: .whileConnected)
-        objc_setAssociatedObject(self, &kKeyboardHeightKey, stream, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        // 保证多订阅者共享一个上游订阅；最后一个订阅者取消后自动释放
+        .share(replay: 1,
+               scope: .whileConnected)
+        objc_setAssociatedObject(self,
+                                 &kKeyboardHeightKey,
+                                 stream,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return stream
     }
 }

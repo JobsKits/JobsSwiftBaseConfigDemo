@@ -10,9 +10,12 @@ import Foundation
 import PromiseKit
 
 public extension JobsAgent {
-    func promise<T: Decodable>(_ request: JobsRequest, as type: T.Type) -> Promise<T> {
+
+    func promise<T: Decodable>(_ request: JobsRequest,
+                               as type: T.Type) -> Promise<T> {
         Promise { seal in
-            _ = send(request, as: type) { result in
+            _ = send(request,
+                     as: type) { result in
                 switch result {
                 /// 处理 .success 分支
                 case .success(let value):
@@ -27,6 +30,7 @@ public extension JobsAgent {
 }
 
 public enum JobsPromises {
+
     public static func whenFulfilled<T>(_ promises: [Promise<T>]) -> Promise<[T]> {
         when(fulfilled: promises)
     }

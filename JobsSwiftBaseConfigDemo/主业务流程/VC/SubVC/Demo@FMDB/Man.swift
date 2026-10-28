@@ -9,6 +9,7 @@
 import Foundation
 
 struct Man {
+
     let id: Int64
     var name: String
     var age: Int

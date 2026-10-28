@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 final class MosaicBrushImageView: UIImageView {
+
     var isBrushEnabled = false
     var onBrushPan: ((CGPoint?, CGPoint) -> Void)?
 
@@ -27,31 +28,41 @@ final class MosaicBrushImageView: UIImageView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>,
+                               with event: UIEvent?) {
         guard isBrushEnabled, let point = touches.first?.location(in: self) else {
-            super.touchesBegan(touches, with: event)
+            super.touchesBegan(touches,
+                               with: event)
             return
         }
         previousPoint = point
-        onBrushPan?(nil, point)
+        onBrushPan?(nil,
+                    point)
     }
 
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesMoved(_ touches: Set<UITouch>,
+                               with event: UIEvent?) {
         guard isBrushEnabled, let point = touches.first?.location(in: self) else {
-            super.touchesMoved(touches, with: event)
+            super.touchesMoved(touches,
+                               with: event)
             return
         }
-        onBrushPan?(previousPoint, point)
+        onBrushPan?(previousPoint,
+                    point)
         previousPoint = point
     }
 
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>,
+                               with event: UIEvent?) {
         previousPoint = nil
-        super.touchesEnded(touches, with: event)
+        super.touchesEnded(touches,
+                           with: event)
     }
 
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesCancelled(_ touches: Set<UITouch>,
+                                   with event: UIEvent?) {
         previousPoint = nil
-        super.touchesCancelled(touches, with: event)
+        super.touchesCancelled(touches,
+                               with: event)
     }
 }

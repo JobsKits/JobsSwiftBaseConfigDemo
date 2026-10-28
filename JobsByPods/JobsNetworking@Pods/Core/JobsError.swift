@@ -7,7 +7,9 @@
 
 import Foundation
 
-public enum JobsError: Error, Sendable {
+public enum JobsError: Error,
+                       Sendable {
+
     case http(statusCode: Int, data: Data?)
     case transport(underlying: String)
     case server(statusCode: Int, data: Data?)
@@ -21,13 +23,18 @@ public enum JobsError: Error, Sendable {
 }
 
 public extension JobsError {
+
     var isCancelled: Bool {
-        if case .cancelled = self { return true }
+        if case .cancelled = self {
+            return true
+        }
         return false
     }
 
     var isBusiness: Bool {
-        if case .business = self { return true }
+        if case .business = self {
+            return true
+        }
         return false
     }
 
@@ -37,8 +44,10 @@ public extension JobsError {
         case .cancelled:
             return .doNotRetry
         /// 合并处理 .http、.server 分支
-        case let .http(statusCode, _), let .server(statusCode, _):
-            return (500...599).contains(statusCode) ? .serverSide : .doNotRetry
+        case let .http(statusCode,
+                       _), let .server(statusCode,
+                                       _):
+            return (500 ... 599).contains(statusCode) ? .serverSide : .doNotRetry
         /// 处理 .transport 分支
         case .transport:
             return .transport
@@ -50,22 +59,28 @@ public extension JobsError {
 }
 
 extension JobsError: LocalizedError {
+
     public var errorDescription: String? {
         switch self {
         /// 处理 .http 分支
-        case let .http(statusCode, data):
+        case let .http(statusCode,
+                       data):
             return "HTTP \(statusCode) \(Self.describe(data))"
         /// 处理 .transport 分支
         case let .transport(underlying):
             return underlying
         /// 处理 .server 分支
-        case let .server(statusCode, data):
+        case let .server(statusCode,
+                         data):
             return "Server \(statusCode) \(Self.describe(data))"
         /// 处理 .decode 分支
-        case let .decode(underlying, data):
+        case let .decode(underlying,
+                         data):
             return "Decode failed: \(underlying) \(Self.describe(data))"
         /// 处理 .business 分支
-        case let .business(code, message, data):
+        case let .business(code,
+                           message,
+                           data):
             return "Business(\(code)): \(message) \(Self.describe(data))"
         /// 处理 .cacheMiss 分支
         case .cacheMiss:
@@ -86,7 +101,9 @@ extension JobsError: LocalizedError {
     }
 
     private static func describe(_ data: Data?) -> String {
-        guard let data, !data.isEmpty else { return "<empty>" }
+        guard let data, !data.isEmpty else {
+            return "<empty>"
+        }
         return "<response \(data.count) bytes>"
     }
 }

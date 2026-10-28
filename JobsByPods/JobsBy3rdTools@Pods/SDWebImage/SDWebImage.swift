@@ -14,13 +14,16 @@ import UIKit
 #if canImport(SDWebImage)
 import SDWebImage
 extension UIImageView {
+
     @discardableResult
-    public func bySDLocalGIF(_ url: URL?, fallback: UIImage? = nil) -> Self {
+    public func bySDLocalGIF(_ url: URL?,
+                             fallback: UIImage? = nil) -> Self {
         guard let url, url.isFileURL else {
             image = fallback
             return self
         }
-        sd_setImage(with: url, placeholderImage: fallback)
+        sd_setImage(with: url,
+                    placeholderImage: fallback)
         return self
     }
 }

@@ -20,31 +20,37 @@ import SnapKit
 public typealias JobsSwiftCountryCodeHandler = (_ countryName: String, _ code: String) -> Void
 
 public protocol JobsSwiftCountryCodeCtrlDelegate: AnyObject {
+
     func jobsSwiftCountryCodeCtrl(_ controller: JobsSwiftCountryCodeCtrl,
                                   didSelectCountryName countryName: String,
                                   code: String)
 }
 
 public final class JobsSwiftCountryCodeCtrl: UIViewController {
+
     public struct Country {
+
         public let countryName: String
         public let code: String
         public let regionCode: String
 
         public var localizedName: String {
-            JobsSwiftCountryCodeCtrl.localizedCountryName(
-                for: regionCode,
-                fallback: countryName
-            )
+            JobsSwiftCountryCodeCtrl.localizedCountryName(for: regionCode,
+                                                          fallback: countryName)
         }
 
         public var flag: String {
-            if regionCode == "TW" { return "🇹🇼" }
+            if regionCode == "TW" {
+                return "🇹🇼"
+            }
             let regionalIndicatorOffset: UInt32 = 127397
             let scalars = regionCode.uppercased().unicodeScalars.compactMap {
                 UnicodeScalar(regionalIndicatorOffset + $0.value)
             }
-            guard scalars.count == 2 else { return "🏳️" };return String(String.UnicodeScalarView(scalars))
+            guard scalars.count == 2 else {
+                return "🏳️"
+            }
+            return String(String.UnicodeScalarView(scalars))
         }
 
         public var displayName: String {
@@ -71,11 +77,12 @@ public final class JobsSwiftCountryCodeCtrl: UIViewController {
               let regionCode = userDefaults.string(forKey: selectedCountryRegionCodeKey),
               !countryName.isEmpty,
               !code.isEmpty,
-              !regionCode.isEmpty else { return nil };return Country(
-                countryName: countryName,
-                code: code,
-                regionCode: regionCode
-              )
+              !regionCode.isEmpty else {
+            return nil
+        }
+        return Country(countryName: countryName,
+                       code: code,
+                       regionCode: regionCode)
     }
 
     private static let selectedCountryNameKey = "com.jobs.JobsSwiftCountryCodeCtrl.selectedCountryName"
@@ -88,7 +95,8 @@ public final class JobsSwiftCountryCodeCtrl: UIViewController {
     }()
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .grouped)
+        UITableView(frame: .zero,
+                    style: .grouped)
             .byDelegate(self)
             .byDataSource(self)
             .byRowHeight(44)
@@ -115,6 +123,7 @@ public final class JobsSwiftCountryCodeCtrl: UIViewController {
 }
 
 private extension JobsSwiftCountryCodeCtrl {
+
     var plistName: String {
         let language = LanguageManager.shared.currentLanguageCode.lowercased()
         return language.hasPrefix("zh") ? "sortedNameCH" : "sortedNameEN"
@@ -126,7 +135,8 @@ private extension JobsSwiftCountryCodeCtrl {
             Bundle.main
         ]
         for bundle in bundles {
-            if let url = bundle.url(forResource: plistName, withExtension: "plist"),
+            if let url = bundle.url(forResource: plistName,
+                                    withExtension: "plist"),
                let dict = NSDictionary(contentsOf: url) as? [String: [String]] {
                 return dict
             }
@@ -136,33 +146,46 @@ private extension JobsSwiftCountryCodeCtrl {
                let dict = NSDictionary(contentsOf: url) as? [String: [String]] {
                 return dict
             }
-        };return [:]
+        }
+        return [:]
     }
 
     func countryInfo(at indexPath: IndexPath) -> Country? {
-        guard indexArray.indices.contains(indexPath.section) else { return nil }
+        guard indexArray.indices.contains(indexPath.section) else {
+            return nil
+        }
         let key = indexArray[indexPath.section]
         guard let rows = sortedNameDict[key],
-              rows.indices.contains(indexPath.row) else { return nil }
+              rows.indices.contains(indexPath.row) else {
+            return nil
+        }
         let row = rows[indexPath.row]
-        guard let separatorRange = row.range(of: "+", options: .backwards) else { return nil }
+        guard let separatorRange = row.range(of: "+",
+                                             options: .backwards) else {
+            return nil
+        }
         let countryName = String(row[..<separatorRange.lowerBound])
             .trimmingCharacters(in: .whitespacesAndNewlines)
         let code = String(row[separatorRange.upperBound...])
             .trimmingCharacters(in: .whitespacesAndNewlines)
-        guard let regionCode = Self.regionCode(for: countryName) else { return nil };return Country(
-            countryName: countryName,
-            code: code,
-            regionCode: regionCode)
+        guard let regionCode = Self.regionCode(for: countryName) else {
+            return nil
+        }
+        return Country(countryName: countryName,
+                       code: code,
+                       regionCode: regionCode)
     }
 
     func selectCountry(at indexPath: IndexPath) {
-        guard let country = countryInfo(at: indexPath) else { return }
+        guard let country = countryInfo(at: indexPath) else {
+            return
+        }
         Self.saveSelectedCountry(country)
         countryCodeDelegate?.jobsSwiftCountryCodeCtrl(self,
                                                       didSelectCountryName: country.countryName,
                                                       code: country.code)
-        countryCodeHandler?(country.countryName, country.code)
+        countryCodeHandler?(country.countryName,
+                            country.code)
         countrySelectionHandler?(country)
         if let navigationController {
             navigationController.popViewController(animated: true)
@@ -173,9 +196,12 @@ private extension JobsSwiftCountryCodeCtrl {
 
     static func saveSelectedCountry(_ country: Country) {
         let userDefaults = UserDefaults.standard
-        userDefaults.set(country.countryName, forKey: selectedCountryNameKey)
-        userDefaults.set(country.code, forKey: selectedCountryCodeKey)
-        userDefaults.set(country.regionCode, forKey: selectedCountryRegionCodeKey)
+        userDefaults.set(country.countryName,
+                         forKey: selectedCountryNameKey)
+        userDefaults.set(country.code,
+                         forKey: selectedCountryCodeKey)
+        userDefaults.set(country.regionCode,
+                         forKey: selectedCountryRegionCodeKey)
         userDefaults.synchronize()
     }
 
@@ -185,7 +211,10 @@ private extension JobsSwiftCountryCodeCtrl {
         let localizedName = locale.localizedString(forRegionCode: regionCode)?
             .trimmingCharacters(in: .whitespacesAndNewlines)
         guard let localizedName,
-              !localizedName.isEmpty else { return fallback };return localizedName
+              !localizedName.isEmpty else {
+            return fallback
+        }
+        return localizedName
     }
 
     static func regionCode(for countryName: String) -> String? {
@@ -197,7 +226,9 @@ private extension JobsSwiftCountryCodeCtrl {
             .folding(options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive],
                      locale: Locale(identifier: "en_US_POSIX"))
             .unicodeScalars
-            .filter { CharacterSet.alphanumerics.contains($0) }
+            .filter {
+                CharacterSet.alphanumerics.contains($0)
+            }
             .map(String.init)
             .joined()
     }
@@ -232,7 +263,9 @@ private extension JobsSwiftCountryCodeCtrl {
         var result: [String: String] = [:]
         for regionCode in regionCodes {
             for locale in locales {
-                guard let countryName = locale.localizedString(forRegionCode: regionCode) else { continue }
+                guard let countryName = locale.localizedString(forRegionCode: regionCode) else {
+                    continue
+                }
                 let key = normalizedCountryName(countryName)
                 if result[key] == nil {
                     result[key] = regionCode
@@ -241,34 +274,47 @@ private extension JobsSwiftCountryCodeCtrl {
         }
         regionCodeAliases.forEach {
             result[normalizedCountryName($0.key)] = $0.value
-        };return result
+        }
+        return result
     }()
 }
 
 extension JobsSwiftCountryCodeCtrl: UITableViewDataSource {
+
     public func numberOfSections(in tableView: UITableView) -> Int {
         indexArray.count
     }
 
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard indexArray.indices.contains(section) else { return 0 };return sortedNameDict[indexArray[section]]?.count ?? 0
+    public func tableView(_ tableView: UITableView,
+                          numberOfRowsInSection section: Int) -> Int {
+        guard indexArray.indices.contains(section) else {
+            return 0
+        }
+        return sortedNameDict[indexArray[section]]?.count ?? 0
     }
 
     public func tableView(_ tableView: UITableView,
                           cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let identifier = "JobsSwiftCountryCodeCtrlCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier)
-            ?? UITableViewCell(style: .subtitle, reuseIdentifier: identifier)
+            ?? UITableViewCell(style: .subtitle,
+                               reuseIdentifier: identifier)
         let country = countryInfo(at: indexPath)
         return cell
             .bySelectionStyle(.none)
             .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
-            .byContentView { $0.byBackgroundColor(JobsCor.secondarySystemGroupedBackground) }
+            .byContentView {
+                $0.byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
+            }
             .byText(country?.displayName)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .regular))
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .regular))
             .byTitleCor(JobsCor.label)
-            .byDetailText(country.map { "+\($0.code)" })
-            .byDetailTitleFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
+            .byDetailText(country.map {
+            "+\($0.code)"
+        })
+            .byDetailTitleFont(JobsFont.systemFont(ofSize: 12,
+                                                   weight: .regular))
             .byDetailTitleCor(JobsCor.secondaryLabel)
     }
 
@@ -284,15 +330,19 @@ extension JobsSwiftCountryCodeCtrl: UITableViewDataSource {
 }
 
 extension JobsSwiftCountryCodeCtrl: UITableViewDelegate {
-    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+
+    public func tableView(_ tableView: UITableView,
+                          heightForHeaderInSection section: Int) -> CGFloat {
         section == 0 ? 0.01 : 30
     }
 
-    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    public func tableView(_ tableView: UITableView,
+                          titleForHeaderInSection section: Int) -> String? {
         indexArray.indices.contains(section) ? indexArray[section] : nil
     }
 
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView,
+                          didSelectRowAt indexPath: IndexPath) {
         selectCountry(at: indexPath)
     }
 }

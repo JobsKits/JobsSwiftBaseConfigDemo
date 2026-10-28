@@ -25,7 +25,9 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class GestureUnlockDemoVC: BaseVC {
+
     private enum FlowState {
+
         case createFirst
         case confirmFirst(temp: GesturePattern)
         case verify
@@ -39,7 +41,9 @@ final class GestureUnlockDemoVC: BaseVC {
         UISegmentedControl(items: ["设置/重置".tr, "验证".tr])
             .bySelectedSegmentIndex(1)
             .onJobsChange { [weak self] (seg: UISegmentedControl) in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 unlockView.reset()
                 if seg.selectedSegmentIndex == 0 {
                     flowState = .createFirst
@@ -70,10 +74,12 @@ final class GestureUnlockDemoVC: BaseVC {
     }()
 
     private lazy var hintLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byNumberOfLines(0)
             .byTextAlignment(.center)
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .medium))
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.modeControl.snp.bottom).offset(14)
                 make.left.equalToSuperview().offset(self.horizontalInset)
@@ -95,20 +101,26 @@ final class GestureUnlockDemoVC: BaseVC {
 
     private lazy var resetButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
-            .byTitle("清除/重来".tr, for: .normal)
-            .byTitleColor(JobsCor.systemBlue, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byBackgroundColor(JobsCor.systemGreen,
+                               for: .normal)
+            .byTitle("清除/重来".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.systemBlue,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
             .onTap { [weak self] sender in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 unlockView.reset()
                 switch flowState {
-                /// 处理 .confirmFirst 分支
+            /// 处理 .confirmFirst 分支
                 case .confirmFirst:
                     flowState = .createFirst
                     hintLabel.byText("请重新设置手势（至少 4 个点 ）".tr)
                     unlockView.reset()
-                /// 未匹配已知分支时执行兜底处理
+            /// 未匹配已知分支时执行兜底处理
                 default:
                     if store.hasPattern {
                         hintLabel.byText("请输入手势解锁".tr)
@@ -137,10 +149,12 @@ final class GestureUnlockDemoVC: BaseVC {
 }
 // MARK: - GestureUnlockViewDelegate（分类解耦）
 extension GestureUnlockDemoVC: GestureUnlockViewDelegate {
+
     func gestureUnlockViewDidBeginInput(_ view: GestureUnlockView) {
-        // 可按需清理提示
+    // 可按需清理提示
     }
-    func gestureUnlockView(_ view: GestureUnlockView, didComplete pattern: GesturePattern) {
+    func gestureUnlockView(_ view: GestureUnlockView,
+                           didComplete pattern: GesturePattern) {
         // ✅ 长度不足：提示完成后清除之前手势痕迹
         guard pattern.indices.count >= view.configuration.minimumPatternLength else {
             toastErrorAndClear("至少连接 \(view.configuration.minimumPatternLength) 个点")
@@ -186,7 +200,8 @@ extension GestureUnlockDemoVC: GestureUnlockViewDelegate {
     }
 }
 
-extension GestureUnlockDemoVC{
+extension GestureUnlockDemoVC {
+
     private func configureUnlockView() {
         var config = GestureUnlockConfiguration()
         config.gridDimension = 3
@@ -219,7 +234,8 @@ extension GestureUnlockDemoVC{
         }
     }
     /// toast + 显示错误态 + 提示结束后清痕
-    private func toastErrorAndClear(_ text: String, clearAfter delay: TimeInterval = 0.65) {
+    private func toastErrorAndClear(_ text: String,
+                                    clearAfter delay: TimeInterval = 0.65) {
         unlockView.showError()
         text.toast
         clearGestureTrace(after: delay)

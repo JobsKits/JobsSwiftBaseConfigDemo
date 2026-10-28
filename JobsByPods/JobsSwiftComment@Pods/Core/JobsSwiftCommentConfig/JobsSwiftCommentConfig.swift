@@ -11,6 +11,7 @@ public typealias JobsSwiftCommentSelectionBlock = (JobsSwiftCommentModel) -> Voi
 public typealias JobsSwiftCommentRefreshActionBlock = (JobsSwiftCommentView) -> Void
 
 public final class JobsSwiftCommentConfig {
+
     public var mode: JobsSwiftCommentMode = .netEase
     public var title: String = ""
     public var showsDevice = true

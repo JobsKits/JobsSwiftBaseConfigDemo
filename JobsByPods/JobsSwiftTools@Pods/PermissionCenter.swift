@@ -22,6 +22,7 @@ import CoreBluetooth
 
 // ================================== 权限中心：声明 ==================================
 public enum SystemPermission {
+
     case camera
     case photoLibraryReadWrite
     case microphone
@@ -30,6 +31,7 @@ public enum SystemPermission {
 }
 
 public enum PermissionState {
+
     case authorized
     case denied
     case notDetermined
@@ -38,6 +40,7 @@ public enum PermissionState {
 }
 // ================================== 权限中心：实现 ==================================
 public final class PermissionCenter: NSObject {
+
     /// 统一对外入口
     public static func ensure(_ permission: SystemPermission,
                               from presenter: UIViewController?,
@@ -45,174 +48,254 @@ public final class PermissionCenter: NSObject {
                               onAuthorized: @escaping jobsByVoidBlock) {
         switch permission {
         /// 处理 .camera 分支
-        case .camera:               ensureCamera(from: presenter, onDenied: onDenied, onAuthorized: onAuthorized)
+        case .camera:
+            ensureCamera(from: presenter,
+                         onDenied: onDenied,
+                         onAuthorized: onAuthorized)
         /// 处理 .photoLibraryReadWrite 分支
-        case .photoLibraryReadWrite:ensurePhotoLibrary(from: presenter, onDenied: onDenied, onAuthorized: onAuthorized)
+        case .photoLibraryReadWrite:
+            ensurePhotoLibrary(from: presenter,
+                               onDenied: onDenied,
+                               onAuthorized: onAuthorized)
         /// 处理 .microphone 分支
-        case .microphone:           ensureMicrophone(from: presenter, onDenied: onDenied, onAuthorized: onAuthorized)
+        case .microphone:
+            ensureMicrophone(from: presenter,
+                             onDenied: onDenied,
+                             onAuthorized: onAuthorized)
         /// 处理 .locationWhenInUse 分支
-        case .locationWhenInUse:    ensureLocationWhenInUse(from: presenter, onDenied: onDenied, onAuthorized: onAuthorized)
+        case .locationWhenInUse:
+            ensureLocationWhenInUse(from: presenter,
+                                    onDenied: onDenied,
+                                    onAuthorized: onAuthorized)
         /// 处理 .bluetooth 分支
-        case .bluetooth:            ensureBluetooth(from: presenter, onDenied: onDenied, onAuthorized: onAuthorized)
+        case .bluetooth:
+            ensureBluetooth(from: presenter,
+                            onDenied: onDenied,
+                            onAuthorized: onAuthorized)
         }
     }
     // MARK: Camera
-    private static func ensureCamera(from presenter: UIViewController?, onDenied: jobsByVoidBlock? = nil, onAuthorized: @escaping jobsByVoidBlock) {
+    private static func ensureCamera(from presenter: UIViewController?,
+                                     onDenied: jobsByVoidBlock? = nil,
+                                     onAuthorized: @escaping jobsByVoidBlock) {
         let status = AVCaptureDevice.authorizationStatus(for: .video)
         switch status {
         /// 处理 .authorized 分支
         case .authorized:
-            onMainAsync { onAuthorized() }
+            onMainAsync {
+                onAuthorized()
+            }
         /// 处理 .notDetermined 分支
         case .notDetermined:
             AVCaptureDevice.requestAccess(for: .video) { granted in
-                granted ? onMainAsync { onAuthorized() } : showNoPermissionToast(in: presenter, onDenied: onDenied)
+                granted ? onMainAsync {
+                    onAuthorized()
+                } : showNoPermissionToast(in: presenter,
+                                          onDenied: onDenied)
             }
         /// 合并处理 .denied、.restricted 分支
         case .denied, .restricted:
-            showNoPermissionToast(in: presenter, onDenied: onDenied)
+            showNoPermissionToast(in: presenter,
+                                  onDenied: onDenied)
         /// 处理系统后续新增的未知枚举值
         @unknown default:
-            showNoPermissionToast(in: presenter, onDenied: onDenied)
+            showNoPermissionToast(in: presenter,
+                                  onDenied: onDenied)
         }
     }
     // MARK: Photo Library (readWrite)
-    private static func ensurePhotoLibrary(from presenter: UIViewController?, onDenied: jobsByVoidBlock? = nil, onAuthorized: @escaping jobsByVoidBlock) {
+    private static func ensurePhotoLibrary(from presenter: UIViewController?,
+                                           onDenied: jobsByVoidBlock? = nil,
+                                           onAuthorized: @escaping jobsByVoidBlock) {
         if #available(iOS 14, *) {
             let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
             switch status {
             /// 合并处理 .authorized、.limited 分支
             case .authorized, .limited:
-                onMainAsync { onAuthorized() }   // limited 也放行
+                onMainAsync {
+                    onAuthorized()
+                }   // limited 也放行
             /// 处理 .notDetermined 分支
             case .notDetermined:
                 PHPhotoLibrary.requestAuthorization(for: .readWrite) { newStatus in
                     switch newStatus {
                     /// 合并处理 .authorized、.limited 分支
-                    case .authorized, .limited: onMainAsync { onAuthorized() }
+                    case .authorized, .limited:
+                        onMainAsync {
+                            onAuthorized()
+                        }
                     /// 未匹配已知分支时执行兜底处理
-                    default: showNoPermissionToast(in: presenter, onDenied: onDenied)
+                    default:
+                        showNoPermissionToast(in: presenter,
+                                              onDenied: onDenied)
                     }
                 }
             /// 合并处理 .denied、.restricted 分支
             case .denied, .restricted:
-                showNoPermissionToast(in: presenter, onDenied: onDenied)
+                showNoPermissionToast(in: presenter,
+                                      onDenied: onDenied)
             /// 处理系统后续新增的未知枚举值
             @unknown default:
-                showNoPermissionToast(in: presenter, onDenied: onDenied)
+                showNoPermissionToast(in: presenter,
+                                      onDenied: onDenied)
             }
         } else {
             let status = PHPhotoLibrary.authorizationStatus()
             switch status {
             /// 处理 .authorized 分支
             case .authorized:
-                onMainAsync { onAuthorized() }
+                onMainAsync {
+                    onAuthorized()
+                }
             /// 处理 .notDetermined 分支
             case .notDetermined:
                 PHPhotoLibrary.requestAuthorization { newStatus in
-                    newStatus == .authorized ? onMainAsync { onAuthorized() } : showNoPermissionToast(in: presenter, onDenied: onDenied)
+                    newStatus == .authorized ? onMainAsync {
+                        onAuthorized()
+                    } : showNoPermissionToast(in: presenter,
+                                              onDenied: onDenied)
                 }
             /// 未匹配已知分支时执行兜底处理
             default:
-                showNoPermissionToast(in: presenter, onDenied: onDenied)
+                showNoPermissionToast(in: presenter,
+                                      onDenied: onDenied)
             }
         }
     }
     // MARK: Microphone  ✅ iOS 17+
-    private static func ensureMicrophone(from presenter: UIViewController?, onDenied: jobsByVoidBlock? = nil, onAuthorized: @escaping jobsByVoidBlock) {
+    private static func ensureMicrophone(from presenter: UIViewController?,
+                                         onDenied: jobsByVoidBlock? = nil,
+                                         onAuthorized: @escaping jobsByVoidBlock) {
         if #available(iOS 17.0, *) {
             let p = AVAudioApplication.shared.recordPermission
             switch p {
             /// 处理 .granted 分支
             case .granted:
-                onMainAsync { onAuthorized() }
+                onMainAsync {
+                    onAuthorized()
+                }
             /// 处理 .undetermined 分支
             case .undetermined:
                 AVAudioApplication.requestRecordPermission { granted in
-                    granted ? onMainAsync {onAuthorized()} : showNoPermissionToast(in: presenter, onDenied: onDenied)
+                    granted ? onMainAsync {
+                        onAuthorized()
+                    } : showNoPermissionToast(in: presenter,
+                                              onDenied: onDenied)
                 }
             /// 处理 .denied 分支
             case .denied:
-                showNoPermissionToast(in: presenter, onDenied: onDenied)
+                showNoPermissionToast(in: presenter,
+                                      onDenied: onDenied)
             /// 处理系统后续新增的未知枚举值
             @unknown default:
-                showNoPermissionToast(in: presenter, onDenied: onDenied)
+                showNoPermissionToast(in: presenter,
+                                      onDenied: onDenied)
             }
         } else {
             let p = AVAudioSession.sharedInstance().recordPermission
             switch p {
             /// 处理 .granted 分支
             case .granted:
-                onMainAsync { onAuthorized() }
+                onMainAsync {
+                    onAuthorized()
+                }
             /// 处理 .undetermined 分支
             case .undetermined:
                 AVAudioSession.sharedInstance().requestRecordPermission { granted in
-                    granted ? onMainAsync { onAuthorized() } : showNoPermissionToast(in: presenter, onDenied: onDenied)
+                    granted ? onMainAsync {
+                        onAuthorized()
+                    } : showNoPermissionToast(in: presenter,
+                                              onDenied: onDenied)
                 }
             /// 处理 .denied 分支
             case .denied:
-                showNoPermissionToast(in: presenter, onDenied: onDenied)
+                showNoPermissionToast(in: presenter,
+                                      onDenied: onDenied)
             /// 处理系统后续新增的未知枚举值
             @unknown default:
-                showNoPermissionToast(in: presenter, onDenied: onDenied)
+                showNoPermissionToast(in: presenter,
+                                      onDenied: onDenied)
             }
         }
     }
     // MARK: Location (WhenInUse)  ✅ iOS 14+
     private static var locProxy = LocationProxy()
-    private static func ensureLocationWhenInUse(from presenter: UIViewController?, onDenied: jobsByVoidBlock? = nil, onAuthorized: @escaping jobsByVoidBlock) {
+    private static func ensureLocationWhenInUse(from presenter: UIViewController?,
+                                                onDenied: jobsByVoidBlock? = nil,
+                                                onAuthorized: @escaping jobsByVoidBlock) {
         let status: CLAuthorizationStatus
         if #available(iOS 14.0, *) {
-            status = CLLocationManager.jobsMake { _ in }.authorizationStatus
+            status = CLLocationManager.jobsMake { _ in }
+                .authorizationStatus
         } else {
             status = CLLocationManager.authorizationStatus()
         }
         switch status {
         /// 合并处理 .authorizedWhenInUse、.authorizedAlways 分支
         case .authorizedWhenInUse, .authorizedAlways:
-            onMainAsync { onAuthorized() }
+            onMainAsync {
+                onAuthorized()
+            }
         /// 处理 .notDetermined 分支
         case .notDetermined:
             locProxy.requestWhenInUse { granted in
-                granted ? onMainAsync { onAuthorized() } : showNoPermissionToast(in: presenter, onDenied: onDenied)
+                granted ? onMainAsync {
+                    onAuthorized()
+                } : showNoPermissionToast(in: presenter,
+                                          onDenied: onDenied)
             }
         /// 合并处理 .denied、.restricted 分支
         case .denied, .restricted:
-            showNoPermissionToast(in: presenter, onDenied: onDenied)
+            showNoPermissionToast(in: presenter,
+                                  onDenied: onDenied)
         /// 处理系统后续新增的未知枚举值
         @unknown default:
-            showNoPermissionToast(in: presenter, onDenied: onDenied)
+            showNoPermissionToast(in: presenter,
+                                  onDenied: onDenied)
         }
     }
     // MARK: Bluetooth
     private static var btProxy = BluetoothProxy()
-    private static func ensureBluetooth(from presenter: UIViewController?, onDenied: jobsByVoidBlock? = nil, onAuthorized: @escaping jobsByVoidBlock) {
+    private static func ensureBluetooth(from presenter: UIViewController?,
+                                        onDenied: jobsByVoidBlock? = nil,
+                                        onAuthorized: @escaping jobsByVoidBlock) {
         if #available(iOS 13.1, *) {
             let auth = CBCentralManager.authorization
             switch auth {
             /// 处理 .allowedAlways 分支
             case .allowedAlways:
-                onMainAsync { onAuthorized() }
+                onMainAsync {
+                    onAuthorized()
+                }
             /// 处理 .notDetermined 分支
             case .notDetermined:
                 btProxy.request { granted in
-                    granted ? onMainAsync { onAuthorized() } : showNoPermissionToast(in: presenter, onDenied: onDenied)
+                    granted ? onMainAsync {
+                        onAuthorized()
+                    } : showNoPermissionToast(in: presenter,
+                                              onDenied: onDenied)
                 }
             /// 合并处理 .denied、.restricted 分支
             case .denied, .restricted:
-                showNoPermissionToast(in: presenter, onDenied: onDenied)
+                showNoPermissionToast(in: presenter,
+                                      onDenied: onDenied)
             /// 处理系统后续新增的未知枚举值
             @unknown default:
-                showNoPermissionToast(in: presenter, onDenied: onDenied)
+                showNoPermissionToast(in: presenter,
+                                      onDenied: onDenied)
             }
         } else {
             btProxy.request { granted in
-                granted ? onMainAsync { onAuthorized() } : showNoPermissionToast(in: presenter, onDenied: onDenied)
+                granted ? onMainAsync {
+                    onAuthorized()
+                } : showNoPermissionToast(in: presenter,
+                                          onDenied: onDenied)
             }
         }
     }
     // MARK: Toast
-    private static func showNoPermissionToast(in presenter: UIViewController?, onDenied: jobsByVoidBlock? = nil) {
+    private static func showNoPermissionToast(in presenter: UIViewController?,
+                                              onDenied: jobsByVoidBlock? = nil) {
         onMainAsync {
             "请获取相关权限".toast
             onDenied?()
@@ -220,11 +303,13 @@ public final class PermissionCenter: NSObject {
     }
 }
 // ================================== 私有代理：定位 & 蓝牙 ==================================
-private final class LocationProxy: NSObject, CLLocationManagerDelegate {
+private final class LocationProxy: NSObject,
+                                   CLLocationManagerDelegate {
+
     private var manager: CLLocationManager?
     private var jobsByVoidBlock: ((Bool) -> Void)?
 
-    func requestWhenInUse(_ jobsByVoidBlock: @escaping (Bool)->Void) {
+    func requestWhenInUse(_ jobsByVoidBlock: @escaping (Bool) -> Void) {
         self.jobsByVoidBlock = jobsByVoidBlock
         let m = CLLocationManager.jobsMake { _ in }
         self.manager = m
@@ -249,13 +334,17 @@ private final class LocationProxy: NSObject, CLLocationManagerDelegate {
     private func handle(_ status: CLAuthorizationStatus) {
         switch status {
         /// 合并处理 .authorizedAlways、.authorizedWhenInUse 分支
-        case .authorizedAlways, .authorizedWhenInUse: jobsByVoidBlock?(true)
+        case .authorizedAlways, .authorizedWhenInUse:
+            jobsByVoidBlock?(true)
         /// 合并处理 .denied、.restricted 分支
-        case .denied, .restricted:                   jobsByVoidBlock?(false)
+        case .denied, .restricted:
+            jobsByVoidBlock?(false)
         /// 处理 .notDetermined 分支
-        case .notDetermined:                          return
+        case .notDetermined:
+            return
         /// 处理系统后续新增的未知枚举值
-        @unknown default:                             jobsByVoidBlock?(false)
+        @unknown default:
+            jobsByVoidBlock?(false)
         }
         jobsByVoidBlock = nil
         manager?.delegate = nil
@@ -263,13 +352,16 @@ private final class LocationProxy: NSObject, CLLocationManagerDelegate {
     }
 }
 
-private final class BluetoothProxy: NSObject, CBCentralManagerDelegate {
-    private var central: CBCentralManager?
-    private var jobsByVoidBlock: ((Bool)->Void)?
+private final class BluetoothProxy: NSObject,
+                                    CBCentralManagerDelegate {
 
-    func request(_ jobsByVoidBlock: @escaping (Bool)->Void) {
+    private var central: CBCentralManager?
+    private var jobsByVoidBlock: ((Bool) -> Void)?
+
+    func request(_ jobsByVoidBlock: @escaping (Bool) -> Void) {
         self.jobsByVoidBlock = jobsByVoidBlock
-        self.central = CBCentralManager(delegate: self, queue: nil,
+        self.central = CBCentralManager(delegate: self,
+                                        queue: nil,
                                         options: [CBCentralManagerOptionShowPowerAlertKey: false])
     }
 

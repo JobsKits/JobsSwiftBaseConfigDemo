@@ -14,6 +14,7 @@ import SnapKit
 
 @MainActor
 public final class JobsSwiftExcelView: UIView {
+
     public private(set) var columns: [JobsSwiftExcelColumn] = []
     public private(set) var rows: [JobsSwiftExcelRow] = []
     /// nil 表示不冻结；N 表示冻结第 0...N 列。
@@ -29,12 +30,14 @@ public final class JobsSwiftExcelView: UIView {
     }
 
     private lazy var frozenPaneView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byClipsToBounds(true)
             .byAddTo(self)
     }()
     private lazy var horizontalScrollView: UIScrollView = {
-        UIScrollView.jobsMake { _ in }
+        UIScrollView
+            .jobsMake { _ in }
             .byDelegate(self)
             .byShowsVerticalScrollIndicator(false)
             .byAlwaysBounceVertical(false)
@@ -42,7 +45,8 @@ public final class JobsSwiftExcelView: UIView {
             .byAddTo(self)
     }()
     private lazy var scrollContentView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byAddTo(horizontalScrollView)
     }()
     private var generatedLabels: [UILabel] = []
@@ -58,15 +62,14 @@ public final class JobsSwiftExcelView: UIView {
     }
 
     public override var intrinsicContentSize: CGSize {
-        CGSize(width: UIView.noIntrinsicMetric, height: requiredHeight)
+        CGSize(width: UIView.noIntrinsicMetric,
+               height: requiredHeight)
     }
 
-    public func configure(
-        columns: [JobsSwiftExcelColumn],
-        rows: [JobsSwiftExcelRow],
-        freezeThroughColumn: Int? = nil,
-        style: JobsSwiftExcelStyle = JobsSwiftExcelStyle()
-    ) {
+    public func configure(columns: [JobsSwiftExcelColumn],
+                          rows: [JobsSwiftExcelRow],
+                          freezeThroughColumn: Int? = nil,
+                          style: JobsSwiftExcelStyle = JobsSwiftExcelStyle()) {
         self.columns = columns
         self.rows = rows
         self.freezeThroughColumn = freezeThroughColumn
@@ -78,7 +81,8 @@ public final class JobsSwiftExcelView: UIView {
         guard Thread.isMainThread else {
             DispatchQueue.main.async { [weak self] in
                 self?.reloadData()
-            };return
+            }
+            return
         }
         jobsRemoveGeneratedViews()
         jobsApplyStyle()
@@ -88,31 +92,38 @@ public final class JobsSwiftExcelView: UIView {
         setNeedsLayout()
     }
 
-    public func setHorizontalContentOffset(_ offset: CGFloat, animated: Bool) {
+    public func setHorizontalContentOffset(_ offset: CGFloat,
+                                           animated: Bool) {
         guard offset.isFinite else {
             return
         }
         if window != nil {
             layoutIfNeeded()
         }
-        let maximumOffset = max(0, horizontalScrollView.contentSize.width - horizontalScrollView.bounds.width)
-        horizontalScrollView.setContentOffset(
-            CGPoint(x: min(max(0, offset), maximumOffset), y: 0),
-            animated: animated
-        )
+        let maximumOffset = max(0,
+                                horizontalScrollView.contentSize.width - horizontalScrollView.bounds.width)
+        horizontalScrollView.setContentOffset(CGPoint(x: min(max(0,offset),
+                                                             maximumOffset),
+                                                      y: 0),
+                                              animated: animated)
     }
 }
 
 private extension JobsSwiftExcelView {
+
     var resolvedColumnWidths: [CGFloat] {
-        columns.map { $0.width.isFinite && $0.width > 0 ? min($0.width, 100_000) : style.defaultColumnWidth }
+        columns.map {
+            $0.width.isFinite && $0.width > 0 ? min($0.width,
+                                                    100_000) : style.defaultColumnWidth
+        }
     }
 
     var frozenColumnCount: Int {
         guard let freezeThroughColumn, !columns.isEmpty, freezeThroughColumn >= 0 else {
             return 0
         }
-        return min(freezeThroughColumn, columns.count - 1) + 1
+        return min(freezeThroughColumn,
+                   columns.count - 1) + 1
     }
 
     func jobsCommonInit() {
@@ -124,7 +135,8 @@ private extension JobsSwiftExcelView {
     }
 
     func jobsMakeLabel() -> UILabel {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextAlignment(.center)
             .byBorderWidth(style.gridLineWidth)
             .byBorderColor(style.gridLineColor)
@@ -155,38 +167,34 @@ private extension JobsSwiftExcelView {
             let parentView = isFrozen ? frozenPaneView : scrollContentView
             let offset = isFrozen ? frozenOffset : scrollOffset
             let width = widths[columnIndex]
-            jobsAddLabel(
-                cell: columns[columnIndex].header,
-                font: style.headerFont,
-                textColor: isFrozen ? style.frozenHeaderTextColor : style.headerTextColor,
-                backgroundColor: isFrozen ? style.frozenHeaderBackgroundColor : style.headerBackgroundColor,
-                parentView: parentView,
-                row: -1,
-                column: columnIndex,
-                top: 0,
-                left: offset,
-                width: width,
-                height: style.headerHeight,
-                selectable: false
-            )
+            jobsAddLabel(cell: columns[columnIndex].header,
+                         font: style.headerFont,
+                         textColor: isFrozen ? style.frozenHeaderTextColor : style.headerTextColor,
+                         backgroundColor: isFrozen ? style.frozenHeaderBackgroundColor : style.headerBackgroundColor,
+                         parentView: parentView,
+                         row: -1,
+                         column: columnIndex,
+                         top: 0,
+                         left: offset,
+                         width: width,
+                         height: style.headerHeight,
+                         selectable: false)
             for rowIndex in rows.indices {
                 let cell = rows[rowIndex].cells.indices.contains(columnIndex)
                     ? rows[rowIndex].cells[columnIndex]
                     : JobsSwiftExcelCell(text: "")
-                jobsAddLabel(
-                    cell: cell,
-                    font: style.bodyFont,
-                    textColor: isFrozen ? style.primaryTextColor : style.secondaryTextColor,
-                    backgroundColor: isFrozen ? style.frozenColumnBackgroundColor : style.bodyBackgroundColor,
-                    parentView: parentView,
-                    row: rowIndex,
-                    column: columnIndex,
-                    top: style.headerHeight + CGFloat(rowIndex) * style.rowHeight,
-                    left: offset,
-                    width: width,
-                    height: style.rowHeight,
-                    selectable: true
-                )
+                jobsAddLabel(cell: cell,
+                             font: style.bodyFont,
+                             textColor: isFrozen ? style.primaryTextColor : style.secondaryTextColor,
+                             backgroundColor: isFrozen ? style.frozenColumnBackgroundColor : style.bodyBackgroundColor,
+                             parentView: parentView,
+                             row: rowIndex,
+                             column: columnIndex,
+                             top: style.headerHeight + CGFloat(rowIndex) * style.rowHeight,
+                             left: offset,
+                             width: width,
+                             height: style.rowHeight,
+                             selectable: true)
             }
             if isFrozen {
                 frozenOffset += width
@@ -196,32 +204,28 @@ private extension JobsSwiftExcelView {
         }
     }
 
-    func jobsAddLabel(
-        cell: JobsSwiftExcelCell,
-        font: UIFont,
-        textColor: UIColor,
-        backgroundColor: UIColor,
-        parentView: UIView,
-        row: Int,
-        column: Int,
-        top: CGFloat,
-        left: CGFloat,
-        width: CGFloat,
-        height: CGFloat,
-        selectable: Bool
-    ) {
+    func jobsAddLabel(cell: JobsSwiftExcelCell,
+                      font: UIFont,
+                      textColor: UIColor,
+                      backgroundColor: UIColor,
+                      parentView: UIView,
+                      row: Int,
+                      column: Int,
+                      top: CGFloat,
+                      left: CGFloat,
+                      width: CGFloat,
+                      height: CGFloat,
+                      selectable: Bool) {
         let label = jobsMakeLabel()
-            .byTag(selectable ? row * max(1, columns.count) + column : -1)
+            .byTag(selectable ? row * max(1,columns.count) + column : -1)
             .byText(cell.text)
             .byTextColor(textColor)
             .byFont(font)
             .byBackgroundColor(backgroundColor)
-            .byTextDisplayMode(
-                cell.textDisplayMode,
-                minimumScaleFactor: cell.minimumScaleFactor,
-                maximumNumberOfLines: cell.maximumNumberOfLines,
-                scrollConfiguration: cell.scrollConfiguration
-            )
+            .byTextDisplayMode(cell.textDisplayMode,
+                               minimumScaleFactor: cell.minimumScaleFactor,
+                               maximumNumberOfLines: cell.maximumNumberOfLines,
+                               scrollConfiguration: cell.scrollConfiguration)
         if selectable {
             label.onTap { [weak self] sender in
                 self?.jobsHandleCellTap(sender)
@@ -238,9 +242,12 @@ private extension JobsSwiftExcelView {
 
     func jobsUpdateConstraints() {
         let widths = resolvedColumnWidths
-        let frozenWidth = widths.prefix(frozenColumnCount).reduce(0, +)
-        let scrollWidth = widths.dropFirst(frozenColumnCount).reduce(0, +)
-        let contentHeight = max(1, requiredHeight)
+        let frozenWidth = widths.prefix(frozenColumnCount).reduce(0,
+                                                                  +)
+        let scrollWidth = widths.dropFirst(frozenColumnCount).reduce(0,
+                                                                     +)
+        let contentHeight = max(1,
+                                requiredHeight)
         frozenPaneView.snp.remakeConstraints { make in
             make.top.left.bottom.equalToSuperview()
             make.width.equalTo(frozenWidth).priority(999)
@@ -252,24 +259,32 @@ private extension JobsSwiftExcelView {
         }
         scrollContentView.snp.remakeConstraints { make in
             make.edges.equalToSuperview()
-            make.width.equalTo(max(1, scrollWidth))
+            make.width.equalTo(max(1,scrollWidth))
             make.height.equalTo(contentHeight)
         }
     }
 
     func jobsHandleCellTap(_ label: UILabel) {
-        let columnCount = max(1, columns.count)
+        let columnCount = max(1,
+                              columns.count)
         let row = label.tag / columnCount
         let column = label.tag % columnCount
-        guard rows.indices.contains(row), columns.indices.contains(column) else { return }
+        guard rows.indices.contains(row), columns.indices.contains(column) else {
+            return
+        }
         let value = rows[row].cells.indices.contains(column) ? rows[row].cells[column].text : ""
-        onSelectCell?(JobsSwiftExcelCellContext(row: row, column: column, value: value))
+        onSelectCell?(JobsSwiftExcelCellContext(row: row,
+                                                column: column,
+                                                value: value))
     }
 }
 
 extension JobsSwiftExcelView: UIScrollViewDelegate {
+
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard scrollView === horizontalScrollView else { return }
+        guard scrollView === horizontalScrollView else {
+            return
+        }
         onHorizontalOffsetChange?(scrollView.contentOffset.x)
     }
 }

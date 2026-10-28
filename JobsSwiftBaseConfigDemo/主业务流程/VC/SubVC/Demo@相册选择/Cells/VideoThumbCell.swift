@@ -20,8 +20,10 @@ import SnapKit
 /// 多个视频缩略格：显示首帧缩略图（不自动播放）
 
 public final class VideoThumbCell: UICollectionViewCell {
+
     private lazy var iv: UIImageView = {
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(YES)
             .byAddTo(contentView) { [unowned self] make in
@@ -32,15 +34,24 @@ public final class VideoThumbCell: UICollectionViewCell {
     private var currentURL: URL?
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.byClipsToBounds(YES).byCornerRadius(8)
+        contentView
+            .byClipsToBounds(YES)
+            .byCornerRadius(8)
         iv.byVisible(YES)
-        if #available(iOS 13.0, *) { playBadge.byTintColor(JobsCor.white) }
+        if #available(iOS 13.0, *) {
+            playBadge.byTintColor(JobsCor.white)
+        }
         playBadge
             .byAlpha(0.9)
             .byAddTo(contentView)
-        playBadge.snp.makeConstraints { make in make.center.equalToSuperview(); make.width.height.equalTo(28) }
+        playBadge.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.height.equalTo(28)
+        }
     }
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     public override func prepareForReuse() {
         super.prepareForReuse()
         currentURL = nil
@@ -69,7 +80,8 @@ public final class VideoThumbCell: UICollectionViewCell {
             } else {
                 currentURL = nil
                 iv.byImage(nil)
-            };return self
+            }
+            return self
         }
         currentURL = nil
         iv.byImage(nil)
@@ -89,12 +101,20 @@ public final class VideoThumbCell: UICollectionViewCell {
             let asset = AVAsset(url: url)
             let gen = AVAssetImageGenerator(asset: asset)
             gen.appliesPreferredTrackTransform = true
-            let time = CMTime(seconds: 0.1, preferredTimescale: 600)
-            guard let cg = try? gen.copyCGImage(at: time, actualTime: nil) else { return }
+            let time = CMTime(seconds: 0.1,
+                              preferredTimescale: 600)
+            guard let cg = try? gen.copyCGImage(at: time,
+                                                actualTime: nil) else {
+                return
+            }
             let img = UIImage(cgImage: cg)
             DispatchQueue.main.async {
-                guard let self else { return }
-                guard self.currentURL == url else { return } // ✅ 防复用串图
+                guard let self else {
+                    return
+                }
+                guard self.currentURL == url else {
+                    return
+                } // ✅ 防复用串图
                 self.iv.byImage(img)
             }
         }

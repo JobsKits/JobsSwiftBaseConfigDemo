@@ -16,13 +16,20 @@ import MJRefresh
 import JobsSwiftBaseDefines
 import JobsSwiftDSL
 extension MJRefreshAutoNormalFooter {
-    static func customFooter(refreshingTarget target: Any?, refreshingAction action: Selector?) -> MJRefreshAutoNormalFooter {
-        let footer = MJRefreshAutoNormalFooter(refreshingTarget: target as Any, refreshingAction: action!)
+
+    static func customFooter(refreshingTarget target: Any?,
+                             refreshingAction action: Selector?) -> MJRefreshAutoNormalFooter {
+        let footer = MJRefreshAutoNormalFooter(refreshingTarget: target as Any,
+                                               refreshingAction: action!)
         // 自定义刷新状态文本
-        footer.setTitle("MJRefreshAutoFooterIdleText".tr, for: .idle)          // 普通状态
-        footer.setTitle("MJRefreshBackFooterPullingText".tr, for: .pulling)            // 松开加载状态
-        footer.setTitle("MJRefreshBackFooterRefreshingText".tr, for: .refreshing)    // 正在加载状态
-        footer.setTitle("MJRefreshBackFooterNoMoreDataText".tr, for: .noMoreData)        // 没有更多数据状态
+        footer.setTitle("MJRefreshAutoFooterIdleText".tr,
+                        for: .idle)          // 普通状态
+        footer.setTitle("MJRefreshBackFooterPullingText".tr,
+                        for: .pulling)            // 松开加载状态
+        footer.setTitle("MJRefreshBackFooterRefreshingText".tr,
+                        for: .refreshing)    // 正在加载状态
+        footer.setTitle("MJRefreshBackFooterNoMoreDataText".tr,
+                        for: .noMoreData)        // 没有更多数据状态
         // 可选：调整样式
         footer.stateLabel?.byFont(UIFont.systemFont(ofSize: 12))
         footer.stateLabel?.byTextColor(JobsCor.secondaryLabel)

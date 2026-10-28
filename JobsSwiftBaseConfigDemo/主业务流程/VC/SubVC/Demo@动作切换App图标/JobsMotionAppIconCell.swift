@@ -17,8 +17,10 @@ import JobsSwiftDSL
 import SnapKit
 
 final class JobsMotionAppIconCell: UICollectionViewCell {
+
     private lazy var iconImageView: UIImageView = {
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(YES)
             .byCornerRadius(17)
@@ -30,8 +32,10 @@ final class JobsMotionAppIconCell: UICollectionViewCell {
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .semibold))
             .byTextColor(JobsCor.label)
             .byTextAlignment(.center)
             .byAddTo(contentView) { [unowned self] make in
@@ -41,8 +45,10 @@ final class JobsMotionAppIconCell: UICollectionViewCell {
     }()
 
     private lazy var sourceLabel: UILabel = {
-        UILabel.jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 9, weight: .regular))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 9,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
             .byAdjustsFontSizeToFitWidth(YES)
@@ -54,9 +60,11 @@ final class JobsMotionAppIconCell: UICollectionViewCell {
     }()
 
     private lazy var currentBadgeLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("当前".tr)
-            .byFont(JobsFont.systemFont(ofSize: 10, weight: .bold))
+            .byFont(JobsFont.systemFont(ofSize: 10,
+                                        weight: .bold))
             .byTextColor(JobsCor.white)
             .byTextAlignment(.center)
             .byBackgroundColor(JobsCor.systemBlue)
@@ -100,7 +108,8 @@ final class JobsMotionAppIconCell: UICollectionViewCell {
     }
 
     @discardableResult
-    func byOption(_ option: JobsMotionAppIconOption, isCurrent: Bool) -> Self {
+    func byOption(_ option: JobsMotionAppIconOption,
+                  isCurrent: Bool) -> Self {
         iconImageView.byImage(UIImage(named: option.previewAssetName))
         titleLabel.byText(option.title.tr)
         sourceLabel.byText(option.sourceDescription)

@@ -83,51 +83,81 @@ import JobsSwiftBaseDefines
 ///
 // MARK: - JobsNotificationToken（无 Rx 版本）
 public protocol JobsNotificationToken {
+
     func cancel()
 }
 
 public final class JobsAnyNotificationToken: JobsNotificationToken {
+
     private var _cancel: jobsByVoidBlock?
-    public init(_ cancel: @escaping jobsByVoidBlock) { self._cancel = cancel }
-    public func cancel() { _cancel?(); _cancel = nil }
-    deinit { cancel() }
+    public init(_ cancel: @escaping jobsByVoidBlock) {
+        self._cancel = cancel
+    }
+    public func cancel() {
+        _cancel?()
+        _cancel = nil
+    }
+    deinit {
+        cancel()
+    }
 }
 // MARK: - 内部 token 容器（挂到 owner/self 上）
 private final class JobsNotiTokenBag: NSObject {
+
     /// name -> tokens
     var tokensByName: [String: [JobsNotificationToken]] = [:]
 
-    func store(_ token: JobsNotificationToken, name: String) {
-        tokensByName[name, default: []].append(token)
+    func store(_ token: JobsNotificationToken,
+               name: String) {
+        tokensByName[name,
+                     default: []].append(token)
     }
 
     func cancelAll() {
         let dict = tokensByName
         tokensByName.removeAll()
-        dict.values.flatMap { $0 }.forEach { $0.cancel() }
+        dict.values.flatMap {
+            $0
+        }
+            .forEach {
+                $0.cancel()
+            }
     }
 
     func cancel(name: String) {
-        guard let tokens = tokensByName.removeValue(forKey: name) else { return }
-        tokens.forEach { $0.cancel() }
+        guard let tokens = tokensByName.removeValue(forKey: name) else {
+            return
+        }
+        tokens.forEach {
+            $0.cancel()
+        }
     }
 
-    deinit { cancelAll() }
+    deinit {
+        cancelAll()
+    }
 }
 
 private var jobsNotiBagKey: UInt8 = 0
 private extension NSObject {
+
     var jobs_notiBag: JobsNotiTokenBag {
-        if let bag = objc_getAssociatedObject(self, &jobsNotiBagKey) as? JobsNotiTokenBag {
+        if let bag = objc_getAssociatedObject(self,
+                                              &jobsNotiBagKey) as? JobsNotiTokenBag {
             return bag
         }
         let bag = JobsNotiTokenBag()
-        objc_setAssociatedObject(self, &jobsNotiBagKey, bag, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(self,
+                                 &jobsNotiBagKey,
+                                 bag,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return bag
     }
 
-    func jobs_store(_ token: JobsNotificationToken, name: String) {
-        jobs_notiBag.store(token, name: name)
+    func jobs_store(_ token: JobsNotificationToken,
+                    name: String) {
+        jobs_notiBag.store(token,
+                           name: name)
     }
 
     func jobs_cancelAllTokens() {
@@ -140,92 +170,108 @@ private extension NSObject {
 }
 // MARK: - NotificationCenter 基础监听实现（无 Rx）
 extension NotificationCenter {
+
     /// 接收通知（内部基础实现）
     /// - 返回 JobsNotificationToken：用于手动 cancel（比如静态监听）
     @discardableResult
-    public static func _onBase(
-        _ name: Notification.Name,
-        object: AnyObject? = nil,
-        queue queue: OperationQueue? = nil,
-        handler: @escaping jobsByNotiBlock
-    ) -> JobsNotificationToken {
-        let token = NotificationCenter.default.addObserver(
-            forName: name,
-            object: object,
-            queue: queue,
-            using: handler
-        )
+    public static func _onBase(_ name: Notification.Name,
+                               object: AnyObject? = nil,
+                               queue queue: OperationQueue? = nil,
+                               handler: @escaping jobsByNotiBlock) -> JobsNotificationToken {
+        let token = NotificationCenter.default.addObserver(forName: name,
+                                                           object: object,
+                                                           queue: queue,
+                                                           using: handler)
         return JobsAnyNotificationToken {
             NotificationCenter.default.removeObserver(token)
         }
     }
     /// owner 版（String）
-    public static func on(
-        _ rawName: String,
-        owner: NSObject,
-        object: AnyObject? = nil,
-        queue queue: OperationQueue? = nil,
-        handler: @escaping jobsByNotiBlock) {
+    public static func on(_ rawName: String,
+                          owner: NSObject,
+                          object: AnyObject? = nil,
+                          queue queue: OperationQueue? = nil,
+                          handler: @escaping jobsByNotiBlock) {
         let t = _onBase(Notification.Name(rawName),
                         object: object,
                         queue: queue,
                         handler: handler)
-        owner.jobs_store(t, name: rawName)
+        owner.jobs_store(t,
+                         name: rawName)
     }
     /// owner 版（Notification.Name）
-    public static func on(
-        _ name: Notification.Name,
-        owner: NSObject,
-        object: AnyObject? = nil,
-        queue queue: OperationQueue? = nil,
-        handler: @escaping jobsByNotiBlock) {
+    public static func on(_ name: Notification.Name,
+                          owner: NSObject,
+                          object: AnyObject? = nil,
+                          queue queue: OperationQueue? = nil,
+                          handler: @escaping jobsByNotiBlock) {
         let t = _onBase(name,
                         object: object,
                         queue: queue,
                         handler: handler)
-        owner.jobs_store(t, name: name.rawValue)
+        owner.jobs_store(t,
+                         name: name.rawValue)
     }
 }
 // MARK: - 发通知（对齐系统：name + object + userInfo）
 extension NSObject {
+
     // MARK: Instance
     /// 只发 name
     @inline(__always)
     public func post(_ name: String) {
-        Self.post(name, object: nil, userInfo: nil)
+        Self.post(name,
+                  object: nil,
+                  userInfo: nil)
     }
     /// 发 userInfo
     @inline(__always)
-    public func post(_ name: String, userInfo: [AnyHashable: Any]?) {
-        Self.post(name, object: nil, userInfo: userInfo)
+    public func post(_ name: String,
+                     userInfo: [AnyHashable: Any]?) {
+        Self.post(name,
+                  object: nil,
+                  userInfo: userInfo)
     }
     /// 发 object
     @inline(__always)
-    public func post(_ name: String, object: Any?) {
-        Self.post(name, object: object, userInfo: nil)
+    public func post(_ name: String,
+                     object: Any?) {
+        Self.post(name,
+                  object: object,
+                  userInfo: nil)
     }
     /// 发 object + userInfo（完整对齐系统参数）
     @inline(__always)
     public func post(_ name: String,
                      object: Any? = nil,
                      userInfo: [AnyHashable: Any]? = nil) {
-        Self.post(name, object: object, userInfo: userInfo)
+        Self.post(name,
+                  object: object,
+                  userInfo: userInfo)
     }
     // MARK: Static / Class
     /// 只发 name
     @inline(__always)
     public class func post(_ name: String) {
-        post(name, object: nil, userInfo: nil)
+        post(name,
+             object: nil,
+             userInfo: nil)
     }
     /// 发 userInfo
     @inline(__always)
-    public class func post(_ name: String, userInfo: [AnyHashable: Any]?) {
-        post(name, object: nil, userInfo: userInfo)
+    public class func post(_ name: String,
+                           userInfo: [AnyHashable: Any]?) {
+        post(name,
+             object: nil,
+             userInfo: userInfo)
     }
     /// 发 object
     @inline(__always)
-    public class func post(_ name: String, object: Any?) {
-        post(name, object: object, userInfo: nil)
+    public class func post(_ name: String,
+                           object: Any?) {
+        post(name,
+             object: object,
+             userInfo: nil)
     }
     /// 发 object + userInfo（完整对齐系统参数）
     @inline(__always)
@@ -245,6 +291,7 @@ extension NSObject {
 /// - Instance 版：自动存 token 到 self，生命周期自动管理
 /// - Class 版：返回 token，需要你自己持有（否则立刻释放收不到）
 extension NSObject {
+
     // MARK: Instance（推荐）
     /// 只拿 object（Any?）
     public func onObject(_ name: String,
@@ -279,7 +326,9 @@ extension NSObject {
                               owner: self,
                               object: filter,
                               queue: queue) { noti in
-            block(noti, noti.object as AnyObject?, noti.userInfo)
+            block(noti,
+                  noti.object as AnyObject?,
+                  noti.userInfo)
         }
     }
     /// 如果想拿完整 Notification
@@ -326,7 +375,9 @@ extension NSObject {
         NotificationCenter._onBase(Notification.Name(name),
                                    object: filter,
                                    queue: queue) { noti in
-            block(noti, noti.object as AnyObject?, noti.userInfo)
+            block(noti,
+                  noti.object as AnyObject?,
+                  noti.userInfo)
         }
     }
 
@@ -343,6 +394,7 @@ extension NSObject {
 }
 // MARK: - 旧式 selector 监听（可选）
 extension NSObject {
+
     /// 用法：
     /// self.onSelector("RefreshUI", selector: #selector(onRefreshUI(_:)))
     /// @objc private func onRefreshUI(_ noti: Notification) {}
@@ -350,16 +402,15 @@ extension NSObject {
     public func onSelector(_ name: String,
                            object: AnyObject? = nil,
                            selector: Selector) {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: selector,
-            name: Notification.Name(name),
-            object: object
-        )
+        NotificationCenter.default.addObserver(self,
+                                               selector: selector,
+                                               name: Notification.Name(name),
+                                               object: object)
     }
 }
 // MARK: - 移除通知（完整：旧式 + token）
 extension NSObject {
+
     /// 移除所有通知（旧式 + 闭包 token）
     /// 推荐：deinit 调用
     @inline(__always)
@@ -370,7 +421,8 @@ extension NSObject {
 
     /// 移除某个 name 的通知（旧式 + token）
     @inline(__always)
-    public func removeNotification(_ name: String, object: AnyObject? = nil) {
+    public func removeNotification(_ name: String,
+                                   object: AnyObject? = nil) {
         NotificationCenter.default.removeObserver(self,
                                                   name: Notification.Name(name),
                                                   object: object) // 旧式
@@ -379,33 +431,36 @@ extension NSObject {
 }
 
 extension String {
+
     /// "通知名称".removeNotification(self)
     @inline(__always)
-    public func removeNotification(_ observer: Any, object: AnyObject? = nil) {
-        NotificationCenter.default.removeObserver(
-            observer,
-            name: Notification.Name(self),
-            object: object
-        )
+    public func removeNotification(_ observer: Any,
+                                   object: AnyObject? = nil) {
+        NotificationCenter.default.removeObserver(observer,
+                                                  name: Notification.Name(self),
+                                                  object: object)
         // 如果 observer 是 NSObject，并且使用了本文件的闭包 on(...)，顺便移除 token
-        (observer as? NSObject)?.removeNotification(self, object: object)
+        (observer as? NSObject)?.removeNotification(self,
+                                                    object: object)
     }
 }
 
 extension Notification.Name {
+
     /// Notification.Name("通知名称").removeNotification(self)
     @inline(__always)
-    public func removeNotification(_ observer: Any, object: AnyObject? = nil) {
-        NotificationCenter.default.removeObserver(
-            observer,
-            name: self,
-            object: object
-        )
-        (observer as? NSObject)?.removeNotification(self.rawValue, object: object)
+    public func removeNotification(_ observer: Any,
+                                   object: AnyObject? = nil) {
+        NotificationCenter.default.removeObserver(observer,
+                                                  name: self,
+                                                  object: object)
+        (observer as? NSObject)?.removeNotification(self.rawValue,
+                                                    object: object)
     }
 }
 
 extension JobsNotificationToken {
+
     /// token.cancel() 的语义糖
     @inline(__always)
     public func removeNotification() {

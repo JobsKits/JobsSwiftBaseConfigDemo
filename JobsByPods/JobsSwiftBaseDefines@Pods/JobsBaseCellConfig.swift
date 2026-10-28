@@ -15,6 +15,7 @@ import JobsTextTools
 
 // MARK: - 通用于 UITableViewCell 和 UICollectionViewCell 的模型组件
 public struct JobsBaseCellConfig {
+
     public let title: JobsText?
     public let detail: JobsText?
     public let image: UIImage?

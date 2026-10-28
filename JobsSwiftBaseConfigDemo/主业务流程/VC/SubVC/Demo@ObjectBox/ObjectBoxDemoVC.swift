@@ -22,6 +22,7 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class ObjectBoxDemoVC: BaseVC {
+
     // MARK: - Data
     private lazy var personBox: Box<Human>? = {
         switch ObjectBoxManager.sharedResult {
@@ -36,7 +37,8 @@ final class ObjectBoxDemoVC: BaseVC {
     private var selectedPerson: Human?
     // MARK: - UI
     private lazy var nameTextField: UITextField = {
-        UITextField.jobsMake { _ in }
+        UITextField
+            .jobsMake { _ in }
             .byPlaceholder("输入姓名".tr)
             .byBorderStyle(.roundedRect)
             .byAddTo(view) { [unowned self] make in
@@ -52,7 +54,8 @@ final class ObjectBoxDemoVC: BaseVC {
     }()
 
     private lazy var ageTextField: UITextField = {
-        UITextField.jobsMake { _ in }
+        UITextField
+            .jobsMake { _ in }
             .byPlaceholder("输入年龄".tr)
             .byBorderStyle(.roundedRect)
             .byKeyboardType(.numberPad)
@@ -66,9 +69,15 @@ final class ObjectBoxDemoVC: BaseVC {
         UIButton.sys()
             .byTitle("新增".tr)
             .onTap { [weak self] _ in
-                guard let self else { return }
-                guard let personBox else { return }
-                guard let input = buildInputPerson() else { return }
+                guard let self else {
+                    return
+                }
+                guard let personBox else {
+                    return
+                }
+                guard let input = buildInputPerson() else {
+                    return
+                }
                 do {
                     try personBox.put(input)
                     clearInput()
@@ -90,21 +99,25 @@ final class ObjectBoxDemoVC: BaseVC {
         UIButton.sys()
             .byTitle("修改选中项".tr)
             .onTap { [weak self] _ in
-                guard let self else { return }
-                guard let personBox else { return }
+                guard let self else {
+                    return
+                }
+                guard let personBox else {
+                    return
+                }
                 guard let selectedPerson else {
                     "请先在列表里选中一条数据".tr.toast
                     return
                 }
                 guard let name = nameTextField.text?
                     .trimmingCharacters(in: .whitespacesAndNewlines),
-                    !name.isEmpty else {
+                      !name.isEmpty else {
                     "姓名不能为空".tr.toast
                     return
                 }
                 guard let ageText = ageTextField.text?
                     .trimmingCharacters(in: .whitespacesAndNewlines),
-                    let age = Int32(ageText) else {
+                      let age = Int32(ageText) else {
                     "年龄不合法".tr.toast
                     return
                 }
@@ -130,8 +143,12 @@ final class ObjectBoxDemoVC: BaseVC {
         UIButton.sys()
             .byTitle("删除选中项".tr)
             .onTap { [weak self] _ in
-                guard let self else { return }
-                guard let personBox else { return }
+                guard let self else {
+                    return
+                }
+                guard let personBox else {
+                    return
+                }
                 guard let selectedPerson else {
                     "请先在列表里选中一条数据".tr.toast
                     return
@@ -157,7 +174,9 @@ final class ObjectBoxDemoVC: BaseVC {
         UIButton.sys()
             .byTitle("查询全部".tr)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.loadAllPersons()
             }
             .byAddTo(view) { [unowned self] make in
@@ -171,7 +190,9 @@ final class ObjectBoxDemoVC: BaseVC {
         UIButton.sys()
             .byTitle("清空输入".tr)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.clearInput()
                 self.selectedPerson = nil
                 self.tableView.reloadData()
@@ -185,7 +206,8 @@ final class ObjectBoxDemoVC: BaseVC {
     }()
 
     private lazy var tableView: UITableView = {
-        UITableView.jobsMake { _ in }
+        UITableView
+            .jobsMake { _ in }
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(UITableViewCell.self)
@@ -217,19 +239,22 @@ final class ObjectBoxDemoVC: BaseVC {
 }
 // MARK: - Data
 private extension ObjectBoxDemoVC {
+
     func buildInputPerson() -> Human? {
         guard let name = nameTextField.text?
             .trimmingCharacters(in: .whitespacesAndNewlines),
-            !name.isEmpty else {
+              !name.isEmpty else {
             "姓名不能为空".tr.toast
             return nil
         }
         guard let ageText = ageTextField.text?
             .trimmingCharacters(in: .whitespacesAndNewlines),
-            let age = Int32(ageText) else {
+              let age = Int32(ageText) else {
             "年龄不合法".tr.toast
             return nil
-        };return Human(name: name, age: age)
+        }
+        return Human(name: name,
+                     age: age)
     }
 
     func loadAllPersons() {
@@ -240,7 +265,9 @@ private extension ObjectBoxDemoVC {
         }
         do {
             let persons = try personBox.all()
-            dataSource = persons.sorted { $0.id > $1.id }
+            dataSource = persons.sorted {
+                $0.id > $1.id
+            }
             tableView.reloadData()
         } catch {
             "查询失败: \(error)".toast
@@ -254,14 +281,18 @@ private extension ObjectBoxDemoVC {
 }
 // MARK: - UITableViewDataSource
 extension ObjectBoxDemoVC: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
         dataSource.count
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let human = dataSource[indexPath.row]
         return tableView
-            .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+            .byDequeueReusableCell(withType: UITableViewCell.self,
+                                   for: indexPath)
             .byText("\(human.name) - \(human.age)岁")
             .bySecondaryText("id: \(human.id)")
             .byAccessoryType(human.id == selectedPerson?.id ? .checkmark : .none)
@@ -269,8 +300,11 @@ extension ObjectBoxDemoVC: UITableViewDataSource {
 }
 // MARK: - UITableViewDelegate
 extension ObjectBoxDemoVC: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath,
+                              animated: true)
         let human = dataSource[indexPath.row]
         selectedPerson = human
         nameTextField.byText(human.name)
@@ -278,7 +312,8 @@ extension ObjectBoxDemoVC: UITableViewDelegate {
         tableView.reloadData()
     }
 
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView,
+                   heightForRowAt indexPath: IndexPath) -> CGFloat {
         56
     }
 }

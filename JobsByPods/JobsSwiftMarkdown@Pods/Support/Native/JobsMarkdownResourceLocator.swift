@@ -11,6 +11,7 @@ import Foundation
 final class JobsMarkdownResourceToken {}
 
 enum JobsMarkdownResourceLocator {
+
     static func runtimeBundle() -> Bundle? {
         let bundleName = "JobsSwiftMarkdownResources"
         let candidates = [
@@ -18,13 +19,18 @@ enum JobsMarkdownResourceLocator {
             Bundle(for: JobsMarkdownResourceToken.self)
         ]
         for candidate in candidates {
-            guard let url = candidate.url(forResource: bundleName, withExtension: "bundle"),
-                  let bundle = Bundle(url: url) else { continue }
+            guard let url = candidate.url(forResource: bundleName,
+                                          withExtension: "bundle"),
+                  let bundle = Bundle(url: url) else {
+                continue
+            }
             return bundle
-        };return nil
+        }
+        return nil
     }
 
     static func templateURL() -> URL? {
-        runtimeBundle()?.url(forResource: "index", withExtension: "html")
+        runtimeBundle()?.url(forResource: "index",
+                             withExtension: "html")
     }
 }

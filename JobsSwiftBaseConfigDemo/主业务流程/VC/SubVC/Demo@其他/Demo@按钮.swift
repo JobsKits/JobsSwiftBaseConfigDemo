@@ -22,17 +22,20 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class UIButtonDemoVC: BaseVC {
+
     // 滚动容器
     private lazy var scroll: UIScrollView = {
-        UIScrollView.jobsMake { _ in }
+        UIScrollView
+            .jobsMake { _ in }
             .byAlwaysBounceVertical(true)
             .byShowsVerticalScrollIndicator(true)
             .byContentInsetAdjustmentBehavior(.automatic)   // iOS 11+
-            .byKeyboardDismissMode(.onDrag)
+        .byKeyboardDismissMode(.onDrag)
     }()
     // 用垂直栈统一承载所有演示按钮，便于扩展/复制
     private lazy var stack: UIStackView = {
-        return UIStackView.jobsMake { _ in }
+        return UIStackView
+            .jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .bySpacing(12)
@@ -52,6 +55,7 @@ final class UIButtonDemoVC: BaseVC {
 }
 
 extension UIButtonDemoVC {
+
     private func setupLayout() {
         // 1) 加入 ScrollView
         scroll.byAddTo(view)
@@ -78,27 +82,45 @@ extension UIButtonDemoVC {
             let btnBasic = UIButton.sys()
                 .byTitle("1) 基础链式：Title / Color / Font / Image / BG".tr)
                 .byTitleColor(JobsCor.white)
-                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+                .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                                 weight: .medium))
                 .byBackgroundColor(JobsCor.systemBlue)
-                .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
-                .onTap { _ in print("基础链式 tapped") }
+                .byContentEdgeInsets(UIEdgeInsets(top: 10,
+                                                  left: 12,
+                                                  bottom: 10,
+                                                  right: 12))
+                .onTap { _ in
+                    print("基础链式 tapped")
+                }
             if #available(iOS 13.0, *) {
-                _ = btnBasic.byImage("bolt.fill".sysImg, for: .normal)
+                _ = btnBasic
+                    .byImage("bolt.fill".sysImg,
+                             for: .normal)
                     .byTintColor(JobsCor.white)
                     .for(.normal)
-                    .preferredSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 14, weight: .semibold))
+                    .preferredSymbolConfiguration(UIImage.SymbolConfiguration(pointSize: 14,
+                                                                              weight: .semibold))
             }
             addDemoButton(btnBasic)
         }
         // 2) 按 state 的链式代理：for(.highlighted).title(...) / 背景色
         do {
             let btnState = UIButton.sys()
-                .byTitle("2) StateProxy：Normal / Highlighted", for: .normal)
-                .byTitleColor(JobsCor.white, for: .normal)
-                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
-                .byBackgroundColor(JobsCor.systemIndigo, for: .normal)
-                .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
-                .onTap { _ in print("StateProxy tapped") }
+                .byTitle("2) StateProxy：Normal / Highlighted",
+                         for: .normal)
+                .byTitleColor(JobsCor.white,
+                              for: .normal)
+                .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                                 weight: .medium))
+                .byBackgroundColor(JobsCor.systemIndigo,
+                                   for: .normal)
+                .byContentEdgeInsets(UIEdgeInsets(top: 10,
+                                                  left: 12,
+                                                  bottom: 10,
+                                                  right: 12))
+                .onTap { _ in
+                    print("StateProxy tapped")
+                }
             btnState
                 .for(.highlighted).title("2) Highlighted 标题")
                 .for(.highlighted).titleColor(JobsCor.yellow)
@@ -110,9 +132,14 @@ extension UIButtonDemoVC {
             let btnBG = UIButton.sys()
                 .byTitle("3) 背景色兜底（Normal / Disabled）".tr)
                 .byTitleColor(JobsCor.white)
-                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
-                .byBackgroundColor(JobsCor.systemTeal, for: .normal)
-                .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
+                .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                                 weight: .medium))
+                .byBackgroundColor(JobsCor.systemTeal,
+                                   for: .normal)
+                .byContentEdgeInsets(UIEdgeInsets(top: 10,
+                                                  left: 12,
+                                                  bottom: 10,
+                                                  right: 12))
                 .onTap { btn in
                     btn.byEnabled(btn.jobs_effectiveState == .disabled)
                 }
@@ -124,9 +151,13 @@ extension UIButtonDemoVC {
             let btnInsets = UIButton.sys()
                 .byTitle("4) ContentInsets / EdgeInsets（左右 24）".tr)
                 .byTitleColor(JobsCor.white)
-                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+                .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                                 weight: .medium))
                 .byBackgroundColor(JobsCor.systemGreen)
-            _ = btnInsets.byContentInsets(NSDirectionalEdgeInsets(top: 8, leading: 24, bottom: 8, trailing: 24))
+            _ = btnInsets.byContentInsets(NSDirectionalEdgeInsets(top: 8,
+                                                                  leading: 24,
+                                                                  bottom: 8,
+                                                                  trailing: 24))
             addDemoButton(btnInsets)
         }
         // 5) 图片与标题的相对位置：byImagePlacement(.leading/.trailing/.top/.bottom) + padding
@@ -134,14 +165,21 @@ extension UIButtonDemoVC {
             let btnPlacement = UIButton.sys()
                 .byTitle("5) imagePlacement = .trailing, padding=8")
                 .byTitleColor(JobsCor.white)
-                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+                .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                                 weight: .medium))
                 .byBackgroundColor(JobsCor.systemOrange)
-                .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
+                .byContentEdgeInsets(UIEdgeInsets(top: 8,
+                                                  left: 12,
+                                                  bottom: 8,
+                                                  right: 12))
             if #available(iOS 13.0, *) {
-                _ = btnPlacement.byImage("arrow.right.circle.fill".sysImg, for: .normal)
+                _ = btnPlacement
+                    .byImage("arrow.right.circle.fill".sysImg,
+                             for: .normal)
                     .byTintColor(JobsCor.white)
             }
-            _ = btnPlacement.byImagePlacement(.trailing, padding: 8)
+            _ = btnPlacement.byImagePlacement(.trailing,
+                                              padding: 8)
             addDemoButton(btnPlacement)
         }
         // 6) 副标题（iOS15+）：bySubtitle；低版本退化为主标题换行
@@ -149,9 +187,13 @@ extension UIButtonDemoVC {
             let btnSubtitle = UIButton.sys()
                 .byTitle("6) 主标题".tr)
                 .byTitleColor(JobsCor.white)
-                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+                .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                                 weight: .semibold))
                 .byBackgroundColor(JobsCor.systemPink)
-                .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
+                .byContentEdgeInsets(UIEdgeInsets(top: 10,
+                                                  left: 12,
+                                                  bottom: 10,
+                                                  right: 12))
                 .bySubTitle("副标题：iOS15+ 走 configuration.subtitle".tr)
                 .bySubTitleColor(JobsCor.white)
                 .bySubTitleFont(JobsFont.systemFont(ofSize: 12))
@@ -162,16 +204,32 @@ extension UIButtonDemoVC {
             let btnMenu = UIButton.sys()
                 .byTitle("7) 菜单作为主动作（点我弹出）".tr)
                 .byTitleColor(JobsCor.white)
-                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+                .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                                 weight: .medium))
                 .byBackgroundColor(JobsCor.systemBrown)
-                .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
+                .byContentEdgeInsets(UIEdgeInsets(top: 10,
+                                                  left: 12,
+                                                  bottom: 10,
+                                                  right: 12))
             if #available(iOS 14.0, *) {
                 let items: [UIAction] = [
-                    UIAction.make(title: "复制".tr, image: "doc.on.doc".sysImg) { _ in print("复制") },
-                    UIAction.make(title: "分享".tr, image: "square.and.arrow.up".sysImg) { _ in print("分享") },
-                    UIAction.make(title: "删除".tr, image: "trash".sysImg, attributes: .destructive) { _ in print("删除") }
+                    UIAction.make(title: "复制".tr,
+                                  image: "doc.on.doc".sysImg) { _ in
+                    print("复制")
+                },
+                    UIAction.make(title: "分享".tr,
+                                  image: "square.and.arrow.up".sysImg) { _ in
+                    print("分享")
+                },
+                    UIAction.make(title: "删除".tr,
+                                  image: "trash".sysImg,
+                                  attributes: .destructive) { _ in
+                    print("删除")
+                }
                 ]
-                _ = btnMenu.byMenu(UIMenu.make(title: "操作".tr, children: items))
+                _ = btnMenu
+                    .byMenu(UIMenu.make(title: "操作".tr,
+                                        children: items))
                     .byShowsMenuAsPrimaryAction(true)
             }
             addDemoButton(btnMenu)
@@ -181,10 +239,16 @@ extension UIButtonDemoVC {
             let btnPointer = UIButton.sys()
                 .byTitle("8) Pointer Interaction（iPad/悬停设备）".tr)
                 .byTitleColor(JobsCor.white)
-                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+                .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                                 weight: .medium))
                 .byBackgroundColor(JobsCor.systemCyan)
-                .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
-                .onTap { _ in print("Pointer tapped") }
+                .byContentEdgeInsets(UIEdgeInsets(top: 10,
+                                                  left: 12,
+                                                  bottom: 10,
+                                                  right: 12))
+                .onTap { _ in
+                    print("Pointer tapped")
+                }
             if #available(iOS 13.4, *) {
                 _ = btnPointer.byPointerInteractionEnabled(true)
             }
@@ -195,27 +259,44 @@ extension UIButtonDemoVC {
             let btnRole = UIButton.sys()
                 .byTitle("9) Role = .destructive（删除）".tr)
                 .byTitleColor(JobsCor.white)
-                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+                .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                                 weight: .semibold))
                 .byBackgroundColor(JobsCor.systemRed)
-                .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
-                .onTap { _ in print("Destructive tapped") }
-            if #available(iOS 14.0, *) { _ = btnRole.byRole(.destructive) }
+                .byContentEdgeInsets(UIEdgeInsets(top: 10,
+                                                  left: 12,
+                                                  bottom: 10,
+                                                  right: 12))
+                .onTap { _ in
+                    print("Destructive tapped")
+                }
+            if #available(iOS 14.0, *) {
+                _ = btnRole.byRole(.destructive)
+            }
             addDemoButton(btnRole)
         }
         // 10) 主动作切换 selected（iOS15+）
         do {
             let btnToggle = UIButton.sys()
-                .byTitle("10) 点击切换 selected".tr, for: .normal)
-                .byTitleColor(JobsCor.white, for: .normal)
-                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
-                .byBackgroundColor(JobsCor.systemMint, for: .normal)
-                .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
+                .byTitle("10) 点击切换 selected".tr,
+                         for: .normal)
+                .byTitleColor(JobsCor.white,
+                              for: .normal)
+                .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                                 weight: .medium))
+                .byBackgroundColor(JobsCor.systemMint,
+                                   for: .normal)
+                .byContentEdgeInsets(UIEdgeInsets(top: 10,
+                                                  left: 12,
+                                                  bottom: 10,
+                                                  right: 12))
                 .for(.selected).title("10) ✅ 已选择")
                 .for(.selected).backgroundColor(JobsCor.systemGreen)
             if #available(iOS 15.0, *) {
                 _ = btnToggle.byChangesSelectionAsPrimaryAction(true)
             } else {
-                _ = btnToggle.onTap { b in b.byToggleSelected() }
+                _ = btnToggle.onTap { b in
+                    b.byToggleSelected()
+                }
             }
             addDemoButton(btnToggle)
         }
@@ -224,19 +305,23 @@ extension UIButtonDemoVC {
             let btnUpdate = UIButton.sys()
                 .byTitle("11) configurationUpdateHandler：高亮时降透明".tr)
                 .byTitleColor(JobsCor.white)
-                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+                .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                                 weight: .medium))
                 .byBackgroundColor(JobsCor.systemBlue)
-                .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
+                .byContentEdgeInsets(UIEdgeInsets(top: 10,
+                                                  left: 12,
+                                                  bottom: 10,
+                                                  right: 12))
             if #available(iOS 15.0, *) {
                 _ = btnUpdate
                     .byAutomaticallyUpdatesConfiguration(true)
                     .byConfigurationUpdateHandler { btn in
                         btn
                             .byConfiguration(
-                                (btn.configuration ?? .filled())
-                                    .byBaseForegroundColor(JobsCor.white)
-                                    .byBaseBackgroundColor(JobsCor.systemBlue)
-                            )
+                        (btn.configuration ?? .filled())
+                            .byBaseForegroundColor(JobsCor.white)
+                            .byBaseBackgroundColor(JobsCor.systemBlue)
+                    )
                             .byAlpha(btn.jobs_effectiveState == .highlighted ? 0.6 : 1.0)
                     }
             }
@@ -247,20 +332,32 @@ extension UIButtonDemoVC {
             let btnRotate = UIButton.sys()
                 .byTitle("12) 旋转动画（点击切换）".tr)
                 .byTitleColor(JobsCor.white)
-                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+                .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                                 weight: .medium))
                 .byBackgroundColor(JobsCor.systemPurple)
-                .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
+                .byContentEdgeInsets(UIEdgeInsets(top: 10,
+                                                  left: 12,
+                                                  bottom: 10,
+                                                  right: 12))
                 .onTap { [weak self] b in
-                    guard self != nil else { return }
+                    guard self != nil else {
+                        return
+                    }
                     b.disableAfterClick(interval: 0.25)
                     if b.isRotating() {
-                        _ = b.stopRotating(resetTransformOnStop: true); print("停止旋转")
+                        _ = b.stopRotating(resetTransformOnStop: true)
+                        print("停止旋转")
                     } else {
-                        _ = b.startRotating(duration: 0.9, scope: .imageView, clockwise: true); print("开始旋转")
+                        _ = b.startRotating(duration: 0.9,
+                                            scope: .imageView,
+                                            clockwise: true)
+                        print("开始旋转")
                     }
                 }
             if #available(iOS 13.0, *) {
-                _ = btnRotate.byImage("arrow.2.circlepath.circle.fill".sysImg, for: .normal)
+                _ = btnRotate
+                    .byImage("arrow.2.circlepath.circle.fill".sysImg,
+                             for: .normal)
                     .byTintColor(JobsCor.white)
             }
             addDemoButton(btnRotate)
@@ -270,12 +367,22 @@ extension UIButtonDemoVC {
             let btnLong = UIButton.sys()
                 .byTitle("13) 长按 0.8s 触发（含手势对象回调）".tr)
                 .byTitleColor(JobsCor.white)
-                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+                .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                                 weight: .medium))
                 .byBackgroundColor(JobsCor.systemGray)
-                .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
+                .byContentEdgeInsets(UIEdgeInsets(top: 10,
+                                                  left: 12,
+                                                  bottom: 10,
+                                                  right: 12))
                 .onLongPress(minimumPressDuration: 0.8) { btn, gr in
-                    if gr.state == .began { btn.byAlpha(0.7); print("长按开始 on \(btn)") }
-                    else if gr.state == .ended || gr.state == .cancelled { btn.byAlpha(1.0); print("长按结束") }
+                    if gr.state == .began {
+                        btn.byAlpha(0.7)
+                        print("长按开始 on \(btn)")
+                    }
+                    else if gr.state == .ended || gr.state == .cancelled {
+                        btn.byAlpha(1.0)
+                        print("长按结束")
+                    }
                 }
             addDemoButton(btnLong)
         }
@@ -284,10 +391,16 @@ extension UIButtonDemoVC {
             let btnAction = UIButton.sys()
                 .byTitle("14) onTap：iOS14+走UIAction，低版本走 addAction 兜底".tr)
                 .byTitleColor(JobsCor.white)
-                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+                .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                                 weight: .medium))
                 .byBackgroundColor(JobsCor.systemBlue)
-                .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
-                .onTap { _ in print("onTap 统一入口（内部已区分 iOS14+ / 低版本）") }
+                .byContentEdgeInsets(UIEdgeInsets(top: 10,
+                                                  left: 12,
+                                                  bottom: 10,
+                                                  right: 12))
+                .onTap { _ in
+                    print("onTap 统一入口（内部已区分 iOS14+ / 低版本）")
+                }
             addDemoButton(btnAction)
         }
         // 15) per-state Symbol 配置
@@ -295,14 +408,22 @@ extension UIButtonDemoVC {
             let btnSymbol = UIButton.sys()
                 .byTitle("15) per-state Symbol 配置（Normal/Highlighted）".tr)
                 .byTitleColor(JobsCor.white)
-                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+                .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                                 weight: .medium))
                 .byBackgroundColor(JobsCor.systemOrange)
-                .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 12, bottom: 10, right: 12))
+                .byContentEdgeInsets(UIEdgeInsets(top: 10,
+                                                  left: 12,
+                                                  bottom: 10,
+                                                  right: 12))
             if #available(iOS 13.0, *) {
-                _ = btnSymbol.byImage("star.fill".sysImg, for: .normal)
+                _ = btnSymbol
+                    .byImage("star.fill".sysImg,
+                             for: .normal)
                     .byTintColor(JobsCor.white)
-                    .for(.normal).preferredSymbolConfiguration(.init(pointSize: 16, weight: .regular))
-                    .for(.highlighted).preferredSymbolConfiguration(.init(pointSize: 20, weight: .bold))
+                    .for(.normal).preferredSymbolConfiguration(.init(pointSize: 16,
+                                                                     weight: .regular))
+                    .for(.highlighted).preferredSymbolConfiguration(.init(pointSize: 20,
+                                                                          weight: .bold))
             }
             addDemoButton(btnSymbol)
         }
@@ -310,16 +431,23 @@ extension UIButtonDemoVC {
         do {
             let btnRich = UIButton.sys()
                 .byBackgroundColor(JobsCor.systemBlue)
-                .byContentEdgeInsets(UIEdgeInsets(top: 10, left: 14, bottom: 10, right: 14))
+                .byContentEdgeInsets(UIEdgeInsets(top: 10,
+                                                  left: 14,
+                                                  bottom: 10,
+                                                  right: 14))
                 .byRichTitle(JobsRichText.make([
-                    JobsRichRun(.text("¥99")).font(JobsFont.systemFont(ofSize: 18, weight: .semibold)).color(JobsCor.systemRed),
-                    JobsRichRun(.text(" /月")).font(JobsFont.systemFont(ofSize: 16)).color(JobsCor.white)
-                ]))         // ✅ 主标题富文本：一个入参
-                .byRichSubTitle(JobsRichText.make([
-                    JobsRichRun(.text("原价 ")).font(JobsFont.systemFont(ofSize: 12)).color(JobsCor.white.withAlphaComponent(0.8)),
-                    JobsRichRun(.text("¥199")).font(JobsFont.systemFont(ofSize: 12, weight: .medium)).color(JobsCor.systemYellow)
-                ]))        // ✅ 副标题富文本：一个入参
-                .onTap { _ in print("富文本主/副 tapped") }
+                        JobsRichRun(.text("¥99")).font(JobsFont.systemFont(ofSize: 18,
+                                                                           weight: .semibold)).color(JobsCor.systemRed),
+                        JobsRichRun(.text(" /月")).font(JobsFont.systemFont(ofSize: 16)).color(JobsCor.white)
+                    ]))         // ✅ 主标题富文本：一个入参
+            .byRichSubTitle(JobsRichText.make([
+                        JobsRichRun(.text("原价 ")).font(JobsFont.systemFont(ofSize: 12)).color(JobsCor.white.withAlphaComponent(0.8)),
+                        JobsRichRun(.text("¥199")).font(JobsFont.systemFont(ofSize: 12,
+                                                                            weight: .medium)).color(JobsCor.systemYellow)
+                    ]))        // ✅ 副标题富文本：一个入参
+            .onTap { _ in
+                    print("富文本主/副 tapped")
+                }
             addDemoButton(btnRich)
         }
     }

@@ -9,6 +9,7 @@ import Foundation
 import Alamofire
 
 struct JobsPreparedRequest {
+
     let url: URL
     let method: HTTPMethod
     let parameters: Parameters?
@@ -20,8 +21,11 @@ struct JobsPreparedRequest {
 }
 
 enum JobsEncodingRule {
+
     static func encoding(for request: JobsRequest) -> JobsParameterEncoding {
-        if let encoding = request.encoding { return encoding }
+        if let encoding = request.encoding {
+            return encoding
+        }
         switch request.method {
         /// 合并处理 .get、.head、.delete 分支
         case .get, .head, .delete:
@@ -32,7 +36,8 @@ enum JobsEncodingRule {
         }
     }
 
-    static func validate(_ request: JobsRequest, encoding: JobsParameterEncoding) throws {
+    static func validate(_ request: JobsRequest,
+                         encoding: JobsParameterEncoding) throws {
         switch encoding {
         /// 处理 .urlQuery 分支
         case .urlQuery:

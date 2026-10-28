@@ -13,6 +13,7 @@ import JobsSwiftDSL
 #endif
 
 public final class JobsSwiftCalendar: UIView {
+
     public weak var dataSource: JobsSwiftCalendarDataSource?
     public weak var delegate: JobsSwiftCalendarDelegate?
     public weak var appearanceDelegate: JobsSwiftCalendarDelegateAppearance?
@@ -26,8 +27,13 @@ public final class JobsSwiftCalendar: UIView {
     public var formatter = DateFormatter.jobsMake { _ in }
     public var today: Date?
     public var currentPage: Date {
-        get { jobsCurrentPage }
-        set { setCurrentPage(newValue, animated: false) }
+        get {
+            jobsCurrentPage
+        }
+        set {
+            setCurrentPage(newValue,
+                           animated: false)
+        }
     }
     public private(set) var minimumDate = Date.distantPast
     public private(set) var maximumDate = Date.distantFuture
@@ -38,7 +44,9 @@ public final class JobsSwiftCalendar: UIView {
     public var adjustsBoundingRectWhenChangingMonths = true
     public var scope = JobsSwiftCalendarScope.month {
         didSet {
-            guard oldValue != scope else { return }
+            guard oldValue != scope else {
+                return
+            }
             let anchor = selectedDates.last ?? jobsCurrentPage
             jobsCurrentPage = scope == .week ? jobsStartOfWeek(anchor) : jobsStartOfMonth(anchor)
             reloadData()
@@ -47,7 +55,9 @@ public final class JobsSwiftCalendar: UIView {
     }
     public var placeholderType = JobsSwiftCalendarPlaceholderType.fillSixRows {
         didSet {
-            guard oldValue != placeholderType else { return }
+            guard oldValue != placeholderType else {
+                return
+            }
             reloadData()
         }
     }
@@ -81,11 +91,15 @@ public final class JobsSwiftCalendar: UIView {
         super.layoutSubviews()
         let width = bounds.width
         let height = bounds.height
-        let headerHeight = min(appearance.headerHeight, height)
-        let weekdayHeight = min(appearance.weekdayHeight, max(0, height - headerHeight))
+        let headerHeight = min(appearance.headerHeight,
+                               height)
+        let weekdayHeight = min(appearance.weekdayHeight,
+                                max(0,
+                                    height - headerHeight))
         let rowCount: CGFloat = scope == .week ? 1 : 6
         let gridY = headerHeight + weekdayHeight
-        let rowHeight = rowCount > 0 ? max(0, (height - gridY) / rowCount) : 0
+        let rowHeight = rowCount > 0 ? max(0,
+                                           (height - gridY) / rowCount) : 0
         let columnWidth = width / 7
         headerLabel.byFrame(CGRect(x: 0,
                                    y: 0,
@@ -121,15 +135,20 @@ public final class JobsSwiftCalendar: UIView {
         guard Thread.isMainThread else {
             DispatchQueue.main.async { [weak self] in
                 self?.reloadData()
-            };return
+            }
+            return
         }
         jobsReloadCalendarData()
         setNeedsLayout()
     }
 
-    public func setCurrentPage(_ currentPage: Date, animated: Bool) {
+    public func setCurrentPage(_ currentPage: Date,
+                               animated: Bool) {
         let date = scope == .week ? jobsStartOfWeek(currentPage) : jobsStartOfMonth(currentPage)
-        guard !jobsDate(date, isSameDayAs: jobsCurrentPage) else { return }
+        guard !jobsDate(date,
+                        isSameDayAs: jobsCurrentPage) else {
+            return
+        }
         jobsCurrentPage = date
         let updates: () -> Void = { [weak self] in
             self?.reloadData()
@@ -147,13 +166,20 @@ public final class JobsSwiftCalendar: UIView {
     }
 
     public func selectDate(_ date: Date?) {
-        guard let date else { return }
+        guard let date else {
+            return
+        }
         let day = jobsStartOfDay(date)
-        guard jobsDateIsSelectable(day) else { return }
+        guard jobsDateIsSelectable(day) else {
+            return
+        }
         if !allowsMultipleSelection {
             jobsMutableSelectedDates.removeAll()
         }
-        if !jobsMutableSelectedDates.contains(where: { jobsDate($0, isSameDayAs: day) }) {
+        if !jobsMutableSelectedDates.contains(where: {
+            jobsDate($0,
+                     isSameDayAs: day)
+        }) {
             jobsMutableSelectedDates.append(day)
         }
         selectedDates = jobsMutableSelectedDates
@@ -161,9 +187,14 @@ public final class JobsSwiftCalendar: UIView {
     }
 
     public func deselectDate(_ date: Date?) {
-        guard let date else { return }
+        guard let date else {
+            return
+        }
         let day = jobsStartOfDay(date)
-        jobsMutableSelectedDates.removeAll { jobsDate($0, isSameDayAs: day) }
+        jobsMutableSelectedDates.removeAll {
+            jobsDate($0,
+                     isSameDayAs: day)
+        }
         selectedDates = jobsMutableSelectedDates
         reloadData()
     }
@@ -172,14 +203,18 @@ public final class JobsSwiftCalendar: UIView {
         let rowCount: CGFloat = scope == .week ? 1 : 6
         let rowHeight: CGFloat = 42
         let height = appearance.headerHeight + appearance.weekdayHeight + rowHeight * rowCount
-        return CGRect(x: 0, y: 0, width: bounds.width, height: height)
+        return CGRect(x: 0,
+                      y: 0,
+                      width: bounds.width,
+                      height: height)
     }
 
     public func jobsInvalidateCalendarLayout() {
         guard Thread.isMainThread else {
             DispatchQueue.main.async { [weak self] in
                 self?.jobsInvalidateCalendarLayout()
-            };return
+            }
+            return
         }
         setNeedsLayout()
         layoutIfNeeded()
@@ -189,13 +224,15 @@ public final class JobsSwiftCalendar: UIView {
         guard Thread.isMainThread else {
             DispatchQueue.main.async { [weak self] in
                 self?.jobsReloadDataSafely()
-            };return
+            }
+            return
         }
         reloadData()
     }
 }
 
 private extension JobsSwiftCalendar {
+
     func jobsCommonInit() {
         formatter
             .byCalendar(gregorian)
@@ -218,31 +255,37 @@ private extension JobsSwiftCalendar {
         headerLabel
             .byTextAlignment(.center)
             .byAddTo(self)
-        for _ in 0..<7 {
+        for _ in 0 ..< 7 {
             let label = UILabel.jobsMake { _ in }
             label.byTextAlignment(.center)
             weekdayLabels.append(label)
             label.byAddTo(self)
         }
-        for _ in 0..<42 {
+        for _ in 0 ..< 42 {
             let cell = JobsSwiftCalendarDayCell(frame: .zero)
-                .byAddTarget(self, action: #selector(jobsCellClickEvent(_:)), for: .touchUpInside)
+                .byAddTarget(self,
+                             action: #selector(jobsCellClickEvent(_:)),
+                             for: .touchUpInside)
                 .byAddTo(self)
             dayCells.append(cell)
         }
     }
 
     func jobsInstallGestureRecognizers() {
-        let left = UISwipeGestureRecognizer(target: self, action: #selector(jobsSwipeGestureEvent(_:)))
+        let left = UISwipeGestureRecognizer(target: self,
+                                            action: #selector(jobsSwipeGestureEvent(_:)))
         left.byDirection(.left)
         addGestureRecognizer(left)
-        let right = UISwipeGestureRecognizer(target: self, action: #selector(jobsSwipeGestureEvent(_:)))
+        let right = UISwipeGestureRecognizer(target: self,
+                                             action: #selector(jobsSwipeGestureEvent(_:)))
         right.byDirection(.right)
         addGestureRecognizer(right)
     }
 
     @objc func jobsSwipeGestureEvent(_ gesture: UISwipeGestureRecognizer) {
-        guard isScrollEnabled else { return }
+        guard isScrollEnabled else {
+            return
+        }
         if gesture.direction == .left {
             jobsMoveCurrentPage(byMonthOffset: 1)
         } else if gesture.direction == .right {
@@ -254,12 +297,17 @@ private extension JobsSwiftCalendar {
         guard Thread.isMainThread else {
             DispatchQueue.main.async { [weak self] in
                 self?.jobsScheduleBoundsReloadIfNeeded()
-            };return
+            }
+            return
         }
-        guard !jobsPendingBoundsReload else { return }
+        guard !jobsPendingBoundsReload else {
+            return
+        }
         jobsPendingBoundsReload = true
         DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.jobsPendingBoundsReload = false
             self.reloadData()
         }
@@ -292,15 +340,19 @@ private extension JobsSwiftCalendar {
             .byLocale(.current)
             .byCalendar(gregorian)
         let symbols = formatter.shortWeekdaySymbols ?? []
-        let startIndex = max(0, gregorian.firstWeekday - 1)
-        let orderedSymbols = (0..<7).map { index -> String in
-            guard !symbols.isEmpty else { return "" }
+        let startIndex = max(0,
+                             gregorian.firstWeekday - 1)
+        let orderedSymbols = (0 ..< 7).map { index -> String in
+            guard !symbols.isEmpty else {
+                return ""
+            }
             var symbol = symbols[(startIndex + index) % symbols.count]
             if appearance.caseOptions.contains(.weekdayUsesSingleUpperCase) {
                 symbol = symbol.isEmpty ? symbol : String(symbol.prefix(1)).uppercased()
             } else if appearance.caseOptions.contains(.weekdayUsesUpperCase) {
                 symbol = symbol.uppercased()
-            };return symbol
+            }
+            return symbol
         }
         weekdayLabels.enumerated().forEach { index, label in
             label
@@ -314,62 +366,106 @@ private extension JobsSwiftCalendar {
         let firstVisibleDate = scope == .week
             ? jobsStartOfWeek(currentPage)
             : jobsStartOfWeek(jobsStartOfMonth(currentPage))
-        jobsVisibleDates = (0..<42).map { jobsDate(byAdding: .day, value: $0, to: firstVisibleDate) }
+        jobsVisibleDates = (0 ..< 42).map {
+            jobsDate(byAdding: .day,
+                     value: $0,
+                     to: firstVisibleDate)
+        }
         dayCells.enumerated().forEach { index, cell in
             let date = jobsVisibleDates[index]
             let position = jobsMonthPosition(for: date)
             let placeholder = scope == .month && position != .current
             let hiddenByPlaceholder = placeholderType == .none && placeholder
-            let title = hiddenByPlaceholder ? nil : (dataSource?.calendar(self, titleFor: date) ?? jobsDayFormatter.string(from: date))
-            let subtitle = hiddenByPlaceholder ? nil : dataSource?.calendar(self, subtitleFor: date)
-            let image = hiddenByPlaceholder ? nil : dataSource?.calendar(self, imageFor: date)
-            let eventsCount = hiddenByPlaceholder ? 0 : (dataSource?.calendar(self, numberOfEventsFor: date) ?? 0)
-            let selected = selectedDates.contains { jobsDate($0, isSameDayAs: date) }
-            let isToday = today.map { jobsDate(date, isSameDayAs: $0) } ?? false
+            let title = hiddenByPlaceholder ? nil : (dataSource?.calendar(self,
+                                                                          titleFor: date) ?? jobsDayFormatter.string(from: date))
+            let subtitle = hiddenByPlaceholder ? nil : dataSource?.calendar(self,
+                                                                            subtitleFor: date)
+            let image = hiddenByPlaceholder ? nil : dataSource?.calendar(self,
+                                                                         imageFor: date)
+            let eventsCount = hiddenByPlaceholder ? 0 : (dataSource?.calendar(self,
+                                                                              numberOfEventsFor: date) ?? 0)
+            let selected = selectedDates.contains {
+                jobsDate($0,
+                         isSameDayAs: date)
+            }
+            let isToday = today.map {
+                jobsDate(date,
+                         isSameDayAs: $0)
+            } ?? false
             let enabled = !hiddenByPlaceholder && jobsDateIsSelectable(date)
             cell
                 .byDate(date)
-                .jobsConfigure(
-                    title: title,
-                    subtitle: subtitle,
-                    image: image,
-                    appearance: appearance,
-                    monthPosition: position,
-                    enabled: enabled,
-                    selected: selected,
-                    today: isToday,
-                    eventsCount: eventsCount,
-                    titleDefaultColor: appearanceDelegate?.calendar(self, appearance: appearance, titleDefaultColorFor: date),
-                    titleSelectionColor: appearanceDelegate?.calendar(self, appearance: appearance, titleSelectionColorFor: date),
-                    subtitleDefaultColor: appearanceDelegate?.calendar(self, appearance: appearance, subtitleDefaultColorFor: date),
-                    selectionColor: appearanceDelegate?.calendar(self, appearance: appearance, selectionColorFor: date)
-                )
-            delegate?.calendar(self, willDisplay: cell, for: date, atMonthPosition: position)
+                .jobsConfigure(title: title,
+                               subtitle: subtitle,
+                               image: image,
+                               appearance: appearance,
+                               monthPosition: position,
+                               enabled: enabled,
+                               selected: selected,
+                               today: isToday,
+                               eventsCount: eventsCount,
+                               titleDefaultColor: appearanceDelegate?.calendar(self,
+                                                                               appearance: appearance,
+                                                                               titleDefaultColorFor: date),
+                               titleSelectionColor: appearanceDelegate?.calendar(self,
+                                                                                 appearance: appearance,
+                                                                                 titleSelectionColorFor: date),
+                               subtitleDefaultColor: appearanceDelegate?.calendar(self,
+                                                                                  appearance: appearance,
+                                                                                  subtitleDefaultColorFor: date),
+                               selectionColor: appearanceDelegate?.calendar(self,
+                                                                            appearance: appearance,
+                                                                            selectionColorFor: date))
+            delegate?.calendar(self,
+                               willDisplay: cell,
+                               for: date,
+                               atMonthPosition: position)
         }
     }
 
     func jobsMoveCurrentPage(byMonthOffset monthOffset: Int) {
         let component: Foundation.Calendar.Component = scope == .week ? .weekOfYear : .month
-        setCurrentPage(jobsDate(byAdding: component, value: monthOffset, to: currentPage), animated: true)
+        setCurrentPage(jobsDate(byAdding: component,
+                                value: monthOffset,
+                                to: currentPage),
+                       animated: true)
     }
 
     @objc func jobsCellClickEvent(_ cell: JobsSwiftCalendarDayCell) {
-        guard let cellDate = cell.date, cell.isEnabled else { return }
-        let date = jobsStartOfDay(cellDate)
-        let position = jobsMonthPosition(for: date)
-        let selected = selectedDates.contains { jobsDate($0, isSameDayAs: date) }
-        if selected {
-            guard delegate?.calendar(self, shouldDeselect: date, atMonthPosition: position) ?? true else { return }
-            deselectDate(date)
-            delegate?.calendar(self, didDeselect: date, atMonthPosition: position)
+        guard let cellDate = cell.date, cell.isEnabled else {
             return
         }
-        guard delegate?.calendar(self, shouldSelect: date, atMonthPosition: position) ?? true else { return }
+        let date = jobsStartOfDay(cellDate)
+        let position = jobsMonthPosition(for: date)
+        let selected = selectedDates.contains {
+            jobsDate($0,
+                     isSameDayAs: date)
+        }
+        if selected {
+            guard delegate?.calendar(self,
+                                     shouldDeselect: date,
+                                     atMonthPosition: position) ?? true else {
+                return
+            }
+            deselectDate(date)
+            delegate?.calendar(self,
+                               didDeselect: date,
+                               atMonthPosition: position)
+            return
+        }
+        guard delegate?.calendar(self,
+                                 shouldSelect: date,
+                                 atMonthPosition: position) ?? true else {
+            return
+        }
         selectDate(date)
         if position != .current {
-            setCurrentPage(date, animated: true)
+            setCurrentPage(date,
+                           animated: true)
         }
-        delegate?.calendar(self, didSelect: date, atMonthPosition: position)
+        delegate?.calendar(self,
+                           didSelect: date,
+                           atMonthPosition: position)
     }
 
     func jobsStartOfDay(_ date: Date) -> Date {
@@ -378,28 +474,41 @@ private extension JobsSwiftCalendar {
 
     func jobsStartOfWeek(_ date: Date) -> Date {
         let day = jobsStartOfDay(date)
-        let weekday = gregorian.component(.weekday, from: day)
+        let weekday = gregorian.component(.weekday,
+                                          from: day)
         let offset = (weekday - gregorian.firstWeekday + 7) % 7
-        return jobsDate(byAdding: .day, value: -offset, to: day)
+        return jobsDate(byAdding: .day,
+                        value: -offset,
+                        to: day)
     }
 
     func jobsStartOfMonth(_ date: Date) -> Date {
-        var components = gregorian.dateComponents([.year, .month], from: date)
+        var components = gregorian.dateComponents([.year, .month],
+                                                  from: date)
         components.day = 1
         return gregorian.date(from: components) ?? date
     }
 
-    func jobsDate(byAdding component: Foundation.Calendar.Component, value: Int, to date: Date) -> Date {
-        gregorian.date(byAdding: component, value: value, to: date) ?? date
+    func jobsDate(byAdding component: Foundation.Calendar.Component,
+                  value: Int,
+                  to date: Date) -> Date {
+        gregorian.date(byAdding: component,
+                       value: value,
+                       to: date) ?? date
     }
 
-    func jobsDate(_ date: Date, isSameDayAs otherDate: Date) -> Bool {
-        gregorian.isDate(date, inSameDayAs: otherDate)
+    func jobsDate(_ date: Date,
+                  isSameDayAs otherDate: Date) -> Bool {
+        gregorian.isDate(date,
+                         inSameDayAs: otherDate)
     }
 
-    func jobsDate(_ date: Date, isSameMonthAs otherDate: Date) -> Bool {
-        let left = gregorian.dateComponents([.year, .month], from: date)
-        let right = gregorian.dateComponents([.year, .month], from: otherDate)
+    func jobsDate(_ date: Date,
+                  isSameMonthAs otherDate: Date) -> Bool {
+        let left = gregorian.dateComponents([.year, .month],
+                                            from: date)
+        let right = gregorian.dateComponents([.year, .month],
+                                             from: otherDate)
         return left.year == right.year && left.month == right.month
     }
 
@@ -408,12 +517,16 @@ private extension JobsSwiftCalendar {
     }
 
     func jobsMonthPosition(for date: Date) -> JobsSwiftCalendarMonthPosition {
-        if jobsDate(date, isSameMonthAs: currentPage) {
+        if jobsDate(date,
+                    isSameMonthAs: currentPage) {
             return .current
-        };return date < currentPage ? .previous : .next
+        }
+        return date < currentPage ? .previous : .next
     }
 
     func jobsNotifyBoundingRectIfNeeded(animated: Bool) {
-        delegate?.calendar(self, boundingRectWillChange: boundingRect(for: scope), animated: animated)
+        delegate?.calendar(self,
+                           boundingRectWillChange: boundingRect(for: scope),
+                           animated: animated)
     }
 }

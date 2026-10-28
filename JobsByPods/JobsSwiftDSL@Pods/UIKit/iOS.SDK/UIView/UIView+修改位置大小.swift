@@ -18,14 +18,23 @@ import JobsSwiftBaseDefines
 //@import JobsByUIKit;
 // MARK: - 自定义便捷计算属性@必要要暴露给OC
 extension UIView {
+
     @objc public var x: CGFloat {
-        get { frame.origin.x }
-        set { frame.origin.x = newValue }
+        get {
+            frame.origin.x
+        }
+        set {
+            frame.origin.x = newValue
+        }
     }
 
     @objc public var y: CGFloat {
-        get { frame.origin.y }
-        set { frame.origin.y = newValue }
+        get {
+            frame.origin.y
+        }
+        set {
+            frame.origin.y = newValue
+        }
     }
 
     @objc public var maxX: CGFloat {
@@ -37,77 +46,134 @@ extension UIView {
     }
 
     @objc public var centerX: CGFloat {
-        get { center.x }
-        set { center.x = newValue }
+        get {
+            center.x
+        }
+        set {
+            center.x = newValue
+        }
     }
 
     @objc public var centerY: CGFloat {
-        get { center.y }
-        set { center.y = newValue }
+        get {
+            center.y
+        }
+        set {
+            center.y = newValue
+        }
     }
     /// frame@origin
     @objc public var origin: CGPoint {
-      get { frame.origin }
-      set { frame.origin = newValue }
+        get {
+            frame.origin
+        }
+        set {
+            frame.origin = newValue
+        }
     }
     /// bounds@origin
     @objc public var boundsOrigin: CGPoint {
-        get { bounds.origin }
-        set { bounds.origin = newValue }
+        get {
+            bounds.origin
+        }
+        set {
+            bounds.origin = newValue
+        }
     }
     // MARK: 对UI控件@平面四个方向的坐标
     @objc public var top: CGFloat {
-        get { frame.origin.y }
-        set { frame.origin.y = newValue }
+        get {
+            frame.origin.y
+        }
+        set {
+            frame.origin.y = newValue
+        }
     }
 
     @objc public var left: CGFloat {
-        get { frame.origin.x }
-        set { frame.origin.x = newValue }
+        get {
+            frame.origin.x
+        }
+        set {
+            frame.origin.x = newValue
+        }
     }
 
     @objc public var bottom: CGFloat {
-        get { frame.origin.y + frame.size.height }
-        set { frame.origin.y = newValue - frame.size.height }
+        get {
+            frame.origin.y + frame.size.height
+        }
+        set {
+            frame.origin.y = newValue - frame.size.height
+        }
     }
 
     @objc public var right: CGFloat {
-        get { frame.origin.x + frame.size.width }
-        set { frame.origin.x = newValue - frame.size.width }
+        get {
+            frame.origin.x + frame.size.width
+        }
+        set {
+            frame.origin.x = newValue - frame.size.width
+        }
     }
     // MARK: 对UI控件@尺寸
     @objc public var size: CGSize {
-        get { frame.size }
-        set { frame.size = newValue }
+        get {
+            frame.size
+        }
+        set {
+            frame.size = newValue
+        }
     }
 
     @objc public var width: CGFloat {
-        get { frame.size.width }
-        set { frame.size.width = newValue }
+        get {
+            frame.size.width
+        }
+        set {
+            frame.size.width = newValue
+        }
     }
 
     @objc public var height: CGFloat {
-        get { frame.size.height }
-        set { frame.size.height = newValue }
+        get {
+            frame.size.height
+        }
+        set {
+            frame.size.height = newValue
+        }
     }
 
     @objc public var boundsSize: CGSize {
-        get { bounds.size }
-        set { bounds.size = newValue }
+        get {
+            bounds.size
+        }
+        set {
+            bounds.size = newValue
+        }
     }
 
     @objc public var boundsWidth: CGFloat {
-        get { bounds.size.width }
-        set { bounds.size.width = newValue }
+        get {
+            bounds.size.width
+        }
+        set {
+            bounds.size.width = newValue
+        }
     }
 
     @objc public var boundsHeight: CGFloat {
-        get { bounds.size.height }
-        set { bounds.size.height = newValue }
+        get {
+            bounds.size.height
+        }
+        set {
+            bounds.size.height = newValue
+        }
     }
 }
 // MARK: - 修改位置大小@DSL系统API结构体
 extension UIView {
+
     @discardableResult
     public func byFrame(_ f: CGRect) -> Self {
         frame = f
@@ -128,6 +194,7 @@ extension UIView {
 }
 // MARK: - 自定义便捷计算属性@DSL
 extension UIView {
+
     @discardableResult
     public func byX(_ value: CGFloat) -> Self {
         x = value
@@ -226,6 +293,7 @@ extension UIView {
 }
 // MARK: X/Y
 extension UIView {
+
     /// 在当前宽度基础上叠加偏移（正负皆可）
     @discardableResult
     public func byWidthOffset(_ delta: CGFloat) -> Self {
@@ -245,26 +313,37 @@ extension UIView {
 }
 // MARK: center
 extension UIView {
+
     /// 在当前中心点基础上叠加偏移
     @discardableResult
     public func byCenterOffset(dx: CGFloat = 0,
                                dy: CGFloat = 0) -> Self {
-        center = CGPoint(x: center.x + dx, y: center.y + dy)
+        center = CGPoint(x: center.x + dx,
+                         y: center.y + dy)
         return self
     }
 }
 // MARK: frame
 extension UIView {
+
     @discardableResult
     public func byFrame(x: CGFloat? = nil,
                         y: CGFloat? = nil,
                         width: CGFloat? = nil,
                         height: CGFloat? = nil) -> Self {
         var f = frame
-        if let x = x { f.origin.x = x }
-        if let y = y { f.origin.y = y }
-        if let w = width { f.size.width = w }
-        if let h = height { f.size.height = h }
+        if let x = x {
+            f.origin.x = x
+        }
+        if let y = y {
+            f.origin.y = y
+        }
+        if let w = width {
+            f.size.width = w
+        }
+        if let h = height {
+            f.size.height = h
+        }
         frame = f
         return self
     }
@@ -273,8 +352,12 @@ extension UIView {
     public func byFrame(origin: CGPoint? = nil,
                         size: CGSize? = nil) -> Self {
         var f = frame
-        if let origin { f.origin = origin }
-        if let size { f.size = size }
+        if let origin {
+            f.origin = origin
+        }
+        if let size {
+            f.size = size
+        }
         frame = f
         return self
     }
@@ -282,10 +365,18 @@ extension UIView {
     @discardableResult
     func byFrame(_ patch: FramePatch) -> Self {
         var f = frame
-        if let x = patch.x { f.origin.x = x }
-        if let y = patch.y { f.origin.y = y }
-        if let w = patch.width { f.size.width = w }
-        if let h = patch.height { f.size.height = h }
+        if let x = patch.x {
+            f.origin.x = x
+        }
+        if let y = patch.y {
+            f.origin.y = y
+        }
+        if let w = patch.width {
+            f.size.width = w
+        }
+        if let h = patch.height {
+            f.size.height = h
+        }
         frame = f
         return self
     }
@@ -306,6 +397,7 @@ extension UIView {
 }
 // MARK: frame.origin
 extension UIView {
+
     /// 在当前 x/y 基础上叠加偏移
     @discardableResult
     public func byOriginOffset(dx: CGFloat = 0,
@@ -333,6 +425,7 @@ extension UIView {
 }
 // MARK: bySize
 extension UIView {
+
     /// 允许在链式调用里“根据自身当前状态”计算 size
     @discardableResult
     public func bySize(_ make: (Self) -> CGSize) -> Self {
@@ -344,7 +437,8 @@ extension UIView {
     @discardableResult
     public func bySize(width: CGFloat,
                        height: CGFloat) -> Self {
-        frame.size = CGSize(width: width, height: height)
+        frame.size = CGSize(width: width,
+                            height: height)
         return self
     }
     /// 同时对宽高做偏移（正负皆可）

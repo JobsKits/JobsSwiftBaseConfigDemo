@@ -15,9 +15,12 @@ import JobsSwiftUILabelScrolling
 import SnapKit
 
 final class JobsSwiftExcelDemoCell: UITableViewCell {
+
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 17, weight: .semibold))
+        UILabel
+            .jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 17,
+                                        weight: .semibold))
             .byTextColor(JobsCor.label)
             .byNumberOfLines(0)
             .byAddTo(contentView) { make in
@@ -36,8 +39,10 @@ final class JobsSwiftExcelDemoCell: UITableViewCell {
             }
     }()
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override init(style: UITableViewCell.CellStyle,
+                  reuseIdentifier: String?) {
+        super.init(style: style,
+                   reuseIdentifier: reuseIdentifier)
         bySelectionStyle(.none)
         byBackgroundColor(JobsCor.clear)
         contentView.byBackgroundColor(JobsCor.clear)
@@ -56,22 +61,19 @@ final class JobsSwiftExcelDemoCell: UITableViewCell {
         super.prepareForReuse()
         excelView.onSelectCell = nil
         excelView.onHorizontalOffsetChange = nil
-        excelView.setHorizontalContentOffset(0, animated: false)
+        excelView.setHorizontalContentOffset(0,
+                                             animated: false)
     }
 
-    func configure(
-        title: String,
-        columns: [JobsSwiftExcelColumn],
-        rows: [JobsSwiftExcelRow],
-        freezeThroughColumn: Int?,
-        onSelectCell: @escaping (JobsSwiftExcelCellContext) -> Void
-    ) {
+    func configure(title: String,
+                   columns: [JobsSwiftExcelColumn],
+                   rows: [JobsSwiftExcelRow],
+                   freezeThroughColumn: Int?,
+                   onSelectCell: @escaping (JobsSwiftExcelCellContext) -> Void) {
         titleLabel.byText(title)
         excelView.onSelectCell = onSelectCell
-        excelView.configure(
-            columns: columns,
-            rows: rows,
-            freezeThroughColumn: freezeThroughColumn
-        )
+        excelView.configure(columns: columns,
+                            rows: rows,
+                            freezeThroughColumn: freezeThroughColumn)
     }
 }

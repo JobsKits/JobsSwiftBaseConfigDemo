@@ -13,10 +13,15 @@ import UIKit
 
 // MARK: - 屏幕常亮
 extension NSObject {
+
     /// 屏幕是否保持常亮
     public var isScreenAlwaysOn: Bool {
-        get { UIApplication.shared.isIdleTimerDisabled }
-        set { UIApplication.shared.isIdleTimerDisabled = newValue }
+        get {
+            UIApplication.shared.isIdleTimerDisabled
+        }
+        set {
+            UIApplication.shared.isIdleTimerDisabled = newValue
+        }
     }
     /// 开启常亮
     public func keepScreenOn() {

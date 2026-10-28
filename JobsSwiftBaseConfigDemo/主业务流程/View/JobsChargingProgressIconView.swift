@@ -16,6 +16,7 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class JobsChargingProgressIconView: UIView {
+
     private static let segmentCount = 3
     private var phase = 0
 
@@ -58,14 +59,18 @@ final class JobsChargingProgressIconView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
-        segments.forEach { $0.byVisible(YES) }
+        segments.forEach {
+            $0.byVisible(YES)
+        }
         update(phase: 0)
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         isUserInteractionEnabled = false
-        segments.forEach { $0.byVisible(YES) }
+        segments.forEach {
+            $0.byVisible(YES)
+        }
         update(phase: 0)
     }
 
@@ -75,14 +80,17 @@ final class JobsChargingProgressIconView: UIView {
     }
 
     func update(phase: Int) {
-        self.phase = max(0, phase) % Self.segmentCount
+        self.phase = max(0,
+                         phase) % Self.segmentCount
         applyColors()
     }
 }
 
 private extension JobsChargingProgressIconView {
+
     func makeSegment() -> UIView {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byCornerRadius(1.5)
             .byClipsToBounds(YES)
     }

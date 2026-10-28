@@ -8,9 +8,11 @@
 import Foundation
 
 public extension JobsObservable {
+
     func map<Mapped>(_ transform: @escaping @Sendable (Value) -> Mapped,
                      name: String? = nil) -> JobsObservable<Mapped> where Mapped: Sendable {
-        let mapped = JobsObservable<Mapped>(transform(currentValue), name: name)
+        let mapped = JobsObservable<Mapped>(transform(currentValue),
+                                            name: name)
         let token = observe { [weak mapped] change in
             mapped?.accept(transform(change.newValue))
         }
@@ -23,7 +25,8 @@ public extension JobsObservable {
     func filter(_ isIncluded: @escaping @Sendable (Value) -> Bool,
                 name: String? = nil) -> JobsObservable<Value> {
         let initial = currentValue
-        let filtered = JobsObservable<Value>(initial, name: name)
+        let filtered = JobsObservable<Value>(initial,
+                                             name: name)
         let token = observe { [weak filtered] change in
             guard isIncluded(change.newValue) else {
                 return
@@ -38,9 +41,11 @@ public extension JobsObservable {
 
     func distinctUntilChanged(_ comparator: @escaping @Sendable (Value, Value) -> Bool,
                               name: String? = nil) -> JobsObservable<Value> {
-        let derived = JobsObservable<Value>(currentValue, name: name)
+        let derived = JobsObservable<Value>(currentValue,
+                                            name: name)
         let token = observe { [weak derived] change in
-            guard !comparator(change.oldValue, change.newValue) else {
+            guard !comparator(change.oldValue,
+                              change.newValue) else {
                 return
             }
             derived?.accept(change.newValue)
@@ -53,7 +58,11 @@ public extension JobsObservable {
 }
 
 public extension JobsObservable where Value: Equatable {
+
     func distinctUntilChanged(name: String? = nil) -> JobsObservable<Value> {
-        distinctUntilChanged({ $0 == $1 }, name: name)
+        distinctUntilChanged({
+            $0 == $1
+        },
+                             name: name)
     }
 }

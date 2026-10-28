@@ -15,6 +15,7 @@ import UIKit
 import JXSegmentedView
 // MARK: - NumberDataSource
 extension JXSegmentedNumberDataSource {
+
     @discardableResult
     public func byNumbers(_ v: [Int]) -> Self {
         numbers = v

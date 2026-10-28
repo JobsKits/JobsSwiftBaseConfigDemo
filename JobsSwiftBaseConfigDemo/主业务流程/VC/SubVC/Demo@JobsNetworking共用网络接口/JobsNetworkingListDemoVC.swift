@@ -22,8 +22,10 @@ import GKNavigationBarSwift
 
 // MARK: - 外层入口：TableView + SnapKit
 final class JobsNetworkingListDemoVC : BaseVC {
+
     private let items = DemoItem.allCases
     private enum DemoItem: CaseIterable {
+
         case requestAPI
         case uploadFile
         case concurrentRequests
@@ -32,15 +34,20 @@ final class JobsNetworkingListDemoVC : BaseVC {
         var title: String {
             switch self {
             /// 处理 .requestAPI 分支
-            case .requestAPI: return "Demo@ 请求接口.swift"
+            case .requestAPI:
+                return "Demo@ 请求接口.swift"
             /// 处理 .uploadFile 分支
-            case .uploadFile: return "Demo@ 上传文件.swift"
+            case .uploadFile:
+                return "Demo@ 上传文件.swift"
             /// 处理 .concurrentRequests 分支
-            case .concurrentRequests: return "Demo@ 同步并发请求.swift"
+            case .concurrentRequests:
+                return "Demo@ 同步并发请求.swift"
             /// 处理 .downloadToLocal 分支
-            case .downloadToLocal: return "Demo@ 下载文件到本地.swift"
+            case .downloadToLocal:
+                return "Demo@ 下载文件到本地.swift"
             /// 处理 .generalRequest 分支
-            case .generalRequest: return "Demo@ 一般数据请求.swift"
+            case .generalRequest:
+                return "Demo@ 一般数据请求.swift"
             }
         }
         func makeViewController() -> UIViewController {
@@ -65,51 +72,67 @@ final class JobsNetworkingListDemoVC : BaseVC {
     }
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byRegisterCell(UITableViewCell.self)
             .bySeparatorStyle(.singleLine)
             .setRefreshSound("Sound.wav")
-            // 非正式协议闭包化
-            .byTarget(self)
+        // 非正式协议闭包化
+        .byTarget(self)
             .numberOfRowsInSection { [weak self] _, _, _ in
                 self?.items.count ?? 0
             }
             .cellForRowAt { [weak self] _, tv, indexPath in
-                tv.byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+                tv
+                    .byDequeueReusableCell(withType: UITableViewCell.self,
+                                           for: indexPath)
                     .byListConfig {
-                        guard let self else { return $0 };return $0
+                        guard let self else {
+                            return $0
+                        }
+                        return $0
                             .byText(self.items[indexPath.row].title)
-                            .byTextFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+                            .byTextFont(JobsFont.systemFont(ofSize: 16,
+                                                            weight: .medium))
                     }
                     .byAccessoryType(.disclosureIndicator)
             }
             .didSelectRowAt { [weak self] _, tv, indexPath in
-                guard let self else { return }
-                tv.deselectRow(at: indexPath, animated: true)
-                self.items[indexPath.row].makeViewController().byPush(self, animated: YES)
+                guard let self else {
+                    return
+                }
+                tv.deselectRow(at: indexPath,
+                               animated: true)
+                self.items[indexPath.row].makeViewController()
+                    .byPush(self,
+                            animated: YES)
             }
-            // 下拉刷新 Header
-            .byRefreshHeader(component: JobsDefaultHeader(),
-                             container: self,
-                             trigger: 66) { [weak self] in
+        // 下拉刷新 Header
+        .byRefreshHeader(component: JobsDefaultHeader(),
+                         container: self,
+                         trigger: 66) { [weak self] in
                 onMainSync { [weak self] in
-                    guard let self else { return }
+                    guard let self else {
+                        return
+                    }
                     self.tableView.byReloadData()
                     self.tableView.switchRefreshHeader(to: .normal)
                     self.tableView.switchRefreshFooter(to: .normal) // 复位“无更多”
                 }
             }
-            // 上拉加载 Footer
-            .byRefreshFooter(component: JobsDefaultFooter(),
-                             container: self,
-                             trigger: 66) { [weak self] in
+        // 上拉加载 Footer
+        .byRefreshFooter(component: JobsDefaultFooter(),
+                         container: self,
+                         trigger: 66) { [weak self] in
                 onMainSync { [weak self] in
-                    guard let self else { return }
+                    guard let self else {
+                        return
+                    }
                     self.tableView.byReloadData()
                     self.tableView.switchRefreshFooter(to: .noMoreData)
                 }
             }
-            .byAddTo(view) {[unowned self] make in
+            .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
                     make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
                     make.left.right.bottom.equalToSuperview()

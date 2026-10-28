@@ -18,10 +18,12 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class FeedListCell: UITableViewCell {
+
     private var task: URLSessionDataTask?
     // MARK: - 懒加载 UI
     private lazy var cover: UIImageView = { [unowned self] in
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(true)
@@ -32,7 +34,8 @@ final class FeedListCell: UITableViewCell {
     }()
 
     private lazy var playIcon: UIImageView = { [unowned self] in
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byImage(UIImage(systemName: "play.circle.fill"))
             .byTintColor(JobsCor.white)
             .byContentMode(.scaleAspectFit)
@@ -44,7 +47,8 @@ final class FeedListCell: UITableViewCell {
     }()
 
     private lazy var nameLabel: UILabel = { [unowned self] in
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byFont(JobsFont.boldSystemFont(ofSize: 16))
             .byTextColor(JobsCor.label)
             .byAddTo(contentView) { [unowned self] make in
@@ -54,7 +58,8 @@ final class FeedListCell: UITableViewCell {
     }()
 
     private lazy var contentLabel: UILabel = { [unowned self] in
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(2)
@@ -66,8 +71,10 @@ final class FeedListCell: UITableViewCell {
     }()
 
     // MARK: - 生命周期
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override init(style: UITableViewCell.CellStyle,
+                  reuseIdentifier: String?) {
+        super.init(style: style,
+                   reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         contentView.byBackgroundColor(JobsCor.systemBackground)
         cover.byVisible(YES)
@@ -76,11 +83,13 @@ final class FeedListCell: UITableViewCell {
         contentLabel.byVisible(YES)
     }
 
-    required init?(coder: NSCoder) { fatalError() }
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        task?.cancel();
+        task?.cancel()
         task = nil
         cover.byImage(nil)
         nameLabel.byText(nil)
@@ -90,6 +99,8 @@ final class FeedListCell: UITableViewCell {
     func fill(_ item: FeedItem) {
         nameLabel.byText(item.nickname)
         contentLabel.byText(item.content.isEmpty ? " " : item.content)
-        task = ImageLoader.shared.load(url: item.headImg, into: cover, placeholder: nil)
+        task = ImageLoader.shared.load(url: item.headImg,
+                                       into: cover,
+                                       placeholder: nil)
     }
 }

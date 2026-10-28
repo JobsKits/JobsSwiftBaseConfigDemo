@@ -14,10 +14,13 @@ import JobsSwiftGraphicCaptcha
 import SnapKit
 
 public final class JobsAppDoorInputView: UIView {
+
     public let field: JobsAppDoorField
     public let textField: UITextField
     public private(set) var countryCode = "+86"
-    public var text: String { textField.text ?? "" }
+    public var text: String {
+        textField.text ?? ""
+    }
     public var onTextChanged: (() -> Void)?
     public var onCountryCodeRequest: (() -> Void)?
     public var onVerificationCodeRequest: (() -> Void)?
@@ -29,7 +32,8 @@ public final class JobsAppDoorInputView: UIView {
     public private(set) var captchaView: JobsSwiftGraphicCaptchaView?
 
     private lazy var iconView: UIImageView = {
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byContentMode(.scaleAspectFit)
             .byTintColor(JobsAppDoorPalette.gold)
             .byAddTo(self) { make in
@@ -39,14 +43,13 @@ public final class JobsAppDoorInputView: UIView {
             }
     }()
 
-    public init(
-        field: JobsAppDoorField,
-        captchaConfig: JobsAppDoorGraphicCaptchaConfig = .defaultConfig,
-        verificationCodeDuration: Int = 60
-    ) {
+    public init(field: JobsAppDoorField,
+                captchaConfig: JobsAppDoorGraphicCaptchaConfig = .defaultConfig,
+                verificationCodeDuration: Int = 60) {
         self.field = field
         self.captchaConfig = captchaConfig
-        self.verificationCodeDuration = max(1, verificationCodeDuration)
+        self.verificationCodeDuration = max(1,
+                                            verificationCodeDuration)
         self.textField = UITextField.jobsMake { _ in }
         super.init(frame: .zero)
         setupView()
@@ -57,16 +60,24 @@ public final class JobsAppDoorInputView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public func setCountry(flag: String, code: String) {
+    public func setCountry(flag: String,
+                           code: String) {
         countryCode = code.hasPrefix("+") ? code : "+\(code)"
-        countryCodeButton?.byTitle("\(flag) \(countryCode)", for: .normal)
+        countryCodeButton?.byTitle("\(flag) \(countryCode)",
+                                   for: .normal)
     }
 
     public func validateGraphicCaptcha() -> Bool {
-        guard field == .graphicCaptcha else { return true }
+        guard field == .graphicCaptcha else {
+            return true
+        }
         if captchaView?.usesServerValidation == true {
-            guard let challenge = captchaView?.serverChallenge else { return false }
-            return !text.isEmpty && (challenge.expiresAt.map { $0 > Date() } ?? true)
+            guard let challenge = captchaView?.serverChallenge else {
+                return false
+            }
+            return !text.isEmpty && (challenge.expiresAt.map {
+                $0 > Date()
+            } ?? true)
         }
         return captchaView?.validateInput(text) ?? false
     }
@@ -77,6 +88,7 @@ public final class JobsAppDoorInputView: UIView {
 }
 
 private extension JobsAppDoorInputView {
+
     func setupView() {
         byBackgroundColor(JobsCor.clear)
             .byBorderColor(JobsAppDoorPalette.fieldStroke)
@@ -87,8 +99,10 @@ private extension JobsAppDoorInputView {
         textField
             .byPlaceholder(placeholder())
             .byPlaceholderColor(JobsAppDoorPalette.placeholder)
-            .byPlaceholderFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byPlaceholderFont(JobsFont.systemFont(ofSize: 14,
+                                                   weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 14,
+                                        weight: .regular))
             .byTextColor(JobsCor.white)
             .byTintColor(JobsCor.white)
             .byAutocorrectionType(.no)
@@ -116,12 +130,16 @@ private extension JobsAppDoorInputView {
         /// 处理密码及确认密码明密文切换分支
         case .password, .confirmPassword:
             let button = UIButton.sys()
-                .byImage(passwordImage(isSecure: true), for: .normal)
+                .byImage(passwordImage(isSecure: true),
+                         for: .normal)
                 .byTintColor(JobsAppDoorPalette.fieldStroke)
                 .onTap { [weak self] sender in
-                    guard let self else { return }
+                    guard let self else {
+                        return
+                    }
                     textField.byToggleSecureTextEntry()
-                    sender.byImage(passwordImage(isSecure: textField.isSecureTextEntry), for: .normal)
+                    sender.byImage(passwordImage(isSecure: textField.isSecureTextEntry),
+                                   for: .normal)
                 }
                 .byAddTo(self) { make in
                     make.right.equalToSuperview().inset(8)
@@ -132,13 +150,12 @@ private extension JobsAppDoorInputView {
         /// 处理手机国码选择分支
         case .phone:
             let button = UIButton.sys()
-                .jobsAppDoorAppearance(
-                    title: "🇨🇳 +86",
-                    titleColor: JobsAppDoorPalette.fieldStroke,
-                    font: JobsFont.systemFont(ofSize: 12, weight: .semibold),
-                    backgroundColor: JobsCor.clear,
-                    cornerRadius: 0
-                )
+                .jobsAppDoorAppearance(title: "🇨🇳 +86",
+                                       titleColor: JobsAppDoorPalette.fieldStroke,
+                                       font: JobsFont.systemFont(ofSize: 12,
+                                                                 weight: .semibold),
+                                       backgroundColor: JobsCor.clear,
+                                       cornerRadius: 0)
                 .onTap { [weak self] _ in
                     self?.onCountryCodeRequest?()
                 }
@@ -156,13 +173,12 @@ private extension JobsAppDoorInputView {
         /// 处理短信验证码倒计时分支
         case .smsCode:
             let button = UIButton.sys()
-                .jobsAppDoorAppearance(
-                    title: JobsAppDoorResource.text("获取验证码"),
-                    titleColor: JobsAppDoorPalette.darkGoldText,
-                    font: JobsFont.systemFont(ofSize: 10, weight: .semibold),
-                    backgroundColor: JobsAppDoorPalette.gold.withAlphaComponent(0.92),
-                    cornerRadius: 17
-                )
+                .jobsAppDoorAppearance(title: JobsAppDoorResource.text("获取验证码"),
+                                       titleColor: JobsAppDoorPalette.darkGoldText,
+                                       font: JobsFont.systemFont(ofSize: 10,
+                                                                 weight: .semibold),
+                                       backgroundColor: JobsAppDoorPalette.gold.withAlphaComponent(0.92),
+                                       cornerRadius: 17)
                 .byTitleAlignment(.center)
                 .byNumberOfLines(1)
                 .byTitleAdjustsFontSizeToFitWidth(true)
@@ -172,7 +188,8 @@ private extension JobsAppDoorInputView {
                     config.clickableWhileRunning = false
                     config.mode = .down(from: verificationCodeDuration)
                     config.renderLegacy = { seconds, countdownButton in
-                        countdownButton.byTitle(JobsAppDoorResource.countdownText(seconds: seconds), for: .normal)
+                        countdownButton.byTitle(JobsAppDoorResource.countdownText(seconds: seconds),
+                                                for: .normal)
                     }
                     if #available(iOS 15.0, *) {
                         config.renderConfiguration = { seconds, configuration in
@@ -182,17 +199,18 @@ private extension JobsAppDoorInputView {
                         }
                     }
                     config.onFinish = { countdownButton, _ in
-                        countdownButton.jobsAppDoorAppearance(
-                            title: JobsAppDoorResource.text("获取验证码"),
-                            titleColor: JobsAppDoorPalette.darkGoldText,
-                            font: JobsFont.systemFont(ofSize: 10, weight: .semibold),
-                            backgroundColor: JobsAppDoorPalette.gold.withAlphaComponent(0.92),
-                            cornerRadius: 17
-                        )
+                        countdownButton.jobsAppDoorAppearance(title: JobsAppDoorResource.text("获取验证码"),
+                                                              titleColor: JobsAppDoorPalette.darkGoldText,
+                                                              font: JobsFont.systemFont(ofSize: 10,
+                                                                                        weight: .semibold),
+                                                              backgroundColor: JobsAppDoorPalette.gold.withAlphaComponent(0.92),
+                                                              cornerRadius: 17)
                     }
                 }
                 .onTap { [weak self] sender in
-                    guard let self else { return }
+                    guard let self else {
+                        return
+                    }
                     onVerificationCodeRequest?()
                     sender.countdownStart()
                 }
@@ -267,7 +285,8 @@ private extension JobsAppDoorInputView {
         case .graphicCaptcha:
             resourceName = "codeEncode"
             symbolName = "character.cursor.ibeam"
-        };return JobsAppDoorResource.image(named: resourceName)
+        }
+        return JobsAppDoorResource.image(named: resourceName)
             ?? UIImage(systemName: symbolName)
     }
 

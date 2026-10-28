@@ -9,6 +9,7 @@ import QuartzCore
 import JobsSwiftBlock
 
 extension CATransition {
+
     /// 统一入口：CATransition.make { $0.byType(...).bySubtype(...) }
     public static func make(_ configure: jobsByCATransitionBlock) -> CATransition {
         let t = CATransition()
@@ -18,6 +19,7 @@ extension CATransition {
 }
 
 extension CATransition {
+
     @discardableResult
     public func byType(_ type: CATransitionType) -> Self {
         self.type = type

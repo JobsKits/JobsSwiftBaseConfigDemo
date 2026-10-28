@@ -9,6 +9,7 @@ import Foundation
 /// 任意 JSON 解码容器（备用）
 
 public struct AnyDecodable: Decodable {
+
     public let value: Any
 
     public init(from decoder: Decoder) throws {
@@ -24,11 +25,16 @@ public struct AnyDecodable: Decodable {
         } else if let v = try? c.decode(String.self) {
             value = v
         } else if let v = try? c.decode([AnyDecodable].self) {
-            value = v.map { $0.value }
+            value = v.map {
+                $0.value
+            }
         } else if let v = try? c.decode([String: AnyDecodable].self) {
-            value = v.mapValues { $0.value }
+            value = v.mapValues {
+                $0.value
+            }
         } else {
-            throw DecodingError.dataCorruptedError(in: c, debugDescription: "Unsupported JSON")
+            throw DecodingError.dataCorruptedError(in: c,
+                                                   debugDescription: "Unsupported JSON")
         }
     }
 }

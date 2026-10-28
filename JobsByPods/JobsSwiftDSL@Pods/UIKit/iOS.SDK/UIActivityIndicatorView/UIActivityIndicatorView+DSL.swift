@@ -13,6 +13,7 @@ import UIKit
 
 // MARK: - 直接赋值@单参数
 extension UIActivityIndicatorView {
+
     @discardableResult
     public func byStyle(_ style: UIActivityIndicatorView.Style) -> Self {
         self.style = style
@@ -33,6 +34,7 @@ extension UIActivityIndicatorView {
 }
 // MARK: - 闭包重载@单参数
 extension UIActivityIndicatorView {
+
     @discardableResult
     public func byStyle(_ builder: () -> UIActivityIndicatorView.Style) -> Self {
         self.style = builder()
@@ -53,6 +55,7 @@ extension UIActivityIndicatorView {
 }
 
 extension UIActivityIndicatorView {
+
     @discardableResult
     public func start() -> Self {
         self.startAnimating()

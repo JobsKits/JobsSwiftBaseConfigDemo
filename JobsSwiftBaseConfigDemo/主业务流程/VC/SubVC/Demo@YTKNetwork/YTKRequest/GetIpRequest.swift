@@ -16,6 +16,7 @@ import YTKNetwork
 /// GET /ip => {"origin": "x.x.x.x"}
 
 final class GetIpRequest: YTKRequest {
+
     override func requestUrl() -> String {
         return "/ip"
     }

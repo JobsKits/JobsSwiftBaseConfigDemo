@@ -32,8 +32,10 @@ import JobsSwiftDSL
  */
 /// 结合 SafeCodable 使用更佳
 extension Decimal {
+
     /// 统一的舍入规则（覆盖业务常见口径）
     public enum RoundingRule {
+
         /// 四舍五入（.plain）
         case plain
         /// 向下取整（绝对值方向变小，.down）
@@ -48,42 +50,60 @@ extension Decimal {
         case awayFromZero
     }
     /// 非破坏性：返回舍入后的新值
-    public func rounded(scale: Int, mode: RoundingRule = .bankers) -> Decimal {
+    public func rounded(scale: Int,
+                        mode: RoundingRule = .bankers) -> Decimal {
         var value = self
         var result = Decimal()
-        NSDecimalRound(&result, &value, scale, Self._nsMode(for: value, rule: mode))
+        NSDecimalRound(&result,
+                       &value,
+                       scale,
+                       Self._nsMode(for: value,
+                                    rule: mode))
         return result
     }
     /// 原地舍入
-    public mutating func round(scale: Int, mode: RoundingRule = .bankers) {
+    public mutating func round(scale: Int,
+                               mode: RoundingRule = .bankers) {
         var tmp = self
-        NSDecimalRound(&self, &tmp, scale, Self._nsMode(for: tmp, rule: mode))
+        NSDecimalRound(&self,
+                       &tmp,
+                       scale,
+                       Self._nsMode(for: tmp,
+                                    rule: mode))
     }
     /// 字符串展示：先按规则舍入，再格式化
     public func formatted(scale: Int,
                           mode: RoundingRule = .bankers,
                           usesGroupingSeparator: Bool = true,
                           locale: Locale = .current) -> String {
-        let rounded = self.rounded(scale: scale, mode: mode)
+        let rounded = self.rounded(scale: scale,
+                                   mode: mode)
         // 直接用 NSDecimalNumber 包装以避免 Double 精度丢失
-        return NumberFormatter.jobsMake { _ in }
+        return NumberFormatter
+            .jobsMake { _ in }
             .byLocale(locale)
             .byNumberStyle(.decimal)
             .byUsesGroupingSeparator(usesGroupingSeparator)
-            .byMinimumFractionDigits(max(0, scale))
-            .byMaximumFractionDigits(max(0, scale)).string(from: rounded as NSDecimalNumber) ?? "\(rounded)"
+            .byMinimumFractionDigits(max(0,scale))
+            .byMaximumFractionDigits(max(0,
+                                         scale)).string(from: rounded as NSDecimalNumber) ?? "\(rounded)"
     }
     // MARK: - 内部：把自定义规则映射到 NSDecimalNumber.RoundingMode
-    private static func _nsMode(for x: Decimal, rule: RoundingRule) -> NSDecimalNumber.RoundingMode {
+    private static func _nsMode(for x: Decimal,
+                                rule: RoundingRule) -> NSDecimalNumber.RoundingMode {
         switch rule {
         /// 处理 .plain 分支
-        case .plain:        return .plain
+        case .plain:
+            return .plain
         /// 处理 .down 分支
-        case .down:         return .down
+        case .down:
+            return .down
         /// 处理 .up 分支
-        case .up:           return .up
+        case .up:
+            return .up
         /// 处理 .bankers 分支
-        case .bankers:      return .bankers
+        case .bankers:
+            return .bankers
         /// 处理 .towardZero 分支
         case .towardZero:
             // 正数向下，负数向上 -> 趋近零
@@ -97,5 +117,9 @@ extension Decimal {
 }
 // 便捷比较：Decimal 默认可用 < >，这里补个 >= 以便内部判断
 extension Decimal {
-    public static func >= (lhs: Decimal, rhs: Decimal) -> Bool { (lhs as NSDecimalNumber).compare(rhs as NSDecimalNumber) != .orderedAscending }
+
+    public static func >= (lhs: Decimal,
+                           rhs: Decimal) -> Bool {
+        (lhs as NSDecimalNumber).compare(rhs as NSDecimalNumber) != .orderedAscending
+    }
 }

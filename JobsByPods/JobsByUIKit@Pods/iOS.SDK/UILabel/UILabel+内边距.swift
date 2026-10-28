@@ -17,11 +17,18 @@ import ObjectiveC
 private var _jobsInsetsKey: UInt8 = 0
 private var _jobsInsetsInstalledKey: UInt8 = 0
 extension UILabel {
+
     /// 给 UILabel 增加 contentInsets 能力（无需自定义子类）
     public var jobs_contentInsets: UIEdgeInsets {
-        get { (objc_getAssociatedObject(self, &_jobsInsetsKey) as? NSValue)?.uiEdgeInsetsValue ?? .zero }
+        get {
+            (objc_getAssociatedObject(self,
+                                      &_jobsInsetsKey) as? NSValue)?.uiEdgeInsetsValue ?? .zero
+        }
         set {
-            objc_setAssociatedObject(self, &_jobsInsetsKey, NSValue(uiEdgeInsets: newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self,
+                                     &_jobsInsetsKey,
+                                     NSValue(uiEdgeInsets: newValue),
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             _jobs_installInsetsSwizzleIfNeeded()
             setNeedsDisplay()
             invalidateIntrinsicContentSize()
@@ -36,28 +43,32 @@ extension UILabel {
 }
 
 extension UILabel {
+
     private static let _once: Void = {
         let cls = UILabel.self
         // drawText(in:)
-        _jobs_swizzle(cls, #selector(drawText(in:)), #selector(_jobs_drawText(in:)))
+        _jobs_swizzle(cls,
+                      #selector(drawText(in:)),
+                      #selector(_jobs_drawText(in:)))
         // textRect(forBounds:limitedToNumberOfLines:)
         _jobs_swizzle(cls,
                       #selector(textRect(forBounds:limitedToNumberOfLines:)),
                       #selector(_jobs_textRect(forBounds:limitedToNumberOfLines:)))
         // intrinsicContentSize
-        _jobs_swizzle(cls, #selector(getter: intrinsicContentSize), #selector(getter: _jobs_intrinsicContentSize))
+        _jobs_swizzle(cls,
+                      #selector(getter: intrinsicContentSize),
+                      #selector(getter: _jobs_intrinsicContentSize))
     }()
 
     private func _jobs_installInsetsSwizzleIfNeeded() {
-        let installed = (objc_getAssociatedObject(UILabel.self, &_jobsInsetsInstalledKey) as? Bool) ?? false
+        let installed = (objc_getAssociatedObject(UILabel.self,
+                                                  &_jobsInsetsInstalledKey) as? Bool) ?? false
         if !installed {
             _ = UILabel._once
-            objc_setAssociatedObject(
-                UILabel.self,
-                &_jobsInsetsInstalledKey,
-                true,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
+            objc_setAssociatedObject(UILabel.self,
+                                     &_jobsInsetsInstalledKey,
+                                     true,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
@@ -69,10 +80,12 @@ extension UILabel {
     }
 
     @objc
-    private func _jobs_textRect(forBounds bounds: CGRect, limitedToNumberOfLines numberOfLines: Int) -> CGRect {
+    private func _jobs_textRect(forBounds bounds: CGRect,
+                                limitedToNumberOfLines numberOfLines: Int) -> CGRect {
         let inset = jobs_contentInsets
         let b = bounds.inset(by: inset)
-        let rect = _jobs_textRect(forBounds: b, limitedToNumberOfLines: numberOfLines)
+        let rect = _jobs_textRect(forBounds: b,
+                                  limitedToNumberOfLines: numberOfLines)
         // 反向把 inset 加回去，保持 UILabel 外观尺寸一致
         return CGRect(x: rect.origin.x - inset.left,
                       y: rect.origin.y - inset.top,
@@ -92,7 +105,12 @@ extension UILabel {
 private func _jobs_swizzle(_ cls: AnyClass,
                            _ orig: Selector,
                            _ repl: Selector) {
-    guard let m1 = class_getInstanceMethod(cls, orig),
-          let m2 = class_getInstanceMethod(cls, repl) else { return }
-    method_exchangeImplementations(m1, m2)
+    guard let m1 = class_getInstanceMethod(cls,
+                                           orig),
+          let m2 = class_getInstanceMethod(cls,
+                                           repl) else {
+        return
+    }
+    method_exchangeImplementations(m1,
+                                   m2)
 }

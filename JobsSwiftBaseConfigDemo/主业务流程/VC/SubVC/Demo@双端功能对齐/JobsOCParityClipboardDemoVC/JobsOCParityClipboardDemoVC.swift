@@ -23,7 +23,8 @@ final class JobsClipboardCueDemoVC: BaseVC {
     private let copiedText = "财神到，四季发财！！！！"
 
     private lazy var copyLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("请点击复制：\(copiedText)".tr)
             .byFont(JobsFont.systemFont(ofSize: 20))
             .byTextColor(JobsCor.systemRed)
@@ -33,12 +34,12 @@ final class JobsClipboardCueDemoVC: BaseVC {
             .addTapAction { [weak self] (_: UILabel) in
                 self?.copyContent()
             }
-            .addLongPressAction(
-                minimumPressDuration: 0.6,
-                allowableMovement: 12,
-                numberOfTouchesRequired: 1
-            ) { [weak self] gesture in
-                guard gesture.state == .began else { return }
+            .addLongPressAction(minimumPressDuration: 0.6,
+                                allowableMovement: 12,
+                                numberOfTouchesRequired: 1) { [weak self] gesture in
+                guard gesture.state == .began else {
+                    return
+                }
                 self?.copyContent()
             }
             .byAddTo(view) { [unowned self] make in
@@ -49,13 +50,17 @@ final class JobsClipboardCueDemoVC: BaseVC {
     }()
 
     private lazy var pasteTextView: UITextView = {
-        UITextView.jobsMake { _ in }
+        UITextView
+            .jobsMake { _ in }
             .byText("请粘贴！！！".tr)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.label)
             .byBackgroundColor(JobsCor.systemGray6)
             .byCornerRadius(8)
-            .byTextContainerInset(UIEdgeInsets(top: 12, left: 10, bottom: 12, right: 10))
+            .byTextContainerInset(UIEdgeInsets(top: 12,
+                                               left: 10,
+                                               bottom: 12,
+                                               right: 10))
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(copyLabel.snp.bottom).offset(10)
                 make.left.right.equalToSuperview().inset(10)

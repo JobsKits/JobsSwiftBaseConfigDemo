@@ -373,6 +373,7 @@ PODS:
     - JobsByUIKit
     - JobsSwiftBaseDefines
     - JobsToast
+  - JobsSwiftDeviceGuard (1.0.0)
   - JobsSwiftDSL (0.1.0):
     - AFNetworking
     - BMPlayer
@@ -717,6 +718,7 @@ DEPENDENCIES:
   - "JobsSwiftComment (from `JobsByPods/JobsSwiftComment@Pods`)"
   - "JobsSwiftCountryCodeCtrl (from `JobsByPods/JobsSwiftCountryCodeCtrl@Pods`)"
   - "JobsSwiftDebugTools (from `JobsByPods/JobsSwiftDebugTools@Pods`)"
+  - "JobsSwiftDeviceGuard (from `JobsByPods/JobsSwiftDeviceGuard@Pods`)"
   - "JobsSwiftDSL (from `JobsByPods/JobsSwiftDSL@Pods`)"
   - "JobsSwiftExcel (from `JobsByPods/JobsSwiftExcel@Pods`)"
   - "JobsSwiftFoundation (from `JobsByPods/JobsSwiftFoundation@Pods`)"
@@ -783,7 +785,7 @@ DEPENDENCIES:
   - YTKNetwork
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  trunk:
     - AFNetworking
     - Alamofire
     - AMPopTip
@@ -940,6 +942,8 @@ EXTERNAL SOURCES:
     :path: "JobsByPods/JobsSwiftCountryCodeCtrl@Pods"
   JobsSwiftDebugTools:
     :path: "JobsByPods/JobsSwiftDebugTools@Pods"
+  JobsSwiftDeviceGuard:
+    :path: "JobsByPods/JobsSwiftDeviceGuard@Pods"
   JobsSwiftDSL:
     :path: "JobsByPods/JobsSwiftDSL@Pods"
   JobsSwiftExcel:
@@ -1070,6 +1074,7 @@ SPEC CHECKSUMS:
   JobsSwiftComment: ed69d684be79acfa072488335364940c013e7264
   JobsSwiftCountryCodeCtrl: 0d34b167e1181565a0004999bc5e2e9bc4f7a2a2
   JobsSwiftDebugTools: 204f308cb46215369dee8c3f723a27583748596e
+  JobsSwiftDeviceGuard: e7eafecde27a77acf775bea8e09417325e6f0d22
   JobsSwiftDSL: 156a872bea237ac50bf020f25e58e00cfb9203d0
   JobsSwiftExcel: c6be794ec8296da968a379cce7265cab2544e156
   JobsSwiftFoundation: e338ddb8128bec50c2e48999c2b0e89ed42cefb6

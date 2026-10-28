@@ -10,6 +10,7 @@ import Foundation
 
 /// 内部状态统一在主线程；业务回调统一在 callbackQueue。
 public final class JobsBluetoothManager: NSObject {
+
     private var storedState: JobsBluetoothState = .unknown
     private var storedDiscovered: [JobsBluetoothPeripheral] = []
     public var state: JobsBluetoothState {
@@ -111,9 +112,9 @@ public final class JobsBluetoothManager: NSObject {
         if let value = centralStorage {
             return value
         }
-        let value = CBCentralManager(
-            delegate: self, queue: .main,
-            options: [CBCentralManagerOptionShowPowerAlertKey: false])
+        let value = CBCentralManager(delegate: self,
+                                     queue: .main,
+                                     options: [CBCentralManagerOptionShowPowerAlertKey: false])
         centralStorage = value
         return value
     }
@@ -139,10 +140,8 @@ public final class JobsBluetoothManager: NSObject {
     private var activeCommand: JobsBluetoothPendingCommand?
     private var writeType: CBCharacteristicWriteType = .withResponse
 
-    public init(
-        profile: JobsBluetoothProfile = JobsBluetoothProfile(),
-        mockTransport: JobsBluetoothMockTransport = JobsBluetoothMockTransport()
-    ) {
+    public init(profile: JobsBluetoothProfile = JobsBluetoothProfile(),
+                mockTransport: JobsBluetoothMockTransport = JobsBluetoothMockTransport()) {
         self.storedProfile = profile
         self.storedMockTransport = mockTransport
         super.init()
@@ -223,7 +222,8 @@ public final class JobsBluetoothManager: NSObject {
             storedDiscovered.removeAll()
             scanGeneration = UUID()
             let current = scanGeneration
-            transition(.scanning, message: "开始扫描")
+            transition(.scanning,
+                       message: "开始扫描")
             if mockTransport.enabled {
                 for peripheral in mockTransport.advertisements() {
                     storedDiscovered.append(peripheral)
@@ -234,12 +234,12 @@ public final class JobsBluetoothManager: NSObject {
                 }
             } else {
                 guard central.state == .poweredOn else {
-                    transition(.unavailable, message: "系统蓝牙不可用")
+                    transition(.unavailable,
+                               message: "系统蓝牙不可用")
                     return
                 }
-                central.scanForPeripherals(
-                    withServices: profile.serviceUUIDs.isEmpty ? nil : profile.serviceUUIDs,
-                    options: [CBCentralManagerScanOptionAllowDuplicatesKey: profile.allowDuplicates])
+                central.scanForPeripherals(withServices: profile.serviceUUIDs.isEmpty ? nil : profile.serviceUUIDs,
+                                           options: [CBCentralManagerScanOptionAllowDuplicatesKey: profile.allowDuplicates])
             }
             let timeout = profile.scanTimeout
             if timeout.isFinite, timeout > 0 {
@@ -250,7 +250,8 @@ public final class JobsBluetoothManager: NSObject {
                     self.stopScanInternal()
                 }
                 scanTimeoutItem = item
-                DispatchQueue.main.asyncAfter(deadline: .now() + min(86_400, timeout), execute: item)
+                DispatchQueue.main.asyncAfter(deadline: .now() + min(86_400,timeout),
+                                              execute: item)
             }
         }
     }
@@ -267,7 +268,8 @@ public final class JobsBluetoothManager: NSObject {
         scanTimeoutItem = nil
         centralStorage?.stopScan()
         if storedState == .scanning {
-            transition(.idle, message: "停止扫描")
+            transition(.idle,
+                       message: "停止扫描")
         }
     }
 
@@ -305,38 +307,44 @@ public final class JobsBluetoothManager: NSObject {
         generation = UUID()
         let current = generation
         pendingIdentifier = nil
-        transition(.connecting, message: "连接 \(identifier.uuidString)")
+        transition(.connecting,
+                   message: "连接 \(identifier.uuidString)")
         if mockTransport.enabled {
             guard
-                mockTransport.advertisements().contains(where: {
-                    $0.identifier == identifier
-                })
+            mockTransport.advertisements().contains(where: {
+                $0.identifier == identifier
+            })
             else {
-                transition(.failed, message: JobsBluetoothError.peripheralNotFound.localizedDescription)
+                transition(.failed,
+                           message: JobsBluetoothError.peripheralNotFound.localizedDescription)
                 return
             }
-            transition(.ready, message: "Mock 设备已就绪")
+            transition(.ready,
+                       message: "Mock 设备已就绪")
             return
         }
         guard central.state == .poweredOn, let peripheral = nativePeripherals[identifier] else {
-            transition(.failed, message: JobsBluetoothError.peripheralNotFound.localizedDescription)
+            transition(.failed,
+                       message: JobsBluetoothError.peripheralNotFound.localizedDescription)
             return
         }
         connectedPeripheral = peripheral
         peripheral.delegate = self
         central.connect(peripheral)
         let configured = profile.connectTimeout
-        let timeout = configured.isFinite && configured > 0 ? min(86_400, configured) : 12
+        let timeout = configured.isFinite && configured > 0 ? min(86_400,
+                                                                  configured) : 12
         let item = DispatchWorkItem { [weak self, weak peripheral] in
             guard let self, let peripheral, self.generation == current,
-                self.connectedPeripheral === peripheral, self.storedState != .ready
+                  self.connectedPeripheral === peripheral, self.storedState != .ready
             else {
                 return
             }
             self.failConnection(JobsBluetoothError.connectionTimeout)
         }
         connectionTimeoutItem = item
-        DispatchQueue.main.asyncAfter(deadline: .now() + timeout, execute: item)
+        DispatchQueue.main.asyncAfter(deadline: .now() + timeout,
+                                      execute: item)
     }
 
     public func disconnect() {
@@ -358,7 +366,8 @@ public final class JobsBluetoothManager: NSObject {
             awaitingDisconnection = old
             centralStorage?.cancelPeripheralConnection(old)
         }
-        transition(.idle, message: "已断开")
+        transition(.idle,
+                   message: "已断开")
     }
 
     private func clearConnection(error: Error) {
@@ -380,7 +389,8 @@ public final class JobsBluetoothManager: NSObject {
         let old = connectedPeripheral
         clearConnection(error: error)
         report(error)
-        transition(.failed, message: error.localizedDescription)
+        transition(.failed,
+                   message: error.localizedDescription)
         if let old, old.state != .disconnected {
             awaitingDisconnection = old
             centralStorage?.cancelPeripheralConnection(old)
@@ -391,12 +401,15 @@ public final class JobsBluetoothManager: NSObject {
 
     private func scheduleReconnect() {
         guard !manuallyDisconnected, let identifier = targetIdentifier,
-            reconnectCount < min(10, max(0, profile.maximumReconnectCount))
+              reconnectCount < min(10,
+                                   max(0,
+                                       profile.maximumReconnectCount))
         else {
             return
         }
         reconnectCount += 1
-        transition(.reconnecting, message: "等待第 \(reconnectCount) 次重连")
+        transition(.reconnecting,
+                   message: "等待第 \(reconnectCount) 次重连")
         let current = generation
         let item = DispatchWorkItem { [weak self] in
             guard let self, self.generation == current, !self.manuallyDisconnected else {
@@ -405,13 +418,16 @@ public final class JobsBluetoothManager: NSObject {
             self.beginConnection(identifier)
         }
         reconnectItem = item
-        DispatchQueue.main.asyncAfter(deadline: .now() + min(16, pow(2, Double(reconnectCount - 1))), execute: item)
+        DispatchQueue.main.asyncAfter(deadline: .now() + min(16,
+                                                             pow(2,
+                                                                 Double(reconnectCount - 1))),
+                                      execute: item)
     }
 
     public func read() {
         onMain {
             guard let peripheral = connectedPeripheral, let characteristic = readCharacteristic,
-                storedState == .ready
+                  storedState == .ready
             else {
                 report(JobsBluetoothError.characteristicNotFound)
                 return
@@ -431,23 +447,23 @@ public final class JobsBluetoothManager: NSObject {
             if !enabled {
                 failCommands(JobsBluetoothError.cancelled)
             }
-            peripheral.setNotifyValue(enabled, for: characteristic)
+            peripheral.setNotifyValue(enabled,
+                                      for: characteristic)
         }
     }
 
-    public func send(_ command: JobsBluetoothCommand, completion: @escaping (Result<Data, Error>) -> Void) {
+    public func send(_ command: JobsBluetoothCommand,
+                     completion: @escaping (Result<Data, Error>) -> Void) {
         sendReliably(command) { result in
             completion(
                 result.map {
-                    $0.data
-                })
+                $0.data
+            })
         }
     }
 
-    public func sendReliably(
-        _ command: JobsBluetoothCommand,
-        completion: @escaping (Result<JobsBluetoothCommandReceipt, Error>) -> Void
-    ) {
+    public func sendReliably(_ command: JobsBluetoothCommand,
+                             completion: @escaping (Result<JobsBluetoothCommandReceipt, Error>) -> Void) {
         onMain {
             guard storedState == .ready else {
                 callback {
@@ -467,12 +483,14 @@ public final class JobsBluetoothManager: NSObject {
                 }
                 return
             }
-            let pending = JobsBluetoothPendingCommand(command, completion: completion)
+            let pending = JobsBluetoothPendingCommand(command,
+                                                      completion: completion)
             let index =
-                queue.firstIndex {
-                    $0.priority < pending.priority
-                } ?? queue.endIndex
-            queue.insert(pending, at: index)
+            queue.firstIndex {
+                $0.priority < pending.priority
+            } ?? queue.endIndex
+            queue.insert(pending,
+                         at: index)
             startNextCommand()
         }
     }
@@ -507,7 +525,8 @@ public final class JobsBluetoothManager: NSObject {
             }
         }
         command.timeoutItem = timeout
-        DispatchQueue.main.asyncAfter(deadline: .now() + min(86_400, command.timeout), execute: timeout)
+        DispatchQueue.main.asyncAfter(deadline: .now() + min(86_400,command.timeout),
+                                      execute: timeout)
         if mockTransport.enabled {
             if let error = mockTransport.injectedError {
                 retryOrFinish(error)
@@ -518,19 +537,20 @@ public final class JobsBluetoothManager: NSObject {
             }
             mockTransport.echo(command.payload) { [weak self, weak command] response in
                 guard let self, let command, self.generation == currentGeneration,
-                    self.activeCommand === command, command.attemptID == currentAttempt
+                      self.activeCommand === command, command.attemptID == currentAttempt
                 else {
                     return
                 }
                 self.receive(response)
                 guard self.generation == currentGeneration, self.activeCommand === command,
-                    command.attemptID == currentAttempt
+                      command.attemptID == currentAttempt
                 else {
                     return
                 }
                 if command.matcher == nil {
                     self.finishCommand(
-                        .success(JobsBluetoothCommandReceipt(confirmation: .applicationResponse, data: response)))
+                        .success(JobsBluetoothCommandReceipt(confirmation: .applicationResponse,
+                                                             data: response)))
                 }
             }
             return
@@ -549,15 +569,18 @@ public final class JobsBluetoothManager: NSObject {
             finishCommand(.failure(JobsBluetoothError.invalidPacket))
             return
         }
-        command.chunks = stride(from: 0, to: command.payload.count, by: maximum).map {
-            command.payload.subdata(in: $0..<min(command.payload.count, $0 + maximum))
+        command.chunks = stride(from: 0,
+                                to: command.payload.count,
+                                by: maximum).map {
+            command.payload.subdata(in: $0 ..< min(command.payload.count,
+                                                   $0 + maximum))
         }
         pumpWrites()
     }
 
     private func pumpWrites() {
         guard let command = activeCommand, let peripheral = connectedPeripheral,
-            let characteristic = writeCharacteristic, !command.awaitingWrite
+              let characteristic = writeCharacteristic, !command.awaitingWrite
         else {
             return
         }
@@ -568,17 +591,21 @@ public final class JobsBluetoothManager: NSObject {
             let data = command.chunks[command.nextChunk]
             command.nextChunk += 1
             command.awaitingWrite = writeType == .withResponse
-            peripheral.writeValue(data, for: characteristic, type: writeType)
+            peripheral.writeValue(data,
+                                  for: characteristic,
+                                  type: writeType)
             if command.awaitingWrite {
                 return
             }
         }
         if let response = command.matchedResponse {
-            finishCommand(.success(JobsBluetoothCommandReceipt(confirmation: .applicationResponse, data: response)))
+            finishCommand(.success(JobsBluetoothCommandReceipt(confirmation: .applicationResponse,
+                                                               data: response)))
         } else if command.matcher == nil {
             let confirmation: JobsBluetoothCommandReceipt.Confirmation =
-                writeType == .withResponse ? .writeAcknowledged : .submitted
-            finishCommand(.success(JobsBluetoothCommandReceipt(confirmation: confirmation, data: Data())))
+            writeType == .withResponse ? .writeAcknowledged : .submitted
+            finishCommand(.success(JobsBluetoothCommandReceipt(confirmation: confirmation,
+                                                               data: Data())))
         }
     }
 
@@ -599,23 +626,25 @@ public final class JobsBluetoothManager: NSObject {
             return
         }
         callback {
-            handler?(data, decoded)
+            handler?(data,
+                     decoded)
         }
         guard let command, activeCommand === command, command.attemptID == currentAttempt,
-            let matcher = command.matcher
+              let matcher = command.matcher
         else {
             return
         }
         let matches = matcher(data)
         // decoder / matcher 可同步重入连接与发送；旧响应只能结束原命令的原尝试。
         guard generation == currentGeneration, activeCommand === command,
-            command.attemptID == currentAttempt, matches
+              command.attemptID == currentAttempt, matches
         else {
             return
         }
         command.matchedResponse = data
         if mockTransport.enabled || !command.awaitingWrite && command.nextChunk == command.chunks.count {
-            finishCommand(.success(JobsBluetoothCommandReceipt(confirmation: .applicationResponse, data: data)))
+            finishCommand(.success(JobsBluetoothCommandReceipt(confirmation: .applicationResponse,
+                                                               data: data)))
         }
     }
 
@@ -646,9 +675,9 @@ public final class JobsBluetoothManager: NSObject {
 
     private func failCommands(_ error: Error) {
         let pending =
-            (activeCommand.map {
-                [$0]
-            } ?? []) + queue
+        (activeCommand.map {
+            [$0]
+        } ?? []) + queue
         activeCommand = nil
         queue.removeAll()
         for command in pending {
@@ -665,8 +694,8 @@ public final class JobsBluetoothManager: NSObject {
             return
         }
         guard profile.writeCharacteristicUUID == nil || writeCharacteristic != nil,
-            profile.readCharacteristicUUID == nil || readCharacteristic != nil,
-            profile.notifyCharacteristicUUID == nil || notifyCharacteristic != nil
+              profile.readCharacteristicUUID == nil || readCharacteristic != nil,
+              profile.notifyCharacteristicUUID == nil || notifyCharacteristic != nil
         else {
             failConnection(JobsBluetoothError.characteristicNotFound)
             return
@@ -674,18 +703,21 @@ public final class JobsBluetoothManager: NSObject {
         if notificationDesired, let characteristic = notifyCharacteristic, !characteristic.isNotifying {
             if !notificationsRequested {
                 notificationsRequested = true
-                connectedPeripheral?.setNotifyValue(true, for: characteristic)
+                connectedPeripheral?.setNotifyValue(true,
+                                                    for: characteristic)
             }
             return
         }
         connectionTimeoutItem?.cancel()
         connectionTimeoutItem = nil
         reconnectCount = 0
-        transition(.ready, message: "必需服务与特征已就绪")
+        transition(.ready,
+                   message: "必需服务与特征已就绪")
         startNextCommand()
     }
 
-    private func transition(_ value: JobsBluetoothState, message: String) {
+    private func transition(_ value: JobsBluetoothState,
+                            message: String) {
         storedState = value
         let log = logReceived
         let state = stateChanged
@@ -728,9 +760,9 @@ public final class JobsBluetoothManager: NSObject {
             }
         }
         let pending =
-            (activeCommand.map {
-                [$0]
-            } ?? []) + queue
+        (activeCommand.map {
+            [$0]
+        } ?? []) + queue
         let destination = callbackQueue
         for command in pending {
             command.timeoutItem?.cancel()
@@ -742,13 +774,15 @@ public final class JobsBluetoothManager: NSObject {
 }
 
 extension JobsBluetoothManager: CBCentralManagerDelegate {
+
     public func centralManagerDidUpdateState(_ central: CBCentralManager) {
         guard !mockTransport.enabled else {
             return
         }
         if central.state == .poweredOn {
             if storedState == .unavailable || storedState == .unknown {
-                transition(.idle, message: "系统蓝牙已开启")
+                transition(.idle,
+                           message: "系统蓝牙已开启")
             }
         } else {
             stopScanInternal()
@@ -756,24 +790,26 @@ extension JobsBluetoothManager: CBCentralManagerDelegate {
             awaitingDisconnection = nil
             pendingIdentifier = nil
             reconnectItem?.cancel()
-            transition(.unavailable, message: "系统蓝牙不可用")
+            transition(.unavailable,
+                       message: "系统蓝牙不可用")
         }
     }
 
-    public func centralManager(
-        _ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
-        advertisementData: [String: Any], rssi RSSI: NSNumber
-    ) {
+    public func centralManager(_ central: CBCentralManager,
+                               didDiscover peripheral: CBPeripheral,
+                               advertisementData: [String: Any],
+                               rssi RSSI: NSNumber) {
         guard !mockTransport.enabled, storedState == .scanning else {
             return
         }
         nativePeripherals[peripheral.identifier] = peripheral
         let strings = advertisementData.reduce(into: [String: String]()) {
-            $0[$1.key] = String(describing: $1.value)
+            $0 [$1.key] = String(describing: $1.value)
         }
-        let snapshot = JobsBluetoothPeripheral(
-            identifier: peripheral.identifier, name: peripheral.name ?? "未命名设备",
-            RSSI: RSSI.intValue, advertisementData: strings)
+        let snapshot = JobsBluetoothPeripheral(identifier: peripheral.identifier,
+                                               name: peripheral.name ?? "未命名设备",
+                                               RSSI: RSSI.intValue,
+                                               advertisementData: strings)
         storedDiscovered.removeAll {
             $0.identifier == snapshot.identifier
         }
@@ -784,25 +820,32 @@ extension JobsBluetoothManager: CBCentralManagerDelegate {
         }
     }
 
-    public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+    public func centralManager(_ central: CBCentralManager,
+                               didConnect peripheral: CBPeripheral) {
         guard connectedPeripheral === peripheral else {
             return
         }
-        transition(.discovering, message: "发现服务")
+        transition(.discovering,
+                   message: "发现服务")
         peripheral.discoverServices(profile.serviceUUIDs.isEmpty ? nil : profile.serviceUUIDs)
     }
 
-    public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        connectionEnded(peripheral, error: error)
+    public func centralManager(_ central: CBCentralManager,
+                               didFailToConnect peripheral: CBPeripheral,
+                               error: Error?) {
+        connectionEnded(peripheral,
+                        error: error)
     }
 
-    public func centralManager(
-        _ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?
-    ) {
-        connectionEnded(peripheral, error: error)
+    public func centralManager(_ central: CBCentralManager,
+                               didDisconnectPeripheral peripheral: CBPeripheral,
+                               error: Error?) {
+        connectionEnded(peripheral,
+                        error: error)
     }
 
-    private func connectionEnded(_ peripheral: CBPeripheral, error: Error?) {
+    private func connectionEnded(_ peripheral: CBPeripheral,
+                                 error: Error?) {
         if awaitingDisconnection === peripheral {
             awaitingDisconnection = nil
             if let pendingIdentifier {
@@ -816,13 +859,16 @@ extension JobsBluetoothManager: CBCentralManagerDelegate {
             return
         }
         clearConnection(error: error ?? JobsBluetoothError.cancelled)
-        transition(.idle, message: error?.localizedDescription ?? "连接已断开")
+        transition(.idle,
+                   message: error?.localizedDescription ?? "连接已断开")
         scheduleReconnect()
     }
 }
 
 extension JobsBluetoothManager: CBPeripheralDelegate {
-    public func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+
+    public func peripheral(_ peripheral: CBPeripheral,
+                           didDiscoverServices error: Error?) {
         guard connectedPeripheral === peripheral else {
             return
         }
@@ -832,22 +878,25 @@ extension JobsBluetoothManager: CBPeripheralDelegate {
         }
         let services = peripheral.services ?? []
         guard !services.isEmpty,
-            Set(profile.serviceUUIDs).isSubset(
-                of: Set(
-                    services.map {
-                        $0.uuid
-                    }))
+              Set(profile.serviceUUIDs).isSubset(
+            of: Set(
+                services.map {
+            $0.uuid
+        }))
         else {
             failConnection(JobsBluetoothError.characteristicNotFound)
             return
         }
         pendingServices = Set(services.map(ObjectIdentifier.init))
         for service in services {
-            peripheral.discoverCharacteristics(nil, for: service)
+            peripheral.discoverCharacteristics(nil,
+                                               for: service)
         }
     }
 
-    public func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?)
+    public func peripheral(_ peripheral: CBPeripheral,
+                           didDiscoverCharacteristicsFor service: CBService,
+                           error: Error?)
     {
         guard connectedPeripheral === peripheral, pendingServices.contains(ObjectIdentifier(service)) else {
             return
@@ -858,17 +907,17 @@ extension JobsBluetoothManager: CBPeripheralDelegate {
         }
         for characteristic in service.characteristics ?? [] {
             if characteristic.uuid == profile.writeCharacteristicUUID,
-                !characteristic.properties.intersection([.write, .writeWithoutResponse]).isEmpty
+               !characteristic.properties.intersection([.write, .writeWithoutResponse]).isEmpty
             {
                 writeCharacteristic = characteristic
             }
             if characteristic.uuid == profile.readCharacteristicUUID,
-                characteristic.properties.contains(.read)
+               characteristic.properties.contains(.read)
             {
                 readCharacteristic = characteristic
             }
             if characteristic.uuid == profile.notifyCharacteristicUUID,
-                !characteristic.properties.intersection([.notify, .indicate]).isEmpty
+               !characteristic.properties.intersection([.notify, .indicate]).isEmpty
             {
                 notifyCharacteristic = characteristic
             }
@@ -877,9 +926,9 @@ extension JobsBluetoothManager: CBPeripheralDelegate {
         readyIfComplete()
     }
 
-    public func peripheral(
-        _ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?
-    ) {
+    public func peripheral(_ peripheral: CBPeripheral,
+                           didUpdateNotificationStateFor characteristic: CBCharacteristic,
+                           error: Error?) {
         guard connectedPeripheral === peripheral, notifyCharacteristic === characteristic else {
             return
         }
@@ -894,11 +943,11 @@ extension JobsBluetoothManager: CBPeripheralDelegate {
         readyIfComplete()
     }
 
-    public func peripheral(
-        _ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?
-    ) {
+    public func peripheral(_ peripheral: CBPeripheral,
+                           didUpdateValueFor characteristic: CBCharacteristic,
+                           error: Error?) {
         guard connectedPeripheral === peripheral,
-            characteristic === readCharacteristic || characteristic === notifyCharacteristic
+              characteristic === readCharacteristic || characteristic === notifyCharacteristic
         else {
             return
         }
@@ -911,10 +960,12 @@ extension JobsBluetoothManager: CBPeripheralDelegate {
         }
     }
 
-    public func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?)
+    public func peripheral(_ peripheral: CBPeripheral,
+                           didWriteValueFor characteristic: CBCharacteristic,
+                           error: Error?)
     {
         guard connectedPeripheral === peripheral, writeCharacteristic === characteristic,
-            let command = activeCommand, command.awaitingWrite
+              let command = activeCommand, command.awaitingWrite
         else {
             return
         }

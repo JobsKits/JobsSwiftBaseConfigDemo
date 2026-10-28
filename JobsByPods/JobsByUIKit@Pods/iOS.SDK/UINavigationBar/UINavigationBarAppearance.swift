@@ -16,6 +16,7 @@ import JobsSwiftBlock
 // MARK: - 直接赋值@单参数
 @available(iOS 15.0, *)
 extension UINavigationBarAppearance {
+
     /// 设置普通标题字体
     @discardableResult
     public func byTitleFont(_ font: UIFont?) -> Self {
@@ -23,7 +24,8 @@ extension UINavigationBarAppearance {
             self.titleTextAttributes[.font] = font
         } else {
             self.titleTextAttributes.removeValue(forKey: .font)
-        };return self
+        }
+        return self
     }
     /// 设置普通标题颜色
     @discardableResult
@@ -32,7 +34,8 @@ extension UINavigationBarAppearance {
             self.titleTextAttributes[.foregroundColor] = color
         } else {
             self.titleTextAttributes.removeValue(forKey: .foregroundColor)
-        };return self
+        }
+        return self
     }
     /// 整体设置普通标题的 attributes
     @discardableResult
@@ -53,7 +56,8 @@ extension UINavigationBarAppearance {
             self.largeTitleTextAttributes[.font] = font
         } else {
             self.largeTitleTextAttributes.removeValue(forKey: .font)
-        };return self
+        }
+        return self
     }
     /// 设置大标题颜色
     @discardableResult
@@ -62,7 +66,8 @@ extension UINavigationBarAppearance {
             self.largeTitleTextAttributes[.foregroundColor] = color
         } else {
             self.largeTitleTextAttributes.removeValue(forKey: .foregroundColor)
-        };return self
+        }
+        return self
     }
     /// 整体设置大标题 attributes
     @discardableResult
@@ -84,7 +89,8 @@ extension UINavigationBarAppearance {
             self.subtitleTextAttributes[.font] = font
         } else {
             self.subtitleTextAttributes.removeValue(forKey: .font)
-        };return self
+        }
+        return self
     }
     @discardableResult
     @available(iOS 26.0, *)
@@ -93,7 +99,8 @@ extension UINavigationBarAppearance {
             self.subtitleTextAttributes[.foregroundColor] = color
         } else {
             self.subtitleTextAttributes.removeValue(forKey: .foregroundColor)
-        };return self
+        }
+        return self
     }
     /// 大标题下副标题
     @discardableResult
@@ -106,6 +113,7 @@ extension UINavigationBarAppearance {
 // MARK: - 闭包重载@单参数
 @available(iOS 15.0, *)
 extension UINavigationBarAppearance {
+
     @discardableResult
     public func byTitleFont(_ builder: () -> UIFont?) -> Self {
         let font = builder()
@@ -113,7 +121,8 @@ extension UINavigationBarAppearance {
             self.titleTextAttributes[.font] = font
         } else {
             self.titleTextAttributes.removeValue(forKey: .font)
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -123,7 +132,8 @@ extension UINavigationBarAppearance {
             self.titleTextAttributes[.foregroundColor] = color
         } else {
             self.titleTextAttributes.removeValue(forKey: .foregroundColor)
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -145,7 +155,8 @@ extension UINavigationBarAppearance {
             self.largeTitleTextAttributes[.font] = font
         } else {
             self.largeTitleTextAttributes.removeValue(forKey: .font)
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -155,7 +166,8 @@ extension UINavigationBarAppearance {
             self.largeTitleTextAttributes[.foregroundColor] = color
         } else {
             self.largeTitleTextAttributes.removeValue(forKey: .foregroundColor)
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -179,7 +191,8 @@ extension UINavigationBarAppearance {
             self.subtitleTextAttributes[.font] = font
         } else {
             self.subtitleTextAttributes.removeValue(forKey: .font)
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -190,7 +203,8 @@ extension UINavigationBarAppearance {
             self.subtitleTextAttributes[.foregroundColor] = color
         } else {
             self.subtitleTextAttributes.removeValue(forKey: .foregroundColor)
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -203,10 +217,13 @@ extension UINavigationBarAppearance {
 
 @available(iOS 15.0, *)
 extension UINavigationBarAppearance {
+
     /// Back指示图标@同时设置 backIndicatorImage / transitionMaskImage
     @discardableResult
-    public func byBackIndicator(_ image: UIImage?, mask: UIImage? = nil) -> Self {
-        setBackIndicatorImage(image, transitionMaskImage: mask ?? image)
+    public func byBackIndicator(_ image: UIImage?,
+                                mask: UIImage? = nil) -> Self {
+        setBackIndicatorImage(image,
+                              transitionMaskImage: mask ?? image)
         return self
     }
     // ================================== 按钮外观 ==================================

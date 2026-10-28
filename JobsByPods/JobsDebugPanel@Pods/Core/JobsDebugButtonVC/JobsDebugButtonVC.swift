@@ -13,6 +13,7 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class JobsDebugButtonVC: BaseVC {
+
     private var centerXConstraint: Constraint?
     private var centerYConstraint: Constraint?
     private var buttonCenter: CGPoint?
@@ -21,7 +22,7 @@ final class JobsDebugButtonVC: BaseVC {
     private lazy var debugButton: UIButton = {
         UIButton.custom()
             .byBgImage(JobsDebugPanelResource.buttonImage)
-            .byAccessibilityLabel("打开调试面板；可拖动；长按隐藏至下次启动")
+            .byAccessibilityLabel("打开调试面板；可拖动；长按隐藏，摇动手机再次显示")
             .onTap { [weak self] _ in
                 guard let window = self?.view.window as? JobsDebugOverlayWindow,
                       let host = window.hostWindow else {
@@ -61,7 +62,8 @@ final class JobsDebugButtonVC: BaseVC {
         guard safeFrame.width > 0, safeFrame.height > 0 else {
             return
         }
-        let initialCenter = CGPoint(x: safeFrame.maxX - 44, y: safeFrame.maxY - 138)
+        let initialCenter = CGPoint(x: safeFrame.maxX - 44,
+                                    y: safeFrame.maxY - 138)
         updateButtonCenter(buttonCenter ?? initialCenter)
     }
 
@@ -70,7 +72,7 @@ final class JobsDebugButtonVC: BaseVC {
             return
         }
         let action = isPanelOpen ? "关闭调试面板并返回" : "打开调试面板"
-        debugButton.byAccessibilityLabel(action + "；可拖动；长按隐藏至下次启动")
+        debugButton.byAccessibilityLabel(action + "；可拖动；长按隐藏，摇动手机再次显示")
     }
 
     private func moveButton(with pan: UIPanGestureRecognizer) {
@@ -93,12 +95,18 @@ final class JobsDebugButtonVC: BaseVC {
     private func updateButtonCenter(_ proposedCenter: CGPoint) {
         // 拖动和窗口尺寸变化都保留完整触摸区域，避免入口滑出屏幕。
         let safeFrame = view.safeAreaLayoutGuide.layoutFrame
-        let minX = min(safeFrame.midX, safeFrame.minX + 44)
-        let maxX = max(safeFrame.midX, safeFrame.maxX - 44)
-        let minY = min(safeFrame.midY, safeFrame.minY + 44)
-        let maxY = max(safeFrame.midY, safeFrame.maxY - 44)
-        let center = CGPoint(x: min(max(proposedCenter.x, minX), maxX),
-                             y: min(max(proposedCenter.y, minY), maxY))
+        let minX = min(safeFrame.midX,
+                       safeFrame.minX + 44)
+        let maxX = max(safeFrame.midX,
+                       safeFrame.maxX - 44)
+        let minY = min(safeFrame.midY,
+                       safeFrame.minY + 44)
+        let maxY = max(safeFrame.midY,
+                       safeFrame.maxY - 44)
+        let center = CGPoint(x: min(max(proposedCenter.x,minX),
+                                    maxX),
+                             y: min(max(proposedCenter.y,minY),
+                                    maxY))
         guard buttonCenter != center else {
             return
         }
@@ -107,11 +115,13 @@ final class JobsDebugButtonVC: BaseVC {
         centerYConstraint?.update(offset: center.y)
     }
 
-    func containsButton(_ point: CGPoint, from window: UIWindow) -> Bool {
+    func containsButton(_ point: CGPoint,
+                        from window: UIWindow) -> Bool {
         guard isViewLoaded, !debugButton.isHidden else {
             return false
         }
-        let local = debugButton.convert(point, from: window)
+        let local = debugButton.convert(point,
+                                        from: window)
         let radius = debugButton.bounds.width * 0.5
         let dx = local.x - debugButton.bounds.midX
         let dy = local.y - debugButton.bounds.midY

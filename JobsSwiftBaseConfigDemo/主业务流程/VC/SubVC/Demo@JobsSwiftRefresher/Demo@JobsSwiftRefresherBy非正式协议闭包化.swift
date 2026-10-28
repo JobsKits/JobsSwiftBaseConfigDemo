@@ -25,33 +25,41 @@ import GKNavigationBarSwift
 /// 下：纵向下拉/上拉（Header/Footer）
 
 final class JobsSwiftRefresherBy非正式协议闭包化DemoVC: BaseVC {
+
     private let topHeight: CGFloat = 180
     private var hItems = 18
     private var rows = 20
     private lazy var collectionView: UICollectionView = {
-        UICollectionView(frame: .zero, collectionViewLayout:UICollectionViewFlowLayout.jobsMake { _ in }
-            .byScrollDirection(.horizontal)
-            .byMinimumLineSpacing(12)
-            .byMinimumInteritemSpacing(12)
-            .bySectionInset(UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12))
-            .byItemSize(CGSize(width: 120, height: 156)))
+        UICollectionView(frame: .zero,
+                         collectionViewLayout: UICollectionViewFlowLayout
+                             .jobsMake { _ in }
+                             .byScrollDirection(.horizontal)
+                             .byMinimumLineSpacing(12)
+                             .byMinimumInteritemSpacing(12)
+                             .bySectionInset(UIEdgeInsets(top: 12,
+                                                          left: 12,
+                                                          bottom: 12,
+                                                          right: 12))
+                             .byItemSize(CGSize(width: 120, height: 156)))
             .byRegisterCell(HCell.self)
             .byBackgroundView(nil)
             .byShowsHorizontalScrollIndicator(false)
             .byAlwaysBounceHorizontal(true)
-            // 非正式协议闭包化
-            .byTarget(self)
+        // 非正式协议闭包化
+        .byTarget(self)
             .numberOfItemsInSection { [weak self] (obj: AnyObject, cv: UICollectionView, section: Int) -> Int in
                 self?.hItems ?? 0
             }
             .cellForItemAt { _, cv, indexPath in
                 cv
-                    .byDequeueCell(HCell.self, for: indexPath)
+                    .byDequeueCell(HCell.self,
+                                   for: indexPath)
                     .byData(indexPath.item)
                     .onResult { _ in }
             }
             .didSelectItemAt({ obj, cv, idx in
-                cv.deselectItem(at: idx, animated: true)
+                cv.deselectItem(at: idx,
+                                animated: true)
                 "点选逻辑".tr.toast
             })
             .byAddTo(view) { [unowned self] make in
@@ -68,33 +76,41 @@ final class JobsSwiftRefresherBy非正式协议闭包化DemoVC: BaseVC {
             .enableRefreshHaptics(true)
             .setRefreshSound("Sound.wav")
             .bySideRefresh(with: JobsDefaultLeftRefresher(),
-                               container: self,
-                               at: .left,
-                               trigger: 70) { [weak self] in
-                guard let self else { return }
+                           container: self,
+                           at: .left,
+                           trigger: 70) { [weak self] in
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { _ in
                     try? await Task.sleep(nanoseconds: 900_000_000)
-                    self.hItems = max(8, self.hItems - 1)
+                    self.hItems = max(8,
+                                      self.hItems - 1)
                     self.collectionView.byReloadData()
-                    self.collectionView.switchSideRefresh(.left, to: .normal)
+                    self.collectionView.switchSideRefresh(.left,
+                                                          to: .normal)
                 }
             }
             .bySideRefresh(with: JobsDefaultRightRefresher(),
-                               container: self,
-                               at: .right,
-                               trigger: 70) { [weak self] in
-                guard let self else { return }
+                           container: self,
+                           at: .right,
+                           trigger: 70) { [weak self] in
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { _ in
                     try? await Task.sleep(nanoseconds: 900_000_000)
                     self.hItems += 3
                     self.collectionView.byReloadData()
-                    self.collectionView.switchSideRefresh(.right, to: .normal)
+                    self.collectionView.switchSideRefresh(.right,
+                                                          to: .normal)
                 }
             }
     }()
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .plain)
+        UITableView(frame: .zero,
+                    style: .plain)
             .byRowHeight(52)
             .byTableFooterView(UIView.jobsMake { _ in })
             .byAddTo(view) { [unowned self] make in
@@ -102,19 +118,22 @@ final class JobsSwiftRefresherBy非正式协议闭包化DemoVC: BaseVC {
                 make.left.right.equalToSuperview()
                 make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             }
-            // 非正式协议闭包化
-            .byTarget(self)
+        // 非正式协议闭包化
+        .byTarget(self)
             .numberOfRowsInSection { [weak self] (obj: AnyObject, tv: UITableView, section: Int) -> Int in
                 self?.rows ?? 0
             }
             .cellForRowAt { _, tv, indexPath in
-                tv.byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+                tv
+                    .byDequeueReusableCell(withType: UITableViewCell.self,
+                                           for: indexPath)
                     .byListConfig {
                         $0.byText("Row \(indexPath.row)")
                     }
             }
             .didSelectRowAt { _, tv, indexPath in
-                tv.deselectRow(at: indexPath, animated: true)
+                tv.deselectRow(at: indexPath,
+                               animated: true)
                 "点选逻辑".tr.toast
             }
             .showRefreshHeaderInfo(YES)
@@ -126,7 +145,9 @@ final class JobsSwiftRefresherBy非正式协议闭包化DemoVC: BaseVC {
             .byRefreshHeader(component: JobsDefaultHeader(),
                              container: self,
                              trigger: 66) { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { _ in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
                     self.rows = 20
@@ -138,7 +159,9 @@ final class JobsSwiftRefresherBy非正式协议闭包化DemoVC: BaseVC {
             .byRefreshFooter(component: JobsDefaultFooter(),
                              container: self,
                              trigger: 66) { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { _ in
                     try? await Task.sleep(nanoseconds: 1_000_000_000)
                     if self.rows < 60 {

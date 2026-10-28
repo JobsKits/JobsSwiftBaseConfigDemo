@@ -21,13 +21,16 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class SlideToUnlockDemoVC: BaseVC {
+
     private lazy var slideView: SlideToUnlockView = {
         SlideToUnlockView()
             .byBackgroundColor(JobsCor.clear)
-//            .byDirection(.rightToLeft)      // 从右往左滑动解锁
-            .bySkeletonEnabled(true)          // 开启骨架屏闪动
-            .byOnUnlock {[weak self] in
-                guard let self else { return }
+        //            .byDirection(.rightToLeft)      // 从右往左滑动解锁
+        .bySkeletonEnabled(true)          // 开启骨架屏闪动
+        .byOnUnlock { [weak self] in
+                guard let self else {
+                    return
+                }
                 print("✅ 已滑到最右侧，执行解锁 block")
                 goBack(nil)
             }
@@ -39,7 +42,8 @@ final class SlideToUnlockDemoVC: BaseVC {
     }()
 
     private lazy var dependencyCard: UIView = { [unowned self] in
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(14)
             .byMasksToBounds(YES)
@@ -50,14 +54,16 @@ final class SlideToUnlockDemoVC: BaseVC {
     }()
 
     private lazy var dependencyLabel: UILabel = { [unowned self] in
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("""
             ① Demo 页面 · SlideToUnlockDemoVC
             ② 交互组件 · JobsGestureUnlock / SlideToUnlockView
             ③ 流光底层 · JobsByUIKit / UIView Shimmer
             """)
             .byTextColor(JobsCor.secondaryLabel)
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .medium))
             .byNumberOfLines(0)
             .byLineBreakMode(.byWordWrapping)
             .byAddTo(dependencyCard) { make in

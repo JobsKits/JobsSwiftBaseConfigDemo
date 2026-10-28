@@ -13,7 +13,10 @@ import UIKit
 
 import JobsSwiftDSL
 
-public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDelegate, UIPickerViewDataSource {
+public final class BRAreaPicker: BRBasePicker<BRAreaSelection>,
+                                 UIPickerViewDelegate,
+                                 UIPickerViewDataSource {
+
     private var data: [BRAreaNode] = []
     private let picker = UIPickerView.jobsMake { _ in }
 
@@ -51,41 +54,60 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
         districts = cities.first?.children ?? []
         applyPendingSelectionIfNeeded()
         // Default state: no highlight until user scrolls.
-        for c in 0..<3 {
+        for c in 0 ..< 3 {
             lastSelectedRow[c] = picker.selectedRow(inComponent: c)
-        };return picker
+        }
+        return picker
     }
 
     public override func confirmSelection() {
-        guard !provinces.isEmpty else { return }
+        guard !provinces.isEmpty else {
+            return
+        }
         let p = provinces[picker.selectedRow(inComponent: 0)].name
         let c: String?
         if !cities.isEmpty, picker.selectedRow(inComponent: 1) < cities.count {
             c = cities[picker.selectedRow(inComponent: 1)].name
-        } else { c = nil }
+        } else {
+            c = nil
+        }
         let d: String?
         if !districts.isEmpty, picker.selectedRow(inComponent: 2) < districts.count {
             d = districts[picker.selectedRow(inComponent: 2)].name
-        } else { d = nil }
-        send(BRAreaSelection(province: p, city: c, district: d))
+        } else {
+            d = nil
+        }
+        send(BRAreaSelection(province: p,
+                             city: c,
+                             district: d))
     }
 
     // MARK: - Picker DataSource
-    public func numberOfComponents(in pickerView: UIPickerView) -> Int { 3 }
+    public func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        3
+    }
 
-    public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    public func pickerView(_ pickerView: UIPickerView,
+                           numberOfRowsInComponent component: Int) -> Int {
         switch component {
-        case 0: return provinces.count
-        case 1: return cities.count
-        default: return districts.count
+        case 0:
+            return provinces.count
+        case 1:
+            return cities.count
+        default:
+            return districts.count
         }
     }
 
-    public func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+    public func pickerView(_ pickerView: UIPickerView,
+                           rowHeightForComponent component: Int) -> CGFloat {
         theme.pickerHeight / 5.0
     }
 
-    public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+    public func pickerView(_ pickerView: UIPickerView,
+                           viewForRow row: Int,
+                           forComponent component: Int,
+                           reusing view: UIView?) -> UIView {
         let label = (view as? UILabel) ?? UILabel.jobsMake { _ in }
         label
             .byTextAlignment(.center)
@@ -93,13 +115,19 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
             .byTextColor(theme.pickerTextColor)
             .byBackgroundColor(.clear)
         switch component {
-        case 0: label.text = provinces[row].name
-        case 1: label.text = cities[row].name
-        default: label.text = districts[row].name
-        };return label
+        case 0:
+            label.text = provinces[row].name
+        case 1:
+            label.text = cities[row].name
+        default:
+            label.text = districts[row].name
+        }
+        return label
     }
 
-    public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    public func pickerView(_ pickerView: UIPickerView,
+                           didSelectRow row: Int,
+                           inComponent component: Int) {
         // mark user interaction for this component
         touchedComponents.insert(component)
         let oldRow = lastSelectedRow[component] ?? row
@@ -109,10 +137,16 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
             let p = provinces[row]
             cities = p.children ?? []
             districts = cities.first?.children ?? []
-            BRiOS12SafePickerReload.reload(pickerView, component: 1)
-            BRiOS12SafePickerReload.reload(pickerView, component: 2)
-            pickerView.selectRow(0, inComponent: 1, animated: false)
-            pickerView.selectRow(0, inComponent: 2, animated: false)
+            BRiOS12SafePickerReload.reload(pickerView,
+                                           component: 1)
+            BRiOS12SafePickerReload.reload(pickerView,
+                                           component: 2)
+            pickerView.selectRow(0,
+                                 inComponent: 1,
+                                 animated: false)
+            pickerView.selectRow(0,
+                                 inComponent: 2,
+                                 animated: false)
             lastSelectedRow[1] = 0
             lastSelectedRow[2] = 0
         } else if component == 1 {
@@ -123,34 +157,49 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
             } else {
                 districts = []
             }
-            BRiOS12SafePickerReload.reload(pickerView, component: 2)
-            pickerView.selectRow(0, inComponent: 2, animated: false)
+            BRiOS12SafePickerReload.reload(pickerView,
+                                           component: 2)
+            pickerView.selectRow(0,
+                                 inComponent: 2,
+                                 animated: false)
             lastSelectedRow[2] = 0
         }
         // colors
         br_on_main_async { [weak self] in
-            guard let self else { return }
-            self.applyRowColor(pickerView, component: component, row: oldRow, selected: false)
-            self.applyRowColor(
-                pickerView,
-                component: component,
-                row: row,
-                selected: self.touchedComponents.contains(component)
-            )
+            guard let self else {
+                return
+            }
+            self.applyRowColor(pickerView,
+                               component: component,
+                               row: oldRow,
+                               selected: false)
+            self.applyRowColor(pickerView,
+                               component: component,
+                               row: row,
+                               selected: self.touchedComponents.contains(component))
             // If province changed, city/district were reset & reloaded.
             if component == 0 {
                 let cityComp = 1
                 let districtComp = 2
                 let cityRow = pickerView.selectedRow(inComponent: cityComp)
-                self.applyRowColor(pickerView, component: cityComp, row: cityRow, selected: self.touchedComponents.contains(cityComp))
+                self.applyRowColor(pickerView,
+                                   component: cityComp,
+                                   row: cityRow,
+                                   selected: self.touchedComponents.contains(cityComp))
                 let districtRow = pickerView.selectedRow(inComponent: districtComp)
-                self.applyRowColor(pickerView, component: districtComp, row: districtRow, selected: self.touchedComponents.contains(districtComp))
+                self.applyRowColor(pickerView,
+                                   component: districtComp,
+                                   row: districtRow,
+                                   selected: self.touchedComponents.contains(districtComp))
             }
             // If city changed, district was reset & reloaded.
             if component == 1 {
                 let districtComp = 2
                 let districtRow = pickerView.selectedRow(inComponent: districtComp)
-                self.applyRowColor(pickerView, component: districtComp, row: districtRow, selected: self.touchedComponents.contains(districtComp))
+                self.applyRowColor(pickerView,
+                                   component: districtComp,
+                                   row: districtRow,
+                                   selected: self.touchedComponents.contains(districtComp))
             }
         }
         if theme.autoSelect {
@@ -160,32 +209,56 @@ public final class BRAreaPicker: BRBasePicker<BRAreaSelection>, UIPickerViewDele
     }
 
     private func applyPendingSelectionIfNeeded() {
-        guard let s = _pendingSelection else { return }
+        guard let s = _pendingSelection else {
+            return
+        }
         // province
-        if let pIndex = provinces.firstIndex(where: { $0.name == s.province }) {
-            picker.selectRow(pIndex, inComponent: 0, animated: false)
+        if let pIndex = provinces.firstIndex(where: {
+            $0.name == s.province
+        }) {
+            picker.selectRow(pIndex,
+                             inComponent: 0,
+                             animated: false)
             cities = provinces[pIndex].children ?? []
         }
         // city
-        if let cityName = s.city, let cIndex = cities.firstIndex(where: { $0.name == cityName }) {
-            picker.selectRow(cIndex, inComponent: 1, animated: false)
+        if let cityName = s.city, let cIndex = cities.firstIndex(where: {
+            $0.name == cityName
+        }) {
+            picker.selectRow(cIndex,
+                             inComponent: 1,
+                             animated: false)
             districts = cities[cIndex].children ?? []
         } else {
-            picker.selectRow(0, inComponent: 1, animated: false)
+            picker.selectRow(0,
+                             inComponent: 1,
+                             animated: false)
             districts = cities.first?.children ?? []
         }
         // district
-        if let dName = s.district, let dIndex = districts.firstIndex(where: { $0.name == dName }) {
-            picker.selectRow(dIndex, inComponent: 2, animated: false)
+        if let dName = s.district, let dIndex = districts.firstIndex(where: {
+            $0.name == dName
+        }) {
+            picker.selectRow(dIndex,
+                             inComponent: 2,
+                             animated: false)
         } else {
-            picker.selectRow(0, inComponent: 2, animated: false)
+            picker.selectRow(0,
+                             inComponent: 2,
+                             animated: false)
         }
         BRiOS12SafePickerReload.reload(picker)
         _pendingSelection = nil
     }
 
-    private func applyRowColor(_ pickerView: UIPickerView, component: Int, row: Int, selected: Bool) {
-        guard let label = pickerView.view(forRow: row, forComponent: component) as? UILabel else { return }
+    private func applyRowColor(_ pickerView: UIPickerView,
+                               component: Int,
+                               row: Int,
+                               selected: Bool) {
+        guard let label = pickerView.view(forRow: row,
+                                          forComponent: component) as? UILabel else {
+            return
+        }
         label.byTextColor(selected ? theme.pickerSelectedTextColor : theme.pickerTextColor)
     }
 }

@@ -20,15 +20,25 @@ import simd
 ///   - Pinch to zoom (radius scale)
 ///   - Tap items: use the item's own target-action or gesture
 
-public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
+public final class SphereTagCloudView: UIView,
+                                       UIGestureRecognizerDelegate {
+
     deinit {
         stop()
     }
     // MARK: - Public Config
     /// 球半径（如果为 nil，会在 layoutSubviews 里用 bounds 自动计算）
-    public var radius: CGFloat? { didSet { setNeedsLayout() } }
+    public var radius: CGFloat? {
+        didSet {
+            setNeedsLayout()
+        }
+    }
     /// 透视强度：越大越“扁”，越小越“立体”（建议 1.5~3）
-    public var perspective: CGFloat = 2.2 { didSet { setNeedsLayout() } }
+    public var perspective: CGFloat = 2.2 {
+        didSet {
+            setNeedsLayout()
+        }
+    }
     /// 深度映射到缩放的范围
     public var minScale: CGFloat = 0.35
     public var maxScale: CGFloat = 1.00
@@ -47,6 +57,7 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
     public var allowSimultaneousGestures: Bool = true
     // MARK: - Internal Node
     private struct Node {
+
         weak var view: UIView?
         var pos: SIMD3<Double> // sphere coordinate, length ~ 1
     }
@@ -82,7 +93,9 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
     /// 设置标签（会清空旧的）
     public func setItems(_ views: [UIView]) {
         // remove old
-        subviews.forEach { $0.removeFromSuperview() }
+        subviews.forEach {
+            $0.removeFromSuperview()
+        }
         nodes.removeAll()
         for v in views {
             addItem(v)
@@ -107,13 +120,20 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
                 view.sizeToFit()
             }
         }
-        nodes.append(Node(view: view, pos: SIMD3<Double>(0, 0, 0)))
+        nodes.append(Node(view: view,
+                          pos: SIMD3<Double>(0,
+                                             0,
+                                             0)))
     }
     /// 开始动画
     public func start() {
-        if displayLink != nil { return }
-        let link = CADisplayLink(target: self, selector: #selector(tick(_:)))
-        link.add(to: .main, forMode: .common)
+        if displayLink != nil {
+            return
+        }
+        let link = CADisplayLink(target: self,
+                                 selector: #selector(tick(_:)))
+        link.add(to: .main,
+                 forMode: .common)
         displayLink = link
     }
     /// 停止动画
@@ -130,7 +150,9 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
     // MARK: - Layout
     public override func layoutSubviews() {
         super.layoutSubviews()
-        if nodes.isEmpty { return }
+        if nodes.isEmpty {
+            return
+        }
         distributeIfNeeded()
         renderAll()
     }
@@ -139,12 +161,14 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
         self.jobs_addGesture(
             UIPanGestureRecognizer
                 .byConfig { [weak self] gr in
-                    guard
-                        let self,
-                        let pan = gr as? UIPanGestureRecognizer
-                    else { return }
-                    self.onPan(pan) // 复用原来的处理函数
+                guard
+                let self,
+                let pan = gr as? UIPanGestureRecognizer
+                else {
+                    return
                 }
+                self.onPan(pan) // 复用原来的处理函数
+            }
                 .byMinTouches(1)
                 .byMaxTouches(1)
                 .byCancelsTouchesInView(false)
@@ -154,12 +178,14 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
         self.jobs_addGesture(
             UIPinchGestureRecognizer
                 .byConfig { [weak self] gr in
-                    guard
-                        let self,
-                        let pinch = gr as? UIPinchGestureRecognizer
-                    else { return }
-                    self.onPinch(pinch) // 复用原来的处理函数
+                guard
+                let self,
+                let pinch = gr as? UIPinchGestureRecognizer
+                else {
+                    return
                 }
+                self.onPinch(pinch) // 复用原来的处理函数
+            }
                 .byScale(1.0)
                 .byCancelsTouchesInView(false)
                 .byDelegate(self))
@@ -171,7 +197,9 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
     }
 
     @objc private func onPan(_ gr: UIPanGestureRecognizer) {
-        guard !nodes.isEmpty else { return }
+        guard !nodes.isEmpty else {
+            return
+        }
         let p = gr.location(in: self)
         switch gr.state {
         /// 处理 .began 分支
@@ -188,7 +216,8 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
             // 手指水平移动 -> 绕 Y 轴转；垂直移动 -> 绕 X 轴转
             let angleY = dx * rotationSensitivity
             let angleX = -dy * rotationSensitivity
-            rotate(byX: angleX, y: angleY)
+            rotate(byX: angleX,
+                   y: angleY)
             renderAll()
             // 实时更新速度，用于惯性
             velX = angleX
@@ -212,7 +241,8 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
             baseRadius = effectiveRadius
         /// 处理 .changed 分支
         case .changed:
-            let r = max(40, baseRadius * gr.scale)
+            let r = max(40,
+                        baseRadius * gr.scale)
             radius = r
             renderAll()
         /// 未匹配已知分支时执行兜底处理
@@ -222,7 +252,9 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
     }
     // MARK: - Ticking
     @objc private func tick(_ link: CADisplayLink) {
-        guard !nodes.isEmpty else { return }
+        guard !nodes.isEmpty else {
+            return
+        }
         if lastTimestamp == 0 {
             lastTimestamp = link.timestamp
             return
@@ -232,13 +264,15 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
         // 惯性旋转
         let hasInertia = abs(velX) > 0.00001 || abs(velY) > 0.00001
         if hasInertia {
-            rotate(byX: velX, y: velY)
+            rotate(byX: velX,
+                   y: velY)
             velX *= inertiaDamping
             velY *= inertiaDamping
         } else if isAutoRotating {
             // 自动旋转
             let angle = autoRotateSpeed * dt
-            rotate(byX: angle * 0.25, y: angle)
+            rotate(byX: angle * 0.25,
+                   y: angle)
         } else {
             return
         }
@@ -246,45 +280,70 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
     }
     // MARK: - Core Math
     private var effectiveRadius: CGFloat {
-        if let r = radius { return r }
+        if let r = radius {
+            return r
+        }
         // 自动半径：取短边的一半再乘一个系数
-        return min(bounds.width, bounds.height) * 0.42
+        return min(bounds.width,
+                   bounds.height) * 0.42
     }
 
     /// 均匀分布到球面：Fibonacci sphere
     private func distributeIfNeeded(force: Bool = false) {
-        guard !nodes.isEmpty else { return }
-        if !force, nodes.allSatisfy({ $0.pos != SIMD3<Double>(0, 0, 0) }) { return }
+        guard !nodes.isEmpty else {
+            return
+        }
+        if !force, nodes.allSatisfy({
+            $0.pos != SIMD3<Double>(0,
+                                    0,
+                                    0)
+        }) {
+            return
+        }
         let n = Double(nodes.count)
         // golden angle
         let ga = Double.pi * (3.0 - sqrt(5.0))
-        for i in 0..<nodes.count {
+        for i in 0 ..< nodes.count {
             let y = 1.0 - (Double(i) + 0.5) * (2.0 / n)
-            let r = sqrt(max(0.0, 1.0 - y * y))
+            let r = sqrt(max(0.0,
+                             1.0 - y * y))
             let theta = ga * (Double(i) + 0.5)
             let x = cos(theta) * r
             let z = sin(theta) * r
-            nodes[i].pos = SIMD3<Double>(x, y, z)
+            nodes[i].pos = SIMD3<Double>(x,
+                                         y,
+                                         z)
         }
     }
 
-    private func rotate(byX angleX: CGFloat, y angleY: CGFloat) {
-        if angleX == 0 && angleY == 0 { return }
+    private func rotate(byX angleX: CGFloat,
+                        y angleY: CGFloat) {
+        if angleX == 0 && angleY == 0 {
+            return
+        }
         let ax = Double(angleX)
         let ay = Double(angleY)
         // rotation around X
-        let rx = double3x3(
-            SIMD3<Double>(1, 0, 0),
-            SIMD3<Double>(0, cos(ax), -sin(ax)),
-            SIMD3<Double>(0, sin(ax), cos(ax))
-        )
+        let rx = double3x3(SIMD3<Double>(1,
+                                         0,
+                                         0),
+                           SIMD3<Double>(0,
+                                         cos(ax),
+                                         -sin(ax)),
+                           SIMD3<Double>(0,
+                                         sin(ax),
+                                         cos(ax)))
         // rotation around Y
-        let ry = double3x3(
-            SIMD3<Double>(cos(ay), 0, sin(ay)),
-            SIMD3<Double>(0, 1, 0),
-            SIMD3<Double>(-sin(ay), 0, cos(ay))
-        )
-        for i in 0..<nodes.count {
+        let ry = double3x3(SIMD3<Double>(cos(ay),
+                                         0,
+                                         sin(ay)),
+                           SIMD3<Double>(0,
+                                         1,
+                                         0),
+                           SIMD3<Double>(-sin(ay),
+                                         0,
+                                         cos(ay)))
+        for i in 0 ..< nodes.count {
             var p = nodes[i].pos
             p = ry * (rx * p)
             nodes[i].pos = p
@@ -292,13 +351,20 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
     }
     // MARK: - Rendering
     private func renderAll() {
-        guard !nodes.isEmpty else { return }
+        guard !nodes.isEmpty else {
+            return
+        }
         let r = effectiveRadius
-        let center = CGPoint(x: bounds.midX, y: bounds.midY)
+        let center = CGPoint(x: bounds.midX,
+                             y: bounds.midY)
         // 先按 z 排序：远的先画，近的后画（更符合视觉）
-        let sortedIdx = nodes.indices.sorted { nodes[$0].pos.z < nodes[$1].pos.z }
+        let sortedIdx = nodes.indices.sorted {
+            nodes[$0].pos.z < nodes[$1].pos.z
+        }
         for idx in sortedIdx {
-            guard let v = nodes[idx].view else { continue }
+            guard let v = nodes[idx].view else {
+                continue
+            }
             let p = nodes[idx].pos
             // p.z in [-1, 1]
             let z = CGFloat(p.z)
@@ -312,10 +378,13 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
             let alpha = minAlpha + (maxAlpha - minAlpha) * depth01
             // place view (keep its own size)
             let size = v.bounds.size
-            v.center = CGPoint(x: x2d, y: y2d)
-            v.bounds = CGRect(origin: .zero, size: size)
+            v.center = CGPoint(x: x2d,
+                               y: y2d)
+            v.bounds = CGRect(origin: .zero,
+                              size: size)
             v.byAlpha(alpha)
-            v.transform = CGAffineTransform(scaleX: scale, y: scale)
+            v.transform = CGAffineTransform(scaleX: scale,
+                                            y: scale)
             // 让更靠前的更容易点到（也可不要）
             v.isUserInteractionEnabled = true
         }
@@ -329,6 +398,7 @@ public final class SphereTagCloudView: UIView, UIGestureRecognizerDelegate {
 }
 /// SphereTagCloudView@DSL
 public extension SphereTagCloudView {
+
     @discardableResult
     func byRadius(_ value: CGFloat?) -> Self {
         radius = value
@@ -342,14 +412,16 @@ public extension SphereTagCloudView {
     }
 
     @discardableResult
-    func byScaleRange(min: CGFloat, max: CGFloat) -> Self {
+    func byScaleRange(min: CGFloat,
+                      max: CGFloat) -> Self {
         minScale = min
         maxScale = max
         return self
     }
 
     @discardableResult
-    func byAlphaRange(min: CGFloat, max: CGFloat) -> Self {
+    func byAlphaRange(min: CGFloat,
+                      max: CGFloat) -> Self {
         minAlpha = min
         maxAlpha = max
         return self

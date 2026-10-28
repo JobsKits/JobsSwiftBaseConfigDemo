@@ -25,6 +25,7 @@ private var _jobsTitleEdgeInsets15Key: UInt8 = 0
 private var _jobsClearConfigurationBackgroundInstalledKey: UInt8 = 0
 
 extension UIButton {
+
     @discardableResult
     private func _jobsApplyContentEdgeInsets(_ insets: UIEdgeInsets) -> Self {
         if #available(iOS 15.0, *) {
@@ -38,12 +39,15 @@ extension UIButton {
         } else {
             let oldInsets = self.contentEdgeInsets
             self.contentEdgeInsets = insets
-            _jobsSyncLegacyInsetsIfNeeded(old: oldInsets, new: insets)
-        };return self
+            _jobsSyncLegacyInsetsIfNeeded(old: oldInsets,
+                                          new: insets)
+        }
+        return self
     }
 }
 // MARK: - 直接赋值@单参数
 extension UIButton {
+
     @available(iOS 15.0, *)
     @discardableResult
     public func byConfiguration(_ cfg: UIButton.Configuration?) -> Self {
@@ -121,23 +125,23 @@ extension UIButton {
             self.byUpdateConfig()
         } else {
             self.imageEdgeInsets = insets
-        };return self
+        }
+        return self
     }
 
     @discardableResult
     public func byTitleEdgeInsets(_ insets: UIEdgeInsets) -> Self {
         if #available(iOS 15.0, *) {
-            objc_setAssociatedObject(
-                self,
-                &_jobsTitleEdgeInsets15Key,
-                insets,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
+            objc_setAssociatedObject(self,
+                                     &_jobsTitleEdgeInsets15Key,
+                                     insets,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             _ensureUnifiedUpdateHandlerInstalled()
             self.byUpdateConfig()
         } else {
             self.titleEdgeInsets = insets
-        };return self
+        }
+        return self
     }
 
     @available(iOS 14.0, *)
@@ -215,6 +219,7 @@ extension UIButton {
 }
 // MARK: - 闭包重载@单参数
 extension UIButton {
+
     @available(iOS 15.0, *)
     @discardableResult
     public func byConfiguration(_ builder: () -> UIButton.Configuration?) -> Self {
@@ -294,24 +299,24 @@ extension UIButton {
             self.byUpdateConfig()
         } else {
             self.imageEdgeInsets = insets
-        };return self
+        }
+        return self
     }
 
     @discardableResult
     public func byTitleEdgeInsets(_ builder: () -> UIEdgeInsets) -> Self {
         let insets = builder()
         if #available(iOS 15.0, *) {
-            objc_setAssociatedObject(
-                self,
-                &_jobsTitleEdgeInsets15Key,
-                insets,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
+            objc_setAssociatedObject(self,
+                                     &_jobsTitleEdgeInsets15Key,
+                                     insets,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             _ensureUnifiedUpdateHandlerInstalled()
             self.byUpdateConfig()
         } else {
             self.titleEdgeInsets = insets
-        };return self
+        }
+        return self
     }
 
     @available(iOS 14.0, *)
@@ -389,6 +394,7 @@ extension UIButton {
 }
 
 extension UIButton {
+
     /// 一步到位：图标圆底（你现在那 4 行就用这个）
     @discardableResult
     public func byImageCircleBackground(_ bgColor: UIColor?,
@@ -406,7 +412,7 @@ extension UIButton {
     @available(iOS 15.0, *)
     @discardableResult
     public func bySetNeedsUpdateConfiguration() -> Self {
-        self.setNeedsUpdateConfiguration();
+        self.setNeedsUpdateConfiguration()
         return self
     }
 
@@ -430,19 +436,16 @@ extension UIButton {
             .selected,
             .disabled
         ].forEach {
-            setBackgroundImage(nil, for: $0)
+            setBackgroundImage(nil,
+                               for: $0)
         }
         if #available(iOS 15.0, *) {
-            if (objc_getAssociatedObject(
-                self,
-                &_jobsClearConfigurationBackgroundInstalledKey
-            ) as? Bool) != true {
-                objc_setAssociatedObject(
-                    self,
-                    &_jobsClearConfigurationBackgroundInstalledKey,
-                    true,
-                    .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-                )
+            if (objc_getAssociatedObject(self,
+                                         &_jobsClearConfigurationBackgroundInstalledKey) as? Bool) != true {
+                objc_setAssociatedObject(self,
+                                         &_jobsClearConfigurationBackgroundInstalledKey,
+                                         true,
+                                         .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
                 ensureConfigUpdateHandler { configuration in
                     var updatedConfiguration = configuration
                     updatedConfiguration.baseBackgroundColor = JobsCor.clear
@@ -451,16 +454,19 @@ extension UIButton {
                 }
             }
             byUpdateConfig()
-        };return self
+        }
+        return self
     }
 
     @discardableResult
     public func byNormalBgColor(_ color: UIColor) -> Self {
-        byBackgroundColor(color, for: .normal)
+        byBackgroundColor(color,
+                          for: .normal)
     }
 
     @discardableResult
-    public func byBorder(color: UIColor, width: CGFloat) -> Self {
+    public func byBorder(color: UIColor,
+                         width: CGFloat) -> Self {
         layer.borderColor = color.cgColor
         layer.borderWidth = width
         return self
@@ -474,9 +480,10 @@ extension UIButton {
 
     @discardableResult
     public func byShadow(color: UIColor = JobsCor.black,
-                  opacity: Float = 0.15,
-                  radius: CGFloat = 6,
-                  offset: CGSize = .init(width: 0, height: 2)) -> Self {
+                         opacity: Float = 0.15,
+                         radius: CGFloat = 6,
+                         offset: CGSize = .init(width: 0,
+                                                height: 2)) -> Self {
         layer
             .byShadowColor(color)
             .byShadowOpacity(opacity)
@@ -490,15 +497,18 @@ extension UIButton {
     public func byImagePlacement(_ placement: JobsDirection,
                                  padding: CGFloat = 8.0) -> Self {
         if #available(iOS 13.0, *) {
-            return byImagePlacement(placement.toDirectionalEdge, padding: padding)
+            return byImagePlacement(placement.toDirectionalEdge,
+                                    padding: padding)
         } else {
-            return byImagePlacementLegacy(placement, padding: padding)
+            return byImagePlacementLegacy(placement,
+                                          padding: padding)
         }
     }
 
     @available(iOS 13.0, *)
     @discardableResult
-    public func byImagePlacement(_ placement: NSDirectionalRectEdge?, padding: CGFloat?) -> Self {
+    public func byImagePlacement(_ placement: NSDirectionalRectEdge?,
+                                 padding: CGFloat?) -> Self {
         let p = placement ?? .top
         let pad = padding ?? 8.0
         if #available(iOS 15.0, *) {
@@ -524,11 +534,16 @@ extension UIButton {
                 let t = cfg.title ?? ""
                 if !t.isEmpty {
                     var attrs: [NSAttributedString.Key: Any] = [:]
-                    if let font = titleLabel?.font { attrs[.font] = font }
+                    if let font = titleLabel?.font {
+                        attrs[.font] = font
+                    }
                     let color = titleColor(for: state) ?? titleColor(for: .normal)
-                    if let color { attrs[.foregroundColor] = color }
-                    cfg.attributedTitle = AttributedString(NSAttributedString(string: t, attributes: attrs))
-                    // 注意：你如果设置了 attributedTitle，系统会优先用它
+                    if let color {
+                        attrs[.foregroundColor] = color
+                    }
+                    cfg.attributedTitle = AttributedString(NSAttributedString(string: t,
+                                                                              attributes: attrs))
+                // 注意：你如果设置了 attributedTitle，系统会优先用它
                 }
             }
             cfg.imagePlacement = p // 图文关系
@@ -538,9 +553,11 @@ extension UIButton {
         } else {
             switch placement {
             /// 处理 .leading 分支
-            case .leading:  semanticContentAttribute = .forceLeftToRight
+            case .leading:
+                semanticContentAttribute = .forceLeftToRight
             /// 处理 .trailing 分支
-            case .trailing: semanticContentAttribute = .forceRightToLeft
+            case .trailing:
+                semanticContentAttribute = .forceRightToLeft
             /// 合并处理 .top、.bottom 分支
             case .top, .bottom:
                 let inset = pad / 2
@@ -549,9 +566,11 @@ extension UIButton {
                                                  bottom: inset,
                                                  right: inset)
             /// 未匹配已知分支时执行兜底处理
-            default: break
+            default:
+                break
             }
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -567,14 +586,22 @@ extension UIButton {
         // 兜底：避免 0 尺寸导致算不出（尤其是刚 setTitle/setImage 但还没 layout）
         // 这里不强行 sizeToFit，尽量不破坏外部约束体系
         func safeImageSize() -> (w: CGFloat, h: CGFloat) {
-            if imageW > 0, imageH > 0 { return (imageW, imageH) }
+            if imageW > 0, imageH > 0 {
+                return (imageW, imageH)
+            }
             let s = imageView?.intrinsicContentSize ?? .zero
-            return (max(0, s.width), max(0, s.height))
+            return (max(0,
+                        s.width), max(0,
+                                      s.height))
         }
         func safeTitleSize() -> (w: CGFloat, h: CGFloat) {
-            if titleW > 0, titleH > 0 { return (titleW, titleH) }
+            if titleW > 0, titleH > 0 {
+                return (titleW, titleH)
+            }
             let s = titleLabel?.intrinsicContentSize ?? .zero
-            return (max(0, s.width), max(0, s.height))
+            return (max(0,
+                        s.width), max(0,
+                                      s.height))
         }
         let img = safeImageSize()
         let ttl = safeTitleSize()
@@ -607,7 +634,10 @@ extension UIButton {
                                            left: -(img.w + padding / 2),
                                            bottom: 0,
                                            right: img.w + padding / 2)
-            contentEdgeInsets = UIEdgeInsets(top: 0, left: padding / 2, bottom: 0, right: padding / 2)
+            contentEdgeInsets = UIEdgeInsets(top: 0,
+                                             left: padding / 2,
+                                             bottom: 0,
+                                             right: padding / 2)
         /// 处理 .top 分支
         case .top:
             _jobsLegacyImagePlacement = .top
@@ -622,7 +652,8 @@ extension UIButton {
                                            bottom: -(img.h + padding) / 2,
                                            right: (img.w) / 2)
             let vPad = (img.h + ttl.h + padding) / 2
-            let hPad = max(img.w, ttl.w) / 2
+            let hPad = max(img.w,
+                           ttl.w) / 2
             contentEdgeInsets = UIEdgeInsets(top: vPad / 2,
                                              left: hPad / 2,
                                              bottom: vPad / 2,
@@ -640,18 +671,21 @@ extension UIButton {
                                            bottom: (img.h + padding) / 2,
                                            right: (img.w) / 2)
             let vPad = (img.h + ttl.h + padding) / 2
-            let hPad = max(img.w, ttl.w) / 2
+            let hPad = max(img.w,
+                           ttl.w) / 2
             contentEdgeInsets = UIEdgeInsets(top: vPad / 2,
                                              left: hPad / 2,
                                              bottom: vPad / 2,
                                              right: hPad / 2)
-        };return self
+        }
+        return self
     }
 
     @available(iOS 13.0, *)
     @discardableResult
     public func byImagePlacement(_ placement: NSDirectionalRectEdge) -> Self {
-        byImagePlacement(placement, padding: 8.0)
+        byImagePlacement(placement,
+                         padding: 8.0)
     }
 
     @available(iOS 15.0, *)
@@ -669,8 +703,10 @@ extension UIButton {
 }
 
 extension UIButton {
+
     // MARK: - iOS12 legacy imagePlacement 标记（用于让后续 contentEdgeInsets.top 真正生效）
     private enum _JobsLegacyImagePlacement: Int {
+
         case none = 0
         case top = 1
         case bottom = 2
@@ -680,20 +716,21 @@ extension UIButton {
 
     private var _jobsLegacyImagePlacement: _JobsLegacyImagePlacement {
         get {
-            let v = (objc_getAssociatedObject(self, &_jobsLegacyImagePlacementKey) as? Int) ?? 0
+            let v = (objc_getAssociatedObject(self,
+                                              &_jobsLegacyImagePlacementKey) as? Int) ?? 0
             return _JobsLegacyImagePlacement(rawValue: v) ?? .none
         }
         set {
-            objc_setAssociatedObject(
-                self,
-                &_jobsLegacyImagePlacementKey,
-                newValue.rawValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
+            objc_setAssociatedObject(self,
+                                     &_jobsLegacyImagePlacementKey,
+                                     newValue.rawValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
     // MARK: - Legacy Insets Shift Helper (iOS 14 and below)
-    private func _jobsShiftEdgeInsets(_ e: UIEdgeInsets, dx: CGFloat, dy: CGFloat) -> UIEdgeInsets {
+    private func _jobsShiftEdgeInsets(_ e: UIEdgeInsets,
+                                      dx: CGFloat,
+                                      dy: CGFloat) -> UIEdgeInsets {
         UIEdgeInsets(top: e.top + dy,
                      left: e.left + dx,
                      bottom: e.bottom - dy,
@@ -701,29 +738,48 @@ extension UIButton {
     }
     /// When legacy imagePlacement(.top/.bottom/.left/.right) has been applied on iOS 12,
     /// changing contentEdgeInsets should also shift image/title insets, otherwise the legacy negative offsets can "push back".
-    private func _jobsSyncLegacyInsetsIfNeeded(old: UIEdgeInsets, new: UIEdgeInsets) {
+    private func _jobsSyncLegacyInsetsIfNeeded(old: UIEdgeInsets,
+                                               new: UIEdgeInsets) {
         switch _jobsLegacyImagePlacement {
         /// 合并处理 .top、.bottom 分支
         case .top, .bottom:
             let dy = new.top - old.top
-            guard dy != 0 else { return }
-            self.imageEdgeInsets = _jobsShiftEdgeInsets(self.imageEdgeInsets, dx: 0, dy: dy)
-            self.titleEdgeInsets = _jobsShiftEdgeInsets(self.titleEdgeInsets, dx: 0, dy: dy)
+            guard dy != 0 else {
+                return
+            }
+            self.imageEdgeInsets = _jobsShiftEdgeInsets(self.imageEdgeInsets,
+                                                        dx: 0,
+                                                        dy: dy)
+            self.titleEdgeInsets = _jobsShiftEdgeInsets(self.titleEdgeInsets,
+                                                        dx: 0,
+                                                        dy: dy)
         /// 处理 .left 分支
         case .left:
             _jobsLegacyImagePlacement = .left
             let dx = new.left - old.left
-            guard dx != 0 else { return }
-            self.imageEdgeInsets = _jobsShiftEdgeInsets(self.imageEdgeInsets, dx: dx, dy: 0)
-            self.titleEdgeInsets = _jobsShiftEdgeInsets(self.titleEdgeInsets, dx: dx, dy: 0)
+            guard dx != 0 else {
+                return
+            }
+            self.imageEdgeInsets = _jobsShiftEdgeInsets(self.imageEdgeInsets,
+                                                        dx: dx,
+                                                        dy: 0)
+            self.titleEdgeInsets = _jobsShiftEdgeInsets(self.titleEdgeInsets,
+                                                        dx: dx,
+                                                        dy: 0)
         /// 处理 .right 分支
         case .right:
             _jobsLegacyImagePlacement = .right
             // Increasing right inset should shift content to the left (negative dx)
             let dx = -(new.right - old.right)
-            guard dx != 0 else { return }
-            self.imageEdgeInsets = _jobsShiftEdgeInsets(self.imageEdgeInsets, dx: dx, dy: 0)
-            self.titleEdgeInsets = _jobsShiftEdgeInsets(self.titleEdgeInsets, dx: dx, dy: 0)
+            guard dx != 0 else {
+                return
+            }
+            self.imageEdgeInsets = _jobsShiftEdgeInsets(self.imageEdgeInsets,
+                                                        dx: dx,
+                                                        dy: 0)
+            self.titleEdgeInsets = _jobsShiftEdgeInsets(self.titleEdgeInsets,
+                                                        dx: dx,
+                                                        dy: 0)
         /// 处理 .none 分支
         case .none:
             return
@@ -731,9 +787,11 @@ extension UIButton {
     }
 
     @discardableResult
-    public func byTitle(_ title: String?, for state: UIControl.State = .normal) -> Self {
+    public func byTitle(_ title: String?,
+                        for state: UIControl.State = .normal) -> Self {
         // ✅ 不管什么系统版本，先把 legacy title 写进去，给 handler 同步用
-        self.setTitle(title, for: state)
+        self.setTitle(title,
+                      for: state)
         if #available(iOS 15.0, *) {
             var cfg = self.configuration ?? .plain()
             // ✅ 立即让当前显示的 title 生效：
@@ -747,17 +805,21 @@ extension UIButton {
             self.configuration = cfg
             _ensureUnifiedUpdateHandlerInstalled()
             byUpdateConfig()
-        };return self
+        }
+        return self
     }
 
     @discardableResult
-    public func byAttributedTitle(_ text: NSAttributedString?, for state: UIControl.State = .normal) -> Self {
-        self.setAttributedTitle(text, for: state)
+    public func byAttributedTitle(_ text: NSAttributedString?,
+                                  for state: UIControl.State = .normal) -> Self {
+        self.setAttributedTitle(text,
+                                for: state)
         return self
     }
     /// 记录某个 state 的标题字体（iOS15+ 会在 handler 内生效；iOS14- 同步 titleLabel.font + attributedTitle）
     @discardableResult
-    public func byTitleFont(_ font: UIFont?, for state: UIControl.State = .normal) -> Self {
+    public func byTitleFont(_ font: UIFont?,
+                            for state: UIControl.State = .normal) -> Self {
         // 记录 state -> font（给 iOS15+ update handler 使用）
         if let font {
             _titleFontDict[state.rawValue] = font
@@ -779,10 +841,14 @@ extension UIButton {
         let syncStates: [UIControl.State] = [.normal, .highlighted, .selected, .disabled]
         for st in syncStates {
             // 如果该状态你已经手动设置过 attributedTitle，就别覆盖
-            if self.attributedTitle(for: st) != nil { continue }
+            if self.attributedTitle(for: st) != nil {
+                continue
+            }
             // 优先取该状态的 title，取不到回退 normal
             let t = self.title(for: st) ?? self.title(for: .normal) ?? ""
-            if t.isEmpty { continue }
+            if t.isEmpty {
+                continue
+            }
             var attrs: [NSAttributedString.Key: Any] = [
                 .font: font ?? JobsFont.systemFont(ofSize: 15)
             ]
@@ -790,8 +856,11 @@ extension UIButton {
             if let c = self.titleColor(for: st) ?? self.titleColor(for: .normal) {
                 attrs[.foregroundColor] = c
             }
-            self.setAttributedTitle(NSAttributedString(string: t, attributes: attrs), for: st)
-        };return self
+            self.setAttributedTitle(NSAttributedString(string: t,
+                                                       attributes: attrs),
+                                    for: st)
+        }
+        return self
     }
     /// 记录某个 state 的标题颜色（iOS15+ 走 configuration；iOS14- 走 setTitleColor）
     ///
@@ -801,7 +870,8 @@ extension UIButton {
     ///
     /// 因此这里除了记录到 dict（给 update handler 使用），也会在“当前正处于该 state”时同步写入 baseForegroundColor。
     @discardableResult
-    public func byTitleColor(_ color: UIColor?, for state: UIControl.State = .normal) -> Self {
+    public func byTitleColor(_ color: UIColor?,
+                             for state: UIControl.State = .normal) -> Self {
         let applyColor: (UIButton, UIColor?) -> Void = { button, resolvedColor in
             if #available(iOS 15.0, tvOS 15.0, *) {
                 // iOS15+：不要 setTitleColor（会和 configuration 打架）
@@ -815,15 +885,20 @@ extension UIButton {
                 let stateIsActive: Bool = {
                     switch state {
                     /// 处理 .disabled 分支
-                    case .disabled:   return !button.isEnabled
+                    case .disabled:
+                        return !button.isEnabled
                     /// 处理 .selected 分支
-                    case .selected:   return button.isSelected
+                    case .selected:
+                        return button.isSelected
                     /// 处理 .highlighted 分支
-                    case .highlighted:return button.isHighlighted
+                    case .highlighted:
+                        return button.isHighlighted
                     /// 处理 .normal 分支
-                    case .normal:     return button.isEnabled && !button.isSelected && !button.isHighlighted
+                    case .normal:
+                        return button.isEnabled && !button.isSelected && !button.isHighlighted
                     /// 未匹配已知分支时执行兜底处理
-                    default:          return false
+                    default:
+                        return false
                     }
                 }()
                 if stateIsActive, let resolvedColor {
@@ -834,21 +909,26 @@ extension UIButton {
                 button._ensureUnifiedUpdateHandlerInstalled()
                 button.byUpdateConfig()
             } else {
-                button.setTitleColor(resolvedColor, for: state)
+                button.setTitleColor(resolvedColor,
+                                     for: state)
             }
         }
         let slot = "UIButton.titleColor.\(state.rawValue)"
         if let key = color?.jobsThemeColorKey {
-            JobsThemeCenter.shared.bind(
-                self,
-                slot: slot
-            ) { object, center in
-                guard let button = object as? UIButton else { return }
-                applyColor(button, center.resolvedColor(key))
-            };return self
+            JobsThemeCenter.shared.bind(self,
+                                        slot: slot) { object, center in
+                guard let button = object as? UIButton else {
+                    return
+                }
+                applyColor(button,
+                           center.resolvedColor(key))
+            }
+            return self
         }
-        JobsThemeCenter.shared.unbind(self, slot: slot)
-        applyColor(self, color)
+        JobsThemeCenter.shared.unbind(self,
+                                      slot: slot)
+        applyColor(self,
+                   color)
         return self
     }
     /// 主标题和副标题之间的距离（兼容 iOS12+）
@@ -861,45 +941,56 @@ extension UIButton {
         } else {
             // iOS 12–14：重新应用 legacy composite
             _applyLegacyComposite(for: .normal)
-        };return self
-    }
-
-    @discardableResult
-    public func byTitleShadowColor(_ color: UIColor?, for state: UIControl.State = .normal) -> Self {
-        self.setTitleShadowColor(color, for: state)
+        }
         return self
     }
 
     @discardableResult
-    public func byImage(_ image: UIImage?, for state: UIControl.State = .normal) -> Self {
+    public func byTitleShadowColor(_ color: UIColor?,
+                                   for state: UIControl.State = .normal) -> Self {
+        self.setTitleShadowColor(color,
+                                 for: state)
+        return self
+    }
+
+    @discardableResult
+    public func byImage(_ image: UIImage?,
+                        for state: UIControl.State = .normal) -> Self {
         let slot = "UIButton.image.\(state.rawValue)"
         if let key = image?.jobsThemeImageKey {
-            JobsThemeCenter.shared.bind(
-                self,
-                slot: slot
-            ) { object, center in
-                guard let button = object as? UIButton else { return }
+            JobsThemeCenter.shared.bind(self,
+                                        slot: slot) { object, center in
+                guard let button = object as? UIButton else {
+                    return
+                }
                 let resolvedImage = center.resolvedImage(key)
-                button.setImage(resolvedImage, for: state)
+                button.setImage(resolvedImage,
+                                for: state)
                 if #available(iOS 15.0, *) {
                     button.configuration = (button.configuration ?? .plain())
                         .byImage(resolvedImage)
                     button.setNeedsUpdateConfiguration()
                 }
-            };return self
+            }
+            return self
         }
-        JobsThemeCenter.shared.unbind(self, slot: slot)
-        self.setImage(image, for: state)
+        JobsThemeCenter.shared.unbind(self,
+                                      slot: slot)
+        self.setImage(image,
+                      for: state)
         if #available(iOS 15.0, *) {
             self.configuration = (self.configuration ?? .plain()).byImage(self.image(for: self.isSelected ? .selected : .normal) ?? self.image(for: .normal) ?? image)
             _ensureUnifiedUpdateHandlerInstalled()
             byUpdateConfig()
-        };return self
+        }
+        return self
     }
 
     @discardableResult
-    public func byBgImage(_ image: UIImage?, for state: UIControl.State = .normal) -> Self {
-        self.setBackgroundImage(image, for: state)
+    public func byBgImage(_ image: UIImage?,
+                          for state: UIControl.State = .normal) -> Self {
+        self.setBackgroundImage(image,
+                                for: state)
         return self
     }
 
@@ -907,7 +998,8 @@ extension UIButton {
     @discardableResult
     public func byPreferredSymbolConfiguration(_ configuration: UIImage.SymbolConfiguration?,
                                                forImageIn state: UIControl.State = .normal) -> Self {
-        self.setPreferredSymbolConfiguration(configuration, forImageIn: state)
+        self.setPreferredSymbolConfiguration(configuration,
+                                             forImageIn: state)
         return self
     }
 
@@ -915,7 +1007,8 @@ extension UIButton {
     public func byBackgroundImageContentMode(_ mode: UIView.ContentMode) -> Self {
         if #available(iOS 15.0, *), var cfg = self.configuration {
             self.configuration = cfg.byBackground(cfg.background.byImageContentMode(mode))// .scaleAspectFill / .scaleAspectFit
-        };return self
+        }
+        return self
     }
 
     @discardableResult
@@ -928,31 +1021,37 @@ extension UIButton {
             // iOS14-：走 legacy 刷新，足够让 title/image 切换
             self.setNeedsLayout()
             self.layoutIfNeeded()
-        };return self
+        }
+        return self
     }
 }
 
 extension UIButton {
+
     // MARK: - state -> UIFont
     public var _titleFontDict: [UInt: UIFont] {
-        get { (objc_getAssociatedObject(self, &_jobsTitleFontDictKey) as? [UInt: UIFont]) ?? [:] }
+        get {
+            (objc_getAssociatedObject(self,
+                                      &_jobsTitleFontDictKey) as? [UInt: UIFont]) ?? [:]
+        }
         set {
-            objc_setAssociatedObject(
-                self,
-                &_jobsTitleFontDictKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self,
+                                     &_jobsTitleFontDictKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
     // MARK: - state -> UIColor (Title color)
     private var _titleColorDict: [UInt: UIColor] {
-        get { (objc_getAssociatedObject(self, &_jobsTitleColorDictKey) as? [UInt: UIColor]) ?? [:] }
+        get {
+            (objc_getAssociatedObject(self,
+                                      &_jobsTitleColorDictKey) as? [UInt: UIColor]) ?? [:]
+        }
         set {
-            objc_setAssociatedObject(
-                self,
-                &_jobsTitleColorDictKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self,
+                                     &_jobsTitleColorDictKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
     // MARK: - Configuration patch list
@@ -961,13 +1060,15 @@ extension UIButton {
 
     @available(iOS 15.0, tvOS 15.0, *)
     private var _jobsCfgPatches: [_JobsCfgPatch] {
-        get { (objc_getAssociatedObject(self, &_jobsConfigPatchListKey) as? [_JobsCfgPatch]) ?? [] }
+        get {
+            (objc_getAssociatedObject(self,
+                                      &_jobsConfigPatchListKey) as? [_JobsCfgPatch]) ?? []
+        }
         set {
-            objc_setAssociatedObject(
-                self,
-                &_jobsConfigPatchListKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self,
+                                     &_jobsConfigPatchListKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
     /// iOS15+：注册一个 configuration patch（会在 update handler 内执行）
@@ -981,26 +1082,38 @@ extension UIButton {
     // MARK: - Install unified configurationUpdateHandler (iOS15+)
     @available(iOS 15.0, tvOS 15.0, *)
     private func _ensureUnifiedUpdateHandlerInstalled() {
-        if (objc_getAssociatedObject(self, &_jobsConfigPatchHandlerInstalledKey) as? Bool) == true { return }
-        objc_setAssociatedObject(
-            self,
-            &_jobsConfigPatchHandlerInstalledKey,
-            true,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-        )
+        if (objc_getAssociatedObject(self,
+                                     &_jobsConfigPatchHandlerInstalledKey) as? Bool) == true {
+            return
+        }
+        objc_setAssociatedObject(self,
+                                 &_jobsConfigPatchHandlerInstalledKey,
+                                 true,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         self.automaticallyUpdatesConfiguration = true
         // 保存旧 handler（避免递归）
         let previousHandler = self.configurationUpdateHandler
         self.configurationUpdateHandler = { [weak self] btn in
             previousHandler?(btn)
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             var cfg = btn.configuration ?? .plain()
             // ---------- title：拆状态优先级（避免组合态取不到） ----------
             func pickTitle() -> String? {
-                if !btn.isEnabled, let t = btn.title(for: .disabled), !t.isEmpty { return t }
-                if btn.isSelected, let t = btn.title(for: .selected), !t.isEmpty { return t }
-                if btn.isHighlighted, let t = btn.title(for: .highlighted), !t.isEmpty { return t }
-                if let t = btn.title(for: .normal), !t.isEmpty { return t };return nil
+                if !btn.isEnabled, let t = btn.title(for: .disabled), !t.isEmpty {
+                    return t
+                }
+                if btn.isSelected, let t = btn.title(for: .selected), !t.isEmpty {
+                    return t
+                }
+                if btn.isHighlighted, let t = btn.title(for: .highlighted), !t.isEmpty {
+                    return t
+                }
+                if let t = btn.title(for: .normal), !t.isEmpty {
+                    return t
+                }
+                return nil
             }
             if let t = pickTitle() {
                 cfg.title = t
@@ -1008,9 +1121,16 @@ extension UIButton {
             // 查不到就别动 cfg.title，避免把字清空
             // ---------- image：拆状态优先级 ----------
             func pickImage() -> UIImage? {
-                if !btn.isEnabled, let i = btn.image(for: .disabled) { return i }
-                if btn.isSelected, let i = btn.image(for: .selected) { return i }
-                if btn.isHighlighted, let i = btn.image(for: .highlighted) { return i };return btn.image(for: .normal)
+                if !btn.isEnabled, let i = btn.image(for: .disabled) {
+                    return i
+                }
+                if btn.isSelected, let i = btn.image(for: .selected) {
+                    return i
+                }
+                if btn.isHighlighted, let i = btn.image(for: .highlighted) {
+                    return i
+                }
+                return btn.image(for: .normal)
             }
             if let img = pickImage() {
                 cfg.image = img
@@ -1018,17 +1138,19 @@ extension UIButton {
             // ---------- patches ----------
             let patches = self._jobsCfgPatches
             if !patches.isEmpty {
-                for p in patches { cfg = p(cfg) }
+                for p in patches {
+                    cfg = p(cfg)
+                }
             }
             // ---------- font：拆状态优先级 ----------
             let font =
-                (!btn.isEnabled ? self._titleFontDict[UIControl.State.disabled.rawValue] : nil)
+            (!btn.isEnabled ? self._titleFontDict[UIControl.State.disabled.rawValue] : nil)
                 ?? (btn.isSelected ? self._titleFontDict[UIControl.State.selected.rawValue] : nil)
                 ?? (btn.isHighlighted ? self._titleFontDict[UIControl.State.highlighted.rawValue] : nil)
                 ?? self._titleFontDict[UIControl.State.normal.rawValue]
             // ---------- color：拆状态优先级 ----------
             let color =
-                (!btn.isEnabled ? self._titleColorDict[UIControl.State.disabled.rawValue] : nil)
+            (!btn.isEnabled ? self._titleColorDict[UIControl.State.disabled.rawValue] : nil)
                 ?? (btn.isSelected ? self._titleColorDict[UIControl.State.selected.rawValue] : nil)
                 ?? (btn.isHighlighted ? self._titleColorDict[UIControl.State.highlighted.rawValue] : nil)
                 ?? self._titleColorDict[UIControl.State.normal.rawValue]
@@ -1040,92 +1162,116 @@ extension UIButton {
             if font != nil || color != nil {
                 cfg = cfg
                     .byTitleTextAttributesTransformer(
-                        UIConfigurationTextAttributesTransformer { incoming in
-                            var a = incoming
-                            if let font { a.font = font }
-                            if let color { a.foregroundColor = color };return a
-                        }
-                    )
-            };btn.configuration = cfg
+                    UIConfigurationTextAttributesTransformer { incoming in
+                    var a = incoming
+                    if let font {
+                        a.font = font
+                    }
+                    if let color {
+                        a.foregroundColor = color
+                    }
+                    return a
+                }
+                )
+            }
+            btn.configuration = cfg
         }
     }
 }
 // MARK: - 进阶：按 state 的链式代理
 extension UIButton {
+
     public func `for`(_ state: UIControl.State) -> StateProxy {
-        StateProxy(button: self, state: state)
+        StateProxy(button: self,
+                   state: state)
     }
 
     public final class StateProxy {
+
         fileprivate let button: UIButton
         let state: UIControl.State
-        init(button: UIButton, state: UIControl.State) {
+        init(button: UIButton,
+             state: UIControl.State) {
             self.button = button
             self.state = state
         }
         @discardableResult
         public func title(_ text: String?) -> UIButton {
-            button.setTitle(text, for: state)
+            button.setTitle(text,
+                            for: state)
             return button
         }
         @discardableResult
         public func attributedTitle(_ text: NSAttributedString?) -> UIButton {
-            button.setAttributedTitle(text, for: state)
+            button.setAttributedTitle(text,
+                                      for: state)
             return button
         }
         @discardableResult
         public func titleColor(_ color: UIColor?) -> UIButton {
-            button.setTitleColor(color, for: state)
+            button.setTitleColor(color,
+                                 for: state)
             return button
         }
         @discardableResult
         public func titleShadowColor(_ color: UIColor?) -> UIButton {
-            button.setTitleShadowColor(color, for: state)
+            button.setTitleShadowColor(color,
+                                       for: state)
             return button
         }
         @discardableResult
         public func image(_ image: UIImage?) -> UIButton {
-            button.setImage(image, for: state)
+            button.setImage(image,
+                            for: state)
             return button
         }
         @available(iOS 13.0, *)
         @discardableResult
         public func preferredSymbolConfiguration(_ configuration: UIImage.SymbolConfiguration?) -> UIButton {
-            button.setPreferredSymbolConfiguration(configuration, forImageIn: state)
+            button.setPreferredSymbolConfiguration(configuration,
+                                                   forImageIn: state)
             return button
         }
         @discardableResult
         public func backgroundColor(_ color: UIColor) -> UIButton {
             if #available(iOS 15.0, *), state == .normal {
                 // ✅ 只写 baseBackgroundColor，避免触发 UIBackgroundConfiguration 的 dynamicMember
-                button.byConfiguration((button.configuration ?? .plain()).byBaseBackgroundColor(color))
+                button
+                    .byConfiguration((button.configuration ?? .plain()).byBaseBackgroundColor(color))
                     .byBackgroundColor(color)// 保险：某些 style 下 baseBackgroundColor 不会立刻体现在 layer 上
-                    .byUpdateConfig()
+                .byUpdateConfig()
             } else {
-                button.setBackgroundColor(color, forState: state)
-            };return button
+                button.setBackgroundColor(color,
+                                          forState: state)
+            }
+            return button
         }
         @discardableResult
         public func backgroundImage(_ image: UIImage?) -> UIButton {
-            button.setBackgroundImage(image, for: state)
+            button.setBackgroundImage(image,
+                                      for: state)
             return button
         }
         @discardableResult
         public func subTitle(_ text: String?) -> UIButton {
-            button.bySubTitle(text, for: state)
+            button.bySubTitle(text,
+                              for: state)
         }
         /// 副标题富文本（按 state）
         @discardableResult
         public func attributedSubTitle(_ text: NSAttributedString?) -> UIButton {
-            button.byAttributedSubTitle(text, for: state)
+            button.byAttributedSubTitle(text,
+                                        for: state)
         }
         @discardableResult
         public func subTitleFont(_ font: UIFont) -> UIButton {
-            button.bySubTitleFont(font, for: state)
+            button.bySubTitleFont(font,
+                                  for: state)
         }
         @discardableResult
         public func subTitleColor(_ color: UIColor) -> UIButton {
-            button.bySubTitleColor(color, for: state)
+            button.bySubTitleColor(color,
+                                   for: state)
         }
     }
 }

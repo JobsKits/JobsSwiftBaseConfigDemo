@@ -22,6 +22,7 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class FTDashboadDemoVC: BaseVC {
+
     private let horizontalInset: CGFloat = 20
     private var didInitProgress = false
     private lazy var dashboardView: FTDashboardView = {
@@ -38,11 +39,11 @@ final class FTDashboadDemoVC: BaseVC {
                 return "\(value)"
             }
             .byConfig { dashboard in
-                JobsThemeCenter.shared.bind(
-                    dashboard,
-                    slot: "FTDashboardDemo.themeColors"
-                ) { object, center in
-                    guard let dashboard = object as? FTDashboardView else { return }
+                JobsThemeCenter.shared.bind(dashboard,
+                                            slot: "FTDashboardDemo.themeColors") { object, center in
+                    guard let dashboard = object as? FTDashboardView else {
+                        return
+                    }
                     let foregroundColor = center.resolvedColor(.textPrimary)
                     dashboard
                         .byTrackColor(foregroundColor.withAlphaComponent(0.18))
@@ -67,13 +68,18 @@ final class FTDashboadDemoVC: BaseVC {
     }()
 
     private lazy var slider: UISlider = {
-        UISlider.jobsMake { _ in }
+        UISlider
+            .jobsMake { _ in }
             .byMinimumValue(0)
             .byMaximumValue(1)
             .byValue(0.44)
-            .onJobsChange{ [weak self] (s: UISlider) in
-                guard let self else { return }
-                dashboardView.setProgress(CGFloat(s.value), animated: true, duration: 0.25)
+            .onJobsChange { [weak self] (s: UISlider) in
+                guard let self else {
+                    return
+                }
+                dashboardView.setProgress(CGFloat(s.value),
+                                          animated: true,
+                                          duration: 0.25)
             }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(dashboardView.snp.bottom).offset(24)
@@ -92,8 +98,11 @@ final class FTDashboadDemoVC: BaseVC {
     /// 关键：布局完成后，再做一次初始 setProgress，避免首帧角度/中心未就位导致乱晃
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        guard !didInitProgress else { return }
+        guard !didInitProgress else {
+            return
+        }
         didInitProgress = true
-        dashboardView.setProgress(CGFloat(slider.value), animated: false)
+        dashboardView.setProgress(CGFloat(slider.value),
+                                  animated: false)
     }
 }

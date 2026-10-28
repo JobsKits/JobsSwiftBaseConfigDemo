@@ -19,10 +19,12 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsDouyinRefreshDemoVC: BaseVC {
+
     private var simulatedRefreshWorkItem: DispatchWorkItem?
 
     private lazy var hintLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("红、绿双球交叉换位并错峰跳跃；组件可独立用于下拉刷新、加载态或空白页。".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 15))
@@ -39,7 +41,8 @@ final class JobsDouyinRefreshDemoVC: BaseVC {
     }()
 
     private lazy var animationCardView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(24)
             .byShadowColor(JobsCor.black)
@@ -56,23 +59,23 @@ final class JobsDouyinRefreshDemoVC: BaseVC {
 
     private lazy var refreshView: JobsDouyinRefreshView = {
         JobsDouyinRefreshView(
-            config: JobsDouyinRefreshConfig(
-                dotDiameter: 18,
-                horizontalTravel: 32,
-                jumpHeight: 11,
-                cycleDuration: 0.84
-            )
+            config: JobsDouyinRefreshConfig(dotDiameter: 18,
+                                            horizontalTravel: 32,
+                                            jumpHeight: 11,
+                                            cycleDuration: 0.84)
         )
-        .byAddTo(animationCardView) { make in
-            make.center.equalToSuperview()
-        }
+            .byAddTo(animationCardView) { make in
+                make.center.equalToSuperview()
+            }
     }()
 
     private lazy var statusLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("正在刷新…".tr)
             .byTextColor(JobsCor.label)
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 14,
+                                        weight: .medium))
             .byTextAlignment(.center)
             .byNumberOfLines(1)
             .byAddTo(animationCardView) { [unowned self] make in
@@ -82,9 +85,12 @@ final class JobsDouyinRefreshDemoVC: BaseVC {
     }()
 
     private lazy var startButton: UIButton = {
-        makeControlButton(title: "开始 / 继续", color: JobsCor.systemGreen)
+        makeControlButton(title: "开始 / 继续",
+                          color: JobsCor.systemGreen)
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 simulatedRefreshWorkItem?.cancel()
                 statusLabel.byText("正在刷新…".tr)
                 if refreshView.isAnimating {
@@ -96,7 +102,8 @@ final class JobsDouyinRefreshDemoVC: BaseVC {
     }()
 
     private lazy var pauseButton: UIButton = {
-        makeControlButton(title: "暂停", color: JobsCor.systemOrange)
+        makeControlButton(title: "暂停",
+                          color: JobsCor.systemOrange)
             .onTap { [weak self] _ in
                 self?.simulatedRefreshWorkItem?.cancel()
                 self?.statusLabel.byText("刷新已暂停".tr)
@@ -105,7 +112,8 @@ final class JobsDouyinRefreshDemoVC: BaseVC {
     }()
 
     private lazy var stopButton: UIButton = {
-        makeControlButton(title: "停止", color: JobsCor.systemRed)
+        makeControlButton(title: "停止",
+                          color: JobsCor.systemRed)
             .onTap { [weak self] _ in
                 self?.simulatedRefreshWorkItem?.cancel()
                 self?.statusLabel.byText("刷新已停止".tr)
@@ -114,7 +122,8 @@ final class JobsDouyinRefreshDemoVC: BaseVC {
     }()
 
     private lazy var controlsStackView: UIStackView = {
-        UIStackView.jobsMake { _ in }
+        UIStackView
+            .jobsMake { _ in }
             .byAxis(.horizontal)
             .byAlignment(.fill)
             .byDistribution(.fillEqually)
@@ -130,7 +139,8 @@ final class JobsDouyinRefreshDemoVC: BaseVC {
     private lazy var simulateButton: UIButton = {
         UIButton.sys()
             .byTitle("模拟一次 2 秒刷新".tr)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .semibold))
             .byTitleColor(JobsCor.white)
             .byBackgroundColor(JobsCor.systemBlue)
             .byCornerRadius(12)
@@ -167,10 +177,12 @@ final class JobsDouyinRefreshDemoVC: BaseVC {
         refreshView.byStop()
     }
 
-    private func makeControlButton(title: String, color: UIColor) -> UIButton {
+    private func makeControlButton(title: String,
+                                   color: UIColor) -> UIButton {
         UIButton.sys()
             .byTitle(title.tr)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .semibold))
             .byTitleColor(JobsCor.white)
             .byBackgroundColor(color)
             .byCornerRadius(10)
@@ -181,11 +193,14 @@ final class JobsDouyinRefreshDemoVC: BaseVC {
         statusLabel.byText("正在刷新…".tr)
         refreshView.byStart()
         let workItem = DispatchWorkItem { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             statusLabel.byText("刷新完成，点击按钮可再次演示".tr)
             refreshView.byStop()
         }
         simulatedRefreshWorkItem = workItem
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: workItem)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2,
+                                      execute: workItem)
     }
 }

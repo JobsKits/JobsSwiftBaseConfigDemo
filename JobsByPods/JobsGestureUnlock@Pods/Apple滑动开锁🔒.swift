@@ -18,8 +18,10 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 public class SlideToUnlockView: UIView {
+
     // MARK: - 方向
     public enum Direction {
+
         case leftToRight   // 默认：从左往右
         case rightToLeft   // 可选：从右往左
     }
@@ -41,7 +43,8 @@ public class SlideToUnlockView: UIView {
     }
     // MARK: - 配置
     private let thumbInset: CGFloat = 4          // 滑块距离左右的内边距
-    private let thumbSize = CGSize(width: 52, height: 52)
+    private let thumbSize = CGSize(width: 52,
+                                   height: 52)
     private var resetWorkItem: DispatchWorkItem?
     private var hasCompleted = false
     private var panStartProgress: CGFloat = 0    // 手势开始时的进度备份
@@ -49,10 +52,15 @@ public class SlideToUnlockView: UIView {
     /// 0 ~ 1 的进度，表示从“起点侧”到“终点侧”的完成度
     private var _progress: CGFloat = 0
     private var progress: CGFloat {
-        get { _progress }
+        get {
+            _progress
+        }
         set {
-            let v = min(max(newValue, 0), 1)
-            guard v != _progress else { return }
+            let v = min(max(newValue,0),
+                        1)
+            guard v != _progress else {
+                return
+            }
             _progress = v
             updateLayoutForProgress(animated: false)
         }
@@ -60,7 +68,8 @@ public class SlideToUnlockView: UIView {
     private var thumbLeadingConstraint: Constraint?
     /// 背景轨道（灰色圆角条）
     private lazy var trackView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemGray5)
             .byCornerRadius(28)
             .byMasksToBounds(YES)
@@ -70,11 +79,10 @@ public class SlideToUnlockView: UIView {
     }()
     /// 轨道内部的“骨架屏效果”闪动条（覆盖整个父视图）
     private lazy var shimmerView: UIView = { [unowned self] in
-        let view = UIView.jobsMake { _ in }
-            .byShimmerColors(
-                base: JobsCor.systemGray5,                 // 与轨道底色一致
-                highlight: JobsCor.white.withAlphaComponent(0.42)
-            )
+        let view = UIView
+            .jobsMake { _ in }
+            .byShimmerColors(base: JobsCor.systemGray5,                 // 与轨道底色一致
+                             highlight: JobsCor.white.withAlphaComponent(0.42))
             .byShimmerDuration(2.4)
             .byShimmerPauseDuration(3.0)
             .byShimmerHighlightWidthRatio(0.05)
@@ -86,10 +94,12 @@ public class SlideToUnlockView: UIView {
     }()
     /// 中间文字：“滑动以解锁”
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("滑动以解锁".tr)
             .byTextColor(JobsCor.secondaryLabel)
-            .byFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 16,
+                                        weight: .medium))
             .byTextAlignment(.center)
             .byAddTo(self) { [unowned self] make in
                 make.edges.equalToSuperview().inset(16)
@@ -97,7 +107,8 @@ public class SlideToUnlockView: UIView {
     }()
     /// 滑块视图
     private lazy var thumbView: UIView = { [unowned self] in
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(thumbSize.height / 2)
             .byMasksToBounds(YES)
@@ -106,54 +117,56 @@ public class SlideToUnlockView: UIView {
             .byShadowRadius(4)
             .byShadowOffset(CGSize(width: 0, height: 2))
             .jobs_addGestureRetView(
-                UIPanGestureRecognizer
-                    .byConfig { [weak self] gr in
-                        guard let self = self,
-                              let pan = gr as? UIPanGestureRecognizer,
-                              let container = gr.view?.superview
-                        else { return }
-                        guard !self.hasCompleted else { return }
-                        let translation = pan.translation(in: container)
-                        let dragWidth = max(
-                            container.bounds.width - self.thumbInset * 2 - self.thumbSize.width,
-                            1
-                        )
-                        switch pan.state {
-                        /// 处理 .began 分支
-                        case .began:
-                            self.panStartProgress = self.progress
-                        /// 处理 .changed 分支
-                        case .changed:
-                            let rawDelta = translation.x / dragWidth
-                            let delta: CGFloat
-                            switch self.direction {
-                            /// 处理 .leftToRight 分支
-                            case .leftToRight:
-                                delta = rawDelta
-                            /// 处理 .rightToLeft 分支
-                            case .rightToLeft:
-                                delta = -rawDelta
-                            }
-                            self.progress = self.panStartProgress + delta
-                            self.layoutIfNeeded()
-                            self.updateShimmerMask()
-                        case .ended:
-                            if self.progress > 0.85 {
-                                self.completeUnlock()
-                            } else {
-                                self.reset(animated: true)
-                            }
-                        case .cancelled, .failed:
-                            self.reset(animated: true)
-                        /// 未匹配已知分支时执行兜底处理
-                        default:
-                            break
-                        }
+            UIPanGestureRecognizer
+                .byConfig { [weak self] gr in
+                guard let self = self,
+                      let pan = gr as? UIPanGestureRecognizer,
+                      let container = gr.view?.superview
+                else {
+                    return
+                }
+                guard !self.hasCompleted else {
+                    return
+                }
+                let translation = pan.translation(in: container)
+                let dragWidth = max(container.bounds.width - self.thumbInset * 2 - self.thumbSize.width,
+                                    1)
+                switch pan.state {
+                /// 处理 .began 分支
+                case .began:
+                    self.panStartProgress = self.progress
+                /// 处理 .changed 分支
+                case .changed:
+                    let rawDelta = translation.x / dragWidth
+                    let delta: CGFloat
+                    switch self.direction {
+                    /// 处理 .leftToRight 分支
+                    case .leftToRight:
+                        delta = rawDelta
+                    /// 处理 .rightToLeft 分支
+                    case .rightToLeft:
+                        delta = -rawDelta
                     }
-                    .byMinTouches(1)
-                    .byMaxTouches(2)
-                    .byCancelsTouchesInView(true)
-            )
+                    self.progress = self.panStartProgress + delta
+                    self.layoutIfNeeded()
+                    self.updateShimmerMask()
+                case .ended:
+                    if self.progress > 0.85 {
+                        self.completeUnlock()
+                    } else {
+                        self.reset(animated: true)
+                    }
+                case .cancelled, .failed:
+                    self.reset(animated: true)
+                /// 未匹配已知分支时执行兜底处理
+                default:
+                    break
+                }
+            }
+                .byMinTouches(1)
+                .byMaxTouches(2)
+                .byCancelsTouchesInView(true)
+        )
             .byAddTo(self) { [unowned self] make in
                 make.centerY.equalToSuperview()
                 make.size.equalTo(thumbSize)
@@ -164,7 +177,8 @@ public class SlideToUnlockView: UIView {
     }()
 
     private lazy var arrow: UIImageView = { [unowned self] in
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byTintColor(JobsCor.systemBlue)
             .byAddTo(thumbView) { [unowned self] make in
                 make.center.equalToSuperview()
@@ -202,12 +216,15 @@ public class SlideToUnlockView: UIView {
         let symbolName: String
         switch direction {
         /// 处理 .leftToRight 分支
-        case .leftToRight: symbolName = "chevron.right"
+        case .leftToRight:
+            symbolName = "chevron.right"
         /// 处理 .rightToLeft 分支
-        case .rightToLeft: symbolName = "chevron.left"
+        case .rightToLeft:
+            symbolName = "chevron.left"
         }
         if #available(iOS 13.0, *) {
-            let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold)
+            let config = UIImage.SymbolConfiguration(pointSize: 18,
+                                                     weight: .bold)
             arrow.byImage(symbolName.sysImg(config))
         } else {
             // iOS12：用同名的 asset 图（chevron.right / chevron.left），或给个兜底
@@ -216,7 +233,9 @@ public class SlideToUnlockView: UIView {
     }
 
     private func updateLayoutForProgress(animated: Bool) {
-        guard bounds.width > 0 else { return }
+        guard bounds.width > 0 else {
+            return
+        }
         let maxOffset = bounds.width - thumbInset - thumbSize.width
         let positionFactor: CGFloat
         switch direction {
@@ -231,7 +250,8 @@ public class SlideToUnlockView: UIView {
         thumbLeadingConstraint?.update(offset: offset)
         titleLabel.byAlpha(1 - _progress * 0.8)
         if animated {
-            UIView.jobsAnimate(0.2, animations: {
+            UIView.jobsAnimate(0.2,
+                               animations: {
                 self.layoutIfNeeded()
                 self.updateShimmerMask()
             })
@@ -260,31 +280,42 @@ public class SlideToUnlockView: UIView {
             shimmerView.jobs_setShimmerMask(nil)
             return
         }
-        let thumbFrameInTrack = trackView.convert(thumbView.frame, from: self)
+        let thumbFrameInTrack = trackView.convert(thumbView.frame,
+                                                  from: self)
         let maskRect: CGRect
         switch direction {
         /// 处理 .leftToRight 分支
         case .leftToRight:
             // 左->右：分界线在圆心位置，右侧保留呼吸屏
             var startX = thumbFrameInTrack.midX        // 圆心
-            startX = min(max(startX, 0), trackBounds.width)
-            let width = max(trackBounds.width - startX, 0)
+            startX = min(max(startX,0),
+                         trackBounds.width)
+            let width = max(trackBounds.width - startX,
+                            0)
             guard width > 0 else {
                 shimmerView.jobs_setShimmerMask(nil)
                 return
             }
-            maskRect = CGRect(x: startX, y: 0, width: width, height: trackBounds.height)
+            maskRect = CGRect(x: startX,
+                              y: 0,
+                              width: width,
+                              height: trackBounds.height)
         /// 处理 .rightToLeft 分支
         case .rightToLeft:
             // 右->左：分界线在圆心位置，左侧保留呼吸屏
             var endX = thumbFrameInTrack.midX          // 圆心
-            endX = min(max(endX, 0), trackBounds.width)
-            let width = max(endX, 0)
+            endX = min(max(endX,0),
+                       trackBounds.width)
+            let width = max(endX,
+                            0)
             guard width > 0 else {
                 shimmerView.jobs_setShimmerMask(nil)
                 return
             }
-            maskRect = CGRect(x: 0, y: 0, width: width, height: trackBounds.height)
+            maskRect = CGRect(x: 0,
+                              y: 0,
+                              width: width,
+                              height: trackBounds.height)
         }
         // 纯矩形遮罩，靠近滑块是笔直的直角边
         let path = UIBezierPath.make(rect: maskRect)
@@ -296,7 +327,9 @@ public class SlideToUnlockView: UIView {
     }
 
     private func completeUnlock() {
-        guard !hasCompleted else { return }
+        guard !hasCompleted else {
+            return
+        }
         hasCompleted = true
         progress = 1
         updateLayoutForProgress(animated: true)
@@ -306,7 +339,8 @@ public class SlideToUnlockView: UIView {
             self?.reset(animated: true)
         }
         resetWorkItem = item
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: item)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6,
+                                      execute: item)
     }
 
     public func reset(animated: Bool = false) {
@@ -320,6 +354,7 @@ public class SlideToUnlockView: UIView {
 }
 
 extension SlideToUnlockView {
+
     @discardableResult
     public func byOnUnlock(_ handler: @escaping jobsByVoidBlock) -> Self {
         self.onUnlock = handler

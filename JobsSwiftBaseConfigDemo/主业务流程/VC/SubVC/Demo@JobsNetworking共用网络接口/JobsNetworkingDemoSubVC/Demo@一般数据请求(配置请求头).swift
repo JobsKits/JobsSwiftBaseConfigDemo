@@ -20,39 +20,43 @@ import SnapKit
 
 // MARK: - 一般数据请求
 final class GeneralRequestDemoVC: JobsNetworkingDemoBaseVC {
+
     private var token: JobsRequestToken?
     private lazy var agent: DefaultJobsAgent = {
-        DefaultJobsAgent(config: JobsRequestConfig(
-            baseURL: URL(string: "https://httpbin.org")!,
-            timeout: 20,
-            version: "v1",
-            userScope: "guest",
-            defaultRetryPolicy: .default
-        ), headerHook: DemoAuthHook())
+        DefaultJobsAgent(config: JobsRequestConfig(baseURL: URL(string: "https://httpbin.org")!,
+                                                   timeout: 20,
+                                                   version: "v1",
+                                                   userScope: "guest",
+                                                   defaultRetryPolicy: .default),
+                         headerHook: DemoAuthHook())
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "一般数据请求".tr)
         runButton
-            .byTitle("Run: cacheThenNetwork + cancel", for: .normal)
+            .byTitle("Run: cacheThenNetwork + cancel",
+                     for: .normal)
             .onTap { [weak self] sender in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.append("Start closure request...\n")
                 let agent = self.agent // ✅ 避免后续 completion 里再去碰 self.agent
-                let req = JobsRequest(
-                    path: "/delay/3",
-                    method: .get,
-                    cachePolicy: .cacheThenNetwork(ttl: 10)
-                )
-                self.token = agent.send(req, as: Data.self) { [weak self] result in
-                    guard let self else { return }
+                let req = JobsRequest(path: "/delay/3",
+                                      method: .get,
+                                      cachePolicy: .cacheThenNetwork(ttl: 10))
+                self.token = agent.send(req,
+                                        as: Data.self) { [weak self] result in
+                    guard let self else {
+                        return
+                    }
                     Task { @MainActor in
                         switch result {
-                        /// 处理 .success 分支
+                    /// 处理 .success 分支
                         case .success(let data):
                             self.append("Success. bytes=\(data.count)\n\n")
-                        /// 处理 .failure 分支
+                    /// 处理 .failure 分支
                         case .failure(let err):
                             self.append("Failure: \(err)\n\n")
                         }

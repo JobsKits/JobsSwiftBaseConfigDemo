@@ -15,16 +15,19 @@ import JobsSwiftBaseDefines
 
 // MARK: - 直接赋值@单参数
 extension UIImageView {
+
     // MARK: 图片
     @discardableResult
     public func byImage(_ img: UIImage?) -> Self {
         let slot = "UIImageView.image"
         if let key = img?.jobsThemeImageKey {
-            JobsThemeCenter.shared.bind(self, slot: slot) { object, center in
+            JobsThemeCenter.shared.bind(self,
+                                        slot: slot) { object, center in
                 (object as? UIImageView)?.image = center.resolvedImage(key)
             }
         } else {
-            JobsThemeCenter.shared.unbind(self, slot: slot)
+            JobsThemeCenter.shared.unbind(self,
+                                          slot: slot)
             image = img
         }
         return self
@@ -95,6 +98,7 @@ extension UIImageView {
 }
 // MARK: - 闭包重载@单参数
 extension UIImageView {
+
     @discardableResult
     public func byImage(_ builder: () -> UIImage?) -> Self {
         byImage(builder())
@@ -109,7 +113,9 @@ extension UIImageView {
     @discardableResult
     public func byHighlighted(_ builder: () -> Bool) -> Self {
         _byApplyValue(builder) { [weak self] highlighted in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.isHighlighted = highlighted
         }
     }
@@ -129,7 +135,9 @@ extension UIImageView {
     @discardableResult
     public func byAnimationDuration(_ builder: () -> TimeInterval) -> Self {
         _byApplyValue(builder) { [weak self] duration in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.animationDuration = duration
         }
     }
@@ -137,7 +145,9 @@ extension UIImageView {
     @discardableResult
     public func byAnimationRepeatCount(_ builder: () -> Int) -> Self {
         _byApplyValue(builder) { [weak self] count in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.animationRepeatCount = count
         }
     }
@@ -153,7 +163,9 @@ extension UIImageView {
     @discardableResult
     public func byPreferredImageDynamicRange(_ builder: () -> UIImage.DynamicRange) -> Self {
         _byApplyValue(builder) { [weak self] range in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.preferredImageDynamicRange = range
         }
     }

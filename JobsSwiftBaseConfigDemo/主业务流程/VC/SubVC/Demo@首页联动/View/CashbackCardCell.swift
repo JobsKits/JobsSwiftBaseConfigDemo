@@ -19,24 +19,32 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class CashbackCardCell: UITableViewCell {
+
     private let corner: CGFloat = 22
     private lazy var cardView: UIView = {
-        var cardView =  UIView.jobsMake { _ in }
+        var cardView =  UIView
+            .jobsMake { _ in }
             .byCornerRadius(corner)
             .byAddTo(contentView) { make in
-                make.edges.equalToSuperview().inset(UIEdgeInsets(top: 10, left: 16, bottom: 10, right: 16))
+                make.edges.equalToSuperview().inset(UIEdgeInsets(top: 10,
+                                                                 left: 16,
+                                                                 bottom: 10,
+                                                                 right: 16))
             }
-        cardView.layer.insertSublayer(gradient, at: 0)
+        cardView.layer.insertSublayer(gradient,
+                                      at: 0)
         cardView
             .byShadowColor(JobsCor.black.withAlphaComponent(0.08))
             .byShadowOpacity(1)
             .byShadowRadius(10)
-            .byShadowOffset(.init(width: 0, height: 3))
+            .byShadowOffset(.init(width: 0,
+                                  height: 3))
         return cardView
     }()
 
     private lazy var iconWrap: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemOrange)
             .byCornerRadius(12)
             .byAddTo(cardView) { make in
@@ -56,9 +64,11 @@ final class CashbackCardCell: UITableViewCell {
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("——")
-            .byFont(JobsFont.systemFont(ofSize: 20, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 20,
+                                        weight: .semibold))
             .byTextColor(JobsCor.label)
             .byAddTo(cardView) { [unowned self] make in
                 make.leading.equalTo(iconWrap.snp.trailing).offset(16)
@@ -68,7 +78,8 @@ final class CashbackCardCell: UITableViewCell {
     }()
 
     private lazy var subLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("神秘彩金等你来拿".tr)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.secondaryLabel)
@@ -80,8 +91,9 @@ final class CashbackCardCell: UITableViewCell {
             }
     }()
 
-    private lazy var gradient:CAGradientLayer = {
-        CAGradientLayer.jobsMake { _ in }
+    private lazy var gradient: CAGradientLayer = {
+        CAGradientLayer
+            .jobsMake { _ in }
             .byCGColors([
                 UIColor(hex: 0xE6C7F7).cgColor,
                 UIColor(hex: 0xD1B7F3).cgColor
@@ -91,8 +103,10 @@ final class CashbackCardCell: UITableViewCell {
             .byCornerRadius(corner)
     }()
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override init(style: UITableViewCell.CellStyle,
+                  reuseIdentifier: String?) {
+        super.init(style: style,
+                   reuseIdentifier: reuseIdentifier)
         self.byBackgroundColor(JobsCor.clear)
         contentView.byBackgroundColor(JobsCor.clear)
         cardView.byVisible(YES)
@@ -102,14 +116,17 @@ final class CashbackCardCell: UITableViewCell {
         subLabel.byVisible(YES)
     }
 
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func layoutSubviews() {
         super.layoutSubviews()
         gradient.byFrame(cardView.bounds)
     }
 
-    func configure(title: String, subtitle: String) {
+    func configure(title: String,
+                   subtitle: String) {
         titleLabel.byText(title)
         subLabel.byText(subtitle)
     }

@@ -17,20 +17,26 @@ import JobsToast
 // MARK: - 可选协议
 /// 如果你想自定义 toast 里展示的 tag，让你的 VC 遵循这个协议即可。
 @objc public protocol UIViewControllerDebugDeinitProtocol {
+
     @objc var debugDeinitTag: String { get }
 }
 
 // MARK: - 对外安装入口
 public enum VCDebugDeallocDebug {
+
     private static let showsDeinitTipsKey = "com.jobs.debug.showsControllerDeinitTips"
 
     /// 是否显示控制器销毁 Toast；未配置时保持历史默认值 `true`。
     public static var showsDeinitTips: Bool {
         get {
-            guard UserDefaults.standard.object(forKey: showsDeinitTipsKey) != nil else { return true };return UserDefaults.standard.bool(forKey: showsDeinitTipsKey)
+            guard UserDefaults.standard.object(forKey: showsDeinitTipsKey) != nil else {
+                return true
+            }
+            return UserDefaults.standard.bool(forKey: showsDeinitTipsKey)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: showsDeinitTipsKey)
+            UserDefaults.standard.set(newValue,
+                                      forKey: showsDeinitTipsKey)
         }
     }
 
@@ -54,16 +60,23 @@ public enum VCDebugDeallocDebug {
 /// - VC 释放时，监听器也会释放
 /// - 在监听器的 deinit 里回调，从而实现“VC deinit 时提示”
 private final class _VCDebugDeinitObserver {
+
     private let onDeinit: () -> Void
-    init(_ onDeinit: @escaping () -> Void) { self.onDeinit = onDeinit }
-    deinit { onDeinit() }
+    init(_ onDeinit: @escaping () -> Void) {
+        self.onDeinit = onDeinit
+    }
+    deinit {
+        onDeinit()
+    }
 }
 // MARK: - UIViewController Hook
 private var _vcDebugDeinitObserverKey: UInt8 = 0
 extension UIViewController {
+
     /// 仅绑定一次监听器，避免重复创建
     fileprivate func _vcDebug_attachDeinitObserverIfNeeded() {
-        if objc_getAssociatedObject(self, &_vcDebugDeinitObserverKey) != nil {
+        if objc_getAssociatedObject(self,
+                                    &_vcDebugDeinitObserverKey) != nil {
             return
         }
         let clsName = String(describing: type(of: self))
@@ -88,28 +101,30 @@ extension UIViewController {
                 text.toast
             }
         }
-        objc_setAssociatedObject(
-            self,
-            &_vcDebugDeinitObserverKey,
-            observer,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-        )
+        objc_setAssociatedObject(self,
+                                 &_vcDebugDeinitObserverKey,
+                                 observer,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
     // MARK: Swizzle
     /// swizzle viewDidLoad：在 VC 生命周期早期绑定 deinit 监听器（不碰 dealloc，更安全）
     fileprivate static func _vcDebug_swizzleViewDidLoadOnce() {
         struct Once {
+
             static let install: Void = {
                 let cls: AnyClass = UIViewController.self
                 let originalSel = #selector(UIViewController.viewDidLoad)
                 let swizzledSel = #selector(UIViewController._vcDebug_viewDidLoad)
                 guard
-                    let originalMethod = class_getInstanceMethod(cls, originalSel),
-                    let swizzledMethod = class_getInstanceMethod(cls, swizzledSel)
+                let originalMethod = class_getInstanceMethod(cls,
+                                                             originalSel),
+                let swizzledMethod = class_getInstanceMethod(cls,
+                                                             swizzledSel)
                 else {
                     return
                 }
-                method_exchangeImplementations(originalMethod, swizzledMethod)
+                method_exchangeImplementations(originalMethod,
+                                               swizzledMethod)
             }()
         }
         _ = Once.install

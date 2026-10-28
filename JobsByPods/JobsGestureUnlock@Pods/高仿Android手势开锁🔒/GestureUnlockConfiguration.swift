@@ -14,6 +14,7 @@ import UIKit
 import JobsSwiftBaseDefines
 
 public struct GestureUnlockConfiguration {
+
     public var gridDimension: Int = 3
     /// 节点直径（实际会按布局自动取 min(该值, spacing*0.65)）
     public var nodeDiameter: CGFloat = 56
@@ -38,11 +39,13 @@ public struct GestureUnlockConfiguration {
     /// 限制节点总量，避免 n*n 溢出以及异常配置造成超量视图。
     var normalized: Self {
         var value = self
-        value.gridDimension = min(10, max(2, gridDimension))
+        value.gridDimension = min(10,
+                                  max(2,gridDimension))
         value.nodeDiameter = nodeDiameter.isFinite && nodeDiameter > 0 ? nodeDiameter : 56
         value.nodeBorderWidth = nodeBorderWidth.isFinite && nodeBorderWidth >= 0 ? nodeBorderWidth : 2
         value.lineWidth = lineWidth.isFinite && lineWidth >= 0 ? lineWidth : 6
-        value.minimumPatternLength = min(value.gridDimension * value.gridDimension, max(1, minimumPatternLength))
+        value.minimumPatternLength = min(value.gridDimension * value.gridDimension,
+                                         max(1,minimumPatternLength))
         return value
     }
 }

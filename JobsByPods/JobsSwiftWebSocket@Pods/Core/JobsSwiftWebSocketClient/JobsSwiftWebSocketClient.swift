@@ -9,8 +9,11 @@
 import Foundation
 
 /// 轻量 WebSocket 客户端：统一连接生命周期、收包循环、心跳、退避重连和主线程回调。
-public final class JobsSwiftWebSocketClient: NSObject, @unchecked Sendable {
+public final class JobsSwiftWebSocketClient: NSObject,
+                                             @unchecked Sendable {
+
     public enum State: Equatable {
+
         /// 尚未发起连接
         case idle
         /// 正在握手
@@ -188,7 +191,9 @@ public final class JobsSwiftWebSocketClient: NSObject, @unchecked Sendable {
 
     public func connect(to url: URL) {
         workQueue.async { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             guard ["ws", "wss"].contains(url.scheme?.lowercased() ?? ""), url.host != nil else {
                 manuallyDisconnected = true
                 cancelReconnect()
@@ -207,7 +212,9 @@ public final class JobsSwiftWebSocketClient: NSObject, @unchecked Sendable {
 
     public func disconnect() {
         workQueue.async { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             manuallyDisconnected = true
             endpoint = nil
             reconnectAttempt = 0
@@ -217,35 +224,29 @@ public final class JobsSwiftWebSocketClient: NSObject, @unchecked Sendable {
         }
     }
 
-    public func send(
-        text: String,
-        completion: @escaping (Result<Void, Error>) -> Void
-    ) {
-        send(.string(text), completion: completion)
+    public func send(text: String,
+                     completion: @escaping (Result<Void, Error>) -> Void) {
+        send(.string(text),
+             completion: completion)
     }
 
-    public func send(
-        data: Data,
-        completion: @escaping (Result<Void, Error>) -> Void
-    ) {
-        send(.data(data), completion: completion)
+    public func send(data: Data,
+                     completion: @escaping (Result<Void, Error>) -> Void) {
+        send(.data(data),
+             completion: completion)
     }
 
-    private func send(
-        _ message: URLSessionWebSocketTask.Message,
-        completion: @escaping (Result<Void, Error>) -> Void
-    ) {
+    private func send(_ message: URLSessionWebSocketTask.Message,
+                      completion: @escaping (Result<Void, Error>) -> Void) {
         workQueue.async { [weak self] in
             guard
-                let self,
-                let task,
-                activeState == .connected
+            let self,
+            let task,
+            activeState == .connected
             else {
-                let error = NSError(
-                    domain: "JobsSwiftWebSocket",
-                    code: -1,
-                    userInfo: [NSLocalizedDescriptionKey: "WebSocket 尚未连接"]
-                )
+                let error = NSError(domain: "JobsSwiftWebSocket",
+                                    code: -1,
+                                    userInfo: [NSLocalizedDescriptionKey: "WebSocket 尚未连接"])
                 DispatchQueue.main.async {
                     completion(.failure(error))
                 }
@@ -259,13 +260,17 @@ public final class JobsSwiftWebSocketClient: NSObject, @unchecked Sendable {
                         completion(.success(()))
                     }
                 }
-                guard let error else { return }
+                guard let error else {
+                    return
+                }
                 self?.workQueue.async {
                     guard
-                        let self,
-                        let task,
-                        self.task === task
-                    else { return }
+                    let self,
+                    let task,
+                    self.task === task
+                    else {
+                        return
+                    }
                     self.handleConnectionEnd(error: error)
                 }
             }
@@ -274,11 +279,9 @@ public final class JobsSwiftWebSocketClient: NSObject, @unchecked Sendable {
 
     private func startConnection(to url: URL) {
         publish(.connecting)
-        let session = URLSession(
-            configuration: .default,
-            delegate: delegateProxy,
-            delegateQueue: nil
-        )
+        let session = URLSession(configuration: .default,
+                                 delegate: delegateProxy,
+                                 delegateQueue: nil)
         let task = session.webSocketTask(with: url)
         self.session = session
         self.task = task
@@ -287,9 +290,13 @@ public final class JobsSwiftWebSocketClient: NSObject, @unchecked Sendable {
 
     private func receiveNextMessage(from task: URLSessionWebSocketTask) {
         task.receive { [weak self, weak task] result in
-            guard let self, let task else { return }
+            guard let self, let task else {
+                return
+            }
             workQueue.async {
-                guard self.task === task else { return }
+                guard self.task === task else {
+                    return
+                }
                 switch result {
                 /// 收到服务端消息后继续下一轮监听
                 case .success(let message):
@@ -340,31 +347,40 @@ public final class JobsSwiftWebSocketClient: NSObject, @unchecked Sendable {
 
     private func scheduleReconnect(lastError: Error?) {
         guard
-            reconnectAttempt < min(100, max(0, maximumReconnectAttempts)),
-            let endpoint
+        reconnectAttempt < min(100,
+                               max(0,
+                                   maximumReconnectAttempts)),
+        let endpoint
         else {
             let message = lastError?.localizedDescription ?? "WebSocket 重连次数已耗尽"
             publish(.failed(message))
             return
         }
         reconnectAttempt += 1
-        let base = reconnectBaseDelay.isFinite ? min(3_600, max(0.1, reconnectBaseDelay)) : 1
-        let maximum = maximumReconnectDelay.isFinite ? min(3_600, max(base, maximumReconnectDelay)) : 16
-        let delay = min(base * pow(2, Double(min(20, reconnectAttempt - 1))), maximum)
-        publish(.reconnecting(attempt: reconnectAttempt, delay: delay))
+        let base = reconnectBaseDelay.isFinite ? min(3_600,
+                                                     max(0.1,reconnectBaseDelay)) : 1
+        let maximum = maximumReconnectDelay.isFinite ? min(3_600,
+                                                           max(base,
+                                                               maximumReconnectDelay)) : 16
+        let delay = min(base * pow(2,
+                                   Double(min(20,
+                                              reconnectAttempt - 1))),
+                        maximum)
+        publish(.reconnecting(attempt: reconnectAttempt,
+                              delay: delay))
         let workItem = DispatchWorkItem { [weak self] in
             guard
-                let self,
-                !manuallyDisconnected,
-                self.endpoint == endpoint
-            else { return }
+            let self,
+            !manuallyDisconnected,
+            self.endpoint == endpoint
+            else {
+                return
+            }
             startConnection(to: endpoint)
         }
         reconnectWorkItem = workItem
-        workQueue.asyncAfter(
-            deadline: .now() + max(0, delay),
-            execute: workItem
-        )
+        workQueue.asyncAfter(deadline: .now() + max(0,delay),
+                             execute: workItem)
     }
 
     private func startHeartbeat() {
@@ -374,27 +390,30 @@ public final class JobsSwiftWebSocketClient: NSObject, @unchecked Sendable {
             return
         }
         let timer = DispatchSource.makeTimerSource(queue: workQueue)
-        timer.schedule(deadline: .now() + min(interval, 86_400), repeating: min(interval, 86_400))
+        timer.schedule(deadline: .now() + min(interval,86_400),
+                       repeating: min(interval,86_400))
         timer.setEventHandler { [weak self] in
             guard let self, let task = self.task,
-                self.activeState == .connected, !self.pingInFlight
+                  self.activeState == .connected, !self.pingInFlight
             else {
                 return
             }
             self.pingInFlight = true
             let configuredTimeout = self.pongTimeout
-            let timeout = configuredTimeout.isFinite ? min(3_600, max(0.1, configuredTimeout)) : 10
+            let timeout = configuredTimeout.isFinite ? min(3_600,
+                                                           max(0.1,configuredTimeout)) : 10
             let deadline = DispatchWorkItem { [weak self, weak task] in
                 guard let self, let task, self.task === task, self.pingInFlight else {
                     return
                 }
                 self.handleConnectionEnd(
-                    error: NSError(
-                        domain: "JobsSwiftWebSocket", code: -2,
-                        userInfo: [NSLocalizedDescriptionKey: "WebSocket pong 超时"]))
+                    error: NSError(domain: "JobsSwiftWebSocket",
+                                   code: -2,
+                                   userInfo: [NSLocalizedDescriptionKey: "WebSocket pong 超时"]))
             }
             self.pongWorkItem = deadline
-            self.workQueue.asyncAfter(deadline: .now() + timeout, execute: deadline)
+            self.workQueue.asyncAfter(deadline: .now() + timeout,
+                                      execute: deadline)
             task.sendPing { [weak self, weak task] error in
                 self?.workQueue.async {
                     guard let self, let task, self.task === task else {
@@ -431,17 +450,24 @@ public final class JobsSwiftWebSocketClient: NSObject, @unchecked Sendable {
         stopHeartbeat()
         let task = self.task
         self.task = nil
-        task?.cancel(with: .goingAway, reason: nil)
+        task?.cancel(with: .goingAway,
+                     reason: nil)
         session?.invalidateAndCancel()
         session = nil
     }
 
     private func publish(_ state: State) {
-        guard activeState != state else { return }
+        guard activeState != state else {
+            return
+        }
         activeState = state
-        withPropertyLock { publishedState = state }
+        withPropertyLock {
+            publishedState = state
+        }
         DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.onStateChange?(state)
         }
     }
@@ -450,23 +476,25 @@ public final class JobsSwiftWebSocketClient: NSObject, @unchecked Sendable {
         reconnectWorkItem?.cancel()
         pongWorkItem?.cancel()
         heartbeatTimer?.cancel()
-        task?.cancel(with: .goingAway, reason: nil)
+        task?.cancel(with: .goingAway,
+                     reason: nil)
         session?.invalidateAndCancel()
     }
 }
 
 extension JobsSwiftWebSocketClient: URLSessionWebSocketDelegate {
-    public func urlSession(
-        _ session: URLSession,
-        webSocketTask: URLSessionWebSocketTask,
-        didOpenWithProtocol protocol: String?
-    ) {
+
+    public func urlSession(_ session: URLSession,
+                           webSocketTask: URLSessionWebSocketTask,
+                           didOpenWithProtocol protocol: String?) {
         workQueue.async { [weak self, weak webSocketTask] in
             guard
-                let self,
-                let webSocketTask,
-                task === webSocketTask
-            else { return }
+            let self,
+            let webSocketTask,
+            task === webSocketTask
+            else {
+                return
+            }
             reconnectAttempt = 0
             publish(.connected)
             startHeartbeat()
@@ -474,35 +502,37 @@ extension JobsSwiftWebSocketClient: URLSessionWebSocketDelegate {
         }
     }
 
-    public func urlSession(
-        _ session: URLSession,
-        webSocketTask: URLSessionWebSocketTask,
-        didCloseWith closeCode: URLSessionWebSocketTask.CloseCode,
-        reason: Data?
-    ) {
+    public func urlSession(_ session: URLSession,
+                           webSocketTask: URLSessionWebSocketTask,
+                           didCloseWith closeCode: URLSessionWebSocketTask.CloseCode,
+                           reason: Data?) {
         workQueue.async { [weak self, weak webSocketTask] in
             guard
-                let self,
-                let webSocketTask,
-                task === webSocketTask
-            else { return }
+            let self,
+            let webSocketTask,
+            task === webSocketTask
+            else {
+                return
+            }
             handleConnectionEnd(error: nil)
         }
     }
 
-    public func urlSession(
-        _ session: URLSession,
-        task: URLSessionTask,
-        didCompleteWithError error: Error?
-    ) {
-        guard let webSocketTask = task as? URLSessionWebSocketTask else { return }
+    public func urlSession(_ session: URLSession,
+                           task: URLSessionTask,
+                           didCompleteWithError error: Error?) {
+        guard let webSocketTask = task as? URLSessionWebSocketTask else {
+            return
+        }
         workQueue.async { [weak self, weak webSocketTask] in
             guard
-                let self,
-                let webSocketTask,
-                self.task === webSocketTask,
-                let error
-            else { return }
+            let self,
+            let webSocketTask,
+            self.task === webSocketTask,
+            let error
+            else {
+                return
+            }
             handleConnectionEnd(error: error)
         }
     }

@@ -17,21 +17,18 @@ import RxCocoa
 import NSObject_Rx
 
 final class KeyboardObserver {
+
     static let shared = KeyboardObserver()
     private var onChange: ((CGFloat, Bool) -> Void)?
     private init() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(onShow(_:)),
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(onHide(_:)),
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil
-        )
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(onShow(_:)),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(onHide(_:)),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
     }
 
     func listen(_ callback: @escaping (_ height: CGFloat, _ isVisible: Bool) -> Void) {
@@ -40,11 +37,13 @@ final class KeyboardObserver {
 
     @objc private func onShow(_ note: Notification) {
         let height = (note.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect)?.height ?? 0
-        onChange?(height, true)
+        onChange?(height,
+                  true)
     }
 
     @objc private func onHide(_ note: Notification) {
-        onChange?(0, false)
+        onChange?(0,
+                  false)
     }
 }
 /**

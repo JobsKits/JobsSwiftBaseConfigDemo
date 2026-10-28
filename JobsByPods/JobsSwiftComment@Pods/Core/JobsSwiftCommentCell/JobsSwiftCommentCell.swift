@@ -12,6 +12,7 @@ import JobsSwiftDSL
 import SnapKit
 
 final class JobsSwiftCommentCell: UITableViewCell {
+
     static let reuseIdentifier = "JobsSwiftCommentCell"
 
     var replyAction: ((JobsSwiftCommentModel) -> Void)?
@@ -30,8 +31,10 @@ final class JobsSwiftCommentCell: UITableViewCell {
     private let topStack = UIStackView.jobsMake { _ in }
     private let contentStack = UIStackView.jobsMake { _ in }
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override init(style: UITableViewCell.CellStyle,
+                  reuseIdentifier: String?) {
+        super.init(style: style,
+                   reuseIdentifier: reuseIdentifier)
         setupViews()
     }
 
@@ -59,8 +62,11 @@ final class JobsSwiftCommentCell: UITableViewCell {
         replyButton.byHidden(true)
         contentLabel
             .byTextColor(JobsCor.label)
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
-        let displayDepth = config.mode == .custom ? min(depth, 2) : min(depth, 1)
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .regular))
+        let displayDepth = config.mode == .custom ? min(depth,
+                                                        2) : min(depth,
+                                                                 1)
         contentLeadingConstraint?.update(offset: 16 + CGFloat(displayDepth) * 22)
         avatarLabel.byText(avatarText(by: comment.nickname))
         nicknameLabel.byText(comment.nickname)
@@ -78,7 +84,8 @@ final class JobsSwiftCommentCell: UITableViewCell {
             replyHintLabel.byHidden(true)
         }
         metaLabel
-            .byText(metaText(by: comment, config: config))
+            .byText(metaText(by: comment,
+                             config: config))
             .byHidden(metaLabel.text?.isEmpty ?? true)
         let showsReplyEntrance = config.showsReplyEntrance && !comment.children.isEmpty && depth == 0
         replyButton.byHidden(!showsReplyEntrance)
@@ -87,7 +94,8 @@ final class JobsSwiftCommentCell: UITableViewCell {
         }
     }
 
-    func updateWithMoreText(_ text: String, depth: Int) {
+    func updateWithMoreText(_ text: String,
+                            depth: Int) {
         selectionStyle = .default
         currentComment = nil
         avatarLabel.byHidden(true)
@@ -95,50 +103,70 @@ final class JobsSwiftCommentCell: UITableViewCell {
         replyHintLabel.byHidden(true)
         metaLabel.byHidden(true)
         replyButton.byHidden(true)
-        contentLeadingConstraint?.update(offset: 16 + CGFloat(min(depth, 2)) * 22)
+        contentLeadingConstraint?.update(offset: 16 + CGFloat(min(depth,2)) * 22)
         contentLabel
             .byText(text)
-            .byTextColor(UIColor(r: 0.17 * 255, g: 0.43 * 255, b: 0.82 * 255))
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+            .byTextColor(UIColor(r: 0.17 * 255,
+                                 g: 0.43 * 255,
+                                 b: 0.82 * 255))
+            .byFont(JobsFont.systemFont(ofSize: 14,
+                                        weight: .semibold))
     }
 }
 
 private extension JobsSwiftCommentCell {
+
     func setupViews() {
         self.byBackgroundColor(JobsCor.clear)
         contentView.byBackgroundColor(JobsCor.clear)
         avatarLabel
             .byTextAlignment(.center)
-            .byFont(JobsFont.systemFont(ofSize: 16, weight: .bold))
+            .byFont(JobsFont.systemFont(ofSize: 16,
+                                        weight: .bold))
             .byTextColor(JobsCor.white)
-            .byBackgroundColor(UIColor(r: 0.70 * 255, g: 0.45 * 255, b: 0.22 * 255))
+            .byBackgroundColor(UIColor(r: 0.70 * 255,
+                                       g: 0.45 * 255,
+                                       b: 0.22 * 255))
             .byCornerRadius(18)
             .byMasksToBounds(true)
         nicknameLabel
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .semibold))
             .byTextColor(JobsCor.label)
-        nicknameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        nicknameLabel.setContentCompressionResistancePriority(.defaultLow,
+                                                              for: .horizontal)
         timeLabel
-            .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 12,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.right)
         contentLabel
             .byNumberOfLines(0)
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .regular))
             .byTextColor(JobsCor.label)
         replyHintLabel
             .byNumberOfLines(1)
-            .byFont(JobsFont.systemFont(ofSize: 12, weight: .medium))
-            .byTextColor(UIColor(r: 0.17 * 255, g: 0.43 * 255, b: 0.82 * 255))
+            .byFont(JobsFont.systemFont(ofSize: 12,
+                                        weight: .medium))
+            .byTextColor(UIColor(r: 0.17 * 255,
+                                 g: 0.43 * 255,
+                                 b: 0.82 * 255))
         metaLabel
             .byNumberOfLines(1)
-            .byFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 12,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
         replyButton
-            .byTitleFont(JobsFont.systemFont(ofSize: 13, weight: .semibold))
+            .byTitleFont(JobsFont.systemFont(ofSize: 13,
+                                             weight: .semibold))
             .byContentHorizontalAlignment(.left)
-            .byTitleColor(UIColor(r: 0.17 * 255, g: 0.43 * 255, b: 0.82 * 255))
-            .byAddTarget(self, action: #selector(replyButtonTapped), for: .touchUpInside)
+            .byTitleColor(UIColor(r: 0.17 * 255,
+                                  g: 0.43 * 255,
+                                  b: 0.82 * 255))
+            .byAddTarget(self,
+                         action: #selector(replyButtonTapped),
+                         for: .touchUpInside)
         topStack
             .byAxis(.horizontal)
             .byAlignment(.firstBaseline)
@@ -173,21 +201,28 @@ private extension JobsSwiftCommentCell {
 
     func avatarText(by nickname: String) -> String {
         let trimmed = nickname.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard let first = trimmed.first else { return "J" };return String(first)
+        guard let first = trimmed.first else {
+            return "J"
+        }
+        return String(first)
     }
 
-    func metaText(by comment: JobsSwiftCommentModel, config: JobsSwiftCommentConfig) -> String {
+    func metaText(by comment: JobsSwiftCommentModel,
+                  config: JobsSwiftCommentConfig) -> String {
         var texts: [String] = []
         if config.showsDevice, !comment.device.isEmpty {
             texts.append(comment.device)
         }
         if config.showsLocation, !comment.location.isEmpty {
             texts.append(comment.location)
-        };return texts.joined(separator: " · ")
+        }
+        return texts.joined(separator: " · ")
     }
 
     @objc func replyButtonTapped() {
-        guard let currentComment else { return }
+        guard let currentComment else {
+            return
+        }
         replyAction?(currentComment)
     }
 }

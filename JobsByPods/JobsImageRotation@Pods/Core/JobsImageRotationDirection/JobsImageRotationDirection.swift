@@ -8,6 +8,7 @@
 import CoreGraphics
 
 public enum JobsImageRotationDirection: Sendable {
+
     case clockwise
     case counterclockwise
 

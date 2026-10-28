@@ -15,17 +15,20 @@ import JobsSwiftBaseDefines
 import GKNavigationBarSwift
 import SnapKit
 
-final class JobsDebugPanelDemoVC: BaseVC, UITableViewDataSource, UITableViewDelegate {
+final class JobsDebugPanelDemoVC: BaseVC,
+                                  UITableViewDataSource,
+                                  UITableViewDelegate {
+
     private var environmentObserver: NSObjectProtocol?
     private var requestToken: JobsRequestToken?
     private var requestGeneration = 0
     private var resultText = "本地演示：环境切换后，后续相对路径请求会使用新 URL。"
-    private lazy var agent = JobsDefaultAgent(config: JobsRequestConfig(
-        baseURL: URL(string: "https://httpbin.org")!,
-        timeout: 3,
-        version: "debug-panel-demo",
-        defaultRetryPolicy: JobsRetryPolicy(maxRetries: 0, initialDelay: 0, multiplier: 1)
-    ))
+    private lazy var agent = JobsDefaultAgent(config: JobsRequestConfig(baseURL: URL(string: "https://httpbin.org")!,
+                                                                        timeout: 3,
+                                                                        version: "debug-panel-demo",
+                                                                        defaultRetryPolicy: JobsRetryPolicy(maxRetries: 0,
+                                                                                                            initialDelay: 0,
+                                                                                                            multiplier: 1)))
     private lazy var tableView: UITableView = {
         UITableView.jobsMake { table in
             table
@@ -52,18 +55,17 @@ final class JobsDebugPanelDemoVC: BaseVC, UITableViewDataSource, UITableViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "JobsDebugPanel Demo")
-        JobsThemeCenter.shared.bind(self, slot: "JobsDebugPanelDemo.appearance") { object, center in
+        JobsThemeCenter.shared.bind(self,
+                                    slot: "JobsDebugPanelDemo.appearance") { object, center in
             guard let controller = object as? UIViewController else {
                 return
             }
             controller.byOverrideUserInterfaceStyle(center.isDarkMode ? .dark : .light)
         }
         tableView.byVisible(true)
-        environmentObserver = NotificationCenter.default.addObserver(
-            forName: JobsDebugPanel.environmentDidChangeNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
+        environmentObserver = NotificationCenter.default.addObserver(forName: JobsDebugPanel.environmentDidChangeNotification,
+                                                                     object: nil,
+                                                                     queue: .main) { [weak self] _ in
             self?.loadRequest()
         }
     }
@@ -73,11 +75,13 @@ final class JobsDebugPanelDemoVC: BaseVC, UITableViewDataSource, UITableViewDele
         loadRequest()
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
         return 4
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let title: String
         let detail: String
         let accessory: UITableViewCell.AccessoryType
@@ -104,14 +108,17 @@ final class JobsDebugPanelDemoVC: BaseVC, UITableViewDataSource, UITableViewDele
             detail = resultText
             accessory = .none
         }
-        return UITableViewCell.make(style: .subtitle, reuseIdentifier: "DebugPanelDemo")
+        return UITableViewCell.make(style: .subtitle,
+                                    reuseIdentifier: "DebugPanelDemo")
             .byText(title)
             .bySecondaryText(detail)
             .byTitleCor(JobsCor.label)
             .byDetailTitleCor(JobsCor.secondaryLabel)
             .byBackgroundColor(JobsCor.systemBackground)
             .byTintColor(JobsCor.label)
-            .bySelectedBackgroundView(UIView.jobsMake { $0.byBackgroundColor(JobsCor.secondarySystemBackground) })
+            .bySelectedBackgroundView(UIView.jobsMake {
+            $0.byBackgroundColor(JobsCor.secondarySystemBackground)
+        })
             .byContentConfiguration { configuration in
                 configuration.textProperties.numberOfLines = 0
                 configuration.secondaryTextProperties.numberOfLines = 0
@@ -119,7 +126,8 @@ final class JobsDebugPanelDemoVC: BaseVC, UITableViewDataSource, UITableViewDele
             .byAccessoryType(accessory)
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
         tableView.byDeselectRow(indexPath)
         if indexPath.row == 1 {
             JobsDebugPanel.shared.open(from: self)
@@ -134,7 +142,10 @@ final class JobsDebugPanelDemoVC: BaseVC, UITableViewDataSource, UITableViewDele
         let generation = requestGeneration
         resultText = "正在请求服务器…\n本地演示已可用，等待服务端响应。"
         reloadIfVisible()
-        requestToken = agent.send(JobsRequest(path: "/get", method: .get, timeout: 3), as: Data.self) { [weak self] result in
+        requestToken = agent.send(JobsRequest(path: "/get",
+                                              method: .get,
+                                              timeout: 3),
+                                  as: Data.self) { [weak self] result in
             DispatchQueue.main.async {
                 guard let self, generation == self.requestGeneration else {
                     return
@@ -143,8 +154,10 @@ final class JobsDebugPanelDemoVC: BaseVC, UITableViewDataSource, UITableViewDele
                 /// 解析成功后以服务端内容替换本地样例
                 case .success(let data):
                     if let object = try? JSONSerialization.jsonObject(with: data),
-                       let formatted = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted, .sortedKeys]),
-                       let text = String(data: formatted, encoding: .utf8) {
+                       let formatted = try? JSONSerialization.data(withJSONObject: object,
+                                                                   options: [.prettyPrinted, .sortedKeys]),
+                       let text = String(data: formatted,
+                                         encoding: .utf8) {
                         self.resultText = "服务端响应\n" + String(text.prefix(1500))
                     } else {
                         self.resultText = "本地演示：服务器响应无法解析，已保留本地示例。\n点击重新请求可重试。"

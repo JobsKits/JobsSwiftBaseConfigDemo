@@ -22,23 +22,25 @@ import SnapKit
 
 @MainActor
 final class PhotoFilterDemoVC: BaseVC {
+
     private let sourceImage: UIImage
     private var filteredImage: UIImage
     private var selectedPreset = PhotoFilterPreset.original
     private var renderRevision = 0
     private var pendingRenderWorkItem: DispatchWorkItem?
-    private let renderQueue = DispatchQueue(
-        label: "com.jobs.demo.photo-filter",
-        qos: .userInitiated
-    )
+    private let renderQueue = DispatchQueue(label: "com.jobs.demo.photo-filter",
+                                            qos: .userInitiated)
 
     private lazy var saveButton: UIButton = {
         UIButton.sys()
             .byTitle("保存".tr)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .semibold))
             .byTitleColor(JobsCor.white)
-            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
-            .byBackgroundColor(JobsCor.systemGray3, for: .disabled)
+            .byBackgroundColor(JobsCor.systemBlue,
+                               for: .normal)
+            .byBackgroundColor(JobsCor.systemGray3,
+                               for: .disabled)
             .byCornerRadius(12)
             .onTap { [weak self] _ in
                 self?.saveFilteredImage()
@@ -51,9 +53,11 @@ final class PhotoFilterDemoVC: BaseVC {
     }()
 
     private lazy var intensityTitleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("强度 100%".tr)
-            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 14, weight: .medium))
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 14,
+                                                       weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(intensityRowView) { make in
                 make.left.centerY.equalToSuperview()
@@ -62,7 +66,8 @@ final class PhotoFilterDemoVC: BaseVC {
     }()
 
     private lazy var intensityRowView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview().inset(20)
                 make.bottom.equalTo(saveButton.snp.top).offset(-12)
@@ -71,7 +76,8 @@ final class PhotoFilterDemoVC: BaseVC {
     }()
 
     private lazy var intensitySlider: UISlider = {
-        UISlider.jobsMake { _ in }
+        UISlider
+            .jobsMake { _ in }
             .byMinimumValue(0)
             .byMaximumValue(1)
             .byValue(1)
@@ -85,7 +91,9 @@ final class PhotoFilterDemoVC: BaseVC {
     }()
 
     private lazy var filterControl: UISegmentedControl = {
-        UISegmentedControl(items: PhotoFilterPreset.allCases.map { $0.title.tr })
+        UISegmentedControl(items: PhotoFilterPreset.allCases.map {
+            $0.title.tr
+        })
             .bySelectedSegmentIndex(PhotoFilterPreset.original.rawValue)
             .onJobsChange { [weak self] (control: UISegmentedControl) in
                 self?.filterDidChange(control.selectedSegmentIndex)
@@ -98,7 +106,8 @@ final class PhotoFilterDemoVC: BaseVC {
     }()
 
     private lazy var imageView: UIImageView = {
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byImage(sourceImage)
             .byContentMode(.scaleAspectFit)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
@@ -112,9 +121,11 @@ final class PhotoFilterDemoVC: BaseVC {
     }()
 
     private lazy var statusLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("原图 · 100%".tr)
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .medium))
             .byTextColor(JobsCor.white)
             .byTextAlignment(.center)
             .byBackgroundColor(JobsCor.black)
@@ -131,7 +142,8 @@ final class PhotoFilterDemoVC: BaseVC {
     init(sourceImage: UIImage) {
         self.sourceImage = sourceImage
         filteredImage = sourceImage
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil,
+                   bundle: nil)
     }
 
     required init?(coder: NSCoder) {
@@ -153,7 +165,9 @@ final class PhotoFilterDemoVC: BaseVC {
     }
 
     private func filterDidChange(_ selectedIndex: Int) {
-        guard let preset = PhotoFilterPreset(rawValue: selectedIndex) else { return }
+        guard let preset = PhotoFilterPreset(rawValue: selectedIndex) else {
+            return
+        }
         pendingRenderWorkItem?.cancel()
         selectedPreset = preset
         refreshIntensityAvailability()
@@ -183,13 +197,13 @@ final class PhotoFilterDemoVC: BaseVC {
         saveButton.byEnabled(false)
         statusLabel.byText("\(preset.title) · 处理中…".tr)
         renderQueue.async { [weak self] in
-            let image = PhotoFilterRenderer.render(
-                sourceImage: sourceImage,
-                preset: preset,
-                intensity: intensity
-            )
+            let image = PhotoFilterRenderer.render(sourceImage: sourceImage,
+                                                   preset: preset,
+                                                   intensity: intensity)
             DispatchQueue.main.async { [weak self] in
-                guard let self, revision == renderRevision else { return }
+                guard let self, revision == renderRevision else {
+                    return
+                }
                 guard let image else {
                     statusLabel.byText("\(preset.title) · 渲染失败".tr)
                     saveButton.byEnabled(true)
@@ -213,16 +227,16 @@ final class PhotoFilterDemoVC: BaseVC {
             self?.renderCurrentFilter()
         }
         pendingRenderWorkItem = workItem
-        DispatchQueue.main.asyncAfter(
-            deadline: .now() + 0.08,
-            execute: workItem
-        )
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.08,
+                                      execute: workItem)
     }
 
     private func saveFilteredImage() {
         saveButton.byEnabled(false)
         PhotoFilterPhotoLibrarySaver.save(filteredImage) { [weak self] result in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             saveButton.byEnabled(true)
             switch result {
             /// 处理 .success 分支

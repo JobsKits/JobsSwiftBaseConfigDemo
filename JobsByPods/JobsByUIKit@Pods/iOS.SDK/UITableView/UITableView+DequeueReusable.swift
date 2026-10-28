@@ -18,40 +18,47 @@ import JobsSwiftDSL
 private var st_registeredCellIdsKey: UInt8 = 0
 private var st_registeredHeaderFooterIdsKey: UInt8 = 0
 extension UITableView {
+
     private var st_registeredCellIds: Set<String> {
-        get { (objc_getAssociatedObject(self, &st_registeredCellIdsKey) as? Set<String>) ?? [] }
+        get {
+            (objc_getAssociatedObject(self,
+                                      &st_registeredCellIdsKey) as? Set<String>) ?? []
+        }
         set {
-            objc_setAssociatedObject(
-                self,
-                &st_registeredCellIdsKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
+            objc_setAssociatedObject(self,
+                                     &st_registeredCellIdsKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
     private var st_registeredHeaderFooterIds: Set<String> {
-        get { (objc_getAssociatedObject(self, &st_registeredHeaderFooterIdsKey) as? Set<String>) ?? [] }
+        get {
+            (objc_getAssociatedObject(self,
+                                      &st_registeredHeaderFooterIdsKey) as? Set<String>) ?? []
+        }
         set {
-            objc_setAssociatedObject(
-                self,
-                &st_registeredHeaderFooterIdsKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
+            objc_setAssociatedObject(self,
+                                     &st_registeredHeaderFooterIdsKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 }
 
 extension UITableView {
+
     /// 快捷复用@UITableViewCell
     @discardableResult
-    public func byDequeueReusableCell<T: UITableViewCell>(withType cellType: T.Type, for indexPath: IndexPath) -> T {
+    public func byDequeueReusableCell<T: UITableViewCell>(withType cellType: T.Type,
+                                                          for indexPath: IndexPath) -> T {
         let reuseId = cellType.className
         if !st_registeredCellIds.contains(reuseId) {
             byRegisterCell(cellType)
             st_registeredCellIds.insert(reuseId)
-        };return self.dequeueReusableCell(withIdentifier: reuseId, for: indexPath) as! T
+        }
+        return self.dequeueReusableCell(withIdentifier: reuseId,
+                                        for: indexPath) as! T
     }
     /// 快捷复用@UITableViewHeaderFooterView
     ///
@@ -89,10 +96,12 @@ extension UITableView {
             // 注册完直接 dequeue
             guard let view = dequeueReusableHeaderFooterView(withIdentifier: reuseId) as? T else {
                 fatalError("❌ dequeueReusableHeaderFooterView failed after register: \(reuseId)")
-            };return view
+            }
+            return view
         }
         guard let view = dequeueReusableHeaderFooterView(withIdentifier: reuseId) as? T else {
             fatalError("❌ dequeueReusableHeaderFooterView failed: \(reuseId)")
-        };return view
+        }
+        return view
     }
 }

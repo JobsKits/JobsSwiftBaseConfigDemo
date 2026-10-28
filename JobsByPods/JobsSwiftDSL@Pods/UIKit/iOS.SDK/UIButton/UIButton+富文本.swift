@@ -14,17 +14,23 @@ import UIKit
 import JobsSwiftDSL
 // MARK: - UIButton@富文本
 extension UIButton {
+
     @discardableResult
     public func byRichTitle(_ rich: NSAttributedString?,
                             for state: UIControl.State = .normal) -> Self {
         if #available(iOS 15.0, *) {
             var cfg = self.configuration ?? .plain()
-            cfg.attributedTitle = rich.map { AttributedString($0) }
+            cfg.attributedTitle = rich.map {
+                AttributedString($0)
+            }
             self.configuration = cfg
             byUpdateConfig()
         } else {
-            _setLegacyRichTitle(rich, for: state); _applyLegacyComposite(for: state)
-        };return self
+            _setLegacyRichTitle(rich,
+                                for: state)
+            _applyLegacyComposite(for: state)
+        }
+        return self
     }
 
     @discardableResult
@@ -32,79 +38,98 @@ extension UIButton {
                                for state: UIControl.State = .normal) -> Self {
         if #available(iOS 15.0, *) {
             var cfg = self.configuration ?? .plain()
-            cfg.attributedSubtitle = rich.map { AttributedString($0) }
+            cfg.attributedSubtitle = rich.map {
+                AttributedString($0)
+            }
             self.configuration = cfg
             byUpdateConfig()
         } else {
-            _setLegacyRichSubTitle(rich, for: state); _applyLegacyComposite(for: state)
-        };return self
+            _setLegacyRichSubTitle(rich,
+                                   for: state)
+            _applyLegacyComposite(for: state)
+        }
+        return self
     }
 }
 private var _richTitleKey: UInt8 = 0
 private var _richSubKey:   UInt8 = 0
 private var _jobsTitlePaddingKey: UInt8 = 0
 extension UIButton {
+
     typealias StateRaw = UInt
     private var _legacyRichTitleMap: [StateRaw: NSAttributedString] {
-        get { objc_getAssociatedObject(self, &_richTitleKey) as? [StateRaw: NSAttributedString] ?? [:] }
+        get {
+            objc_getAssociatedObject(self,
+                                     &_richTitleKey) as? [StateRaw: NSAttributedString] ?? [:]
+        }
         set {
-            objc_setAssociatedObject(
-                self,
-                &_richTitleKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
+            objc_setAssociatedObject(self,
+                                     &_richTitleKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
     private var _legacyRichSubMap: [StateRaw: NSAttributedString] {
-        get { objc_getAssociatedObject(self, &_richSubKey) as? [StateRaw: NSAttributedString] ?? [:] }
+        get {
+            objc_getAssociatedObject(self,
+                                     &_richSubKey) as? [StateRaw: NSAttributedString] ?? [:]
+        }
         set {
-            objc_setAssociatedObject(
-                self,
-                &_richSubKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self,
+                                     &_richSubKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
     var _jobsTitlePadding: CGFloat {
         get {
-            (objc_getAssociatedObject(self, &_jobsTitlePaddingKey) as? CGFloat) ?? 0
+            (objc_getAssociatedObject(self,
+                                      &_jobsTitlePaddingKey) as? CGFloat) ?? 0
         }
         set {
-            objc_setAssociatedObject(
-                self,
-                &_jobsTitlePaddingKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
+            objc_setAssociatedObject(self,
+                                     &_jobsTitlePaddingKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
     var _jobsLegacyTitlePadding: CGFloat {
-        get { (objc_getAssociatedObject(self, &_jobsTitlePaddingKey) as? CGFloat) ?? 0 }
+        get {
+            (objc_getAssociatedObject(self,
+                                      &_jobsTitlePaddingKey) as? CGFloat) ?? 0
+        }
         set {
-            objc_setAssociatedObject(
-                self,
-                &_jobsTitlePaddingKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
+            objc_setAssociatedObject(self,
+                                     &_jobsTitlePaddingKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
-    private func _setLegacyRichTitle(_ rich: NSAttributedString?, for state: UIControl.State) {
+    private func _setLegacyRichTitle(_ rich: NSAttributedString?,
+                                     for state: UIControl.State) {
         var m = _legacyRichTitleMap
         let k = state.rawValue
-        if let r = rich { m[k] = r } else { m.removeValue(forKey: k) }
+        if let r = rich {
+            m[k] = r
+        } else {
+            m.removeValue(forKey: k)
+        }
         _legacyRichTitleMap = m
     }
 
-    private func _setLegacyRichSubTitle(_ rich: NSAttributedString?, for state: UIControl.State) {
+    private func _setLegacyRichSubTitle(_ rich: NSAttributedString?,
+                                        for state: UIControl.State) {
         var m = _legacyRichSubMap
         let k = state.rawValue
-        if let r = rich { m[k] = r } else { m.removeValue(forKey: k) }
+        if let r = rich {
+            m[k] = r
+        } else {
+            m.removeValue(forKey: k)
+        }
         _legacyRichSubMap = m
     }
 
@@ -115,13 +140,16 @@ extension UIButton {
         switch (title, sub) {
         /// 处理 (nil, nil) 分支
         case (nil, nil):
-            setAttributedTitle(nil, for: state)
+            setAttributedTitle(nil,
+                               for: state)
         /// 处理 (t?, nil) 分支
         case let (t?, nil):
-            setAttributedTitle(t, for: state)
+            setAttributedTitle(t,
+                               for: state)
         /// 处理 (nil, s?) 分支
         case let (nil, s?):
-            setAttributedTitle(s, for: state)
+            setAttributedTitle(s,
+                               for: state)
         /// 处理 (t?, s?) 分支
         case let (t?, s?):
             titleLabel?
@@ -143,7 +171,8 @@ extension UIButton {
             combined.append(t)
             combined.append(NSAttributedString(string: "\n")) // 保留换行（必须要有两行）
             combined.append(subMutable)
-            byAttributedTitle(combined, for: state)
+            byAttributedTitle(combined,
+                              for: state)
         }
     }
 }

@@ -9,6 +9,7 @@
 import Foundation
 
 public final class TokenStore {
+
     public static let shared = TokenStore()
     private init() {}
 

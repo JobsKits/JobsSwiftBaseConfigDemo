@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 public struct FramePatch {
+
     public var x: CGFloat?
     public var y: CGFloat?
     public var width: CGFloat?
@@ -29,6 +30,7 @@ public struct FramePatch {
 }
 // MARK: - ShadowDirection
 public struct ShadowDirection: OptionSet {
+
     public let rawValue: UInt
     public static let top        = ShadowDirection([])
     public static let down       = ShadowDirection(rawValue: 1 << 0)
@@ -46,6 +48,7 @@ public struct ShadowDirection: OptionSet {
 }
 // MARK: - UIBorderSideType
 public struct UIBorderSideType: OptionSet {
+
     public let rawValue: UInt
     public static let all    = UIBorderSideType([])
     public static let top    = UIBorderSideType(rawValue: 1 << 0)
@@ -59,11 +62,13 @@ public struct UIBorderSideType: OptionSet {
 }
 // MARK: - 这样写的话，外面可以JobsIndexPath.section 进行调用
 public struct JobsIndexPath {
+
     public var section: Int
     public var rowOrItem: Int
 }
 // MARK: - 无数据占位图的类型
 public struct JobsEmptyViewType: OptionSet {
+
     public let rawValue: UInt
     public static let none       = JobsEmptyViewType([])
     public static let label      = JobsEmptyViewType(rawValue: 1 << 0)

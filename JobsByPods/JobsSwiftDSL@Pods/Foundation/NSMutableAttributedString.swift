@@ -12,39 +12,57 @@ import UIKit
 #endif
 
 extension NSMutableAttributedString {
+
     // MARK: - 添加单个属性
     @discardableResult
-    public func byAddAttribute(_ name: NSAttributedString.Key, value: Any, range: NSRange? = nil) -> Self {
+    public func byAddAttribute(_ name: NSAttributedString.Key,
+                               value: Any,
+                               range: NSRange? = nil) -> Self {
         if let range = range {
-            self.addAttribute(name, value: value, range: range)
+            self.addAttribute(name,
+                              value: value,
+                              range: range)
         } else {
-            self.addAttribute(name, value: value, range: NSRange(location: 0, length: self.length))
-        };return self
+            self.addAttribute(name,
+                              value: value,
+                              range: NSRange(location: 0, length: self.length))
+        }
+        return self
     }
     // MARK: - 添加多个属性
     @discardableResult
-    public func byAddAttributes(_ attrs: [NSAttributedString.Key : Any], range: NSRange? = nil) -> Self {
-        let targetRange = range ?? NSRange(location: 0, length: self.length)
-        self.addAttributes(attrs, range: targetRange)
+    public func byAddAttributes(_ attrs: [NSAttributedString.Key : Any],
+                                range: NSRange? = nil) -> Self {
+        let targetRange = range ?? NSRange(location: 0,
+                                           length: self.length)
+        self.addAttributes(attrs,
+                           range: targetRange)
         return self
     }
     // MARK: - 移除属性
     @discardableResult
-    public func byRemoveAttribute(_ name: NSAttributedString.Key, range: NSRange? = nil) -> Self {
-        let targetRange = range ?? NSRange(location: 0, length: self.length)
-        self.removeAttribute(name, range: targetRange)
+    public func byRemoveAttribute(_ name: NSAttributedString.Key,
+                                  range: NSRange? = nil) -> Self {
+        let targetRange = range ?? NSRange(location: 0,
+                                           length: self.length)
+        self.removeAttribute(name,
+                             range: targetRange)
         return self
     }
     // MARK: - 替换内容
     @discardableResult
-    public func byReplace(in range: NSRange, with attrString: NSAttributedString) -> Self {
-        self.replaceCharacters(in: range, with: attrString)
+    public func byReplace(in range: NSRange,
+                          with attrString: NSAttributedString) -> Self {
+        self.replaceCharacters(in: range,
+                               with: attrString)
         return self
     }
     // MARK: - 插入
     @discardableResult
-    public func byInsert(_ attrString: NSAttributedString, at index: Int) -> Self {
-        self.insert(attrString, at: index)
+    public func byInsert(_ attrString: NSAttributedString,
+                         at index: Int) -> Self {
+        self.insert(attrString,
+                    at: index)
         return self
     }
     // MARK: - 追加

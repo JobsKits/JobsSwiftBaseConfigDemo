@@ -21,13 +21,17 @@ import UIKit
          .byEnabled(true)
  */
 extension UIGestureRecognizer {
+
     /// 初始化方法封装
     @discardableResult
-    public func byTarget(_ target: Any?, action: Selector?) -> Self {
+    public func byTarget(_ target: Any?,
+                         action: Selector?) -> Self {
         // ⚠️ 注意：这里不是安全复用的做法，仅供链式设置使用
         if let target, let action {
-            self.addTarget(target, action: action)
-        };return self
+            self.addTarget(target,
+                           action: action)
+        }
+        return self
     }
     /// Delegate
     @discardableResult
@@ -96,6 +100,7 @@ extension UIGestureRecognizer {
 }
 // MARK: 子类专属链式扩展@UITapGestureRecognizer
 extension UITapGestureRecognizer {
+
     @discardableResult
     public func byTaps(_ count: Int) -> Self {
         numberOfTapsRequired = count
@@ -110,6 +115,7 @@ extension UITapGestureRecognizer {
 }
 // MARK: 子类专属链式扩展@UILongPressGestureRecognizer
 extension UILongPressGestureRecognizer {
+
     @discardableResult
     public func byMinDuration(_ t: TimeInterval) -> Self {
         minimumPressDuration = t
@@ -130,6 +136,7 @@ extension UILongPressGestureRecognizer {
 }
 // MARK: 子类专属链式扩展@UIPanGestureRecognizer
 extension UIPanGestureRecognizer {
+
     @discardableResult
     public func byMinTouches(_ n: Int) -> Self {
         minimumNumberOfTouches = n
@@ -138,11 +145,15 @@ extension UIPanGestureRecognizer {
 
     @discardableResult
     public func byMaxTouches(_ n: Int) -> Self {
-        if maximumNumberOfTouches != Int.max {maximumNumberOfTouches = n;};return self
+        if maximumNumberOfTouches != Int.max {
+            maximumNumberOfTouches = n
+        }
+        return self
     }
 }
 // MARK: 子类专属链式扩展@UISwipeGestureRecognizer
 extension UISwipeGestureRecognizer {
+
     @discardableResult
     public func byDirection(_ d: UISwipeGestureRecognizer.Direction) -> Self {
         direction = d
@@ -158,6 +169,7 @@ extension UISwipeGestureRecognizer {
 // MARK: 子类专属链式扩展@UIRotationGestureRecognizer
 /// Rotation（旋转）
 extension UIRotationGestureRecognizer {
+
     /// 当前旋转角度（弧度）
     @discardableResult
     public func byRotation(_ value: CGFloat) -> Self {
@@ -175,9 +187,11 @@ extension UIRotationGestureRecognizer {
     public func byOnRotationChange(_ block: @escaping (UIRotationGestureRecognizer, CGFloat) -> Void) -> Self {
         self.byAction { gesture in
             if let rot = gesture as? UIRotationGestureRecognizer {
-                block(rot, rot.rotation)
+                block(rot,
+                      rot.rotation)
             }
-        };return self
+        }
+        return self
     }
 }
 // MARK: 子类专属链式扩展@UITapGestureRecognizer
@@ -185,6 +199,7 @@ extension UIRotationGestureRecognizer {
 import RxSwift
 import RxCocoa
 extension UITapGestureRecognizer {
+
     /// 语义属性：等价于 `.rx.event`
     public var event: ControlEvent<UITapGestureRecognizer> {
         self.rx.event
@@ -194,6 +209,7 @@ extension UITapGestureRecognizer {
 // MARK: 子类专属链式扩展@UIPinchGestureRecognizer
 /// Pinch（捏合缩放）
 extension UIPinchGestureRecognizer {
+
     /// 当前缩放比例（scale）
     @discardableResult
     public func byScale(_ value: CGFloat) -> Self {
@@ -211,8 +227,10 @@ extension UIPinchGestureRecognizer {
     public func byOnScaleChange(_ block: @escaping (UIPinchGestureRecognizer, CGFloat) -> Void) -> Self {
         self.byAction { gesture in
             if let pinch = gesture as? UIPinchGestureRecognizer {
-                block(pinch, pinch.scale)
+                block(pinch,
+                      pinch.scale)
             }
-        };return self
+        }
+        return self
     }
 }

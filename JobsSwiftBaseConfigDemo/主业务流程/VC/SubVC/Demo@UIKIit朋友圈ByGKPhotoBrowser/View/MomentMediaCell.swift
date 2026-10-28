@@ -19,8 +19,10 @@ import JobsImageTools
 import SnapKit
 
 final class MomentMediaCell: UICollectionViewCell {
+
     public lazy var imageViewRef: UIImageView = {
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.tertiarySystemFill)
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(YES)
@@ -32,7 +34,8 @@ final class MomentMediaCell: UICollectionViewCell {
     }()
 
     private lazy var playBadge: UIImageView = {
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byContentMode(.scaleAspectFit)
             .byTintColor(JobsCor.white)
             .byImage("play.circle.fill".sysImg)
@@ -48,7 +51,9 @@ final class MomentMediaCell: UICollectionViewCell {
         playBadge.byVisible(YES)
     }
 
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     override func prepareForReuse() {
         super.prepareForReuse()
         imageViewRef.jobs_cancelImageLoad()
@@ -58,12 +63,13 @@ final class MomentMediaCell: UICollectionViewCell {
 
     @discardableResult
     func byData(_ any: Any?) -> Self {
-        guard let m = any as? MomentMedia else { return self }
+        guard let m = any as? MomentMedia else {
+            return self
+        }
         playBadge.byVisible(m.isVideo)
-        imageViewRef.jobs_setImage(
-            m.coverURL,
-            shimmerConfig: nil,
-            targetSize: imageViewRef.bounds.size
-        );return self
+        imageViewRef.jobs_setImage(m.coverURL,
+                                   shimmerConfig: nil,
+                                   targetSize: imageViewRef.bounds.size)
+        return self
     }
 }

@@ -14,23 +14,21 @@ import UIKit
 import Jobsl10n
 
 extension String {
+
     /// 多语言@唯一入口（支持自动刷新）
     public var tr: String {
         // ⭐️ 关键：把 key 注册进线程标记
-        return TRAutoRefresh.Marker.pack(
-            translated: NSLocalizedString(
-                self,
-                tableName: nil,
-                bundle: TRLang.bundle(),
-                value: self,
-                comment: ""
-            ),
-            key: self,
-            table: nil
-        )
+        return TRAutoRefresh.Marker.pack(translated: NSLocalizedString(self,
+                                                                       tableName: nil,
+                                                                       bundle: TRLang.bundle(),
+                                                                       value: self,
+                                                                       comment: ""),
+                                         key: self,
+                                         table: nil)
     }
     // 多语言@带参数版本
     public func tr(_ args: CVarArg...) -> String {
-        String(format: self.tr, arguments: args)
+        String(format: self.tr,
+               arguments: args)
     }
 }

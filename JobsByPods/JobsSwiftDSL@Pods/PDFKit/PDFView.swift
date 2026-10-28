@@ -14,6 +14,7 @@ import UIKit
 import PDFKit
 
 extension PDFView {
+
     // MARK: 文档 & 展示
     @discardableResult
     public func byDocument(_ doc: PDFDocument?) -> Self {
@@ -29,7 +30,8 @@ extension PDFView {
     public func byDisplayDirection(_ direction: PDFDisplayDirection) -> Self {
         if #available(iOS 11.0, *) {
             self.displayDirection = direction
-        }; return self
+        }
+        return self
     }
     @discardableResult
     public func byDisplaysPageBreaks(_ on: Bool) -> Self {
@@ -40,7 +42,8 @@ extension PDFView {
     public func byPageBreakMargins(_ insets: UIEdgeInsets) -> Self {
         if #available(iOS 11.0, *) {
             self.pageBreakMargins = insets
-        };return self
+        }
+        return self
     }
     @discardableResult
     public func byDisplaysAsBook(_ on: Bool) -> Self {
@@ -51,7 +54,8 @@ extension PDFView {
     public func byDisplaysRTL(_ on: Bool) -> Self {
         if #available(iOS 11.0, *) {
             self.displaysRTL = on
-        }; return self
+        }
+        return self
     }
     @discardableResult
     public func byBackgroundColor(_ color: UIColor) -> Self {
@@ -62,20 +66,24 @@ extension PDFView {
     public func byInterpolationQuality(_ q: PDFInterpolationQuality) -> Self {
         if #available(iOS 11.0, *) {
             self.interpolationQuality = q
-        };return self
+        }
+        return self
     }
     @discardableResult
     public func byPageShadowsEnabled(_ on: Bool) -> Self {
         if #available(iOS 12.0, *) {
             self.pageShadowsEnabled = on
-        }; return self
+        }
+        return self
     }
     @discardableResult
     public func byUsePageVC(_ enable: Bool,
                             options: [AnyHashable: Any]? = nil) -> Self {
         if #available(iOS 11.0, *) {
-            self.usePageViewController(enable, withViewOptions: options)
-        };return self
+            self.usePageViewController(enable,
+                                       withViewOptions: options)
+        }
+        return self
     }
     @discardableResult
     public func byDelegate(_ d: PDFViewDelegate?) -> Self {
@@ -108,14 +116,16 @@ extension PDFView {
         }
         if let auto {
             self.autoScales = auto
-        };return self
+        }
+        return self
     }
     @discardableResult
     public func byFitNow(maxScale limit: CGFloat = 4.0) -> Self {
         let fit = scaleFactorForSizeToFit
         if #available(iOS 11.0, *) {
             minScaleFactor = fit
-            maxScaleFactor = Swift.max(fit, limit)
+            maxScaleFactor = Swift.max(fit,
+                                       limit)
         }
         scaleFactor = fit
         return self
@@ -155,7 +165,9 @@ extension PDFView {
     public func byGoTo(index: Int) -> Self {
         if let p = self.document?.page(at: index) {
             self.go(to: p)
-        };return self }
+        }
+        return self
+    }
     @discardableResult
     public func byGo(to destination: PDFDestination) -> Self {
         self.go(to: destination)
@@ -167,21 +179,30 @@ extension PDFView {
         return self
     }
     @discardableResult
-    public func byGo(to rect: CGRect, on page: PDFPage) -> Self {
-        self.go(to: rect, on: page)
+    public func byGo(to rect: CGRect,
+                     on page: PDFPage) -> Self {
+        self.go(to: rect,
+                on: page)
         return self
     }
     // MARK: 选择 & 缩放按钮
     @discardableResult
-    public func bySet(selection: PDFSelection?, animate: Bool = false) -> Self {
+    public func bySet(selection: PDFSelection?,
+                      animate: Bool = false) -> Self {
         if #available(iOS 11.0, *) {
-            self.setCurrentSelection(selection, animate: animate) }
+            self.setCurrentSelection(selection,
+                                     animate: animate)
+        }
         else {
             self.currentSelection = selection
-        }; return self
+        }
+        return self
     }
     @discardableResult
-    public func byClearSelection() -> Self { self.clearSelection(); return self }
+    public func byClearSelection() -> Self {
+        self.clearSelection()
+        return self
+    }
     @discardableResult
     public func bySelectAll() -> Self {
         self.selectAll(nil)
@@ -202,21 +223,27 @@ extension PDFView {
     public func byEnableFind(_ enabled: Bool = true) -> Self {
         if #available(iOS 16.0, *) {
             self.isFindInteractionEnabled = enabled
-        }; return self
+        }
+        return self
     }
     // then/with
     @discardableResult
     public func byApply(_ block: (PDFView) -> Void) -> Self {
-        block(self); return self
+        block(self)
+        return self
     }
     /// 基于 `scaleFactorForSizeToFit`
     @discardableResult
-    public func byFitScale(max: CGFloat = 4.0, auto: Bool? = nil) -> Self {
+    public func byFitScale(max: CGFloat = 4.0,
+                           auto: Bool? = nil) -> Self {
         let fit = scaleFactorForSizeToFit
         if #available(iOS 11.0, *) {
             minScaleFactor = fit
             maxScaleFactor = max
         }
-        if let auto { autoScales = auto }; return self
+        if let auto {
+            autoScales = auto
+        }
+        return self
     }
 }

@@ -17,6 +17,8 @@ public typealias BackButtonLayout = (JobsNavBar, UIButton, ConstraintMaker) -> V
 // MARK: - 回调协议：任何宿主视图（含 BaseWebView）都可感知 NavBar 显隐变化并自行调整内部布局
 @MainActor
 public protocol JobsNavBarHost: AnyObject {
+
     /// enabled: true=已安装；false=已移除
-    func jobsNavBarDidToggle(enabled: Bool, navBar: JobsNavBar)
+    func jobsNavBarDidToggle(enabled: Bool,
+                             navBar: JobsNavBar)
 }

@@ -21,18 +21,18 @@ import JobsSwiftBaseDefines
 import SnapKit
 private var addClosureKey: UInt8 = 0
 extension UIView {
+
     public var jobsAddConstraintsClosure: jobsByConstraintMakerBlock? {
         get {
-            objc_getAssociatedObject(self, &addClosureKey) as? jobsByConstraintMakerBlock
+            objc_getAssociatedObject(self,
+                                     &addClosureKey) as? jobsByConstraintMakerBlock
         }
         set {
             // 闭包推荐 COPY 语义
-            objc_setAssociatedObject(
-                self,
-                &addClosureKey,
-                newValue,
-                .OBJC_ASSOCIATION_COPY_NONATOMIC
-            )
+            objc_setAssociatedObject(self,
+                                     &addClosureKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_COPY_NONATOMIC)
         }
     }
     // MARK: - 存储约束
@@ -40,7 +40,8 @@ extension UIView {
     public func byAddConstraintsClosure(_ closure: ((_ make: ConstraintMaker) -> Void)? = nil) -> Self {
         if let closure {
             self.jobsAddConstraintsClosure = closure
-        };return self
+        }
+        return self
     }
     // MARK: - 添加约束
     @discardableResult
@@ -48,7 +49,8 @@ extension UIView {
         if let closure {
             self.byAddConstraintsClosure(closure)
             self.snp.makeConstraints(closure)
-        };return self
+        }
+        return self
     }
     // MARK: - 添加到父视图
     /**
@@ -59,15 +61,16 @@ extension UIView {
      */
     // 基础的一参数 byAddTo 位于 JobsSwiftDSL；这里仅承接 SnapKit 约束。
     @discardableResult
-    public func byAddTo(
-        _ superView: UIView?,
-        _ closure: ((ConstraintMaker) -> Void)?
-    ) -> Self {
-        guard let superView else { return self }
+    public func byAddTo(_ superView: UIView?,
+                        _ closure: ((ConstraintMaker) -> Void)?) -> Self {
+        guard let superView else {
+            return self
+        }
         superView.addSubview(self)
         if let closure {
             self.snp.makeConstraints(closure)
-        };return self
+        }
+        return self
     }
     /**
      
@@ -77,29 +80,32 @@ extension UIView {
      */
     // ✅ 必须传 closure（不提供默认值），避免歧义
     @discardableResult
-    public func byAddTo(
-        _ superView: UIView?,
-        _ closure: (_ v: UIView, _ make: ConstraintMaker) -> Void
-    ) -> Self {
-        guard let superView else { return self }
+    public func byAddTo(_ superView: UIView?,
+                        _ closure: (_ v: UIView, _ make: ConstraintMaker) -> Void) -> Self {
+        guard let superView else {
+            return self
+        }
         superView.addSubview(self)
         self.snp.makeConstraints { make in
-            closure(self, make)
-        };return self
+            closure(self,
+                    make)
+        }
+        return self
     }
     /// 把当前 view 作为 arrangedSubview 加入 stackView，并支持链式 + 可选约束
     @discardableResult
-    public func byArrangedTo(
-        _ container: UIStackView?,
-        _ closure: ((ConstraintMaker) -> Void)? = nil
-    ) -> Self {
+    public func byArrangedTo(_ container: UIStackView?,
+                             _ closure: ((ConstraintMaker) -> Void)? = nil) -> Self {
         guard
-            let stackView = container as? UIStackView
-        else { return self }
+        let stackView = container as? UIStackView
+        else {
+            return self
+        }
         stackView.addArrangedSubview(self)
         if let closure {
             self.snp.makeConstraints(closure)
-        };return self
+        }
+        return self
     }
     // MARK: - 链式 makeConstraints
     @discardableResult
@@ -171,12 +177,14 @@ extension UIView {
      )
  */
 extension UIView {
+
     /// SnapKit 版 distributeViewsAlongAxis
     /// - Parameters:
     ///   - views: 要分布的子视图（需要先 addSubview）
     ///   - model: 分布参数
     @discardableResult
-    public func snap_distribute(_ views: [UIView], _ model: SnapDistributeModel) -> Self {
+    public func snap_distribute(_ views: [UIView],
+                                _ model: SnapDistributeModel) -> Self {
         guard views.count >= 2 else {
             // 只有 0/1 个 view，不需要 distribute
             if let v = views.first {
@@ -193,7 +201,8 @@ extension UIView {
                         make.left.right.equalToSuperview()
                     }
                 }
-            };return self
+            }
+            return self
         }
         switch model.axis {
         /// 处理 .horizontal 分支
@@ -206,13 +215,19 @@ extension UIView {
                 make.right.equalToSuperview().inset(model.tailSpacing)
             }
             // 串起来 + 同高（或 crossSize）
-            for i in 0..<views.count {
+            for i in 0 ..< views.count {
                 let v = views[i]
                 v.snp.makeConstraints { make in
                     // 顶底拉伸（或 crossSize 固定高度）
-                    if let top = model.top { make.top.equalToSuperview().inset(top) }
-                    if let bottom = model.bottom { make.bottom.equalToSuperview().inset(bottom) }
-                    if let h = model.crossSize { make.height.equalTo(h) }
+                    if let top = model.top {
+                        make.top.equalToSuperview().inset(top)
+                    }
+                    if let bottom = model.bottom {
+                        make.bottom.equalToSuperview().inset(bottom)
+                    }
+                    if let h = model.crossSize {
+                        make.height.equalTo(h)
+                    }
                 }
                 if i > 0 {
                     v.snp.makeConstraints { make in
@@ -233,9 +248,15 @@ extension UIView {
             // 可选：容器自身约束（像 Masonry 那段）
             if model.makeContainerConstraints {
                 self.snp.makeConstraints { make in
-                    if let top = model.top { make.top.equalToSuperview().inset(top) }
-                    if let bottom = model.bottom { make.bottom.equalToSuperview().inset(bottom) }
-                    if let h = model.crossSize { make.height.equalTo(h) }
+                    if let top = model.top {
+                        make.top.equalToSuperview().inset(top)
+                    }
+                    if let bottom = model.bottom {
+                        make.bottom.equalToSuperview().inset(bottom)
+                    }
+                    if let h = model.crossSize {
+                        make.height.equalTo(h)
+                    }
                 }
             }
         /// 处理 .vertical 分支
@@ -246,12 +267,18 @@ extension UIView {
             views.last!.snp.makeConstraints { make in
                 make.bottom.equalToSuperview().inset(model.tailSpacing)
             }
-            for i in 0..<views.count {
+            for i in 0 ..< views.count {
                 let v = views[i]
                 v.snp.makeConstraints { make in
-                    if let left = model.left { make.left.equalToSuperview().inset(left) }
-                    if let right = model.right { make.right.equalToSuperview().inset(right) }
-                    if let w = model.crossSize { make.width.equalTo(w) }
+                    if let left = model.left {
+                        make.left.equalToSuperview().inset(left)
+                    }
+                    if let right = model.right {
+                        make.right.equalToSuperview().inset(right)
+                    }
+                    if let w = model.crossSize {
+                        make.width.equalTo(w)
+                    }
                 }
                 if i > 0 {
                     v.snp.makeConstraints { make in
@@ -270,34 +297,49 @@ extension UIView {
             }
             if model.makeContainerConstraints {
                 self.snp.makeConstraints { make in
-                    if let left = model.left { make.left.equalToSuperview().inset(left) }
-                    if let right = model.right { make.right.equalToSuperview().inset(right) }
-                    if let w = model.crossSize { make.width.equalTo(w) }
+                    if let left = model.left {
+                        make.left.equalToSuperview().inset(left)
+                    }
+                    if let right = model.right {
+                        make.right.equalToSuperview().inset(right)
+                    }
+                    if let w = model.crossSize {
+                        make.width.equalTo(w)
+                    }
                 }
             }
-        };return self
+        }
+        return self
     }
 }
 
 // MARK: - ✅ btnArr 链式：addSubview + distribute
 extension Array where Element: UIView {
+
     /// 把数组里的 view 全部 add 到 superView（链式返回 self）
     @discardableResult
     public func addTo(_ superView: UIView) -> Self {
-        forEach { superView.addSubview($0) };return self
+        forEach {
+            superView.addSubview($0)
+        }
+        return self
     }
     /// 在 superView 内对数组 view 做均分分布（链式返回 self）
     /// 注意：默认要求已经 addSubview 进 superView（可配合 jobs_addTo）
     @discardableResult
-    public func snapDistribute(in superView: UIView, model: SnapDistributeModel) -> Self {
-        superView.snap_distribute(self, model)
+    public func snapDistribute(in superView: UIView,
+                               model: SnapDistributeModel) -> Self {
+        superView.snap_distribute(self,
+                                  model)
         return self
     }
     /// 一步到位：addTo + distribute
     @discardableResult
-    public func addDistributeTo(_ superView: UIView, model: SnapDistributeModel) -> Self {
+    public func addDistributeTo(_ superView: UIView,
+                                model: SnapDistributeModel) -> Self {
         addTo(superView)
-        snapDistribute(in: superView, model: model)
+        snapDistribute(in: superView,
+                       model: model)
         return self
     }
 }

@@ -13,6 +13,7 @@ import UIKit
 
 #if os(iOS) || os(tvOS)
 extension UIPickerView {
+
     @discardableResult
     public func byDelegate(_ delegate: UIPickerViewDelegate?) -> Self {
         self.delegate = delegate
@@ -32,8 +33,12 @@ extension UIPickerView {
     }
 
     @discardableResult
-    public func bySelectRow(_ row: Int, inComponent component: Int, animated: Bool) -> Self {
-        selectRow(row, inComponent: component, animated: animated)
+    public func bySelectRow(_ row: Int,
+                            inComponent component: Int,
+                            animated: Bool) -> Self {
+        selectRow(row,
+                  inComponent: component,
+                  animated: animated)
         return self
     }
 

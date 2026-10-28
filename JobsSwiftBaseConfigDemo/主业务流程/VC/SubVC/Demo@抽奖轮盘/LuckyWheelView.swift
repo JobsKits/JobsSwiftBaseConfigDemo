@@ -29,7 +29,9 @@ import SnapKit
 /// 5. 每个扇形文字外侧有一个圆形 ImageView（用 placeholderImage 渲染）
 
 final class LuckyWheelView: UIView {
+
     enum PointerDirection {
+
         case up
         case down
         case left
@@ -40,13 +42,21 @@ final class LuckyWheelView: UIView {
     var pointerDirection: PointerDirection = .up
     /// 完整 Segment 模型（推荐使用）
     var segments: [LuckyWheelSegment] = [] {
-        didSet { setNeedsLayout() }
+        didSet {
+            setNeedsLayout()
+        }
     }
     /// 仅背景色（向下兼容）：设置 colors 会自动生成 segments
     var colors: [UIColor] {
-        get { segments.map { $0.backgroundColor ?? JobsCor.clear } }
+        get {
+            segments.map {
+                $0.backgroundColor ?? JobsCor.clear
+            }
+        }
         set {
-            segments = newValue.map { LuckyWheelSegment(backgroundColor: $0) }
+            segments = newValue.map {
+                LuckyWheelSegment(backgroundColor: $0)
+            }
         }
     }
     /// 旋转持续时间（秒，近似控制）
@@ -73,26 +83,32 @@ final class LuckyWheelView: UIView {
     /// 中央按钮（用的 UIButton DSL）
     private lazy var centerButton: UIButton = {
         UIButton.sys()
-            /// 背景色
-            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
-            /// 普通标题
-            .byTitle("点我\n抽奖".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+        /// 背景色
+        .byBackgroundColor(JobsCor.systemGreen,
+                           for: .normal)
+        /// 普通标题
+        .byTitle("点我\n抽奖".tr,
+                 for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
             .byCornerRadius(30)
             .byMasksToBounds(true)
-            /// 点击声音
-            .byTapSound("Sound.wav")
-            /// 点按事件：走统一的旋转逻辑
-            .onTap { [weak self] btn in
-                guard let self else { return }
+        /// 点击声音
+        .byTapSound("Sound.wav")
+        /// 点按事件：走统一的旋转逻辑
+        .onTap { [weak self] btn in
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     self.startSpinWithScrollLikeDeceleration()
                 }
                 btn.playTapBounce(haptic: .light)
             }
-            /// 长按反馈（按钮自身的视觉反馈）
-            .onLongPress(minimumPressDuration: 0.8) { btn, gr in
+        /// 长按反馈（按钮自身的视觉反馈）
+        .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                 if gr.state == .began {
                     btn.byAlpha(0.6)
                 } else if gr.state == .ended || gr.state == .cancelled {
@@ -120,7 +136,9 @@ final class LuckyWheelView: UIView {
         let gr = UIPanGestureRecognizer
             .byConfig { [weak self] gr in
                 guard let self,
-                      let pan = gr as? UIPanGestureRecognizer else { return }
+                      let pan = gr as? UIPanGestureRecognizer else {
+                    return
+                }
                 self.handlePan(pan)
             }
             .byMinTouches(1)
@@ -134,7 +152,9 @@ final class LuckyWheelView: UIView {
         let gr = UITapGestureRecognizer
             .byConfig { [weak self] gr in
                 guard let self,
-                      let tap = gr as? UITapGestureRecognizer else { return }
+                      let tap = gr as? UITapGestureRecognizer else {
+                    return
+                }
                 self.handleSegmentTap(tap)
             }
             .byTaps(1)
@@ -148,7 +168,9 @@ final class LuckyWheelView: UIView {
         let gr = UILongPressGestureRecognizer
             .byConfig { [weak self] gr in
                 guard let self,
-                      let lp = gr as? UILongPressGestureRecognizer else { return }
+                      let lp = gr as? UILongPressGestureRecognizer else {
+                    return
+                }
                 self.handleSegmentLongPress(lp)
             }
             .byMinDuration(0.5)
@@ -185,6 +207,7 @@ final class LuckyWheelView: UIView {
 }
 
 extension LuckyWheelView {
+
     private func commonInit() {
         self.byBackgroundColor(JobsCor.clear)
         clipsToBounds = false
@@ -208,19 +231,29 @@ extension LuckyWheelView {
     }
 
     private func rebuildSlices() {
-        sliceLayers.forEach { $0.removeFromSuperlayer() }
+        sliceLayers.forEach {
+            $0.removeFromSuperlayer()
+        }
         sliceLayers.removeAll()
         // 清掉旧的文字 label / 图片
-        segmentLabels.forEach { $0.removeFromSuperview() }
+        segmentLabels.forEach {
+            $0.removeFromSuperview()
+        }
         segmentLabels.removeAll()
-        segmentImageViews.forEach { $0.removeFromSuperview() }
+        segmentImageViews.forEach {
+            $0.removeFromSuperview()
+        }
         segmentImageViews.removeAll()
         guard !segments.isEmpty,
               plateView.bounds.width > 0,
-              plateView.bounds.height > 0 else { return }
+              plateView.bounds.height > 0 else {
+            return
+        }
         let bounds = plateView.bounds
-        let center = CGPoint(x: bounds.midX, y: bounds.midY)
-        let radius = min(bounds.width, bounds.height) / 2
+        let center = CGPoint(x: bounds.midX,
+                             y: bounds.midY)
+        let radius = min(bounds.width,
+                         bounds.height) / 2
         let count = segments.count
         let anglePerSlice = 2 * CGFloat.pi / CGFloat(count)
         for (index, segment) in segments.enumerated() {
@@ -229,15 +262,14 @@ extension LuckyWheelView {
             // 扇形路径
             let path = UIBezierPath.make()
                 .byMove(to: center)
-                .byAddArc(
-                    withCenter: center,
-                    radius: radius,
-                    startAngle: startAngle,
-                    endAngle: endAngle,
-                    clockwise: true
-                )
+                .byAddArc(withCenter: center,
+                          radius: radius,
+                          startAngle: startAngle,
+                          endAngle: endAngle,
+                          clockwise: true)
                 .byClose()
-            let layer = CAShapeLayer.jobsMake { _ in }
+            let layer = CAShapeLayer
+                .jobsMake { _ in }
                 .byPath(path.cgPath)
                 .byFillColor(segment.backgroundColor)
             plateView.layer.addSublayer(layer)
@@ -245,30 +277,33 @@ extension LuckyWheelView {
             // ==== 文本：整体“对准圆心” ===========================
             let midAngle = (startAngle + endAngle) / 2
             if let attr = makeSegmentAttributedText(for: segment) {
-                let label = UILabel.jobsMake { _ in }
+                let label = UILabel
+                    .jobsMake { _ in }
                     .byNumberOfLines(0)
                     .byTextAlignment(.center)
                     .byBgCor(JobsCor.clear)
                     .byAttributedString(attr)
                 // 文本中心在扇形中线、偏内一点
                 let textRadius = radius * 0.55
-                let textCenter = CGPoint(
-                    x: center.x + cos(midAngle) * textRadius,
-                    y: center.y + sin(midAngle) * textRadius
-                )
+                let textCenter = CGPoint(x: center.x + cos(midAngle) * textRadius,
+                                         y: center.y + sin(midAngle) * textRadius)
                 // 先算一下所需大小
                 let maxTextWidth: CGFloat = anglePerSlice * radius * 0.5
                 let maxTextHeight: CGFloat = radius * 1.4
-                let maxSize = CGSize(width: maxTextWidth, height: maxTextHeight)
-                let rect = attr.boundingRect(
-                    with: maxSize,
-                    options: [.usesLineFragmentOrigin, .usesFontLeading],
-                    context: nil
-                )
-                let w = min(maxTextWidth, ceil(rect.width))
-                let h = min(maxTextHeight, ceil(rect.height))
+                let maxSize = CGSize(width: maxTextWidth,
+                                     height: maxTextHeight)
+                let rect = attr.boundingRect(with: maxSize,
+                                             options: [.usesLineFragmentOrigin, .usesFontLeading],
+                                             context: nil)
+                let w = min(maxTextWidth,
+                            ceil(rect.width))
+                let h = min(maxTextHeight,
+                            ceil(rect.height))
                 label
-                    .byBounds(CGRect(x: 0, y: 0, width: w, height: h))
+                    .byBounds(CGRect(x: 0,
+                                     y: 0,
+                                     width: w,
+                                     height: h))
                     .byCenter(textCenter)
                 // 让 label 的纵向轴沿着圆心连线方向
                 let rotation = midAngle - CGFloat.pi / 2
@@ -282,12 +317,11 @@ extension LuckyWheelView {
                let url = segment.imageURLString {
                 // 图片中心比文字更靠外圈一点
                 let imageRadius = radius * 0.8
-                let imageCenter = CGPoint(
-                    x: center.x + cos(midAngle) * imageRadius,
-                    y: center.y + sin(midAngle) * imageRadius
-                )
+                let imageCenter = CGPoint(x: center.x + cos(midAngle) * imageRadius,
+                                          y: center.y + sin(midAngle) * imageRadius)
                 let imageSize = radius * 0.22
-                let imageView = UIImageView.jobsMake { _ in }
+                let imageView = UIImageView
+                    .jobsMake { _ in }
                     .jobs_setImage(url,
                                    fallback: placeholder,
                                    shimmerConfig: nil,
@@ -295,7 +329,10 @@ extension LuckyWheelView {
                                    targetSize: CGSize(width: imageSize, height: imageSize))
                     .byContentMode(.scaleAspectFill)
                     .byClipsToBounds(YES)
-                    .byBounds(CGRect(x: 0, y: 0, width: imageSize, height: imageSize))
+                    .byBounds(CGRect(x: 0,
+                                     y: 0,
+                                     width: imageSize,
+                                     height: imageSize))
                     .byCenter(imageCenter)
                     .byCornerRadius(imageSize / 2.0)
                     .byAddTo(plateView)
@@ -304,13 +341,12 @@ extension LuckyWheelView {
         }
         // 中心点方便观察
         let dotRadius: CGFloat = 3
-        let dotPath = UIBezierPath.make(ovalIn: CGRect(
-            x: center.x - dotRadius,
-            y: center.y - dotRadius,
-            width: dotRadius * 2,
-            height: dotRadius * 2
-        ))
-        let dotLayer = CAShapeLayer.jobsMake { _ in }
+        let dotPath = UIBezierPath.make(ovalIn: CGRect(x: center.x - dotRadius,
+                                                       y: center.y - dotRadius,
+                                                       width: dotRadius * 2,
+                                                       height: dotRadius * 2))
+        let dotLayer = CAShapeLayer
+            .jobsMake { _ in }
             .byPath(dotPath.cgPath)
             .byFillColor(JobsCor.white)
         plateView.layer.addSublayer(dotLayer)
@@ -323,36 +359,52 @@ extension LuckyWheelView {
         }
         guard let text = segment.text, !text.isEmpty else {
             return nil
-        };return NSAttributedString(
-            string: text,
-            attributes: [
-                .font: segment.textFont ?? JobsFont.systemFont(ofSize: 12, weight: .medium),
+        }
+        return NSAttributedString(string: text,
+                                  attributes: [
+                .font: segment.textFont ?? JobsFont.systemFont(ofSize: 12,
+                                                               weight: .medium),
                 .foregroundColor: segment.textColor ?? JobsCor.black
-            ]
-        )
+            ])
     }
     // MARK: - Segment 命中计算 ===========================
     private func segmentIndex(_ point: CGPoint) -> Int? {
         guard !segments.isEmpty,
               plateView.bounds.width > 0,
               plateView.bounds.height > 0
-        else { return nil }
+        else {
+            return nil
+        }
         let bounds = self.bounds
-        let center = CGPoint(x: bounds.midX, y: bounds.midY)
-        let radius = min(bounds.width, bounds.height) / 2
+        let center = CGPoint(x: bounds.midX,
+                             y: bounds.midY)
+        let radius = min(bounds.width,
+                         bounds.height) / 2
         let dx = point.x - center.x
         let dy = point.y - center.y
-        let distance = hypot(dx, dy)
-        if distance > radius { return nil }
-        let touchAngle = atan2(dy, dx)
+        let distance = hypot(dx,
+                             dy)
+        if distance > radius {
+            return nil
+        }
+        let touchAngle = atan2(dy,
+                               dx)
         var angle0 = touchAngle - currentAngle
         let twoPi = 2 * CGFloat.pi
-        while angle0 < 0 { angle0 += twoPi }
-        while angle0 >= twoPi { angle0 -= twoPi }
+        while angle0 < 0 {
+            angle0 += twoPi
+        }
+        while angle0 >= twoPi {
+            angle0 -= twoPi
+        }
         let startFromTop: CGFloat = -CGFloat.pi / 2
         var relative = angle0 - startFromTop
-        while relative < 0 { relative += twoPi }
-        while relative >= twoPi { relative -= twoPi }
+        while relative < 0 {
+            relative += twoPi
+        }
+        while relative >= twoPi {
+            relative -= twoPi
+        }
         let count = segments.count
         let anglePerSlice = twoPi / CGFloat(count)
         let idx = Int(relative / anglePerSlice)
@@ -364,30 +416,50 @@ extension LuckyWheelView {
     }
     // MARK: - Segment 手势回调 ===========================
     private func handleSegmentTap(_ gr: UITapGestureRecognizer) {
-        guard gr.state == .ended else { return }
-        guard timer == nil else { return }
+        guard gr.state == .ended else {
+            return
+        }
+        guard timer == nil else {
+            return
+        }
         let point = gr.location(in: self)
-        if centerButton.frame.contains(point) { return }
+        if centerButton.frame.contains(point) {
+            return
+        }
         guard let index = segmentIndex(point),
-              index >= 0, index < segments.count else { return }
+              index >= 0, index < segments.count else {
+            return
+        }
         let segment = segments[index]
         segmentTapHandler?(segment)
     }
 
     private func handleSegmentLongPress(_ gr: UILongPressGestureRecognizer) {
-        guard timer == nil else { return }
+        guard timer == nil else {
+            return
+        }
         let point = gr.location(in: self)
-        if centerButton.frame.contains(point) { return }
+        if centerButton.frame.contains(point) {
+            return
+        }
         guard let index = segmentIndex(point),
-              index >= 0, index < segments.count else { return }
+              index >= 0, index < segments.count else {
+            return
+        }
         let segment = segments[index]
-        segmentLongPressHandler?(segment, gr)
+        segmentLongPressHandler?(segment,
+                                 gr)
     }
     // MARK: - 手势拖动旋转 ===============================
     private func handlePan(_ gesture: UIPanGestureRecognizer) {
-        if !isPanRotationEnabled { return }
-        if timer != nil { return }
-        let center = CGPoint(x: bounds.midX, y: bounds.midY)
+        if !isPanRotationEnabled {
+            return
+        }
+        if timer != nil {
+            return
+        }
+        let center = CGPoint(x: bounds.midX,
+                             y: bounds.midY)
         let location = gesture.location(in: self)
         if gesture.state == .began,
            centerButton.frame.contains(location) {
@@ -395,7 +467,8 @@ extension LuckyWheelView {
         }
         let dx = location.x - center.x
         let dy = location.y - center.y
-        let angle = atan2(dy, dx)
+        let angle = atan2(dy,
+                          dx)
         let now = CACurrentMediaTime()
         switch gesture.state {
         /// 处理 .began 分支
@@ -407,8 +480,12 @@ extension LuckyWheelView {
         case .changed:
             var step = angle - lastTouchAngle
             let pi = CGFloat.pi
-            if step > pi { step -= 2 * pi }
-            if step < -pi { step += 2 * pi }
+            if step > pi {
+                step -= 2 * pi
+            }
+            if step < -pi {
+                step += 2 * pi
+            }
             currentAngle += step
             plateView.byTransform(CGAffineTransform(rotationAngle: currentAngle))
             let dt = now - lastTouchTimestamp
@@ -444,25 +521,26 @@ extension LuckyWheelView {
             v0 = velocityForTargetDuration(spinDuration)
         }
         centerButton.bySelected(true)
-        decelerator = ScrollDecelerator(
-            velocity: v0,
-            decelerationRate: decelerationRate
-        )
+        decelerator = ScrollDecelerator(velocity: v0,
+                                        decelerationRate: decelerationRate)
         /// 旋转中重复启动只重置减速器，继续复用已有 Timer
-        guard timer == nil else { return }
+        guard timer == nil else {
+            return
+        }
         // ✅ displayLink 属于非 GCD 内核：JobsSwiftTimer 强制主线程 + RunLoop.main（默认就是 .main）:contentReference[oaicite:0]{index=0}
-        let config = JobsSwiftTimerConfig(
-            interval: TimeInterval(timerInterval),
-            repeats: true,
-            tolerance: 0,
-            queue: .main,
-            runLoop: .main,
-            runLoopMode: .common
-        )
+        let config = JobsSwiftTimerConfig(interval: TimeInterval(timerInterval),
+                                          repeats: true,
+                                          tolerance: 0,
+                                          queue: .main,
+                                          runLoop: .main,
+                                          runLoopMode: .common)
         // ✅ 正确创建方式：直接 new JobsTimer（你项目里没有 JobsTimerFactory）:contentReference[oaicite:1]{index=1}
-        let t = JobsTimer(kind: .displayLink, config: config) { [weak self] in
+        let t = JobsTimer(kind: .displayLink,
+                          config: config) { [weak self] in
             // ✅ tick 回调是 @Sendable：显式切回 MainActor，才能触碰 UIKit / self
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             onMainAsync(self) { vc in
                 self.tickTimer()
             }
@@ -472,10 +550,12 @@ extension LuckyWheelView {
     }
 
     private func velocityForTargetDuration(_ duration: TimeInterval) -> CGFloat {
-        let T = max(0.1, min(duration, 6.0))
+        let T = max(0.1,
+                    min(duration,6.0))
         let d = decelerationRate
         let eps = stopThreshold
-        let denom = pow(d, 1000 * T)
+        let denom = pow(d,
+                        1000 * T)
         if denom < 1e-4 {
             return eps / 1e-4
         } else {
@@ -516,29 +596,39 @@ extension LuckyWheelView {
     private func currentSegmentIndex(_ direction: PointerDirection) -> Int? {
         guard !segments.isEmpty,
               bounds.width > 0,
-              bounds.height > 0 else { return nil }
-        let center = CGPoint(x: bounds.midX, y: bounds.midY)
-        let radius = min(bounds.width, bounds.height) / 2
+              bounds.height > 0 else {
+            return nil
+        }
+        let center = CGPoint(x: bounds.midX,
+                             y: bounds.midY)
+        let radius = min(bounds.width,
+                         bounds.height) / 2
         let inset: CGFloat = 1
         let point: CGPoint
         switch direction {
         /// 处理 .up 分支
         case .up:
-            point = CGPoint(x: center.x, y: center.y - radius + inset)
+            point = CGPoint(x: center.x,
+                            y: center.y - radius + inset)
         /// 处理 .down 分支
         case .down:
-            point = CGPoint(x: center.x, y: center.y + radius - inset)
+            point = CGPoint(x: center.x,
+                            y: center.y + radius - inset)
         /// 处理 .left 分支
         case .left:
-            point = CGPoint(x: center.x - radius + inset, y: center.y)
+            point = CGPoint(x: center.x - radius + inset,
+                            y: center.y)
         /// 处理 .right 分支
         case .right:
-            point = CGPoint(x: center.x + radius - inset, y: center.y)
-        };return segmentIndex(point)
+            point = CGPoint(x: center.x + radius - inset,
+                            y: center.y)
+        }
+        return segmentIndex(point)
     }
 }
 // MARK: - LuckyWheelView 点语法 DSL ===================
 extension LuckyWheelView {
+
     @discardableResult
     func byPointerDirection(_ direction: PointerDirection) -> Self {
         self.pointerDirection = direction

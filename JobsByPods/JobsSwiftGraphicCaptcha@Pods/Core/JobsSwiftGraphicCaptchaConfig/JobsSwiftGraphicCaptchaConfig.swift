@@ -7,7 +7,9 @@
 
 import Foundation
 
-public struct JobsSwiftGraphicCaptchaCharacterUnit: OptionSet, Sendable {
+public struct JobsSwiftGraphicCaptchaCharacterUnit: OptionSet,
+                                                    Sendable {
+
     public let rawValue: Int
 
     public init(rawValue: Int) {
@@ -28,6 +30,7 @@ public struct JobsSwiftGraphicCaptchaCharacterUnit: OptionSet, Sendable {
 }
 
 public struct JobsSwiftGraphicCaptchaConfig: Sendable {
+
     public var length: Int
     public var caseSensitive: Bool
     public var characterUnits: JobsSwiftGraphicCaptchaCharacterUnit
@@ -48,6 +51,7 @@ public struct JobsSwiftGraphicCaptchaConfig: Sendable {
 }
 
 public extension JobsSwiftGraphicCaptchaConfig {
+
     static var defaultConfig: Self {
         Self()
     }
@@ -69,11 +73,13 @@ public extension JobsSwiftGraphicCaptchaConfig {
     }
 
     static var letterCaseSensitiveConfig: Self {
-        Self(caseSensitive: true, characterUnits: .letter)
+        Self(caseSensitive: true,
+             characterUnits: .letter)
     }
 
     static var letterCaseInsensitiveConfig: Self {
-        Self(caseSensitive: false, characterUnits: .letter)
+        Self(caseSensitive: false,
+             characterUnits: .letter)
     }
 
     static var mixedConfig: Self {

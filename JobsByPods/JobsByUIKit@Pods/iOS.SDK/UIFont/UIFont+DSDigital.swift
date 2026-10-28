@@ -12,7 +12,9 @@ import UIKit
 #endif
 
 extension UIFont {
+
     public enum DSDigital {
+
         public static func Regular(_ size: CGFloat) -> UIFont {
             switch Bundle.lang() {
             /// 合并处理 .vietnamese、.turkish 分支
@@ -26,13 +28,17 @@ extension UIFont {
                 return UIFont.SFArabic.Regular(size)
             /// 未匹配已知分支时执行兜底处理
             default:
-                return make("DS-Digital", size, fallback: .regular)
+                return make("DS-Digital",
+                            size,
+                            fallback: .regular)
             }
         }
         private static func make(_ name: String,
                                  _ size: CGFloat,
                                  fallback: UIFont.Weight) -> UIFont {
-            UIFont(name: name, size: size) ?? .systemFont(ofSize: size, weight: fallback)
+            UIFont(name: name,
+                   size: size) ?? .systemFont(ofSize: size,
+                                              weight: fallback)
         }
     }
 }

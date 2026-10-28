@@ -23,6 +23,7 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class ToastDemoVC: BaseVC {
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
@@ -34,6 +35,7 @@ final class ToastDemoVC: BaseVC {
 }
 
 extension ToastDemoVC {
+
     // MARK: - UI
     private func setupButtons() {
         // 统一样式
@@ -42,12 +44,20 @@ extension ToastDemoVC {
         let vSpacing: CGFloat = 12
         var last: UIView?
         @discardableResult
-        func addButton(_ title: String, action: @escaping jobsByVoidBlock) -> UIButton {
+        func addButton(_ title: String,
+                       action: @escaping jobsByVoidBlock) -> UIButton {
             let btn = UIButton.sys()
-                .byTitle(title, for: .normal)
-                .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
-                .byContentEdgeInsets(UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12))
-                .onTap { _ in action() }
+                .byTitle(title,
+                         for: .normal)
+                .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                                 weight: .medium))
+                .byContentEdgeInsets(UIEdgeInsets(top: 8,
+                                                  left: 12,
+                                                  bottom: 8,
+                                                  right: 12))
+                .onTap { _ in
+                    action()
+                }
                 .byAddTo(view) { [unowned self] make in
                     if let last {
                         make.top.equalTo(last.snp.bottom).offset(vSpacing)
@@ -82,10 +92,9 @@ extension ToastDemoVC {
         }
         // 6) 手动提前关闭（先弹再 1s 后主动 dismiss）
         addButton("手动提前关闭") {
-            let t = JobsToast.show(
-                text: "3秒后本该消失，但我会 1 秒提前关闭",
-                config: JobsToast.Config().byDuration(3)
-            )
+            let t = JobsToast.show(text: "3秒后本该消失，但我会 1 秒提前关闭",
+                                   config: JobsToast.Config()
+                                       .byDuration(3))
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 t.dismiss()
             }

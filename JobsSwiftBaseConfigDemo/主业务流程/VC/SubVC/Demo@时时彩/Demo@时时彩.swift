@@ -23,6 +23,7 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsMultiTimerTableDemoVC: BaseVC {
+
     deinit {
         JobsSwiftTimerMgr.shared.stopAndRemove(scopeIdentifier: timerScopeIdentifier)
     }
@@ -65,17 +66,24 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
 
     private lazy var wisdomActionButton: UIButton = {
         UIButton.sys()
-            .byFrame(CGRect(x: 0, y: 0, width: 44, height: 44))
-            .byTitle("查看设计智慧".tr, for: .normal)
-            .byTitleColor(JobsCor.label, for: .normal)
+            .byFrame(CGRect(x: 0,
+                            y: 0,
+                            width: 44,
+                            height: 44))
+            .byTitle("查看设计智慧".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.label,
+                          for: .normal)
             .onTap { [weak self] _ in
                 self?.showWisdomList()
             }
     }()
 
     private lazy var wisdomOverlayView: UIView = {
-        UIView.jobsMake { _ in }
-            .byBackgroundColor(UIColor(white: 0, alpha: 0.35))
+        UIView
+            .jobsMake { _ in }
+            .byBackgroundColor(UIColor(white: 0,
+                                       alpha: 0.35))
             .byHidden(true)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.bottom.equalToSuperview()
@@ -88,7 +96,8 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
     }()
 
     private lazy var wisdomTableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .insetGrouped)
+        let tableView = UITableView(frame: .zero,
+                                    style: .insetGrouped)
         wisdomTableViewIdentity = tableView
         return tableView
             .byBackgroundColor(JobsCor.secondarySystemBackground)
@@ -104,9 +113,11 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
     }()
 
     private lazy var navigationMainTitleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextColor(JobsCor.label)
-            .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 16,
+                                        weight: .semibold))
             .byTextAlignment(.center)
             .byNumberOfLines(1)
             .byAdjustsFontSizeToFitWidth(YES)
@@ -115,9 +126,11 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
     }()
 
     private lazy var navigationSubTitleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextColor(JobsCor.secondaryLabel)
-            .byFont(JobsFont.systemFont(ofSize: 11, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 11,
+                                        weight: .regular))
             .byTextAlignment(.center)
             .byNumberOfLines(1)
             .byAdjustsFontSizeToFitWidth(YES)
@@ -126,7 +139,8 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
     }()
 
     private lazy var navigationTitleView: UIStackView = {
-        UIStackView.jobsMake { _ in }
+        UIStackView
+            .jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.center)
             .byDistribution(.fill)
@@ -138,13 +152,14 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
     }()
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .plain)
+        UITableView(frame: .zero,
+                    style: .plain)
             .bySeparatorStyle(.singleLine)
             .byRowHeight(rowHeight)
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(JobsCountdownCell.self) // ✅ 修正：注册真正使用的 cell
-            .byAddTo(view) { [unowned self] make in
+        .byAddTo(view) { [unowned self] make in
                 make.left.right.bottom.equalToSuperview()
                 if view.jobs_hasVisibleTopBar() {
                     make.top.equalTo(self.gk_navigationBar.snp.bottom)
@@ -159,15 +174,13 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
         setupNavigationBar()
         bindWisdomTheme()
         tableView.byVisible(YES)
-        data = (0..<60).map { i in
-            let remain = Int.random(in: 8...300)                 // 每行剩余时间不同
+        data = (0 ..< 60).map { i in
+            let remain = Int.random(in: 8 ... 300)                 // 每行剩余时间不同
             let tick = [0.5, 1.0, 1.0, 2.0].randomElement()!     // tick 间隔不同
-            return JobsCountdownItem(
-                id: UUID().uuidString,
-                title: "Row #\(i)  (tick:\(tick)s, remain:\(remain)s)",
-                endAt: Date().addingTimeInterval(TimeInterval(remain)),
-                tickInterval: tick
-            )
+            return JobsCountdownItem(id: UUID().uuidString,
+                                     title: "Row #\(i)  (tick:\(tick)s, remain:\(remain)s)",
+                                     endAt: Date().addingTimeInterval(TimeInterval(remain)),
+                                     tickInterval: tick)
         }
         tableView.reloadData()
     }
@@ -200,17 +213,16 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
         navigationSubTitleLabel
             .byText(subTitle)
             .byVisible(!subTitle.isEmpty)
-        jobsSetupGKNav(
-            title: fullTitle,
-            rightButtons: [wisdomActionButton]
-        )
+        jobsSetupGKNav(title: fullTitle,
+                       rightButtons: [wisdomActionButton])
         gk_navTitleView = navigationTitleView
     }
 
     private func showWisdomList() {
         isWisdomListVisible = true
         wisdomOverlayView
-            .byBackgroundColor(UIColor(white: 0, alpha: 0.35))
+            .byBackgroundColor(UIColor(white: 0,
+                                       alpha: 0.35))
             .byHidden(false)
         wisdomTableView
             .byBackgroundColor(JobsCor.secondarySystemBackground)
@@ -219,18 +231,20 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
     }
 
     private func hideWisdomList() {
-        guard isWisdomListVisible else { return }
+        guard isWisdomListVisible else {
+            return
+        }
         isWisdomListVisible = false
         wisdomOverlayView.byHidden(true)
     }
 
     private func bindWisdomTheme() {
-        JobsThemeCenter.shared.bind(
-            self,
-            slot: "JobsMultiTimerTableDemoVC.wisdomList"
-        ) { object, _ in
+        JobsThemeCenter.shared.bind(self,
+                                    slot: "JobsMultiTimerTableDemoVC.wisdomList") { object, _ in
             guard let viewController = object as? JobsMultiTimerTableDemoVC,
-                  viewController.isWisdomListVisible else { return }
+                  viewController.isWisdomListVisible else {
+                return
+            }
             viewController.wisdomTableView
                 .byBackgroundColor(JobsCor.secondarySystemBackground)
                 .reloadData()
@@ -238,23 +252,29 @@ final class JobsMultiTimerTableDemoVC: BaseVC {
     }
 }
 // MARK: - UITableViewDataSource / UITableViewDelegate
-extension JobsMultiTimerTableDemoVC: UITableViewDataSource, UITableViewDelegate {
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension JobsMultiTimerTableDemoVC: UITableViewDataSource,
+                                     UITableViewDelegate {
+
+    public func tableView(_ tableView: UITableView,
+                          numberOfRowsInSection section: Int) -> Int {
         tableView === wisdomTableViewIdentity ? wisdomItems.count + 1 : data.count
     }
 
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView,
+                          cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if tableView === wisdomTableViewIdentity {
             let reuseIdentifier = "JobsMultiTimerWisdomCell"
             let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) ??
-                UITableViewCell(style: .subtitle, reuseIdentifier: reuseIdentifier)
+                UITableViewCell(style: .subtitle,
+                                reuseIdentifier: reuseIdentifier)
             let isCloseRow = indexPath.row == wisdomItems.count
             if isCloseRow {
                 return cell
                     .byText("关闭".tr)
                     .byTitleCor(JobsCor.systemBlue)
                     .byTitleTextAlignment(.center)
-                    .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+                    .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                                     weight: .semibold))
                     .byDetailText(nil)
                     .bySelectionStyle(.default)
                     .byBackgroundColor(JobsCor.systemBackground)
@@ -264,41 +284,54 @@ extension JobsMultiTimerTableDemoVC: UITableViewDataSource, UITableViewDelegate 
                 .byText(item.title.tr)
                 .byTitleCor(JobsCor.label)
                 .byTitleTextAlignment(.left)
-                .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .semibold))
+                .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                                 weight: .semibold))
                 .byTitleNumberOfLines(1)
                 .byDetailText(item.detail.tr)
                 .byDetailTitleCor(JobsCor.secondaryLabel)
                 .byDetailTitleTextAlignment(.left)
-                .byDetailTitleFont(JobsFont.systemFont(ofSize: 12, weight: .regular))
+                .byDetailTitleFont(JobsFont.systemFont(ofSize: 12,
+                                                       weight: .regular))
                 .byDetailTitleNumberOfLines(0)
                 .bySelectionStyle(.none)
                 .byBackgroundColor(JobsCor.systemBackground)
-        };return tableView
-            .byDequeueReusableCell(withType: JobsCountdownCell.self, for: indexPath)
-            .byData(data[indexPath.row], scopeIdentifier: timerScopeIdentifier)
+        }
+        return tableView
+            .byDequeueReusableCell(withType: JobsCountdownCell.self,
+                                   for: indexPath)
+            .byData(data[indexPath.row],
+                    scopeIdentifier: timerScopeIdentifier)
     }
 
-    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    public func tableView(_ tableView: UITableView,
+                          titleForHeaderInSection section: Int) -> String? {
         tableView === wisdomTableViewIdentity ? "时时彩 Demo 的设计智慧".tr : nil
     }
 
-    public func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+    public func tableView(_ tableView: UITableView,
+                          titleForFooterInSection section: Int) -> String? {
         tableView === wisdomTableViewIdentity
             ? "记住：VC 只有一个 Scope，不是只有一个 Timer。".tr
             : nil
     }
 
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView,
+                          didSelectRowAt indexPath: IndexPath) {
         guard tableView === wisdomTableViewIdentity,
-              indexPath.row == wisdomItems.count else { return }
-        tableView.deselectRow(at: indexPath, animated: true)
+              indexPath.row == wisdomItems.count else {
+            return
+        }
+        tableView.deselectRow(at: indexPath,
+                              animated: true)
         hideWisdomList()
     }
 
     public func tableView(_ tableView: UITableView,
                           didEndDisplaying cell: UITableViewCell,
                           forRowAt indexPath: IndexPath) {
-        guard tableView === self.tableView else { return }
+        guard tableView === self.tableView else {
+            return
+        }
         // 离屏就停（省资源）；再次出现会按 endAt 计算，显示依然准确
         (cell as? JobsCountdownCell)?.stopTimerIfNeeded()
     }

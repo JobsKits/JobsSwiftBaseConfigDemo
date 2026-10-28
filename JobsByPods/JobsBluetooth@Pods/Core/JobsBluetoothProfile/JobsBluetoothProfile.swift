@@ -10,6 +10,7 @@ import Foundation
 
 /// 描述一种设备的 UUID、超时、重连和协议编解码策略。
 public final class JobsBluetoothProfile {
+
     public var identifier = "default"
     public var serviceUUIDs: [CBUUID] = []
     public var writeCharacteristicUUID: CBUUID?
@@ -56,19 +57,22 @@ public final class JobsBluetoothProfile {
 
     @discardableResult
     public func byScanTimeout(_ value: TimeInterval) -> Self {
-        scanTimeout = max(0, value)
+        scanTimeout = max(0,
+                          value)
         return self
     }
 
     @discardableResult
     public func byConnectTimeout(_ value: TimeInterval) -> Self {
-        connectTimeout = max(0, value)
+        connectTimeout = max(0,
+                             value)
         return self
     }
 
     @discardableResult
     public func byMaximumReconnectCount(_ value: Int) -> Self {
-        maximumReconnectCount = max(0, value)
+        maximumReconnectCount = max(0,
+                                    value)
         return self
     }
 

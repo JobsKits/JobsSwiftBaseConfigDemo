@@ -18,8 +18,17 @@ import JobsSwiftDSL
 /// UI控件始终还是矩形，但是不规则区域以外是无法响应点击事件的
 
 public class IrregularButton: UIButton {
-    var points: [CGPoint] = [] { didSet { setNeedsLayout() } }
-    var designSize: CGSize? { didSet { setNeedsLayout() } }
+
+    var points: [CGPoint] = [] {
+        didSet {
+            setNeedsLayout()
+        }
+    }
+    var designSize: CGSize? {
+        didSet {
+            setNeedsLayout()
+        }
+    }
 
     private let maskLayer = CAShapeLayer.jobsMake { _ in }
     private let strokeLayer = CAShapeLayer.jobsMake { _ in }
@@ -45,9 +54,9 @@ public class IrregularButton: UIButton {
             .byFillColor(JobsCor.clear)
             .byStrokeColor(JobsCor.clear)
             .byLineWidth(0)
-        // 不要系统按钮那套高亮干预
-//        adjustsImageWhenHighlighted = false
-//        showsTouchWhenHighlighted = false
+    // 不要系统按钮那套高亮干预
+    //        adjustsImageWhenHighlighted = false
+    //        showsTouchWhenHighlighted = false
     }
 
     public override func layoutSubviews() {
@@ -62,37 +71,54 @@ public class IrregularButton: UIButton {
             .byPath(path)
     }
     // ✅ 点击区域也按不规则形状来
-    public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        guard let path = cachedPath else { return super.point(inside: point, with: event) };return path.contains(point)
+    public override func point(inside point: CGPoint,
+                               with event: UIEvent?) -> Bool {
+        guard let path = cachedPath else {
+            return super.point(inside: point,
+                               with: event)
+        }
+        return path.contains(point)
     }
 
     private func buildPath() -> UIBezierPath {
         let p = UIBezierPath.make()
-        guard bounds.width > 0, bounds.height > 0, points.count >= 3 else { return p }
+        guard bounds.width > 0, bounds.height > 0, points.count >= 3 else {
+            return p
+        }
         let pts = scaled(points)
         p.byMove(to: pts[0])
-        for i in 1..<pts.count { p.byAddLine(to: pts[i]) }
+        for i in 1 ..< pts.count {
+            p.byAddLine(to: pts[i])
+        }
         p.byClose()
         return p
     }
 
     private func scaled(_ pts: [CGPoint]) -> [CGPoint] {
-        guard let ds = designSize, ds.width > 0, ds.height > 0 else { return pts }
+        guard let ds = designSize, ds.width > 0, ds.height > 0 else {
+            return pts
+        }
         let sx = bounds.width / ds.width
         let sy = bounds.height / ds.height
-        return pts.map { CGPoint(x: $0.x * sx, y: $0.y * sy) }
+        return pts.map {
+            CGPoint(x: $0.x * sx,
+                    y: $0.y * sy)
+        }
     }
 }
 // MARK: - Chain
 extension IrregularButton {
+
     @discardableResult
-    public func byPoints(_ pts: [CGPoint], designSize: CGSize? = nil) -> Self {
+    public func byPoints(_ pts: [CGPoint],
+                         designSize: CGSize? = nil) -> Self {
         points = pts
         self.designSize = designSize
         return self
     }
     @discardableResult
-    public func byStroke(_ c: UIColor, _ w: CGFloat) -> Self {
+    public func byStroke(_ c: UIColor,
+                         _ w: CGFloat) -> Self {
         strokeLayer
             .byStrokeColor(c)
             .byLineWidth(w)

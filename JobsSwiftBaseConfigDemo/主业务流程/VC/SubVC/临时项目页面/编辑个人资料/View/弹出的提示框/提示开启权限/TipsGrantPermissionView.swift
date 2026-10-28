@@ -21,14 +21,17 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 final class TipsGrantPermissionView: UIView {
+
     /// 自适应主题卡片
     private lazy var cardView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
             .byLayer { layer in
-                layer.byCornerRadius(14)
+                layer
+                    .byCornerRadius(14)
                     .byMasksToBounds(NO) // 有阴影就不要 masksToBounds = true，不然阴影会被裁掉
-                    .byShadowColor(JobsCor.black.withAlphaComponent(0.15))
+            .byShadowColor(JobsCor.black.withAlphaComponent(0.15))
                     .byShadowOffset(CGSize(width: 0, height: 4))
                     .byShadowRadius(12)
                     .byShadowOpacity(1)
@@ -39,14 +42,18 @@ final class TipsGrantPermissionView: UIView {
     }()
     /// 标题：温馨提示
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("温馨提示".tr)
             .byTextColor(JobsCor.label)
-            .byFont(JobsFont.systemFont(ofSize: 17, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 17,
+                                        weight: .semibold))
             .byTextAlignment(.center)
             .byNumberOfLines(1)
-            .byHugging(.required, axis: .vertical)
-            .byCompressionResistance(.required, axis: .vertical)
+            .byHugging(.required,
+                       axis: .vertical)
+            .byCompressionResistance(.required,
+                                     axis: .vertical)
             .byAddTo(cardView) { make in
                 make.top.equalToSuperview().inset(18)
                 make.left.right.equalToSuperview().inset(20)
@@ -55,7 +62,8 @@ final class TipsGrantPermissionView: UIView {
     }()
     /// 主文案
     private lazy var messageLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("开启照片、视频权限，如果不允许\n您将无法选择相册里的照片进行上传".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -68,7 +76,8 @@ final class TipsGrantPermissionView: UIView {
     }()
     /// 灰色小字
     private lazy var hintLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("设置-隐私安全-照片和视频".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 12))
@@ -82,12 +91,20 @@ final class TipsGrantPermissionView: UIView {
     /// 底部绿色按钮：去开启
     private lazy var confirmButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(.init(r: 0/255, g: 199/255, b: 140/25, a: 1))
-            .byTitle("去开启".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byBackgroundColor(.init(r: 0 / 255,
+                                     g: 199 / 255,
+                                     b: 140 / 25,
+                                     a: 1))
+            .byTitle("去开启".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .semibold))
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.removeFromSuperview()
                 self.confirmHandler?()
             }
@@ -111,6 +128,7 @@ final class TipsGrantPermissionView: UIView {
 }
 
 extension TipsGrantPermissionView {
+
     private func setupUI() {
         // 半透明黑色遮罩（按需打开）
         // byBackgroundColor(JobsCor.black.withAlphaComponent(0.35))
@@ -118,6 +136,7 @@ extension TipsGrantPermissionView {
         cardView.byVisible(YES)
         confirmButton.byVisible(YES)
         // 标题下方分割线
-        cardView.makeBelowSeparatorBy(below: titleLabel, offset: 12)
+        cardView.makeBelowSeparatorBy(below: titleLabel,
+                                      offset: 12)
     }
 }

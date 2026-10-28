@@ -21,12 +21,15 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsSwiftCommentModeDetailVC: BaseVC {
+
     var mode: JobsSwiftCommentMode = .netEase
     var popupStyle = false
     var replyDetailStyle = false
     var commentArr: [JobsSwiftCommentModel] = []
     var popUpHeight: CGFloat = 0 {
-        didSet { updatePreferredContentSizeIfNeeded() }
+        didSet {
+            updatePreferredContentSizeIfNeeded()
+        }
     }
 
     private var demoRefreshCount = 0
@@ -34,9 +37,13 @@ final class JobsSwiftCommentModeDetailVC: BaseVC {
     private var replyDetailViewController: JobsSwiftCommentModeDetailVC?
     private lazy var closeButton: UIButton = {
         UIButton.sys()
-            .byFrame(CGRect(x: 0, y: 0, width: 44.w, height: 44.h))
+            .byFrame(CGRect(x: 0,
+                            y: 0,
+                            width: 44.w,
+                            height: 44.h))
             .byTintColor(JobsCor.label)
-            .byImage("xmark".sysImg.withRenderingMode(.alwaysTemplate), for: .normal)
+            .byImage("xmark".sysImg.withRenderingMode(.alwaysTemplate),
+                     for: .normal)
             .byContentEdgeInsets(.zero)
             .onTap { [weak self] _ in
                 self?.dismiss(animated: true)
@@ -76,13 +83,12 @@ final class JobsSwiftCommentModeDetailVC: BaseVC {
 }
 
 private extension JobsSwiftCommentModeDetailVC {
+
     func setupNavigation() {
         byTitle(titleText)
         if popupStyle {
-            jobsSetupGKNav(
-                title: titleText,
-                rightButtons: [closeButton]
-            )
+            jobsSetupGKNav(title: titleText,
+                           rightButtons: [closeButton])
         } else {
             jobsSetupGKNav(title: titleText)
         }
@@ -95,7 +101,9 @@ private extension JobsSwiftCommentModeDetailVC {
         config.showsReplyEntrance = !replyDetailStyle
         bindRefresher(by: config)
         config.commentSelectedBlock = { [weak self] comment in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             if self.mode == .toutiao, !comment.children.isEmpty, !self.replyDetailStyle {
                 self.openReplyPage(by: comment)
             } else {
@@ -103,13 +111,16 @@ private extension JobsSwiftCommentModeDetailVC {
             }
         }
         config.replySelectedBlock = { [weak self] comment in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             if self.mode == .toutiao, !comment.children.isEmpty, !self.replyDetailStyle {
                 self.openReplyPage(by: comment)
             } else {
                 print("点击回复入口：\(comment.messageID)")
             }
-        };return config
+        }
+        return config
     }
 
     func bindRefresher(by config: JobsSwiftCommentConfig) {
@@ -128,12 +139,13 @@ private extension JobsSwiftCommentModeDetailVC {
 
     func pullRefresh(by commentView: JobsSwiftCommentView) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self, weak commentView] in
-            guard let self, let commentView else { return }
+            guard let self, let commentView else {
+                return
+            }
             self.demoRefreshCount += 1
-            self.commentArr.insert(
-                self.demoGeneratedComment(action: "refresh", index: self.demoRefreshCount),
-                at: 0
-            )
+            self.commentArr.insert(self.demoGeneratedComment(action: "refresh",
+                                                             index: self.demoRefreshCount),
+                                   at: 0)
             commentView.reloadWithComments(self.commentArr)
             commentView.endPullRefresh()
         }
@@ -141,31 +153,33 @@ private extension JobsSwiftCommentModeDetailVC {
 
     func loadMore(by commentView: JobsSwiftCommentView) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self, weak commentView] in
-            guard let self, let commentView else { return }
+            guard let self, let commentView else {
+                return
+            }
             self.demoLoadMoreCount += 1
             self.commentArr.append(
-                self.demoGeneratedComment(action: "loadMore", index: self.demoLoadMoreCount)
+                self.demoGeneratedComment(action: "loadMore",
+                                          index: self.demoLoadMoreCount)
             )
             commentView.reloadWithComments(self.commentArr)
             commentView.endLoadMore()
         }
     }
 
-    func demoGeneratedComment(action: String, index: Int) -> JobsSwiftCommentModel {
+    func demoGeneratedComment(action: String,
+                              index: Int) -> JobsSwiftCommentModel {
         let isRefresh = action == "refresh"
         let nickname = isRefresh ? "刷新来的评论" : "加载来的评论"
         let content = isRefresh
             ? "这条是下拉刷新插入的新一级评论，用来验证模式一/三的刷新入口。"
             : "这条是上拉加载追加的新一级评论，用来验证模式一/三的加载入口。"
-        return JobsSwiftCommentModel.comment(
-            messageID: "c-\(action)-\(mode.rawValue)-\(index)",
-            nickname: "\(nickname)\(index)",
-            replyID: "news-20260706",
-            publishTime: "刚刚",
-            content: content,
-            device: "JobsSwiftRefresher",
-            location: "深圳"
-        )
+        return JobsSwiftCommentModel.comment(messageID: "c-\(action)-\(mode.rawValue)-\(index)",
+                                             nickname: "\(nickname)\(index)",
+                                             replyID: "news-20260706",
+                                             publishTime: "刚刚",
+                                             content: content,
+                                             device: "JobsSwiftRefresher",
+                                             location: "深圳")
     }
 
     func openReplyPage(by comment: JobsSwiftCommentModel) {
@@ -174,23 +188,31 @@ private extension JobsSwiftCommentModeDetailVC {
         replyDetailViewController?.replyDetailStyle = true
         replyDetailViewController?.commentArr = [comment]
         if let replyDetailViewController {
-            navigationController?.pushViewController(replyDetailViewController, animated: true)
+            navigationController?.pushViewController(replyDetailViewController,
+                                                     animated: true)
         }
     }
 
     var titleText: String {
         if replyDetailStyle {
-            guard let comment = commentArr.first, !comment.nickname.isEmpty else { return "评论回复" };return "\(comment.nickname) 的回复"
-        };return JobsSwiftCommentConfig.title(by: mode)
+            guard let comment = commentArr.first, !comment.nickname.isEmpty else {
+                return "评论回复"
+            }
+            return "\(comment.nickname) 的回复"
+        }
+        return JobsSwiftCommentConfig.title(by: mode)
     }
 
     func updatePreferredContentSizeIfNeeded() {
-        guard popupStyle else { return }
+        guard popupStyle else {
+            return
+        }
         let available = presentingViewController?.view.bounds.size ?? view.bounds.size
         guard available.width > 0, available.height > 0 else {
             return
         }
-        let size = CGSize(width: available.width, height: available.height * 0.62)
+        let size = CGSize(width: available.width,
+                          height: available.height * 0.62)
         if preferredContentSize != size {
             preferredContentSize = size
         }

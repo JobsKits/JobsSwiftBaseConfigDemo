@@ -9,44 +9,41 @@ import UIKit
 import JobsSwiftDSL
 
 extension UIButton {
+
     /// JobsAppDoor 对外可复用的按钮配置入口。
     @discardableResult
-    public func byJobsAppDoorAppearance(
-        title: String? = nil,
-        titleColor: UIColor? = nil,
-        font: UIFont? = nil,
-        backgroundColor: UIColor,
-        cornerRadius: CGFloat,
-        borderColor: UIColor? = nil,
-        borderWidth: CGFloat = 0
-    ) -> Self {
-        jobsAppDoorAppearance(
-            title: title,
-            titleColor: titleColor,
-            font: font,
-            backgroundColor: backgroundColor,
-            cornerRadius: cornerRadius,
-            borderColor: borderColor,
-            borderWidth: borderWidth
-        )
+    public func byJobsAppDoorAppearance(title: String? = nil,
+                                        titleColor: UIColor? = nil,
+                                        font: UIFont? = nil,
+                                        backgroundColor: UIColor,
+                                        cornerRadius: CGFloat,
+                                        borderColor: UIColor? = nil,
+                                        borderWidth: CGFloat = 0) -> Self {
+        jobsAppDoorAppearance(title: title,
+                              titleColor: titleColor,
+                              font: font,
+                              backgroundColor: backgroundColor,
+                              cornerRadius: cornerRadius,
+                              borderColor: borderColor,
+                              borderWidth: borderWidth)
     }
 
     /// 统一收口新旧 UIButton 背景、圆角与字体管线。
     @discardableResult
-    func jobsAppDoorAppearance(
-        title: String? = nil,
-        titleColor: UIColor? = nil,
-        font: UIFont? = nil,
-        backgroundColor: UIColor,
-        cornerRadius: CGFloat,
-        borderColor: UIColor? = nil,
-        borderWidth: CGFloat = 0
-    ) -> Self {
+    func jobsAppDoorAppearance(title: String? = nil,
+                               titleColor: UIColor? = nil,
+                               font: UIFont? = nil,
+                               backgroundColor: UIColor,
+                               cornerRadius: CGFloat,
+                               borderColor: UIColor? = nil,
+                               borderWidth: CGFloat = 0) -> Self {
         if let title {
-            byTitle(title, for: .normal)
+            byTitle(title,
+                    for: .normal)
         }
         if let titleColor {
-            byTitleColor(titleColor, for: .normal)
+            byTitleColor(titleColor,
+                         for: .normal)
         }
         if let font {
             byTitleFont(font)
@@ -63,14 +60,16 @@ extension UIButton {
             buttonConfiguration.baseForegroundColor = titleColor ?? buttonConfiguration.baseForegroundColor
             byConfiguration(buttonConfiguration)
         } else {
-            byBackgroundColor(backgroundColor, for: .normal)
+            byBackgroundColor(backgroundColor,
+                              for: .normal)
             byCornerRadius(cornerRadius)
             if let borderColor {
                 byBorderColor(borderColor)
             }
             byBorderWidth(borderWidth)
             byClipsToBounds(cornerRadius > 0)
-        };return self
+        }
+        return self
     }
 
     /// 登录辅助操作保持单行，配置式按钮与旧标题管线同步处理。
@@ -85,6 +84,7 @@ extension UIButton {
             var buttonConfiguration = configuration ?? .plain()
             buttonConfiguration.titleLineBreakMode = .byClipping
             byConfiguration(buttonConfiguration)
-        };return self
+        }
+        return self
     }
 }

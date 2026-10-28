@@ -8,8 +8,10 @@
 import Foundation
 
 extension BinaryFloatingPoint {
+
     /// 浮点数专用：指定保留几位小数
     public func toString(_ fractionDigits: Int) -> String {
-        String(format: "%.\(fractionDigits)f", Double(self))
+        String(format: "%.\(fractionDigits)f",
+               Double(self))
     }
 }

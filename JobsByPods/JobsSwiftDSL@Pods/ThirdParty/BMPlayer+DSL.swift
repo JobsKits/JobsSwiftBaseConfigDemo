@@ -20,6 +20,7 @@ import SnapKit
 import BMPlayer
 // MARK: - 链式配置（byX）
 extension BMPlayer {
+
     // 代理
     @discardableResult
     public func byDelegate(_ delegate: BMPlayerDelegate?) -> Self {
@@ -67,26 +68,35 @@ extension BMPlayer {
     public func byResource(_ resource: BMPlayerResource,
                            definitionIndex: Int = 0,
                            autoPlay: Bool = BMPlayerConf.shouldAutoPlay) -> Self {
-        self.setVideo(resource: resource, definitionIndex: definitionIndex)
-        if autoPlay { self.autoPlay() };return self
+        self.setVideo(resource: resource,
+                      definitionIndex: definitionIndex)
+        if autoPlay {
+            self.autoPlay()
+        }
+        return self
     }
     // 仅设置资源，不自动播放
     @discardableResult
     public func byResourceNoAutoPlay(_ resource: BMPlayerResource,
-                              definitionIndex: Int = 0) -> Self {
-        self.setVideo(resource: resource, definitionIndex: definitionIndex)
+                                     definitionIndex: Int = 0) -> Self {
+        self.setVideo(resource: resource,
+                      definitionIndex: definitionIndex)
         return self
     }
     // 约束辅助：将播放器添加到指定视图并用 SnapKit 约束
     @discardableResult
     public func byAddTo(_ container: UIView,
-                 make: (_ make: ConstraintMaker) -> Void) -> Self {
+                        make: (_ make: ConstraintMaker) -> Void) -> Self {
         container.addSubview(self)
-        self.snp.makeConstraints { make($0) };return self
+        self.snp.makeConstraints {
+            make($0)
+        }
+        return self
     }
 }
 // MARK: - 行为（byX）与控制（onX）
 extension BMPlayer {
+
     // 播放 / 暂停 / 自动播放
     @discardableResult
     public func byPlay() -> Self {
@@ -108,13 +118,15 @@ extension BMPlayer {
     // Seek
     @discardableResult
     public func bySeek(to seconds: TimeInterval,
-                completion: (jobsByVoidBlock)? = nil) -> Self {
-        self.seek(seconds, completion: completion)
+                       completion: (jobsByVoidBlock)? = nil) -> Self {
+        self.seek(seconds,
+                  completion: completion)
         return self
     }
 }
 // MARK: - 事件回调（onX）
 extension BMPlayer {
+
     /// 播放进度回调 (current, total)
     @discardableResult
     public func onPlayTimeChanged(_ block: @escaping (TimeInterval, TimeInterval) -> Void) -> Self {
@@ -149,9 +161,14 @@ extension BMPlayer {
 }
 // MARK: - 语义糖（状态读取）
 extension BMPlayer {
+
     /// 是否在播（对外镜像，避免直接读内部图层）
-    public var isPlayingNow: Bool { self.isPlaying }
+    public var isPlayingNow: Bool {
+        self.isPlaying
+    }
     /// 当前 AVPlayer（若需要向下扩展）
-    public var av: AVPlayer? { self.avPlayer }
+    public var av: AVPlayer? {
+        self.avPlayer
+    }
 }
 #endif

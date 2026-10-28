@@ -22,12 +22,14 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsButtonDemoVC: BaseVC {
+
     private let horizontalInset: CGFloat = 16
     private let itemHeight: CGFloat = 78
     private let vSpacing: CGFloat = 14
     // MARK: - UI (Lazy)
     private lazy var hintLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byNumberOfLines(0)
             .byText("JobsButton Demo：4种模式 + 点击/长按（叠加不覆盖）\n\n• 点击：会依次触发多段回调（叠加）\n• 长按：同样支持叠加\n• 图片：前景图/背景图都用 Kingfisher 链式加载".tr)
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -48,24 +50,27 @@ final class JobsButtonDemoVC: BaseVC {
         JobsButton()
             .byMode(.imageTopTextBottom)
             .byTitleLabel { lab in
-                lab.byText("上图下文".tr)
+                lab
+                    .byText("上图下文".tr)
                     .byTextColor(JobsCor.red)
             }
             .bySubTitleLabel { lab in
-                lab.byText("image -> title -> subtitle")
+                lab
+                    .byText("image -> title -> subtitle")
                     .byTextColor(JobsCor.blue)
             }
-            // 前景图：内部 foregroundImageView（链式不丢 self）
-            .byForegroundImageView { iv in
-                iv.byContentMode(.scaleAspectFill)
+        // 前景图：内部 foregroundImageView（链式不丢 self）
+        .byForegroundImageView { iv in
+                iv
+                    .byContentMode(.scaleAspectFill)
                     .byClipsToBounds()
                     .jobs_setImage("https://picsum.photos/200?random=111",
                                    fallback: "Ani".img,
                                    shimmerConfig: nil,
                                    targetSize: CGSize(width: 64, height: 64))
             }
-            // 背景图：JobsButton 自己是 UIImageView
-            .byContentMode(.scaleAspectFill)
+        // 背景图：JobsButton 自己是 UIImageView
+        .byContentMode(.scaleAspectFill)
             .byClipsToBounds()
             .jobs_setImage("https://picsum.photos/600/200?random=11",
                            fallback: "Ani".img,
@@ -80,12 +85,16 @@ final class JobsButtonDemoVC: BaseVC {
                 "点击了悬浮按钮：上图下文（tap #2 叠加）".tr.toast
             }
             .addLongPressActionAppend { gr in
-                guard gr.state == .began else { return }
+                guard gr.state == .began else {
+                    return
+                }
                 print("btn1 longPress #1 began")
                 "长按了悬浮按钮：上图下文（longPress #1）".tr.toast
             }
             .addLongPressActionAppend { gr in
-                guard gr.state == .began else { return }
+                guard gr.state == .began else {
+                    return
+                }
                 print("btn1 longPress #2 began (append)")
                 "长按了悬浮按钮：上图下文（longPress #2 叠加）".tr.toast
             }
@@ -106,15 +115,18 @@ final class JobsButtonDemoVC: BaseVC {
         JobsButton()
             .byMode(.textTopImageBottom)
             .byTitleLabel { lab in
-                lab.byText("上文下图".tr)
+                lab
+                    .byText("上文下图".tr)
                     .byTextColor(JobsCor.red)
             }
             .bySubTitleLabel { lab in
-                lab.byText("title -> subtitle -> image")
+                lab
+                    .byText("title -> subtitle -> image")
                     .byTextColor(JobsCor.blue)
             }
             .byForegroundImageView { iv in
-                iv.byContentMode(.scaleAspectFill)
+                iv
+                    .byContentMode(.scaleAspectFill)
                     .byClipsToBounds()
                     .jobs_setImage("https://picsum.photos/200?random=222",
                                    fallback: "Ani".img,
@@ -152,15 +164,18 @@ final class JobsButtonDemoVC: BaseVC {
         JobsButton()
             .byMode(.imageLeftTextRight)
             .byTitleLabel { lab in
-                lab.byText("左图右文".tr)
+                lab
+                    .byText("左图右文".tr)
                     .byTextColor(JobsCor.red)
             }
             .bySubTitleLabel { lab in
-                lab.byText("image -> title -> subtitle")
+                lab
+                    .byText("image -> title -> subtitle")
                     .byTextColor(JobsCor.blue)
             }
             .byForegroundImageView { iv in
-                iv.byContentMode(.scaleAspectFill)
+                iv
+                    .byContentMode(.scaleAspectFill)
                     .byClipsToBounds()
                     .jobs_setImage("https://picsum.photos/200?random=333",
                                    fallback: "Ani".img,
@@ -174,12 +189,16 @@ final class JobsButtonDemoVC: BaseVC {
                            shimmerConfig: nil,
                            targetSize: nil)
             .addLongPressActionAppend { gr in
-                guard gr.state == .began else { return }
+                guard gr.state == .began else {
+                    return
+                }
                 print("btn3 longPress #1 began")
                 "长按了悬浮按钮：左图右文（longPress #1）".tr.toast
             }
             .addLongPressActionAppend { gr in
-                guard gr.state == .began else { return }
+                guard gr.state == .began else {
+                    return
+                }
                 print("btn3 longPress #2 began (append)")
                 "长按了悬浮按钮：左图右文（longPress #2 叠加）".tr.toast
             }
@@ -200,15 +219,18 @@ final class JobsButtonDemoVC: BaseVC {
         JobsButton()
             .byMode(.textLeftImageRight)
             .byTitleLabel { lab in
-                lab.byText("左文右图".tr)
+                lab
+                    .byText("左文右图".tr)
                     .byTextColor(JobsCor.red)
             }
             .bySubTitleLabel { lab in
-                lab.byText("title -> subtitle -> image")
+                lab
+                    .byText("title -> subtitle -> image")
                     .byTextColor(JobsCor.blue)
             }
             .byForegroundImageView { iv in
-                iv.byContentMode(.scaleAspectFill)
+                iv
+                    .byContentMode(.scaleAspectFill)
                     .byClipsToBounds()
                     .jobs_setImage("https://picsum.photos/200?random=444",
                                    fallback: "Ani".img,
@@ -226,7 +248,9 @@ final class JobsButtonDemoVC: BaseVC {
                 "点击了悬浮按钮：左文右图".tr.toast
             }
             .addLongPressActionAppend { gr in
-                guard gr.state == .began else { return }
+                guard gr.state == .began else {
+                    return
+                }
                 print("btn4 longPress began")
                 "长按了悬浮按钮：左文右图".tr.toast
             }

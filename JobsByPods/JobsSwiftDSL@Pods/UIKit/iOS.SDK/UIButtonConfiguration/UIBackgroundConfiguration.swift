@@ -13,6 +13,7 @@ import UIKit
 
 @available(iOS 14.0, *)
 public extension UIBackgroundConfiguration {
+
     // MARK: - Convenience factories
     @discardableResult
     @inlinable
@@ -170,7 +171,8 @@ public extension UIBackgroundConfiguration {
     // MARK: - Generic utilities (optional)
     @discardableResult
     @inlinable
-    func by<T>(_ keyPath: WritableKeyPath<Self, T>, _ value: T) -> Self {
+    func by<T>(_ keyPath: WritableKeyPath<Self, T>,
+               _ value: T) -> Self {
         var c = self
         c[keyPath: keyPath] = value
         return c

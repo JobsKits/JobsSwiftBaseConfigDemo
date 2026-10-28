@@ -19,6 +19,7 @@ import SnapKit
 
 // MARK: —— 红包雨视图
 public class RedPacketRainView: UIView {
+
     deinit {
         spawnTimer?.stop()
         fallTimer?.stop()
@@ -51,6 +52,7 @@ public class RedPacketRainView: UIView {
     private var activePackets: [UIButton] = []
     /// 每个红包的运动参数
     private struct PacketMotion {
+
         let spawnTime: TimeInterval
         let duration: TimeInterval
         let startCenter: CGPoint
@@ -59,11 +61,9 @@ public class RedPacketRainView: UIView {
     private var pausedAt: TimeInterval?
     private var packetMotions: [ObjectIdentifier: PacketMotion] = [:]
     // MARK: - Init
-    public init(
-        frame: CGRect = .zero,
-        config: RedPacketRainConfig = .default,
-        timerKind: JobsTimerKind = .gcd
-    ) {
+    public init(frame: CGRect = .zero,
+                config: RedPacketRainConfig = .default,
+                timerKind: JobsTimerKind = .gcd) {
         self.config = config.normalized
         self.timerKind = timerKind
         super.init(frame: frame)
@@ -83,7 +83,9 @@ public class RedPacketRainView: UIView {
     }
     // MARK: - 对外控制
     public func start() {
-        guard !isRunning else { return }
+        guard !isRunning else {
+            return
+        }
         adjustPausedMotionsIfNeeded()
         buildTimerIfNeeded()
         isRunning = true
@@ -92,7 +94,9 @@ public class RedPacketRainView: UIView {
     }
 
     public func pause() {
-        guard isRunning else { return }
+        guard isRunning else {
+            return
+        }
         isRunning = false
         pausedAt = ProcessInfo.processInfo.systemUptime
         spawnTimer?.pause()
@@ -100,7 +104,9 @@ public class RedPacketRainView: UIView {
     }
 
     public func resume() {
-        guard !isRunning else { return }
+        guard !isRunning else {
+            return
+        }
         guard spawnTimer != nil, fallTimer != nil else {
             start()
             return
@@ -137,21 +143,17 @@ public class RedPacketRainView: UIView {
     // MARK: - Timer
     private func buildTimerIfNeeded() {
         if spawnTimer == nil {
-            let cfg = JobsSwiftTimerConfig(
-                interval: max(0.05, config.spawnInterval),
-                repeats: true,
-                tolerance: 0.01,
-                queue: .main,
-                runLoop: .main,
-                runLoopMode: .common,
-                pauseInBackground: true,
-                autoManageAppState: true
-            )
+            let cfg = JobsSwiftTimerConfig(interval: max(0.05,config.spawnInterval),
+                                           repeats: true,
+                                           tolerance: 0.01,
+                                           queue: .main,
+                                           runLoop: .main,
+                                           runLoopMode: .common,
+                                           pauseInBackground: true,
+                                           autoManageAppState: true)
             // ✅ 新版：直接 new JobsTimer（不再用 JobsTimerFactory.make）
-            spawnTimer = JobsTimer(
-                kind: timerKind,
-                config: cfg
-            ) { [weak self] in
+            spawnTimer = JobsTimer(kind: timerKind,
+                                   config: cfg) { [weak self] in
                 // ✅ Swift 6：@Sendable handler，触 UI 必须回 MainActor
                 onMainAsync(self) { vc in
                     self?.spawnPacketIfNeeded()
@@ -159,21 +161,17 @@ public class RedPacketRainView: UIView {
             }
         }
         if fallTimer == nil {
-            let fallCfg = JobsSwiftTimerConfig(
-                interval: 1.0 / 60.0,
-                repeats: true,
-                tolerance: 0.0,
-                queue: .main,
-                runLoop: .main,
-                runLoopMode: .common,
-                pauseInBackground: true,
-                autoManageAppState: true
-            )
+            let fallCfg = JobsSwiftTimerConfig(interval: 1.0 / 60.0,
+                                               repeats: true,
+                                               tolerance: 0.0,
+                                               queue: .main,
+                                               runLoop: .main,
+                                               runLoopMode: .common,
+                                               pauseInBackground: true,
+                                               autoManageAppState: true)
             // ✅ 新版：直接 new JobsTimer（不再用 JobsTimerFactory.make）
-            fallTimer = JobsTimer(
-                kind: timerKind,
-                config: fallCfg
-            ) { [weak self] in
+            fallTimer = JobsTimer(kind: timerKind,
+                                  config: fallCfg) { [weak self] in
                 // ✅ Swift 6：@Sendable handler，触 UI 必须回 MainActor
                 onMainAsync(self) { vc in
                     self?.updatePackets()
@@ -184,23 +182,28 @@ public class RedPacketRainView: UIView {
     // MARK: - 红包生成逻辑（UIButton 版本）
     @MainActor
     private func spawnPacketIfNeeded() {
-        guard isRunning else { return }
-        guard bounds.width > 0, bounds.height > 0 else { return }
+        guard isRunning else {
+            return
+        }
+        guard bounds.width > 0, bounds.height > 0 else {
+            return
+        }
         // 控制并发上限
         if activePackets.count >= config.maxConcurrentCount {
             return
         }
         let width = bounds.width - config.spawnInsets.left - config.spawnInsets.right
-        guard width > 0 else { return }
+        guard width > 0 else {
+            return
+        }
         // 随机 X
-        let maxX = max(0, width - config.packetSize.width)
-        let randomX = config.spawnInsets.left + CGFloat.random(in: 0...maxX)
-        let startFrame = CGRect(
-            x: randomX,
-            y: -config.packetSize.height,
-            width: config.packetSize.width,
-            height: config.packetSize.height
-        )
+        let maxX = max(0,
+                       width - config.packetSize.width)
+        let randomX = config.spawnInsets.left + CGFloat.random(in: 0 ... maxX)
+        let startFrame = CGRect(x: randomX,
+                                y: -config.packetSize.height,
+                                width: config.packetSize.width,
+                                height: config.packetSize.height)
         // 用 UIButton + DSL 创建单个红包
         let packet = UIButton.sys()
             .byFrame(startFrame)
@@ -224,44 +227,47 @@ public class RedPacketRainView: UIView {
         if config.tapEnabled {
             // 直接用按钮事件作为入口（onTap 最终是 addTarget + touchUpInside）
             packet.onTap { [weak self] sender in
-                guard let self = self else { return }
+                guard let self = self else {
+                    return
+                }
                 sender.playTapBounce(haptic: .light)  // 👈 临时放大→回弹（不注册任何手势/事件）
                 self.removePacket(sender)
                 if self.tappedCount < Int.max {
                     self.tappedCount += 1
                 }
-                self.tapCallback?(self, self.tappedCount)
+                self.tapCallback?(self,
+                                  self.tappedCount)
                 let feedback = UIImpactFeedbackGenerator(style: .light)
                 feedback.impactOccurred()
             }
         }
         // 随机下落时间
         let duration = Double.random(
-            in: min(config.minFallDuration, config.maxFallDuration)
-                ... max(config.minFallDuration, config.maxFallDuration)
+            in: min(config.minFallDuration,
+                    config.maxFallDuration)
+                ... max(config.minFallDuration,
+                        config.maxFallDuration)
         )
         // 计算终点 frame（含水平漂移）
         var endFrame = startFrame
         endFrame.origin.y = bounds.height + config.packetSize.height
-        let drift = CGFloat.random(in: -40...40)
-        endFrame.origin.x = min(
-            max(config.spawnInsets.left, endFrame.origin.x + drift),
-            bounds.width - config.spawnInsets.right - config.packetSize.width
-        )
+        let drift = CGFloat.random(in: -40 ... 40)
+        endFrame.origin.x = min(max(config.spawnInsets.left,
+                                    endFrame.origin.x + drift),
+                                bounds.width - config.spawnInsets.right - config.packetSize.width)
         // 固定一个轻微旋转角度
-        let angle = CGFloat.random(in: -0.25...0.25)
+        let angle = CGFloat.random(in: -0.25 ... 0.25)
         packet.transform = CGAffineTransform(rotationAngle: angle)
         packet.byAddTo(self)
         activePackets.append(packet)
         // 保存运动参数，后续由定时器驱动更新
         let startCenter = packet.center
-        let endCenter = CGPoint(x: endFrame.midX, y: endFrame.midY)
-        let motion = PacketMotion(
-            spawnTime: ProcessInfo.processInfo.systemUptime,
-            duration: duration,
-            startCenter: startCenter,
-            endCenter: endCenter
-        )
+        let endCenter = CGPoint(x: endFrame.midX,
+                                y: endFrame.midY)
+        let motion = PacketMotion(spawnTime: ProcessInfo.processInfo.systemUptime,
+                                  duration: duration,
+                                  startCenter: startCenter,
+                                  endCenter: endCenter)
         packetMotions[ObjectIdentifier(packet)] = motion
     }
     // MARK: - 下落刷新逻辑
@@ -271,32 +277,40 @@ public class RedPacketRainView: UIView {
             if !isRunning {
                 fallTimer?.stop()
                 fallTimer = nil
-            };return
+            }
+            return
         }
-        guard pausedAt == nil else { return }
+        guard pausedAt == nil else {
+            return
+        }
         let now = ProcessInfo.processInfo.systemUptime
         var finished: [UIButton] = []
         for packet in activePackets {
             let key = ObjectIdentifier(packet)
-            guard let motion = packetMotions[key] else { continue }
+            guard let motion = packetMotions[key] else {
+                continue
+            }
             let elapsed = now - motion.spawnTime
-            if elapsed <= 0 { continue }
-            let progress = min(1.0, elapsed / motion.duration)
+            if elapsed <= 0 {
+                continue
+            }
+            let progress = min(1.0,
+                               elapsed / motion.duration)
             let sx = motion.startCenter.x
             let sy = motion.startCenter.y
             let ex = motion.endCenter.x
             let ey = motion.endCenter.y
-            let newCenter = CGPoint(
-                x: sx + (ex - sx) * CGFloat(progress),
-                y: sy + (ey - sy) * CGFloat(progress)
-            )
+            let newCenter = CGPoint(x: sx + (ex - sx) * CGFloat(progress),
+                                    y: sy + (ey - sy) * CGFloat(progress))
             packet.center = newCenter
             if progress >= 1.0 {
                 finished.append(packet)
             }
         }
         if !finished.isEmpty {
-            finished.forEach { removePacket($0) }
+            finished.forEach {
+                removePacket($0)
+            }
         }
         if activePackets.isEmpty && !isRunning {
             fallTimer?.stop()
@@ -305,8 +319,11 @@ public class RedPacketRainView: UIView {
     }
 
     private func adjustPausedMotionsIfNeeded() {
-        guard let pausedAt else { return }
-        let delay = max(0, ProcessInfo.processInfo.systemUptime - pausedAt)
+        guard let pausedAt else {
+            return
+        }
+        let delay = max(0,
+                        ProcessInfo.processInfo.systemUptime - pausedAt)
         self.pausedAt = nil
         for (id, motion) in packetMotions {
             packetMotions[id] = PacketMotion(spawnTime: motion.spawnTime + delay,
@@ -317,13 +334,17 @@ public class RedPacketRainView: UIView {
     }
 
     private func clearAllPackets() {
-        activePackets.forEach { $0.removeFromSuperview() }
+        activePackets.forEach {
+            $0.removeFromSuperview()
+        }
         activePackets.removeAll()
         packetMotions.removeAll()
     }
 
     private func removePacket(_ packet: UIButton) {
-        if let idx = activePackets.firstIndex(where: { $0 === packet }) {
+        if let idx = activePackets.firstIndex(where: {
+            $0 === packet
+        }) {
             activePackets.remove(at: idx)
         }
         packetMotions.removeValue(forKey: ObjectIdentifier(packet))
@@ -332,13 +353,14 @@ public class RedPacketRainView: UIView {
 }
 // MARK: - DSL
 public extension RedPacketRainView {
+
     /// 类似 UIButton.sys()：默认 config + 默认 timerKind
-    static func dsl(
-        config: RedPacketRainConfig = .default,
-        timerKind: JobsTimerKind = .gcd
-    ) -> RedPacketRainView {
+    static func dsl(config: RedPacketRainConfig = .default,
+                    timerKind: JobsTimerKind = .gcd) -> RedPacketRainView {
         // 注意这里调用的是现在的 init(frame:config:timerKind:)
-        RedPacketRainView(frame: .zero, config: config, timerKind: timerKind)
+        RedPacketRainView(frame: .zero,
+                          config: config,
+                          timerKind: timerKind)
     }
     /// 链式配置整体 config
     @discardableResult

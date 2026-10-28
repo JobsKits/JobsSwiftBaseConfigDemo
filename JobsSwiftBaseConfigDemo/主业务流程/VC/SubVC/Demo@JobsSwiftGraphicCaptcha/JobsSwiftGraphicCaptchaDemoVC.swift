@@ -21,11 +21,13 @@ import GKNavigationBarSwift
 import SnapKit
 
 private struct JobsSwiftGraphicCaptchaDemoUnit {
+
     let title: String
     let characterUnit: JobsSwiftGraphicCaptchaCharacterUnit
 }
 
 private struct JobsSwiftGraphicCaptchaDemoOption: Equatable {
+
     let title: String
     let characterUnits: JobsSwiftGraphicCaptchaCharacterUnit
 
@@ -34,20 +36,17 @@ private struct JobsSwiftGraphicCaptchaDemoOption: Equatable {
     }
 
     var config: JobsSwiftGraphicCaptchaConfig {
-        return JobsSwiftGraphicCaptchaConfig(
-            caseSensitive: true,
-            characterUnits: characterUnits,
-            mixedGroupCount: characterGroupCount > 1 ? characterGroupCount : 0
-        )
+        return JobsSwiftGraphicCaptchaConfig(caseSensitive: true,
+                                             characterUnits: characterUnits,
+                                             mixedGroupCount: characterGroupCount > 1 ? characterGroupCount : 0)
     }
 }
 
 final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
-    private var selectedOption = JobsSwiftGraphicCaptchaDemoOption(
-        title: "英文大写 + 英文小写 + 阿拉伯数字 + 简体汉字 + 繁体汉字",
-        characterUnits: [.uppercaseLetter, .lowercaseLetter, .number,
-                         .simplifiedChinese, .traditionalChinese]
-    )
+
+    private var selectedOption = JobsSwiftGraphicCaptchaDemoOption(title: "英文大写 + 英文小写 + 阿拉伯数字 + 简体汉字 + 繁体汉字",
+                                                                   characterUnits: [.uppercaseLetter, .lowercaseLetter, .number,
+            .simplifiedChinese, .traditionalChinese])
     private var optionButtons: [UIButton] = []
     private var optionRowViews: [UIView] = []
     private var optionScrollViews: [UIScrollView] = []
@@ -64,16 +63,19 @@ final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
             self?.resultLabel
                 .byText("当前验证码：\(text)")
                 .byTextColor(JobsCor.secondaryLabel)
-        };return captchaView
+        }
+        return captchaView
     }()
 
     private lazy var optionRowsView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
     }()
 
     private lazy var lengthLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("长度：".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 15))
@@ -81,14 +83,17 @@ final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
 
     private lazy var lengthStepper: JobsSwiftNumberStepper = {
         JobsSwiftNumberStepper()
-            .configure(value: 4, minimumValue: 4, maximumValue: 8)
+            .configure(value: 4,
+                       minimumValue: 4,
+                       maximumValue: 8)
             .onJobsChange { [weak self] (stepper: JobsSwiftNumberStepper) in
                 self?.lengthChanged(stepper)
             }
     }()
 
     private lazy var inputField: UITextField = {
-        UITextField.jobsMake { _ in }
+        UITextField
+            .jobsMake { _ in }
             .byBorderStyle(.roundedRect)
             .byClearButtonMode(.whileEditing)
             .byAutocapitalizationType(.none)
@@ -97,10 +102,12 @@ final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
     }()
 
     private lazy var resultLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("等待输入校验".tr)
             .byTextColor(JobsCor.secondaryLabel)
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .medium))
             .byTextAlignment(.center)
             .byNumberOfLines(2)
     }()
@@ -108,11 +115,12 @@ final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
     private lazy var refreshButton: UIButton = {
         UIButton.sys()
             .byConfiguration(
-                UIButton.Configuration.filled()
-                    .byTitle("刷新".tr)
-                    .byCornerStyle(.medium)
-            )
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            UIButton.Configuration.filled()
+                .byTitle("刷新".tr)
+                .byCornerStyle(.medium)
+        )
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .medium))
             .onTap { [weak self] _ in
                 self?.refreshCaptcha()
             }
@@ -121,11 +129,12 @@ final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
     private lazy var validateButton: UIButton = {
         UIButton.sys()
             .byConfiguration(
-                UIButton.Configuration.filled()
-                    .byTitle("校验".tr)
-                    .byCornerStyle(.medium)
-            )
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            UIButton.Configuration.filled()
+                .byTitle("校验".tr)
+                .byCornerStyle(.medium)
+        )
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .medium))
             .onTap { [weak self] _ in
                 self?.validateCaptcha()
             }
@@ -142,37 +151,53 @@ final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
 }
 
 private extension JobsSwiftGraphicCaptchaDemoVC {
+
     var optionGroups: [(title: String, options: [JobsSwiftGraphicCaptchaDemoOption])] {
         let units = [
-            JobsSwiftGraphicCaptchaDemoUnit(title: "英文大写", characterUnit: .uppercaseLetter),
-            JobsSwiftGraphicCaptchaDemoUnit(title: "英文小写", characterUnit: .lowercaseLetter),
-            JobsSwiftGraphicCaptchaDemoUnit(title: "阿拉伯数字", characterUnit: .number),
-            JobsSwiftGraphicCaptchaDemoUnit(title: "简体汉字", characterUnit: .simplifiedChinese),
-            JobsSwiftGraphicCaptchaDemoUnit(title: "繁体汉字", characterUnit: .traditionalChinese)
+            JobsSwiftGraphicCaptchaDemoUnit(title: "英文大写",
+                                            characterUnit: .uppercaseLetter),
+            JobsSwiftGraphicCaptchaDemoUnit(title: "英文小写",
+                                            characterUnit: .lowercaseLetter),
+            JobsSwiftGraphicCaptchaDemoUnit(title: "阿拉伯数字",
+                                            characterUnit: .number),
+            JobsSwiftGraphicCaptchaDemoUnit(title: "简体汉字",
+                                            characterUnit: .simplifiedChinese),
+            JobsSwiftGraphicCaptchaDemoUnit(title: "繁体汉字",
+                                            characterUnit: .traditionalChinese)
         ]
         let groupTitles = ["单个演示", "两两混合", "三三混合", "四四混合", "全部混合"]
         return groupTitles.enumerated().map { index, groupTitle in
             let groupCount = index + 1
-            let options = combinations(units, count: groupCount).map { combination in
-                JobsSwiftGraphicCaptchaDemoOption(
-                    title: combination.map(\.title).joined(separator: " + "),
-                    characterUnits: combination.reduce(into: []) { result, unit in
-                        result.formUnion(unit.characterUnit)
-                    }
-                )
-            };return (groupTitle, options)
+            let options = combinations(units,
+                                       count: groupCount).map { combination in
+                JobsSwiftGraphicCaptchaDemoOption(title: combination.map(\.title).joined(separator: " + "),
+                                                  characterUnits: combination.reduce(into: []) { result, unit in
+                    result.formUnion(unit.characterUnit)
+                })
+            }
+            return (groupTitle, options)
         }
     }
 
     func combinations(_ units: [JobsSwiftGraphicCaptchaDemoUnit],
                       count: Int) -> [[JobsSwiftGraphicCaptchaDemoUnit]] {
-        guard count > 0 else { return [[]] }
-        guard units.count >= count else { return [] }
-        if count == units.count { return [units] }
+        guard count > 0 else {
+            return [[]]
+        }
+        guard units.count >= count else {
+            return []
+        }
+        if count == units.count {
+            return [units]
+        }
         let head = units[0]
         let tail = Array(units.dropFirst())
-        let includingHead = combinations(tail, count: count - 1).map { [head] + $0 }
-        let excludingHead = combinations(tail, count: count)
+        let includingHead = combinations(tail,
+                                         count: count - 1).map {
+            [head] + $0
+        }
+        let excludingHead = combinations(tail,
+                                         count: count)
         return includingHead + excludingHead
     }
 
@@ -225,7 +250,9 @@ private extension JobsSwiftGraphicCaptchaDemoVC {
     }
 
     func buildOptionRows(in containerView: UIView) {
-        optionRowViews.forEach { $0.byRemoveFromSuperview() }
+        optionRowViews.forEach {
+            $0.byRemoveFromSuperview()
+        }
         optionButtons.removeAll()
         optionRowViews.removeAll()
         optionScrollViews.removeAll()
@@ -234,16 +261,20 @@ private extension JobsSwiftGraphicCaptchaDemoVC {
         let groups = optionGroups
         var previousRow: UIView?
         for (index, group) in groups.enumerated() {
-            let rowView = UIView.jobsMake { _ in }
+            let rowView = UIView
+                .jobsMake { _ in }
                 .byBackgroundColor(JobsCor.clear)
             optionRowViews.append(rowView)
-            let titleLabel = UILabel.jobsMake { _ in }
+            let titleLabel = UILabel
+                .jobsMake { _ in }
                 .byText(group.title.tr)
                 .byTextColor(JobsCor.secondaryLabel)
-                .byFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
+                .byFont(JobsFont.systemFont(ofSize: 13,
+                                            weight: .medium))
                 .byTextAlignment(.left)
             optionTitleLabels.append(titleLabel)
-            let scrollView = UIScrollView.jobsMake { _ in }
+            let scrollView = UIScrollView
+                .jobsMake { _ in }
                 .byAlwaysBounceHorizontal(true)
                 .byAlwaysBounceVertical(false)
                 .byShowsHorizontalScrollIndicator(false)
@@ -251,7 +282,8 @@ private extension JobsSwiftGraphicCaptchaDemoVC {
                 .byDirectionalLockEnabled(true)
                 .byContentInsetAdjustmentBehavior(.never)
             optionScrollViews.append(scrollView)
-            let stackView = UIStackView.jobsMake { _ in }
+            let stackView = UIStackView
+                .jobsMake { _ in }
                 .byAxis(.horizontal)
                 .byDistribution(.fill)
                 .byAlignment(.fill)
@@ -291,17 +323,21 @@ private extension JobsSwiftGraphicCaptchaDemoVC {
     func optionButton(for option: JobsSwiftGraphicCaptchaDemoOption) -> UIButton {
         let button = UIButton.sys()
             .byConfiguration(
-                UIButton.Configuration.plain()
-                    .byTitle(option.title.tr)
-                    .byBaseForegroundColor(JobsCor.secondaryLabel)
-                    .byBackground(
-                        UIBackgroundConfiguration.clear()
-                            .byBackgroundColor(JobsCor.systemGray6)
-                            .byCornerRadius(8)
-                    )
-                    .byContentInsets(NSDirectionalEdgeInsets(top: 0, leading: 14, bottom: 0, trailing: 14))
+            UIButton.Configuration.plain()
+                .byTitle(option.title.tr)
+                .byBaseForegroundColor(JobsCor.secondaryLabel)
+                .byBackground(
+                UIBackgroundConfiguration.clear()
+                    .byBackgroundColor(JobsCor.systemGray6)
+                    .byCornerRadius(8)
             )
-            .byTitleFont(JobsFont.systemFont(ofSize: 13, weight: .medium))
+                .byContentInsets(NSDirectionalEdgeInsets(top: 0,
+                                                         leading: 14,
+                                                         bottom: 0,
+                                                         trailing: 14))
+        )
+            .byTitleFont(JobsFont.systemFont(ofSize: 13,
+                                             weight: .medium))
             .onTap { [weak self] _ in
                 self?.applyOption(option)
             }
@@ -331,10 +367,10 @@ private extension JobsSwiftGraphicCaptchaDemoVC {
                     configuration
                         .byBaseForegroundColor(selected ? JobsCor.white : JobsCor.secondaryLabel)
                         .byBackground(
-                            configuration.background
-                                .byBackgroundColor(selected ? JobsCor.systemBlue : JobsCor.systemGray6)
-                                .byCornerRadius(8)
-                        )
+                    configuration.background
+                        .byBackgroundColor(selected ? JobsCor.systemBlue : JobsCor.systemGray6)
+                        .byCornerRadius(8)
+                )
                 }
         }
     }

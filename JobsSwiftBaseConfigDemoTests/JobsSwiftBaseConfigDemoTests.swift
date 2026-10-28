@@ -11,6 +11,7 @@ import JobsSwiftTimer
 import JobsSwiftTimerMgr
 
 private final class JobsTimerTestProbe: @unchecked Sendable {
+
     private let lock = NSLock()
     private var activeCallbacks = 0
     private var callbackCount = 0
@@ -18,10 +19,13 @@ private final class JobsTimerTestProbe: @unchecked Sendable {
 
     func beginCallback(targetCount: Int) -> Bool {
         lock.lock()
-        defer { lock.unlock() }
+        defer {
+            lock.unlock()
+        }
         activeCallbacks += 1
         callbackCount += 1
-        maximumConcurrentCallbacks = max(maximumConcurrentCallbacks, activeCallbacks)
+        maximumConcurrentCallbacks = max(maximumConcurrentCallbacks,
+                                         activeCallbacks)
         return callbackCount == targetCount
     }
 
@@ -33,17 +37,24 @@ private final class JobsTimerTestProbe: @unchecked Sendable {
 
     var maximumConcurrency: Int {
         lock.lock()
-        defer { lock.unlock() };return maximumConcurrentCallbacks
+        defer {
+            lock.unlock()
+        }
+        return maximumConcurrentCallbacks
     }
 }
 
 private final class JobsTimerTestClock: @unchecked Sendable {
+
     private let lock = NSLock()
     private var value: TimeInterval = 0
 
     func read() -> TimeInterval {
         lock.lock()
-        defer { lock.unlock() };return value
+        defer {
+            lock.unlock()
+        }
+        return value
     }
 
     func set(_ newValue: TimeInterval) {
@@ -54,19 +65,18 @@ private final class JobsTimerTestClock: @unchecked Sendable {
 }
 
 final class JobsSwiftBaseConfigDemoTests: XCTestCase {
+
     override func setUpWithError() throws {
         try super.setUpWithError()
         continueAfterFailure = false
         // 通知只能模拟计时器事件，不能把 UIKit 宿主的真实状态改成 active。
-        let hostIsActive = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "applicationState == %ld", UIApplication.State.active.rawValue),
-            object: UIApplication.shared
-        )
-        XCTAssertEqual(
-            XCTWaiter.wait(for: [hostIsActive], timeout: 10),
-            .completed,
-            "测试宿主未进入 active，请检查启动时的系统权限弹窗与模拟器前台状态。"
-        )
+        let hostIsActive = XCTNSPredicateExpectation(predicate: NSPredicate(format: "applicationState == %ld",
+                                                                            UIApplication.State.active.rawValue),
+                                                     object: UIApplication.shared)
+        XCTAssertEqual(XCTWaiter.wait(for: [hostIsActive],
+                                      timeout: 10),
+                       .completed,
+                       "测试宿主未进入 active，请检查启动时的系统权限弹窗与模拟器前台状态。")
     }
 
     func testGestureUnlockDemoLoadsWithoutException() throws {
@@ -84,32 +94,31 @@ final class JobsSwiftBaseConfigDemoTests: XCTestCase {
     }
 
     func testTimerConfigNormalizesInvalidValues() {
-        let config = JobsSwiftTimerConfig(
-            interval: .infinity,
-            tolerance: .nan,
-            callbackDeliveryPolicy: .dropIfBusy
-        )
+        let config = JobsSwiftTimerConfig(interval: .infinity,
+                                          tolerance: .nan,
+                                          callbackDeliveryPolicy: .dropIfBusy)
 
-        XCTAssertEqual(config.interval, 1)
-        XCTAssertEqual(config.tolerance, 0)
-        XCTAssertEqual(config.callbackDeliveryPolicy, .dropIfBusy)
+        XCTAssertEqual(config.interval,
+                       1)
+        XCTAssertEqual(config.tolerance,
+                       0)
+        XCTAssertEqual(config.callbackDeliveryPolicy,
+                       .dropIfBusy)
     }
 
     func testAllTimerEnginesCanStartAndStop() {
         [JobsTimerKind.gcd, .foundation, .displayLink, .runLoop].forEach { kind in
-            let timer = JobsTimer(
-                kind: kind,
-                config: JobsSwiftTimerConfig(
-                    interval: 60,
-                    queue: .main,
-                    pauseInBackground: false,
-                    autoManageAppState: false
-                )
-            ) {}
+            let timer = JobsTimer(kind: kind,
+                                  config: JobsSwiftTimerConfig(interval: 60,
+                                                               queue: .main,
+                                                               pauseInBackground: false,
+                                                               autoManageAppState: false)) {}
             timer.start()
-            XCTAssertTrue(timer.isRunning, "kind=\(kind)")
+            XCTAssertTrue(timer.isRunning,
+                          "kind=\(kind)")
             timer.stop()
-            XCTAssertFalse(timer.isRunning, "kind=\(kind)")
+            XCTAssertFalse(timer.isRunning,
+                           "kind=\(kind)")
         }
     }
 
@@ -117,32 +126,31 @@ final class JobsSwiftBaseConfigDemoTests: XCTestCase {
         let finished = expectation(description: "one-shot finished")
         let lock = NSLock()
         var events: [String] = []
-        let timer = JobsTimer(
-            kind: .gcd,
-            config: JobsSwiftTimerConfig(
-                interval: 0.01,
-                repeats: false,
-                queue: .global(qos: .userInitiated),
-                pauseInBackground: false,
-                autoManageAppState: false
-            )
-        ) {
+        let timer = JobsTimer(kind: .gcd,
+                              config: JobsSwiftTimerConfig(interval: 0.01,
+                                                           repeats: false,
+                                                           queue: .global(qos: .userInitiated),
+                                                           pauseInBackground: false,
+                                                           autoManageAppState: false)) {
             lock.lock()
             events.append("tick")
             lock.unlock()
-        }.onFinish {
-            lock.lock()
-            events.append("finish")
-            lock.unlock()
-            finished.fulfill()
         }
+            .onFinish {
+                lock.lock()
+                events.append("finish")
+                lock.unlock()
+                finished.fulfill()
+            }
         timer.start()
 
-        wait(for: [finished], timeout: 2)
+        wait(for: [finished],
+             timeout: 2)
         lock.lock()
         let deliveredEvents = events
         lock.unlock()
-        XCTAssertEqual(deliveredEvents, ["tick", "finish"])
+        XCTAssertEqual(deliveredEvents,
+                       ["tick", "finish"])
         XCTAssertFalse(timer.isRunning)
     }
 
@@ -158,55 +166,54 @@ final class JobsSwiftBaseConfigDemoTests: XCTestCase {
         let clock = JobsTimerTestClock()
         let finished = expectation(description: "countdown finished")
         finished.expectedFulfillmentCount = 1
-        let countdown = JobsSwiftTimerCountdown(
-            duration: 1,
-            kind: .gcd,
-            tickInterval: 0.005,
-            queue: .global(qos: .userInitiated),
-            timeProvider: { clock.read() }
-        ).byFinished { snapshot in
-            XCTAssertEqual(snapshot.elapsed, 1, accuracy: 0.000_001)
-            XCTAssertEqual(snapshot.remaining, 0, accuracy: 0.000_001)
-            finished.fulfill()
-        }
+        let countdown = JobsSwiftTimerCountdown(duration: 1,
+                                                kind: .gcd,
+                                                tickInterval: 0.005,
+                                                queue: .global(qos: .userInitiated),
+                                                timeProvider: {
+            clock.read()
+        })
+            .byFinished { snapshot in
+                XCTAssertEqual(snapshot.elapsed,
+                               1,
+                               accuracy: 0.000_001)
+                XCTAssertEqual(snapshot.remaining,
+                               0,
+                               accuracy: 0.000_001)
+                finished.fulfill()
+            }
         countdown.start()
         clock.set(2)
 
-        wait(for: [finished], timeout: 2)
-        XCTAssertEqual(countdown.state, .finished)
-        XCTAssertEqual(countdown.snapshot.progress, 1, accuracy: 0.000_001)
+        wait(for: [finished],
+             timeout: 2)
+        XCTAssertEqual(countdown.state,
+                       .finished)
+        XCTAssertEqual(countdown.snapshot.progress,
+                       1,
+                       accuracy: 0.000_001)
     }
 
     func testTimerResumesOnlyAfterAutomaticPause() {
-        let timer = JobsTimer(
-            kind: .gcd,
-            config: JobsSwiftTimerConfig(
-                interval: 60,
-                queue: .main,
-                pauseInBackground: true,
-                autoManageAppState: true
-            )
-        ) {}
+        let timer = JobsTimer(kind: .gcd,
+                              config: JobsSwiftTimerConfig(interval: 60,
+                                                           queue: .main,
+                                                           pauseInBackground: true,
+                                                           autoManageAppState: true)) {}
         timer.start()
         XCTAssertTrue(timer.isRunning)
 
-        NotificationCenter.default.post(
-            name: UIApplication.willResignActiveNotification,
-            object: nil
-        )
+        NotificationCenter.default.post(name: UIApplication.willResignActiveNotification,
+                                        object: nil)
         XCTAssertFalse(timer.isRunning)
 
-        NotificationCenter.default.post(
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil
-        )
+        NotificationCenter.default.post(name: UIApplication.didBecomeActiveNotification,
+                                        object: nil)
         XCTAssertTrue(timer.isRunning)
 
         timer.pause()
-        NotificationCenter.default.post(
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil
-        )
+        NotificationCenter.default.post(name: UIApplication.didBecomeActiveNotification,
+                                        object: nil)
         XCTAssertFalse(timer.isRunning)
         timer.stop()
     }
@@ -214,51 +221,46 @@ final class JobsSwiftBaseConfigDemoTests: XCTestCase {
     func testManagedTimerHandleKeepsManagerPauseStateInSync() throws {
         let identifier = "tests.managed.\(UUID().uuidString)"
         let manager = JobsSwiftTimerMgr()
-        defer { _ = try? manager.act(.cancel, identifier: identifier) }
-        let timer = try manager.create(
-            kind: .gcd,
-            identifier: identifier,
-            config: JobsSwiftTimerConfig(interval: 60, queue: .main),
-            backgroundPolicy: .pauseAndResume
-        ) {}
+        defer {
+            _ = try? manager.act(.cancel,
+                                 identifier: identifier)
+        }
+        let timer = try manager.create(kind: .gcd,
+                                       identifier: identifier,
+                                       config: JobsSwiftTimerConfig(interval: 60,
+                                                                    queue: .main),
+                                       backgroundPolicy: .pauseAndResume) {}
         timer.start()
         XCTAssertTrue(timer.isRunning)
 
-        NotificationCenter.default.post(
-            name: UIApplication.willResignActiveNotification,
-            object: nil
-        )
+        NotificationCenter.default.post(name: UIApplication.willResignActiveNotification,
+                                        object: nil)
         XCTAssertFalse(timer.isRunning)
 
         timer.pause()
-        NotificationCenter.default.post(
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil
-        )
+        NotificationCenter.default.post(name: UIApplication.didBecomeActiveNotification,
+                                        object: nil)
         XCTAssertFalse(timer.isRunning)
     }
 
     func testReplacedManagedHandleCannotRestartOldTimer() throws {
         let identifier = "tests.replace.\(UUID().uuidString)"
         let manager = JobsSwiftTimerMgr(managesAppState: false)
-        defer { _ = try? manager.act(.cancel, identifier: identifier) }
-        let config = JobsSwiftTimerConfig(
-            interval: 60,
-            queue: .main,
-            pauseInBackground: false
-        )
-        let oldTimer = try manager.create(
-            kind: .gcd,
-            identifier: identifier,
-            config: config,
-            backgroundPolicy: .ignore
-        ) {}
-        let currentTimer = try manager.create(
-            kind: .gcd,
-            identifier: identifier,
-            config: config,
-            backgroundPolicy: .ignore
-        ) {}
+        defer {
+            _ = try? manager.act(.cancel,
+                                 identifier: identifier)
+        }
+        let config = JobsSwiftTimerConfig(interval: 60,
+                                          queue: .main,
+                                          pauseInBackground: false)
+        let oldTimer = try manager.create(kind: .gcd,
+                                          identifier: identifier,
+                                          config: config,
+                                          backgroundPolicy: .ignore) {}
+        let currentTimer = try manager.create(kind: .gcd,
+                                              identifier: identifier,
+                                              config: config,
+                                              backgroundPolicy: .ignore) {}
 
         oldTimer.start()
         currentTimer.start()
@@ -269,29 +271,25 @@ final class JobsSwiftBaseConfigDemoTests: XCTestCase {
     func testExpectedTimerCancelCannotRemoveReplacement() throws {
         let identifier = "tests.expected-cancel.\(UUID().uuidString)"
         let manager = JobsSwiftTimerMgr(managesAppState: false)
-        let config = JobsSwiftTimerConfig(
-            interval: 60,
-            queue: .main,
-            pauseInBackground: false
-        )
-        let oldTimer = try manager.create(
-            kind: .gcd,
-            identifier: identifier,
-            config: config,
-            backgroundPolicy: .ignore
-        ) {}
-        let currentTimer = try manager.create(
-            kind: .gcd,
-            identifier: identifier,
-            config: config,
-            backgroundPolicy: .ignore
-        ) {}
+        let config = JobsSwiftTimerConfig(interval: 60,
+                                          queue: .main,
+                                          pauseInBackground: false)
+        let oldTimer = try manager.create(kind: .gcd,
+                                          identifier: identifier,
+                                          config: config,
+                                          backgroundPolicy: .ignore) {}
+        let currentTimer = try manager.create(kind: .gcd,
+                                              identifier: identifier,
+                                              config: config,
+                                              backgroundPolicy: .ignore) {}
         currentTimer.start()
 
-        XCTAssertFalse(manager.stopAndRemove(identifier: identifier, expectedTimer: oldTimer))
+        XCTAssertFalse(manager.stopAndRemove(identifier: identifier,
+                                             expectedTimer: oldTimer))
         XCTAssertTrue(manager.timer(for: identifier) === currentTimer)
         XCTAssertTrue(currentTimer.isRunning)
-        XCTAssertTrue(manager.stopAndRemove(identifier: identifier, expectedTimer: currentTimer))
+        XCTAssertTrue(manager.stopAndRemove(identifier: identifier,
+                                            expectedTimer: currentTimer))
         XCTAssertNil(manager.timer(for: identifier))
         XCTAssertFalse(currentTimer.isRunning)
     }
@@ -299,35 +297,32 @@ final class JobsSwiftBaseConfigDemoTests: XCTestCase {
     func testTimerScopeResumesOnlyScopePausedTimers() throws {
         let scopeIdentifier = "tests.scope.\(UUID().uuidString)"
         let manager = JobsSwiftTimerMgr(managesAppState: false)
-        let config = JobsSwiftTimerConfig(
-            interval: 60,
-            queue: .main,
-            pauseInBackground: false
-        )
-        let scopeTimer = try manager.create(
-            kind: .gcd,
-            identifier: "\(scopeIdentifier).scope",
-            config: config,
-            backgroundPolicy: .ignore,
-            scopeIdentifier: scopeIdentifier
-        ) {}
-        let manuallyPausedTimer = try manager.create(
-            kind: .gcd,
-            identifier: "\(scopeIdentifier).manual",
-            config: config,
-            backgroundPolicy: .ignore,
-            scopeIdentifier: scopeIdentifier
-        ) {}
+        let config = JobsSwiftTimerConfig(interval: 60,
+                                          queue: .main,
+                                          pauseInBackground: false)
+        let scopeTimer = try manager.create(kind: .gcd,
+                                            identifier: "\(scopeIdentifier).scope",
+                                            config: config,
+                                            backgroundPolicy: .ignore,
+                                            scopeIdentifier: scopeIdentifier) {}
+        let manuallyPausedTimer = try manager.create(kind: .gcd,
+                                                     identifier: "\(scopeIdentifier).manual",
+                                                     config: config,
+                                                     backgroundPolicy: .ignore,
+                                                     scopeIdentifier: scopeIdentifier) {}
         scopeTimer.start()
         manuallyPausedTimer.start().pause()
 
-        XCTAssertEqual(manager.pause(scopeIdentifier: scopeIdentifier), 2)
+        XCTAssertEqual(manager.pause(scopeIdentifier: scopeIdentifier),
+                       2)
         XCTAssertFalse(scopeTimer.isRunning)
         XCTAssertFalse(manuallyPausedTimer.isRunning)
-        XCTAssertEqual(manager.resume(scopeIdentifier: scopeIdentifier), 2)
+        XCTAssertEqual(manager.resume(scopeIdentifier: scopeIdentifier),
+                       2)
         XCTAssertTrue(scopeTimer.isRunning)
         XCTAssertFalse(manuallyPausedTimer.isRunning)
-        XCTAssertEqual(manager.stopAndRemove(scopeIdentifier: scopeIdentifier), 2)
+        XCTAssertEqual(manager.stopAndRemove(scopeIdentifier: scopeIdentifier),
+                       2)
         XCTAssertNil(manager.timer(for: "\(scopeIdentifier).scope"))
         XCTAssertNil(manager.timer(for: "\(scopeIdentifier).manual"))
     }
@@ -336,45 +331,41 @@ final class JobsSwiftBaseConfigDemoTests: XCTestCase {
         let identifier = "tests.fire-once.\(UUID().uuidString)"
         let manager = JobsSwiftTimerMgr(managesAppState: false)
         let delivered = expectation(description: "managed fire once")
-        let timer = try manager.create(
-            kind: .gcd,
-            identifier: identifier,
-            config: JobsSwiftTimerConfig(
-                interval: 60,
-                queue: .global(qos: .userInitiated),
-                pauseInBackground: false,
-                autoManageAppState: false
-            ),
-            backgroundPolicy: .ignore
-        ) {
+        let timer = try manager.create(kind: .gcd,
+                                       identifier: identifier,
+                                       config: JobsSwiftTimerConfig(interval: 60,
+                                                                    queue: .global(qos: .userInitiated),
+                                                                    pauseInBackground: false,
+                                                                    autoManageAppState: false),
+                                       backgroundPolicy: .ignore) {
             delivered.fulfill()
         }
         timer.fireOnce()
 
         XCTAssertNil(manager.timer(for: identifier))
-        wait(for: [delivered], timeout: 2)
+        wait(for: [delivered],
+             timeout: 2)
     }
 
     func testConcurrentManagedActionsConvergeToFinalPause() throws {
         let identifier = "tests.concurrent.\(UUID().uuidString)"
         let manager = JobsSwiftTimerMgr(managesAppState: false)
-        let timer = try manager.create(
-            kind: .gcd,
-            identifier: identifier,
-            config: JobsSwiftTimerConfig(
-                interval: 60,
-                queue: .global(qos: .utility),
-                pauseInBackground: false,
-                autoManageAppState: false
-            ),
-            backgroundPolicy: .ignore
-        ) {}
+        let timer = try manager.create(kind: .gcd,
+                                       identifier: identifier,
+                                       config: JobsSwiftTimerConfig(interval: 60,
+                                                                    queue: .global(qos: .utility),
+                                                                    pauseInBackground: false,
+                                                                    autoManageAppState: false),
+                                       backgroundPolicy: .ignore) {}
         let group = DispatchGroup()
-        let queue = DispatchQueue(label: "tests.timer-manager", attributes: .concurrent)
-        for index in 0..<100 {
+        let queue = DispatchQueue(label: "tests.timer-manager",
+                                  attributes: .concurrent)
+        for index in 0 ..< 100 {
             group.enter()
             queue.async {
-                defer { group.leave() }
+                defer {
+                    group.leave()
+                }
                 switch index % 3 {
                 /// 处理 数值 0 分支
                 case 0:
@@ -388,7 +379,8 @@ final class JobsSwiftBaseConfigDemoTests: XCTestCase {
                 }
             }
         }
-        XCTAssertEqual(group.wait(timeout: .now() + 3), .success)
+        XCTAssertEqual(group.wait(timeout: .now() + 3),
+                       .success)
 
         timer.pause()
         XCTAssertFalse(timer.isRunning)
@@ -396,27 +388,19 @@ final class JobsSwiftBaseConfigDemoTests: XCTestCase {
         timer.stop()
     }
 
-    private func assertSlowCallbacksAreSerialized(
-        policy: JobsTimerCallbackDeliveryPolicy,
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        let callbackQueue = DispatchQueue(
-            label: "tests.timer-callback.\(UUID().uuidString)",
-            attributes: .concurrent
-        )
+    private func assertSlowCallbacksAreSerialized(policy: JobsTimerCallbackDeliveryPolicy,
+                                                  file: StaticString = #filePath,
+                                                  line: UInt = #line) {
+        let callbackQueue = DispatchQueue(label: "tests.timer-callback.\(UUID().uuidString)",
+                                          attributes: .concurrent)
         let probe = JobsTimerTestProbe()
         let received = expectation(description: "slow callbacks \(policy)")
-        let timer = JobsTimer(
-            kind: .gcd,
-            config: JobsSwiftTimerConfig(
-                interval: 0.001,
-                queue: callbackQueue,
-                callbackDeliveryPolicy: policy,
-                pauseInBackground: false,
-                autoManageAppState: false
-            )
-        ) {
+        let timer = JobsTimer(kind: .gcd,
+                              config: JobsSwiftTimerConfig(interval: 0.001,
+                                                           queue: callbackQueue,
+                                                           callbackDeliveryPolicy: policy,
+                                                           pauseInBackground: false,
+                                                           autoManageAppState: false)) {
             let reachedTarget = probe.beginCallback(targetCount: 4)
             Thread.sleep(forTimeInterval: 0.015)
             probe.endCallback()
@@ -425,10 +409,14 @@ final class JobsSwiftBaseConfigDemoTests: XCTestCase {
             }
         }
         timer.start()
-        wait(for: [received], timeout: 3)
+        wait(for: [received],
+             timeout: 3)
         timer.stop()
         callbackQueue.sync(flags: .barrier) {}
 
-        XCTAssertEqual(probe.maximumConcurrency, 1, file: file, line: line)
+        XCTAssertEqual(probe.maximumConcurrency,
+                       1,
+                       file: file,
+                       line: line)
     }
 }

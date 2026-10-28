@@ -13,12 +13,11 @@ import JobsByUIKit
 import JobsSwiftDSL
 
 public enum JobsSplashPresenter {
+
     @discardableResult
     @MainActor
-    public static func show(
-        over hostViewController: UIViewController,
-        configuration: JobsSplashConfiguration
-    ) -> JobsSplashVC {
+    public static func show(over hostViewController: UIViewController,
+                            configuration: JobsSplashConfiguration) -> JobsSplashVC {
         let hostGestureStates = (hostViewController.view.gestureRecognizers ?? []).map {
             (gestureRecognizer: $0, isEnabled: $0.isEnabled)
         }
@@ -39,6 +38,7 @@ public enum JobsSplashPresenter {
         splashVC.didMove(toParent: hostViewController)
         DispatchQueue.main.async { [weak splashVC] in
             splashVC?.becomeFirstResponder()
-        };return splashVC
+        }
+        return splashVC
     }
 }

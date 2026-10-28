@@ -21,6 +21,7 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsHandwritingDemoVC: BaseVC {
+
     private static let savedStrokesKey = "com.jobs.handwriting.savedStrokes.v1"
 
     private var hasUnsavedChanges = false
@@ -30,8 +31,12 @@ final class JobsHandwritingDemoVC: BaseVC {
 
     private lazy var backButton: UIButton = {
         UIButton.sys()
-            .byFrame(CGRect(x: 0, y: 0, width: 32.w, height: 32.h))
-            .byImage("chevron.left".sysImg, for: .normal)
+            .byFrame(CGRect(x: 0,
+                            y: 0,
+                            width: 32.w,
+                            height: 32.h))
+            .byImage("chevron.left".sysImg,
+                     for: .normal)
             .onTap { [weak self] _ in
                 self?.requestLeavePage()
             }
@@ -39,16 +44,20 @@ final class JobsHandwritingDemoVC: BaseVC {
 
     private lazy var saveButton: UIButton = {
         UIButton.sys()
-            .byTitle("保存".tr, for: .normal)
-            .byTitleColor(JobsCor.systemBlue, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTitle("保存".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.systemBlue,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .semibold))
             .onTap { [weak self] _ in
                 self?.saveCanvas(showFeedback: true)
             }
     }()
 
     private lazy var tipLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("可使用手指或 Apple Pencil 书写；右上角保存后，下次进入会恢复笔迹。".tr)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -65,9 +74,12 @@ final class JobsHandwritingDemoVC: BaseVC {
 
     private lazy var clearButton: UIButton = {
         UIButton.sys()
-            .byTitle("清空手写板".tr, for: .normal)
-            .byTitleColor(JobsCor.systemRed, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTitle("清空手写板".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.systemRed,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .semibold))
             .onTap { [weak self] _ in
                 self?.canvasView.clearCanvas()
             }
@@ -91,7 +103,8 @@ final class JobsHandwritingDemoVC: BaseVC {
             }
         canvasView.contentDidChange = { [weak self] in
             self?.hasUnsavedChanges = true
-        };return canvasView
+        }
+        return canvasView
     }()
 
     deinit {
@@ -101,11 +114,9 @@ final class JobsHandwritingDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemGroupedBackground)
-        jobsSetupGKNav(
-            title: "手写板".tr,
-            leftButton: backButton,
-            rightButtons: [saveButton]
-        )
+        jobsSetupGKNav(title: "手写板".tr,
+                       leftButton: backButton,
+                       rightButtons: [saveButton])
         tipLabel.byVisible(YES)
         clearButton.byVisible(YES)
         canvasView.byVisible(YES)
@@ -126,8 +137,11 @@ final class JobsHandwritingDemoVC: BaseVC {
 }
 
 private extension JobsHandwritingDemoVC {
+
     func loadSavedCanvas() {
-        guard let data = UserDefaults.standard.data(forKey: Self.savedStrokesKey) else { return }
+        guard let data = UserDefaults.standard.data(forKey: Self.savedStrokesKey) else {
+            return
+        }
         do {
             try canvasView.loadEncodedStrokes(data)
         } catch {
@@ -142,10 +156,8 @@ private extension JobsHandwritingDemoVC {
     func saveCanvas(showFeedback: Bool) -> Bool {
         do {
             if canvasView.hasStrokes {
-                UserDefaults.standard.set(
-                    try canvasView.encodedStrokes(),
-                    forKey: Self.savedStrokesKey
-                )
+                UserDefaults.standard.set(try canvasView.encodedStrokes(),
+                                          forKey: Self.savedStrokesKey)
             } else {
                 UserDefaults.standard.removeObject(forKey: Self.savedStrokesKey)
             }
@@ -153,7 +165,8 @@ private extension JobsHandwritingDemoVC {
             hasUnsavedChanges = false
             if showFeedback {
                 (canvasView.hasStrokes ? "手写内容已保存" : "空白手写板已保存").tr.toast
-            };return true
+            }
+            return true
         } catch {
             "手写内容保存失败".tr.toast
             return false
@@ -165,31 +178,36 @@ private extension JobsHandwritingDemoVC {
             leavePage()
             return
         }
-        guard !isLeaveAlertShowing else { return }
+        guard !isLeaveAlertShowing else {
+            return
+        }
         isLeaveAlertShowing = true
-        leaveAlertController = UIAlertController.makeAlert(
-            "是否保存手写内容？".tr,
-            "选择“不保存”会清除已持久化的笔迹，下次进入显示空白手写板。".tr
-        )
+        leaveAlertController = UIAlertController.makeAlert("是否保存手写内容？".tr,
+                                                           "选择“不保存”会清除已持久化的笔迹，下次进入显示空白手写板。".tr)
         leaveAlertController?
             .byAddCancel("继续手写".tr) { [weak self] _ in
                 self?.isLeaveAlertShowing = false
             }
             .byAddDestructive("不保存".tr) { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.isLeaveAlertShowing = false
                 self.discardSavedCanvas()
                 self.leavePage()
             }
             .byAddOK("保存并退出".tr) { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.isLeaveAlertShowing = false
                 if self.saveCanvas(showFeedback: false) {
                     self.leavePage()
                 }
             }
         if let leaveAlertController {
-            present(leaveAlertController, animated: true)
+            present(leaveAlertController,
+                    animated: true)
         }
     }
 
@@ -205,7 +223,9 @@ private extension JobsHandwritingDemoVC {
     }
 
     func lockInteractivePopGesture() {
-        guard let gesture = navigationController?.interactivePopGestureRecognizer else { return }
+        guard let gesture = navigationController?.interactivePopGestureRecognizer else {
+            return
+        }
         if previousInteractivePopEnabled == nil {
             previousInteractivePopEnabled = gesture.isEnabled
         }
@@ -214,7 +234,9 @@ private extension JobsHandwritingDemoVC {
 
     func restoreInteractivePopGesture() {
         guard let gesture = navigationController?.interactivePopGestureRecognizer,
-              let previousInteractivePopEnabled else { return }
+              let previousInteractivePopEnabled else {
+            return
+        }
         gesture.byEnabled(previousInteractivePopEnabled)
         self.previousInteractivePopEnabled = nil
     }

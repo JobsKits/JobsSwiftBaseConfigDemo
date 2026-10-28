@@ -10,11 +10,14 @@ import Foundation
 
 @available(iOS 13.0, *)
 public extension JobsDownloadCapable {
+
     func download(_ request: JobsDownloadRequest) async throws -> URL {
         let box = JobsAsyncResultBox<URL>()
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
-                guard box.install(continuation) else { return }
+                guard box.install(continuation) else {
+                    return
+                }
                 let token = download(request) { result in
                     box.complete(result)
                 }

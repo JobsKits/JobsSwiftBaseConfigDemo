@@ -16,6 +16,7 @@ import JobsSwiftDSL
 
 // MARK: - 数据源类型（当前网络来源）
 public enum JobsNetworkSource {
+
     case wifi
     case cellular
     case other
@@ -24,42 +25,51 @@ public enum JobsNetworkSource {
     public var displayName: String {
         switch self {
         /// 处理 .wifi 分支
-        case .wifi:     return "Wi-Fi".tr
+        case .wifi:
+            return "Wi-Fi".tr
         /// 处理 .cellular 分支
-        case .cellular: return "蜂窝".tr
+        case .cellular:
+            return "蜂窝".tr
         /// 处理 .other 分支
-        case .other:    return "其他".tr
+        case .other:
+            return "其他".tr
         /// 处理 .none 分支
-        case .none:     return "无网络".tr
+        case .none:
+            return "无网络".tr
         }
     }
 }
 // MARK: - 获取当前总上传/下载字节（Wi-Fi + 蜂窝）
 /// 单一方向的总字节数：下行 / 上行
 struct NetworkBytes {
+
     let download: UInt64   // 下行总字节数
     let upload: UInt64     // 上行总字节数
-    init(download: UInt64 = 0, upload: UInt64 = 0) {
+    init(download: UInt64 = 0,
+         upload: UInt64 = 0) {
         self.download = download
         self.upload = upload
     }
 }
-private func saturatedByteSum(_ lhs: UInt64, _ rhs: UInt64) -> UInt64 {
+private func saturatedByteSum(_ lhs: UInt64,
+                              _ rhs: UInt64) -> UInt64 {
     let (value, overflow) = lhs.addingReportingOverflow(rhs)
     return overflow ? UInt64.max : value
 }
 
 /// 按来源拆分的字节统计
 struct NetworkSplitBytes {
+
     let wifi: NetworkBytes
     let cellular: NetworkBytes
     let other: NetworkBytes
     /// 所有来源合计
     var total: NetworkBytes {
-        NetworkBytes(
-            download: saturatedByteSum(saturatedByteSum(wifi.download, cellular.download), other.download),
-            upload: saturatedByteSum(saturatedByteSum(wifi.upload, cellular.upload), other.upload)
-        )
+        NetworkBytes(download: saturatedByteSum(saturatedByteSum(wifi.download,
+                                                                 cellular.download),
+                                                other.download),
+                     upload: saturatedByteSum(saturatedByteSum(wifi.upload,cellular.upload),
+                                              other.upload))
     }
 }
 /// 读取当前所有网络接口的总上下行字节（只统计 UP 状态的 Wi-Fi / 蜂窝 / 其他）
@@ -73,11 +83,9 @@ func currentNetworkBytesSplit() -> NetworkSplitBytes {
     var otherOut: UInt64 = 0
 
     guard getifaddrs(&addrs) == 0, let firstAddr = addrs else {
-        return NetworkSplitBytes(
-            wifi: NetworkBytes(),
-            cellular: NetworkBytes(),
-            other: NetworkBytes()
-        )
+        return NetworkSplitBytes(wifi: NetworkBytes(),
+                                 cellular: NetworkBytes(),
+                                 other: NetworkBytes())
     }
 
     defer {
@@ -98,23 +106,30 @@ func currentNetworkBytesSplit() -> NetworkSplitBytes {
             let outBytes = UInt64(data.ifi_obytes)
             // en0 / en1... 一般是 Wi-Fi（也可能有有线），pdp_ip0... 一般是蜂窝
             if name.hasPrefix("en") {
-                wifiIn = saturatedByteSum(wifiIn, inBytes)
-                wifiOut = saturatedByteSum(wifiOut, outBytes)
+                wifiIn = saturatedByteSum(wifiIn,
+                                          inBytes)
+                wifiOut = saturatedByteSum(wifiOut,
+                                           outBytes)
             } else if name.hasPrefix("pdp_ip") {
-                cellIn = saturatedByteSum(cellIn, inBytes)
-                cellOut = saturatedByteSum(cellOut, outBytes)
+                cellIn = saturatedByteSum(cellIn,
+                                          inBytes)
+                cellOut = saturatedByteSum(cellOut,
+                                           outBytes)
             } else {
-                otherIn = saturatedByteSum(otherIn, inBytes)
-                otherOut = saturatedByteSum(otherOut, outBytes)
+                otherIn = saturatedByteSum(otherIn,
+                                           inBytes)
+                otherOut = saturatedByteSum(otherOut,
+                                            outBytes)
             }
         }
         ptr = ifa.ifa_next
     }
-    return NetworkSplitBytes(
-        wifi: NetworkBytes(download: wifiIn, upload: wifiOut),
-        cellular: NetworkBytes(download: cellIn, upload: cellOut),
-        other: NetworkBytes(download: otherIn, upload: otherOut)
-    )
+    return NetworkSplitBytes(wifi: NetworkBytes(download: wifiIn,
+                                                upload: wifiOut),
+                             cellular: NetworkBytes(download: cellIn,
+                                                    upload: cellOut),
+                             other: NetworkBytes(download: otherIn,
+                                                 upload: otherOut))
 }
 /// 向后兼容：总字节数（Wi-Fi + 蜂窝 + 其他）
 func currentNetworkBytes() -> NetworkBytes {
@@ -125,13 +140,16 @@ func currentNetworkBytes() -> NetworkBytes {
 /// - 每 interval 秒回调一次当前网络来源 + 上/下行速度（Bytes/s）
 /// - 内部用 NWPathMonitor + getifaddrs 统计总字节差值
 public final class JobsNetworkTrafficMonitor {
+
     public static let shared = JobsNetworkTrafficMonitor()
     private let lock = NSLock()
     private var updateHandler: ((JobsNetworkSource, Double, Double) -> Void)?
     var onUpdate: ((JobsNetworkSource, Double, Double) -> Void)? {
         get {
             lock.lock()
-            defer { lock.unlock() }
+            defer {
+                lock.unlock()
+            }
             return updateHandler
         }
         set {
@@ -154,7 +172,9 @@ public final class JobsNetworkTrafficMonitor {
     public var currentSource: JobsNetworkSource {
         get {
             lock.lock()
-            defer { lock.unlock() }
+            defer {
+                lock.unlock()
+            }
             return source
         }
         set {
@@ -185,7 +205,8 @@ public final class JobsNetworkTrafficMonitor {
     }
 
     func start(interval: TimeInterval = 1) {
-        let interval = interval.isFinite && interval > 0 ? min(max(0.05, interval), 86_400) : 1
+        let interval = interval.isFinite && interval > 0 ? min(max(0.05,interval),
+                                                               86_400) : 1
         lock.lock()
         generation &+= 1
         let token = generation
@@ -193,7 +214,8 @@ public final class JobsNetworkTrafficMonitor {
         lastBytes = currentNetworkBytes()
         lastSampleUptime = DispatchTime.now().uptimeNanoseconds
         let timer = DispatchSource.makeTimerSource(queue: sampleQueue)
-        timer.schedule(deadline: .now() + interval, repeating: interval)
+        timer.schedule(deadline: .now() + interval,
+                       repeating: interval)
         timer.setEventHandler { [weak self] in
             self?.sample(generation: token)
         }
@@ -226,7 +248,9 @@ public final class JobsNetworkTrafficMonitor {
             self.lock.lock()
             let callback = self.generation == token && self.timer != nil ? self.updateHandler : nil
             self.lock.unlock()
-            callback?(currentSource, up, down)
+            callback?(currentSource,
+                      up,
+                      down)
         }
     }
 
@@ -248,6 +272,7 @@ public final class JobsNetworkTrafficMonitor {
 }
 // MARK: - DSL 风格链式封装
 public extension JobsNetworkTrafficMonitor {
+
     @discardableResult
     func byOnUpdate(_ block: @escaping (JobsNetworkSource, Double, Double) -> Void) -> Self {
         self.onUpdate = block
@@ -267,11 +292,14 @@ public extension JobsNetworkTrafficMonitor {
 // MARK: - 单位格式化（B/s -> KB/s / MB/s）
 public func jobs_formatSpeed(_ bytesPerSec: Double) -> String {
     if bytesPerSec < 1024 {
-        return String(format: "%.0f B/s", bytesPerSec)
+        return String(format: "%.0f B/s",
+                      bytesPerSec)
     } else if bytesPerSec < 1024 * 1024 {
-        return String(format: "%.1f KB/s", bytesPerSec / 1024)
+        return String(format: "%.1f KB/s",
+                      bytesPerSec / 1024)
     } else {
-        return String(format: "%.2f MB/s", bytesPerSec / 1024 / 1024)
+        return String(format: "%.2f MB/s",
+                      bytesPerSec / 1024 / 1024)
     }
 }
 // MARK: - 蜂窝 / Wi-Fi 运营商信息
@@ -280,7 +308,9 @@ func currentCellularCarrierDescription() -> String? {
     let networkInfo = CTTelephonyNetworkInfo()
     // iOS 12+ 可能有多卡
     if #available(iOS 12.0, *) {
-        guard let providers = networkInfo.serviceSubscriberCellularProviders else { return nil }
+        guard let providers = networkInfo.serviceSubscriberCellularProviders else {
+            return nil
+        }
         let descs: [String] = providers.values.compactMap { carrier in
             var parts: [String] = []
             if let name = carrier.carrierName {
@@ -290,13 +320,15 @@ func currentCellularCarrierDescription() -> String? {
                 parts.append("MCC/MNC: \(mcc)/\(mnc)")
             }
             if carrier.isoCountryCode != nil {
-                // 可以扩展更多字段
+            // 可以扩展更多字段
             }
-        return parts.isEmpty ? nil : parts.joined(separator: "，")
+            return parts.isEmpty ? nil : parts.joined(separator: "，")
         }
         return descs.isEmpty ? nil : descs.joined(separator: " | ")
     } else {
-        guard let carrier = networkInfo.subscriberCellularProvider else { return nil }
+        guard let carrier = networkInfo.subscriberCellularProvider else {
+            return nil
+        }
         var parts: [String] = []
         if let name = carrier.carrierName {
             parts.append(name)
@@ -328,6 +360,7 @@ func currentNetworkSource() -> JobsNetworkSource {
 /// - 这个逻辑只判断「网卡层的字节变化」，无法保证一定是App 发起的请求；
 /// - 但在触发了自己的网络请求之后再调用本方法，基本可以认为“出现的新增流量”与当前操作有强相关性。
 final class JobsNetworkDataReadyMonitor {
+
     static let shared = JobsNetworkDataReadyMonitor()
 
     private let queue = DispatchQueue(label: "jobs.network.ready")
@@ -354,7 +387,9 @@ final class JobsNetworkDataReadyMonitor {
 
     private func isCurrent(_ token: UInt64) -> Bool {
         deliveryLock.lock()
-        defer { deliveryLock.unlock() }
+        defer {
+            deliveryLock.unlock()
+        }
         return token == generation
     }
 
@@ -367,15 +402,14 @@ final class JobsNetworkDataReadyMonitor {
     ///   - onWiFiReady: 第一次探测到 Wi-Fi 有数据流动时触发（主线程回调，可选）
     ///   - onCellularReady: 第一次探测到蜂窝有数据流动时触发（主线程回调，可选）
     ///   - onTimeout: 超时仍无任何数据时触发（主线程回调，可选）
-    func waitOnce(
-        interval: TimeInterval = 0.5,
-        timeout: TimeInterval? = 10,
-        onWiFiReady: (jobsByVoidBlock)? = nil,
-        onCellularReady: (jobsByVoidBlock)? = nil,
-        onTimeout: (jobsByVoidBlock)? = nil
-    ) {
+    func waitOnce(interval: TimeInterval = 0.5,
+                  timeout: TimeInterval? = 10,
+                  onWiFiReady: (jobsByVoidBlock)? = nil,
+                  onCellularReady: (jobsByVoidBlock)? = nil,
+                  onTimeout: (jobsByVoidBlock)? = nil) {
         let token = nextGeneration()
-        let interval = interval.isFinite && interval > 0 ? min(max(0.05, interval), 86_400) : 0.5
+        let interval = interval.isFinite && interval > 0 ? min(max(0.05,interval),
+                                                               86_400) : 0.5
         queue.async { [weak self] in
             guard let self, self.isCurrent(token) else {
                 return
@@ -394,12 +428,14 @@ final class JobsNetworkDataReadyMonitor {
             self.lastWiFi = split.wifi
             self.lastCellular = split.cellular
             if let timeout = timeout {
-                self.deadline = CFAbsoluteTimeGetCurrent() + (timeout.isFinite ? min(max(0, timeout), 1_000_000_000) : 10)
+                self.deadline = CFAbsoluteTimeGetCurrent() + (timeout.isFinite ? min(max(0,timeout),
+                                                                                     1_000_000_000) : 10)
             } else {
                 self.deadline = nil
             }
             let t = DispatchSource.makeTimerSource(queue: self.queue)
-            t.schedule(deadline: .now() + interval, repeating: interval)
+            t.schedule(deadline: .now() + interval,
+                       repeating: interval)
             t.setEventHandler { [weak self] in
                 guard let self else {
                     return
@@ -470,8 +506,8 @@ final class JobsNetworkDataReadyMonitor {
                     if !firedAny, let onTimeout = onTimeout {
                         DispatchQueue.main.async { [weak self] in
                             guard self?.isCurrent(token) == true else {
-                                        return
-                                    }
+                                return
+                            }
                             onTimeout()
                         }
                     }
@@ -514,21 +550,18 @@ public func JobsNetworkTrafficMonitorStop() {
 }
 // MARK: - DSL 风格封装（链式）
 extension JobsNetworkDataReadyMonitor {
+
     @discardableResult
-    func byWaitOnce(
-        interval: TimeInterval = 0.5,
-        timeout: TimeInterval? = 10,
-        onWiFiReady: (jobsByVoidBlock)? = nil,
-        onCellularReady: (jobsByVoidBlock)? = nil,
-        onTimeout: (jobsByVoidBlock)? = nil
-    ) -> Self {
-        waitOnce(
-            interval: interval,
-            timeout: timeout,
-            onWiFiReady: onWiFiReady,
-            onCellularReady: onCellularReady,
-            onTimeout: onTimeout
-        )
+    func byWaitOnce(interval: TimeInterval = 0.5,
+                    timeout: TimeInterval? = 10,
+                    onWiFiReady: (jobsByVoidBlock)? = nil,
+                    onCellularReady: (jobsByVoidBlock)? = nil,
+                    onTimeout: (jobsByVoidBlock)? = nil) -> Self {
+        waitOnce(interval: interval,
+                 timeout: timeout,
+                 onWiFiReady: onWiFiReady,
+                 onCellularReady: onCellularReady,
+                 onTimeout: onTimeout)
         return self
     }
 }
@@ -551,16 +584,12 @@ extension JobsNetworkDataReadyMonitor {
 ///     }
 /// )
 /// ```
-public func jobsWaitNetworkDataReady(
-    onWiFiReady: (jobsByVoidBlock)? = nil,
-    onCellularReady: (jobsByVoidBlock)? = nil,
-    onTimeout: (jobsByVoidBlock)? = nil
-) {
-    JobsNetworkDataReadyMonitor.shared.byWaitOnce(
-        interval: 0.5,
-        timeout: 10,
-        onWiFiReady: onWiFiReady,
-        onCellularReady: onCellularReady,
-        onTimeout: onTimeout
-    )
+public func jobsWaitNetworkDataReady(onWiFiReady: (jobsByVoidBlock)? = nil,
+                                     onCellularReady: (jobsByVoidBlock)? = nil,
+                                     onTimeout: (jobsByVoidBlock)? = nil) {
+    JobsNetworkDataReadyMonitor.shared.byWaitOnce(interval: 0.5,
+                                                  timeout: 10,
+                                                  onWiFiReady: onWiFiReady,
+                                                  onCellularReady: onCellularReady,
+                                                  onTimeout: onTimeout)
 }

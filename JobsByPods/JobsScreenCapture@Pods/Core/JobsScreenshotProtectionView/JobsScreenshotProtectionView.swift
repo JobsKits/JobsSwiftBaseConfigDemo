@@ -14,13 +14,16 @@ import SnapKit
 import JobsSwiftDSL
 
 public final class JobsScreenshotProtectionView: UIView {
+
     public let contentView = UIView.jobsMake { _ in }
 
     /// 仅表示当前系统找到候选安全容器，不代表 Apple 保证截图防护。
     public private(set) var isProtectionAvailable = false
     public private(set) var isProtectionVerified = false
     public var hidesContentWhileCaptured = true {
-        didSet { updateCaptureVisibility() }
+        didSet {
+            updateCaptureVisibility()
+        }
     }
     private var captureObserver: NSObjectProtocol?
 
@@ -35,14 +38,17 @@ public final class JobsScreenshotProtectionView: UIView {
         configureSecureContainer()
         if #available(iOS 11.0, tvOS 11.0, *) {
             captureObserver = NotificationCenter.default.addObserver(forName: UIScreen.capturedDidChangeNotification,
-                                                                     object: nil, queue: .main) { [weak self] _ in
+                                                                     object: nil,
+                                                                     queue: .main) { [weak self] _ in
                 self?.updateCaptureVisibility()
             }
         }
     }
 
     deinit {
-        if let captureObserver { NotificationCenter.default.removeObserver(captureObserver) }
+        if let captureObserver {
+            NotificationCenter.default.removeObserver(captureObserver)
+        }
     }
 
     /// 只有宿主在当前 OS/设备上做过截图、录屏及镜像验证，才显式标记为 verified。
@@ -72,7 +78,9 @@ public final class JobsScreenshotProtectionView: UIView {
     @discardableResult
     public func setProtectionEnabled(_ enabled: Bool) -> Self {
         secureTextField.bySecureTextEntry(enabled && isProtectionAvailable)
-        if !enabled { isProtectionVerified = false }
+        if !enabled {
+            isProtectionVerified = false
+        }
         return self
     }
 

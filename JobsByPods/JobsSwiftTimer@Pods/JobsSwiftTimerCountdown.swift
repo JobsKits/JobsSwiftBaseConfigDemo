@@ -8,6 +8,7 @@
 import Foundation
 /// JobsTimer@系统倒计时进度条
 public final class JobsSwiftTimerCountdown: @unchecked Sendable {
+
     deinit {
         cancel()
     }
@@ -19,9 +20,13 @@ public final class JobsSwiftTimerCountdown: @unchecked Sendable {
     /// - `countDown` : 100% 慢慢掉到 0%，适合“剩余进度”语义
     public typealias ProgressMode = Snapshot.Mode
     /// 进度快照
-    public struct Snapshot: Sendable, Equatable {
+    public struct Snapshot: Sendable,
+                            Equatable {
+
         /// 进度模式
-        public enum Mode: Sendable, Equatable {
+        public enum Mode: Sendable,
+                          Equatable {
+
             /// 从 0% 到 100%（elapsed / total）
             case countUp
             /// 从 100% 到 0%（remaining / total）
@@ -33,13 +38,17 @@ public final class JobsSwiftTimerCountdown: @unchecked Sendable {
         public let elapsed: TimeInterval
         /// 剩余时间（秒）
         public var remaining: TimeInterval {
-            max(0, total - elapsed)
+            max(0,
+                total - elapsed)
         }
         /// 0.0 ~ 1.0：已经过去的比例（从 0% → 100%）
         public var elapsedRatio: Double {
-            guard total > 0 else { return 1 }
+            guard total > 0 else {
+                return 1
+            }
             let ratio = elapsed / total
-            return min(1, max(0, ratio))
+            return min(1,
+                       max(0,ratio))
         }
         /// 0.0 ~ 1.0：剩余比例（从 100% → 0%）
         public var remainingRatio: Double {
@@ -65,7 +74,9 @@ public final class JobsSwiftTimerCountdown: @unchecked Sendable {
         }
     }
     /// 状态
-    public enum State: Sendable, Equatable {
+    public enum State: Sendable,
+                       Equatable {
+
         case idle       // 初始
         case running    // 进行中
         case finished   // 正常完成
@@ -74,21 +85,41 @@ public final class JobsSwiftTimerCountdown: @unchecked Sendable {
     // MARK: - Public
     /// 当前状态
     public var state: State {
-        withLock { storedState }
+        withLock {
+            storedState
+        }
     }
     /// 当前快照
     public var snapshot: Snapshot {
-        withLock { storedSnapshot }
+        withLock {
+            storedSnapshot
+        }
     }
     /// 进度回调（每次 tick）
     public var onProgress: ProgressHandler? {
-        get { withLock { progressHandler } }
-        set { withLock { progressHandler = newValue } }
+        get {
+            withLock {
+                progressHandler
+            }
+        }
+        set {
+            withLock {
+                progressHandler = newValue
+            }
+        }
     }
     /// 完成回调（走到 100%）
     public var onFinished: ProgressHandler? {
-        get { withLock { finishedHandler } }
-        set { withLock { finishedHandler = newValue } }
+        get {
+            withLock {
+                finishedHandler
+            }
+        }
+        set {
+            withLock {
+                finishedHandler = newValue
+            }
+        }
     }
     /// 所使用的 JobsTimer 内核
     public let kind: JobsTimerKind
@@ -116,21 +147,25 @@ public final class JobsSwiftTimerCountdown: @unchecked Sendable {
     ///   - tickInterval: tick 间隔，默认 1/60 秒
     ///   - tolerance: 时间容差，默认 0
     ///   - queue: 回调队列，默认 .main
-    public init(
-        duration: TimeInterval,
-        kind: JobsTimerKind = .displayLink,
-        tickInterval: TimeInterval = 1.0 / 60.0,
-        tolerance: TimeInterval = 0,
-        queue: DispatchQueue = .main,
-        timeProvider: @escaping TimeProvider = { ProcessInfo.processInfo.systemUptime }
-    ) {
-        let normalizedTotal = duration.isFinite ? max(0, duration) : 0
-        let normalizedTickInterval = tickInterval.isFinite ? max(0.000_001, tickInterval) : 1.0 / 60.0
+    public init(duration: TimeInterval,
+                kind: JobsTimerKind = .displayLink,
+                tickInterval: TimeInterval = 1.0 / 60.0,
+                tolerance: TimeInterval = 0,
+                queue: DispatchQueue = .main,
+                timeProvider: @escaping TimeProvider = {
+        ProcessInfo.processInfo.systemUptime
+    }) {
+        let normalizedTotal = duration.isFinite ? max(0,
+                                                      duration) : 0
+        let normalizedTickInterval = tickInterval.isFinite ? max(0.000_001,
+                                                                 tickInterval) : 1.0 / 60.0
         let normalizedTolerance = tolerance.isFinite
-            ? min(max(0, tolerance), normalizedTickInterval)
+            ? min(max(0,tolerance),
+                  normalizedTickInterval)
             : 0
         self.total = normalizedTotal
-        self.storedSnapshot = Snapshot(total: normalizedTotal, elapsed: 0)
+        self.storedSnapshot = Snapshot(total: normalizedTotal,
+                                       elapsed: 0)
         self.kind = kind
         self.tickInterval = normalizedTickInterval
         self.tolerance = normalizedTolerance
@@ -142,20 +177,25 @@ public final class JobsSwiftTimerCountdown: @unchecked Sendable {
     @discardableResult
     public func start() -> JobsSwiftTimerCountdown {
         if kind != .gcd {
-            precondition(Thread.isMainThread, "JobsSwiftTimerCountdown: non-GCD start must be called on main thread.")
+            precondition(Thread.isMainThread,
+                         "JobsSwiftTimerCountdown: non-GCD start must be called on main thread.")
         }
         var oldTimer: JobsSwiftTimerProtocol?
         var token: UInt64 = 0
-        var initialSnapshot = Snapshot(total: total, elapsed: 0)
+        var initialSnapshot = Snapshot(total: total,
+                                       elapsed: 0)
         var initialProgress: ProgressHandler?
         var immediateFinish: ProgressHandler?
         let shouldCreateTimer = withLock { () -> Bool in
-            if storedState == .running { return false }
+            if storedState == .running {
+                return false
+            }
             oldTimer = timer
             timer = nil
             generation &+= 1
             token = generation
-            storedSnapshot = Snapshot(total: total, elapsed: 0)
+            storedSnapshot = Snapshot(total: total,
+                                      elapsed: 0)
             initialSnapshot = storedSnapshot
             initialProgress = progressHandler
             startTimestamp = nil
@@ -174,18 +214,19 @@ public final class JobsSwiftTimerCountdown: @unchecked Sendable {
             immediateFinish?(initialSnapshot)
             return self
         }
-        let config = JobsSwiftTimerConfig(
-            interval: tickInterval,
-            repeats: true,
-            tolerance: tolerance,
-            queue: queue,
-            callbackDeliveryPolicy: .coalesceLatest
-        )
-        let t = JobsTimer(kind: kind, config: config) { [weak self] in
+        let config = JobsSwiftTimerConfig(interval: tickInterval,
+                                          repeats: true,
+                                          tolerance: tolerance,
+                                          queue: queue,
+                                          callbackDeliveryPolicy: .coalesceLatest)
+        let t = JobsTimer(kind: kind,
+                          config: config) { [weak self] in
             self?.handleTick(token: token)
         }
         let shouldStartTimer = withLock { () -> Bool in
-            guard generation == token, storedState == .running else { return false }
+            guard generation == token, storedState == .running else {
+                return false
+            }
             timer = t
             return true
         }
@@ -206,7 +247,8 @@ public final class JobsSwiftTimerCountdown: @unchecked Sendable {
             startTimestamp = nil
             if storedState == .running {
                 storedState = .cancelled
-            };return timerToStop
+            }
+            return timerToStop
         }
         stopTimerSafely(timerToStop)
     }
@@ -214,7 +256,8 @@ public final class JobsSwiftTimerCountdown: @unchecked Sendable {
     public func reset() {
         cancel()
         withLock {
-            storedSnapshot = Snapshot(total: total, elapsed: 0)
+            storedSnapshot = Snapshot(total: total,
+                                      elapsed: 0)
             startTimestamp = nil
             storedState = .idle
         }
@@ -228,10 +271,15 @@ public final class JobsSwiftTimerCountdown: @unchecked Sendable {
         withLock {
             guard generation == token,
                   storedState == .running,
-                  let startTimestamp else { return }
-            let elapsed = max(0, timeProvider() - startTimestamp)
-            let clampedElapsed = min(elapsed, total)
-            storedSnapshot = Snapshot(total: total, elapsed: clampedElapsed)
+                  let startTimestamp else {
+                return
+            }
+            let elapsed = max(0,
+                              timeProvider() - startTimestamp)
+            let clampedElapsed = min(elapsed,
+                                     total)
+            storedSnapshot = Snapshot(total: total,
+                                      elapsed: clampedElapsed)
             currentSnapshot = storedSnapshot
             progress = progressHandler
             if clampedElapsed >= total {
@@ -243,7 +291,9 @@ public final class JobsSwiftTimerCountdown: @unchecked Sendable {
                 finished = finishedHandler
             }
         }
-        guard let currentSnapshot else { return }
+        guard let currentSnapshot else {
+            return
+        }
         progress?(currentSnapshot)
         if let timerToStop {
             stopTimerSafely(timerToStop)
@@ -252,8 +302,12 @@ public final class JobsSwiftTimerCountdown: @unchecked Sendable {
     }
 
     private func stopTimerSafely(_ timer: JobsSwiftTimerProtocol?) {
-        guard let timer else { return }
-        let stop = { _ = timer.stop() }
+        guard let timer else {
+            return
+        }
+        let stop = {
+            _ = timer.stop()
+        }
         if timer.requiresMainThreadLifecycle, !Thread.isMainThread {
             DispatchQueue.main.sync(execute: stop)
         } else {
@@ -264,11 +318,15 @@ public final class JobsSwiftTimerCountdown: @unchecked Sendable {
     @discardableResult
     private func withLock<T>(_ body: () throws -> T) rethrows -> T {
         lock.lock()
-        defer { lock.unlock() };return try body()
+        defer {
+            lock.unlock()
+        }
+        return try body()
     }
 }
 // MARK: - DSL
 public extension JobsSwiftTimerCountdown {
+
     /// 链式设置进度回调
     @discardableResult
     func byProgress(_ handler: @escaping ProgressHandler) -> Self {
@@ -303,15 +361,15 @@ public extension JobsSwiftTimerCountdown {
                         queue: DispatchQueue = .main,
                         onProgress: ProgressHandler? = nil,
                         onFinished: ProgressHandler? = nil,
-                        timeProvider: @escaping TimeProvider = { ProcessInfo.processInfo.systemUptime }) -> JobsSwiftTimerCountdown {
-        let process = JobsSwiftTimerCountdown(
-            duration: duration,
-            kind: kind,
-            tickInterval: tickInterval,
-            tolerance: tolerance,
-            queue: queue,
-            timeProvider: timeProvider
-        )
+                        timeProvider: @escaping TimeProvider = {
+        ProcessInfo.processInfo.systemUptime
+    }) -> JobsSwiftTimerCountdown {
+        let process = JobsSwiftTimerCountdown(duration: duration,
+                                              kind: kind,
+                                              tickInterval: tickInterval,
+                                              tolerance: tolerance,
+                                              queue: queue,
+                                              timeProvider: timeProvider)
         process.onProgress = onProgress
         process.onFinished = onFinished
         process.start()

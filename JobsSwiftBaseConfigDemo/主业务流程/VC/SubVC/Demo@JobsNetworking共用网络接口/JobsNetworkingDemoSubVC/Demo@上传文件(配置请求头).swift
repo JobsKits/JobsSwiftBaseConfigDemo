@@ -20,23 +20,26 @@ import SnapKit
 
 // MARK: - 上传文件
 final class UploadFileDemoVC: JobsNetworkingDemoBaseVC {
+
     private lazy var agent: DefaultJobsAgent = {
-        DefaultJobsAgent(config: JobsRequestConfig(
-            baseURL: URL(string: "https://httpbin.org")!,
-            timeout: 60,
-            version: "v1",
-            userScope: "guest",
-            defaultRetryPolicy: .default
-        ), headerHook: DemoAuthHook())
+        DefaultJobsAgent(config: JobsRequestConfig(baseURL: URL(string: "https://httpbin.org")!,
+                                                   timeout: 60,
+                                                   version: "v1",
+                                                   userScope: "guest",
+                                                   defaultRetryPolicy: .default),
+                         headerHook: DemoAuthHook())
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         jobsSetupGKNav(title: "上传文件".tr)
         runButton
-            .byTitle("Run: multipart upload", for: .normal)
+            .byTitle("Run: multipart upload",
+                     for: .normal)
             .onTap { [weak self] sender in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.append("Start closure request...\n")
                 append("Preparing temp file...\n")
                 Task {
@@ -44,18 +47,23 @@ final class UploadFileDemoVC: JobsNetworkingDemoBaseVC {
                         let tempURL = FileManager.default.temporaryDirectory
                             .appendingPathComponent("demo_upload.txt")
                         try "Hello JobsNetworking Upload".data(using: .utf8)!.write(to: tempURL)
-                        struct UploadResp: Decodable { let files: [String: String]? }
-                        let request = JobsUploadRequest(
-                            path: "/post",
-                            method: .post,
-                            files: [
-                                .file(url: tempURL, name: "file", fileName: "demo_upload.txt", mimeType: "text/plain")
-                            ],
-                            form: [
-                                "note": AnySendable("upload from demo")
-                            ]
-                        )
-                        let resp: UploadResp = try await self.agent.upload(request, as: UploadResp.self)
+                        struct UploadResp: Decodable {
+
+                            let files: [String: String]?
+                        }
+                        let request = JobsUploadRequest(path: "/post",
+                                                        method: .post,
+                                                        files: [
+                            .file(url: tempURL,
+                                  name: "file",
+                                  fileName: "demo_upload.txt",
+                                  mimeType: "text/plain")
+                        ],
+                                                        form: [
+                            "note": AnySendable("upload from demo")
+                        ])
+                        let resp: UploadResp = try await self.agent.upload(request,
+                                                                           as: UploadResp.self)
                         self.append("Upload done. resp.files keys = \(resp.files?.keys.joined(separator: ",") ?? "nil")\n\n")
                     } catch {
                         self.append("Error: \(error)\n\n")

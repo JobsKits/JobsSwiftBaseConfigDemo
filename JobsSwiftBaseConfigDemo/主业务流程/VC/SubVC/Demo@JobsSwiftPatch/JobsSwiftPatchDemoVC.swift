@@ -21,10 +21,12 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsSwiftPatchDemoVC: BaseVC {
+
     private static let patchID = "com.jobs.demo.swiftpatch.payload"
 
     private lazy var patchCardView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
             .byMasksToBounds(false)
@@ -36,9 +38,11 @@ final class JobsSwiftPatchDemoVC: BaseVC {
     }()
 
     private lazy var titleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("Swift 热更新 Demo".tr)
-            .byFont(JobsFont.systemFont(ofSize: 24, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 24,
+                                        weight: .semibold))
             .byTextColor(JobsCor.label)
             .byNumberOfLines(0)
             .byAddTo(patchCardView) { make in
@@ -49,9 +53,11 @@ final class JobsSwiftPatchDemoVC: BaseVC {
     }()
 
     private lazy var subtitleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("点击按钮后模拟下载进度；进度结束后读取本地预置补丁数据，通过 Runtime 临时改变当前页面 UI。".tr)
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 14,
+                                        weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
             .byAddTo(patchCardView) { [unowned self] make in
@@ -61,9 +67,11 @@ final class JobsSwiftPatchDemoVC: BaseVC {
     }()
 
     private lazy var statusLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("等待开始".tr)
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .regular))
             .byTextColor(JobsCor.tertiaryLabel)
             .byNumberOfLines(0)
             .byAddTo(patchCardView) { [unowned self] make in
@@ -87,9 +95,12 @@ final class JobsSwiftPatchDemoVC: BaseVC {
 
     private lazy var hotRefreshButton: UIButton = {
         UIButton.sys()
-            .byTitle("开始热更新演示".tr, for: .normal)
-            .byTitleColor(JobsCor.systemBackground, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byTitle("开始热更新演示".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.systemBackground,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .medium))
             .byBackgroundColor(JobsCor.label)
             .byCornerRadius(8)
             .onTap { [weak self] _ in
@@ -128,6 +139,7 @@ final class JobsSwiftPatchDemoVC: BaseVC {
 }
 
 private extension JobsSwiftPatchDemoVC {
+
     func buildDemoUI() {
         patchCardView.byVisible(true)
         titleLabel.byVisible(true)
@@ -145,17 +157,18 @@ private extension JobsSwiftPatchDemoVC {
         progressView
             .byProgress(0)
             .byHidden(false)
-        UIView.jobsAnimateWithCompletion(
-            1.2,
-            animations: {
-                self.progressView.byProgress(1, animated: true)
-            },
-            completion: { [weak self] _ in
-                guard let self else { return }
-                self.installLocalRuntimePatch()
-                self.applyPatchPayload(self.hotRefreshPatchPayload())
+        UIView.jobsAnimateWithCompletion(1.2,
+                                         animations: {
+            self.progressView.byProgress(1,
+                                         animated: true)
+        },
+                                         completion: { [weak self] _ in
+            guard let self else {
+                return
             }
-        )
+            self.installLocalRuntimePatch()
+            self.applyPatchPayload(self.hotRefreshPatchPayload())
+        })
     }
 
     func installLocalRuntimePatch() {
@@ -182,7 +195,9 @@ private extension JobsSwiftPatchDemoVC {
     }
 
     func applyPatchPayload(_ payload: NSDictionary) {
-        guard payload.count > 0 else { return }
+        guard payload.count > 0 else {
+            return
+        }
         view.byBackgroundColor(JobsCor.systemBackground)
         patchCardView.byBackgroundColor(color(hex: payload["cardHex"] as? String,
                                               defaultColor: JobsCor.secondarySystemBackground))
@@ -201,7 +216,8 @@ private extension JobsSwiftPatchDemoVC {
         progressView.byProgressTintColor(color(hex: payload["progressHex"] as? String,
                                                defaultColor: JobsCor.systemGreen))
         hotRefreshButton
-            .byTitle((payload["buttonTitle"] as? String) ?? "", for: .normal)
+            .byTitle((payload["buttonTitle"] as? String) ?? "",
+                     for: .normal)
             .byEnabled(true)
     }
 
@@ -222,18 +238,25 @@ private extension JobsSwiftPatchDemoVC {
             .byProgressTintColor(JobsCor.systemBlue)
             .byHidden(true)
         hotRefreshButton
-            .byTitle("开始热更新演示".tr, for: .normal)
+            .byTitle("开始热更新演示".tr,
+                     for: .normal)
             .byEnabled(true)
     }
 
-    func color(hex: String?, defaultColor: UIColor) -> UIColor {
-        guard let hex else { return defaultColor }
-        let clean = hex.replacingOccurrences(of: "#", with: "")
-        guard clean.count == 6, let value = Int(clean, radix: 16) else { return defaultColor };return UIColor(
-            red: CGFloat((value >> 16) & 0xFF) / 255.0,
-            green: CGFloat((value >> 8) & 0xFF) / 255.0,
-            blue: CGFloat(value & 0xFF) / 255.0,
-            alpha: 1
-        )
+    func color(hex: String?,
+               defaultColor: UIColor) -> UIColor {
+        guard let hex else {
+            return defaultColor
+        }
+        let clean = hex.replacingOccurrences(of: "#",
+                                             with: "")
+        guard clean.count == 6, let value = Int(clean,
+                                                radix: 16) else {
+            return defaultColor
+        }
+        return UIColor(red: CGFloat((value >> 16) & 0xFF) / 255.0,
+                       green: CGFloat((value >> 8) & 0xFF) / 255.0,
+                       blue: CGFloat(value & 0xFF) / 255.0,
+                       alpha: 1)
     }
 }

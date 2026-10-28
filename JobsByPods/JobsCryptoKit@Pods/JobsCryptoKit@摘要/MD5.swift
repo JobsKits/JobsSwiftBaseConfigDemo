@@ -10,6 +10,7 @@ import CommonCrypto
 
 // MARK: 属性
 public extension String {
+
     /// 字符串的MD5值
     /// "32313213".md5String ➤ 53ee308c00c3fad3dde79e7bfba55dba
     var md5String: String {
@@ -24,10 +25,13 @@ public extension String {
         let strLen = CUnsignedInt(utf8)
         let digestLen = Int(CC_MD5_DIGEST_LENGTH)
         let result = UnsafeMutablePointer<UInt8>.allocate(capacity: digestLen)
-        CC_MD5(str!, strLen, result)
+        CC_MD5(str!,
+               strLen,
+               result)
         let hash = NSMutableString()
         for i in 0 ..< digestLen {
-            hash.appendFormat("%02x", result[i])
+            hash.appendFormat("%02x",
+                              result[i])
         }
         result.deallocate()
         return String(format: hash as String)

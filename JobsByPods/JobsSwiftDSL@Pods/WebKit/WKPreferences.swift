@@ -14,6 +14,7 @@ import UIKit
 import WebKit
 
 extension WKPreferences {
+
     // ================================== minimumFontSize ==================================
     @discardableResult
     public func byMinimumFontSize(_ value: CGFloat) -> Self {

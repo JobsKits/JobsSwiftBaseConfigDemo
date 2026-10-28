@@ -15,6 +15,9 @@ import JobsSwiftBaseDefines
 
 @MainActor
 public extension ViewDataProtocol where Self: UICollectionViewCell {
+
     @discardableResult
-    func byData(_ any: Any?) -> Self { self }
+    func byData(_ any: Any?) -> Self {
+        self
+    }
 }

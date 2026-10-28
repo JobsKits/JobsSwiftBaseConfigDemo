@@ -21,6 +21,7 @@ import Foundation
  */
 // MARK: - 统一协议
 public protocol JobsSwiftTimerProtocol: AnyObject {
+
     /// 计时器当前是否处于运行中
     var isRunning: Bool { get }
     /// 生命周期操作是否必须路由到主线程；自定义实现默认按主线程安全策略处理
@@ -49,5 +50,8 @@ public protocol JobsSwiftTimerProtocol: AnyObject {
 }
 
 public extension JobsSwiftTimerProtocol {
-    var requiresMainThreadLifecycle: Bool { true }
+
+    var requiresMainThreadLifecycle: Bool {
+        true
+    }
 }

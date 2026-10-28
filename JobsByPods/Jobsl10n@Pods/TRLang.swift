@@ -9,15 +9,22 @@ import Foundation
 
 // MARK: - 统一语言桥（无兼容分支，仅此一套）
 public enum TRLang {
+
     private static let lock = NSLock()
-    private static var bundleStorage: () -> Bundle = { .main }
-    private static var localeStorage: () -> String = { Locale.current.identifier }
+    private static var bundleStorage: () -> Bundle = {
+        .main
+    }
+    private static var localeStorage: () -> String = {
+        Locale.current.identifier
+    }
 
     /// provider 的存取同步；自定义 closure 的内部线程合同由注入方负责。
     public static var bundleProvider: () -> Bundle {
         get {
             lock.lock()
-            defer { lock.unlock() }
+            defer {
+                lock.unlock()
+            }
             return bundleStorage
         }
         set {
@@ -32,7 +39,9 @@ public enum TRLang {
     public static var localeCodeProvider: () -> String {
         get {
             lock.lock()
-            defer { lock.unlock() }
+            defer {
+                lock.unlock()
+            }
             return localeStorage
         }
         set {

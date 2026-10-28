@@ -11,10 +11,8 @@ import JobsSwiftBlock
 
 public extension NSUserActivity {
 
-    static func make(
-        activityType: String,
-        configure: jobsByNSUserActivityBlock
-    ) -> NSUserActivity {
+    static func make(activityType: String,
+                     configure: jobsByNSUserActivityBlock) -> NSUserActivity {
         let activity = NSUserActivity(activityType: activityType)
         configure(activity)
         return activity

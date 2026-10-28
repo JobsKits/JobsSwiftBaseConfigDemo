@@ -15,6 +15,7 @@ import UIKit
 import JXSegmentedView
 // MARK: - DotLine
 extension JXSegmentedIndicatorDotLineView {
+
     @discardableResult
     public func byLineMaxWidth(_ v: CGFloat) -> Self {
         lineMaxWidth = v

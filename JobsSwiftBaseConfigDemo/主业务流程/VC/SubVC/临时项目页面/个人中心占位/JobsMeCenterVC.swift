@@ -22,7 +22,10 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class JobsMeCenterVC: BaseVC {
-    enum Row: Int, CaseIterable {
+
+    enum Row: Int,
+              CaseIterable {
+
         case userInfo
         case crashLog
         case favorites
@@ -31,39 +34,52 @@ final class JobsMeCenterVC: BaseVC {
         var title: String {
             switch self {
             /// 处理 .userInfo 分支
-            case .userInfo:  return "用户信息".tr
+            case .userInfo:
+                return "用户信息".tr
             /// 处理 .crashLog 分支
-            case .crashLog:  return "崩溃日志".tr
+            case .crashLog:
+                return "崩溃日志".tr
             /// 处理 .favorites 分支
-            case .favorites: return "收藏".tr
+            case .favorites:
+                return "收藏".tr
             /// 处理 .settings 分支
-            case .settings:  return "设置".tr
+            case .settings:
+                return "设置".tr
             /// 处理 .about 分支
-            case .about:     return "关于".tr
+            case .about:
+                return "关于".tr
             }
         }
         var symbolName: String {
             switch self {
             /// 处理 .userInfo 分支
-            case .userInfo:  return "person.text.rectangle"
+            case .userInfo:
+                return "person.text.rectangle"
             /// 处理 .crashLog 分支
-            case .crashLog:  return "exclamationmark.triangle"
+            case .crashLog:
+                return "exclamationmark.triangle"
             /// 处理 .favorites 分支
-            case .favorites: return "star"
+            case .favorites:
+                return "star"
             /// 处理 .settings 分支
-            case .settings:  return "gearshape"
+            case .settings:
+                return "gearshape"
             /// 处理 .about 分支
-            case .about:     return "info.circle"
+            case .about:
+                return "info.circle"
             }
         }
     }
 
     private lazy var headerView: UIView = {
-        UIView.jobsMake { _ in }.byBackgroundColor(JobsCor.systemBackground)
+        UIView
+            .jobsMake { _ in }
+            .byBackgroundColor(JobsCor.systemBackground)
     }()
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .plain)
+        UITableView(frame: .zero,
+                    style: .plain)
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(UITableViewCell.self)
@@ -91,43 +107,63 @@ final class JobsMeCenterVC: BaseVC {
     }
 }
 
-extension JobsMeCenterVC: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension JobsMeCenterVC: UITableViewDataSource,
+                          UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
         Row.allCases.count
     }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = Row(rawValue: indexPath.row)!
         return tableView
-            .byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+            .byDequeueReusableCell(withType: UITableViewCell.self,
+                                   for: indexPath)
             .byText(row.title)
+            .byAccessibilityIdentifier("JobsMeCenter.\(row)")
             .byImage(row.symbolName.sysImg.withRenderingMode(.alwaysTemplate))
             .byAccessoryType(.disclosureIndicator)
             .byBackgroundColor(JobsCor.clear)
-            .byContentView { $0.byBackgroundColor(JobsCor.clear) }
+            .byContentView {
+                $0.byBackgroundColor(JobsCor.clear)
+            }
             .byTitleCor(JobsCor.label)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
-            .byImageView { $0.byTintColor(JobsCor.secondaryLabel) }
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .regular))
+            .byImageView {
+                $0.byTintColor(JobsCor.secondaryLabel)
+            }
             .byBackgroundConfiguration { backgroundConfiguration in
                 backgroundConfiguration.backgroundColor = JobsCor.clear
                 backgroundConfiguration.cornerRadius = 0
             }
     }
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { 64 }
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView,
+                   heightForRowAt indexPath: IndexPath) -> CGFloat {
+        64
+    }
+    func tableView(_ tableView: UITableView,
+                   heightForHeaderInSection section: Int) -> CGFloat {
         CGFloat.leastNormalMagnitude
     }
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView,
+                   heightForFooterInSection section: Int) -> CGFloat {
         CGFloat.leastNormalMagnitude
     }
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath,
+                              animated: true)
         switch Row(rawValue: indexPath.row)! {
         /// 处理 .userInfo 分支
         case .userInfo:
-            JobsSwiftUserInfoVC().byPush(self)
+            JobsSwiftUserInfoVC()
+                .byPush(self)
         /// 处理 .crashLog 分支
         case .crashLog:
-            CrashLogDemoVC().byPush(self)
+            CrashLogDemoVC()
+                .byPush(self)
         /// 处理 .favorites 分支
         case .favorites:
             "收藏".tr.toast
@@ -137,7 +173,7 @@ extension JobsMeCenterVC: UITableViewDataSource, UITableViewDelegate {
         /// SettingsVC().byPush(self)
         case .about:
             "关于".tr.toast
-            // AboutVC().byPush(self)
+        // AboutVC().byPush(self)
         }
         jobsSideDrawer?.closeDrawer(animated: true)
     }

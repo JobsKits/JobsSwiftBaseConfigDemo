@@ -18,8 +18,10 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 public final class ImageCell: UICollectionViewCell {
+
     private lazy var iv: UIImageView = {
-        UIImageView.jobsMake { _ in }
+        UIImageView
+            .jobsMake { _ in }
             .byContentMode(.scaleAspectFill)
             .byClipsToBounds(YES)
             .byAddTo(contentView) { [unowned self] make in
@@ -30,7 +32,9 @@ public final class ImageCell: UICollectionViewCell {
         super.init(frame: frame)
         iv.byVisible(YES)
     }
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     public override func prepareForReuse() {
         super.prepareForReuse()
         iv.byImage(nil)
@@ -54,7 +58,8 @@ public final class ImageCell: UICollectionViewCell {
                 iv.byImage(img)
             } else {
                 iv.byImage(nil)
-            };return self
+            }
+            return self
         }
         iv.byImage(nil)
         return self

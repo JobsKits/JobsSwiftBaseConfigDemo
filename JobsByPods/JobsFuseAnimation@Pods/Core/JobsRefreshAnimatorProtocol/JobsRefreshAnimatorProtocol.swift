@@ -14,6 +14,7 @@ import UIKit
 /// 刷新状态机传给动画插件的统一阶段。
 @MainActor
 public enum JobsRefreshAnimatorPhase {
+
     case idle
     case pulling
     case ready
@@ -25,6 +26,7 @@ public enum JobsRefreshAnimatorPhase {
 /// 刷新宿主只依赖此协议；图片、Lottie、GIF 和品牌动画均可作为同级插件实现。
 @MainActor
 public protocol JobsRefreshAnimatorProtocol: AnyObject {
+
     var refreshAnimatorView: UIView { get }
     var refreshAnimatorPreferredSize: CGSize { get }
 

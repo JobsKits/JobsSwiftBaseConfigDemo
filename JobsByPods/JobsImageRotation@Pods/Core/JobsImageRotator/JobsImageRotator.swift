@@ -15,18 +15,24 @@ import JobsSwiftTimer
 
 #if os(iOS) || os(tvOS)
 public final class JobsImageRotator: @unchecked Sendable {
+
     public static let defaultInterval: TimeInterval = 1.0 / 60.0
 
     public var direction: JobsImageRotationDirection
     public var interval: TimeInterval {
-        get { tickInterval }
+        get {
+            tickInterval
+        }
         set {
-            precondition(Thread.isMainThread, "JobsImageRotator configuration belongs to the main thread.")
+            precondition(Thread.isMainThread,
+                         "JobsImageRotator configuration belongs to the main thread.")
             tickInterval = Self.normalizedInterval(newValue)
             if timer != nil {
                 let paused = isPaused
                 start()
-                if paused { pause() }
+                if paused {
+                    pause()
+                }
             }
         }
     }
@@ -41,11 +47,9 @@ public final class JobsImageRotator: @unchecked Sendable {
     private var currentAngle: CGFloat = 0
     private var timer: JobsSwiftTimerProtocol?
 
-    public init(
-        targetView: UIView,
-        direction: JobsImageRotationDirection = .clockwise,
-        interval: TimeInterval = JobsImageRotator.defaultInterval
-    ) {
+    public init(targetView: UIView,
+                direction: JobsImageRotationDirection = .clockwise,
+                interval: TimeInterval = JobsImageRotator.defaultInterval) {
         self.targetView = targetView
         self.direction = direction
         self.tickInterval = Self.normalizedInterval(interval)
@@ -58,17 +62,17 @@ public final class JobsImageRotator: @unchecked Sendable {
 
     @discardableResult
     public func start() -> Self {
-        precondition(Thread.isMainThread, "JobsImageRotator.start() must be called on the main thread.")
+        precondition(Thread.isMainThread,
+                     "JobsImageRotator.start() must be called on the main thread.")
         timer?.stop()
         isPaused = false
         lastTick = ProcessInfo.processInfo.systemUptime
-        let config = JobsSwiftTimerConfig(
-            interval: tickInterval,
-            repeats: true,
-            tolerance: 0,
-            queue: .main
-        )
-        let nextTimer = JobsTimer(kind: .gcd, config: config) { [weak self] in
+        let config = JobsSwiftTimerConfig(interval: tickInterval,
+                                          repeats: true,
+                                          tolerance: 0,
+                                          queue: .main)
+        let nextTimer = JobsTimer(kind: .gcd,
+                                  config: config) { [weak self] in
             self?.rotateOneTick()
         }
         timer = nextTimer
@@ -78,7 +82,8 @@ public final class JobsImageRotator: @unchecked Sendable {
 
     @discardableResult
     public func pause() -> Self {
-        precondition(Thread.isMainThread, "JobsImageRotator.pause() must be called on the main thread.")
+        precondition(Thread.isMainThread,
+                     "JobsImageRotator.pause() must be called on the main thread.")
         isPaused = true
         lastTick = nil
         timer?.pause()
@@ -87,7 +92,8 @@ public final class JobsImageRotator: @unchecked Sendable {
 
     @discardableResult
     public func resume() -> Self {
-        precondition(Thread.isMainThread, "JobsImageRotator.resume() must be called on the main thread.")
+        precondition(Thread.isMainThread,
+                     "JobsImageRotator.resume() must be called on the main thread.")
         isPaused = false
         lastTick = ProcessInfo.processInfo.systemUptime
         timer?.resume()
@@ -96,7 +102,8 @@ public final class JobsImageRotator: @unchecked Sendable {
 
     @discardableResult
     public func stop(reset: Bool = true) -> Self {
-        precondition(Thread.isMainThread, "JobsImageRotator.stop() must be called on the main thread.")
+        precondition(Thread.isMainThread,
+                     "JobsImageRotator.stop() must be called on the main thread.")
         timer?.stop()
         timer = nil
         lastTick = nil
@@ -104,17 +111,20 @@ public final class JobsImageRotator: @unchecked Sendable {
         if reset {
             currentAngle = 0
             targetView?.transform = baseTransform
-        };return self
+        }
+        return self
     }
 
     private func rotateOneTick() {
-        precondition(Thread.isMainThread, "JobsImageRotator ticks must be delivered on the main thread.")
+        precondition(Thread.isMainThread,
+                     "JobsImageRotator ticks must be delivered on the main thread.")
         guard let targetView else {
             stop(reset: false)
             return
         }
         let now = ProcessInfo.processInfo.systemUptime
-        let elapsed = max(0, now - (lastTick ?? now))
+        let elapsed = max(0,
+                          now - (lastTick ?? now))
         lastTick = now
         let speed = radiansPerSecond.isFinite ? radiansPerSecond : .pi * 2
         currentAngle += direction.angularMultiplier * speed * CGFloat(elapsed)

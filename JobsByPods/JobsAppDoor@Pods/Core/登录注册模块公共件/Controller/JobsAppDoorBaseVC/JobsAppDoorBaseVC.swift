@@ -15,6 +15,7 @@ import SnapKit
 import JobsSwiftGraphicCaptcha
 
 public enum JobsAppDoorSubmissionState {
+
     case idle
     case submitting
     case succeeded
@@ -22,11 +23,12 @@ public enum JobsAppDoorSubmissionState {
 }
 
 open class JobsAppDoorBaseVC: BaseVC {
+
     public let configuration: JobsAppDoorConfig
     public var submitHandler: ((JobsAppDoorMode, JobsAppDoorFormValues) -> Void)?
     /// Inject the host's API call and return its cancellation action.
     public var submitOperation: ((JobsAppDoorMode, JobsAppDoorFormValues,
-                                  @escaping (Result<Void, Error>) -> Void) -> (() -> Void)?)?
+            @escaping (Result<Void, Error>) -> Void) -> (() -> Void)?)?
     public var configureGraphicCaptcha: ((JobsSwiftGraphicCaptchaView) -> Void)?
     public var submissionTimeout: TimeInterval = 15
     public var onSubmissionStateChanged: ((JobsAppDoorSubmissionState) -> Void)?
@@ -61,20 +63,24 @@ open class JobsAppDoorBaseVC: BaseVC {
 
     final lazy var customerServiceButton: UIButton = {
         UIButton.sys()
-            .jobsAppDoorAppearance(
-                title: "\(JobsAppDoorResource.text("在线客服"))\n\(JobsAppDoorResource.text("7×24小时"))",
-                titleColor: JobsAppDoorPalette.gold,
-                font: JobsFont.systemFont(ofSize: 10, weight: .medium),
-                backgroundColor: JobsAppDoorPalette.cardBackground,
-                cornerRadius: 19,
-                borderColor: JobsAppDoorPalette.gold,
-                borderWidth: 2
-            )
-            .byImage(JobsAppDoorResource.customerServiceIconImage(), for: .normal)
-            .byImagePlacement(.left, padding: 7)
+            .jobsAppDoorAppearance(title: "\(JobsAppDoorResource.text("在线客服"))\n\(JobsAppDoorResource.text("7×24小时"))",
+                                   titleColor: JobsAppDoorPalette.gold,
+                                   font: JobsFont.systemFont(ofSize: 10,
+                                                             weight: .medium),
+                                   backgroundColor: JobsAppDoorPalette.cardBackground,
+                                   cornerRadius: 19,
+                                   borderColor: JobsAppDoorPalette.gold,
+                                   borderWidth: 2)
+            .byImage(JobsAppDoorResource.customerServiceIconImage(),
+                     for: .normal)
+            .byImagePlacement(.left,
+                              padding: 7)
             .byTitleAlignment(.center)
             .byNumberOfLines(2)
-            .byContentEdgeInsets(UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
+            .byContentEdgeInsets(UIEdgeInsets(top: 4,
+                                              left: 8,
+                                              bottom: 4,
+                                              right: 8))
             .onTap { [weak self] _ in
                 self?.customerServiceHandler?()
             }
@@ -83,18 +89,14 @@ open class JobsAppDoorBaseVC: BaseVC {
 
     final lazy var volumeButton: UIButton = {
         UIButton.sys()
-            .jobsAppDoorAppearance(
-                titleColor: JobsAppDoorPalette.gold,
-                backgroundColor: JobsAppDoorPalette.cardBackground,
-                cornerRadius: 18,
-                borderColor: JobsAppDoorPalette.gold,
-                borderWidth: 1
-            )
-            .byImage(
-                JobsAppDoorResource.image(named: "AppDoorVolume")
-                    ?? UIImage(systemName: "speaker.wave.2.fill"),
-                for: .normal
-            )
+            .jobsAppDoorAppearance(titleColor: JobsAppDoorPalette.gold,
+                                   backgroundColor: JobsAppDoorPalette.cardBackground,
+                                   cornerRadius: 18,
+                                   borderColor: JobsAppDoorPalette.gold,
+                                   borderWidth: 1)
+            .byImage(JobsAppDoorResource.image(named: "AppDoorVolume")
+                ?? UIImage(systemName: "speaker.wave.2.fill"),
+                     for: .normal)
             .byTintColor(JobsAppDoorPalette.gold)
             .onTap { [weak self] _ in
                 self?.toggleVolumePanel()
@@ -107,7 +109,8 @@ open class JobsAppDoorBaseVC: BaseVC {
     }()
 
     final lazy var volumePanelView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsAppDoorPalette.cardBackground.withAlphaComponent(0.92))
             .byCornerRadius(14)
             .byClipsToBounds(true)
@@ -115,7 +118,8 @@ open class JobsAppDoorBaseVC: BaseVC {
             .byBorderWidth(1)
             .byAlpha(0)
             .byHidden(true)
-            .byTransform(CGAffineTransform(scaleX: 0.88, y: 0.88))
+            .byTransform(CGAffineTransform(scaleX: 0.88,
+                                           y: 0.88))
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(volumeButton.snp.bottom).offset(8)
                 make.centerX.equalTo(volumeButton)
@@ -124,10 +128,12 @@ open class JobsAppDoorBaseVC: BaseVC {
     }()
 
     final lazy var volumePercentLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextColor(JobsAppDoorPalette.gold)
             .byTextAlignment(.center)
-            .byFont(JobsFont.systemFont(ofSize: 10, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 10,
+                                        weight: .medium))
             .byAdjustsFontSizeToFitWidth(true)
             .byMinimumScaleFactor(0.7)
             .byAddTo(volumePanelView) { make in
@@ -138,7 +144,8 @@ open class JobsAppDoorBaseVC: BaseVC {
     }()
 
     final lazy var volumeSlider: UISlider = {
-        UISlider.jobsMake { _ in }
+        UISlider
+            .jobsMake { _ in }
             .byMinimumValue(0)
             .byMaximumValue(1)
             .byValue(backgroundView.currentVolume)
@@ -159,7 +166,8 @@ open class JobsAppDoorBaseVC: BaseVC {
 
     public init(configuration: JobsAppDoorConfig = .defaultConfig) {
         self.configuration = configuration
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil,
+                   bundle: nil)
     }
 
     @available(*, unavailable)
@@ -200,11 +208,13 @@ open class JobsAppDoorBaseVC: BaseVC {
         cancelSubmission()
         view.endEditing(true)
         jobsForceHideSystemNavBar(false)
-        setVolumePanelVisible(false, animated: false)
+        setVolumePanelVisible(false,
+                              animated: false)
         backgroundView.pause()
     }
 
-    func handleKeyboardOffset(_ offset: CGFloat, keyboardVisible: Bool) { }
+    func handleKeyboardOffset(_ offset: CGFloat,
+                              keyboardVisible: Bool) { }
 
     func formLayoutFrame(preferredY: CGFloat,
                          preferredHeight: CGFloat,
@@ -212,18 +222,27 @@ open class JobsAppDoorBaseVC: BaseVC {
                          footerHeight: CGFloat) -> CGRect {
         let safeFrame = view.bounds.inset(by: view.safeAreaInsets)
         let keyboardTop = view.keyboardLayoutGuide.layoutFrame.minY
-        let bottom = max(safeFrame.minY, min(safeFrame.maxY, keyboardTop))
-        let height = min(preferredHeight, max(0, bottom - safeFrame.minY - footerHeight))
-        let top = min(max(safeFrame.minY, safeFrame.minY + preferredY - keyboardLift),
-                      max(safeFrame.minY, bottom - height - footerHeight))
-        return CGRect(x: safeFrame.minX, y: top, width: safeFrame.width, height: height)
+        let bottom = max(safeFrame.minY,
+                         min(safeFrame.maxY,keyboardTop))
+        let height = min(preferredHeight,
+                         max(0,
+                             bottom - safeFrame.minY - footerHeight))
+        let top = min(max(safeFrame.minY,
+                          safeFrame.minY + preferredY - keyboardLift),
+                      max(safeFrame.minY,
+                          bottom - height - footerHeight))
+        return CGRect(x: safeFrame.minX,
+                      y: top,
+                      width: safeFrame.width,
+                      height: height)
     }
 
     final func openCountryCodePicker(for inputView: JobsAppDoorInputView) {
         view.endEditing(true)
         let controller = JobsSwiftCountryCodeCtrl()
         controller.countrySelectionHandler = { [weak inputView] country in
-            inputView?.setCountry(flag: country.flag, code: country.code)
+            inputView?.setCountry(flag: country.flag,
+                                  code: country.code)
         }
         controller.byPush(self)
     }
@@ -237,7 +256,9 @@ open class JobsAppDoorBaseVC: BaseVC {
     }
 
     public final func cancelSubmission() {
-        guard isSubmitting else { return }
+        guard isSubmitting else {
+            return
+        }
         submissionGeneration &+= 1
         let cancel = cancelSubmissionOperation
         cancelSubmissionOperation = nil
@@ -255,8 +276,11 @@ open class JobsAppDoorBaseVC: BaseVC {
         onSubmissionStateChanged?(state)
     }
 
-    private func finishSubmission(_ result: Result<Void, Error>, generation: UInt64) {
-        guard submissionGeneration == generation, isSubmitting else { return }
+    private func finishSubmission(_ result: Result<Void, Error>,
+                                  generation: UInt64) {
+        guard submissionGeneration == generation, isSubmitting else {
+            return
+        }
         submissionTimeoutWork?.cancel()
         submissionTimeoutWork = nil
         cancelSubmissionOperation = nil
@@ -268,31 +292,44 @@ open class JobsAppDoorBaseVC: BaseVC {
         }
     }
 
-    final func dispatchSubmit(mode: JobsAppDoorMode, values: JobsAppDoorFormValues) {
-        guard !isSubmitting else { return }
+    final func dispatchSubmit(mode: JobsAppDoorMode,
+                              values: JobsAppDoorFormValues) {
+        guard !isSubmitting else {
+            return
+        }
         guard let operation = submitOperation else {
-            submitHandler?(mode, values)
+            submitHandler?(mode,
+                           values)
             return
         }
         submissionGeneration &+= 1
         let generation = submissionGeneration
         setSubmissionState(.submitting)
-        guard submissionGeneration == generation, isSubmitting else { return }
+        guard submissionGeneration == generation, isSubmitting else {
+            return
+        }
         let timeout = submissionTimeout.isFinite && submissionTimeout > 0
-            ? min(submissionTimeout, 300) : 15
+            ? min(submissionTimeout,
+                  300) : 15
         let work = DispatchWorkItem { [weak self] in
-            guard let self, self.submissionGeneration == generation, self.isSubmitting else { return }
+            guard let self, self.submissionGeneration == generation, self.isSubmitting else {
+                return
+            }
             let cancel = self.cancelSubmissionOperation
-            self.finishSubmission(.failure(NSError(domain: "JobsAppDoor", code: -1001,
+            self.finishSubmission(.failure(NSError(domain: "JobsAppDoor",
+                                                   code: -1001,
                                                    userInfo: [NSLocalizedDescriptionKey: "请求超时，请重试"])),
                                   generation: generation)
             cancel?()
         }
         submissionTimeoutWork = work
-        DispatchQueue.main.asyncAfter(deadline: .now() + timeout, execute: work)
-        let cancel = operation(mode, values) { [weak self] result in
+        DispatchQueue.main.asyncAfter(deadline: .now() + timeout,
+                                      execute: work)
+        let cancel = operation(mode,
+                               values) { [weak self] result in
             DispatchQueue.main.async {
-                self?.finishSubmission(result, generation: generation)
+                self?.finishSubmission(result,
+                                       generation: generation)
             }
         }
         if submissionGeneration == generation, isSubmitting {
@@ -304,32 +341,45 @@ open class JobsAppDoorBaseVC: BaseVC {
 
     final func runEntrancePop(views: [UIView]) {
         views.forEach {
-            $0.byAlpha(0).byTransform(CGAffineTransform(scaleX: 0.01, y: 0.01))
+            $0
+                .byAlpha(0)
+                .byTransform(CGAffineTransform(scaleX: 0.01,
+                                               y: 0.01))
         }
-        UIView.jobsAnimateKeyframes(
-            1,
-            options: [.calculationModeCubic],
-            animations: {
-                UIView.jobsAddKeyframe(withRelativeStartTime: 0, relativeDuration: 0.72) {
-                    views.forEach {
-                        $0.byAlpha(1).byTransform(CGAffineTransform(scaleX: 1.1, y: 1.1))
-                    }
-                }
-                UIView.jobsAddKeyframe(withRelativeStartTime: 0.72, relativeDuration: 0.28) {
-                    views.forEach { $0.byTransform(.identity) }
+        UIView.jobsAnimateKeyframes(1,
+                                    options: [.calculationModeCubic],
+                                    animations: {
+            UIView.jobsAddKeyframe(withRelativeStartTime: 0,
+                                   relativeDuration: 0.72) {
+                views.forEach {
+                    $0
+                        .byAlpha(1)
+                        .byTransform(CGAffineTransform(scaleX: 1.1,
+                                                       y: 1.1))
                 }
             }
-        )
+            UIView.jobsAddKeyframe(withRelativeStartTime: 0.72,
+                                   relativeDuration: 0.28) {
+                views.forEach {
+                    $0.byTransform(.identity)
+                }
+            }
+        })
     }
 }
 
 private extension JobsAppDoorBaseVC {
+
     func toggleVolumePanel() {
-        setVolumePanelVisible(!volumePanelShowing, animated: true)
+        setVolumePanelVisible(!volumePanelShowing,
+                              animated: true)
     }
 
-    func setVolumePanelVisible(_ visible: Bool, animated: Bool) {
-        guard configuration.backgroundType == .video else { return }
+    func setVolumePanelVisible(_ visible: Bool,
+                               animated: Bool) {
+        guard configuration.backgroundType == .video else {
+            return
+        }
         volumePanelShowing = visible
         volumePanelView
             .byHidden(false)
@@ -341,7 +391,8 @@ private extension JobsAppDoorBaseVC {
         let alpha: CGFloat = visible ? 1 : 0
         let transform = visible
             ? CGAffineTransform.identity
-            : CGAffineTransform(scaleX: 0.88, y: 0.88)
+            : CGAffineTransform(scaleX: 0.88,
+                                y: 0.88)
         let animations: () -> Void = {
             self.volumePanelView
                 .byAlpha(alpha)
@@ -357,15 +408,13 @@ private extension JobsAppDoorBaseVC {
             completion(true)
             return
         }
-        UIView.jobsAnimateWithSpring(
-            0.24,
-            delay: 0,
-            dampingRatio: 0.86,
-            initialVelocity: 0.2,
-            options: [.curveEaseInOut, .allowUserInteraction],
-            animations: animations,
-            completion: completion
-        )
+        UIView.jobsAnimateWithSpring(0.24,
+                                     delay: 0,
+                                     dampingRatio: 0.86,
+                                     initialVelocity: 0.2,
+                                     options: [.curveEaseInOut, .allowUserInteraction],
+                                     animations: animations,
+                                     completion: completion)
     }
 
     func applyVolume(_ volume: Float) {
@@ -381,27 +430,26 @@ private extension JobsAppDoorBaseVC {
 
     func observeKeyboard() {
         let center = NotificationCenter.default
-        let showObserver = center.addObserver(
-            forName: UIResponder.keyboardWillChangeFrameNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] notification in
+        let showObserver = center.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification,
+                                              object: nil,
+                                              queue: .main) { [weak self] notification in
             guard let self,
                   let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
                   let scene = view.window?.windowScene else {
                 return
             }
-            let frameInView = view.convert(frame, from: scene.screen.coordinateSpace)
+            let frameInView = view.convert(frame,
+                                           from: scene.screen.coordinateSpace)
             let intersection = view.bounds.intersection(frameInView)
             let overlap = intersection.isNull ? 0 : intersection.height
-            handleKeyboardOffset(overlap, keyboardVisible: overlap > 0)
+            handleKeyboardOffset(overlap,
+                                 keyboardVisible: overlap > 0)
         }
-        let hideObserver = center.addObserver(
-            forName: UIResponder.keyboardWillHideNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            self?.handleKeyboardOffset(0, keyboardVisible: false)
+        let hideObserver = center.addObserver(forName: UIResponder.keyboardWillHideNotification,
+                                              object: nil,
+                                              queue: .main) { [weak self] _ in
+            self?.handleKeyboardOffset(0,
+                                       keyboardVisible: false)
         }
         keyboardObservers = [showObserver, hideObserver]
     }

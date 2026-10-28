@@ -21,13 +21,15 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class EmptyTableViewDemoVC: BaseVC {
+
     // ================================== 数据源 & 状态 ==================================
     private var items: [String] = []                 // 初始为空 -> 触发空态
     private var isPullRefreshing = false
     private var isLoadingMore = false
     // ================================== UI：TableView ==================================
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(UITableViewCell.self)
@@ -36,17 +38,24 @@ final class EmptyTableViewDemoVC: BaseVC {
             .byNoSectionHeaderTopPadding()
             .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据".tr, for: .normal)
-                    .bySubTitle("点我填充示例数据".tr, for: .normal)
-                    .byImage("tray".sysImg, for: .normal)
+                    .byTitle("暂无数据".tr,
+                             for: .normal)
+                    .bySubTitle("点我填充示例数据".tr,
+                                for: .normal)
+                    .byImage("tray".sysImg,
+                             for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in
-                        guard let self else { return }
-                        self.items = (1...10).map { "Row \($0)" }
+                        guard let self else {
+                            return
+                        }
+                        self.items = (1 ... 10).map {
+                            "Row \($0)"
+                        }
                         self.tableView.reloadData()   // ✅ reload 后会自动评估空态，无需再手动调用
                     }
-                    // 可选：不满意默认居中 -> 自定义布局
-                    .byEmptyLayout { btn, make, host in
+            // 可选：不满意默认居中 -> 自定义布局
+            .byEmptyLayout { btn, make, host in
                         make.centerX.equalTo(host)
                         make.centerY.equalTo(host).offset(-40)
                         make.leading.greaterThanOrEqualTo(host).offset(16)
@@ -54,13 +63,13 @@ final class EmptyTableViewDemoVC: BaseVC {
                         make.width.lessThanOrEqualTo(host).multipliedBy(0.9)
                     }
             }
-//            .byContentInset(UIEdgeInsets(
-//                top: UIApplication.jobsSafeTopInset + 30,
-//                left: 0,
-//                bottom: 0,
-//                right: 0
-//            ))
-            .byAddTo(view) {[unowned self] make in
+        //            .byContentInset(UIEdgeInsets(
+        //                top: UIApplication.jobsSafeTopInset + 30,
+        //                left: 0,
+        //                bottom: 0,
+        //                right: 0
+        //            ))
+        .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
                     make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(10)
                     make.left.right.bottom.equalToSuperview()
@@ -73,55 +82,69 @@ final class EmptyTableViewDemoVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
-        jobsSetupGKNav(
-            title: "UITableView@空态刷新".tr,
-            rightButtons: [
+        jobsSetupGKNav(title: "UITableView@空态刷新".tr,
+                       rightButtons: [
                 UIButton.sys()
-                    .byTitle("空数据刷新".tr, for: .normal)
-                    .byTitleFont(JobsFont.systemFont(ofSize: 8, weight: .medium))
-                    /// 按钮图片@图文关系
-                    .byImagePlacement(.top)
-                    .byImage("trash.circle".sysImg, for: .normal)
-                    .byImage("trash.circle.fill".sysImg, for: .selected)
-                    /// 事件触发@点按
-                    .onTap { [weak self] sender in
-                        guard let self else { return }
-                        sender.byToggleSelected()
-                        print("🛑 手动停止刷新")
-                        items.removeAll()
-                        tableView.byReloadData()
-                        updateFooterAvailability()
-                        tableView.byReloadEmptyViewAuto()
-                    }
+                    .byTitle("空数据刷新".tr,
+                             for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 8,
+                                                     weight: .medium))
+                /// 按钮图片@图文关系
+                .byImagePlacement(.top)
+                    .byImage("trash.circle".sysImg,
+                             for: .normal)
+                    .byImage("trash.circle.fill".sysImg,
+                             for: .selected)
+                /// 事件触发@点按
+                .onTap { [weak self] sender in
+                guard let self else {
+                    return
+                }
+                sender.byToggleSelected()
+                print("🛑 手动停止刷新")
+                items.removeAll()
+                tableView.byReloadData()
+                updateFooterAvailability()
+                tableView.byReloadEmptyViewAuto()
+            }
                     .byAdd({ make in
-                        make.size.equalTo(CGSize(width: 70, height: 44))
-                    }),
+                make.size.equalTo(CGSize(width: 70, height: 44))
+            }),
                 UIButton.sys()
-                    .byTitle("数据刷新".tr, for: .normal)
-                    .byTitleFont(JobsFont.systemFont(ofSize: 8, weight: .medium))
-                    /// 按钮图片@图文关系
-                    .byImagePlacement(.top)
-                    .byImage("arrow.clockwise.circle".sysImg, for: .normal)
-                    .byImage("arrow.clockwise.circle.fill".sysImg, for: .selected)
-                    /// 事件触发@点按
-                    .onTap { [weak self] sender in
-                        guard let self else { return }
-                        sender.byToggleSelected()
-                        if items.isEmpty {
-                            items = (1...12).map { "Row \($0)" }
-                        } else {
-                            let base = items.count
-                            items += (1...6).map { "Row \(base + $0)" }
-                        }
-                        tableView.byReloadData()
-                        updateFooterAvailability()
-                        tableView.byReloadEmptyViewAuto()
+                    .byTitle("数据刷新".tr,
+                             for: .normal)
+                    .byTitleFont(JobsFont.systemFont(ofSize: 8,
+                                                     weight: .medium))
+                /// 按钮图片@图文关系
+                .byImagePlacement(.top)
+                    .byImage("arrow.clockwise.circle".sysImg,
+                             for: .normal)
+                    .byImage("arrow.clockwise.circle.fill".sysImg,
+                             for: .selected)
+                /// 事件触发@点按
+                .onTap { [weak self] sender in
+                guard let self else {
+                    return
+                }
+                sender.byToggleSelected()
+                if items.isEmpty {
+                    items = (1 ... 12).map {
+                        "Row \($0)"
                     }
+                } else {
+                    let base = items.count
+                    items += (1 ... 6).map {
+                        "Row \(base + $0)"
+                    }
+                }
+                tableView.byReloadData()
+                updateFooterAvailability()
+                tableView.byReloadEmptyViewAuto()
+            }
                     .byAdd({ make in
-                        make.size.equalTo(CGSize(width: 60, height: 44))
-                    })
-            ]
-        )
+                make.size.equalTo(CGSize(width: 60, height: 44))
+            })
+            ])
         tableView.byVisible(true)
     }
     /// Footer 可用性（示例实现）
@@ -135,20 +158,30 @@ final class EmptyTableViewDemoVC: BaseVC {
     }
 }
 // ================================== UITableViewDataSource & UITableViewDelegate ==================================
-extension EmptyTableViewDemoVC : UITableViewDataSource, UITableViewDelegate{
-    func numberOfSections(in tableView: UITableView) -> Int { 1 }
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension EmptyTableViewDemoVC : UITableViewDataSource,
+                                 UITableViewDelegate {
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        1
+    }
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
         items.count
     }
     // 先确保注册：tableView.byRegisterCell(UITableViewCell.self)
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        tableView.byDequeueReusableCell(withType: UITableViewCell.self, for: indexPath)
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        tableView
+            .byDequeueReusableCell(withType: UITableViewCell.self,
+                                   for: indexPath)
             .byText(items[indexPath.row])
             .bySecondaryText("Section \(indexPath.section) · Row \(indexPath.row)")
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
         print("✅ didSelect Row: \(indexPath.row)")
-        tableView.deselectRow(at: indexPath, animated: true)
+        tableView.deselectRow(at: indexPath,
+                              animated: true)
     }
 }

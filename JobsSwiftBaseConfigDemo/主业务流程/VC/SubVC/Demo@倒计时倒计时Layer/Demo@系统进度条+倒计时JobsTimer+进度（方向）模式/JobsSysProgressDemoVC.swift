@@ -25,6 +25,7 @@ import GKNavigationBarSwift
 /// Demo@系统进度条+倒计时JobsSwiftTimer+进度（方向）模式
 
 final class JobsSysProgressDemoVC: BaseVC {
+
     let horizontalInset: CGFloat = 40
     /// 当前正在运行的倒计时过程
     private var countdownProcess: JobsSwiftTimerCountdown?
@@ -37,7 +38,9 @@ final class JobsSysProgressDemoVC: BaseVC {
     private lazy var durationOptions: [Int] = [5, 10, 20]
     /// SegmentedControl 展示文案
     private lazy var durationSegmentTitles: [String] = {
-        durationOptions.map { "%ld 秒".tr($0) }
+        durationOptions.map {
+            "%ld 秒".tr($0)
+        }
     }()
     /// 选中的倒计时总时长（基于 durationOptions + 当前选中的 index）
     private var selectedDuration: TimeInterval {
@@ -47,16 +50,18 @@ final class JobsSysProgressDemoVC: BaseVC {
         }
         // fallback：默认用数组中的第二个（10 秒）
         return durationOptions.count > 1
-        ? TimeInterval(durationOptions[1])
-        : TimeInterval(durationOptions.first ?? 10)
+            ? TimeInterval(durationOptions[1])
+            : TimeInterval(durationOptions.first ?? 10)
     }
     // MARK: - UI
     /// 显示剩余时间
     private lazy var timeLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("剩余：-- 秒".tr)
             .byTextColor(JobsCor.label)
-            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 18, weight: .medium))
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 18,
+                                                       weight: .medium))
             .byTextAlignment(.center)
             .byAddTo(view) { [unowned self] make in
                 make.left.equalToSuperview().offset(20)
@@ -81,27 +86,34 @@ final class JobsSysProgressDemoVC: BaseVC {
     /// 模式切换按钮：0%→100% / 100%→0%
     private lazy var modeButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(JobsCor.systemOrange, for: .normal)
-            .byTitle(modeButtonTitle(), for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+            .byBackgroundColor(JobsCor.systemOrange,
+                               for: .normal)
+            .byTitle(modeButtonTitle(),
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 14,
+                                             weight: .medium))
             .byCornerRadius(16)
             .onTap { [weak self] _ in
-                guard let self else { return }
-                // 切换模式本身
+                guard let self else {
+                    return
+                }
+            // 切换模式本身
                 switch progressMode {
-                /// 处理 .countUp 分支
+            /// 处理 .countUp 分支
                 case .countUp:
                     progressMode = .countDown
-                /// 处理 .countDown 分支
+            /// 处理 .countDown 分支
                 case .countDown:
                     progressMode = .countUp
                 }
-                // 切模式时，如果在跑，就先停掉
+            // 切模式时，如果在跑，就先停掉
                 countdownProcess?.cancel()
                 countdownProcess = nil
-                // 刷新按钮标题 + 进度初值 + 开始按钮状态
-                modeButton.byTitle(modeButtonTitle(), for: .normal)
+            // 刷新按钮标题 + 进度初值 + 开始按钮状态
+                modeButton.byTitle(modeButtonTitle(),
+                                   for: .normal)
                 updateTimeLabelForIdle()
                 setStartButton(true)
             }
@@ -116,12 +128,14 @@ final class JobsSysProgressDemoVC: BaseVC {
     private lazy var durationSegment: UISegmentedControl = {
         UISegmentedControl(items: durationSegmentTitles)
             .bySelectedSegmentIndex(1) // 默认选中 10 秒
-            .onJobsChange { [weak self] (_: UISegmentedControl) in
-                guard let self else { return }
-                // 切换时长时，如果有在跑的倒计时，先停掉
+        .onJobsChange { [weak self] (_: UISegmentedControl) in
+                guard let self else {
+                    return
+                }
+            // 切换时长时，如果有在跑的倒计时，先停掉
                 countdownProcess?.cancel()
                 countdownProcess = nil
-                // 重新回到“准备开始”状态
+            // 重新回到“准备开始”状态
                 updateTimeLabelForIdle()
                 setStartButton(true)
             }
@@ -134,69 +148,85 @@ final class JobsSysProgressDemoVC: BaseVC {
     /// 开始按钮
     private lazy var startButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
-            .byTitle("开始倒计时".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemGreen,
+                               for: .normal)
+            .byTitle("开始倒计时".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
             .byTitleFont(JobsFont.boldSystemFont(ofSize: 16))
             .byCornerRadius(8)
-            /// 点按 = 开始一次新的倒计时
-            .onTap { [weak self] _ in
-                guard let self else { return }
-                // 先停掉旧的，支持重投
+        /// 点按 = 开始一次新的倒计时
+        .onTap { [weak self] _ in
+                guard let self else {
+                    return
+                }
+            // 先停掉旧的，支持重投
                 if let process = self.countdownProcess {
                     process.cancel()
                     self.countdownProcess = nil
                 }
                 let duration = self.selectedDuration
-                // 根据进度模式设置起点
+            // 根据进度模式设置起点
                 let initialRatio: Float = {
                     switch self.progressMode {
-                    /// 处理 .countUp 分支
-                    case .countUp:   return 0.0
-                    /// 处理 .countDown 分支
-                    case .countDown: return 1.0
+                /// 处理 .countUp 分支
+                    case .countUp:
+                        return 0.0
+                /// 处理 .countDown 分支
+                    case .countDown:
+                        return 1.0
                     }
                 }()
-                self.progressView.setProgress(initialRatio, animated: false)
-                self.timeLabel.byText(String(format: "剩余：%.1f 秒", duration))
+                self.progressView.setProgress(initialRatio,
+                                              animated: false)
+                self.timeLabel.byText(String(format: "剩余：%.1f 秒",
+                                             duration))
                 self.setStartButton(false)
-                self.countdownProcess = JobsSwiftTimerCountdown(
-                    duration: duration,
-                    kind: .displayLink,          // CADisplayLink 内核，更顺滑
-                    tickInterval: 1.0 / 60.0,    // 60fps
-                    tolerance: 0,
-                    queue: .main
-                )
-                // ✅ Swift 6 / Sendable “同等待遇”：
-                // 1) 先把 weak self 冻结成 strongSelf，避免 “captured var self” 警告
-                // 2) 再显式切回 MainActor，安全触碰 UIKit
-                .byProgress { [weak self] snap in
-                    guard let strongSelf = self else { return }
-                    onMainAsync(self) { vc in
-                        let ratio = Float(snap.progress(for: strongSelf.progressMode))
-                        print("mode=\(strongSelf.progressMode) elapsed=\(snap.elapsedRatio) remaining=\(snap.remainingRatio) ratio=\(ratio)")
-                        strongSelf.progressView.setProgress(ratio, animated: true)
-                        strongSelf.timeLabel.byText(String(format: "剩余：%.1f 秒", snap.remaining))
+                self.countdownProcess = JobsSwiftTimerCountdown(duration: duration,
+                                                                kind: .displayLink,          // CADisplayLink 内核，更顺滑
+                                                                tickInterval: 1.0 / 60.0,    // 60fps
+                                                                tolerance: 0,
+                                                                queue: .main)
+            // ✅ Swift 6 / Sendable “同等待遇”：
+            // 1) 先把 weak self 冻结成 strongSelf，避免 “captured var self” 警告
+            // 2) 再显式切回 MainActor，安全触碰 UIKit
+            .byProgress { [weak self] snap in
+                        guard let strongSelf = self else {
+                            return
+                        }
+                        onMainAsync(self) { vc in
+                            let ratio = Float(snap.progress(for: strongSelf.progressMode))
+                            print("mode=\(strongSelf.progressMode) elapsed=\(snap.elapsedRatio) remaining=\(snap.remainingRatio) ratio=\(ratio)")
+                            strongSelf.progressView.setProgress(ratio,
+                                                                animated: true)
+                            strongSelf.timeLabel.byText(String(format: "剩余：%.1f 秒",
+                                                               snap.remaining))
+                        }
                     }
-                }
-                .byFinished { [weak self] snap in
-                    guard let strongSelf = self else { return }
-                    onMainAsync(self) { vc in
-                        let finalRatio: Float = {
-                            switch strongSelf.progressMode {
-                            /// 处理 .countUp 分支
-                            case .countUp:   return 1.0
-                            /// 处理 .countDown 分支
-                            case .countDown: return 0.0
-                            }
-                        }()
-                        strongSelf.progressView.setProgress(finalRatio, animated: true)
-                        strongSelf.timeLabel.byText("倒计时完成 ✅（总 \(Int(snap.total)) 秒）")
-                        strongSelf.countdownProcess = nil
-                        strongSelf.setStartButton(true)
+                    .byFinished { [weak self] snap in
+                        guard let strongSelf = self else {
+                            return
+                        }
+                        onMainAsync(self) { vc in
+                            let finalRatio: Float = {
+                                switch strongSelf.progressMode {
+                        /// 处理 .countUp 分支
+                                case .countUp:
+                                    return 1.0
+                        /// 处理 .countDown 分支
+                                case .countDown:
+                                    return 0.0
+                                }
+                            }()
+                            strongSelf.progressView.setProgress(finalRatio,
+                                                                animated: true)
+                            strongSelf.timeLabel.byText("倒计时完成 ✅（总 \(Int(snap.total)) 秒）")
+                            strongSelf.countdownProcess = nil
+                            strongSelf.setStartButton(true)
+                        }
                     }
-                }
-                .byStartRunning()
+                    .byStartRunning()
             }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.durationSegment.snp.bottom).offset(40.h)
@@ -208,14 +238,19 @@ final class JobsSysProgressDemoVC: BaseVC {
     /// 取消按钮
     private lazy var cancelButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(JobsCor.systemGray, for: .normal)
-            .byTitle("取消".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
+            .byBackgroundColor(JobsCor.systemGray,
+                               for: .normal)
+            .byTitle("取消".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16))
             .byCornerRadius(8)
-            /// 普通@点按事件触发
-            .onTap { [weak self] _ in
-                guard let self else { return }
+        /// 普通@点按事件触发
+        .onTap { [weak self] _ in
+                guard let self else {
+                    return
+                }
                 countdownProcess?.cancel()
                 countdownProcess = nil
                 updateTimeLabelForIdle()
@@ -254,21 +289,27 @@ final class JobsSysProgressDemoVC: BaseVC {
 }
 
 extension JobsSysProgressDemoVC {
+
     // MARK: - Helper
     /// 空闲状态下，根据当前选中的时长更新文案 + 进度初始值
     private func updateTimeLabelForIdle() {
         let duration = selectedDuration
-        timeLabel.byText(String(format: "准备开始：%.0f 秒", duration))
+        timeLabel.byText(String(format: "准备开始：%.0f 秒",
+                                duration))
         let initialRatio: Float = {
             switch progressMode {
             /// 处理 .countUp 分支
-            case .countUp:   return 0.0
+            case .countUp:
+                return 0.0
             /// 处理 .countDown 分支
-            case .countDown: return 1.0
+            case .countDown:
+                return 1.0
             }
         }()
-        progressView.setProgress(initialRatio, animated: false)
-        modeButton.byTitle(modeButtonTitle(), for: .normal)
+        progressView.setProgress(initialRatio,
+                                 animated: false)
+        modeButton.byTitle(modeButtonTitle(),
+                           for: .normal)
     }
     /// 统一控制“开始倒计时”按钮的可用状态和样式
     private func setStartButton(_ enabled: Bool) {
@@ -299,8 +340,10 @@ extension JobsSysProgressDemoVC {
     /// UIProgressView 的 progress 还是 0~1，这里自动换算。
     private func setProgressPercent(_ percent: CGFloat,
                                     animated: Bool = true) {
-        let clamped = max(0, min(percent, 100))
+        let clamped = max(0,
+                          min(percent,100))
         let ratio = Float(clamped / 100.0)
-        progressView.setProgress(ratio, animated: animated)
+        progressView.setProgress(ratio,
+                                 animated: animated)
     }
 }

@@ -16,38 +16,41 @@ import JobsSwiftBaseDefines
 
 // MARK: - 📌给 UIViewController 的生命周期中加入探针@转发到挂载的子视图 UIView
 /// 示例代码 ➤ UIView 侧挂钩 @ UIViewController 的生命周期
-private final class UITestView: UIView, VCLifeCycleListener {
+private final class UITestView: UIView,
+                                VCLifeCycleListener {
+
     func hostLoadView() {
-        /// TODO
+    /// TODO
     }
     func hostViewDidLoad() {
-        /// TODO
+    /// TODO
     }
     func hostViewWillAppear() {
-        /// TODO
+    /// TODO
     }
     func hostViewDidAppear() {
-        /// TODO
+    /// TODO
     }
     func hostViewWillDisappear() {
-        /// TODO
+    /// TODO
     }
     func hostViewDidDisappear() {
-        /// TODO
+    /// TODO
     }
     func hostViewWillLayoutSubviews() {
-        /// TODO
+    /// TODO
     }
     func hostViewDidLayoutSubviews() {
-        /// TODO
+    /// TODO
     }
     func hostViewSafeAreaInsetsDidChange() {
-        /// TODO
+    /// TODO
     }
 }
 /// 示例代码 ➤ UIViewController 侧@注入使用（手动映射示例）
 /// 注意：实际使用本文件提供的 bindVCLifecycleListener 后，不需要手动写这些转发。
 private final class UITestVC: UIViewController {
+
     lazy var testView = {
         UITestView()
     }()
@@ -99,6 +102,7 @@ private final class UITestVC: UIViewController {
 }
 // MARK: - 用协议让 view 接收“宿主生命周期”事件（不耦合具体 view）
 public protocol VCLifeCycleListener: AnyObject {
+
     func hostLoadView()
     func hostViewDidLoad()
     func hostViewWillAppear()
@@ -113,6 +117,7 @@ public protocol VCLifeCycleListener: AnyObject {
 }
 
 public extension VCLifeCycleListener {
+
     func hostLoadView() {}
     func hostViewDidLoad() {}
     func hostViewWillAppear() {}
@@ -128,49 +133,74 @@ private var _vcListenersKey: UInt8 = 0
 private var _vcSwizzledKey: UInt8 = 0
 // MARK: - Public API
 extension UIViewController {
+
     /// 绑定一个 listener（通常是某个子 view）
     public func bindVCLifecycleListener(_ listener: VCLifeCycleListener) {
         VCLifecycleSwizzler.installIfNeeded()
-        var arr = (objc_getAssociatedObject(self, &_vcListenersKey) as? [AnyWeakBox]) ?? []
+        var arr = (objc_getAssociatedObject(self,
+                                            &_vcListenersKey) as? [AnyWeakBox]) ?? []
         // 去重（避免重复绑定）
         let obj = listener as AnyObject
-        if arr.contains(where: { $0.value === obj }) == false {
+        if arr.contains(where: {
+            $0.value === obj
+        }) == false {
             arr.append(WeakBox(obj))
-            objc_setAssociatedObject(
-                self,
-                &_vcListenersKey,
-                arr,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self,
+                                     &_vcListenersKey,
+                                     arr,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
     /// 解绑（可选）
     public func unbindVCLifecycleListener(_ listener: VCLifeCycleListener) {
-        guard var arr = objc_getAssociatedObject(self, &_vcListenersKey) as? [AnyWeakBox] else { return }
+        guard var arr = objc_getAssociatedObject(self,
+                                                 &_vcListenersKey) as? [AnyWeakBox] else {
+            return
+        }
         let obj = listener as AnyObject
-        arr.removeAll { $0.value == nil || $0.value === obj }
-        objc_setAssociatedObject(self, &_vcListenersKey, arr, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        arr.removeAll {
+            $0.value == nil || $0.value === obj
+        }
+        objc_setAssociatedObject(self,
+                                 &_vcListenersKey,
+                                 arr,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
     /// 当前活着的 listeners（自动清理 nil）
     fileprivate var _vcLifecycleListeners: [VCLifeCycleListener] {
-        let arr = (objc_getAssociatedObject(self, &_vcListenersKey) as? [AnyWeakBox]) ?? []
+        let arr = (objc_getAssociatedObject(self,
+                                            &_vcListenersKey) as? [AnyWeakBox]) ?? []
         // 清理 nil，并把 AnyObject 转回协议类型
-        let aliveObjects: [AnyObject] = arr.compactMap { $0.value }
-        let aliveListeners: [VCLifeCycleListener] = aliveObjects.compactMap { $0 as? VCLifeCycleListener }
+        let aliveObjects: [AnyObject] = arr.compactMap {
+            $0.value
+        }
+        let aliveListeners: [VCLifeCycleListener] = aliveObjects.compactMap {
+            $0 as? VCLifeCycleListener
+        }
         if aliveObjects.count != arr.count {
-            objc_setAssociatedObject(
-                self,
-                &_vcListenersKey,
-                aliveObjects.map { WeakBox($0) },
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        };return aliveListeners
+            objc_setAssociatedObject(self,
+                                     &_vcListenersKey,
+                                     aliveObjects.map {
+                WeakBox($0)
+            },
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        return aliveListeners
     }
 }
 // MARK: - Swizzler
 private enum VCLifecycleSwizzler {
+
     static func installIfNeeded() {
         // 保证只 swizzle 一次
-        if (objc_getAssociatedObject(UIViewController.self, &_vcSwizzledKey) as? Bool) == true { return }
-        objc_setAssociatedObject(UIViewController.self, &_vcSwizzledKey, true, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        if (objc_getAssociatedObject(UIViewController.self,
+                                     &_vcSwizzledKey) as? Bool) == true {
+            return
+        }
+        objc_setAssociatedObject(UIViewController.self,
+                                 &_vcSwizzledKey,
+                                 true,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         swizzle(UIViewController.self,
                 original: #selector(UIViewController.loadView),
                 swizzled: #selector(UIViewController.__probe_loadView))
@@ -200,50 +230,76 @@ private enum VCLifecycleSwizzler {
                 swizzled: #selector(UIViewController.__probe_viewSafeAreaInsetsDidChange))
     }
 
-    private static func swizzle(_ cls: AnyClass, original: Selector, swizzled: Selector) {
+    private static func swizzle(_ cls: AnyClass,
+                                original: Selector,
+                                swizzled: Selector) {
         guard
-            let m1 = class_getInstanceMethod(cls, original),
-            let m2 = class_getInstanceMethod(cls, swizzled)
-        else { return }
-        method_exchangeImplementations(m1, m2)
+        let m1 = class_getInstanceMethod(cls,
+                                         original),
+        let m2 = class_getInstanceMethod(cls,
+                                         swizzled)
+        else {
+            return
+        }
+        method_exchangeImplementations(m1,
+                                       m2)
     }
 }
 // MARK: - Probe Forwarders
 extension UIViewController {
+
     @objc fileprivate func __probe_loadView() {
         __probe_loadView()
-        _vcLifecycleListeners.forEach { $0.hostLoadView() }
+        _vcLifecycleListeners.forEach {
+            $0.hostLoadView()
+        }
     }
     @objc fileprivate func __probe_viewDidLoad() {
         __probe_viewDidLoad()
-        _vcLifecycleListeners.forEach { $0.hostViewDidLoad() }
+        _vcLifecycleListeners.forEach {
+            $0.hostViewDidLoad()
+        }
     }
     @objc fileprivate func __probe_viewWillAppear(_ animated: Bool) {
         __probe_viewWillAppear(animated)
-        _vcLifecycleListeners.forEach { $0.hostViewWillAppear() }
+        _vcLifecycleListeners.forEach {
+            $0.hostViewWillAppear()
+        }
     }
     @objc fileprivate func __probe_viewDidAppear(_ animated: Bool) {
         __probe_viewDidAppear(animated)
-        _vcLifecycleListeners.forEach { $0.hostViewDidAppear() }
+        _vcLifecycleListeners.forEach {
+            $0.hostViewDidAppear()
+        }
     }
     @objc fileprivate func __probe_viewWillDisappear(_ animated: Bool) {
         __probe_viewWillDisappear(animated)
-        _vcLifecycleListeners.forEach { $0.hostViewWillDisappear() }
+        _vcLifecycleListeners.forEach {
+            $0.hostViewWillDisappear()
+        }
     }
     @objc fileprivate func __probe_viewDidDisappear(_ animated: Bool) {
         __probe_viewDidDisappear(animated)
-        _vcLifecycleListeners.forEach { $0.hostViewDidDisappear() }
+        _vcLifecycleListeners.forEach {
+            $0.hostViewDidDisappear()
+        }
     }
     @objc fileprivate func __probe_viewWillLayoutSubviews() {
         __probe_viewWillLayoutSubviews()
-        _vcLifecycleListeners.forEach { $0.hostViewWillLayoutSubviews() }
+        _vcLifecycleListeners.forEach {
+            $0.hostViewWillLayoutSubviews()
+        }
     }
     @objc fileprivate func __probe_viewDidLayoutSubviews() {
         __probe_viewDidLayoutSubviews()
-        _vcLifecycleListeners.forEach { $0.hostViewDidLayoutSubviews() }
+        _vcLifecycleListeners.forEach {
+            $0.hostViewDidLayoutSubviews()
+        }
     }
     @objc fileprivate func __probe_viewSafeAreaInsetsDidChange() {
         __probe_viewSafeAreaInsetsDidChange()
-        _vcLifecycleListeners.forEach { $0.hostViewSafeAreaInsetsDidChange() }
+        _vcLifecycleListeners.forEach {
+            $0.hostViewSafeAreaInsetsDidChange()
+        }
     }
 }

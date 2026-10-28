@@ -16,15 +16,23 @@ import UIKit
 /// 只保证“能从头到尾走一遍”，不保证能往回走、不保证能下标读、不保证能遍历第二遍
 
 extension Sequence where Element: Comparable {
+
     /// 一次遍历拿到 (最小, 最大)
     public func minMax() -> (min: Element, max: Element)? {
         var iterator = makeIterator()
-        guard let first = iterator.next() else { return nil }
+        guard let first = iterator.next() else {
+            return nil
+        }
         var minVal = first
         var maxVal = first
         while let next = iterator.next() {
-            if next < minVal { minVal = next }
-            if next > maxVal { maxVal = next }
-        };return (min: minVal, max: maxVal)
+            if next < minVal {
+                minVal = next
+            }
+            if next > maxVal {
+                maxVal = next
+            }
+        }
+        return (min: minVal, max: maxVal)
     }
 }

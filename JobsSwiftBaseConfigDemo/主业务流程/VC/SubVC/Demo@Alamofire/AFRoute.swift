@@ -19,43 +19,63 @@ private func jobs_encodeJSONObject(_ value: Any) throws -> Data {
     let mirror = Mirror(reflecting: value)
     var obj: [String: Any] = [:]
     for (labelOpt, v) in mirror.children {
-        guard let label = labelOpt else { continue }
+        guard let label = labelOpt else {
+            continue
+        }
         // unwrap Optional
         let mv = Mirror(reflecting: v)
         if mv.displayStyle == .optional {
-            if mv.children.count == 0 { continue } // nil
+            if mv.children.count == 0 {
+                continue
+            } // nil
             let unwrapped = mv.children.first!.value
-            if let json = jobs_jsonValue(unwrapped) { obj[label] = json }
+            if let json = jobs_jsonValue(unwrapped) {
+                obj[label] = json
+            }
             continue
         }
-        if let json = jobs_jsonValue(v) { obj[label] = json }
-    };return try JSONSerialization.data(withJSONObject: obj)
+        if let json = jobs_jsonValue(v) {
+            obj[label] = json
+        }
+    }
+    return try JSONSerialization.data(withJSONObject: obj)
 }
 
 private func jobs_jsonValue(_ v: Any) -> Any? {
     switch v {
     /// 处理 String 类型分支
-    case let x as String: return x
+    case let x as String:
+        return x
     /// 处理 Int 类型分支
-    case let x as Int: return x
+    case let x as Int:
+        return x
     /// 处理 Int64 类型分支
-    case let x as Int64: return x
+    case let x as Int64:
+        return x
     /// 处理 Double 类型分支
-    case let x as Double: return x
+    case let x as Double:
+        return x
     /// 处理 Float 类型分支
-    case let x as Float: return x
+    case let x as Float:
+        return x
     /// 处理 Bool 类型分支
-    case let x as Bool: return x
+    case let x as Bool:
+        return x
     /// 处理 [Any] 类型分支
     case let x as [Any]:
-        return x.compactMap { jobs_jsonValue($0) }
+        return x.compactMap {
+            jobs_jsonValue($0)
+        }
     /// 处理 [String: Any] 类型分支
     case let x as [String: Any]:
         // sanitize nested dictionary
         var out: [String: Any] = [:]
         for (k, vv) in x {
-            if let j = jobs_jsonValue(vv) { out[k] = j }
-        };return out
+            if let j = jobs_jsonValue(vv) {
+                out[k] = j
+            }
+        }
+        return out
     /// 未匹配已知分支时执行兜底处理
     default:
         return nil
@@ -63,6 +83,7 @@ private func jobs_jsonValue(_ v: Any) -> Any? {
 }
 
 enum AFRoute: URLRequestConvertible {
+
     case ghZen
     case ghUser(username: String)
     case ghSearchUsers(q: String, page: Int?)
@@ -80,36 +101,50 @@ enum AFRoute: URLRequestConvertible {
     var baseURL: URL {
         switch self {
         /// 合并处理 .ghZen、.ghUser、.ghSearchUsers 分支
-        case .ghZen, .ghUser, .ghSearchUsers: return URL(string: "https://api.github.com")!
+        case .ghZen, .ghUser, .ghSearchUsers:
+            return URL(string: "https://api.github.com")!
         /// 合并处理 .login、.createUser、.updateUser、.deleteUser 分支
-        case .login, .createUser, .updateUser, .deleteUser: return URL(string: "https://reqres.in")!
+        case .login, .createUser, .updateUser, .deleteUser:
+            return URL(string: "https://reqres.in")!
         /// 合并处理 .uploadAvatar、.downloadPNG、.downloadBytes 分支
-        case .uploadAvatar, .downloadPNG, .downloadBytes: return URL(string: "https://httpbin.org")!
+        case .uploadAvatar, .downloadPNG, .downloadBytes:
+            return URL(string: "https://httpbin.org")!
         }
     }
 
     var path: String {
         switch self {
         /// 处理 .ghZen 分支
-        case .ghZen: return "/zen"
+        case .ghZen:
+            return "/zen"
         /// 处理 .ghUser 分支
-        case let .ghUser(username): return "/users/\(username)"
+        case let .ghUser(username):
+            return "/users/\(username)"
         /// 处理 .ghSearchUsers 分支
-        case .ghSearchUsers: return "/search/users"
+        case .ghSearchUsers:
+            return "/search/users"
         /// 处理 .login 分支
-        case .login: return "/api/login"
+        case .login:
+            return "/api/login"
         /// 处理 .createUser 分支
-        case .createUser: return "/api/users"
+        case .createUser:
+            return "/api/users"
         /// 处理 .updateUser 分支
-        case let .updateUser(id, _): return "/api/users/\(id)"
+        case let .updateUser(id,
+                             _):
+            return "/api/users/\(id)"
         /// 处理 .deleteUser 分支
-        case let .deleteUser(id): return "/api/users/\(id)"
+        case let .deleteUser(id):
+            return "/api/users/\(id)"
         /// 处理 .uploadAvatar 分支
-        case .uploadAvatar: return "/post"
+        case .uploadAvatar:
+            return "/post"
         /// 处理 .downloadPNG 分支
-        case .downloadPNG:  return "/image/png"
+        case .downloadPNG:
+            return "/image/png"
         /// 处理 .downloadBytes 分支
-        case let .downloadBytes(n): return "/bytes/\(n)"
+        case let .downloadBytes(n):
+            return "/bytes/\(n)"
         }
     }
 
@@ -133,19 +168,23 @@ enum AFRoute: URLRequestConvertible {
     var timeout: TimeInterval {
         switch self {
         /// 合并处理 .uploadAvatar、.downloadPNG、.downloadBytes 分支
-        case .uploadAvatar, .downloadPNG, .downloadBytes: return 60
+        case .uploadAvatar, .downloadPNG, .downloadBytes:
+            return 60
         /// 未匹配已知分支时执行兜底处理
-        default: return 20
+        default:
+            return 20
         }
     }
     // MARK: - Headers
     var headers: HTTPHeaders {
         var h: HTTPHeaders = ["Accept": "application/json"]
         if case .uploadAvatar = self {
-            // multipart 自带 boundary Content-Type
+        // multipart 自带 boundary Content-Type
         } else {
-            h.add(name: "Content-Type", value: "application/json; charset=utf-8")
-        };return h
+            h.add(name: "Content-Type",
+                  value: "application/json; charset=utf-8")
+        }
+        return h
     }
     // MARK: - Encoding / Body
     func asURLRequest() throws -> URLRequest {
@@ -160,15 +199,22 @@ enum AFRoute: URLRequestConvertible {
             // 这些要么无 body，要么交给 upload/download API
             return req
         /// 处理 .ghSearchUsers 分支
-        case let .ghSearchUsers(q, page):
-            var comps = URLComponents(url: url, resolvingAgainstBaseURL: false)!
-            var items: [URLQueryItem] = [.init(name: "q", value: q)]
-            if let p = page { items.append(.init(name: "page", value: "\(p)")) }
+        case let .ghSearchUsers(q,
+                                page):
+            var comps = URLComponents(url: url,
+                                      resolvingAgainstBaseURL: false)!
+            var items: [URLQueryItem] = [.init(name: "q",
+                                               value: q)]
+            if let p = page {
+                items.append(.init(name: "page",
+                                   value: "\(p)"))
+            }
             comps.queryItems = items
             req.url = comps.url
             return req
         /// 处理 .login 分支
-        case let .login(email, password):
+        case let .login(email,
+                        password):
             let body = ["email": email, "password": password]
             req.httpBody = try JSONSerialization.data(withJSONObject: body)
             return req
@@ -177,7 +223,8 @@ enum AFRoute: URLRequestConvertible {
             req.httpBody = try jobs_encodeJSONObject(b)
             return req
         /// 处理 .updateUser 分支
-        case let .updateUser(_, b):
+        case let .updateUser(_,
+                             b):
             req.httpBody = try jobs_encodeJSONObject(b)
             return req
         }
@@ -188,17 +235,23 @@ enum AFRoute: URLRequestConvertible {
         /// 合并处理 .downloadPNG、.downloadBytes 分支
         case .downloadPNG, .downloadBytes:
             return { _, _ in
-                let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                    .appendingPathComponent("Downloads", isDirectory: true)
-                try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+                let dir = FileManager.default.urls(for: .documentDirectory,
+                                                   in: .userDomainMask) [0]
+                    .appendingPathComponent("Downloads",
+                                            isDirectory: true)
+                try? FileManager.default.createDirectory(at: dir,
+                                                         withIntermediateDirectories: true)
                 let name: String = {
                     switch self {
                     /// 处理 .downloadPNG 分支
-                    case .downloadPNG: return "sample.png"
+                    case .downloadPNG:
+                        return "sample.png"
                     /// 处理 .downloadBytes 分支
-                    case let .downloadBytes(n): return "bytes_\(n).bin"
+                    case let .downloadBytes(n):
+                        return "bytes_\(n).bin"
                     /// 未匹配已知分支时执行兜底处理
-                    default: return "file.bin"
+                    default:
+                        return "file.bin"
                     }
                 }()
                 let url = dir.appendingPathComponent(name)

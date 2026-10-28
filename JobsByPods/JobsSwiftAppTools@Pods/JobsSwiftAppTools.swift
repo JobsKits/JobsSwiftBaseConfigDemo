@@ -25,7 +25,8 @@ import SwiftEntryKit
 import SnapKit
 
 // MARK: 🔔 通用弹窗提示
-public func presentAlert(for urlString: String, on textView: UITextView) {
+public func presentAlert(for urlString: String,
+                         on textView: UITextView) {
     // 💡 iOS17+：delegate 不一定是当前 VC，用原来的兜底逻辑
     guard let host = textView.window?.rootViewController
         ?? UIApplication.jobsTopMostVC(ignoreAlert: true) else {
@@ -33,9 +34,10 @@ public func presentAlert(for urlString: String, on textView: UITextView) {
     }
 
     UIAlertController
-        .makeAlert("点击链接", "已点击：\(urlString)")
+        .makeAlert("点击链接",
+                   "已点击：\(urlString)")
         .byAddOK()                  // 默认“确定”按钮
-        .byPresent(host)            // 用封装过的 present 逻辑
+    .byPresent(host)            // 用封装过的 present 逻辑
 }
 // MARK: - 启动分类处理（Block DSL）
 ///
@@ -44,12 +46,11 @@ public func presentAlert(for urlString: String, on textView: UITextView) {
 ///   - firstToday: 当天第一次启动
 ///   - normal: 普通启动
 public enum AppLaunchManager {
+
     @discardableResult
-    public static func handleLaunch(
-        firstInstall: (jobsByVoidBlock)? = nil,
-        firstToday: (jobsByVoidBlock)? = nil,
-        normal: (jobsByVoidBlock)? = nil
-    ) -> LaunchKind {
+    public static func handleLaunch(firstInstall: (jobsByVoidBlock)? = nil,
+                                    firstToday: (jobsByVoidBlock)? = nil,
+                                    normal: (jobsByVoidBlock)? = nil) -> LaunchKind {
         let kind = LaunchChecker.markAndClassifyThisLaunch()
         switch kind {
         /// 处理 .firstInstallLaunch 分支
@@ -64,11 +65,13 @@ public enum AppLaunchManager {
         case .normal:
             print("📦 普通启动")
             normal?()
-        };return kind
+        }
+        return kind
     }
 }
 // MARK: - App 启动检查
 public enum LaunchChecker {
+
     private static let stateLock = NSLock.jobsMake { _ in }
     // 存储键（全部用 UInt8）
     static let kFirstLaunchFlag = "com.jobs.launch.first"   // 0/1
@@ -82,16 +85,24 @@ public enum LaunchChecker {
     @discardableResult
     public static func markAndClassifyThisLaunch(now: Date = Date()) -> LaunchKind {
         stateLock.lock()
-        defer { stateLock.unlock() }
+        defer {
+            stateLock.unlock()
+        }
         // 1) 是否首次安装启动
         let firstFlag = UD.uint8(forKey: kFirstLaunchFlag) ?? 0
         if firstFlag == 0 {
-            UD.setUInt8(1, forKey: kFirstLaunchFlag)
+            UD.setUInt8(1,
+                        forKey: kFirstLaunchFlag)
             // 同时写入“今天”的 Y/M/D
             let (y, m, d) = ymd(from: now)
-            writeYMD(y, m, d, UD: UD)
+            writeYMD(y,
+                     m,
+                     d,
+                     UD: UD)
             UD.synchronize()
-            logLaunch(kind: .firstInstallLaunch, now: now, lastYMD: nil)
+            logLaunch(kind: .firstInstallLaunch,
+                      now: now,
+                      lastYMD: nil)
             return .firstInstallLaunch
         }
         // 2) 当日首次：对比存储的 Y/M/D（全是 UInt8）
@@ -101,7 +112,10 @@ public enum LaunchChecker {
         let (curY, curM, curD) = ymd(from: now)
         if storedY != curY || storedM != curM || storedD != curD {
             // 新的一天 → 更新 Y/M/D
-            writeYMD(curY, curM, curD, UD: UD)
+            writeYMD(curY,
+                     curM,
+                     curD,
+                     UD: UD)
             UD.synchronize()
             logLaunch(kind: .firstLaunchToday,
                       now: now,
@@ -109,23 +123,29 @@ public enum LaunchChecker {
             return .firstLaunchToday
         }
         // 3) 普通启动
-        logLaunch(kind: .normal, now: now, lastYMD: (storedY, storedM, storedD))
+        logLaunch(kind: .normal,
+                  now: now,
+                  lastYMD: (storedY, storedM, storedD))
         return .normal
     }
     /// 是否为安装后的第一次启动（不产生副作用，纯读）
     public static var isFirstInstallLaunch: Bool {
         stateLock.lock()
-        defer { stateLock.unlock() }
+        defer {
+            stateLock.unlock()
+        }
         return (UD.uint8(forKey: kFirstLaunchFlag) ?? 0) == 0
     }
     /// 是否为今天的第一次启动（不产生副作用，纯读）
     public static func isFirstLaunchToday(now: Date = Date()) -> Bool {
         stateLock.lock()
-        defer { stateLock.unlock() }
+        defer {
+            stateLock.unlock()
+        }
         guard
-            let y  = UD.uint8(forKey: kY),
-            let m  = UD.uint8(forKey: kM),
-            let dd = UD.uint8(forKey: kD)
+        let y  = UD.uint8(forKey: kY),
+        let m  = UD.uint8(forKey: kM),
+        let dd = UD.uint8(forKey: kD)
         else {
             // 没存过，当作今天第一次
             return true
@@ -136,7 +156,9 @@ public enum LaunchChecker {
     /// 调试/测试用：清空标记
     public static func reset() {
         stateLock.lock()
-        defer { stateLock.unlock() }
+        defer {
+            stateLock.unlock()
+        }
         UD.removeBy(kFirstLaunchFlag)
             .removeBy(kY)
             .removeBy(kM)
@@ -145,12 +167,14 @@ public enum LaunchChecker {
 }
 // MARK: - 私有工具
 extension LaunchChecker {
+
     /// 以 UInt8 表示的 Y/M/D（年为 2000 基准偏移）
     static func ymd(from date: Date) -> (UInt8, UInt8, UInt8) {
         var cal = Calendar(identifier: .gregorian)
         cal.locale = Locale(identifier: "zh_CN")
         cal.timeZone = .current
-        let c = cal.dateComponents([.year, .month, .day], from: date)
+        let c = cal.dateComponents([.year, .month, .day],
+                                   from: date)
         let y = UInt8(clamping: (c.year ?? 2000) - yearBase)
         let m = UInt8(clamping: c.month ?? 1)
         let d = UInt8(clamping: c.day ?? 1)
@@ -161,9 +185,12 @@ extension LaunchChecker {
                          _ m: UInt8,
                          _ d: UInt8,
                          UD: UserDefaults) {
-        UD.setUInt8(y, forKey: kY)
-        UD.setUInt8(m, forKey: kM)
-        UD.setUInt8(d, forKey: kD)
+        UD.setUInt8(y,
+                    forKey: kY)
+        UD.setUInt8(m,
+                    forKey: kM)
+        UD.setUInt8(d,
+                    forKey: kD)
     }
     /// “尽可能最全”的时间格式化（用于打印，而不是存储）
     static func fullFormatter() -> DateFormatter {
@@ -176,11 +203,9 @@ extension LaunchChecker {
             .byTimeZone(.current)
         return f
     }
-    static func logLaunch(
-        kind: LaunchKind,
-        now: Date,
-        lastYMD: (UInt8?, UInt8?, UInt8?)? = nil
-    ) {
+    static func logLaunch(kind: LaunchKind,
+                          now: Date,
+                          lastYMD: (UInt8?, UInt8?, UInt8?)? = nil) {
         let stamp = fullFormatter().string(from: now)
         let last = lastYMD ?? (nil, nil, nil)
         func desc(_ tuple: (UInt8?, UInt8?, UInt8?)) -> String {
@@ -206,7 +231,8 @@ extension LaunchChecker {
 }
 // MARK: - 关于时间格式化
 public func nowClock() -> String {
-    DateFormatter.jobsMake { _ in }
+    DateFormatter
+        .jobsMake { _ in }
         .byLocale(.autoupdatingCurrent)
         .byTimeZone(.autoupdatingCurrent)
         .byDateFormat("HH:mm:ss")
@@ -214,68 +240,82 @@ public func nowClock() -> String {
 }
 
 public func fmt(_ d: Date) -> String {
-    DateFormatter.jobsMake { _ in }.byDateFormat("HH:mm:ss.SSS").string(from: d)
+    DateFormatter
+        .jobsMake { _ in }
+        .byDateFormat("HH:mm:ss.SSS").string(from: d)
 }
 // MARK: - 判断目标字符串是否是URL
 @inline(__always)
 public func isHttpURL(_ raw: String?) -> Bool {
     guard let s = raw?.trimmingCharacters(in: .whitespacesAndNewlines),
           !s.isEmpty
-    else { return false }
+    else {
+        return false
+    }
     let p = s.lowercased()
     return p.hasPrefix("http://") || p.hasPrefix("https://")
 }
 /// 全局通用注册@UITableViewCell及其子类
 extension UITableView {
+
     @discardableResult
-    public func register() -> Self{
+    public func register() -> Self {
         self
             .byRegisterCell(UITableViewCell.self)
             .byRegisterCell(BaseTableViewCellByDefault.self)
             .byRegisterCell(BaseTableViewCellByValue1.self)
             .byRegisterCell(BaseTableViewCellByValue2.self)
             .byRegisterCell(BaseTableViewCellBySubtitle.self)
-        return self;
+        return self
     }
 }
 /// 全局通用注册@UICollectionViewCell及其子类
 extension UICollectionView {
+
     @discardableResult
-    public func register() -> Self{
+    public func register() -> Self {
         self.byRegisterCell(UICollectionViewCell.self)
-        return self;
+        return self
     }
 }
 // MARK: - 弹窗策略
-public func makeEKAttributes() -> EKAttributes{
+public func makeEKAttributes() -> EKAttributes {
     let anim = EKAttributes.animScaleInFadeOut
     return EKAttributes()
         .byPosition(.center)
         .byDuration(.infinity)  // 交互型：不自动消失
-        // 统一交给 EK 控制外观
-        .byBackground(.color(color: EKColor(JobsCor.secondarySystemBackground)))
+    // 统一交给 EK 控制外观
+    .byBackground(.color(color: EKColor(JobsCor.secondarySystemBackground)))
         .byCorner(radius: 14)
         .byShadow()
-        // 外部点击无效，必须点按钮
-        .byEntryInteraction(.absorbTouches)
+    // 外部点击无效，必须点按钮
+    .byEntryInteraction(.absorbTouches)
         .byScreenInteraction(.forward)
-        // 给一点儿半透明遮罩增强聚焦，但不响应关闭
-        .byScreen(.color(color: EKColor(UIColor(gray: 0, alpha: 0.15))))
+    // 给一点儿半透明遮罩增强聚焦，但不响应关闭
+    .byScreen(.color(color: EKColor(UIColor(gray: 0,
+                                            alpha: 0.15))))
         .byDisplayMode(.inferred)
         .byStatusBar(.inferred)
         .byEntrance(anim.entrance)
         .byExit(anim.exit)
 }
 // MARK: - 时间格式化策略
-public func fmt(_ date: Date, _ f: String) -> String {
-    DateFormatter.jobsMake { _ in }.byLocale(.current).byDateFormat(f).string(from: date)
+public func fmt(_ date: Date,
+                _ f: String) -> String {
+    DateFormatter
+        .jobsMake { _ in }
+        .byLocale(.current)
+        .byDateFormat(f).string(from: date)
 }
 // MARK: - 分割线
 extension UIView {
+
     /// 在指定 view 下方添加一条分割线，添加到当前 view（self）上
     @discardableResult
-    public func makeBelowSeparatorBy(below anchor:UIView ,offset t:CGFloat = 0.0) -> UIView {
-        UIView.jobsMake { _ in }
+    public func makeBelowSeparatorBy(below anchor: UIView ,
+                                     offset t: CGFloat = 0.0) -> UIView {
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor("#3C3C431F".cor)
             .byAddTo(self) { make in
                 make.height.equalTo(0.6)
@@ -285,14 +325,16 @@ extension UIView {
     }
     /// 在当前 UILayoutGuide 下方添加一条分割线，添加到它的 owningView 上
     @discardableResult
-    public func makeBelowSeparatorBy(below anchor:UILayoutGuide ,offset t: CGFloat = 0.0) -> UIView? {
+    public func makeBelowSeparatorBy(below anchor: UILayoutGuide ,
+                                     offset t: CGFloat = 0.0) -> UIView? {
         // 1️⃣ owningView 是可选，要先解包，而且函数要返回 UIView
         guard let hostView = anchor.owningView else {
             assertionFailure("UILayoutGuide 没有 owningView，无法添加分割线")
             return nil
         }
         // 2️⃣ 分割线加到 hostView 上，约束基于“当前 guide(self)” 的 bottom
-        return UIView.jobsMake { _ in }
+        return UIView
+            .jobsMake { _ in }
             .byBackgroundColor("#3C3C431F".cor)
             .byAddTo(hostView) { make in
                 make.height.equalTo(0.6)
@@ -303,22 +345,27 @@ extension UIView {
 }
 // MARK: - 网络监听
 private enum JobsNetworkListenerKeys {
+
     static var labelKey: UInt8 = 0
 }
 
 public extension UIView {
+
     /// 为当前 view 创建 / 复用一个悬浮网络监听 Label
     @discardableResult
     func makeNetworkListener(in containerView: UIView? = nil) -> UILabel {
         // 1️⃣ 如果已经有了，直接复用
-        if let cached = objc_getAssociatedObject(self, &JobsNetworkListenerKeys.labelKey) as? UILabel {
+        if let cached = objc_getAssociatedObject(self,
+                                                 &JobsNetworkListenerKeys.labelKey) as? UILabel {
             return cached
         }
         // 2️⃣ 第一次创建
         let container = containerView ?? self
-        let label = UILabel.jobsMake { _ in }
+        let label = UILabel
+            .jobsMake { _ in }
             .byText("网络初始化中...".tr)
-            .byFont(JobsFont.systemFont(ofSize: 11, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 11,
+                                        weight: .medium))
             .byTextColor(JobsCor.white)
             .byNumberOfLines(2)
             .byTextAlignment(.center)
@@ -331,7 +378,7 @@ public extension UIView {
                     .byContainer(container)
                     .byStart(.point(CGPoint(x: container.bounds.width - 140,
                                             y: container.bounds.height - 250))) // 起始点（可用区域坐标）
-                    .byFallbackSize(CGSize(width: 140, height: 48))
+            .byFallbackSize(CGSize(width: 140, height: 48))
                     .byDocking(.nearestEdge)
                     .byHapticOnDock(true)
             }
@@ -344,7 +391,7 @@ public extension UIView {
     }
 }
 
-public func networkNormalListenerBy(_ view:UIView){
+public func networkNormalListenerBy(_ view: UIView) {
     JobsNetworkTrafficMonitor.shared
         .byOnUpdate { [weak view] source, up, down in
             guard let view else {
@@ -356,12 +403,13 @@ public func networkNormalListenerBy(_ view:UIView){
             源: \(source.displayName)
             ⬆︎ \(upStr)  ⬇︎ \(downStr)
             """
-            view.makeNetworkListener().byText(text)
+            view.makeNetworkListener()
+                .byText(text)
         }
         .byStart(interval: 1.0)
 }
 
-public func networkRichListenerBy(_ view:UIView){
+public func networkRichListenerBy(_ view: UIView) {
     JobsNetworkTrafficMonitor.shared
         .byOnUpdate { [weak view] source, up, down in
             guard let view else {
@@ -369,19 +417,21 @@ public func networkRichListenerBy(_ view:UIView){
             }
             let upStr   = jobs_formatSpeed(up)
             let downStr = jobs_formatSpeed(down)
-            // 段落样式：居中 + 行距
+        // 段落样式：居中 + 行距
             let paragraph = jobsMakeParagraphStyle { ps in
                 ps.alignment = .center
                 ps.lineSpacing = 2
             }
-            // 用 JobsRichText 拼富文本
+        // 用 JobsRichText 拼富文本
             let attr = JobsRichText.make([
                 // 第 1 行：源
                 JobsRichRun(.text("源: "))
-                    .font(JobsFont.systemFont(ofSize: 10, weight: .medium))
+                    .font(JobsFont.systemFont(ofSize: 10,
+                                              weight: .medium))
                     .color(JobsCor.secondaryLabel),
                 JobsRichRun(.text(source.displayName))
-                    .font(JobsFont.systemFont(ofSize: 11, weight: .semibold))
+                    .font(JobsFont.systemFont(ofSize: 11,
+                                              weight: .semibold))
                     .color(JobsCor.white),
                 JobsRichRun(.text("\n")),
                 // 第 2 行：上行
@@ -389,18 +439,22 @@ public func networkRichListenerBy(_ view:UIView){
                     .font(JobsFont.systemFont(ofSize: 11))
                     .color(JobsCor.systemGreen),
                 JobsRichRun(.text(upStr + "  "))
-                    .font(JobsFont.monospacedDigitSystemFont(ofSize: 11, weight: .medium))
+                    .font(JobsFont.monospacedDigitSystemFont(ofSize: 11,
+                                                             weight: .medium))
                     .color(JobsCor.white),
                 // 下行
                 JobsRichRun(.text("⬇︎ "))
                     .font(JobsFont.systemFont(ofSize: 11))
                     .color(JobsCor.systemRed),
                 JobsRichRun(.text(downStr))
-                    .font(JobsFont.monospacedDigitSystemFont(ofSize: 11, weight: .medium))
+                    .font(JobsFont.monospacedDigitSystemFont(ofSize: 11,
+                                                             weight: .medium))
                     .color(JobsCor.white)
-            ], paragraphStyle: paragraph)
-            // 单例悬浮 Label + 富文本
-            view.makeNetworkListener().byAttributedString(attr)
+            ],
+                                         paragraphStyle: paragraph)
+        // 单例悬浮 Label + 富文本
+            view.makeNetworkListener()
+                .byAttributedString(attr)
         }
         .byStart(interval: 1.0)
 }
@@ -408,7 +462,7 @@ public func networkRichListenerBy(_ view:UIView){
 /// v0: 手指离开瞬间的速度（pt/s）
 /// d: UIScrollView.DecelerationRate.normal.rawValue 之类
 public func projectDistance(v0: CGFloat,
-                     decelerationRate d: CGFloat) -> CGFloat {
+                            decelerationRate d: CGFloat) -> CGFloat {
     guard v0.isFinite, d.isFinite, d >= 0, d < 1 else {
         return 0
     }
@@ -416,16 +470,16 @@ public func projectDistance(v0: CGFloat,
     return distance.isFinite ? distance : 0
 }
 /// 旋转180
-public func transform180ByBOOL(_ expanded : Bool) -> CGAffineTransform{
+public func transform180ByBOOL(_ expanded : Bool) -> CGAffineTransform {
     expanded
-    ? CGAffineTransform(rotationAngle: .pi)
-    : .identity
+        ? CGAffineTransform(rotationAngle: .pi)
+        : .identity
 }
 /// 旋转90
-public func transform90ByBOOL(_ expanded : Bool) -> CGAffineTransform{
+public func transform90ByBOOL(_ expanded : Bool) -> CGAffineTransform {
     expanded
-    ? CGAffineTransform(rotationAngle: .pi / 2)
-    : .identity
+        ? CGAffineTransform(rotationAngle: .pi / 2)
+        : .identity
 }
 /// 根据展开状态返回对应的 3D 折叠变换矩阵
 ///
@@ -438,10 +492,10 @@ public func transform90ByBOOL(_ expanded : Bool) -> CGAffineTransform{
 /// 使用场景：
 /// 常用于 UITableViewCell / UICollectionViewCell 的展开收起动画，
 /// 配合 UIView.animate 可实现类似“翻页 / 折叠”的 3D 动画效果。
-public func foldTransformByBOOL(_ expanded : Bool) -> CATransform3D{
+public func foldTransformByBOOL(_ expanded : Bool) -> CATransform3D {
     expanded
-    ? CATransform3DIdentity
-    : foldTransform()
+        ? CATransform3DIdentity
+        : foldTransform()
 }
 /// 生成一个“折叠隐藏”的 3D 变换矩阵
 ///
@@ -474,11 +528,9 @@ public func foldTransformByBOOL(_ expanded : Bool) -> CATransform3D{
 public func foldTransform() -> CATransform3D {
     var t = CATransform3DIdentity
     t.m34 = -1 / 700
-    return CATransform3DRotate(
-        t,
-        -.pi / 2,
-        1,
-        0,
-        0
-    )
+    return CATransform3DRotate(t,
+                               -.pi / 2,
+                               1,
+                               0,
+                               0)
 }

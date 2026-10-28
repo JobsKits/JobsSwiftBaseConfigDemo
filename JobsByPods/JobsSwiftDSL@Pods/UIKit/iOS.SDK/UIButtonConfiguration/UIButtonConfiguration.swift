@@ -15,6 +15,7 @@ import JobsSwiftDSL
 
 @available(iOS 15.0, tvOS 15.0, *)
 public extension UIButton.Configuration {
+
     // MARK: - Convenience style factories (static styles)
     @discardableResult
     @inlinable
@@ -351,7 +352,8 @@ public extension UIButton.Configuration {
     /// Generic keyPath setter, helps you avoid writing wrappers for your own custom fields.
     @discardableResult
     @inlinable
-    func by<T>(_ keyPath: WritableKeyPath<Self, T>, _ value: T) -> Self {
+    func by<T>(_ keyPath: WritableKeyPath<Self, T>,
+               _ value: T) -> Self {
         var c = self
         c[keyPath: keyPath] = value
         return c
@@ -370,36 +372,36 @@ public extension UIButton.Configuration {
     func byForcePlainKeepingContent() -> Self {
         let old = self
         var c : UIButton.Configuration = .plain()
-            // MARK: - Background / base colors
-            .byBackground(old.background)
+        // MARK: - Background / base colors
+        .byBackground(old.background)
             .byBaseForegroundColor(old.baseForegroundColor)
             .byBaseBackgroundColor(old.baseBackgroundColor)
-            // MARK: - Corner / Size / Mac idiom
-            .byCornerStyle(old.cornerStyle)
+        // MARK: - Corner / Size / Mac idiom
+        .byCornerStyle(old.cornerStyle)
             .byButtonSize(old.buttonSize)
             .byMacIdiomStyle(old.macIdiomStyle)
-            // MARK: - Title / Subtitle
-            .byTitle(old.title)
+        // MARK: - Title / Subtitle
+        .byTitle(old.title)
             .byAttributedTitle(old.attributedTitle)
             .byTitleTextAttributesTransformer(old.titleTextAttributesTransformer)
             .bySubtitle(old.subtitle)
             .byAttributedSubtitle(old.attributedSubtitle)
             .bySubtitleTextAttributesTransformer(old.subtitleTextAttributesTransformer)
-            // MARK: - Image
-            .byImage(old.image)
+        // MARK: - Image
+        .byImage(old.image)
             .byImageColorTransformer(old.imageColorTransformer)
             .byPreferredSymbolConfigurationForImage(old.preferredSymbolConfigurationForImage)
             .byImagePlacement(old.imagePlacement)
             .byImagePadding(old.imagePadding)
-            // MARK: - Layout
-            .byContentInsets(old.contentInsets)
+        // MARK: - Layout
+        .byContentInsets(old.contentInsets)
             .byTitlePadding(old.titlePadding)
             .byTitleAlignment(old.titleAlignment)
-            // MARK: - Activity indicator
-            .byShowsActivityIndicator(old.showsActivityIndicator)
+        // MARK: - Activity indicator
+        .byShowsActivityIndicator(old.showsActivityIndicator)
             .byActivityIndicatorColorTransformer(old.activityIndicatorColorTransformer)
-            // MARK: - Behavior
-            .byAutomaticallyUpdateForSelection(old.automaticallyUpdateForSelection)
+        // MARK: - Behavior
+        .byAutomaticallyUpdateForSelection(old.automaticallyUpdateForSelection)
         // MARK: - iOS 16+ Indicator
         if #available(iOS 16.0, tvOS 16.0, *) {
             c = c
@@ -409,6 +411,7 @@ public extension UIButton.Configuration {
         // MARK: - iOS 26+ Symbol content transition
         if #available(iOS 26.0, tvOS 26.0, *) {
             c = c.bySymbolContentTransition(old.symbolContentTransition)
-        };return c
+        }
+        return c
     }
 }

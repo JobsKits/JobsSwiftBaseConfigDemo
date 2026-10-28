@@ -22,9 +22,11 @@ import GKNavigationBarSwift
 
 #if !canImport(FMDB) && canImport(WCDB)
 final class WCDBDemoVC: BaseVC {
+
     private let horizontalInset: CGFloat = 16
     private lazy var hintLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byBgCor(JobsCor.systemCyan)
             .byText("WCDB Demo\nDB: \(DemoDB.shared.dbPath)")
@@ -43,7 +45,9 @@ final class WCDBDemoVC: BaseVC {
         UIButton.sys()
             .byTitle("Insert One Row")
             .onTap { [weak self] sender in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 do {
                     let short = String(UUID().uuidString.prefix(8))
                     let rowID = try DemoDB.shared.insert("hello-\(short)")
@@ -64,12 +68,14 @@ final class WCDBDemoVC: BaseVC {
         UIButton.sys()
             .byTitle("Query Latest 20")
             .onTap { [weak self] sender in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 do {
                     let list = try DemoDB.shared.fetchLatest(limit: 20)
-                    // 5) 用的时候，用 .byVisible(YES) 来唤起
+                // 5) 用的时候，用 .byVisible(YES) 来唤起
                     player.byVisible(YES)
-                    // 逆序显示成“从旧到新”
+                // 逆序显示成“从旧到新”
                     let lines = list.reversed().map { m -> String in
                         let id = m.identifier ?? -1
                         let text = m.content ?? ""
@@ -92,7 +98,9 @@ final class WCDBDemoVC: BaseVC {
         UIButton.sys()
             .byTitle("Clear Table")
             .onTap { [weak self] sender in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 do {
                     try DemoDB.shared.clear()
                     player.byVisible(YES)
@@ -109,7 +117,8 @@ final class WCDBDemoVC: BaseVC {
     }()
 
     private lazy var player: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(UIColor(gray: 0.96 * 255))
             .byCornerRadius(12)
             .byVisible(NO)
@@ -122,9 +131,11 @@ final class WCDBDemoVC: BaseVC {
     }()
 
     private lazy var resultTextView: UITextView = {
-        UITextView.jobsMake { _ in }
+        UITextView
+            .jobsMake { _ in }
             .byEditable(NO)
-            .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 12,
+                                                  weight: .regular))
             .byAddTo(player) { make in
                 make.edges.equalToSuperview().inset(12)
             }

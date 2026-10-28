@@ -15,6 +15,7 @@ import UIKit
 import JXSegmentedView
 // MARK: - DoubleLine
 extension JXSegmentedIndicatorDoubleLineView {
+
     /// 双线指示器：最细时的线宽比例（0~1）
     @discardableResult
     public func byMinLineWidthPercent(_ v: CGFloat) -> Self {

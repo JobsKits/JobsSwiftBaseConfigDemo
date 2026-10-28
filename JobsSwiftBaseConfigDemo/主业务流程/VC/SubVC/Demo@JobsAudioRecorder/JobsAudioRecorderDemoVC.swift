@@ -15,6 +15,7 @@ import SnapKit
 import UIKit
 
 final class JobsAudioRecorderDemoVC: BaseVC {
+
     private let recorder = JobsAudioRecorderEngine.shared
     private let player = JobsAudioPlayerEngine.shared
     private var recordings: [JobsAudioRecording] = []
@@ -23,7 +24,9 @@ final class JobsAudioRecorderDemoVC: BaseVC {
     private lazy var modeControl: UISegmentedControl = {
         let control = UISegmentedControl(items: ["短暂录音".tr, "长时间录音".tr])
         control.bySelectedSegmentIndex(0)
-        control.addTarget(self, action: #selector(modeChanged), for: .valueChanged)
+        control.addTarget(self,
+                          action: #selector(modeChanged),
+                          for: .valueChanged)
         return control
     }()
     private lazy var durationTitleLabel: UILabel = {
@@ -31,7 +34,8 @@ final class JobsAudioRecorderDemoVC: BaseVC {
         label
             .byText("录音时长".tr)
             .byTextColor(JobsCor.label)
-            .byFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 16,
+                                        weight: .medium))
         return label
     }()
     private lazy var durationField: UITextField = {
@@ -49,7 +53,8 @@ final class JobsAudioRecorderDemoVC: BaseVC {
         label
             .byText("秒".tr)
             .byTextColor(JobsCor.secondaryLabel)
-            .byFont(JobsFont.systemFont(ofSize: 15, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 15,
+                                        weight: .regular))
         return label
     }()
     private lazy var hintLabel: UILabel = {
@@ -57,7 +62,8 @@ final class JobsAudioRecorderDemoVC: BaseVC {
         label
             .byNumberOfLines(0)
             .byTextColor(JobsCor.secondaryLabel)
-            .byFont(JobsFont.systemFont(ofSize: 13, weight: .regular))
+            .byFont(JobsFont.systemFont(ofSize: 13,
+                                        weight: .regular))
         return label
     }()
     private lazy var durationSpacerView = UIView.jobsMake { _ in }
@@ -71,7 +77,8 @@ final class JobsAudioRecorderDemoVC: BaseVC {
         label
             .byText("本地录音".tr)
             .byTextColor(JobsCor.label)
-            .byFont(JobsFont.systemFont(ofSize: 17, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 17,
+                                        weight: .semibold))
         return label
     }()
     private lazy var capturePanel = UIView.jobsMake { _ in }
@@ -80,12 +87,14 @@ final class JobsAudioRecorderDemoVC: BaseVC {
         label
             .byTextAlignment(.center)
             .byTextColor(JobsCor.secondaryLabel)
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .medium))
+            .byFont(JobsFont.systemFont(ofSize: 14,
+                                        weight: .medium))
         return label
     }()
     private lazy var recordButton = JobsAudioRecordButton()
     private lazy var longRecordButtonOuterRingView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.clear)
             .byBorderColor(JobsCor.white)
             .byBorderWidth(4)
@@ -94,27 +103,37 @@ final class JobsAudioRecorderDemoVC: BaseVC {
     }()
     private lazy var longRecordButton: UIButton = {
         UIButton.sys()
-            .byTitle("开始长时间录音".tr, for: .normal)
-            .byTitle("停止并保存长时间录音".tr, for: .selected)
-            .byTitleColor(JobsCor.clear, for: .normal)
-            .byTitleColor(JobsCor.clear, for: .selected)
-            .byBackgroundColor(JobsCor.white, for: .normal)
+            .byTitle("开始长时间录音".tr,
+                     for: .normal)
+            .byTitle("停止并保存长时间录音".tr,
+                     for: .selected)
+            .byTitleColor(JobsCor.clear,
+                          for: .normal)
+            .byTitleColor(JobsCor.clear,
+                          for: .selected)
+            .byBackgroundColor(JobsCor.white,
+                               for: .normal)
             .byCornerRadius(35)
             .onTap { [weak self] _ in
                 self?.toggleLongRecording()
             }
     }()
     private lazy var tableView: UITableView = {
-        let table = UITableView(frame: .zero, style: .insetGrouped)
+        let table = UITableView(frame: .zero,
+                                style: .insetGrouped)
         table
             .byDataSource(self)
             .byDelegate(self)
-        table.register(UITableViewCell.self, forCellReuseIdentifier: "AudioCell")
+        table.register(UITableViewCell.self,
+                       forCellReuseIdentifier: "AudioCell")
         return table
     }()
     private lazy var messageAlertController: UIAlertController = {
-        let alertController = UIAlertController(title: "提示", message: nil, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "知道了", style: .default))
+        let alertController = UIAlertController(title: "提示",
+                                                message: nil,
+                                                preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "知道了",
+                                                style: .default))
         return alertController
     }()
 
@@ -141,7 +160,9 @@ final class JobsAudioRecorderDemoVC: BaseVC {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if recorder.isRecording, recorder.mode == .short { recorder.cancel() }
+        if recorder.isRecording, recorder.mode == .short {
+            recorder.cancel()
+        }
     }
 
     private func setupUI() {
@@ -221,27 +242,57 @@ final class JobsAudioRecorderDemoVC: BaseVC {
 
     private func bindActions() {
         recordButton.onBegin = { [weak self] in
-            guard let self, permissionGranted else { self?.showPermissionAlert(); return false }
-            let duration = max(1, TimeInterval(durationField.text ?? "") ?? 60)
+            guard let self, permissionGranted else {
+                self?.showPermissionAlert()
+                return false
+            }
+            let duration = max(1,
+                               TimeInterval(durationField.text ?? "") ?? 60)
             recordButton.duration = duration
-            do { try recorder.start(mode: .short, maximumDuration: duration); return true }
-            catch { show(error.localizedDescription); return false }
+            do {
+                try recorder.start(mode: .short,
+                                   maximumDuration: duration)
+                return true
+            }
+            catch {
+                show(error.localizedDescription)
+                return false
+            }
         }
-        recordButton.onFinish = { [weak self] in self?.recorder.stopAndSave() }
-        recordButton.onCancel = { [weak self] in self?.recorder.cancel() }
+        recordButton.onFinish = { [weak self] in
+            self?.recorder.stopAndSave()
+        }
+        recordButton.onCancel = { [weak self] in
+            self?.recorder.cancel()
+        }
         recordButton.onTooShort = { [weak self] in
-            guard let self else { return }
-            show(String(format: "录音时间太短，请至少录制 %.0f 秒".tr, recordButton.minimumValidDuration))
+            guard let self else {
+                return
+            }
+            show(String(format: "录音时间太短，请至少录制 %.0f 秒".tr,
+                        recordButton.minimumValidDuration))
         }
     }
 
-    @objc private func modeChanged() { refreshState() }
+    @objc private func modeChanged() {
+        refreshState()
+    }
 
     @objc private func toggleLongRecording() {
-        guard permissionGranted else { showPermissionAlert(); return }
-        if recorder.isRecording { recorder.stopAndSave(); return }
-        do { try recorder.start(mode: .long) }
-        catch { show(error.localizedDescription) }
+        guard permissionGranted else {
+            showPermissionAlert()
+            return
+        }
+        if recorder.isRecording {
+            recorder.stopAndSave()
+            return
+        }
+        do {
+            try recorder.start(mode: .long)
+        }
+        catch {
+            show(error.localizedDescription)
+        }
     }
 
     private func refreshState() {
@@ -252,10 +303,8 @@ final class JobsAudioRecorderDemoVC: BaseVC {
         longRecordButton.byHidden(shortMode)
         modeControl.isEnabled = !recorder.isRecording
         if shortMode {
-            hintLabel.text = String(
-                format: "白色刻度前不算有效录音；至少录制 %.0f 秒，手指移出按钮即取消，计时环走满后自动保存。".tr,
-                recordButton.minimumValidDuration
-            )
+            hintLabel.text = String(format: "白色刻度前不算有效录音；至少录制 %.0f 秒，手指移出按钮即取消，计时环走满后自动保存。".tr,
+                                    recordButton.minimumValidDuration)
             captureHintLabel.byText("按住录音".tr)
         } else {
             hintLabel.byText("开始后可离开本页或让 App 进入后台，返回后轻触按钮停止并保存。".tr)
@@ -270,48 +319,89 @@ final class JobsAudioRecorderDemoVC: BaseVC {
         tableView.reloadData()
     }
 
-    private func showPermissionAlert() { show("请在系统设置中允许麦克风权限") }
+    private func showPermissionAlert() {
+        show("请在系统设置中允许麦克风权限")
+    }
 
     private func show(_ message: String) {
         messageAlertController.byMessage(message)
-        guard presentedViewController !== messageAlertController else { return }
-        present(messageAlertController, animated: true)
+        guard presentedViewController !== messageAlertController else {
+            return
+        }
+        present(messageAlertController,
+                animated: true)
     }
 }
 
 extension JobsAudioRecorderDemoVC: JobsAudioRecorderEngineDelegate {
-    func audioRecorderEngineDidStart(_ engine: JobsAudioRecorderEngine) { refreshState() }
-    func audioRecorderEngine(_ engine: JobsAudioRecorderEngine, didFinishAt url: URL?, error: Error?) {
+
+    func audioRecorderEngineDidStart(_ engine: JobsAudioRecorderEngine) {
+        refreshState()
+    }
+    func audioRecorderEngine(_ engine: JobsAudioRecorderEngine,
+                             didFinishAt url: URL?,
+                             error: Error?) {
         refreshState()
         reloadRecordings()
-        if let error { show(error.localizedDescription) }
+        if let error {
+            show(error.localizedDescription)
+        }
     }
 }
 
-extension JobsAudioRecorderDemoVC: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { recordings.count }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+extension JobsAudioRecorderDemoVC: UITableViewDataSource,
+                                   UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
+        recordings.count
+    }
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = recordings[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "AudioCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "AudioCell",
+                                                 for: indexPath)
         return cell
             .byContentConfiguration { content in
                 content.image = UIImage(systemName: item.mode == .long ? "waveform.badge.mic" : "waveform")
                 content.text = item.mode == .long ? "长时间录音" : "短暂录音"
-                content.secondaryText = String(format: "%.1f 秒 · %.1f KB · %@", item.duration, Double(item.fileSize) / 1024, item.url.lastPathComponent)
+                content.secondaryText = String(format: "%.1f 秒 · %.1f KB · %@",
+                                               item.duration,
+                                               Double(item.fileSize) / 1024,
+                                               item.url.lastPathComponent)
             }
             .byAccessoryType(.detailButton)
     }
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        do { _ = try player.toggle(url: recordings[indexPath.row].url) }
-        catch { show(error.localizedDescription) }
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath,
+                              animated: true)
+        do {
+            _ = try player.toggle(url: recordings[indexPath.row].url)
+        }
+        catch {
+            show(error.localizedDescription)
+        }
     }
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let action = UIContextualAction(style: .destructive, title: "删除") { [weak self] _, _, done in
-            guard let self else { done(false); return }
+    func tableView(_ tableView: UITableView,
+                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let action = UIContextualAction(style: .destructive,
+                                        title: "删除") { [weak self] _, _, done in
+            guard let self else {
+                done(false)
+                return
+            }
             player.stop()
-            do { try JobsAudioRecordingStore.shared.delete(recordings[indexPath.row]); reloadRecordings(); done(true) }
-            catch { show(error.localizedDescription); done(false) }
-        };return UISwipeActionsConfiguration(actions: [action])
+            do {
+                try JobsAudioRecordingStore.shared.delete(recordings[indexPath.row])
+                reloadRecordings()
+                done(true)
+            }
+            catch {
+                show(error.localizedDescription)
+                done(false)
+            }
+        }
+        return UISwipeActionsConfiguration(actions: [action])
     }
 }

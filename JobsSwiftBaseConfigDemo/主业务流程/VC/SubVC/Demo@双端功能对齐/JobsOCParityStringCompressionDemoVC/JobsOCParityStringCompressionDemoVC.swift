@@ -21,7 +21,8 @@ import SnapKit
 final class JobsStringCompressionDemoVC: BaseVC {
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView.jobsMake { _ in }
+        UIScrollView
+            .jobsMake { _ in }
             .byAlwaysBounceVertical(YES)
             .byShowsVerticalScrollIndicator(false)
             .byAddTo(view) { [unowned self] make in
@@ -31,7 +32,8 @@ final class JobsStringCompressionDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalTo(scrollView.contentLayoutGuide)
                 make.width.equalTo(scrollView.frameLayoutGuide)
@@ -39,7 +41,8 @@ final class JobsStringCompressionDemoVC: BaseVC {
     }()
 
     private lazy var resultCard: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.systemBackground)
             .byCornerRadius(14)
             .byShadowColor(JobsCor.black.withAlphaComponent(0.12))
@@ -53,7 +56,8 @@ final class JobsStringCompressionDemoVC: BaseVC {
     }()
 
     private lazy var titleLabel: UILabel = {
-        makeSectionLabel("字符串压缩 / 解压结果".tr, size: 22)
+        makeSectionLabel("字符串压缩 / 解压结果".tr,
+                         size: 22)
             .byAddTo(resultCard) { make in
                 make.top.equalToSuperview().offset(20)
                 make.left.right.equalToSuperview().inset(18)
@@ -71,12 +75,12 @@ final class JobsStringCompressionDemoVC: BaseVC {
     private lazy var algorithmValueLabel: UILabel = {
         makeValueLabel(
             "压缩：NSString → UTF8 NSData → NSKeyedArchiver → Base64 字符串\n\n"
-            + "解压：Base64 → NSKeyedUnarchiver NSData → UTF8 NSString"
+                + "解压：Base64 → NSKeyedUnarchiver NSData → UTF8 NSString"
         )
-        .byAddTo(resultCard) { [unowned self] make in
-            make.top.equalTo(algorithmTitleLabel.snp.bottom).offset(8)
-            make.left.right.equalToSuperview().inset(18)
-        }
+            .byAddTo(resultCard) { [unowned self] make in
+                make.top.equalTo(algorithmTitleLabel.snp.bottom).offset(8)
+                make.left.right.equalToSuperview().inset(18)
+            }
     }()
 
     private lazy var sourceTitleLabel: UILabel = {
@@ -88,7 +92,8 @@ final class JobsStringCompressionDemoVC: BaseVC {
     }()
 
     private lazy var sourceTextView: UITextView = {
-        UITextView.jobsMake { _ in }
+        UITextView
+            .jobsMake { _ in }
             .byText("这是一个需要压缩的字符串".tr)
             .byFont(JobsFont.systemFont(ofSize: 15))
             .byTextColor(JobsCor.label)
@@ -96,7 +101,10 @@ final class JobsStringCompressionDemoVC: BaseVC {
             .byCornerRadius(9)
             .byBorderWidth(1)
             .byBorderColor(JobsCor.separator)
-            .byTextContainerInset(UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
+            .byTextContainerInset(UIEdgeInsets(top: 10,
+                                               left: 10,
+                                               bottom: 10,
+                                               right: 10))
             .byAddTo(resultCard) { [unowned self] make in
                 make.top.equalTo(sourceTitleLabel.snp.bottom).offset(8)
                 make.left.right.equalToSuperview().inset(18)
@@ -131,12 +139,12 @@ final class JobsStringCompressionDemoVC: BaseVC {
     private lazy var compressedValueLabel: UILabel = {
         makeValueLabel("")
             .byUserInteractionEnabled(YES)
-            .addLongPressAction(
-                minimumPressDuration: 0.6,
-                allowableMovement: 12,
-                numberOfTouchesRequired: 1
-            ) { [weak self] gesture in
-                guard gesture.state == .began, let text = self?.compressedValueLabel.text, !text.isEmpty else { return }
+            .addLongPressAction(minimumPressDuration: 0.6,
+                                allowableMovement: 12,
+                                numberOfTouchesRequired: 1) { [weak self] gesture in
+                guard gesture.state == .began, let text = self?.compressedValueLabel.text, !text.isEmpty else {
+                    return
+                }
                 text.paste()
                 "压缩字符串已复制".toast
             }
@@ -164,10 +172,13 @@ final class JobsStringCompressionDemoVC: BaseVC {
 
     private lazy var recompressButton: UIButton = {
         UIButton.sys()
-            .byTitle("重新压缩".tr, for: .normal)
+            .byTitle("重新压缩".tr,
+                     for: .normal)
             .byTitleFont(JobsFont.boldSystemFont(ofSize: 16))
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byBackgroundColor(JobsCor.systemBlue,
+                               for: .normal)
             .byCornerRadius(10)
             .onTap { [weak self] _ in
                 self?.compress()
@@ -194,8 +205,10 @@ final class JobsStringCompressionDemoVC: BaseVC {
         compress()
     }
 
-    private func makeSectionLabel(_ text: String, size: CGFloat = 16) -> UILabel {
-        UILabel.jobsMake { _ in }
+    private func makeSectionLabel(_ text: String,
+                                  size: CGFloat = 16) -> UILabel {
+        UILabel
+            .jobsMake { _ in }
             .byText(text)
             .byFont(JobsFont.boldSystemFont(ofSize: size))
             .byTextColor(JobsCor.label)
@@ -215,29 +228,29 @@ final class JobsStringCompressionDemoVC: BaseVC {
     private func compress() {
         let source = sourceTextView.text ?? ""
         guard let sourceData = source.data(using: .utf8),
-              let archivedData = try? NSKeyedArchiver.archivedData(
-                withRootObject: sourceData,
-                requiringSecureCoding: false
-              ) else {
+              let archivedData = try? NSKeyedArchiver.archivedData(withRootObject: sourceData,
+                                                                   requiringSecureCoding: false) else {
             informationValueLabel.byText("压缩失败".tr)
             compressedValueLabel.byText("")
             restoredValueLabel.byText("")
             return
         }
         let base64 = archivedData.base64EncodedString()
-        let restoredObject = try? NSKeyedUnarchiver.unarchivedObject(
-            ofClass: NSData.self,
-            from: archivedData
-        )
+        let restoredObject = try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSData.self,
+                                                                     from: archivedData)
         let restored = restoredObject
-            .flatMap { String(data: $0 as Data, encoding: .utf8) }
+            .flatMap {
+                String(data: $0 as Data,
+                       encoding: .utf8)
+            }
             ?? "解压失败".tr
         let ratio = sourceData.isEmpty ? 0 : Double(archivedData.count) / Double(sourceData.count)
         informationValueLabel.byText(
             "原始 UTF8 字节：\(sourceData.count)\n"
-            + "归档数据字节：\(archivedData.count)\n"
-            + "Base64 字符数：\(base64.count)\n"
-            + String(format: "压缩比：%.2f", ratio)
+                + "归档数据字节：\(archivedData.count)\n"
+                + "Base64 字符数：\(base64.count)\n"
+                + String(format: "压缩比：%.2f",
+                         ratio)
         )
         compressedValueLabel.byText(base64)
         restoredValueLabel.byText(restored)
@@ -246,7 +259,10 @@ final class JobsStringCompressionDemoVC: BaseVC {
 
 private final class JobsCompressionValueLabel: UILabel {
 
-    private let contentInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    private let contentInsets = UIEdgeInsets(top: 10,
+                                             left: 10,
+                                             bottom: 10,
+                                             right: 10)
 
     override func drawText(in rect: CGRect) {
         super.drawText(in: rect.inset(by: contentInsets))
@@ -254,9 +270,7 @@ private final class JobsCompressionValueLabel: UILabel {
 
     override var intrinsicContentSize: CGSize {
         let size = super.intrinsicContentSize
-        return CGSize(
-            width: size.width + contentInsets.left + contentInsets.right,
-            height: size.height + contentInsets.top + contentInsets.bottom
-        )
+        return CGSize(width: size.width + contentInsets.left + contentInsets.right,
+                      height: size.height + contentInsets.top + contentInsets.bottom)
     }
 }

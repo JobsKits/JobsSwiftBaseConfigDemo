@@ -20,7 +20,8 @@ import SnapKit
 final class JobsBulletTextDemoVC: BaseVC {
 
     private lazy var contentView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom).offset(28)
                 make.centerX.equalToSuperview()
@@ -29,7 +30,8 @@ final class JobsBulletTextDemoVC: BaseVC {
     }()
 
     private lazy var chineseLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byNumberOfLines(0)
             .byBackgroundColor(JobsCor.systemIndigo.withAlphaComponent(0.25))
             .byAttributedString(makeChineseText())
@@ -39,7 +41,8 @@ final class JobsBulletTextDemoVC: BaseVC {
     }()
 
     private lazy var englishLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byNumberOfLines(0)
             .byBackgroundColor(JobsCor.systemTeal.withAlphaComponent(0.25))
             .byAttributedString(makeEnglishText())
@@ -66,24 +69,22 @@ final class JobsBulletTextDemoVC: BaseVC {
         let first = "• 我是中国人我是中国人我是中国人我是中国人我是中国人"
         let second = "• 你是日本人你是日本人你是日本人你是日本人你是日本人"
         let text = "\(first)\n\(second)"
-        let attributedText = NSMutableAttributedString(
-            string: text,
-            attributes: [
+        let attributedText = NSMutableAttributedString(string: text,
+                                                       attributes: [
                 .font: JobsFont.systemFont(ofSize: 12),
                 .foregroundColor: JobsCor.label,
                 .paragraphStyle: paragraph
-            ]
-        )
-        attributedText.addAttribute(
-            .foregroundColor,
-            value: JobsCor.systemRed,
-            range: (text as NSString).range(of: "•")
-        )
-        attributedText.addAttribute(
-            .foregroundColor,
-            value: JobsCor.systemBlue,
-            range: (text as NSString).range(of: "•", options: [], range: NSRange(location: first.count, length: text.count - first.count))
-        );return attributedText
+            ])
+        attributedText.addAttribute(.foregroundColor,
+                                    value: JobsCor.systemRed,
+                                    range: (text as NSString).range(of: "•"))
+        attributedText.addAttribute(.foregroundColor,
+                                    value: JobsCor.systemBlue,
+                                    range: (text as NSString).range(of: "•",
+                                                                    options: [],
+                                                                    range: NSRange(location: first.count,
+                                                                                   length: text.count - first.count)))
+        return attributedText
     }
 
     private func makeEnglishText() -> NSAttributedString {
@@ -104,25 +105,30 @@ final class JobsBulletTextDemoVC: BaseVC {
             let attachment = NSTextAttachment.jobsMake { _ in }
             attachment
                 .byImage(makeBulletImage())
-                .byBounds(CGRect(x: 0, y: 1, width: 8, height: 8))
+                .byBounds(CGRect(x: 0,
+                                 y: 1,
+                                 width: 8,
+                                 height: 8))
             attributedText.append(NSAttributedString(attachment: attachment))
             attributedText.append(NSAttributedString(string: " \(line)"))
         }
-        attributedText.addAttributes(
-            [
+        attributedText.addAttributes([
                 .font: JobsFont.systemFont(ofSize: 12),
                 .foregroundColor: JobsCor.label,
                 .paragraphStyle: paragraph
             ],
-            range: NSRange(location: 0, length: attributedText.length)
-        );return attributedText
+                                     range: NSRange(location: 0,
+                                                    length: attributedText.length))
+        return attributedText
     }
 
     private func makeBulletImage() -> UIImage {
-        let size = CGSize(width: 8, height: 8)
+        let size = CGSize(width: 8,
+                          height: 8)
         return UIGraphicsImageRenderer(size: size).image { context in
             JobsCor.systemRed.setFill()
-            context.cgContext.fillEllipse(in: CGRect(origin: .zero, size: size))
+            context.cgContext.fillEllipse(in: CGRect(origin: .zero,
+                                                     size: size))
         }
     }
 }

@@ -18,6 +18,7 @@ import SnapKit
 import SwiftMessages
 
 extension UILabel {
+
     @discardableResult
     func byAttributedString(_ attributed: NSAttributedString?) -> Self {
         self.attributedText = attributed
@@ -36,13 +37,16 @@ extension UILabel {
 }
 
 extension UIView {
+
     @discardableResult
     func byAddTo(_ superView: UIView,
                  _ closure: (_ v: UIView, _ make: ConstraintMaker) -> Void) -> Self {
         superView.addSubview(self)
         self.snp.makeConstraints { make in
-            closure(self, make)
-        };return self
+            closure(self,
+                    make)
+        }
+        return self
     }
 
     @discardableResult
@@ -68,21 +72,31 @@ extension UIView {
 }
 private var actionKey: Void?
 extension UIButton {
+
     @discardableResult
     private func _bindTapClosure(_ action: @escaping jobsByBtnBlock,
                                  for events: UIControl.Event = .touchUpInside) -> Self {
-        objc_setAssociatedObject(self, &actionKey, action, .OBJC_ASSOCIATION_COPY_NONATOMIC)
-        removeTarget(self, action: #selector(_jobsHandleAction(_:)), for: events)
-        addTarget(self, action: #selector(_jobsHandleAction(_:)), for: events)
+        objc_setAssociatedObject(self,
+                                 &actionKey,
+                                 action,
+                                 .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        removeTarget(self,
+                     action: #selector(_jobsHandleAction(_:)),
+                     for: events)
+        addTarget(self,
+                  action: #selector(_jobsHandleAction(_:)),
+                  for: events)
         return self
     }
     @discardableResult
     func jobs_addTapClosure(_ action: @escaping jobsByBtnBlock,
                             for events: UIControl.Event = .touchUpInside) -> Self {
-        _bindTapClosure(action, for: events)
+        _bindTapClosure(action,
+                        for: events)
     }
     @objc private func _jobsHandleAction(_ sender: UIButton) {
-        if let action = objc_getAssociatedObject(self, &actionKey) as? (UIButton) -> Void {
+        if let action = objc_getAssociatedObject(self,
+                                                 &actionKey) as? (UIButton) -> Void {
             action(sender)
         }
     }
@@ -91,11 +105,15 @@ extension UIButton {
     func onTap(_ handler: @escaping jobsByBtnBlock) -> Self {
         if #available(iOS 14.0, *) {
             (self as UIControl).addAction(UIAction { [weak self] _ in
-                guard let s = self else { return }
+                guard let s = self else {
+                    return
+                }
                 handler(s)
-            }, for: .touchUpInside)
+            },
+                                          for: .touchUpInside)
         } else {
             self.jobs_addTapClosure(handler)
-        };return self
+        }
+        return self
     }
 }

@@ -23,6 +23,7 @@ import GKNavigationBarSwift
 final class FeedListVC: BaseVC,
                         UITableViewDataSource,
                         UITableViewDelegate {
+
     private var allItems: [FeedItem] = []
     private var items: [FeedItem] = []
     private var page = 1
@@ -31,21 +32,27 @@ final class FeedListVC: BaseVC,
     private var isLoadingMore    = false
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(FeedListCell.self)
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
-            // 空态按钮（点击加载首屏）
-            .byEmptyButtonProvider { [unowned self] in
+        // 空态按钮（点击加载首屏）
+        .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据".tr, for: .normal)
-                    .bySubTitle("点我加载本地示例数据".tr, for: .normal)
-                    .byImage("tray".sysImg, for: .normal)
+                    .byTitle("暂无数据".tr,
+                             for: .normal)
+                    .bySubTitle("点我加载本地示例数据".tr,
+                                for: .normal)
+                    .byImage("tray".sysImg,
+                             for: .normal)
                     .byImagePlacement(.top)
-                    .onTap { [weak self] _ in self?.reloadFromJSON() }
+                    .onTap { [weak self] _ in
+                        self?.reloadFromJSON()
+                    }
                     .byEmptyLayout { _, make, host in
                         make.centerX.equalTo(host)
                         make.centerY.equalTo(host).offset(-40)
@@ -76,7 +83,9 @@ final class FeedListVC: BaseVC,
     private func reloadFromJSON() {
         allItems = FeedModel.loadAll()
         page = 1
-        items = FeedModel.page(all: allItems, page: page, pageSize: pageSize)
+        items = FeedModel.page(all: allItems,
+                               page: page,
+                               pageSize: pageSize)
         tableView.byReloadData()
         updateFooterAvailability()
         tableView.byReloadEmptyViewAuto()
@@ -84,17 +93,24 @@ final class FeedListVC: BaseVC,
 
     fileprivate func updateFooterAvailability() {
         if items.count >= allItems.count && !items.isEmpty {
-            /// TODO
+        /// TODO
         }
     }
     // MARK: DataSource / Delegate
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { items.count }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.byDequeueReusableCell(withType: FeedListCell.self, for: indexPath)
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
+        items.count
+    }
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.byDequeueReusableCell(withType: FeedListCell.self,
+                                                   for: indexPath)
         cell.fill(items[indexPath.row])
         return cell
     }
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        PlayerDetailVC(item: items[indexPath.row]).byPush(self)
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
+        PlayerDetailVC(item: items[indexPath.row])
+            .byPush(self)
     }
 }

@@ -12,6 +12,7 @@ public typealias JobsSwiftSearcherHistoryBlock = ([String]) -> Void
 public typealias JobsSwiftSearcherVoidBlock = () -> Void
 
 public final class JobsSwiftSearcherConfig {
+
     public var placeholder = "请输入搜索内容"
     public var searchButtonTitle = "搜索"
     public var recommendTitle = "搜索推荐"
@@ -21,7 +22,9 @@ public final class JobsSwiftSearcherConfig {
     public var historyScope: String?
     public var persistsHistory = true
     public var effectiveHistoryStorageKey: String {
-        guard let scope = historyScope, !scope.isEmpty else { return historyStorageKey }
+        guard let scope = historyScope, !scope.isEmpty else {
+            return historyStorageKey
+        }
         let encoded = Data(scope.utf8).base64EncodedString()
         return "\(historyStorageKey).account.\(encoded)"
     }

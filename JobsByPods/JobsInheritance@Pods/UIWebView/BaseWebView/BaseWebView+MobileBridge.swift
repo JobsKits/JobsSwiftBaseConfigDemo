@@ -16,8 +16,10 @@ import JobsSwiftBlock
 import JobsSwiftDSL
 
 public extension BaseWebView {
+
     // ===== 通用 MobileBridge（H5 的 iOSBridge 约定）=====
     struct MobileBridgeConfig {
+
         public var injectShim: Bool = true                             // 无前端桥时的兜底
         public var tokenProvider: (@Sendable () async -> String?)?     // 异步 token
         public var onNavigateHome: (jobsByVoidBlock)? = nil
@@ -27,11 +29,14 @@ public extension BaseWebView {
         public var onShowToast: ((String) -> Void)? = nil
         public var onUnknownAction: ((String, [String: Any]) -> Void)? = nil
         public init() {}
-        public static func defaults() -> Self { .init() }
+        public static func defaults() -> Self {
+            .init()
+        }
     }
 }
 // MARK: - MobileBridgeConfig · 链式 DSL
 public extension BaseWebView.MobileBridgeConfig {
+
     @discardableResult
     func byInjectShim(_ on: Bool = true) -> Self {
         var c = self
@@ -90,6 +95,7 @@ public extension BaseWebView.MobileBridgeConfig {
 }
 // MARK: - useMobileBridge · 闭包构造重载（纯 DSL）
 public extension BaseWebView {
+
     /// 允许：web.useMobileBridge { $0.byTokenProvider{...}.byShowToast{...} }
     @discardableResult
     @MainActor

@@ -15,6 +15,7 @@ import UIKit
 import JXSegmentedView
 // MARK: - Image
 extension JXSegmentedIndicatorImageView {
+
     @discardableResult
     public func byImage(_ v: UIImage?) -> Self {
         image = v

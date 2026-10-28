@@ -8,6 +8,7 @@
 import Foundation
 
 public struct JobsRequest: Sendable {
+
     public var path: String
     public var method: HTTPMethod
     public var query: [String: JobsValue]?
@@ -20,19 +21,17 @@ public struct JobsRequest: Sendable {
     public var trace: JobsTrace
     public var allowsEmptyResponse: Bool
 
-    public init(
-        path: String,
-        method: HTTPMethod,
-        query: [String: JobsValue]? = nil,
-        body: [String: JobsValue]? = nil,
-        headers: [String: String] = [:],
-        timeout: TimeInterval? = nil,
-        encoding: JobsParameterEncoding? = nil,
-        cachePolicy: JobsCachePolicy = .networkOnly,
-        retryPolicy: JobsRetryPolicy? = nil,
-        trace: JobsTrace = JobsTrace(),
-        allowsEmptyResponse: Bool = false
-    ) {
+    public init(path: String,
+                method: HTTPMethod,
+                query: [String: JobsValue]? = nil,
+                body: [String: JobsValue]? = nil,
+                headers: [String: String] = [:],
+                timeout: TimeInterval? = nil,
+                encoding: JobsParameterEncoding? = nil,
+                cachePolicy: JobsCachePolicy = .networkOnly,
+                retryPolicy: JobsRetryPolicy? = nil,
+                trace: JobsTrace = JobsTrace(),
+                allowsEmptyResponse: Bool = false) {
         self.path = path
         self.method = method
         self.query = query

@@ -18,13 +18,16 @@ import JobsSwiftDSL
 /// 为了更加的贴合语义，这里使用OC的runtime机制去拿到内部私有的内部类来进行修改
 
 extension UITextField {
+
     @discardableResult
     public func byPlaceholderColor(_ color: UIColor) -> Self {
         if let label = jobs_placeholderLabel_byRuntime() {
             label.byTextColor(color)
         } else {
-            jobs_applyAttributedPlaceholder(color: color, font: nil) // 兜底
-        };return self
+            jobs_applyAttributedPlaceholder(color: color,
+                                            font: nil) // 兜底
+        }
+        return self
     }
 
     @discardableResult
@@ -32,24 +35,36 @@ extension UITextField {
         if let label = jobs_placeholderLabel_byRuntime() {
             label.byFont(font)
         } else {
-            jobs_applyAttributedPlaceholder(color: nil, font: font) // 兜底
-        };return self
+            jobs_applyAttributedPlaceholder(color: nil,
+                                            font: font) // 兜底
+        }
+        return self
     }
     /// 更接近 OC 的方式：通过 runtime 取 ivar，再 object_getIvar
     fileprivate func jobs_placeholderLabel_byRuntime() -> UILabel? {
         // 有的系统叫 _placeholderLabel，有的可能叫 placeholderLabel（通常是前者）
         for name in ["_placeholderLabel", "placeholderLabel"] {
-            if let ivar = class_getInstanceVariable(UITextField.self, name) {
-                return object_getIvar(self, ivar) as? UILabel
+            if let ivar = class_getInstanceVariable(UITextField.self,
+                                                    name) {
+                return object_getIvar(self,
+                                      ivar) as? UILabel
             }
-        };return nil
+        }
+        return nil
     }
-    fileprivate func jobs_applyAttributedPlaceholder(color: UIColor?, font: UIFont?) {
+    fileprivate func jobs_applyAttributedPlaceholder(color: UIColor?,
+                                                     font: UIFont?) {
         let text = placeholder ?? (attributedPlaceholder?.string ?? "")
         var attrs: [NSAttributedString.Key: Any] =
-            attributedPlaceholder?.attributes(at: 0, effectiveRange: nil) ?? [:]
-        if let color { attrs[.foregroundColor] = color }
-        if let font { attrs[.font] = font }
-        attributedPlaceholder = NSAttributedString(string: text, attributes: attrs)
+        attributedPlaceholder?.attributes(at: 0,
+                                          effectiveRange: nil) ?? [:]
+        if let color {
+            attrs[.foregroundColor] = color
+        }
+        if let font {
+            attrs[.font] = font
+        }
+        attributedPlaceholder = NSAttributedString(string: text,
+                                                   attributes: attrs)
     }
 }

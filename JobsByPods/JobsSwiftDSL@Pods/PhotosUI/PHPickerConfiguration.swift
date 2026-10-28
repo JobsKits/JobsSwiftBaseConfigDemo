@@ -12,6 +12,7 @@ import PhotosUI
 @available(watchOS, unavailable)
 @available(tvOS, unavailable)
 public extension PHPickerConfiguration {
+
     /// 链式设置 filter
     @discardableResult
     func byFilter(_ filter: PHPickerFilter?) -> Self {
@@ -27,7 +28,8 @@ public extension PHPickerConfiguration {
     @discardableResult
     func bySelectionLimit(_ limit: Int) -> Self {
         var result = self
-        result.selectionLimit = max(0, limit)
+        result.selectionLimit = max(0,
+                                    limit)
         return result
     }
     /// 链式设置 preferredAssetRepresentationMode
@@ -43,6 +45,7 @@ public extension PHPickerConfiguration {
 @available(watchOS, unavailable)
 @available(tvOS, unavailable)
 public extension PHPickerConfiguration {
+
     /// 链式设置 selection
     @discardableResult
     func bySelection(_ selection: Selection) -> Self {
@@ -73,11 +76,13 @@ public extension PHPickerConfiguration {
 @available(iOS 17.0, macOS 14.0, *)
 @available(watchOS, unavailable)
 public extension PHPickerConfiguration.Update {
+
     /// 链式设置 selectionLimit
     @discardableResult
     func bySelectionLimit(_ limit: Int) -> Self {
         var result = self
-        result.selectionLimit = max(0, limit)
+        result.selectionLimit = max(0,
+                                    limit)
         return result
     }
     /// 链式设置 edgesWithoutContentMargins
@@ -107,32 +112,49 @@ public extension PHPickerConfiguration.Update {
 @available(watchOS, unavailable)
 @available(tvOS, unavailable)
 public extension PHPickerConfiguration.AssetRepresentationMode {
+
     /// 是否为 automatic
-    var isAutomatic: Bool { self == .automatic }
+    var isAutomatic: Bool {
+        self == .automatic
+    }
 
     /// 是否为 current
-    var isCurrent: Bool { self == .current }
+    var isCurrent: Bool {
+        self == .current
+    }
 
     /// 是否为 compatible
-    var isCompatible: Bool { self == .compatible }
+    var isCompatible: Bool {
+        self == .compatible
+    }
 }
 
 @available(iOS 15.0, macOS 13.0, *)
 @available(watchOS, unavailable)
 @available(tvOS, unavailable)
 public extension PHPickerConfiguration.Selection {
+
     /// 是否为 default
-    var isDefault: Bool { self == .default }
+    var isDefault: Bool {
+        self == .default
+    }
 
     /// 是否为 ordered
-    var isOrdered: Bool { self == .ordered }
+    var isOrdered: Bool {
+        self == .ordered
+    }
 }
 
 @available(iOS 17.0, macOS 14.0, *)
 @available(watchOS, unavailable)
 public extension PHPickerConfiguration.Selection {
+
     /// 是否为 continuous
-    var isContinuous: Bool { self == .continuous }
+    var isContinuous: Bool {
+        self == .continuous
+    }
     /// 是否为 continuousAndOrdered
-    var isContinuousAndOrdered: Bool { self == .continuousAndOrdered }
+    var isContinuousAndOrdered: Bool {
+        self == .continuousAndOrdered
+    }
 }

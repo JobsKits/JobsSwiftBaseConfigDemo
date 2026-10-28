@@ -20,6 +20,7 @@ import SnapKit
 final class JobsLandscapeSwitchDemoVC: BaseVC {
 
     private enum Action {
+
         case detect
         case lockLandscape
         case unlock
@@ -40,7 +41,8 @@ final class JobsLandscapeSwitchDemoVC: BaseVC {
     private var orientationMask: UIInterfaceOrientationMask = .all
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView.jobsMake { _ in }
+        UIScrollView
+            .jobsMake { _ in }
             .byAlwaysBounceVertical(YES)
             .byShowsVerticalScrollIndicator(false)
             .byAddTo(view) { [unowned self] make in
@@ -50,7 +52,8 @@ final class JobsLandscapeSwitchDemoVC: BaseVC {
     }()
 
     private lazy var contentView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byAddTo(scrollView) { [unowned self] make in
                 make.edges.equalTo(scrollView.contentLayoutGuide)
                 make.width.equalTo(scrollView.frameLayoutGuide)
@@ -61,13 +64,18 @@ final class JobsLandscapeSwitchDemoVC: BaseVC {
         descriptors.enumerated().map { index, descriptor in
             UIButton.sys()
                 .byTag(index)
-                .byTitle(descriptor.0.tr, for: .normal)
-                .bySubTitle(descriptor.1?.tr, for: .normal)
+                .byTitle(descriptor.0.tr,
+                         for: .normal)
+                .bySubTitle(descriptor.1?.tr,
+                            for: .normal)
                 .byTitleFont(JobsFont.boldSystemFont(ofSize: 17))
                 .bySubTitleFont(JobsFont.systemFont(ofSize: 11))
-                .byTitleColor(JobsCor.systemRed, for: .normal)
-                .bySubTitleColor(JobsCor.secondaryLabel, for: .normal)
-                .byBackgroundColor(JobsCor.systemBackground, for: .normal)
+                .byTitleColor(JobsCor.systemRed,
+                              for: .normal)
+                .bySubTitleColor(JobsCor.secondaryLabel,
+                                 for: .normal)
+                .byBackgroundColor(JobsCor.systemBackground,
+                                   for: .normal)
                 .byCornerRadius(12)
                 .byBorderWidth(1)
                 .byBorderColor(JobsCor.separator)
@@ -78,9 +86,11 @@ final class JobsLandscapeSwitchDemoVC: BaseVC {
     }()
 
     private lazy var resultLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("请选择上方功能".tr)
-            .byFont(JobsFont.systemFont(ofSize: 14, weight: .semibold))
+            .byFont(JobsFont.systemFont(ofSize: 14,
+                                        weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
             .byNumberOfLines(0)
@@ -109,10 +119,13 @@ final class JobsLandscapeSwitchDemoVC: BaseVC {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        guard isMovingFromParent || navigationController?.isBeingDismissed == true else { return }
+        guard isMovingFromParent || navigationController?.isBeingDismissed == true else {
+            return
+        }
         orientationMask = .portrait
         configureNavigationOrientation()
-        requestOrientation(.portrait, deviceOrientation: .portrait)
+        requestOrientation(.portrait,
+                           deviceOrientation: .portrait)
     }
 
     private func installButtons() {
@@ -132,7 +145,9 @@ final class JobsLandscapeSwitchDemoVC: BaseVC {
                 make.height.equalTo(164)
             }
         }
-        guard let lastButton = actionButtons.last else { return }
+        guard let lastButton = actionButtons.last else {
+            return
+        }
         resultLabel.snp.makeConstraints { make in
             make.top.equalTo(lastButton.snp.bottom).offset(20)
             make.bottom.equalTo(contentView.snp.bottom).inset(24)
@@ -157,39 +172,42 @@ final class JobsLandscapeSwitchDemoVC: BaseVC {
         case .lockLandscape:
             orientationMask = .landscape
             configureNavigationOrientation()
-            requestOrientation(.landscape, deviceOrientation: .landscapeLeft)
+            requestOrientation(.landscape,
+                               deviceOrientation: .landscapeLeft)
             resultLabel.byText("已锁定：任意横屏方向".tr)
         /// 解除方向锁定
         case .unlock:
             orientationMask = .all
             configureNavigationOrientation()
-            requestOrientation(.all, deviceOrientation: .unknown)
+            requestOrientation(.all,
+                               deviceOrientation: .unknown)
             resultLabel.byText("已解除锁定：允许所有方向".tr)
         /// 切换到设备左横屏
         case .landscapeLeft:
             orientationMask = .landscapeLeft
             configureNavigationOrientation()
-            requestOrientation(.landscapeLeft, deviceOrientation: .landscapeRight)
+            requestOrientation(.landscapeLeft,
+                               deviceOrientation: .landscapeRight)
             resultLabel.byText("已切换：设备左横屏".tr)
         /// 切换到设备右横屏
         case .landscapeRight:
             orientationMask = .landscapeRight
             configureNavigationOrientation()
-            requestOrientation(.landscapeRight, deviceOrientation: .landscapeLeft)
+            requestOrientation(.landscapeRight,
+                               deviceOrientation: .landscapeLeft)
             resultLabel.byText("已切换：设备右横屏".tr)
         /// 恢复竖屏方向
         case .portrait:
             orientationMask = .portrait
             configureNavigationOrientation()
-            requestOrientation(.portrait, deviceOrientation: .portrait)
+            requestOrientation(.portrait,
+                               deviceOrientation: .portrait)
             resultLabel.byText("已切换：设备竖直向上".tr)
         }
     }
 
-    private func requestOrientation(
-        _ mask: UIInterfaceOrientationMask,
-        deviceOrientation: UIDeviceOrientation
-    ) {
+    private func requestOrientation(_ mask: UIInterfaceOrientationMask,
+                                    deviceOrientation: UIDeviceOrientation) {
         if #available(iOS 16.0, *),
            let windowScene = view.window?.windowScene {
             setNeedsUpdateOfSupportedInterfaceOrientations()
@@ -199,7 +217,8 @@ final class JobsLandscapeSwitchDemoVC: BaseVC {
                 self?.resultLabel.byText("方向切换失败：\(error.localizedDescription)")
             }
         } else if deviceOrientation != .unknown {
-            UIDevice.current.setValue(deviceOrientation.rawValue, forKey: "orientation")
+            UIDevice.current.setValue(deviceOrientation.rawValue,
+                                      forKey: "orientation")
             UIViewController.attemptRotationToDeviceOrientation()
         }
     }

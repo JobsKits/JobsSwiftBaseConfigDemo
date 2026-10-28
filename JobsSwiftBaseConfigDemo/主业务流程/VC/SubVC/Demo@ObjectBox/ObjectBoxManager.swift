@@ -10,6 +10,7 @@ import Foundation
 import ObjectBox
 
 final class ObjectBoxManager {
+
     static let sharedResult: Result<ObjectBoxManager, Error> = Result {
         try ObjectBoxManager()
     }
@@ -18,14 +19,13 @@ final class ObjectBoxManager {
     let humanBox: Box<Human>
 
     private init() throws {
-        let appSupport = try FileManager.default.url(
-            for: .applicationSupportDirectory,
-            in: .userDomainMask,
-            appropriateFor: nil,
-            create: true
-        )
+        let appSupport = try FileManager.default.url(for: .applicationSupportDirectory,
+                                                     in: .userDomainMask,
+                                                     appropriateFor: nil,
+                                                     create: true)
         let directory = appSupport.appendingPathComponent("objectbox-demo")
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: directory,
+                                                withIntermediateDirectories: true)
         store = try Store(directoryPath: directory.path)
         humanBox = store.box(for: Human.self)
     }

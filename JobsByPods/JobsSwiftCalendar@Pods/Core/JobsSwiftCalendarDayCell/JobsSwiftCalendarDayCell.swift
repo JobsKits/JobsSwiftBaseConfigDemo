@@ -15,6 +15,7 @@ import JobsSwiftBaseDefines
 import JobsSwiftDSL
 
 public final class JobsSwiftCalendarDayCell: UIControl {
+
     public var date: Date?
     public var monthPosition = JobsSwiftCalendarMonthPosition.notFound
     public private(set) var titleLabel = UILabel.jobsMake { _ in }
@@ -38,20 +39,35 @@ public final class JobsSwiftCalendarDayCell: UIControl {
         super.layoutSubviews()
         let width = bounds.width
         let height = bounds.height
-        let circleSide = min(min(width, height) * 0.64, 38)
+        let circleSide = min(min(width,height) * 0.64,
+                             38)
         let titleHeight: CGFloat = 24
         let hasSubtitle = !(subtitleLabel.text ?? "").isEmpty
-        let titleY = hasSubtitle ? max(2, (height - 42) * 0.34) : max(2, (height - titleHeight) * 0.42)
+        let titleY = hasSubtitle ? max(2,
+                                       (height - 42) * 0.34) : max(2,
+                                                                   (height - titleHeight) * 0.42)
         selectionView.byFrame(CGRect(x: (width - circleSide) / 2,
                                      y: titleY + (titleHeight - circleSide) / 2,
                                      width: circleSide,
                                      height: circleSide))
         selectionView.byCornerRadius(circleSide / 2)
-        titleLabel.byFrame(CGRect(x: 0, y: titleY, width: width, height: titleHeight))
-        subtitleLabel.byFrame(CGRect(x: 0, y: titleLabel.frame.maxY - 1, width: width, height: 15))
-        imageView.byFrame(CGRect(x: (width - 14) / 2, y: subtitleLabel.frame.maxY, width: 14, height: 14))
+        titleLabel.byFrame(CGRect(x: 0,
+                                  y: titleY,
+                                  width: width,
+                                  height: titleHeight))
+        subtitleLabel.byFrame(CGRect(x: 0,
+                                     y: titleLabel.frame.maxY - 1,
+                                     width: width,
+                                     height: 15))
+        imageView.byFrame(CGRect(x: (width - 14) / 2,
+                                 y: subtitleLabel.frame.maxY,
+                                 width: 14,
+                                 height: 14))
         eventDotView
-            .byFrame(CGRect(x: (width - 5) / 2, y: height - 8, width: 5, height: 5))
+            .byFrame(CGRect(x: (width - 5) / 2,
+                            y: height - 8,
+                            width: 5,
+                            height: 5))
             .byCornerRadius(2.5)
     }
 
@@ -107,6 +123,7 @@ public final class JobsSwiftCalendarDayCell: UIControl {
 }
 
 private extension JobsSwiftCalendarDayCell {
+
     func jobsCommonInit() {
         self.byBackgroundColor(JobsCor.clear)
         selectionView

@@ -23,6 +23,7 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class MessageListDemoVC: BaseVC {
+
     // MARK: - Data
     private var items: [MessageItem] = []
     private var selectedIDs: Set<UUID> = []
@@ -37,7 +38,9 @@ final class MessageListDemoVC: BaseVC {
     private var baseIndicatorInsetsLegacy: UIEdgeInsets = .zero
     // MARK: - State
     private var isEditingMode: Bool = false {
-        didSet { applyEditingMode(isEditingMode) }
+        didSet {
+            applyEditingMode(isEditingMode)
+        }
     }
     private var isAllSelected: Bool {
         !items.isEmpty && selectedIDs.count == items.count
@@ -50,33 +53,52 @@ final class MessageListDemoVC: BaseVC {
     // MARK: - Nav Buttons
     private lazy var rightEditButton: UIButton = {
         UIButton.sys()
-            .byTitle("编辑".tr, for: .normal)
-            .byTitle("完成".tr, for: .selected)
-            .byTitleColor(JobsCor.label, for: .normal)
-            .byTitleColor(JobsCor.label, for: .selected)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15, weight: .medium))
+            .byTitle("编辑".tr,
+                     for: .normal)
+            .byTitle("完成".tr,
+                     for: .selected)
+            .byTitleColor(JobsCor.label,
+                          for: .normal)
+            .byTitleColor(JobsCor.label,
+                          for: .selected)
+            .byTitleFont(JobsFont.systemFont(ofSize: 15,
+                                             weight: .medium))
             .byNumberOfLines(1)
             .byLineBreakMode(.byClipping)
-            .byContentEdgeInsets(UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 18))
+            .byContentEdgeInsets(UIEdgeInsets(top: 0,
+                                              left: 12,
+                                              bottom: 0,
+                                              right: 18))
             .byAdd { make in
                 make.size.equalTo(CGSize(width: 76, height: 44))
             }
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.isEditingMode.toggle()
             }
     }()
     // MARK: - BottomBar Buttons
     private lazy var bottomSelectAllButton: UIButton = {
         UIButton.sys()
-            .byTitle("全选".tr, for: .normal)
-            .byTitle("取消".tr, for: .selected)
-            .byTitleColor(JobsCor.label, for: .normal)
-            .byTitleColor(JobsCor.label, for: .selected)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitle("全选".tr,
+                     for: .normal)
+            .byTitle("取消".tr,
+                     for: .selected)
+            .byTitleColor(JobsCor.label,
+                          for: .normal)
+            .byTitleColor(JobsCor.label,
+                          for: .selected)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
             .onTap { [weak self] _ in
-                guard let self else { return }
-                guard self.isEditingMode else { return }
+                guard let self else {
+                    return
+                }
+                guard self.isEditingMode else {
+                    return
+                }
                 self.isAllSelected ? self.deselectAllRows(clearIDs: true) : self.selectAllRows()
                 self.updateBottomBarUI()
             }
@@ -84,22 +106,29 @@ final class MessageListDemoVC: BaseVC {
 
     private lazy var bottomDeleteButton: UIButton = {
         UIButton.sys()
-            .byTitle("删除".tr, for: .normal)
-            .byTitleColor(JobsCor.systemRed, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .medium))
+            .byTitle("删除".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.systemRed,
+                          for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+                                             weight: .medium))
             .onTap { [weak self] _ in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 self.deleteSelectedRows()
             }
     }()
     // MARK: - BottomBar
     private lazy var bottomBar: UIView = {
-        let v = UIView.jobsMake { _ in }
+        let v = UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byShadowColor(JobsCor.black.withAlphaComponent(0.10))
             .byShadowOpacity(1)
             .byShadowRadius(8)
-            .byShadowOffset(.init(width: 0, height: -2))
+            .byShadowOffset(.init(width: 0,
+                                  height: -2))
             .byVisible(NO)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview()
@@ -116,11 +145,13 @@ final class MessageListDemoVC: BaseVC {
             make.right.equalToSuperview().inset(16)
             make.centerY.equalTo(v.safeAreaLayoutGuide.snp.centerY)
             make.height.equalTo(44)
-        };return v
+        }
+        return v
     }()
     // MARK: - TableView
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .insetGrouped)
+        UITableView(frame: .zero,
+                    style: .insetGrouped)
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(MessageCell.self)
@@ -130,12 +161,17 @@ final class MessageListDemoVC: BaseVC {
             .byNoSectionHeaderTopPadding()
             .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据".tr, for: .normal)
-                    .bySubTitle("点我填充示例数据".tr, for: .normal)
-                    .byImage("tray".sysImg, for: .normal)
+                    .byTitle("暂无数据".tr,
+                             for: .normal)
+                    .bySubTitle("点我填充示例数据".tr,
+                                for: .normal)
+                    .byImage("tray".sysImg,
+                             for: .normal)
                     .byImagePlacement(.top)
                     .onTap { [weak self] _ in
-                        guard let self else { return }
+                        guard let self else {
+                            return
+                        }
                         self.rows = 20
                         self.items = self.makeDemoItems(self.rows)
                         self.selectedIDs.removeAll()
@@ -152,7 +188,9 @@ final class MessageListDemoVC: BaseVC {
             .byRefreshHeader(component: JobsDefaultHeader(),
                              container: self,
                              trigger: 66) { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     self.rows = 20
                     self.items = self.makeDemoItems(self.rows)
@@ -165,7 +203,9 @@ final class MessageListDemoVC: BaseVC {
             .byRefreshFooter(component: JobsDefaultFooter(),
                              container: self,
                              trigger: 66) { [weak self] in
-                guard let self else { return }
+                guard let self else {
+                    return
+                }
                 onMainAsync(self) { vc in
                     if self.rows < 60 {
                         self.rows += 20
@@ -189,24 +229,26 @@ final class MessageListDemoVC: BaseVC {
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        jobsSetupGKNav(
-            title: "消息".tr,
-            rightButtons: [rightEditButton]  // ✅ 右上角一直存在
+        jobsSetupGKNav(title: "消息".tr,
+                       rightButtons: [rightEditButton]  // ✅ 右上角一直存在
         )
         tableView.byVisible(YES)
         bottomBar.byVisible(YES)
-        view.bringSubviewToFront(bottomBar)   
+        view.bringSubviewToFront(bottomBar)
         captureBaseInsetsIfNeeded()
         loadInitialData()   // ✅ 一进页面就有数据
         updateNavUI()
         updateBottomBarUI()
-        setBottomBarVisible(false, animated: false) // ✅ 保证初始状态不占 inset
+        setBottomBarVisible(false,
+                            animated: false) // ✅ 保证初始状态不占 inset
     }
 
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         // ✅ 旋转/切换机型/通话条等导致 safeArea 变化时，编辑态下同步高度
-        guard isEditingMode else { return }
+        guard isEditingMode else {
+            return
+        }
         bottomBarHeightC?.update(offset: bottomBarShownHeight)
         applyTableInsetsForBottomBarVisible(true)
         view.layoutIfNeeded()
@@ -254,15 +296,19 @@ final class MessageListDemoVC: BaseVC {
 }
 // MARK: - UITableViewDataSource
 extension MessageListDemoVC: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
         items.count
     }
 
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.byDequeueReusableCell(withType: MessageCell.self, for: indexPath)
+        let cell = tableView.byDequeueReusableCell(withType: MessageCell.self,
+                                                   for: indexPath)
         let item = items[indexPath.row]
-        cell.render(item: item, editing: isEditingMode)
+        cell.render(item: item,
+                    editing: isEditingMode)
         return cell
     }
 
@@ -275,25 +321,35 @@ extension MessageListDemoVC: UITableViewDataSource {
                    moveRowAt sourceIndexPath: IndexPath,
                    to destinationIndexPath: IndexPath) {
         let moved = items.remove(at: sourceIndexPath.row)
-        items.insert(moved, at: destinationIndexPath.row)
+        items.insert(moved,
+                     at: destinationIndexPath.row)
     }
 }
 // MARK: - UITableViewDelegate
 extension MessageListDemoVC: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { 64 }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView,
+                   heightForRowAt indexPath: IndexPath) -> CGFloat {
+        64
+    }
+
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
         if isEditingMode {
             selectedIDs.insert(items[indexPath.row].id)
             updateBottomBarUI()
             tableView.cellForRow(at: indexPath)?.setNeedsLayout()
         } else {
-            tableView.deselectRow(at: indexPath, animated: true)
+            tableView.deselectRow(at: indexPath,
+                                  animated: true)
         }
     }
 
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        guard isEditingMode else { return }
+    func tableView(_ tableView: UITableView,
+                   didDeselectRowAt indexPath: IndexPath) {
+        guard isEditingMode else {
+            return
+        }
         selectedIDs.remove(items[indexPath.row].id)
         updateBottomBarUI()
         tableView.cellForRow(at: indexPath)?.setNeedsLayout()
@@ -309,33 +365,39 @@ extension MessageListDemoVC: UITableViewDelegate {
         true
     }
 
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    func tableView(_ tableView: UITableView,
+                   canEditRowAt indexPath: IndexPath) -> Bool {
         true
     }
 }
 
 extension MessageListDemoVC {
+
     // MARK: - Editing
     private func applyEditingMode(_ editing: Bool) {
         tableView.byAllowsMultipleSelectionDuringEditing(true)
-        tableView.setEditing(editing, animated: true)
+        tableView.setEditing(editing,
+                             animated: true)
         if editing {
             syncSelectionToUI()
         } else {
             deselectAllRows(clearIDs: true)
         }
-        setBottomBarVisible(editing, animated: true)
+        setBottomBarVisible(editing,
+                            animated: true)
         updateNavUI()
         updateBottomBarUI()
         tableView.reloadData()
     }
 
-    private func setBottomBarVisible(_ visible: Bool, animated: Bool) {
+    private func setBottomBarVisible(_ visible: Bool,
+                                     animated: Bool) {
         let h = bottomBarShownHeight
         let d: TimeInterval = animated ? 0.25 : 0
         applyTableInsetsForBottomBarVisible(visible)
         if visible {
-            bottomBar.jobs_slide(.show(from: .bottom, size: h),
+            bottomBar.jobs_slide(.show(from: .bottom,
+                                       size: h),
                                  sizeConstraint: bottomBarHeightC,
                                  duration: d)
         } else {
@@ -353,19 +415,25 @@ extension MessageListDemoVC {
     }
 
     private func syncSelectionToUI() {
-        guard !items.isEmpty else { return }
+        guard !items.isEmpty else {
+            return
+        }
         for (idx, item) in items.enumerated() where selectedIDs.contains(item.id) {
-            tableView.selectRow(at: IndexPath(row: idx, section: 0),
+            tableView.selectRow(at: IndexPath(row: idx,
+                                              section: 0),
                                 animated: false,
                                 scrollPosition: .none)
         }
     }
 
     private func selectAllRows() {
-        guard !items.isEmpty else { return }
+        guard !items.isEmpty else {
+            return
+        }
         selectedIDs = Set(items.map(\.id))
-        for i in 0..<items.count {
-            tableView.selectRow(at: IndexPath(row: i, section: 0),
+        for i in 0 ..< items.count {
+            tableView.selectRow(at: IndexPath(row: i,
+                                              section: 0),
                                 animated: false,
                                 scrollPosition: .none)
         }
@@ -373,25 +441,42 @@ extension MessageListDemoVC {
 
     private func deselectAllRows(clearIDs: Bool = false) {
         (tableView.indexPathsForSelectedRows ?? []).forEach {
-            tableView.deselectRow(at: $0, animated: false)
+            tableView.deselectRow(at: $0,
+                                  animated: false)
         }
-        if clearIDs { selectedIDs.removeAll() }
+        if clearIDs {
+            selectedIDs.removeAll()
+        }
     }
 
     private func deleteSelectedRows() {
-        guard isEditingMode else { return }
-        guard let selected = tableView.indexPathsForSelectedRows, !selected.isEmpty else { return }
-        let sorted = selected.sorted { $0.row > $1.row }
+        guard isEditingMode else {
+            return
+        }
+        guard let selected = tableView.indexPathsForSelectedRows, !selected.isEmpty else {
+            return
+        }
+        let sorted = selected.sorted {
+            $0.row > $1.row
+        }
         let idsToRemove: [UUID] = sorted.compactMap { ip in
-            guard items.indices.contains(ip.row) else { return nil };return items[ip.row].id
+            guard items.indices.contains(ip.row) else {
+                return nil
+            }
+            return items[ip.row].id
         }
         for ip in sorted {
-            guard items.indices.contains(ip.row) else { continue }
+            guard items.indices.contains(ip.row) else {
+                continue
+            }
             items.remove(at: ip.row)
         }
-        idsToRemove.forEach { selectedIDs.remove($0) }
+        idsToRemove.forEach {
+            selectedIDs.remove($0)
+        }
         tableView.performBatchUpdates {
-            tableView.deleteRows(at: sorted, with: .automatic)
+            tableView.deleteRows(at: sorted,
+                                 with: .automatic)
         } completion: { _ in
             self.updateBottomBarUI()
             self.updateNavUI()
@@ -403,14 +488,14 @@ extension MessageListDemoVC {
     }
     // MARK: - Demo Data
     private func makeDemoItems(_ count: Int) -> [MessageItem] {
-        (1...count).map { i in
-            MessageItem(
-                id: UUID(),
-                title: "消息 \(i)",
-                preview: "这是第 \(i) 条消息预览内容（演示用）",
-                time: String(format: "%02d:%02d", (8 + i) % 24, (i * 3) % 60),
-                isUnread: (i % 3 != 0)
-            )
+        (1 ... count).map { i in
+            MessageItem(id: UUID(),
+                        title: "消息 \(i)",
+                        preview: "这是第 \(i) 条消息预览内容（演示用）",
+                        time: String(format: "%02d:%02d",
+                                     (8 + i) % 24,
+                                     (i * 3) % 60),
+                        isUnread: (i % 3 != 0))
         }
     }
 }

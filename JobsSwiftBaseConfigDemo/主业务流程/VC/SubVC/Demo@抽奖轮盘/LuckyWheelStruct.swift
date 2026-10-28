@@ -19,13 +19,17 @@ import JobsByUIKit
 /// decelerationRate：UIScrollView.DecelerationRate.normal.rawValue 之类
 
 struct ScrollDecelerator {
+
     var velocity: CGFloat              // 当前速度（比如角速度）
     let decelerationRate: CGFloat      // 例如 0.998（.normal）
     /// 每过 dt 秒，更新一次速度，并返回这一小段的“位移”（这边就是 Δangle）
     mutating func step(dt: CGFloat) -> CGFloat {
-        guard dt > 0 else { return 0 }
+        guard dt > 0 else {
+            return 0
+        }
         // 每毫秒乘一次 rate -> dt 秒乘 pow(rate, dt * 1000)
-        let factor = pow(decelerationRate, dt * 1000)
+        let factor = pow(decelerationRate,
+                         dt * 1000)
         let v0 = velocity
         let v1 = v0 * factor              // 衰减后的速度
         // 位移 ≈ (v0 + v1) / 2 * dt （匀变速近似）
@@ -40,6 +44,7 @@ struct ScrollDecelerator {
 }
 // MARK: - Segment 模型 =======================================
 struct LuckyWheelSegment {
+
     /// 普通文本（如果有 attributedText，则优先用 attributedText）
     var text: String?
     var textFont: UIFont?

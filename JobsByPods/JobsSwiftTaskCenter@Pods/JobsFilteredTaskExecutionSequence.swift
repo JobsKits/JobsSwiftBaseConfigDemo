@@ -9,6 +9,7 @@ import Foundation
 
 // MARK: - JobsFilteredTaskExecutionSequence
 public struct JobsFilteredTaskExecutionSequence: AsyncSequence {
+
     public typealias Element = TaskExecution
     private let base: JobsTaskExecutionSequence
     private let predicate: @Sendable (TaskExecution) -> Bool
@@ -21,11 +22,14 @@ public struct JobsFilteredTaskExecutionSequence: AsyncSequence {
 }
 
 extension JobsFilteredTaskExecutionSequence {
+
     public func makeAsyncIterator() -> AsyncIterator {
-        AsyncIterator(base: base.makeAsyncIterator(), predicate: predicate)
+        AsyncIterator(base: base.makeAsyncIterator(),
+                      predicate: predicate)
     }
 
     public struct AsyncIterator: AsyncIteratorProtocol {
+
         private var base: JobsTaskExecutionSequence.AsyncIterator
         private let predicate: @Sendable (TaskExecution) -> Bool
         init(base: JobsTaskExecutionSequence.AsyncIterator,
@@ -38,7 +42,8 @@ extension JobsFilteredTaskExecutionSequence {
                 if predicate(execution) {
                     return execution
                 }
-            };return nil
+            }
+            return nil
         }
     }
 }

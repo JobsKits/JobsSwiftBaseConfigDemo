@@ -8,6 +8,7 @@
 import Foundation
 
 public enum TextFormatStrategy {
+
     /// 直接原样（可与其他策略组合使用时置于最后）
     case identity
     /// 去除所有空格
@@ -28,7 +29,9 @@ public enum TextFormatStrategy {
     // 组合：按顺序依次应用
     public static func chain(_ strategies: [TextFormatStrategy]) -> (String) -> String {
         return { input in
-            strategies.reduce(input) { acc, s in s.apply(acc) }
+            strategies.reduce(input) { acc, s in
+                s.apply(acc)
+            }
         }
     }
 
@@ -39,7 +42,8 @@ public enum TextFormatStrategy {
             return s
         /// 处理 .trimSpaces 分支
         case .trimSpaces:
-            return s.replacingOccurrences(of: " ", with: "")
+            return s.replacingOccurrences(of: " ",
+                                          with: "")
         /// 处理 .lowercased 分支
         case .lowercased:
             return s.lowercased()
@@ -48,31 +52,43 @@ public enum TextFormatStrategy {
             return s.uppercased()
         /// 处理 .digitsOnly 分支
         case .digitsOnly:
-            return s.filter { $0.isNumber }
+            return s.filter {
+                $0.isNumber
+            }
         /// 处理 .decimal 分支
         case .decimal(let scale):
             // 仅保留一处小数点 + 限制小数位数
-            var filtered = s.filter { $0.isNumber || $0 == "." }
+            var filtered = s.filter {
+                $0.isNumber || $0 == "."
+            }
             // 合并多余小数点
             if let firstDot = filtered.firstIndex(of: ".") {
                 let after = filtered.index(after: firstDot)
-                let tail = filtered[after...].replacingOccurrences(of: ".", with: "")
+                let tail = filtered[after...].replacingOccurrences(of: ".",
+                                                                   with: "")
                 filtered = String(filtered[..<after]) + tail
             }
             if scale >= 0, let dot = filtered.firstIndex(of: ".") {
-                let end = filtered.index(dot, offsetBy: scale + 1, limitedBy: filtered.endIndex) ?? filtered.endIndex
+                let end = filtered.index(dot,
+                                         offsetBy: scale + 1,
+                                         limitedBy: filtered.endIndex) ?? filtered.endIndex
                 filtered = String(filtered[..<end])
-            };return filtered
+            }
+            return filtered
         /// 处理 .phoneCNGrouped 分支
         case .phoneCNGrouped:
             // 展示分组：3-4-4；内部可以在回写 VM 时去空格
-            let digits = s.filter { $0.isNumber }.prefix(11)
+            let digits = s.filter {
+                $0.isNumber
+            }
+                .prefix(11)
             let raw = String(digits)
             switch raw.count {
             /// 处理 0...3 范围 分支
-            case 0...3: return raw
+            case 0 ... 3:
+                return raw
             /// 处理 4...7 范围 分支
-            case 4...7:
+            case 4 ... 7:
                 let a = raw.prefix(3)
                 let b = raw.dropFirst(3)
                 return "\(a) \(b)"
@@ -85,11 +101,19 @@ public enum TextFormatStrategy {
             }
         /// 处理 .bankCardGrouped 分支
         case .bankCardGrouped:
-            let digits = s.filter { $0.isNumber };return stride(from: 0, to: digits.count, by: 4)
+            let digits = s.filter {
+                $0.isNumber
+            }
+            return stride(from: 0,
+                          to: digits.count,
+                          by: 4)
                 .map { i -> String in
-                    let start = digits.index(digits.startIndex, offsetBy: i)
-                    let end = digits.index(start, offsetBy: 4, limitedBy: digits.endIndex) ?? digits.endIndex
-                    return String(digits[start..<end])
+                    let start = digits.index(digits.startIndex,
+                                             offsetBy: i)
+                    let end = digits.index(start,
+                                           offsetBy: 4,
+                                           limitedBy: digits.endIndex) ?? digits.endIndex
+                    return String(digits[start ..< end])
                 }
                 .joined(separator: " ")
         /// 处理 .custom 分支
@@ -100,6 +124,7 @@ public enum TextFormatStrategy {
 }
 
 public enum TextValidateStrategy {
+
     case alwaysTrue
     case nonEmpty
     case minLength(Int)
@@ -111,7 +136,11 @@ public enum TextValidateStrategy {
 
     /// 组合校验：全部为 true 才通过
     public static func all(_ strategies: [TextValidateStrategy]) -> (String) -> Bool {
-        return { s in strategies.allSatisfy { $0.test(s) } }
+        return { s in
+            strategies.allSatisfy {
+                $0.test(s)
+            }
+        }
     }
 
     public func test(_ s: String) -> Bool {
@@ -129,29 +158,43 @@ public enum TextValidateStrategy {
         case .email:
             // 简洁校验（生产建议换更严格正则）
             let pattern = #"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$"#
-            return s.range(of: pattern, options: [.regularExpression, .caseInsensitive]) != nil
+            return s.range(of: pattern,
+                           options: [.regularExpression, .caseInsensitive]) != nil
         /// 处理 .phoneCN 分支
         case .phoneCN:
-            let digits = s.filter { $0.isNumber };return digits.count == 11
+            let digits = s.filter {
+                $0.isNumber
+            }
+            return digits.count == 11
         /// 处理 .bankCard 分支
         case .bankCard(let min):
-            let digits = s.filter { $0.isNumber };return digits.count >= min
+            let digits = s.filter {
+                $0.isNumber
+            }
+            return digits.count >= min
         /// 处理 .decimal 分支
         case .decimal(let maxScale):
             if let dot = s.firstIndex(of: ".") {
-                let scale = s.distance(from: dot, to: s.endIndex) - 1
+                let scale = s.distance(from: dot,
+                                       to: s.endIndex) - 1
                 return scale >= 0 && scale <= maxScale
-            };return true
+            }
+            return true
         /// 处理 .regex 分支
         case .regex(let re):
-            let range = NSRange(location: 0, length: (s as NSString).length)
-            return re.firstMatch(in: s, options: [], range: range) != nil
+            let range = NSRange(location: 0,
+                                length: (s as NSString).length)
+            return re.firstMatch(in: s,
+                                 options: [],
+                                 range: range) != nil
         }
     }
 }
 /// 预置工厂：一站式拿格式化 + 校验闭包
 public struct TextInputStrategyFactory {
+
     public struct PhoneCN {
+
         /// 展示：3-4-4 分组；校验：11 位
         public static var formatter: (String) -> String {
             TextFormatStrategy.chain([.trimSpaces, .phoneCNGrouped])
@@ -162,6 +205,7 @@ public struct TextInputStrategyFactory {
     }
 
     public struct BankCard {
+
         public static var formatter: (String) -> String {
             TextFormatStrategy.chain([.trimSpaces, .bankCardGrouped])
         }
@@ -171,6 +215,7 @@ public struct TextInputStrategyFactory {
     }
 
     public struct Email {
+
         public static var formatter: (String) -> String {
             TextFormatStrategy.chain([.trimSpaces, .lowercased])
         }
@@ -180,16 +225,25 @@ public struct TextInputStrategyFactory {
     }
 
     public struct Digits {
+
         public static func formatter(maxLength: Int? = nil) -> (String) -> String {
             let base = TextFormatStrategy.digitsOnly.apply
-            if let m = maxLength { return { String(base($0).prefix(m)) } };return base
+            if let m = maxLength {
+                return {
+                    String(base($0).prefix(m))
+                }
+            }
+            return base
         }
         public static func validator(minLength: Int = 1) -> (String) -> Bool {
-            { s in s.filter(\.isNumber).count >= minLength }
+            { s in
+                s.filter(\.isNumber).count >= minLength
+            }
         }
     }
 
     public struct Decimal {
+
         public static func formatter(scale: Int) -> (String) -> String {
             TextFormatStrategy.decimal(scale).apply
         }

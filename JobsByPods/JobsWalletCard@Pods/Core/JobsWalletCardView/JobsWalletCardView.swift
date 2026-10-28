@@ -16,7 +16,9 @@ import JobsSwiftBaseDefines
 import SnapKit
 
 public final class JobsWalletCardView: UIView {
+
     private enum Section: Int {
+
         case cards
         case addCard
     }
@@ -42,23 +44,26 @@ public final class JobsWalletCardView: UIView {
             .byLayoutDelegate(self)
     }()
     private lazy var collectionView: UICollectionView = {
-        UICollectionView(frame: .zero, collectionViewLayout: walletLayout)
+        UICollectionView(frame: .zero,
+                         collectionViewLayout: walletLayout)
             .byBackgroundColor(JobsCor.clear)
             .byEmptyButtonProvider { [weak self] in
-                JobsEmptyAuto.Config.defaultProvider().onTap { [weak self] _ in
-                    self?.onReload?()
-                }
+                JobsEmptyAuto.Config.defaultProvider()
+                    .onTap { [weak self] _ in
+                        self?.onReload?()
+                    }
             }
             .byShowsVerticalScrollIndicator(false)
-            .byContentInset(UIEdgeInsets(top: 16, left: 0, bottom: 24, right: 0))
+            .byContentInset(UIEdgeInsets(top: 16,
+                                         left: 0,
+                                         bottom: 24,
+                                         right: 0))
             .byRegisterCell(JobsWalletCardCell.self)
             .byRegisterCell(JobsWalletAddCardCell.self)
             .byDelegate(self)
             .byDataSource(self)
-            .byRegisterSupplementaryView(
-                JobsWalletSectionHeaderView.self,
-                kind: UICollectionView.elementKindSectionHeader
-            )
+            .byRegisterSupplementaryView(JobsWalletSectionHeaderView.self,
+                                         kind: UICollectionView.elementKindSectionHeader)
             .byAddTo(self) { make in
                 make.edges.equalToSuperview()
             }
@@ -88,6 +93,7 @@ public final class JobsWalletCardView: UIView {
 }
 
 public extension JobsWalletCardView {
+
     @discardableResult
     func byCards(_ cards: [JobsWalletCardModel]) -> Self {
         self.cards = cards
@@ -152,13 +158,16 @@ public extension JobsWalletCardView {
 }
 
 extension JobsWalletCardView: UICollectionViewDataSource {
+
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
         showsAddCard ? 2 : 1
     }
 
     public func collectionView(_ collectionView: UICollectionView,
                                numberOfItemsInSection section: Int) -> Int {
-        guard let section = Section(rawValue: section) else { return 0 }
+        guard let section = Section(rawValue: section) else {
+            return 0
+        }
         switch section {
         /// 银行卡区域按外部模型数量展示
         case .cards:
@@ -178,12 +187,15 @@ extension JobsWalletCardView: UICollectionViewDataSource {
         /// 渲染银行卡
         case .cards:
             return collectionView
-                .byDequeueCell(JobsWalletCardCell.self, for: indexPath)
-                .byModel(cards[indexPath.item], highlighted: walletLayout.isActive(at: indexPath))
+                .byDequeueCell(JobsWalletCardCell.self,
+                               for: indexPath)
+                .byModel(cards[indexPath.item],
+                         highlighted: walletLayout.isActive(at: indexPath))
         /// 渲染添加银行卡入口
         case .addCard:
             return collectionView
-                .byDequeueCell(JobsWalletAddCardCell.self, for: indexPath)
+                .byDequeueCell(JobsWalletAddCardCell.self,
+                               for: indexPath)
                 .byTitle(addCardTitle)
         }
     }
@@ -195,31 +207,36 @@ extension JobsWalletCardView: UICollectionViewDataSource {
               let section = Section(rawValue: indexPath.section) else {
             return UICollectionReusableView.jobsMake { _ in }
         }
-        let header = collectionView.byDequeueSupplementary(
-            JobsWalletSectionHeaderView.self,
-            kind: kind,
-            for: indexPath
-        )
+        let header = collectionView.byDequeueSupplementary(JobsWalletSectionHeaderView.self,
+                                                           kind: kind,
+                                                           for: indexPath)
         switch section {
         /// 银行卡区域展示主标题与交互提示
         case .cards:
-            return header.byTitle(sectionTitle, subtitle: sectionSubtitle)
+            return header.byTitle(sectionTitle,
+                                  subtitle: sectionSubtitle)
         /// 添加银行卡区域只展示操作标题
         case .addCard:
-            return header.byTitle(addSectionTitle, subtitle: "")
+            return header.byTitle(addSectionTitle,
+                                  subtitle: "")
         }
     }
 }
 
 extension JobsWalletCardView: UICollectionViewDelegate {
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let section = Section(rawValue: indexPath.section) else { return }
+
+    public func collectionView(_ collectionView: UICollectionView,
+                               didSelectItemAt indexPath: IndexPath) {
+        guard let section = Section(rawValue: indexPath.section) else {
+            return
+        }
         switch section {
         /// 银行卡点击由布局根据模式统一管理开合
         case .cards:
             walletLayout.toggle(at: indexPath)
             collectionView.reloadData()
-            selectCardBlock?(cards[indexPath.item], indexPath.item)
+            selectCardBlock?(cards[indexPath.item],
+                             indexPath.item)
         /// 添加银行卡点击只向业务层回调
         case .addCard:
             addCardBlock?()
@@ -228,9 +245,12 @@ extension JobsWalletCardView: UICollectionViewDelegate {
 }
 
 extension JobsWalletCardView: JobsWalletCardLayoutDelegate {
+
     public func collectionView(_ collectionView: UICollectionView,
                                reusableHeaderHeightFor section: Int) -> CGFloat {
-        guard let section = Section(rawValue: section) else { return 0 }
+        guard let section = Section(rawValue: section) else {
+            return 0
+        }
         switch section {
         /// 银行卡区域沿用原 Demo 的紧凑 Header
         case .cards:

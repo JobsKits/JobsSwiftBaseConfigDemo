@@ -22,8 +22,10 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class SafeCodableDemoVC: BaseVC {
+
     // MARK: - Model
     private struct User: Codable {
+
         @SafeCodable var id: Int
         @SafeCodable var name: String
         @SafeCodable var vip: Bool
@@ -58,20 +60,32 @@ final class SafeCodableDemoVC: BaseVC {
     """#
     // MARK: - Reporter：把宽松转换/默认值上报到 UI
     private final class UIReporter: SafeCodableReporting {
+
         private weak var owner: SafeCodableDemoVC?
-        init(owner: SafeCodableDemoVC) { self.owner = owner }
+        init(owner: SafeCodableDemoVC) {
+            self.owner = owner
+        }
         func report(_ event: SafeCodableEvent) {
             DispatchQueue.main.async {
-                guard let o = self.owner else { return }
+                guard let o = self.owner else {
+                    return
+                }
                 switch event {
                 /// 处理 .coerced 分支
-                case let .coerced(from, to, path, raw):
+                case let .coerced(from,
+                                  to,
+                                  path,
+                                  raw):
                     o.appendLog("➡️ coerced \(path.joined(separator: ".")) \(from) -> \(to) raw=\(raw ?? "nil")")
                 /// 处理 .defaulted 分支
-                case let .defaulted(expected, path, reason):
+                case let .defaulted(expected,
+                                    path,
+                                    reason):
                     o.appendLog("⚠️ defaulted \(path.joined(separator: ".")) to \(expected) because \(reason)")
                 /// 处理 .failed 分支
-                case let .failed(expected, path, reason):
+                case let .failed(expected,
+                                 path,
+                                 reason):
                     o.appendLog("❌ failed \(path.joined(separator: ".")) expected \(expected): \(reason)")
                 }
             }
@@ -79,7 +93,8 @@ final class SafeCodableDemoVC: BaseVC {
     }
     // MARK: - Lazy UI（全部懒加载，byAddTo + SnapKit）
     private lazy var jsonTitleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("JSON（可编辑）".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 14))
             .byAddTo(view) { [unowned self] make in
@@ -90,8 +105,10 @@ final class SafeCodableDemoVC: BaseVC {
     }()
 
     private lazy var jsonTextView: UITextView = {
-        UITextView.jobsMake { _ in }
-            .byFont(JobsFont.monospacedSystemFont(ofSize: 13, weight: .regular))
+        UITextView
+            .jobsMake { _ in }
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 13,
+                                                  weight: .regular))
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(8)
             .byTextColor(JobsCor.label)
@@ -104,11 +121,16 @@ final class SafeCodableDemoVC: BaseVC {
 
     private lazy var decodeDirtyButton: UIButton = {
         UIButton.sys()
-            .byTitle("解码：脏数据".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byBackgroundColor(JobsCor.systemBlue, for: .normal)
+            .byTitle("解码：脏数据".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byBackgroundColor(JobsCor.systemBlue,
+                               for: .normal)
             .byCornerRadius(8)
-            .onTap { [weak self] _ in self?.useDirtyJSONAndDecode() }
+            .onTap { [weak self] _ in
+                self?.useDirtyJSONAndDecode()
+            }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.jsonTextView.snp.bottom).offset(12)
                 make.left.equalToSuperview().offset(16)
@@ -118,11 +140,16 @@ final class SafeCodableDemoVC: BaseVC {
 
     private lazy var decodeCleanButton: UIButton = {
         UIButton.sys()
-            .byTitle("解码：规范数据".tr, for: .normal)
-            .byTitleColor(JobsCor.white, for: .normal)
-            .byBackgroundColor(JobsCor.systemGreen, for: .normal)
+            .byTitle("解码：规范数据".tr,
+                     for: .normal)
+            .byTitleColor(JobsCor.white,
+                          for: .normal)
+            .byBackgroundColor(JobsCor.systemGreen,
+                               for: .normal)
             .byCornerRadius(8)
-            .onTap { [weak self] _ in self?.useCleanJSONAndDecode() }
+            .onTap { [weak self] _ in
+                self?.useCleanJSONAndDecode()
+            }
             .byAddTo(view) { [unowned self] make in
                 make.left.equalTo(self.decodeDirtyButton.snp.right).offset(12)
                 make.right.equalToSuperview().inset(16)
@@ -133,7 +160,8 @@ final class SafeCodableDemoVC: BaseVC {
     }()
 
     private lazy var valuesTitleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("解析结果".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 14))
             .byAddTo(view) { [unowned self] make in
@@ -151,7 +179,8 @@ final class SafeCodableDemoVC: BaseVC {
     private lazy var homepageLabel: UILabel  = makeValueLabel(baseline: createdAtLabel)
     private lazy var avatarURLLabel: UILabel = makeValueLabel(baseline: homepageLabel)
     private lazy var logTitleLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("解码日志".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 14))
             .byAddTo(view) { [unowned self] make in
@@ -162,8 +191,10 @@ final class SafeCodableDemoVC: BaseVC {
     }()
 
     private lazy var logTextView: UITextView = {
-        UITextView.jobsMake { _ in }
-            .byFont(JobsFont.monospacedSystemFont(ofSize: 12, weight: .regular))
+        UITextView
+            .jobsMake { _ in }
+            .byFont(JobsFont.monospacedSystemFont(ofSize: 12,
+                                                  weight: .regular))
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(8)
             .byTextColor(JobsCor.label)
@@ -201,8 +232,10 @@ final class SafeCodableDemoVC: BaseVC {
 }
 
 extension SafeCodableDemoVC {
+
     private func makeValueLabel(baseline: UILabel?) -> UILabel {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.label)
             .byNumberOfLines(0)
@@ -218,7 +251,8 @@ extension SafeCodableDemoVC {
     // MARK: - SafeCodable 引导
     private func bootstrapSafeCodable() {
         SafeCodableConfig.shared.customDateFormatters = [
-            DateFormatter.jobsMake { _ in }
+            DateFormatter
+                .jobsMake { _ in }
                 .byLocale(Locale(identifier: "en_US_POSIX"))
                 .byTimeZone(TimeZone(secondsFromGMT: 0)!)
                 .byDateFormat("yyyy-MM-dd HH:mm:ss")]
@@ -244,7 +278,9 @@ extension SafeCodableDemoVC {
             return
         }
         do {
-            let user = try JSONDecoder.make { _ in }.decode(User.self, from: data)
+            let user = try JSONDecoder.make { _ in }
+                .decode(User.self,
+                        from: data)
             render(user)
             appendLog("✅ 解码成功")
         } catch {
@@ -257,7 +293,8 @@ extension SafeCodableDemoVC {
         nameLabel.byText("name: \(u.name)")
         vipLabel.byText("vip: \(u.vip)")
         scoreLabel.byText("score: \(u.score)")
-        createdAtLabel.byText("createdAt: " + DateFormatter.jobsMake { _ in }
+        createdAtLabel.byText("createdAt: " + DateFormatter
+            .jobsMake { _ in }
             .byLocale(Locale(identifier: "en_US_POSIX"))
             .byTimeZone(TimeZone(secondsFromGMT: 0)!)
             .byDateFormat("yyyy-MM-dd HH:mm:ss 'UTC'").string(from: u.createdAt))
@@ -267,19 +304,25 @@ extension SafeCodableDemoVC {
 
     private func clearValues() {
         [idLabel,
-         nameLabel,
-         vipLabel,
-         scoreLabel,
-         createdAtLabel,
-         homepageLabel,
-         avatarURLLabel].forEach { $0.byText("") }
+            nameLabel,
+            vipLabel,
+            scoreLabel,
+            createdAtLabel,
+            homepageLabel,
+            avatarURLLabel].forEach {
+            $0.byText("")
+        }
     }
 
     private func appendLog(_ line: String) {
         let prefix = logTextView.text?.isEmpty == false ? "\n" : ""
         logTextView.byText((logTextView.text ?? "") + prefix + line)
-        logTextView.scrollRangeToVisible(NSRange(location: max(0, logTextView.text.count - 1), length: 1))
+        logTextView.scrollRangeToVisible(NSRange(location: max(0,
+                                                               logTextView.text.count - 1),
+                                                 length: 1))
     }
 
-    private func clearLog() { logTextView.byText("") }
+    private func clearLog() {
+        logTextView.byText("")
+    }
 }

@@ -18,28 +18,35 @@ import JobsSwiftDSL
 import SnapKit
 /// 利用SnapKit 给 UIViewController 加背景图（UIImageView）
 extension UIViewController {
+
     // MARK: - AO Key（UInt8 哨兵）
     private struct _JobsAssocKeys {
+
         static var imageView: UInt8 = 0
     }
     // MARK: - 懒载 imageView（挂在 VC 上）
     public var jobsImageView: UIImageView {
-        if let iv = objc_getAssociatedObject(self, &_JobsAssocKeys.imageView) as? UIImageView {
+        if let iv = objc_getAssociatedObject(self,
+                                             &_JobsAssocKeys.imageView) as? UIImageView {
             return iv
         }
-        let iv = UIImageView().byUserInteractionEnabled(false).byClipsToBounds(true).byContentMode(.scaleAspectFill)
-        objc_setAssociatedObject(self, &_JobsAssocKeys.imageView, iv, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        let iv = UIImageView()
+            .byUserInteractionEnabled(false)
+            .byClipsToBounds(true)
+            .byContentMode(.scaleAspectFill)
+        objc_setAssociatedObject(self,
+                                 &_JobsAssocKeys.imageView,
+                                 iv,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return iv
     }
     // MARK: - 安装并约束（默认铺满 Safe Area）
     @discardableResult
-    public func bgImageView(
-        to container: UIView? = nil,
-        contentMode: UIView.ContentMode = .scaleAspectFill,
-        backgroundColor: UIColor? = nil,
-        remakeConstraints: Bool = true,
-        layout: (jobsByConstraintMakerBlock)? = nil
-    ) -> UIImageView {
+    public func bgImageView(to container: UIView? = nil,
+                            contentMode: UIView.ContentMode = .scaleAspectFill,
+                            backgroundColor: UIColor? = nil,
+                            remakeConstraints: Bool = true,
+                            layout: (jobsByConstraintMakerBlock)? = nil) -> UIImageView {
         let holder = container ?? view
         let iv = jobsImageView
         if iv.superview !== holder {
@@ -47,10 +54,16 @@ extension UIViewController {
             holder?.addSubview(iv)
         }
         iv.byContentMode(contentMode)
-        if let bg = backgroundColor { iv.backgroundColor = bg }
+        if let bg = backgroundColor {
+            iv.backgroundColor = bg
+        }
         if let layout = layout {
-            if remakeConstraints { iv.snp.remakeConstraints(layout) }
-            else { iv.snp.makeConstraints(layout) }
+            if remakeConstraints {
+                iv.snp.remakeConstraints(layout)
+            }
+            else {
+                iv.snp.makeConstraints(layout)
+            }
         } else {
             if remakeConstraints {
                 iv.snp.remakeConstraints { make in

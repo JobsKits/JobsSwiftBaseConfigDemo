@@ -26,12 +26,14 @@ import SnapKit
 import GKNavigationBarSwift
 
 final class UITextViewDemoVC: BaseVC {
+
     // MARK: 双向绑定（无 Rx）
     var relayValue = "Hello Value"
     var isSyncing = false
     // MARK: - Scroll
     private lazy var scrollerView: UIScrollView = {
-        UIScrollView.jobsMake { _ in }
+        UIScrollView
+            .jobsMake { _ in }
             .byShowsVerticalScrollIndicator(true)
             .byShowsHorizontalScrollIndicator(false)
             .byAlwaysBounceVertical(true)
@@ -47,7 +49,8 @@ final class UITextViewDemoVC: BaseVC {
     /// 不是“必须”加 contentView，但在 iOS 里“直接往 UIScrollView 上加子视图”是一个容易埋雷的做法。
     /// contentView 不是“多余”，它是 为了让 Auto Layout 能 100% 正确推导 contentSize。
     private lazy var contentView: UIView = {
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byAddTo(scrollerView) { [unowned self] make in
                 make.edges.equalToSuperview()
                 make.width.equalToSuperview()
@@ -55,7 +58,8 @@ final class UITextViewDemoVC: BaseVC {
     }()
 
     private lazy var title1: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("1️⃣ 输入监听（byOnInput）".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 15))
             .byTextColor(JobsCor.secondaryLabel)
@@ -67,37 +71,49 @@ final class UITextViewDemoVC: BaseVC {
     }()
 
     private lazy var tv1: UITextView = {
-        UITextView.jobsMake { _ in }
+        UITextView
+            .jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.label)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byKeyboardType(.default)
             .byEditable(true)
             .bySelectable(true)
-            .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
-            .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
+            .byTextContainerInset(UIEdgeInsets(top: 8,
+                                               left: 10,
+                                               bottom: 8,
+                                               right: 10))
+            .byRoundedBorder(color: JobsCor.systemGray4,
+                             width: 1,
+                             radius: 8)
             .byPlaceHolder("哈哈哈哈".tr)
             .byPlaceHolderCor(JobsCor.blue)
             .byPlaceHolderFont(JobsFont.boldSystemFont(ofSize: 15))
             .byHintLimit(12) { lb in
-                lb.byFont(JobsFont.monospacedDigitSystemFont(ofSize: 11, weight: .semibold))
+                lb
+                    .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 11,
+                                                               weight: .semibold))
                     .byTextColor(JobsCor.red)
             }
-            /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
-            .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited ,text ,tv in
-                guard let self else { return }
-                // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
-                // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
-                // char：删除/回车时为 ""
-                // mode：space/delete/return/normal
-                // isLimited：是否设置了限制（limit != nil）
+        /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+        .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited , text , tv in
+                guard let self else {
+                    return
+                }
+            // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
+            // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+            // char：删除/回车时为 ""
+            // mode：space/delete/return/normal
+            // isLimited：是否设置了限制（limit != nil）
                 print("✏️ char='\(char)' value='\(value)' mode=\(mode) limited=\(isLimited) text='\(text)'")
             }
             .byBeginEditing { value in
-                print("✍️ begin:", value)
+                print("✍️ begin:",
+                      value)
             }
             .byEndEditing { value in
-                print("✅ end:", value)
+                print("✅ end:",
+                      value)
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title1.snp.bottom).offset(8)
@@ -108,7 +124,8 @@ final class UITextViewDemoVC: BaseVC {
     }()
 
     private lazy var title2: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("2️⃣ 金额输入（formatter + validator + maxLength）".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 15))
             .byTextColor(JobsCor.secondaryLabel)
@@ -119,33 +136,47 @@ final class UITextViewDemoVC: BaseVC {
     }()
 
     private lazy var tvMoney: UITextView = {
-        UITextView.jobsMake { _ in }
-            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 16, weight: .regular))
+        UITextView
+            .jobsMake { _ in }
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 16,
+                                                       weight: .regular))
             .byTextColor(JobsCor.label)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byKeyboardType(.decimalPad)
-            .byTextContainerInset(UIEdgeInsets(top: 6, left: 8, bottom: 6, right: 8))
-            .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
+            .byTextContainerInset(UIEdgeInsets(top: 6,
+                                               left: 8,
+                                               bottom: 6,
+                                               right: 8))
+            .byRoundedBorder(color: JobsCor.systemGray4,
+                             width: 1,
+                             radius: 8)
             .byText("123.45")
-            /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
-            .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited ,text ,tv in
-                guard let self else { return }
-                // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
-                // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
-                // char：删除/回车时为 ""
-                // mode：space/delete/return/normal
-                // isLimited：是否设置了限制（limit != nil）
+        /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+        .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited , text , tv in
+                guard let self else {
+                    return
+                }
+            // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
+            // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+            // char：删除/回车时为 ""
+            // mode：space/delete/return/normal
+            // isLimited：是否设置了限制（limit != nil）
                 let formatted = JobsFormatters.decimal(scale: 2)(value)
-                if text != formatted { tv.byText(formatted) }
-                let ok = JobsValidators.decimal(min: 0, max: 999_999)(formatted)
+                if text != formatted {
+                    tv.byText(formatted)
+                }
+                let ok = JobsValidators.decimal(min: 0,
+                                                max: 999_999)(formatted)
                 tv.byBorderColor(ok ? JobsCor.systemGreen : JobsCor.systemRed)
                 print("✏️ char='\(char)' value='\(value)' mode=\(mode) limited=\(isLimited) text='\(text)'")
             }
             .byBeginEditing { value in
-                print("✍️ begin:", value)
+                print("✍️ begin:",
+                      value)
             }
             .byEndEditing { value in
-                print("✅ end:", value)
+                print("✅ end:",
+                      value)
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title2.snp.bottom).offset(8)
@@ -155,7 +186,8 @@ final class UITextViewDemoVC: BaseVC {
     }()
 
     private lazy var title3: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("3️⃣ 手机号输入（3-4-4 分组 + 11 位校验）".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 15))
             .byTextColor(JobsCor.secondaryLabel)
@@ -166,32 +198,41 @@ final class UITextViewDemoVC: BaseVC {
     }()
 
     private lazy var tvPhone: UITextView = {
-        UITextView.jobsMake { _ in }
+        UITextView
+            .jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.label)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byKeyboardType(.numberPad)
-            .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
+            .byRoundedBorder(color: JobsCor.systemGray4,
+                             width: 1,
+                             radius: 8)
             .byText("13800138000")
-            /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
-            .byOnInput(limit: 13) { [weak self] char, value, mode, isLimited ,text ,tv in
-                guard let self else { return }
-                // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
-                // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
-                // char：删除/回车时为 ""
-                // mode：space/delete/return/normal
-                // isLimited：是否设置了限制（limit != nil）
+        /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+        .byOnInput(limit: 13) { [weak self] char, value, mode, isLimited , text , tv in
+                guard let self else {
+                    return
+                }
+            // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
+            // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+            // char：删除/回车时为 ""
+            // mode：space/delete/return/normal
+            // isLimited：是否设置了限制（limit != nil）
                 let formatted = JobsFormatters.phoneCN()(value)
-                if tv.text != formatted { tv.byText(formatted) }
+                if tv.text != formatted {
+                    tv.byText(formatted)
+                }
                 let ok = JobsValidators.phoneCN()(formatted)
                 tv.byBorderColor(ok ? JobsCor.systemGreen : JobsCor.systemOrange)
                 print("📱 char='\(char)' value='\(formatted)' mode=\(mode) limited=\(isLimited) ok=\(ok)")
             }
             .byBeginEditing { value in
-                print("✍️ begin:", value)
+                print("✍️ begin:",
+                      value)
             }
             .byEndEditing { value in
-                print("✅ end:", value)
+                print("✅ end:",
+                      value)
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title3.snp.bottom).offset(8)
@@ -201,7 +242,8 @@ final class UITextViewDemoVC: BaseVC {
     }()
 
     private lazy var title4: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("4️⃣ 富文本 + 链接样式 + DataDetector".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 15))
             .byTextColor(JobsCor.secondaryLabel)
@@ -212,31 +254,35 @@ final class UITextViewDemoVC: BaseVC {
     }()
 
     private lazy var tvBlue: UITextView = {
-        UITextView.jobsMake { _ in }
-            .byAttributedText(NSMutableAttributedString(
-                string: "🔗 默认蓝色链接（系统样式）：",
-                attributes: [.font: JobsFont.systemFont(ofSize: 15),
-                             .foregroundColor: JobsCor.secondaryLabel]
-            ).byAdd(NSAttributedString(
-                string: " Apple 官网",
-                attributes: [.link: URL(string: "https://www.apple.com")!,
-                             .font: JobsFont.boldSystemFont(ofSize: 16)]
-            )).byAdd(NSAttributedString(
-                string: "\n客服电话：400-123-4567",
-                attributes: [.font: JobsFont.systemFont(ofSize: 15)]
-            )))
+        UITextView
+            .jobsMake { _ in }
+            .byAttributedText(NSMutableAttributedString(string: "🔗 默认蓝色链接（系统样式）：",
+                                                        attributes: [.font: JobsFont.systemFont(ofSize: 15),
+                    .foregroundColor: JobsCor.secondaryLabel])
+                .byAdd(NSAttributedString(string: " Apple 官网",
+                                          attributes: [.link: URL(string: "https://www.apple.com")!,
+                        .font: JobsFont.boldSystemFont(ofSize: 16)]))
+                .byAdd(NSAttributedString(string: "\n客服电话：400-123-4567",
+                                          attributes: [.font: JobsFont.systemFont(ofSize: 15)])))
             .byTextColor(JobsCor.label)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byEditable(false)
             .bySelectable(true)
             .byDataDetectorTypes([.link, .phoneNumber])
-            .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
-            .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
+            .byTextContainerInset(UIEdgeInsets(top: 8,
+                                               left: 10,
+                                               bottom: 8,
+                                               right: 10))
+            .byRoundedBorder(color: JobsCor.systemGray4,
+                             width: 1,
+                             radius: 8)
             .byBeginEditing { value in
-                print("✍️ begin:", value)
+                print("✍️ begin:",
+                      value)
             }
             .byEndEditing { value in
-                print("✅ end:", value)
+                print("✅ end:",
+                      value)
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title4.snp.bottom).offset(8)
@@ -246,19 +292,16 @@ final class UITextViewDemoVC: BaseVC {
     }()
 
     private lazy var tvRed: UITextView = {
-        UITextView.jobsMake { _ in }
-            .byAttributedText(NSMutableAttributedString(
-                string: "🔴 自定义红色链接：",
-                attributes: [.font: JobsFont.systemFont(ofSize: 15),
-                             .foregroundColor: JobsCor.secondaryLabel]
-            ).byAdd(NSAttributedString(
-                string: " Jobs 官网",
-                attributes: [.link: URL(string: "https://www.google.com")!,
-                             .font: JobsFont.boldSystemFont(ofSize: 16)]
-            )).byAdd(NSAttributedString(
-                string: "\n客服电话：400-123-4567",
-                attributes: [.font: JobsFont.systemFont(ofSize: 15)]
-            )))
+        UITextView
+            .jobsMake { _ in }
+            .byAttributedText(NSMutableAttributedString(string: "🔴 自定义红色链接：",
+                                                        attributes: [.font: JobsFont.systemFont(ofSize: 15),
+                    .foregroundColor: JobsCor.secondaryLabel])
+                .byAdd(NSAttributedString(string: " Jobs 官网",
+                                          attributes: [.link: URL(string: "https://www.google.com")!,
+                        .font: JobsFont.boldSystemFont(ofSize: 16)]))
+                .byAdd(NSAttributedString(string: "\n客服电话：400-123-4567",
+                                          attributes: [.font: JobsFont.systemFont(ofSize: 15)])))
             .byTextColor(JobsCor.label)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byEditable(false)
@@ -268,13 +311,20 @@ final class UITextViewDemoVC: BaseVC {
                 .foregroundColor: JobsCor.systemRed,
                 .underlineStyle: NSUnderlineStyle.single.rawValue
             ])
-            .byTextContainerInset(UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10))
-            .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
+            .byTextContainerInset(UIEdgeInsets(top: 8,
+                                               left: 10,
+                                               bottom: 8,
+                                               right: 10))
+            .byRoundedBorder(color: JobsCor.systemGray4,
+                             width: 1,
+                             radius: 8)
             .byBeginEditing { value in
-                print("✍️ begin:", value)
+                print("✍️ begin:",
+                      value)
             }
             .byEndEditing { value in
-                print("✅ end:", value)
+                print("✅ end:",
+                      value)
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(tvBlue.snp.bottom).offset(12)
@@ -284,7 +334,8 @@ final class UITextViewDemoVC: BaseVC {
     }()
 
     private lazy var title6: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("6️⃣ 双向绑定示例：A ⇄ B ⇄ Value".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 15))
             .byTextColor(JobsCor.secondaryLabel)
@@ -295,28 +346,37 @@ final class UITextViewDemoVC: BaseVC {
     }()
 
     private lazy var tvA: UITextView = {
-        UITextView.jobsMake { _ in }
-            .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
+        UITextView
+            .jobsMake { _ in }
+            .byRoundedBorder(color: JobsCor.systemGray4,
+                             width: 1,
+                             radius: 8)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.label)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byText(relayValue)
-            // A -> B
-            /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
-            .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited ,text ,tv in
-                guard let self else { return }
-                // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
-                // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
-                // char：删除/回车时为 ""
-                // mode：space/delete/return/normal
-                // isLimited：是否设置了限制（limit != nil）
-                sync(from: self.tvA, to: self.tvB, value: value)
+        // A -> B
+        /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+        .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited , text , tv in
+                guard let self else {
+                    return
+                }
+            // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
+            // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+            // char：删除/回车时为 ""
+            // mode：space/delete/return/normal
+            // isLimited：是否设置了限制（limit != nil）
+                sync(from: self.tvA,
+                     to: self.tvB,
+                     value: value)
             }
             .byBeginEditing { value in
-                print("✍️ begin:", value)
+                print("✍️ begin:",
+                      value)
             }
             .byEndEditing { value in
-                print("✅ end:", value)
+                print("✅ end:",
+                      value)
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title6.snp.bottom).offset(8)
@@ -326,28 +386,37 @@ final class UITextViewDemoVC: BaseVC {
     }()
 
     private lazy var tvB: UITextView = {
-        UITextView.jobsMake { _ in }
-            .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
+        UITextView
+            .jobsMake { _ in }
+            .byRoundedBorder(color: JobsCor.systemGray4,
+                             width: 1,
+                             radius: 8)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.label)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byText(relayValue)
-            // B -> A
-            /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
-            .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited ,text ,tv in
-                guard let self else { return }
-                // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
-                // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
-                // char：删除/回车时为 ""
-                // mode：space/delete/return/normal
-                // isLimited：是否设置了限制（limit != nil）
-                sync(from: tvB, to: tvA, value: value)
+        // B -> A
+        /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+        .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited , text , tv in
+                guard let self else {
+                    return
+                }
+            // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
+            // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+            // char：删除/回车时为 ""
+            // mode：space/delete/return/normal
+            // isLimited：是否设置了限制（limit != nil）
+                sync(from: tvB,
+                     to: tvA,
+                     value: value)
             }
             .byBeginEditing { value in
-                print("✍️ begin:", value)
+                print("✍️ begin:",
+                      value)
             }
             .byEndEditing { value in
-                print("✅ end:", value)
+                print("✅ end:",
+                      value)
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(tvA.snp.bottom).offset(12)
@@ -357,7 +426,8 @@ final class UITextViewDemoVC: BaseVC {
     }()
 
     private lazy var valueLab: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byTextColor(JobsCor.secondaryLabel)
             .byText("Value: \(relayValue)")
@@ -368,7 +438,8 @@ final class UITextViewDemoVC: BaseVC {
     }()
 
     private lazy var title7: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("7️⃣ 删除键监听".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 15))
             .byTextColor(JobsCor.secondaryLabel)
@@ -379,28 +450,37 @@ final class UITextViewDemoVC: BaseVC {
     }()
 
     private lazy var tvDelete: UITextView = {
-        UITextView.jobsMake { _ in }
-            .byRoundedBorder(color: JobsCor.systemGray4, width: 1, radius: 8)
+        UITextView
+            .jobsMake { _ in }
+            .byRoundedBorder(color: JobsCor.systemGray4,
+                             width: 1,
+                             radius: 8)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.label)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byText("删除我试试看 👇".tr)
-            /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
-            .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited ,text ,tv in
-                guard let self else { return }
-                // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
-                // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
-                // char：删除/回车时为 ""
-                // mode：space/delete/return/normal
-                // isLimited：是否设置了限制（limit != nil）
-                guard mode == .delete else { return }
+        /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
+        .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited , text , tv in
+                guard let self else {
+                    return
+                }
+            // text 就是当前 UITextView.text（保证不是 nil，空就是 ""）
+            // value 仍然是“本次变更后的值”（由监听器计算出来的 new）
+            // char：删除/回车时为 ""
+            // mode：space/delete/return/normal
+            // isLimited：是否设置了限制（limit != nil）
+                guard mode == .delete else {
+                    return
+                }
                 "点击了删除键".tr.toast
             }
             .byBeginEditing { value in
-                print("✍️ begin:", value)
+                print("✍️ begin:",
+                      value)
             }
             .byEndEditing { value in
-                print("✅ end:", value)
+                print("✅ end:",
+                      value)
             }
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(title7.snp.bottom).offset(8)
@@ -433,12 +513,19 @@ final class UITextViewDemoVC: BaseVC {
 }
 
 extension UITextViewDemoVC {
-    func sync(from source: UITextView, to target: UITextView, value: String) {
-        guard !isSyncing else { return }
+
+    func sync(from source: UITextView,
+              to target: UITextView,
+              value: String) {
+        guard !isSyncing else {
+            return
+        }
         isSyncing = true
         relayValue = value
         valueLab.byText("Value: \(relayValue)")
-        if target.text != value { target.byText(value) }
+        if target.text != value {
+            target.byText(value)
+        }
         isSyncing = false
     }
 }

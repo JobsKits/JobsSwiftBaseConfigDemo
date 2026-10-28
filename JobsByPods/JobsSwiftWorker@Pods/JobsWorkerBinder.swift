@@ -15,6 +15,7 @@ import JobsByUIKit
 
 #if os(iOS) || os(tvOS)
 public enum JobsWorkerBinder {
+
     @discardableResult
     public static func bindText(_ source: JobsObservable<String>,
                                 to label: UILabel,
@@ -28,30 +29,37 @@ public enum JobsWorkerBinder {
         }
         if let bag {
             worker.store(in: bag)
-        };return worker
+        }
+        return worker
     }
 
     @discardableResult
     public static func bindTextField(_ textField: UITextField,
                                      to source: JobsObservable<String>) -> JobsWorker {
-        let worker = JobsWorker(mode: .ever, label: "textField.binding")
+        let worker = JobsWorker(mode: .ever,
+                                label: "textField.binding")
         textField.byAddTarget(TextFieldTarget.shared,
                               action: #selector(TextFieldTarget.shared.inputChanged(_:)),
                               for: .editingChanged)
-        TextFieldTarget.shared.register(textField: textField, observable: source, worker: worker)
+        TextFieldTarget.shared.register(textField: textField,
+                                        observable: source,
+                                        worker: worker)
         worker.setDisposer {
             TextFieldTarget.shared.unregister(textField: textField)
-        };return worker
+        }
+        return worker
     }
 }
 
 private final class TextFieldTarget: NSObject {
+
     static let shared = TextFieldTarget()
 
     private let lock = NSLock.jobsMake { _ in }
     private var storage: [ObjectIdentifier: Entry] = [:]
 
     struct Entry {
+
         weak var textField: UITextField?
         weak var worker: JobsWorker?
         let observable: JobsObservable<String>
@@ -61,7 +69,9 @@ private final class TextFieldTarget: NSObject {
                   observable: JobsObservable<String>,
                   worker: JobsWorker) {
         lock.lock()
-        storage[ObjectIdentifier(textField)] = Entry(textField: textField, worker: worker, observable: observable)
+        storage[ObjectIdentifier(textField)] = Entry(textField: textField,
+                                                     worker: worker,
+                                                     observable: observable)
         lock.unlock()
     }
 
@@ -69,15 +79,21 @@ private final class TextFieldTarget: NSObject {
         lock.lock()
         storage.removeValue(forKey: ObjectIdentifier(textField))
         lock.unlock()
-        textField.removeTarget(self, action: #selector(inputChanged(_:)), for: .editingChanged)
+        textField.removeTarget(self,
+                               action: #selector(inputChanged(_:)),
+                               for: .editingChanged)
     }
 
     @objc func inputChanged(_ sender: UITextField) {
         lock.lock()
         let entry = storage[ObjectIdentifier(sender)]
         lock.unlock()
-        guard let entry else { return }
-        guard entry.worker?.isDisposed == false else { return }
+        guard let entry else {
+            return
+        }
+        guard entry.worker?.isDisposed == false else {
+            return
+        }
         entry.observable.accept(sender.text ?? "")
     }
 }

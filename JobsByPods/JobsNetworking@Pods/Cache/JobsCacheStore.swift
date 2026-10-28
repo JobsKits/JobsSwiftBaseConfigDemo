@@ -8,26 +8,35 @@
 import Foundation
 
 public protocol JobsCacheStore: Sendable {
+
     func get(key: JobsCacheKey) -> JobsCachedValue?
-    func get(key: JobsCacheKey, allowExpired: Bool) -> JobsCachedValue?
-    func set(key: JobsCacheKey, value: JobsCachedValue)
+    func get(key: JobsCacheKey,
+             allowExpired: Bool) -> JobsCachedValue?
+    func set(key: JobsCacheKey,
+             value: JobsCachedValue)
     func remove(key: JobsCacheKey)
     func removeAll()
 }
 
 public extension JobsCacheStore {
+
     /// 第三方 store 维持旧合同；内建 store 支持有限宽限期内的 stale 读取。
-    func get(key: JobsCacheKey, allowExpired: Bool) -> JobsCachedValue? {
+    func get(key: JobsCacheKey,
+             allowExpired: Bool) -> JobsCachedValue? {
         get(key: key)
     }
 }
 
-public struct JobsCachedValue: Codable, Sendable {
+public struct JobsCachedValue: Codable,
+                               Sendable {
+
     public let data: Data
     public let expiry: Date
     public let responseHeaders: [String: String]
 
-    public init(data: Data, expiry: Date, responseHeaders: [String: String] = [:]) {
+    public init(data: Data,
+                expiry: Date,
+                responseHeaders: [String: String] = [:]) {
         self.data = data
         self.expiry = expiry
         self.responseHeaders = responseHeaders
@@ -38,7 +47,9 @@ public struct JobsCachedValue: Codable, Sendable {
     }
 }
 
-public final class JobsMemoryCache: JobsCacheStore, @unchecked Sendable {
+public final class JobsMemoryCache: JobsCacheStore,
+                                    @unchecked Sendable {
+
     private let lock = NSLock()
     private var store: [String: JobsCachedValue] = [:]
     private var access: [String: Date] = [:]
@@ -46,19 +57,24 @@ public final class JobsMemoryCache: JobsCacheStore, @unchecked Sendable {
     private let maximumByteCount: Int
     private let staleGrace: TimeInterval
 
-    public init(
-        maximumEntryCount: Int = 256, maximumByteCount: Int = 10 * 1_024 * 1_024, staleGrace: TimeInterval = 300
-    ) {
-        self.maximumEntryCount = max(1, maximumEntryCount)
-        self.maximumByteCount = max(1, maximumByteCount)
-        self.staleGrace = staleGrace.isFinite ? max(0, min(staleGrace, 86_400)) : 300
+    public init(maximumEntryCount: Int = 256,
+                maximumByteCount: Int = 10 * 1_024 * 1_024,
+                staleGrace: TimeInterval = 300) {
+        self.maximumEntryCount = max(1,
+                                     maximumEntryCount)
+        self.maximumByteCount = max(1,
+                                    maximumByteCount)
+        self.staleGrace = staleGrace.isFinite ? max(0,
+                                                    min(staleGrace,86_400)) : 300
     }
 
     public func get(key: JobsCacheKey) -> JobsCachedValue? {
-        get(key: key, allowExpired: false)
+        get(key: key,
+            allowExpired: false)
     }
 
-    public func get(key: JobsCacheKey, allowExpired: Bool) -> JobsCachedValue? {
+    public func get(key: JobsCacheKey,
+                    allowExpired: Bool) -> JobsCachedValue? {
         var retired: JobsCachedValue?
         lock.lock()
         defer {
@@ -81,7 +97,8 @@ public final class JobsMemoryCache: JobsCacheStore, @unchecked Sendable {
         return value
     }
 
-    public func set(key: JobsCacheKey, value: JobsCachedValue) {
+    public func set(key: JobsCacheKey,
+                    value: JobsCachedValue) {
         var retired: [JobsCachedValue] = []
         lock.lock()
         defer {
@@ -91,21 +108,21 @@ public final class JobsMemoryCache: JobsCacheStore, @unchecked Sendable {
         guard value.data.count <= maximumByteCount else {
             return
         }
-        if let previous = store.updateValue(value, forKey: key.raw) {
+        if let previous = store.updateValue(value,
+                                            forKey: key.raw) {
             retired.append(previous)
         }
         access[key.raw] = Date()
         while store.count > maximumEntryCount
-            || store.values.reduce(
-                0,
-                {
-                    $0 + $1.data.count
-                }) > maximumByteCount
+            || store.values.reduce(0,
+                                   {
+            $0 + $1.data.count
+        }) > maximumByteCount
         {
             guard
-                let oldest = access.min(by: {
-                    $0.value < $1.value
-                })?.key
+            let oldest = access.min(by: {
+                $0.value < $1.value
+            })?.key
             else {
                 break
             }
@@ -138,8 +155,11 @@ public final class JobsMemoryCache: JobsCacheStore, @unchecked Sendable {
     }
 }
 
-public final class JobsDiskCache: JobsCacheStore, @unchecked Sendable {
+public final class JobsDiskCache: JobsCacheStore,
+                                  @unchecked Sendable {
+
     private enum ReadError: LocalizedError {
+
         case invalidFile
         case budgetExceeded
 
@@ -160,37 +180,45 @@ public final class JobsDiskCache: JobsCacheStore, @unchecked Sendable {
     private let staleGrace: TimeInterval
     private let onError: (@Sendable (Error) -> Void)?
 
-    public init(
-        namespace: String = "JobsNetworkingCache", maximumEntryCount: Int = 500,
-        maximumByteCount: Int = 100 * 1_024 * 1_024, staleGrace: TimeInterval = 300,
-        onError: (@Sendable (Error) -> Void)? = nil
-    ) {
-        self.maximumEntryCount = max(1, maximumEntryCount)
-        self.maximumByteCount = max(1, maximumByteCount)
-        self.staleGrace = staleGrace.isFinite ? max(0, min(staleGrace, 86_400)) : 300
+    public init(namespace: String = "JobsNetworkingCache",
+                maximumEntryCount: Int = 500,
+                maximumByteCount: Int = 100 * 1_024 * 1_024,
+                staleGrace: TimeInterval = 300,
+                onError: (@Sendable (Error) -> Void)? = nil) {
+        self.maximumEntryCount = max(1,
+                                     maximumEntryCount)
+        self.maximumByteCount = max(1,
+                                    maximumByteCount)
+        self.staleGrace = staleGrace.isFinite ? max(0,
+                                                    min(staleGrace,86_400)) : 300
         self.onError = onError
         let base =
-            FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
+        FileManager.default.urls(for: .cachesDirectory,
+                                 in: .userDomainMask).first
             ?? FileManager.default.temporaryDirectory
         let safe = namespace.unicodeScalars.map {
             CharacterSet.alphanumerics.contains($0) || "._-".unicodeScalars.contains($0) ? String($0) : "_"
-        }.joined()
+        }
+            .joined()
         let namespaceComponent = safe.utf8.count > 100 ? JobsCacheKey.digest(Data(safe.utf8)) : safe
-        dir = base.appendingPathComponent(
-            namespaceComponent.isEmpty || namespaceComponent == "." || namespaceComponent == ".."
-                ? "JobsNetworkingCache" : namespaceComponent, isDirectory: true)
+        dir = base.appendingPathComponent(namespaceComponent.isEmpty || namespaceComponent == "." || namespaceComponent == ".."
+            ? "JobsNetworkingCache" : namespaceComponent,
+                                          isDirectory: true)
         do {
-            try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+            try FileManager.default.createDirectory(at: dir,
+                                                    withIntermediateDirectories: true)
         } catch {
             onError?(error)
         }
     }
 
     public func get(key: JobsCacheKey) -> JobsCachedValue? {
-        get(key: key, allowExpired: false)
+        get(key: key,
+            allowExpired: false)
     }
 
-    public func get(key: JobsCacheKey, allowExpired: Bool) -> JobsCachedValue? {
+    public func get(key: JobsCacheKey,
+                    allowExpired: Bool) -> JobsCachedValue? {
         var failure: Error?
         lock.lock()
         let url = fileURL(for: key)
@@ -208,13 +236,15 @@ public final class JobsDiskCache: JobsCacheStore, @unchecked Sendable {
                 guard data.count <= maximumByteCount else {
                     throw ReadError.budgetExceeded
                 }
-                let value = try JSONDecoder().decode(JobsCachedValue.self, from: data)
+                let value = try JSONDecoder().decode(JobsCachedValue.self,
+                                                     from: data)
                 let now = Date()
                 if now >= value.expiry.addingTimeInterval(staleGrace) {
                     try FileManager.default.removeItem(at: url)
                 } else if allowExpired || now < value.expiry {
                     result = value
-                    try FileManager.default.setAttributes([.modificationDate: now], ofItemAtPath: url.path)
+                    try FileManager.default.setAttributes([.modificationDate: now],
+                                                          ofItemAtPath: url.path)
                 }
             } catch {
                 result = nil
@@ -230,7 +260,8 @@ public final class JobsDiskCache: JobsCacheStore, @unchecked Sendable {
         return result
     }
 
-    public func set(key: JobsCacheKey, value: JobsCachedValue) {
+    public func set(key: JobsCacheKey,
+                    value: JobsCachedValue) {
         var failure: Error?
         lock.lock()
         do {
@@ -241,8 +272,10 @@ public final class JobsDiskCache: JobsCacheStore, @unchecked Sendable {
             guard encoded.count <= maximumByteCount else {
                 throw ReadError.budgetExceeded
             }
-            try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-            try encoded.write(to: fileURL(for: key), options: .atomic)
+            try FileManager.default.createDirectory(at: dir,
+                                                    withIntermediateDirectories: true)
+            try encoded.write(to: fileURL(for: key),
+                              options: .atomic)
             try trim()
         } catch {
             failure = error
@@ -277,7 +310,8 @@ public final class JobsDiskCache: JobsCacheStore, @unchecked Sendable {
             if FileManager.default.fileExists(atPath: dir.path) {
                 try FileManager.default.removeItem(at: dir)
             }
-            try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+            try FileManager.default.createDirectory(at: dir,
+                                                    withIntermediateDirectories: true)
         } catch {
             failure = error
         }
@@ -292,18 +326,18 @@ public final class JobsDiskCache: JobsCacheStore, @unchecked Sendable {
     }
 
     private func trim() throws {
-        let files = try FileManager.default.contentsOfDirectory(
-            at: dir, includingPropertiesForKeys: [.contentModificationDateKey, .fileSizeKey]
-        )
-        .filter {
-            $0.pathExtension == "cache"
-        }
+        let files = try FileManager.default.contentsOfDirectory(at: dir,
+                                                                includingPropertiesForKeys: [.contentModificationDateKey, .fileSizeKey])
+            .filter {
+                $0.pathExtension == "cache"
+            }
         let entries = try files.map { url -> (URL, Date, Int) in
             let info = try url.resourceValues(forKeys: [.contentModificationDateKey, .fileSizeKey])
             return (url, info.contentModificationDate ?? .distantPast, info.fileSize ?? 0)
-        }.sorted {
-            $0.1 < $1.1
         }
+            .sorted {
+                $0.1 < $1.1
+            }
         var bytes = entries.reduce(0) {
             $0 + $1.2
         }

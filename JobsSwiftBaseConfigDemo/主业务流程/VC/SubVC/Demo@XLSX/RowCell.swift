@@ -19,13 +19,16 @@ import SnapKit
 
 // MARK: - RowCell（SnapKit 布局）
 final class RowCell: UITableViewCell {
+
     // MARK: - UI
     private lazy var indexLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byTextAlignment(.left)
             .byHugging(.required)
             .byCompressionResistance(.required)
-            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 13, weight: .regular))
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 13,
+                                                       weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { make in
                 make.top.equalToSuperview().offset(8)
@@ -35,7 +38,8 @@ final class RowCell: UITableViewCell {
     }()
 
     private lazy var stack: UIStackView = {
-        UIStackView.jobsMake { _ in }
+        UIStackView
+            .jobsMake { _ in }
             .byAxis(.horizontal)
             .byAlignment(.firstBaseline)
             .byDistribution(.fillProportionally)
@@ -48,9 +52,13 @@ final class RowCell: UITableViewCell {
             }
     }()
     // MARK: - Life Cycle
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    override init(style: UITableViewCell.CellStyle,
+                  reuseIdentifier: String?) {
+        super.init(style: style,
+                   reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         byBackgroundColor(JobsCor.secondarySystemBackground)
         contentView.byBackgroundColor(JobsCor.secondarySystemBackground)
@@ -73,7 +81,8 @@ final class RowCell: UITableViewCell {
             }
             for text in values {
                 stack.addArrangedSubview(
-                    UILabel.jobsMake { _ in }
+                    UILabel
+                        .jobsMake { _ in }
                         .byNumberOfLines(1)
                         .byFont(JobsFont.systemFont(ofSize: 15))
                         .byText(text)
@@ -81,10 +90,13 @@ final class RowCell: UITableViewCell {
                         .byCompressionResistance(.defaultLow)
                 )
             }
-        };return self
+        }
+        return self
     }
 
     func sendResult(_ any: Any?) {}
     @discardableResult
-    func onResult(_ callback: @escaping (Any?) -> Void) -> Self { self }
+    func onResult(_ callback: @escaping (Any?) -> Void) -> Self {
+        self
+    }
 }

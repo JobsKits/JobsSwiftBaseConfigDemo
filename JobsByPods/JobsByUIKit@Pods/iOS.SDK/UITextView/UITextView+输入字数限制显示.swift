@@ -18,12 +18,14 @@ import SnapKit
 
 // MARK: - UITextView + HintLimit (charCount/limit)
 extension UITextView {
+
     /// 右下角计数提示：`当前字数/限制字数`，如 `3/200`
     /// - Note: 视觉优先。一旦设置，对于限制字数的优先级 ➤ byHintLimit > byOnInput
     @discardableResult
     public func byHintLimit(_ limit: Int,
                             _ config: ((UILabel) -> Void)? = nil) -> Self {
-        let locked = max(0, limit)
+        let locked = max(0,
+                         limit)
         jobs_hintLimitLocked = locked // ✅ 锁定优先级来源
         // ✅ 强制同步到真正的输入限制
         jobs_textInputObserver.limit = locked
@@ -35,14 +37,17 @@ extension UITextView {
         jobs_installSuperviewHookIfNeeded()
         jobs_attachHintLabelIfPossible()
         onMainAsync { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.jobs_attachHintLabelIfPossible()
             self.jobs_updateHintLabel()
             // 再同步一次，确保后续链式不会改掉
             if let locked = self.jobs_hintLimitLocked {
                 self.jobs_textInputObserver.limit = locked
             }
-        };return self
+        }
+        return self
     }
     /// 显式关闭 hintLimit 优先级（关闭后，byOnInput 的 limit 才能重新生效）
     @discardableResult
@@ -60,7 +65,9 @@ extension UITextView {
 }
 // MARK: - Private Associated Storage
 extension UITextView {
+
     private struct JobsHintKeys {
+
         static var labelKey: UInt8 = 0
         static var hintLockedKey: UInt8 = 0
         static var tokenKey: UInt8 = 0
@@ -71,12 +78,18 @@ extension UITextView {
     }
 
     private final class JobsDeinitBox {
+
         let cleanup: () -> Void
-        init(_ cleanup: @escaping () -> Void) { self.cleanup = cleanup }
-        deinit { cleanup() }
+        init(_ cleanup: @escaping () -> Void) {
+            self.cleanup = cleanup
+        }
+        deinit {
+            cleanup()
+        }
     }
 
     private final class JobsSuperviewHookView: UIView {
+
         weak var host: UITextView?
         @discardableResult
         public func byHost(_ host: UITextView?) -> Self {
@@ -96,95 +109,110 @@ extension UITextView {
     }
 
     internal var jobs_hintLimitLocked: Int? {
-        get { objc_getAssociatedObject(self, &JobsHintKeys.hintLockedKey) as? Int }
+        get {
+            objc_getAssociatedObject(self,
+                                     &JobsHintKeys.hintLockedKey) as? Int
+        }
         set {
-            objc_setAssociatedObject(
-                self,
-                &JobsHintKeys.hintLockedKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
+            objc_setAssociatedObject(self,
+                                     &JobsHintKeys.hintLockedKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
     fileprivate var jobs_hintLabel: UILabel? {
-        get { objc_getAssociatedObject(self, &JobsHintKeys.labelKey) as? UILabel }
+        get {
+            objc_getAssociatedObject(self,
+                                     &JobsHintKeys.labelKey) as? UILabel
+        }
         set {
-            objc_setAssociatedObject(
-                self,
-                &JobsHintKeys.labelKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
+            objc_setAssociatedObject(self,
+                                     &JobsHintKeys.labelKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
     private var jobs_textDidChangeToken: NSObjectProtocol? {
-        get { objc_getAssociatedObject(self, &JobsHintKeys.tokenKey) as? NSObjectProtocol }
+        get {
+            objc_getAssociatedObject(self,
+                                     &JobsHintKeys.tokenKey) as? NSObjectProtocol
+        }
         set {
-            objc_setAssociatedObject(
-                self,
-                &JobsHintKeys.tokenKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
+            objc_setAssociatedObject(self,
+                                     &JobsHintKeys.tokenKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
     private var jobs_originalTextInset: UIEdgeInsets? {
-        get { (objc_getAssociatedObject(self, &JobsHintKeys.originalInsetKey) as? NSValue)?.uiEdgeInsetsValue }
+        get {
+            (objc_getAssociatedObject(self,
+                                      &JobsHintKeys.originalInsetKey) as? NSValue)?.uiEdgeInsetsValue
+        }
         set {
-            objc_setAssociatedObject(
-                self,
-                &JobsHintKeys.originalInsetKey,
-                newValue.map { NSValue(uiEdgeInsets: $0) },
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
+            objc_setAssociatedObject(self,
+                                     &JobsHintKeys.originalInsetKey,
+                                     newValue.map {
+                NSValue(uiEdgeInsets: $0)
+            },
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
     fileprivate var jobs_didAdjustInset: Bool {
-        get { (objc_getAssociatedObject(self, &JobsHintKeys.didAdjustInsetKey) as? Bool) ?? false }
+        get {
+            (objc_getAssociatedObject(self,
+                                      &JobsHintKeys.didAdjustInsetKey) as? Bool) ?? false
+        }
         set {
-            objc_setAssociatedObject(
-                self,
-                &JobsHintKeys.didAdjustInsetKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
+            objc_setAssociatedObject(self,
+                                     &JobsHintKeys.didAdjustInsetKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
     private var jobs_deinitBox: JobsDeinitBox? {
-        get { objc_getAssociatedObject(self, &JobsHintKeys.deinitBoxKey) as? JobsDeinitBox }
+        get {
+            objc_getAssociatedObject(self,
+                                     &JobsHintKeys.deinitBoxKey) as? JobsDeinitBox
+        }
         set {
-            objc_setAssociatedObject(
-                self,
-                &JobsHintKeys.deinitBoxKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self,
+                                     &JobsHintKeys.deinitBoxKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
     private var jobs_superviewHook: JobsSuperviewHookView? {
-        get { objc_getAssociatedObject(self, &JobsHintKeys.superviewHookKey) as? JobsSuperviewHookView }
+        get {
+            objc_getAssociatedObject(self,
+                                     &JobsHintKeys.superviewHookKey) as? JobsSuperviewHookView
+        }
         set {
-            objc_setAssociatedObject(
-                self,
-                &JobsHintKeys.superviewHookKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self,
+                                     &JobsHintKeys.superviewHookKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 }
 // MARK: - Install / Update
 extension UITextView {
+
     @discardableResult
     fileprivate func jobs_installHintLabelIfNeeded() -> UILabel {
-        if let lb = jobs_hintLabel { return lb }
+        if let lb = jobs_hintLabel {
+            return lb
+        }
         let lb = UILabel()
             .byUserInteractionEnabled(false)
-            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 12, weight: .regular))
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 12,
+                                                       weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byBackgroundColor(JobsCor.clear)
             .byTextAlignment(.right)
@@ -195,8 +223,12 @@ extension UITextView {
     }
 
     fileprivate func jobs_attachHintLabelIfPossible() {
-        guard let lb = jobs_hintLabel else { return }
-        guard let sv = superview else { return }
+        guard let lb = jobs_hintLabel else {
+            return
+        }
+        guard let sv = superview else {
+            return
+        }
         if lb.superview === sv {
             sv.bringSubviewToFront(lb)
             lb.byZPosition(.greatestFiniteMagnitude)
@@ -213,7 +245,9 @@ extension UITextView {
     }
 
     fileprivate func jobs_installSuperviewHookIfNeeded() {
-        if jobs_superviewHook != nil { return }
+        if jobs_superviewHook != nil {
+            return
+        }
         jobs_superviewHook = JobsSuperviewHookView(frame: .zero)
             .byBackgroundColor(JobsCor.clear)
             .byUserInteractionEnabled(false)
@@ -224,7 +258,9 @@ extension UITextView {
     }
 
     fileprivate func jobs_adjustTextInsetForHintLabelIfNeeded() {
-        guard jobs_didAdjustInset == false else { return }
+        guard jobs_didAdjustInset == false else {
+            return
+        }
         jobs_originalTextInset = textContainerInset
         let minBottom: CGFloat = 22
         var inset = textContainerInset
@@ -236,7 +272,9 @@ extension UITextView {
     }
 
     fileprivate func jobs_updateHintLabel() {
-        guard let lb = jobs_hintLabel else { return }
+        guard let lb = jobs_hintLabel else {
+            return
+        }
         let current = (text ?? "").count
         lb.byText("\(current)/\(jobs_hintLimitLocked ?? 0)")
         jobs_attachHintLabelIfPossible()
@@ -247,19 +285,23 @@ extension UITextView {
     }
 
     fileprivate func jobs_installTextDidChangeObserverIfNeeded() {
-        if jobs_textDidChangeToken != nil { return }
-        let token = NotificationCenter.default.addObserver(
-            forName: UITextView.textDidChangeNotification,
-            object: self,
-            queue: .main
-        ) { [weak self] _ in
-            guard let self else { return }
+        if jobs_textDidChangeToken != nil {
+            return
+        }
+        let token = NotificationCenter.default.addObserver(forName: UITextView.textDidChangeNotification,
+                                                           object: self,
+                                                           queue: .main) { [weak self] _ in
+            guard let self else {
+                return
+            }
             self.jobs_updateHintLabel()
         }
         jobs_textDidChangeToken = token
         if jobs_deinitBox == nil {
             jobs_deinitBox = JobsDeinitBox { [weak self] in
-                guard let self, let t = self.jobs_textDidChangeToken else { return }
+                guard let self, let t = self.jobs_textDidChangeToken else {
+                    return
+                }
                 NotificationCenter.default.removeObserver(t)
                 self.jobs_textDidChangeToken = nil
             }

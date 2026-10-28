@@ -15,7 +15,9 @@ import JobsByUIKit
 
 @MainActor
 final class JobsCopiedAppIconPhotoStore {
+
     enum StoreError: LocalizedError {
+
         case imageEncodingFailed
 
         var errorDescription: String? {
@@ -43,7 +45,10 @@ final class JobsCopiedAppIconPhotoStore {
     }
 
     var selectedPhoto: JobsCopiedAppIconPhoto? {
-        guard let selectedPhotoID else { return nil };return storedPhotos.first {
+        guard let selectedPhotoID else {
+            return nil
+        }
+        return storedPhotos.first {
             $0.id == selectedPhotoID
         }
     }
@@ -52,19 +57,21 @@ final class JobsCopiedAppIconPhotoStore {
         get {
             guard let value = UserDefaults.standard.string(forKey: Self.selectedPhotoIDKey) else {
                 return nil
-            };return UUID(uuidString: value)
+            }
+            return UUID(uuidString: value)
         }
         set {
-            UserDefaults.standard.set(newValue?.uuidString, forKey: Self.selectedPhotoIDKey)
+            UserDefaults.standard.set(newValue?.uuidString,
+                                      forKey: Self.selectedPhotoIDKey)
         }
     }
 
     private init() {
-        let applicationSupportURL = fileManager.urls(
-            for: .applicationSupportDirectory,
-            in: .userDomainMask
-        ).first ?? URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-        directoryURL = applicationSupportURL.appendingPathComponent(Self.directoryName, isDirectory: true)
+        let applicationSupportURL = fileManager.urls(for: .applicationSupportDirectory,
+                                                     in: .userDomainMask).first ?? URL(fileURLWithPath: NSTemporaryDirectory(),
+                                                                                       isDirectory: true)
+        directoryURL = applicationSupportURL.appendingPathComponent(Self.directoryName,
+                                                                    isDirectory: true)
         indexURL = directoryURL.appendingPathComponent(Self.indexFileName)
         storedPhotos = []
         do {
@@ -76,7 +83,9 @@ final class JobsCopiedAppIconPhotoStore {
             print("⚠️ JobsMotionAppIcon 照片副本索引读取失败：\(error.localizedDescription)")
         }
         if let selectedPhotoID,
-           !storedPhotos.contains(where: { $0.id == selectedPhotoID }) {
+           !storedPhotos.contains(where: {
+            $0.id == selectedPhotoID
+        }) {
             self.selectedPhotoID = storedPhotos.first?.id
         }
     }
@@ -92,15 +101,14 @@ final class JobsCopiedAppIconPhotoStore {
         try ensureDirectoryExists()
         let id = UUID()
         let fileName = "\(id.uuidString).jpg"
-        let photo = JobsCopiedAppIconPhoto(
-            id: id,
-            fileName: fileName,
-            createdAt: Date(),
-            pixelWidth: squareImage.cgImage?.width ?? Int(squareImage.size.width * squareImage.scale),
-            pixelHeight: squareImage.cgImage?.height ?? Int(squareImage.size.height * squareImage.scale)
-        )
+        let photo = JobsCopiedAppIconPhoto(id: id,
+                                           fileName: fileName,
+                                           createdAt: Date(),
+                                           pixelWidth: squareImage.cgImage?.width ?? Int(squareImage.size.width * squareImage.scale),
+                                           pixelHeight: squareImage.cgImage?.height ?? Int(squareImage.size.height * squareImage.scale))
         let photoURL = fileURL(for: photo)
-        try data.write(to: photoURL, options: .atomic)
+        try data.write(to: photoURL,
+                       options: .atomic)
         let updatedPhotos = [photo] + storedPhotos
         do {
             try writeIndex(updatedPhotos)
@@ -118,14 +126,22 @@ final class JobsCopiedAppIconPhotoStore {
     }
 
     func select(_ photo: JobsCopiedAppIconPhoto) {
-        guard storedPhotos.contains(photo) else { return }
+        guard storedPhotos.contains(photo) else {
+            return
+        }
         selectedPhotoID = photo.id
     }
 
     func delete(photoIDs: Set<UUID>) throws {
-        guard !photoIDs.isEmpty else { return }
-        let removedPhotos = storedPhotos.filter { photoIDs.contains($0.id) }
-        let remainingPhotos = storedPhotos.filter { !photoIDs.contains($0.id) }
+        guard !photoIDs.isEmpty else {
+            return
+        }
+        let removedPhotos = storedPhotos.filter {
+            photoIDs.contains($0.id)
+        }
+        let remainingPhotos = storedPhotos.filter {
+            !photoIDs.contains($0.id)
+        }
         try writeIndex(remainingPhotos)
         removedPhotos.forEach {
             try? fileManager.removeItem(at: fileURL(for: $0))
@@ -142,11 +158,10 @@ final class JobsCopiedAppIconPhotoStore {
 }
 
 private extension JobsCopiedAppIconPhotoStore {
+
     func ensureDirectoryExists() throws {
-        try fileManager.createDirectory(
-            at: directoryURL,
-            withIntermediateDirectories: true
-        )
+        try fileManager.createDirectory(at: directoryURL,
+                                        withIntermediateDirectories: true)
     }
 
     func fileURL(for photo: JobsCopiedAppIconPhoto) -> URL {
@@ -154,13 +169,17 @@ private extension JobsCopiedAppIconPhotoStore {
     }
 
     func loadIndex() throws -> [JobsCopiedAppIconPhoto] {
-        guard fileManager.fileExists(atPath: indexURL.path) else { return [] };return try JSONDecoder.make { _ in }.decode(
-            [JobsCopiedAppIconPhoto].self,
-            from: Data(contentsOf: indexURL)
-        )
+        guard fileManager.fileExists(atPath: indexURL.path) else {
+            return []
+        }
+        return try JSONDecoder.make { _ in }
+            .decode([JobsCopiedAppIconPhoto].self,
+                    from: Data(contentsOf: indexURL))
     }
 
     func writeIndex(_ photos: [JobsCopiedAppIconPhoto]) throws {
-        try JSONEncoder.make { _ in }.encode(photos).write(to: indexURL, options: .atomic)
+        try JSONEncoder.make { _ in }
+            .encode(photos).write(to: indexURL,
+                                  options: .atomic)
     }
 }

@@ -18,44 +18,48 @@ private var jobsCountdownControllerKey: UInt8 = 0
 private var JobsCountdownBinderKey: UInt8 = 0
 
 extension UIButton {
+
     // MARK: - 通过 AssociatedObject 挂到 UIButton 上（一个按钮一个 binder）
     public var jobs_countdownBinder: JobsCountdownBinder {
-        if let obj = objc_getAssociatedObject(self, &JobsCountdownBinderKey) as? JobsCountdownBinder {
+        if let obj = objc_getAssociatedObject(self,
+                                              &JobsCountdownBinderKey) as? JobsCountdownBinder {
             return obj
         }
         let obj = JobsCountdownBinder()
-        objc_setAssociatedObject(
-            self,
-            &JobsCountdownBinderKey,
-            obj,
-            .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-        );return obj
+        objc_setAssociatedObject(self,
+                                 &JobsCountdownBinderKey,
+                                 obj,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return obj
     }
 }
 
 extension UIButton {
+
     public var jobsCountdownController: JobsCountdownBtnCtrl? {
         get {
-            objc_getAssociatedObject(self, &jobsCountdownControllerKey) as? JobsCountdownBtnCtrl
+            objc_getAssociatedObject(self,
+                                     &jobsCountdownControllerKey) as? JobsCountdownBtnCtrl
         }
         set {
-            objc_setAssociatedObject(
-                self,
-                &jobsCountdownControllerKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self,
+                                     &jobsCountdownControllerKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 }
 
 extension UIButton {
+
     /// 配置倒计时（不会立刻绑定点击行为，也不会自动 start）
     @discardableResult
     public func byCountdown(_ builder: JobsCountdownConfigBuilder) -> Self {
         var cfg = JobsCountdownBtnConfig()
         builder(&cfg)
         // 覆盖旧 controller
-        let controller = JobsCountdownBtnCtrl(button: self, config: cfg)
+        let controller = JobsCountdownBtnCtrl(button: self,
+                                              config: cfg)
         self.jobsCountdownController = controller
         return self
     }
@@ -66,18 +70,22 @@ extension UIButton {
         onTap { [weak self] sender in
             guard let self = self,
                   let ctrl = self.jobsCountdownController
-            else { return }
+            else {
+                return
+            }
             if ctrl.isRunning {
                 // 正在跑
                 if ctrl.config.clickableWhileRunning {
-                    ctrl.config.onTapWhileRunning?(self, ctrl.config)
+                    ctrl.config.onTapWhileRunning?(self,
+                                                   ctrl.config)
                 } else {
-                    // 不可点就直接吞掉点击
+                // 不可点就直接吞掉点击
                 }
             } else {
                 ctrl.start() // 未运行 -> 开始
             }
-        };return self
+        }
+        return self
     }
     /// 手动停止并复原 UI
     public func jobsStopCountdown() {
@@ -86,6 +94,7 @@ extension UIButton {
 }
 // MARK: - Countdown DSL（把 jobsCountdownController 包起来，直接在按钮上调用）
 extension UIButton {
+
     /// 开始倒计时（等价于 jobsCountdownController?.start()）
     @discardableResult
     public func countdownStart() -> Self {

@@ -20,6 +20,7 @@ import JobsSwiftNumberStepper
 import SnapKit
 
 final class JobsSwiftNumberStepperDemoVC: BaseVC {
+
     private var cardViews: [UIView] = []
     private var titleLabels: [UILabel] = []
     private var detailLabels: [UILabel] = []
@@ -27,7 +28,8 @@ final class JobsSwiftNumberStepperDemoVC: BaseVC {
     private var numberSteppers: [JobsSwiftNumberStepper] = []
 
     private lazy var scrollView: UIScrollView = {
-        UIScrollView.jobsMake { _ in }
+        UIScrollView
+            .jobsMake { _ in }
             .byAlwaysBounceVertical(true)
             .byShowsVerticalScrollIndicator(false)
             .byKeyboardDismissMode(.interactive)
@@ -42,7 +44,8 @@ final class JobsSwiftNumberStepperDemoVC: BaseVC {
     }()
 
     private lazy var contentStackView: UIStackView = {
-        UIStackView.jobsMake { _ in }
+        UIStackView
+            .jobsMake { _ in }
             .byAxis(.vertical)
             .byAlignment(.fill)
             .byDistribution(.fill)
@@ -54,7 +57,8 @@ final class JobsSwiftNumberStepperDemoVC: BaseVC {
     }()
 
     private lazy var introLabel: UILabel = {
-        UILabel.jobsMake { _ in }
+        UILabel
+            .jobsMake { _ in }
             .byText("减号 + 整数输入框 + 加号。上下限均为可选配置；到达已设置的边界时，对应按钮会自动禁用并置灰。".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -70,32 +74,25 @@ final class JobsSwiftNumberStepperDemoVC: BaseVC {
 }
 
 private extension JobsSwiftNumberStepperDemoVC {
+
     func setupScenarios() {
         contentStackView.byAddArrangedSubview(introLabel)
-        addScenario(
-            title: "不设置边界",
-            detail: "minimumValue = nil，maximumValue = nil",
-            value: 0
-        )
-        addScenario(
-            title: "仅设置下限",
-            detail: "minimumValue = 4；当前值到 4 时减号不可点",
-            value: 4,
-            minimumValue: 4
-        )
-        addScenario(
-            title: "仅设置上限",
-            detail: "maximumValue = 8；当前值到 8 时加号不可点",
-            value: 8,
-            maximumValue: 8
-        )
-        addScenario(
-            title: "同时设置上下限",
-            detail: "输入框只接受整数，结束编辑后自动收敛到 4...8",
-            value: 6,
-            minimumValue: 4,
-            maximumValue: 8
-        )
+        addScenario(title: "不设置边界",
+                    detail: "minimumValue = nil，maximumValue = nil",
+                    value: 0)
+        addScenario(title: "仅设置下限",
+                    detail: "minimumValue = 4；当前值到 4 时减号不可点",
+                    value: 4,
+                    minimumValue: 4)
+        addScenario(title: "仅设置上限",
+                    detail: "maximumValue = 8；当前值到 8 时加号不可点",
+                    value: 8,
+                    maximumValue: 8)
+        addScenario(title: "同时设置上下限",
+                    detail: "输入框只接受整数，结束编辑后自动收敛到 4...8",
+                    value: 6,
+                    minimumValue: 4,
+                    maximumValue: 8)
     }
 
     func addScenario(title: String,
@@ -103,28 +100,32 @@ private extension JobsSwiftNumberStepperDemoVC {
                      value: Int,
                      minimumValue: Int? = nil,
                      maximumValue: Int? = nil) {
-        let cardView = UIView.jobsMake { _ in }
+        let cardView = UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
-        let titleLabel = UILabel.jobsMake { _ in }
+        let titleLabel = UILabel
+            .jobsMake { _ in }
             .byText(title.tr)
             .byTextColor(JobsCor.label)
-            .byFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
-        let detailLabel = UILabel.jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 16,
+                                        weight: .semibold))
+        let detailLabel = UILabel
+            .jobsMake { _ in }
             .byText(detail.tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byNumberOfLines(0)
-        let valueLabel = UILabel.jobsMake { _ in }
+        let valueLabel = UILabel
+            .jobsMake { _ in }
             .byText("当前值：\(value)")
             .byTextColor(JobsCor.systemBlue)
-            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 14, weight: .medium))
+            .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 14,
+                                                       weight: .medium))
         let numberStepper = JobsSwiftNumberStepper()
-            .configure(
-                value: value,
-                minimumValue: minimumValue,
-                maximumValue: maximumValue
-            )
+            .configure(value: value,
+                       minimumValue: minimumValue,
+                       maximumValue: maximumValue)
             .onJobsChange { (stepper: JobsSwiftNumberStepper) in
                 valueLabel.byText("当前值：\(stepper.value)")
             }

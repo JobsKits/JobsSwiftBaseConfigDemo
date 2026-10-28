@@ -95,6 +95,7 @@
 			membershipExceptions = (
 				"主业务流程/VC/TODO/Demo@自定义注解.swift",
 				Info.plist,
+				"启动入口/JobsDeviceLaunchGate/README.md",
 				"Resources/AppIcons/JobsAlternateComposerIcon-Gyroscope.icon",
 				"Resources/AppIcons/JobsAlternateComposerIcon-Planet.icon",
 				"Resources/AppIcons/JobsAlternateComposerIcon-Rocket.icon",

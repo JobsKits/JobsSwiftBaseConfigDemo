@@ -21,43 +21,62 @@ import JobsSwiftTimer
 import SnapKit
 
 private enum JobsFuseSoundStore {
+
     private static let lock = NSLock.jobsMake { _ in }
     private static var soundIDs = [String: SystemSoundID]()
 
-    static func soundID(fileFullName: String, bundle: Bundle) -> SystemSoundID? {
-        guard let soundURL = soundURL(fileFullName: fileFullName, bundle: bundle) else { return nil }
+    static func soundID(fileFullName: String,
+                        bundle: Bundle) -> SystemSoundID? {
+        guard let soundURL = soundURL(fileFullName: fileFullName,
+                                      bundle: bundle) else {
+            return nil
+        }
         let cacheKey = soundURL.absoluteString
         lock.lock()
-        defer { lock.unlock() }
-        if let soundID = soundIDs[cacheKey] { return soundID }
+        defer {
+            lock.unlock()
+        }
+        if let soundID = soundIDs[cacheKey] {
+            return soundID
+        }
         var soundID = SystemSoundID(0)
-        guard AudioServicesCreateSystemSoundID(soundURL as CFURL, &soundID) == kAudioServicesNoError,
-              soundID != 0 else { return nil }
+        guard AudioServicesCreateSystemSoundID(soundURL as CFURL,
+                                               &soundID) == kAudioServicesNoError,
+              soundID != 0 else {
+            return nil
+        }
         soundIDs[cacheKey] = soundID
         return soundID
     }
 
-    private static func soundURL(fileFullName: String, bundle: Bundle) -> URL? {
-        guard !fileFullName.isEmpty else { return nil }
+    private static func soundURL(fileFullName: String,
+                                 bundle: Bundle) -> URL? {
+        guard !fileFullName.isEmpty else {
+            return nil
+        }
         let fileName = fileFullName as NSString
         let resourceName = fileName.deletingPathExtension
         let resourceExtension = fileName.pathExtension
-        if let soundURL = bundle.url(
-            forResource: resourceName,
-            withExtension: resourceExtension.isEmpty ? nil : resourceExtension
-        ) { return soundURL }
-        for bundleURL in bundle.urls(forResourcesWithExtension: "bundle", subdirectory: nil) ?? [] {
+        if let soundURL = bundle.url(forResource: resourceName,
+                                     withExtension: resourceExtension.isEmpty ? nil : resourceExtension) {
+            return soundURL
+        }
+        for bundleURL in bundle.urls(forResourcesWithExtension: "bundle",
+                                     subdirectory: nil) ?? [] {
             guard let resourceBundle = Bundle(url: bundleURL),
-                  let soundURL = resourceBundle.url(
-                    forResource: resourceName,
-                    withExtension: resourceExtension.isEmpty ? nil : resourceExtension
-                  ) else { continue };return soundURL
-        };return nil
+                  let soundURL = resourceBundle.url(forResource: resourceName,
+                                                    withExtension: resourceExtension.isEmpty ? nil : resourceExtension) else {
+                continue
+            }
+            return soundURL
+        }
+        return nil
     }
 }
 
 // MARK: - 长按导火索外圈配置
 public struct JobsFuseOuterRingConfig {
+
     /// 外圈线宽。注意：这一版默认画在按钮 bounds 内侧，masksToBounds = true 也一定可见。
     public var lineWidth: CGFloat
     /// 进度线颜色。不要和按钮背景色一样，否则肉眼几乎看不出来。
@@ -90,37 +109,44 @@ public struct JobsFuseOuterRingConfig {
     /// 门槛刻度颜色。
     public var thresholdColor: UIColor
 
-    public init(
-        lineWidth: CGFloat = 4,
-        strokeColor: UIColor = JobsCor.white,
-        trackColor: UIColor? = JobsCor.white.withAlphaComponent(0.22),
-        fillColor: UIColor = JobsCor.clear,
-        fromOpacity: Float = 1.0,
-        toOpacity: Float = 1.0,
-        growDuration: TimeInterval = 1.2,
-        timerInterval: TimeInterval = 1.0 / 60.0,
-        repeatsWhileHolding: Bool = false,
-        retreatDuration: TimeInterval = 0.28,
-        fadeOutDuration: TimeInterval = 0.08,
-        inset: CGFloat = 1,
-        startsFromTop: Bool = true,
-        thresholdProgress: CGFloat? = nil,
-        thresholdColor: UIColor = JobsCor.white
-    ) {
-        self.lineWidth = max(0.5, lineWidth)
+    public init(lineWidth: CGFloat = 4,
+                strokeColor: UIColor = JobsCor.white,
+                trackColor: UIColor? = JobsCor.white.withAlphaComponent(0.22),
+                fillColor: UIColor = JobsCor.clear,
+                fromOpacity: Float = 1.0,
+                toOpacity: Float = 1.0,
+                growDuration: TimeInterval = 1.2,
+                timerInterval: TimeInterval = 1.0 / 60.0,
+                repeatsWhileHolding: Bool = false,
+                retreatDuration: TimeInterval = 0.28,
+                fadeOutDuration: TimeInterval = 0.08,
+                inset: CGFloat = 1,
+                startsFromTop: Bool = true,
+                thresholdProgress: CGFloat? = nil,
+                thresholdColor: UIColor = JobsCor.white) {
+        self.lineWidth = max(0.5,
+                             lineWidth)
         self.strokeColor = strokeColor
         self.trackColor = trackColor
         self.fillColor = fillColor
         self.fromOpacity = fromOpacity
         self.toOpacity = toOpacity
-        self.growDuration = max(0.001, growDuration)
-        self.timerInterval = max(0.001, timerInterval)
+        self.growDuration = max(0.001,
+                                growDuration)
+        self.timerInterval = max(0.001,
+                                 timerInterval)
         self.repeatsWhileHolding = repeatsWhileHolding
-        self.retreatDuration = max(0, retreatDuration)
-        self.fadeOutDuration = max(0, fadeOutDuration)
-        self.inset = max(0, inset)
+        self.retreatDuration = max(0,
+                                   retreatDuration)
+        self.fadeOutDuration = max(0,
+                                   fadeOutDuration)
+        self.inset = max(0,
+                         inset)
         self.startsFromTop = startsFromTop
-        self.thresholdProgress = thresholdProgress.map { max(0, min(1, $0)) }
+        self.thresholdProgress = thresholdProgress.map {
+            max(0,
+                min(1,$0))
+        }
         self.thresholdColor = thresholdColor
     }
 }
@@ -136,50 +162,108 @@ private var _jobsFuseScaleOriginalTransformKey: UInt8 = 0
 private var _jobsFuseScaleActiveKey: UInt8 = 0
 
 private final class _JobsFuseRingConfigBox: NSObject {
+
     let config: JobsFuseOuterRingConfig
-    init(_ config: JobsFuseOuterRingConfig) { self.config = config }
+    init(_ config: JobsFuseOuterRingConfig) {
+        self.config = config
+    }
 }
 
 private final class _JobsFuseTransformBox: NSObject {
+
     let transform: CGAffineTransform
-    init(_ transform: CGAffineTransform) { self.transform = transform }
+    init(_ transform: CGAffineTransform) {
+        self.transform = transform
+    }
 }
 
 private final class _JobsFuseTimeBox: NSObject {
+
     let value: CFTimeInterval
-    init(_ value: CFTimeInterval) { self.value = value }
+    init(_ value: CFTimeInterval) {
+        self.value = value
+    }
 }
 
 // MARK: - 外圈 Layer 自增动画
 extension UIView {
+
     private var jobs_fuseRingLayer: CAShapeLayer? {
-        get { objc_getAssociatedObject(self, &_jobsFuseRingLayerKey) as? CAShapeLayer }
-        set { objc_setAssociatedObject(self, &_jobsFuseRingLayerKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        get {
+            objc_getAssociatedObject(self,
+                                     &_jobsFuseRingLayerKey) as? CAShapeLayer
+        }
+        set {
+            objc_setAssociatedObject(self,
+                                     &_jobsFuseRingLayerKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 
     private var jobs_fuseTrackLayer: CAShapeLayer? {
-        get { objc_getAssociatedObject(self, &_jobsFuseTrackLayerKey) as? CAShapeLayer }
-        set { objc_setAssociatedObject(self, &_jobsFuseTrackLayerKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        get {
+            objc_getAssociatedObject(self,
+                                     &_jobsFuseTrackLayerKey) as? CAShapeLayer
+        }
+        set {
+            objc_setAssociatedObject(self,
+                                     &_jobsFuseTrackLayerKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 
     private var jobs_fuseThresholdLayer: CAShapeLayer? {
-        get { objc_getAssociatedObject(self, &_jobsFuseThresholdLayerKey) as? CAShapeLayer }
-        set { objc_setAssociatedObject(self, &_jobsFuseThresholdLayerKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        get {
+            objc_getAssociatedObject(self,
+                                     &_jobsFuseThresholdLayerKey) as? CAShapeLayer
+        }
+        set {
+            objc_setAssociatedObject(self,
+                                     &_jobsFuseThresholdLayerKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 
     private var jobs_fuseRingTimer: JobsSwiftTimerProtocol? {
-        get { objc_getAssociatedObject(self, &_jobsFuseRingTimerKey) as? JobsSwiftTimerProtocol }
-        set { objc_setAssociatedObject(self, &_jobsFuseRingTimerKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        get {
+            objc_getAssociatedObject(self,
+                                     &_jobsFuseRingTimerKey) as? JobsSwiftTimerProtocol
+        }
+        set {
+            objc_setAssociatedObject(self,
+                                     &_jobsFuseRingTimerKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 
     private var jobs_fuseRingStartTS: CFTimeInterval {
-        get { (objc_getAssociatedObject(self, &_jobsFuseRingStartTSKey) as? _JobsFuseTimeBox)?.value ?? 0 }
-        set { objc_setAssociatedObject(self, &_jobsFuseRingStartTSKey, _JobsFuseTimeBox(newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        get {
+            (objc_getAssociatedObject(self,
+                                      &_jobsFuseRingStartTSKey) as? _JobsFuseTimeBox)?.value ?? 0
+        }
+        set {
+            objc_setAssociatedObject(self,
+                                     &_jobsFuseRingStartTSKey,
+                                     _JobsFuseTimeBox(newValue),
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 
     private var jobs_fuseRingConfig: JobsFuseOuterRingConfig {
-        get { (objc_getAssociatedObject(self, &_jobsFuseRingConfigKey) as? _JobsFuseRingConfigBox)?.config ?? .init() }
-        set { objc_setAssociatedObject(self, &_jobsFuseRingConfigKey, _JobsFuseRingConfigBox(newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        get {
+            (objc_getAssociatedObject(self,
+                                      &_jobsFuseRingConfigKey) as? _JobsFuseRingConfigBox)?.config ?? .init()
+        }
+        set {
+            objc_setAssociatedObject(self,
+                                     &_jobsFuseRingConfigKey,
+                                     _JobsFuseRingConfigBox(newValue),
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 
     /// 开始：按钮外圈 Layer 自增。
@@ -189,10 +273,14 @@ extension UIView {
     @discardableResult
     public func byFuseOuterRingStart(_ config: JobsFuseOuterRingConfig = .init()) -> Self {
         let work = { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.layoutIfNeeded()
             self.byFuseOuterRingStop(animated: false)
-            guard self.bounds.width > 0, self.bounds.height > 0 else { return }
+            guard self.bounds.width > 0, self.bounds.height > 0 else {
+                return
+            }
             self.jobs_fuseRingConfig = config
             self.jobs_fuseRingStartTS = CACurrentMediaTime()
             let trackLayer: CAShapeLayer?
@@ -225,7 +313,7 @@ extension UIView {
                 .byLineJoin(.round)
                 .byStrokeStart(0)
                 .byStrokeEnd(0.001) // 不是 0，长按 began 的瞬间也能看到起点
-                .byOpacity(config.fromOpacity)
+            .byOpacity(config.fromOpacity)
             self.layer.addSublayer(ring)
             let thresholdLayer: CAShapeLayer?
             if let thresholdProgress = config.thresholdProgress {
@@ -239,8 +327,10 @@ extension UIView {
                     .byLineWidth(config.lineWidth + 3)
                     .byLineCap(.butt)
                     .byLineJoin(.round)
-                    .byStrokeStart(max(0, thresholdProgress - markerHalfLength))
-                    .byStrokeEnd(min(1, thresholdProgress + markerHalfLength))
+                    .byStrokeStart(max(0,
+                                       thresholdProgress - markerHalfLength))
+                    .byStrokeEnd(min(1,
+                                     thresholdProgress + markerHalfLength))
                     .byOpacity(1)
                 self.layer.addSublayer(marker)
                 thresholdLayer = marker
@@ -252,33 +342,40 @@ extension UIView {
             self.jobs_fuseThresholdLayer = thresholdLayer
             self.jobs_layoutFuseOuterRingLayers()
             self.jobs_updateFuseOuterRing(progress: 0.001)
-            let timer = JobsTimer(
-                kind: .gcd,
-                config: JobsSwiftTimerConfig(
-                    interval: config.timerInterval,
-                    repeats: true,
-                    tolerance: 0,
-                    queue: .main,
-                    pauseInBackground: true
-                )
-            ) { [weak self] in
+            let timer = JobsTimer(kind: .gcd,
+                                  config: JobsSwiftTimerConfig(interval: config.timerInterval,
+                                                               repeats: true,
+                                                               tolerance: 0,
+                                                               queue: .main,
+                                                               pauseInBackground: true)) { [weak self] in
                 self?.jobs_updateFuseOuterRingByTimer()
             }
             self.jobs_fuseRingTimer = timer
             timer.start()
         }
-        if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } };return self
+        if Thread.isMainThread {
+            work()
+        } else {
+            DispatchQueue.main.async {
+                work()
+            }
+        }
+        return self
     }
 
     /// 停止：松手后外圈先按 strokeEnd 倒退回 0，再淡出并移除。
     @discardableResult
     public func byFuseOuterRingStop(animated: Bool = true) -> Self {
         let work = { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             // 先停掉“增长”定时器。后面如果需要退潮，会重新创建一个 JobsSwiftTimer。
             self.jobs_fuseRingTimer?.stop()
             self.jobs_fuseRingTimer = nil
-            guard let ring = self.jobs_fuseRingLayer else { return }
+            guard let ring = self.jobs_fuseRingLayer else {
+                return
+            }
             let track = self.jobs_fuseTrackLayer
             let threshold = self.jobs_fuseThresholdLayer
             let config = self.jobs_fuseRingConfig
@@ -294,7 +391,9 @@ extension UIView {
                 self?.jobs_fuseThresholdLayer = nil
             }
             let currentStrokeEnd = CGFloat(
-                max(0, min(1, ring.presentation()?.strokeEnd ?? ring.strokeEnd))
+                max(0,
+                    min(1,
+                        ring.presentation()?.strokeEnd ?? ring.strokeEnd))
             )
             guard animated, config.retreatDuration > 0, currentStrokeEnd > 0.001 else {
                 removeBlock()
@@ -314,23 +413,26 @@ extension UIView {
             threshold?.opacity = currentThresholdOpacity
             CATransaction.commit()
             let retreatStartTS = CACurrentMediaTime()
-            let retreatTimer = JobsTimer(
-                kind: .gcd,
-                config: JobsSwiftTimerConfig(
-                    interval: config.timerInterval,
-                    repeats: true,
-                    tolerance: 0,
-                    queue: .main,
-                    pauseInBackground: true
-                )
-            ) { [weak self, weak ring, weak track, weak threshold] in
-                guard let self, let ring else { return }
-                let elapsed = max(0, CACurrentMediaTime() - retreatStartTS)
-                let raw = min(1.0, elapsed / max(0.001, config.retreatDuration))
+            let retreatTimer = JobsTimer(kind: .gcd,
+                                         config: JobsSwiftTimerConfig(interval: config.timerInterval,
+                                                                      repeats: true,
+                                                                      tolerance: 0,
+                                                                      queue: .main,
+                                                                      pauseInBackground: true)) { [weak self, weak ring, weak track, weak threshold] in
+                guard let self, let ring else {
+                    return
+                }
+                let elapsed = max(0,
+                                  CACurrentMediaTime() - retreatStartTS)
+                let raw = min(1.0,
+                              elapsed / max(0.001,
+                                            config.retreatDuration))
                 let p = CGFloat(raw)
                 // easeOut：一松手先明显回退，后面慢慢收尾，像退潮。
-                let eased = 1.0 - pow(1.0 - p, 2.0)
-                let strokeEnd = max(0.0001, currentStrokeEnd * (1.0 - CGFloat(eased)))
+                let eased = 1.0 - pow(1.0 - p,
+                                      2.0)
+                let strokeEnd = max(0.0001,
+                                    currentStrokeEnd * (1.0 - CGFloat(eased)))
                 CATransaction.begin()
                 CATransaction.setDisableActions(true)
                 ring
@@ -340,7 +442,9 @@ extension UIView {
                 track?.opacity = currentTrackOpacity * Float(1.0 - p)
                 threshold?.opacity = currentThresholdOpacity * Float(1.0 - p)
                 CATransaction.commit()
-                guard raw >= 1.0 else { return }
+                guard raw >= 1.0 else {
+                    return
+                }
                 self.jobs_fuseRingTimer?.stop()
                 self.jobs_fuseRingTimer = nil
                 let fadeDuration = config.fadeOutDuration
@@ -357,48 +461,76 @@ extension UIView {
                 fadeRing.isRemovedOnCompletion = false
                 CATransaction.begin()
                 CATransaction.setCompletionBlock(removeBlock)
-                ring.add(fadeRing, forKey: "jobs.fuse.outerRing.retreatFadeOut")
+                ring.add(fadeRing,
+                         forKey: "jobs.fuse.outerRing.retreatFadeOut")
                 CATransaction.commit()
             }
             self.jobs_fuseRingTimer = retreatTimer
             retreatTimer.start()
         }
-        if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } };return self
+        if Thread.isMainThread {
+            work()
+        } else {
+            DispatchQueue.main.async {
+                work()
+            }
+        }
+        return self
     }
 
     /// 手动刷新导火索外圈布局。按钮 bounds 或 cornerRadius 变化后可调用。
     @discardableResult
     public func byFuseOuterRingLayoutIfNeeded() -> Self {
-        let work = { [weak self] in self?.jobs_layoutFuseOuterRingLayers() }
-        if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } };return self
+        let work = { [weak self] in
+            self?.jobs_layoutFuseOuterRingLayers()
+        }
+        if Thread.isMainThread {
+            work()
+        } else {
+            DispatchQueue.main.async {
+                work()
+            }
+        }
+        return self
     }
 
     private func jobs_layoutFuseOuterRingLayers() {
-        guard let ring = jobs_fuseRingLayer else { return }
+        guard let ring = jobs_fuseRingLayer else {
+            return
+        }
         let config = jobs_fuseRingConfig
         let inset = config.inset + config.lineWidth / 2.0
-        let rect = bounds.insetBy(dx: inset, dy: inset)
-        guard rect.width > 0, rect.height > 0 else { return }
-        let radius = max(0, min(layer.cornerRadius, min(rect.width, rect.height) / 2.0))
+        let rect = bounds.insetBy(dx: inset,
+                                  dy: inset)
+        guard rect.width > 0, rect.height > 0 else {
+            return
+        }
+        let radius = max(0,
+                         min(layer.cornerRadius,
+                             min(rect.width,rect.height) / 2.0))
         let path: CGPath
         if config.startsFromTop {
             // 圆形按钮走 arc，可从 12 点钟方向开始增长。
-            let center = CGPoint(x: bounds.midX, y: bounds.midY)
-            let r = max(0.1, min(rect.width, rect.height) / 2.0)
-            path = UIBezierPath.make(
-                arcCenter: center,
-                radius: r,
-                startAngle: -.pi / 2,
-                endAngle: 1.5 * .pi,
-                clockwise: true
-            ).cgPath
+            let center = CGPoint(x: bounds.midX,
+                                 y: bounds.midY)
+            let r = max(0.1,
+                        min(rect.width,rect.height) / 2.0)
+            path = UIBezierPath.make(arcCenter: center,
+                                     radius: r,
+                                     startAngle: -.pi / 2,
+                                     endAngle: 1.5 * .pi,
+                                     clockwise: true).cgPath
         } else {
-            path = UIBezierPath.make(roundedRect: rect, cornerRadius: radius).cgPath
+            path = UIBezierPath.make(roundedRect: rect,
+                                     cornerRadius: radius).cgPath
         }
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        for layer in [jobs_fuseTrackLayer, ring].compactMap({ $0 }) {
-            layer.byContentsScale(traitCollection.displayScale)
+        for layer in [jobs_fuseTrackLayer, ring].compactMap({
+            $0
+        }) {
+            layer
+                .byContentsScale(traitCollection.displayScale)
                 .byFrame(bounds)
             layer.path = path
             layer.lineWidth = config.lineWidth
@@ -413,21 +545,26 @@ extension UIView {
 
     private func jobs_updateFuseOuterRingByTimer() {
         let config = jobs_fuseRingConfig
-        let elapsed = max(0, CACurrentMediaTime() - jobs_fuseRingStartTS)
+        let elapsed = max(0,
+                          CACurrentMediaTime() - jobs_fuseRingStartTS)
         let raw = elapsed / config.growDuration
         let progress: CGFloat
         if config.repeatsWhileHolding {
             progress = CGFloat(raw.truncatingRemainder(dividingBy: 1.0))
         } else {
-            progress = CGFloat(min(1.0, raw))
+            progress = CGFloat(min(1.0,raw))
         }
-        jobs_updateFuseOuterRing(progress: max(0.001, min(1.0, progress)))
+        jobs_updateFuseOuterRing(progress: max(0.001,
+                                               min(1.0,progress)))
     }
 
     private func jobs_updateFuseOuterRing(progress: CGFloat) {
-        guard let ring = jobs_fuseRingLayer else { return }
+        guard let ring = jobs_fuseRingLayer else {
+            return
+        }
         let config = jobs_fuseRingConfig
-        let p = max(0.001, min(1.0, progress))
+        let p = max(0.001,
+                    min(1.0,progress))
         let opacity = config.fromOpacity + (config.toOpacity - config.fromOpacity) * Float(p)
         CATransaction.begin()
         CATransaction.setDisableActions(true)
@@ -441,53 +578,76 @@ extension UIView {
 
 // MARK: - 长按放大 / 松手恢复
 extension UIView {
+
     private var jobs_fuseScaleOriginalTransform: CGAffineTransform? {
-        get { (objc_getAssociatedObject(self, &_jobsFuseScaleOriginalTransformKey) as? _JobsFuseTransformBox)?.transform }
+        get {
+            (objc_getAssociatedObject(self,
+                                      &_jobsFuseScaleOriginalTransformKey) as? _JobsFuseTransformBox)?.transform
+        }
         set {
-            let box = newValue.map { _JobsFuseTransformBox($0) }
-            objc_setAssociatedObject(self, &_jobsFuseScaleOriginalTransformKey, box, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            let box = newValue.map {
+                _JobsFuseTransformBox($0)
+            }
+            objc_setAssociatedObject(self,
+                                     &_jobsFuseScaleOriginalTransformKey,
+                                     box,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
     private var jobs_fuseScaleActive: Bool {
-        get { (objc_getAssociatedObject(self, &_jobsFuseScaleActiveKey) as? NSNumber)?.boolValue ?? false }
-        set { objc_setAssociatedObject(self, &_jobsFuseScaleActiveKey, NSNumber(value: newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+        get {
+            (objc_getAssociatedObject(self,
+                                      &_jobsFuseScaleActiveKey) as? NSNumber)?.boolValue ?? false
+        }
+        set {
+            objc_setAssociatedObject(self,
+                                     &_jobsFuseScaleActiveKey,
+                                     NSNumber(value: newValue),
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 
     /// 开始长按时：按钮放大。
     @discardableResult
-    public func byFusePressScaleStart(
-        scale: CGFloat = 1.16,
-        duration: TimeInterval = 0.16
-    ) -> Self {
+    public func byFusePressScaleStart(scale: CGFloat = 1.16,
+                                      duration: TimeInterval = 0.16) -> Self {
         let work = { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             if !self.jobs_fuseScaleActive {
                 self.jobs_fuseScaleOriginalTransform = self.transform
             }
             self.jobs_fuseScaleActive = true
             let base = self.jobs_fuseScaleOriginalTransform ?? self.transform
-            UIView.animate(
-                withDuration: duration,
-                delay: 0,
-                options: [.beginFromCurrentState, .allowUserInteraction, .curveEaseOut]
-            ) { [weak self] in
-                self?.transform = base.scaledBy(x: max(0.01, scale), y: max(0.01, scale))
+            UIView.animate(withDuration: duration,
+                           delay: 0,
+                           options: [.beginFromCurrentState, .allowUserInteraction, .curveEaseOut]) { [weak self] in
+                self?.transform = base.scaledBy(x: max(0.01,scale),
+                                                y: max(0.01,scale))
             }
         }
-        if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } };return self
+        if Thread.isMainThread {
+            work()
+        } else {
+            DispatchQueue.main.async {
+                work()
+            }
+        }
+        return self
     }
 
     /// 松手/取消时：按钮恢复原大小。
     @discardableResult
-    public func byFusePressScaleStop(
-        animated: Bool = true,
-        duration: TimeInterval = 0.22,
-        damping: CGFloat = 0.72,
-        velocity: CGFloat = 0.8
-    ) -> Self {
+    public func byFusePressScaleStop(animated: Bool = true,
+                                     duration: TimeInterval = 0.22,
+                                     damping: CGFloat = 0.72,
+                                     velocity: CGFloat = 0.8) -> Self {
         let work = { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             let original = self.jobs_fuseScaleOriginalTransform ?? .identity
             self.jobs_fuseScaleActive = false
             self.jobs_fuseScaleOriginalTransform = nil
@@ -495,28 +655,33 @@ extension UIView {
                 self.transform = original
                 return
             }
-            UIView.animate(
-                withDuration: duration,
-                delay: 0,
-                usingSpringWithDamping: max(0.05, min(1, damping)),
-                initialSpringVelocity: max(0, velocity),
-                options: [.beginFromCurrentState, .allowUserInteraction]
-            ) { [weak self] in
+            UIView.animate(withDuration: duration,
+                           delay: 0,
+                           usingSpringWithDamping: max(0.05,
+                                                       min(1,damping)),
+                           initialSpringVelocity: max(0,velocity),
+                           options: [.beginFromCurrentState, .allowUserInteraction]) { [weak self] in
                 self?.transform = original
             }
         }
-        if Thread.isMainThread { work() } else { DispatchQueue.main.async { work() } };return self
+        if Thread.isMainThread {
+            work()
+        } else {
+            DispatchQueue.main.async {
+                work()
+            }
+        }
+        return self
     }
 }
 
 // MARK: - 组合入口：外圈 + 放大 + 声音
 extension UIView {
+
     /// 长按 began 时直接调用。
     @discardableResult
-    public func byFusePressStart(
-        ringConfig: JobsFuseOuterRingConfig = .init(),
-        scale: CGFloat = 1.16
-    ) -> Self {
+    public func byFusePressStart(ringConfig: JobsFuseOuterRingConfig = .init(),
+                                 scale: CGFloat = 1.16) -> Self {
         byFuseOuterRingStart(ringConfig)
         byFusePressScaleStart(scale: scale)
         return self
@@ -532,24 +697,28 @@ extension UIView {
 
     /// 从 App 或内嵌资源 Bundle 播放音频文件，并复用已创建的 SystemSoundID。
     @discardableResult
-    public func byFusePlaySound(
-        _ fileFullName: String = "Sound.wav",
-        bundle: Bundle = .main
-    ) -> Self {
-        if let soundID = JobsFuseSoundStore.soundID(fileFullName: fileFullName, bundle: bundle) {
+    public func byFusePlaySound(_ fileFullName: String = "Sound.wav",
+                                bundle: Bundle = .main) -> Self {
+        if let soundID = JobsFuseSoundStore.soundID(fileFullName: fileFullName,
+                                                    bundle: bundle) {
             AudioServicesPlaySystemSound(soundID)
-        };return self
+        }
+        return self
     }
 
     /// 播放调用方已创建并负责管理的 SystemSoundID。
     @discardableResult
     public func byFusePlaySystemSound(_ soundID: SystemSoundID) -> Self {
-        if soundID != 0 { AudioServicesPlaySystemSound(soundID) };return self
+        if soundID != 0 {
+            AudioServicesPlaySystemSound(soundID)
+        }
+        return self
     }
 }
 
 // MARK: - 分格充电动画配置
 public struct JobsChargingAnimationConfig {
+
     /// 充电格数，默认 3 格。
     public var segmentCount: Int
     /// 已充格颜色，默认系统绿色。
@@ -567,32 +736,37 @@ public struct JobsChargingAnimationConfig {
     /// 动画视图尺寸。
     public var indicatorSize: CGSize
 
-    public init(
-        segmentCount: Int = 3,
-        filledColor: UIColor = JobsCor.systemGreen,
-        emptyColor: UIColor = JobsCor.systemGray3,
-        interval: TimeInterval = 0.45,
-        transitionDuration: TimeInterval = 0.18,
-        segmentSpacing: CGFloat = 2,
-        segmentCornerRadius: CGFloat = 2,
-        indicatorSize: CGSize = CGSize(width: 30, height: 14)
-    ) {
-        self.segmentCount = max(1, segmentCount)
+    public init(segmentCount: Int = 3,
+                filledColor: UIColor = JobsCor.systemGreen,
+                emptyColor: UIColor = JobsCor.systemGray3,
+                interval: TimeInterval = 0.45,
+                transitionDuration: TimeInterval = 0.18,
+                segmentSpacing: CGFloat = 2,
+                segmentCornerRadius: CGFloat = 2,
+                indicatorSize: CGSize = CGSize(width: 30,
+                                               height: 14)) {
+        self.segmentCount = max(1,
+                                segmentCount)
         self.filledColor = filledColor
         self.emptyColor = emptyColor
-        self.interval = interval.isFinite ? max(0.05, interval) : 0.45
-        self.transitionDuration = transitionDuration.isFinite ? max(0, transitionDuration) : 0.18
-        self.segmentSpacing = segmentSpacing.isFinite ? max(0, segmentSpacing) : 2
-        self.segmentCornerRadius = segmentCornerRadius.isFinite ? max(0, segmentCornerRadius) : 2
-        self.indicatorSize = CGSize(
-            width: indicatorSize.width.isFinite ? max(1, indicatorSize.width) : 30,
-            height: indicatorSize.height.isFinite ? max(1, indicatorSize.height) : 14
-        )
+        self.interval = interval.isFinite ? max(0.05,
+                                                interval) : 0.45
+        self.transitionDuration = transitionDuration.isFinite ? max(0,
+                                                                    transitionDuration) : 0.18
+        self.segmentSpacing = segmentSpacing.isFinite ? max(0,
+                                                            segmentSpacing) : 2
+        self.segmentCornerRadius = segmentCornerRadius.isFinite ? max(0,
+                                                                      segmentCornerRadius) : 2
+        self.indicatorSize = CGSize(width: indicatorSize.width.isFinite ? max(1,
+                                                                              indicatorSize.width) : 30,
+                                    height: indicatorSize.height.isFinite ? max(1,
+                                                                                indicatorSize.height) : 14)
     }
 }
 
 // MARK: - 分格充电动画视图
 public final class JobsChargingAnimationView: UIView {
+
     public private(set) var config = JobsChargingAnimationConfig()
     public private(set) var filledSegmentCount = 0
 
@@ -606,7 +780,8 @@ public final class JobsChargingAnimationView: UIView {
     }
 
     public convenience init(config: JobsChargingAnimationConfig) {
-        self.init(frame: CGRect(origin: .zero, size: config.indicatorSize))
+        self.init(frame: CGRect(origin: .zero,
+                                size: config.indicatorSize))
         byConfig(config)
     }
 
@@ -642,24 +817,26 @@ public final class JobsChargingAnimationView: UIView {
     /// 更新配置。格数、颜色、间隔、间距和尺寸均可覆盖缺省值。
     @discardableResult
     public func byConfig(_ config: JobsChargingAnimationConfig) -> Self {
-        let normalized = JobsChargingAnimationConfig(
-            segmentCount: config.segmentCount,
-            filledColor: config.filledColor,
-            emptyColor: config.emptyColor,
-            interval: config.interval,
-            transitionDuration: config.transitionDuration,
-            segmentSpacing: config.segmentSpacing,
-            segmentCornerRadius: config.segmentCornerRadius,
-            indicatorSize: config.indicatorSize
-        )
+        let normalized = JobsChargingAnimationConfig(segmentCount: config.segmentCount,
+                                                     filledColor: config.filledColor,
+                                                     emptyColor: config.emptyColor,
+                                                     interval: config.interval,
+                                                     transitionDuration: config.transitionDuration,
+                                                     segmentSpacing: config.segmentSpacing,
+                                                     segmentCornerRadius: config.segmentCornerRadius,
+                                                     indicatorSize: config.indicatorSize)
         let shouldResume = wantsRunning
         jobs_stopChargingTimer()
         self.config = normalized
-        filledSegmentCount = min(filledSegmentCount, normalized.segmentCount)
+        filledSegmentCount = min(filledSegmentCount,
+                                 normalized.segmentCount)
         jobs_rebuildChargingSegments()
         invalidateIntrinsicContentSize()
         setNeedsLayout()
-        if shouldResume { jobs_syncChargingTimerState() };return self
+        if shouldResume {
+            jobs_syncChargingTimerState()
+        }
+        return self
     }
 
     /// 从 0 格开始播放；每一拍前进 1 格，满格后的下一拍回到 0 格。
@@ -698,35 +875,37 @@ public final class JobsChargingAnimationView: UIView {
         if reset {
             filledSegmentCount = 0
             jobs_applyChargingColors(animated: false)
-        };return self
+        }
+        return self
     }
 
     /// 手动前进 1 格，便于业务层按自己的节奏驱动。
     @discardableResult
     public func byAdvance(animated: Bool = true) -> Self {
         let advance = { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             self.filledSegmentCount = self.filledSegmentCount >= self.config.segmentCount
-            ? 0
-            : self.filledSegmentCount + 1
+                ? 0
+                : self.filledSegmentCount + 1
             self.jobs_applyChargingColors(animated: animated)
         }
         if Thread.isMainThread {
             advance()
         } else {
             DispatchQueue.main.async(execute: advance)
-        };return self
+        }
+        return self
     }
 
     private func jobs_setupChargingAnimation() {
         isUserInteractionEnabled = false
         byBackgroundColor(JobsCor.clear)
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(jobs_reduceMotionStatusDidChange),
-            name: UIAccessibility.reduceMotionStatusDidChangeNotification,
-            object: nil
-        )
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(jobs_reduceMotionStatusDidChange),
+                                               name: UIAccessibility.reduceMotionStatusDidChangeNotification,
+                                               object: nil)
         jobs_rebuildChargingSegments()
     }
 
@@ -735,9 +914,12 @@ public final class JobsChargingAnimationView: UIView {
     }
 
     private func jobs_rebuildChargingSegments() {
-        segmentLayers.forEach { $0.removeFromSuperlayer() }
-        segmentLayers = (0..<config.segmentCount).map { _ in
-            CALayer.jobsMake { _ in }
+        segmentLayers.forEach {
+            $0.removeFromSuperlayer()
+        }
+        segmentLayers = (0 ..< config.segmentCount).map { _ in
+            CALayer
+                .jobsMake { _ in }
                 .byBackgroundColor(config.emptyColor)
                 .byCornerRadius(config.segmentCornerRadius)
         }
@@ -749,19 +931,27 @@ public final class JobsChargingAnimationView: UIView {
     private func jobs_layoutChargingSegments() {
         guard !segmentLayers.isEmpty,
               bounds.width > 0,
-              bounds.height > 0 else { return }
+              bounds.height > 0 else {
+            return
+        }
         let count = CGFloat(segmentLayers.count)
-        let totalSpacing = config.segmentSpacing * max(0, count - 1)
-        let segmentWidth = max(1, (bounds.width - totalSpacing) / count)
+        let totalSpacing = config.segmentSpacing * max(0,
+                                                       count - 1)
+        let segmentWidth = max(1,
+                               (bounds.width - totalSpacing) / count)
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         for (index, segmentLayer) in segmentLayers.enumerated() {
             let originX = CGFloat(index) * (segmentWidth + config.segmentSpacing)
             segmentLayer
-                .byFrame(CGRect(x: originX, y: 0, width: segmentWidth, height: bounds.height))
+                .byFrame(CGRect(x: originX,
+                                y: 0,
+                                width: segmentWidth,
+                                height: bounds.height))
                 .byCornerRadius(
-                    min(config.segmentCornerRadius, min(segmentWidth, bounds.height) / 2)
-                )
+                min(config.segmentCornerRadius,
+                    min(segmentWidth,bounds.height) / 2)
+            )
         }
         CATransaction.commit()
     }
@@ -769,10 +959,10 @@ public final class JobsChargingAnimationView: UIView {
     private func jobs_applyChargingColors(animated: Bool) {
         for (index, segmentLayer) in segmentLayers.enumerated() {
             let targetColor = index < filledSegmentCount
-            ? config.filledColor
-            : config.emptyColor
+                ? config.filledColor
+                : config.emptyColor
             let currentColor = segmentLayer.presentation()?.backgroundColor
-            ?? segmentLayer.backgroundColor
+                ?? segmentLayer.backgroundColor
             CATransaction.begin()
             CATransaction.setDisableActions(true)
             segmentLayer.byBackgroundColor(targetColor)
@@ -782,14 +972,12 @@ public final class JobsChargingAnimationView: UIView {
                 segmentLayer.removeAnimation(forKey: "jobs.charging.color")
                 continue
             }
-            segmentLayer.add(
-                CABasicAnimation(keyPath: "backgroundColor")
-                    .byFromValue(currentColor)
-                    .byToValue(targetColor.cgColor)
-                    .byDuration(config.transitionDuration)
-                    .byTimingFunction(CAMediaTimingFunction(name: .easeInEaseOut)),
-                forKey: "jobs.charging.color"
-            )
+            segmentLayer.add(CABasicAnimation(keyPath: "backgroundColor")
+                .byFromValue(currentColor)
+                .byToValue(targetColor.cgColor)
+                .byDuration(config.transitionDuration)
+                .byTimingFunction(CAMediaTimingFunction(name: .easeInEaseOut)),
+                             forKey: "jobs.charging.color")
         }
     }
 
@@ -804,19 +992,17 @@ public final class JobsChargingAnimationView: UIView {
             timer.resume()
             return
         }
-        timer = JobsTimer(
-            kind: .gcd,
-            config: JobsSwiftTimerConfig(
-                interval: config.interval,
-                repeats: true,
-                tolerance: min(0.03, config.interval * 0.1),
-                queue: .main,
-                pauseInBackground: true,
-                autoManageAppState: true
-            )
-        ) { [weak self] in
+        timer = JobsTimer(kind: .gcd,
+                          config: JobsSwiftTimerConfig(interval: config.interval,
+                                                       repeats: true,
+                                                       tolerance: min(0.03,
+                                                                      config.interval * 0.1),
+                                                       queue: .main,
+                                                       pauseInBackground: true,
+                                                       autoManageAppState: true)) { [weak self] in
             self?.byAdvance()
-        }.start()
+        }
+            .start()
     }
 
     private func jobs_stopChargingTimer() {
@@ -829,31 +1015,28 @@ public final class JobsChargingAnimationView: UIView {
 private var _jobsChargingAnimationViewKey: UInt8 = 0
 
 extension UITableViewCell {
+
     private var jobs_chargingAnimationView: JobsChargingAnimationView? {
         get {
-            objc_getAssociatedObject(
-                self,
-                &_jobsChargingAnimationViewKey
-            ) as? JobsChargingAnimationView
+            objc_getAssociatedObject(self,
+                                     &_jobsChargingAnimationViewKey) as? JobsChargingAnimationView
         }
         set {
-            objc_setAssociatedObject(
-                self,
-                &_jobsChargingAnimationViewKey,
-                newValue,
-                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
-            )
+            objc_setAssociatedObject(self,
+                                     &_jobsChargingAnimationViewKey,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
     /// 只驱动当前 cell 的充电视图，不触发 UITableView.reloadData / reloadRows。
     @discardableResult
-    public func byChargingAnimationStart(
-        _ config: JobsChargingAnimationConfig = .init(),
-        reset: Bool = true
-    ) -> Self {
+    public func byChargingAnimationStart(_ config: JobsChargingAnimationConfig = .init(),
+                                         reset: Bool = true) -> Self {
         let work = { [weak self] in
-            guard let self else { return }
+            guard let self else {
+                return
+            }
             let chargingView: JobsChargingAnimationView
             if let current = self.jobs_chargingAnimationView {
                 chargingView = current.byConfig(config)
@@ -875,7 +1058,8 @@ extension UITableViewCell {
             work()
         } else {
             DispatchQueue.main.async(execute: work)
-        };return self
+        }
+        return self
     }
 
     /// 暂停当前 cell 的动画，保留格数。
@@ -899,14 +1083,13 @@ extension UITableViewCell {
         if removeFromSuperview {
             jobs_chargingAnimationView?.removeFromSuperview()
             jobs_chargingAnimationView = nil
-        };return self
+        }
+        return self
     }
 
     private static func jobs_chargingPlaceholderImage(size: CGSize) -> UIImage {
-        let normalizedSize = CGSize(
-            width: max(1, size.width),
-            height: max(1, size.height)
-        )
+        let normalizedSize = CGSize(width: max(1,size.width),
+                                    height: max(1,size.height))
         return UIGraphicsImageRenderer(size: normalizedSize).image { _ in }
     }
 }

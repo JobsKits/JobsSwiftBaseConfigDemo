@@ -18,13 +18,15 @@ import JobsSwiftDSL
 
 // MARK: - 自定义 PresentationController（控制高度/位置/遮罩）
 final class HalfSheetPresentationController: UIPresentationController {
+
     private let height: CGFloat
     private lazy var dimmingView: UIView = {
         let v = UIView(frame: containerView?.bounds ?? .zero)
         v
             .byBackgroundColor(JobsCor.black.withAlphaComponent(0.38))
             .byAlpha(1)
-        v.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onTapDim)))
+        v.addGestureRecognizer(UITapGestureRecognizer(target: self,
+                                                      action: #selector(onTapDim)))
         return v
     }()
 
@@ -32,17 +34,26 @@ final class HalfSheetPresentationController: UIPresentationController {
          presenting presentingViewController: UIViewController?,
          height: CGFloat) {
         self.height = height
-        super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
+        super.init(presentedViewController: presentedViewController,
+                   presenting: presentingViewController)
     }
 
     override var frameOfPresentedViewInContainerView: CGRect {
-        guard let container = containerView else { return .zero }
+        guard let container = containerView else {
+            return .zero
+        }
         let y = container.bounds.height - height
-        return CGRect(x: 0, y: max(0, y), width: container.bounds.width, height: min(container.bounds.height, height))
+        return CGRect(x: 0,
+                      y: max(0,y),
+                      width: container.bounds.width,
+                      height: min(container.bounds.height,
+                                  height))
     }
 
     override func presentationTransitionWillBegin() {
-        guard let container = containerView else { return }
+        guard let container = containerView else {
+            return
+        }
         dimmingView
             .byFrame(container.bounds)
             .byAddTo(container)

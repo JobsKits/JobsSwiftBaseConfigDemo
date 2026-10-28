@@ -17,65 +17,95 @@ import JobsSwiftBaseDefines
 import JobsSwiftDSL
 import SnapKit
 
-struct LeftMenuItem { let icon: String; let title: String }
+struct LeftMenuItem {
+
+    let icon: String
+    let title: String
+}
 
 final class LeftMenuView: UIView {
+
     private let items: [LeftMenuItem]
     private(set) var selectedIndex: Int
     var selectionChanged: ((Int) -> Void)?
-    var currentTitle: String { items[selectedIndex].title }
+    var currentTitle: String {
+        items[selectedIndex].title
+    }
 
     private lazy var tableView: UITableView = {
-        UITableView(frame: .zero, style: .plain)
+        UITableView(frame: .zero,
+                    style: .plain)
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(LeftMenuCell.self)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .bySeparatorStyle(.none)
             .byNoContentInsetAdjustment()
-            .byAddTo(self) { make in make.edges.equalToSuperview() }
+            .byAddTo(self) { make in
+                make.edges.equalToSuperview()
+            }
     }()
 
-    init(items: [LeftMenuItem], defaultIndex: Int) {
+    init(items: [LeftMenuItem],
+         defaultIndex: Int) {
         self.items = items
         self.selectedIndex = defaultIndex
         super.init(frame: .zero)
         self.byBackgroundColor(JobsCor.secondarySystemBackground)
         // 右侧 0.5 分隔线
-        UIView.jobsMake { _ in }
+        UIView
+            .jobsMake { _ in }
             .byBackgroundColor(JobsCor.quaternaryLabel)
             .byAddTo(self) { make in
                 make.top.bottom.trailing.equalToSuperview()
                 make.width.equalTo(0.5)
             }
         DispatchQueue.main.async { [weak self] in
-            self?.tableView.selectRow(at: IndexPath(row: defaultIndex, section: 0),
-                                      animated: false, scrollPosition: .none)
+            self?.tableView.selectRow(at: IndexPath(row: defaultIndex,
+                                                    section: 0),
+                                      animated: false,
+                                      scrollPosition: .none)
         }
     }
 
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
-extension LeftMenuView: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { items.count }
+extension LeftMenuView: UITableViewDataSource,
+                        UITableViewDelegate {
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let m = items[indexPath.row]
-        return (tableView.byDequeueReusableCell(withType: LeftMenuCell.self, for: indexPath) as LeftMenuCell)
-            .byMenu(icon: m.icon, title: m.title, selected: indexPath.row == selectedIndex)
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
+        items.count
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let m = items[indexPath.row]
+        return (tableView.byDequeueReusableCell(withType: LeftMenuCell.self,
+                                                for: indexPath) as LeftMenuCell)
+            .byMenu(icon: m.icon,
+                    title: m.title,
+                    selected: indexPath.row == selectedIndex)
+    }
+
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
         selectedIndex = indexPath.row
         tableView.reloadData()
         selectionChanged?(indexPath.row)
     }
 
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { 64 }
+    func tableView(_ tableView: UITableView,
+                   heightForRowAt indexPath: IndexPath) -> CGFloat {
+        64
+    }
 }
 
 extension LeftMenuView {
+
     /// 左侧菜单选中变化（链式）
     @discardableResult
     func onSelectionChanged(_ handler: @escaping (Int) -> Void) -> Self {

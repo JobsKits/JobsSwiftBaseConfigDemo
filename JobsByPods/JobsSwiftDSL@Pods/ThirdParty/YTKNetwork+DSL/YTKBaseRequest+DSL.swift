@@ -11,6 +11,7 @@ import JobsSwiftBlock
 import YTKNetwork
 import AFNetworking
 public extension YTKBaseRequest {
+
     // MARK: - 基本配置
     @discardableResult
     func byTag(_ value: Int) -> Self {
@@ -47,21 +48,24 @@ public extension YTKBaseRequest {
     func byDownloadProgress(_ block: @escaping JobsYTKProgress) -> Self {
         self.resumableDownloadProgressBlock = { progress in
             block(progress)
-        };return self
+        }
+        return self
     }
     /// 上传进度
     @discardableResult
     func byUploadProgress(_ block: @escaping JobsYTKProgress) -> Self {
         self.uploadProgressBlock = { progress in
             block(progress)
-        };return self
+        }
+        return self
     }
     /// Multipart 构造
     @discardableResult
     func byConstructBody(_ block: @escaping (AFMultipartFormData) -> Void) -> Self {
         self.constructingBodyBlock = { formData in
             block(formData)
-        };return self
+        }
+        return self
     }
     // MARK: - 回调配置（不带类型）
     /// 成功回调（request 类型是 YTKBaseRequest）
@@ -69,25 +73,32 @@ public extension YTKBaseRequest {
     func bySuccess(_ block: @escaping JobsYTKJobsVoidBlock) -> Self {
         self.successCompletionBlock = { req in
             block(req)
-        };return self
+        }
+        return self
     }
     /// 失败回调（request 类型是 YTKBaseRequest）
     @discardableResult
     func byFailure(_ block: @escaping JobsYTKJobsVoidBlock) -> Self {
         self.failureCompletionBlock = { req in
             block(req)
-        };return self
+        }
+        return self
     }
     /// 一次性同时配成功 & 失败
     @discardableResult
     func byCompletion(success: JobsYTKJobsVoidBlock? = nil,
                       failure: JobsYTKJobsVoidBlock? = nil) -> Self {
         if let s = success {
-            self.successCompletionBlock = { req in s(req) }
+            self.successCompletionBlock = { req in
+                s(req)
+            }
         }
         if let f = failure {
-            self.failureCompletionBlock = { req in f(req) }
-        };return self
+            self.failureCompletionBlock = { req in
+                f(req)
+            }
+        }
+        return self
     }
     // MARK: - 回调配置（带具体子类类型）
     /// 成功回调，自动 cast 成指定子类
@@ -95,18 +106,24 @@ public extension YTKBaseRequest {
     func bySuccess<T: YTKBaseRequest>(_ type: T.Type,
                                       _ block: @escaping jobsByTypeBlock<T>) -> Self {
         self.successCompletionBlock = { req in
-            guard let casted = req as? T else { return }
+            guard let casted = req as? T else {
+                return
+            }
             block(casted)
-        };return self
+        }
+        return self
     }
     /// 失败回调，自动 cast 成指定子类
     @discardableResult
     func byFailure<T: YTKBaseRequest>(_ type: T.Type,
                                       _ block: @escaping (T) -> Void) -> Self {
         self.failureCompletionBlock = { req in
-            guard let casted = req as? T else { return }
+            guard let casted = req as? T else {
+                return
+            }
             block(casted)
-        };return self
+        }
+        return self
     }
     // MARK: - 启动
     /// 启动请求，按需自动 clear 回调，避免循环引用

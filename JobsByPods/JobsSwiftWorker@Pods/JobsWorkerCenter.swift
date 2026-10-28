@@ -8,6 +8,7 @@
 import Foundation
 
 public final class JobsWorkerCenter {
+
     public static let `default` = JobsWorkerCenter()
 
     private let lock = NSLock()
@@ -18,7 +19,9 @@ public final class JobsWorkerCenter {
     @discardableResult
     public func bag(for key: String) -> JobsWorkerBag {
         lock.lock()
-        defer { lock.unlock() }
+        defer {
+            lock.unlock()
+        }
         if let bag = buckets[key] {
             return bag
         }
@@ -41,6 +44,8 @@ public final class JobsWorkerCenter {
         snapshot = Array(buckets.values)
         buckets.removeAll()
         lock.unlock()
-        snapshot.forEach { $0.removeAll() }
+        snapshot.forEach {
+            $0.removeAll()
+        }
     }
 }

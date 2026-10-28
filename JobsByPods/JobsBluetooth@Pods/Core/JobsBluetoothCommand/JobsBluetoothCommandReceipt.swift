@@ -8,7 +8,9 @@
 import Foundation
 
 public struct JobsBluetoothCommandReceipt {
+
     public enum Confirmation {
+
         case submitted
         case writeAcknowledged
         case applicationResponse

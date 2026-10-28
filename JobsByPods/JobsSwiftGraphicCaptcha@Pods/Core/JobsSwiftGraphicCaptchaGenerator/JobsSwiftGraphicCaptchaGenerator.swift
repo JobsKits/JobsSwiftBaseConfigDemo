@@ -8,6 +8,7 @@
 import Foundation
 
 public enum JobsSwiftGraphicCaptchaGenerator {
+
     public static let numberCharacters: [String] = Array("0123456789").map(String.init)
     public static let lowercaseLetterCharacters: [String] = Array("abcdefghijklmnopqrstuvwxyz").map(String.init)
     public static let uppercaseLetterCharacters: [String] = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ").map(String.init)
@@ -35,15 +36,20 @@ public enum JobsSwiftGraphicCaptchaGenerator {
         }
         if units.contains(.traditionalChinese) {
             characters.append(contentsOf: traditionalChineseCharacters)
-        };return characters
+        }
+        return characters
     }
 
     public static func randomText(config: JobsSwiftGraphicCaptchaConfig?) -> String {
         let captchaConfig = config ?? .defaultConfig
-        let length = max(captchaConfig.length, 1)
-        let validCustomCharacters = captchaConfig.customCharacters.filter { !$0.isEmpty }
+        let length = max(captchaConfig.length,
+                         1)
+        let validCustomCharacters = captchaConfig.customCharacters.filter {
+            !$0.isEmpty
+        }
         if !validCustomCharacters.isEmpty {
-            return randomText(characters: validCustomCharacters, length: length)
+            return randomText(characters: validCustomCharacters,
+                              length: length)
         }
         let groups = characterGroups(for: captchaConfig.characterUnits)
         if captchaConfig.mixedGroupCount > 1,
@@ -56,7 +62,9 @@ public enum JobsSwiftGraphicCaptchaGenerator {
         var sourceCharacters = characters(for: captchaConfig.characterUnits)
         if sourceCharacters.isEmpty {
             sourceCharacters = characters(for: .default)
-        };return randomText(characters: sourceCharacters, length: length)
+        }
+        return randomText(characters: sourceCharacters,
+                          length: length)
     }
 
     public static func validate(input: String?,
@@ -64,14 +72,18 @@ public enum JobsSwiftGraphicCaptchaGenerator {
                                 caseSensitive: Bool) -> Bool {
         let inputText = (input ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         let captchaText = (captcha ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !inputText.isEmpty, !captchaText.isEmpty else { return false }
+        guard !inputText.isEmpty, !captchaText.isEmpty else {
+            return false
+        }
         if caseSensitive {
             return inputText == captchaText
-        };return inputText.caseInsensitiveCompare(captchaText) == .orderedSame
+        }
+        return inputText.caseInsensitiveCompare(captchaText) == .orderedSame
     }
 }
 
 private extension JobsSwiftGraphicCaptchaGenerator {
+
     static func characterGroups(for units: JobsSwiftGraphicCaptchaCharacterUnit) -> [[String]] {
         var groups: [[String]] = []
         if units.contains(.number) {
@@ -88,24 +100,49 @@ private extension JobsSwiftGraphicCaptchaGenerator {
         }
         if units.contains(.traditionalChinese) {
             groups.append(traditionalChineseCharacters)
-        };return groups
+        }
+        return groups
     }
 
-    static func randomText(characters: [String], length: Int) -> String {
-        guard !characters.isEmpty else { return "" };return (0..<length).compactMap { _ in characters.randomElement() }.joined()
+    static func randomText(characters: [String],
+                           length: Int) -> String {
+        guard !characters.isEmpty else {
+            return ""
+        }
+        return (0 ..< length).compactMap { _ in
+            characters.randomElement()
+        }
+            .joined()
     }
 
-    static func randomMixedText(groups: [[String]], length: Int, groupCount: Int) -> String? {
-        let validGroups = groups.filter { !$0.isEmpty }
-        guard groupCount >= 2, validGroups.count >= 2, length >= 2 else { return nil }
-        let selectedGroupCount = min(groupCount, length, validGroups.count)
-        guard selectedGroupCount >= 2 else { return nil }
+    static func randomMixedText(groups: [[String]],
+                                length: Int,
+                                groupCount: Int) -> String? {
+        let validGroups = groups.filter {
+            !$0.isEmpty
+        }
+        guard groupCount >= 2, validGroups.count >= 2, length >= 2 else {
+            return nil
+        }
+        let selectedGroupCount = min(groupCount,
+                                     length,
+                                     validGroups.count)
+        guard selectedGroupCount >= 2 else {
+            return nil
+        }
         let selectedGroups = Array(validGroups.shuffled().prefix(selectedGroupCount))
-        var characters = selectedGroups.compactMap { $0.randomElement() }
-        let sourceCharacters = selectedGroups.flatMap { $0 }
+        var characters = selectedGroups.compactMap {
+            $0.randomElement()
+        }
+        let sourceCharacters = selectedGroups.flatMap {
+            $0
+        }
         while characters.count < length {
-            guard let character = sourceCharacters.randomElement() else { break }
+            guard let character = sourceCharacters.randomElement() else {
+                break
+            }
             characters.append(character)
-        };return characters.shuffled().joined()
+        }
+        return characters.shuffled().joined()
     }
 }

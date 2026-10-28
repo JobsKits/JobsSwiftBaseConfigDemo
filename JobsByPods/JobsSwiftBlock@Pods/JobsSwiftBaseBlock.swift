@@ -110,23 +110,23 @@ public typealias JobsByMAVoidBlock = @MainActor () -> Void
 /// isLimited = false : 从“被限长”状态恢复（删到 maxLength 以下）
 public typealias JobsTFOnLimitChanged = (_ isLimited: Bool, _ textField: UITextField) -> Void
 public typealias UITextFieldOnChange = (_ tf: UITextField,
-                                        _ input: String,
-                                        _ oldText: String,
-                                        _ isDeleting: Bool) -> Void
+    _ input: String,
+    _ oldText: String,
+    _ isDeleting: Bool) -> Void
 public typealias TVOnBackspace = (_ tv: UITextView) -> Void
 public typealias TVOnChange = (_ tv: UITextView,
-                               _ input: String,
-                               _ old: String,
-                               _ isDeleting: Bool) -> Void
+    _ input: String,
+    _ old: String,
+    _ isDeleting: Bool) -> Void
 /// UI@UIButton
 public typealias JobsRetButtonBlock = () -> UIButton?         // 返回 nil 隐藏
 public typealias JobsButtonLongPressBlock = (UIButton, UILongPressGestureRecognizer) -> Void
 public typealias JobsPressFuseTick = (_ btn: UIButton,
-                                      _ elapsed: TimeInterval,
-                                      _ progress: CGFloat) -> Void
+    _ elapsed: TimeInterval,
+    _ progress: CGFloat) -> Void
 public typealias JobsPressFuseEnd  = (_ btn: UIButton,
-                                      _ elapsed: TimeInterval,
-                                      _ progress: CGFloat) -> Void
+    _ elapsed: TimeInterval,
+    _ progress: CGFloat) -> Void
 /// UI@图片
 public typealias JobsRetUIImageBlock = () -> UIImage?
 /// UI@富文本
