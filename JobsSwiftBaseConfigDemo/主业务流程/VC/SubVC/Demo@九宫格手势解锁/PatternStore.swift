@@ -17,8 +17,16 @@ import JobsGestureUnlock
 // MARK: - Demo Store（示例用 UserDefaults + SHA256）
 final class PatternStore {
 
-    private let keyHash = "gesture_unlock.pattern_hash"
-    private let keySalt = "gesture_unlock.salt"
+    private var storagePrefix: String {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            return "jobs.coverage.gesture_unlock"
+        }
+        #endif
+        return "gesture_unlock"
+    }
+    private var keyHash: String { "\(storagePrefix).pattern_hash" }
+    private var keySalt: String { "\(storagePrefix).salt" }
 
     var hasPattern: Bool {
         UserDefaults.standard.string(forKey: keyHash) != nil

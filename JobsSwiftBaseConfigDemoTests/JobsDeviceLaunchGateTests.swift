@@ -11,6 +11,10 @@ import JobsByUIKit
 import JobsSwiftDeviceGuard
 @testable import JobsSwiftBaseConfigDemo
 
+// 用途：验证设备风险启动门禁的一次性决策、默认拦截策略、拦截页创建与 Scene 启动隔离。
+// 运行：Debug 下由 JobsSwiftBaseConfigDemoTests 自动发现，在 Xcode 按 ⌘U 或由 CI 执行。
+// 边界：通过测试入口注入检测结果，只验证启动编排，不代表越狱真机检出率；不编入主 App。
+
 #if DEBUG
 @MainActor
 final class JobsDeviceLaunchGateTests: XCTestCase {

@@ -44,6 +44,9 @@ private final class _JobsButtonLongPressSleeve: NSObject {
         guard let btn = (g.view as? UIButton) ?? button else {
             return
         }
+        #if DEBUG
+        btn.jobs_recordCoverageLongPressDispatch(recognizer: g)
+        #endif
         btn.jobs_invokeLongPressBlocks(recognizer: g)
     }
 }
@@ -82,6 +85,32 @@ extension UIButton {
             block(self)
         }
     }
+    #if DEBUG
+    fileprivate func jobs_recordCoverageLongPressDispatch(recognizer: UILongPressGestureRecognizer) {
+        guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route"),
+              accessibilityIdentifier == "jobs.coverage.marquee.clone" ||
+                accessibilityIdentifier == "jobs.coverage.marquee.template" else {
+            return
+        }
+        let state: String
+        switch recognizer.state {
+        case .began:
+            state = "began"
+        case .changed:
+            state = "changed"
+        case .ended:
+            state = "ended"
+        case .cancelled:
+            state = "cancelled"
+        case .failed:
+            state = "failed"
+        default:
+            state = "possible"
+        }
+        let handler = jobsLongPressBlock == nil ? "missing" : "present"
+        accessibilityValue = "gr:\(state);handler:\(handler)"
+    }
+    #endif
     // 实际调用长按聚合 block
     internal func jobs_invokeLongPressBlocks(recognizer: UILongPressGestureRecognizer) {
         jobsLongPressBlock?(self,

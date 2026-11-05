@@ -7,6 +7,10 @@
 
 import Foundation
 
+/// 验证请求 Token、异步结果盒、内存缓存及 WebSocket 回调在释放捕获对象时重入自身不会死锁。
+/// 由本目录 run_regressions.rb 编译后，按命令行模式分别启动 12 个带超时限制的独立测试子进程。
+/// 仅覆盖锁与析构重入边界，不发起网络传输；本文件不加入主 App target。
+
 final class ReleaseProbe {
     let action: () -> Void
 

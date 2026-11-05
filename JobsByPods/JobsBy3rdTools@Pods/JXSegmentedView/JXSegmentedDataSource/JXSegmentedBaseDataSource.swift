@@ -96,7 +96,7 @@ extension JXSegmentedBaseDataSource {
     /// content 宽度：用于 indicatorWidthSameAsItemContent 等场景
     @discardableResult
     public func byItemContentWidth(_ v: CGFloat) -> Self {
-        itemContentWidth = v
+        itemWidth = v
         return self
     }
 

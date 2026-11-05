@@ -35,7 +35,7 @@ final class GeneralRequestDemoVC: JobsNetworkingDemoBaseVC {
         super.viewDidLoad()
         jobsSetupGKNav(title: "一般数据请求".tr)
         runButton
-            .byTitle("Run: cacheThenNetwork + cancel",
+            .byTitle("Run: cacheElseLoad + cancel",
                      for: .normal)
             .onTap { [weak self] sender in
                 guard let self else {
@@ -45,7 +45,7 @@ final class GeneralRequestDemoVC: JobsNetworkingDemoBaseVC {
                 let agent = self.agent // ✅ 避免后续 completion 里再去碰 self.agent
                 let req = JobsRequest(path: "/delay/3",
                                       method: .get,
-                                      cachePolicy: .cacheThenNetwork(ttl: 10))
+                                      cachePolicy: .cacheElseLoad(ttl: 10))
                 self.token = agent.send(req,
                                         as: Data.self) { [weak self] result in
                     guard let self else {
@@ -65,7 +65,7 @@ final class GeneralRequestDemoVC: JobsNetworkingDemoBaseVC {
                 self.append("Tip: 返回上一页会 cancel。\n\n")
             }
         textView.byVisible(YES)
-        append("说明：演示 cacheThenNetwork(ttl) + closure token cancel。\n\n")
+        append("说明：演示 cacheElseLoad(ttl) + closure token cancel。\n\n")
     }
 
     override func viewWillDisappear(_ animated: Bool) {

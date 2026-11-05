@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# Compiles each owned Pod before compiling the host. Logs and DerivedData stay outside build/.
 require 'json'
 require 'open3'
 require 'optparse'
@@ -7,6 +6,10 @@ require 'fileutils'
 require 'tmpdir'
 require 'time'
 require 'rexml/document'
+
+# 用途：真实构建 Jobs 自维护 Pod 和宿主工程，逐单元或批量核对覆盖范围并保存命令日志与结果。
+# 运行：在本文件目录执行 ruby ./validate_builds.rb [--batch-pods]；完整选项见 --help，需要已安装的 Pods 与 Xcode。
+# 边界：此入口会实际调用 xcodebuild，构建产物写入独立输出目录；它是构建门禁，不是 App 源码或普通 XCTest 用例。
 
 # BuildableReference 必须来自已安装 Pods 项目的真实 UUID，不能只凭 podspec 名称伪造构建覆盖。
 def batch_targets(project_path, names, configuration)

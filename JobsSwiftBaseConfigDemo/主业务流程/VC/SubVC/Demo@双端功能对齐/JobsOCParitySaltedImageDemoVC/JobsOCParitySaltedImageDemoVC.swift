@@ -59,6 +59,7 @@ final class JobsSaltedImageStoreDemoVC: BaseVC {
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero,
                     style: .plain)
+            .byAccessibilityIdentifier("jobs.list.JobsSaltedImageStoreDemoVC")
             .byDataSource(self)
             .byDelegate(self)
             .byRowHeight(62)
@@ -94,6 +95,7 @@ extension JobsSaltedImageStoreDemoVC: UITableViewDataSource,
                                reuseIdentifier: reuseIdentifier)
         return cell
             .byText(codecs[indexPath.row].title)
+            .byAccessibilityIdentifier("jobs.route.JobsSaltedImageStoreDemoVC.\(codecs[indexPath.row])")
             .byTitleFont(JobsFont.systemFont(ofSize: 16))
             .byTitleCor(JobsCor.label)
             .byAccessoryType(.disclosureIndicator)

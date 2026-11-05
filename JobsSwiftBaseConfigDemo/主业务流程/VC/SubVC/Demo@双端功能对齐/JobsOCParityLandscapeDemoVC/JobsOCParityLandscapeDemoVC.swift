@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import JobsByUIKit
+import JobsGetWindow
 import JobsInheritance
 import JobsSwiftBaseDefines
 import GKNavigationBarSwift
@@ -166,7 +167,7 @@ final class JobsLandscapeSwitchDemoVC: BaseVC {
         switch action {
         /// 检测当前屏幕方向
         case .detect:
-            let orientation = view.window?.windowScene?.interfaceOrientation
+            let orientation = view.window?.windowScene?.interfaceOrientationCompat
             resultLabel.byText("当前屏幕方向：\(orientationDescription(orientation))")
         /// 锁定任意横屏方向
         case .lockLandscape:
@@ -208,18 +209,23 @@ final class JobsLandscapeSwitchDemoVC: BaseVC {
 
     private func requestOrientation(_ mask: UIInterfaceOrientationMask,
                                     deviceOrientation: UIDeviceOrientation) {
-        if #available(iOS 16.0, *),
-           let windowScene = view.window?.windowScene {
+        if #available(iOS 16.0, *) {
+            guard let windowScene = view.window?.windowScene else {
+                resultLabel.byText("窗口尚未连接，请稍后重试".tr)
+                return
+            }
             setNeedsUpdateOfSupportedInterfaceOrientations()
             windowScene.requestGeometryUpdate(
                 UIWindowScene.GeometryPreferences.iOS(interfaceOrientations: mask)
             ) { [weak self] error in
                 self?.resultLabel.byText("方向切换失败：\(error.localizedDescription)")
             }
-        } else if deviceOrientation != .unknown {
-            UIDevice.current.setValue(deviceOrientation.rawValue,
-                                      forKey: "orientation")
-            UIViewController.attemptRotationToDeviceOrientation()
+        } else {
+            if deviceOrientation != .unknown {
+                UIDevice.current.setValue(deviceOrientation.rawValue,
+                                          forKey: "orientation")
+                UIViewController.attemptRotationToDeviceOrientation()
+            }
         }
     }
 

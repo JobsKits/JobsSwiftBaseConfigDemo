@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>BundleID</key>
+	<string>com.jobs.JobsSwiftBaseConfigDemo.JobsSwiftBaseConfigDemo</string>
+	<key>DevelopmentTeam</key>
+	<string></string>
+	<key>HostProject</key>
+	<string>JobsSwiftBaseConfigDemo.xcodeproj</string>
+	<key>HostTarget</key>
+	<string>JobsSwiftBaseConfigDemo</string>
+	<key>Name</key>
+	<string>Swift UIKit 工程</string>
+	<key>Project</key>
+	<string>swift</string>
+	<key>RunnerBundleID</key>
+	<string></string>
+</dict>
+</plist>

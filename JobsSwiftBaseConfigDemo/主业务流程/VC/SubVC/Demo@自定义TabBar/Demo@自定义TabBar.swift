@@ -27,6 +27,19 @@ import GKNavigationBarSwift
 // MARK: - Demo：多按钮（>5）以便直观看 ScrollView 横向滑动
 final class TabBarDemoVC: BaseVC {
 
+    #if DEBUG
+    private var coverageLongPressCount = 0
+    private lazy var coverageLongPressLabel: UILabel = {
+        UILabel.jobsMake { _ in }
+            .byText("0")
+            .byTextColor(JobsCor.clear)
+            .byFrame(CGRect(x: 8, y: 108, width: 1, height: 1))
+            .byAccessibilityIdentifier("jobs.tabbar.discount.longPressCount")
+            .byUserInteractionEnabled(false)
+            .byAddTo(view)
+    }()
+    #endif
+
     // MARK: JobsTabBarCtrl（链式点语法 + 中间按钮凸起 + 横竖屏自适应）
     private lazy var tabCtrl: JobsTabBarCtrl = {
         JobsTabBarCtrl()
@@ -47,7 +60,12 @@ final class TabBarDemoVC: BaseVC {
             .byLockUnitToMaxEqualCount(true)
             .byAutoRelayoutForBoundsChange(true)
         // 首次构建回调（此处无需处理）
-        .onButtonsBuilt { _ in }
+        .onButtonsBuilt { buttons in
+                let identifiers = ["home", "discount", "wallet", "friends", "activity", "service", "me"]
+                for (index, button) in buttons.enumerated() where identifiers.indices.contains(index) {
+                    button.byAccessibilityIdentifier("jobs.tabbar.\(identifiers[index])")
+                }
+            }
         // 每次布局后：做“中间按钮凸起”（横竖屏都会回调）
         .onButtonsLayoutedWeakOwner { owner, btns in
                 guard !btns.isEmpty else {
@@ -137,8 +155,11 @@ final class TabBarDemoVC: BaseVC {
                 "优惠@点按事件".tr.toast
             }
                 /// 事件触发@长按
-                .onLongPress(minimumPressDuration: 0.8) { btn, gr in
+                .onLongPress(minimumPressDuration: 0.8) { [weak self] btn, gr in
                 if gr.state == .began {
+                    #if DEBUG
+                    self?.recordCoverageLongPress()
+                    #endif
                     btn.byAlpha(0.6)
                     print("长按开始 on \(btn)")
                     "优惠@长按事件".tr.toast
@@ -299,5 +320,21 @@ final class TabBarDemoVC: BaseVC {
             $0.edges.equalToSuperview()
         }
         tabCtrl.didMove(toParent: self)
+        tabCtrl.TabBar.byAccessibilityIdentifier("jobs.tabbar.scroll")
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            coverageLongPressLabel.byVisible(true)
+        }
+        #endif
     }
+
+    #if DEBUG
+    private func recordCoverageLongPress() {
+        guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") else {
+            return
+        }
+        coverageLongPressCount += 1
+        coverageLongPressLabel.byText("\(coverageLongPressCount)")
+    }
+    #endif
 }

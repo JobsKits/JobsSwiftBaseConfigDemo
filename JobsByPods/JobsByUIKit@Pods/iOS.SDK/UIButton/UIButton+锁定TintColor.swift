@@ -32,11 +32,10 @@ extension UIButton {
             }
             byUpdateConfig()
         }
-        // 3) 避免 tint 影响（尤其是 system button）
+        // 3) 避免 tint 与高亮 / 禁用状态的自动调整。
         byTintColor(JobsCor.clear)
-        // 4) 禁止 UIButton 自动“变暗/变亮”之类的调整（有时会影响观感）
-        self.adjustsImageWhenHighlighted = false
-        self.adjustsImageWhenDisabled = false
+            .byAdjustsImageWhenHighlighted(false)
+            .byAdjustsImageWhenDisabled(false)
         return self
     }
     // MARK: - 只锁 Image（图片不随 tint / 状态变）
@@ -55,8 +54,8 @@ extension UIButton {
             }
         }
         // 避免系统按压/禁用自动“变暗”
-        adjustsImageWhenHighlighted = false
-        adjustsImageWhenDisabled = false
+        byAdjustsImageWhenHighlighted(false)
+            .byAdjustsImageWhenDisabled(false)
         return self
     }
     /// 图片吃 tint，但 tint 锁死为某个颜色

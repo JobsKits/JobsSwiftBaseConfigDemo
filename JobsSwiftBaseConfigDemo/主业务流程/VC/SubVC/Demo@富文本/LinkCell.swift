@@ -33,6 +33,9 @@ final class LinkCell: UITableViewCell,
 
     enum Mode { case delegate, rac, rightAligned }   // ← 新增 rightAligned
     private var simulatorAlertController: UIAlertController?
+    #if DEBUG
+    private var coverageCustomerLink: JobsCoverageRichTextLinkElement?
+    #endif
     // ============================== UI（懒加载：内部完成 add + 约束） ==============================
     private lazy var titleLabel: UILabel = { [unowned self] in
         UILabel
@@ -154,6 +157,31 @@ extension LinkCell {
         // 附件文案
         attachmentLabel.richTextBy(attachmentRuns,
                                    paragraphStyle: attachmentParagraphStyle)
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            coverageCustomerLink = nil
+            contentView.accessibilityElements = nil
+            cardView.accessibilityElements = nil
+            textView.accessibilityElements = nil
+            isAccessibilityElement = false
+            contentView.isAccessibilityElement = false
+            cardView.isAccessibilityElement = false
+            textView.isAccessibilityElement = false
+            let attributed = textView.attributedText ?? NSAttributedString(string: "")
+            let range = (attributed.string as NSString).range(of: "专属客服")
+            if range.location != NSNotFound {
+                let element = JobsCoverageRichTextLinkElement(accessibilityContainer: contentView)
+                element.textView = textView
+                element.characterRange = range
+                element.accessibilityLabel = "专属客服"
+                element.accessibilityIdentifier = "jobs.richText.\(mode).customer"
+                element.accessibilityTraits = .link
+                element.isAccessibilityElement = true
+                contentView.accessibilityElements = [titleLabel, element, attachmentLabel]
+                coverageCustomerLink = element
+            }
+        }
+        #endif
         // 手势：先清旧，再加新
         textView.gestureRecognizers?.forEach {
             textView.removeGestureRecognizer($0)
@@ -295,6 +323,7 @@ extension LinkCell {
                               name)
                     }
                     .byTintColor(JobsCor.systemBlue)
+                    .byView { $0.byAccessibilityIdentifier("jobs.richText.rac.alert") }
                     .byPresent(vc)
             }
             return
@@ -318,3 +347,41 @@ extension LinkCell {
         }
     }
 }
+
+#if DEBUG
+/// 无障碍目标只覆盖真实链接的首行字形；自动化仍向原 UITextView 发送触摸。
+private final class JobsCoverageRichTextLinkElement: UIAccessibilityElement {
+
+    weak var textView: UITextView?
+    var characterRange = NSRange(location: NSNotFound, length: 0)
+
+    override var accessibilityFrame: CGRect {
+        get {
+            guard let textView,
+                  textView.window != nil,
+                  characterRange.location != NSNotFound else {
+                return .zero
+            }
+            let manager = textView.layoutManager
+            let container = textView.textContainer
+            manager.ensureLayout(for: container)
+            let glyphs = manager.glyphRange(forCharacterRange: characterRange,
+                                            actualCharacterRange: nil)
+            guard glyphs.length > 0,
+                  glyphs.location < manager.numberOfGlyphs else {
+                return .zero
+            }
+            var line = NSRange()
+            manager.lineFragmentRect(forGlyphAt: glyphs.location,
+                                      effectiveRange: &line)
+            let firstLine = NSIntersectionRange(glyphs, line)
+            let rect = manager.boundingRect(forGlyphRange: firstLine,
+                                             in: container)
+                .offsetBy(dx: textView.textContainerInset.left,
+                           dy: textView.textContainerInset.top)
+            return UIAccessibility.convertToScreenCoordinates(rect, in: textView)
+        }
+        set {}
+    }
+}
+#endif

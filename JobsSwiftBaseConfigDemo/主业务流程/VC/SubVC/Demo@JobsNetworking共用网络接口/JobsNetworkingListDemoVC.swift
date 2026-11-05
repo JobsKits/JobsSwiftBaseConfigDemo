@@ -74,6 +74,7 @@ final class JobsNetworkingListDemoVC : BaseVC {
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero,
                     style: .insetGrouped)
+            .byAccessibilityIdentifier("jobs.list.JobsNetworkingListDemoVC")
             .byRegisterCell(UITableViewCell.self)
             .bySeparatorStyle(.singleLine)
             .setRefreshSound("Sound.wav")
@@ -86,6 +87,7 @@ final class JobsNetworkingListDemoVC : BaseVC {
                 tv
                     .byDequeueReusableCell(withType: UITableViewCell.self,
                                            for: indexPath)
+                    .byAccessibilityIdentifier("jobs.route.JobsNetworkingListDemoVC.\(DemoItem.allCases[indexPath.row])")
                     .byListConfig {
                         guard let self else {
                             return $0

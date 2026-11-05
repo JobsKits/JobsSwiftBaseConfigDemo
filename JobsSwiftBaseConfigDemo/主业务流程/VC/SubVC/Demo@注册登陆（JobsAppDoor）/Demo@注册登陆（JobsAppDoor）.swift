@@ -14,6 +14,7 @@ import UIKit
 
 import GKNavigationBarSwift
 import JobsAppDoor
+import JobsSwiftGraphicCaptcha
 import JobsByUIKit
 import JobsInheritance
 import JobsSwiftBaseDefines
@@ -50,6 +51,7 @@ final class JobsAppDoorDemoVC: BaseVC {
                                                                weight: .semibold),
                                      backgroundColor: JobsCor.systemPink,
                                      cornerRadius: 26)
+            .byAccessibilityIdentifier("jobs.auth.open.style1")
             .onTap { [weak self] _ in
                 guard let self else {
                     return
@@ -66,6 +68,7 @@ final class JobsAppDoorDemoVC: BaseVC {
                                                                weight: .semibold),
                                      backgroundColor: JobsCor.systemIndigo,
                                      cornerRadius: 26)
+            .byAccessibilityIdentifier("jobs.auth.open.style2")
             .onTap { [weak self] _ in
                 guard let self else {
                     return
@@ -104,10 +107,18 @@ final class JobsAppDoorDemoVC: BaseVC {
 private extension JobsAppDoorDemoVC {
 
     func openAppDoor(_ controller: JobsAppDoorBaseVC) {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            controller.configureGraphicCaptcha = { captcha in
+                captcha.captchaText = "JOBS"
+            }
+        }
+        #endif
         controller.submitHandler = { [weak controller, weak self] mode, values in
             let alertController = UIAlertController(title: self?.modeTitle(mode),
                                                     message: "username: \(values.username)\nphone: \(values.countryCode) \(values.phone)",
                                                     preferredStyle: .alert)
+            alertController.view.byAccessibilityIdentifier("jobs.auth.submitted.\(mode)")
             alertController.addAction(UIAlertAction(title: "OK",
                                                     style: .default))
             controller?.present(alertController,

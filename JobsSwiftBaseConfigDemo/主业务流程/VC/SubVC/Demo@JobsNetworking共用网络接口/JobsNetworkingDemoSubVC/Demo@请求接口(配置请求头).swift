@@ -54,7 +54,7 @@ final class RequestAPIDemoVC: JobsNetworkingDemoBaseVC {
                         self.append("1) /uuid -> \(uuid.uuid)\n")
                         let data = try await self.agent.send(JobsRequest(path: "/get",
                                                                          method: .get,
-                                                                         query: ["k": AnySendable("v")]),
+                                                                         query: ["k": JobsValue("v")]),
                                                              as: Data.self)
                         self.append("2) /get bytes -> \(data.count)\n\n")
                     } catch {

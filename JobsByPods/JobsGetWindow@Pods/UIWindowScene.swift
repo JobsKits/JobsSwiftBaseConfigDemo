@@ -14,6 +14,22 @@ import UIKit
 @available(iOS 13.0, *)
 public extension UIWindowScene {
 
+    #if os(iOS)
+    /// 始终读取当前 Scene；新系统不再使用已废弃的方向属性。
+    var interfaceOrientationCompat: UIInterfaceOrientation {
+        if #available(iOS 16.0, *) {
+            return effectiveGeometry.interfaceOrientation
+        } else {
+            return legacyInterfaceOrientation
+        }
+    }
+
+    @available(iOS, introduced: 13.0, deprecated: 26.0)
+    private var legacyInterfaceOrientation: UIInterfaceOrientation {
+        return interfaceOrientation
+    }
+    #endif
+
     var keyWindowCompat: UIWindow? {
         if #available(iOS 15.0, *) {
             return self.keyWindow

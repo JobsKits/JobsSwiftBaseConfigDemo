@@ -42,6 +42,7 @@ digraph PodspecDependencies {
   "JobsSwiftCountryCodeCtrl";
   "JobsSwiftDSL";
   "JobsSwiftDebugTools";
+  "JobsSwiftDeviceGuard";
   "JobsSwiftExcel";
   "JobsSwiftFoundation";
   "JobsSwiftGraphicCaptcha";

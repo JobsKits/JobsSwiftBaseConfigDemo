@@ -683,34 +683,14 @@ extension UIButton {
                           y: y,
                           width: w,
                           height: h)
-        // legacy：imageEdgeInsets 做个近似偏移（configuration 模式下不走这套）
-        // ⚠️ iOS15+ 直接访问 imageEdgeInsets 会产生 deprecated warning；
-        // 这里改为走你统一的兼容读取（KVC），既保留 legacy 行为，也不污染编译输出。
-        if #available(iOS 15.0, *), self.configuration != nil {
-        // no-op
-        } else {
-            let insets = self.jobs_legacyImageEdgeInsets
-            rect.origin.x += insets.left - insets.right
-            rect.origin.y += insets.top - insets.bottom
-        }
+        let insets = self.jobs_imageEdgeInsets
+        rect.origin.x += insets.left - insets.right
+        rect.origin.y += insets.top - insets.bottom
         return rect.integral
     }
 
     private func jobs_effectiveContentRect(in bounds: CGRect) -> CGRect {
-        if #available(iOS 15.0, *), let cfg = self.configuration {
-            let di = cfg.contentInsets
-            let isRTL = (self.effectiveUserInterfaceLayoutDirection == .rightToLeft)
-            let left = isRTL ? di.trailing : di.leading
-            let right = isRTL ? di.leading : di.trailing
-            return bounds.inset(by: UIEdgeInsets(top: di.top,
-                                                 left: left,
-                                                 bottom: di.bottom,
-                                                 right: right))
-        } else {
-            // ⚠️ iOS15+ 直接访问 contentEdgeInsets 会产生 deprecated warning；
-            // 改为走兼容读取（KVC）。
-            return bounds.inset(by: self.jobs_legacyContentEdgeInsets)
-        }
+        return bounds.inset(by: self.jobs_contentEdgeInsets)
     }
 
     private func jobs_layoutFGOverlayIfNeeded() {

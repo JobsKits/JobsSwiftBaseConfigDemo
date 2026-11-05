@@ -37,6 +37,7 @@ final class PicLoadDemoVC: BaseVC {
     private lazy var scrollView: UIScrollView = {
         UIScrollView
             .jobsMake { _ in }
+            .byAccessibilityIdentifier("jobs.coverage.PicLoadDemoVC.scroll")
             .byShowsIndicators(vertical: true,
                                horizontal: false)
             .byAlwaysBounceVertical(true)
@@ -343,6 +344,7 @@ final class PicLoadDemoVC: BaseVC {
                 print("🔴 Kingfisher@背景图 2 tapped, selected=\(sender.isSelected)")
                 "点击了UIButton网络背景图@SDWebImage".tr.toast
             }
+            .byAccessibilityIdentifier("jobs.coverage.picload.longPress.0")
             .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                 if gr.state == .began {
                     btn.byAlpha(0.6)
@@ -351,6 +353,10 @@ final class PicLoadDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoveragePicLoadDemoVCLongPressState(btn,
+                                               gr)
+#endif
             }
             .byAddTo(scrollView) { [unowned self] make in
                 make.top.equalTo(btnBGLabel.snp.bottom).offset(6.h)
@@ -397,6 +403,7 @@ final class PicLoadDemoVC: BaseVC {
                 print("🔴 Kingfisher@背景图 2 tapped, selected=\(sender.isSelected)")
                 "UIButton网络前景图@SDWebImage".tr.toast
             }
+            .byAccessibilityIdentifier("jobs.coverage.picload.longPress.1")
             .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                 if gr.state == .began {
                     btn.byAlpha(0.6)
@@ -405,6 +412,10 @@ final class PicLoadDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoveragePicLoadDemoVCLongPressState(btn,
+                                               gr)
+#endif
             }
             .byAddTo(scrollView) { [unowned self] make in
                 make.top.equalTo(btnImageLabel.snp.bottom).offset(6.h)
@@ -450,6 +461,7 @@ final class PicLoadDemoVC: BaseVC {
                 print("🔴 Kingfisher@背景图 2 tapped, selected=\(sender.isSelected)")
                 "UIButton网络背景图@Kingfisher".tr.toast
             }
+            .byAccessibilityIdentifier("jobs.coverage.picload.longPress.2")
             .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                 if gr.state == .began {
                     btn.byAlpha(0.6)
@@ -458,6 +470,10 @@ final class PicLoadDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoveragePicLoadDemoVCLongPressState(btn,
+                                               gr)
+#endif
             }
             .byAddTo(scrollView) { [unowned self] make in
                 make.top.equalTo(btnBGKFLabel.snp.bottom).offset(6.h)
@@ -506,6 +522,7 @@ final class PicLoadDemoVC: BaseVC {
                 print("🔴 Kingfisher@背景图 2 tapped, selected=\(sender.isSelected)")
                 "UIButton网络前景图@Kingfisher".tr.toast
             }
+            .byAccessibilityIdentifier("jobs.coverage.picload.longPress.3")
             .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                 if gr.state == .began {
                     btn.byAlpha(0.6)
@@ -514,6 +531,10 @@ final class PicLoadDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoveragePicLoadDemoVCLongPressState(btn,
+                                               gr)
+#endif
             }
             .byAddTo(scrollView) { [unowned self] make in
                 make.top.equalTo(btnImageKFLabel.snp.bottom).offset(6.h)
@@ -592,3 +613,21 @@ final class PicLoadDemoVC: BaseVC {
         }
     }
 }
+
+#if DEBUG
+@MainActor
+private func jobsCoveragePicLoadDemoVCLongPressState(_ button: UIButton,
+                                          _ gesture: UILongPressGestureRecognizer) {
+    guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") else {
+        return
+    }
+    if gesture.state == .began, button.alpha < 1 {
+        button.byAccessibilityLabel("longPress:began")
+    } else if gesture.state == .ended {
+        let completed = button.accessibilityLabel == "longPress:began" && button.alpha == 1
+        button.byAccessibilityLabel(completed ? "longPress:completed" : "longPress:invalidLifecycle")
+    } else if gesture.state == .cancelled || gesture.state == .failed {
+        button.byAccessibilityLabel("longPress:cancelled")
+    }
+}
+#endif

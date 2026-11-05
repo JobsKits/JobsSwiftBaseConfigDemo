@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import JobsByUIKit
+import JobsSwiftBaseDefines
 import JobsSwiftDSL
 import JobsScale
 import JobsToast
@@ -42,8 +43,7 @@ final class MosaicBrushDemoVC: MosaicBaseDemoVC {
     }
 
     override func makeRightButtons() -> [UIButton] {
-        [
-            UIButton.sys()
+        let button = UIButton.sys()
                 .byFrame(CGRect(x: 0,
                                 y: 0,
                                 width: 32.w,
@@ -61,7 +61,12 @@ final class MosaicBrushDemoVC: MosaicBaseDemoVC {
                 self.imageView.isBrushEnabled = isSelected
                 (isSelected ? "涂抹马赛克已开启" : "涂抹马赛克已关闭").toast
             }
-        ]
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            button.byAccessibilityIdentifier("jobs.coverage.mosaic.brush.toggle")
+        }
+        #endif
+        return [button]
     }
 
     override func onImageLoaded(_ image: UIImage) {

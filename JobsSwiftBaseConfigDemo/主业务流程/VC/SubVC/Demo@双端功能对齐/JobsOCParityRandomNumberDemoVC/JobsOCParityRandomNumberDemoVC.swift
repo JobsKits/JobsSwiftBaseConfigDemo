@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsInheritance
 import JobsSwiftBaseDefines
 import GKNavigationBarSwift
@@ -81,6 +82,78 @@ final class JobsRandomNumberDemoVC: BaseVC {
 
     private var values: [Int] = []
 
+#if DEBUG
+    private var coverageTouchEndedCount = 0
+
+    /// 只提供真实背景触摸区域，不绑定动作、不代调刷新方法。
+    private final class CoverageTouchPad: UIView {
+
+        weak var owner: JobsRandomNumberDemoVC?
+
+        override var isAccessibilityElement: Bool {
+            get {
+                true
+            }
+            set {
+                super.isAccessibilityElement = newValue
+            }
+        }
+
+        override var accessibilityIdentifier: String? {
+            get {
+                "jobs.coverage.random.backgroundTouch"
+            }
+            set {
+                super.accessibilityIdentifier = newValue
+            }
+        }
+
+        override var accessibilityLabel: String? {
+            get {
+                "touchesEnded:\(owner?.coverageTouchEndedCount ?? 0)"
+            }
+            set {
+                super.accessibilityLabel = newValue
+            }
+        }
+
+        override var accessibilityValue: String? {
+            get {
+                owner?.values.map {
+                    String($0)
+                }.joined(separator: ",")
+            }
+            set {
+                super.accessibilityValue = newValue
+            }
+        }
+    }
+
+    private func prepareCoverageTouchPad() {
+        guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") else {
+            return
+        }
+        let pad = CoverageTouchPad.jobsMake { pad in
+            pad.owner = self
+        }
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
+            .byAddTo(view) { [unowned self] make in
+                make.centerX.equalToSuperview()
+                make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).inset(8)
+                make.width.equalTo(220)
+                make.height.equalTo(44)
+            }
+        UILabel.jobsMake { _ in }
+            .byText("巡检：点击背景刷新全部随机数")
+            .byTextColor(JobsCor.label)
+            .byFont(JobsFont.systemFont(ofSize: 12))
+            .byTextAlignment(.center)
+            .byAddTo(pad) { make in
+                make.edges.equalToSuperview()
+            }
+    }
+#endif
+
     private lazy var refreshButton: UIButton = {
         UIButton.sys()
             .byImage("arrow.clockwise".sysImg,
@@ -117,6 +190,9 @@ final class JobsRandomNumberDemoVC: BaseVC {
                        rightButtons: [refreshButton])
         tableView.byVisible(YES)
         reloadRandomValues()
+#if DEBUG
+        prepareCoverageTouchPad()
+#endif
     }
 
     override func touchesEnded(_ touches: Set<UITouch>,
@@ -124,6 +200,11 @@ final class JobsRandomNumberDemoVC: BaseVC {
         super.touchesEnded(touches,
                            with: event)
         reloadRandomValues()
+#if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            coverageTouchEndedCount += 1
+        }
+#endif
     }
 
     private func reloadRandomValues() {

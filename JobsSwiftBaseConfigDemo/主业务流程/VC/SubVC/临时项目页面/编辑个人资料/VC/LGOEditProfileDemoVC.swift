@@ -261,6 +261,7 @@ extension LGOEditProfileDemoVC: UITableViewDataSource {
             return tableView
                 .byDequeueReusableCell(withType: BaseTableViewCellByValue1.self,
                                        for: indexPath)
+                .byAccessibilityIdentifier("jobs.profile.row.\(row)")
                 .byTitleFont(JobsFont.systemFont(ofSize: 16))
                 .byDetailTitleFont((JobsFont.systemFont(ofSize: 14)))
                 .bySelectionStyle(.none)

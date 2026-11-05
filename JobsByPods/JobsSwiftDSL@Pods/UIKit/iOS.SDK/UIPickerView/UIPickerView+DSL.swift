@@ -28,7 +28,12 @@ extension UIPickerView {
 
     @discardableResult
     public func byShowsSelectionIndicator(_ shows: Bool) -> Self {
-        showsSelectionIndicator = shows
+        // iOS 7 起系统始终管理选中指示器，这个旧属性已不再生效。
+        if #available(iOS 7.0, tvOS 9.0, *) {
+            return self
+        } else {
+            showsSelectionIndicator = shows
+        }
         return self
     }
 

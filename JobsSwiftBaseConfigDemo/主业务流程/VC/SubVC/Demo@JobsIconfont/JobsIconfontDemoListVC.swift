@@ -90,6 +90,7 @@ final class JobsIconfontDemoListVC: BaseVC {
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero,
                     style: .insetGrouped)
+            .byAccessibilityIdentifier("jobs.list.JobsIconfontDemoListVC")
             .byDataSource(self)
             .byDelegate(self)
             .bySeparatorStyle(.singleLine)
@@ -133,6 +134,7 @@ extension JobsIconfontDemoListVC: UITableViewDataSource,
             .byDequeueReusableCell(withType: UITableViewCell.self,
                                    for: indexPath)
             .byAccessoryType(.disclosureIndicator)
+            .byAccessibilityIdentifier("jobs.route.JobsIconfontDemoListVC.\(row)")
             .byListConfig {
                 $0
                     .byImage(

@@ -19,6 +19,10 @@ import JobsSwiftComment
 import JobsScale
 import JobsSwiftGraphicCaptcha
 
+/// 验证自建 UIKit 组件的颜色转换、窗口查找、Picker 取消、WebView 配置、日历、评论裁剪、缩放及验证码重入。
+/// 属于 JobsSwiftBaseConfigDemoTests 的宿主 XCTest，由 Xcode Test 或 CI 的测试流程在 iOS 模拟器运行。
+/// 测试框架按 test 方法发现用例，无需业务代码直接调用；本文件不加入主 App target。
+
 @MainActor
 final class JobsUIKitRegression: XCTestCase {
     func testGrayPatternAndStrictHexConversion() throws {
@@ -41,7 +45,8 @@ final class JobsUIKitRegression: XCTestCase {
         XCTAssertNil(UIColor(patternImage: image).jobsRGBComponents())
     }
 
-    func testEmptyContainerVisibleControllerTerminates() {
+    @available(*, deprecated, message: "仅验证已退役窗口别名的源码兼容性。")
+    func testEmptyContainerVisibleControllerTerminates() throws {
         XCTAssertTrue(jobsGetMainWindow() === JobsGetWindow.jobsGetMainWindow())
         XCTAssertTrue(jobsGetMainWindowBefore13() === JobsGetWindow.jobsGetMainWindowBefore13())
         XCTAssertTrue(jobsGetMainWindowAfter13() === JobsGetWindow.jobsGetMainWindowAfter13())
@@ -49,7 +54,7 @@ final class JobsUIKitRegression: XCTestCase {
         for scene in UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }) {
             XCTAssertTrue(scene.keyWindowCompat === scene.keyWindow)
         }
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 640))
+        let window = try makeWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 640))
         let containers: [UIViewController] = [UINavigationController(), UITabBarController(),
                                              UISplitViewController(), UIPageViewController()]
         for container in containers {
@@ -86,8 +91,8 @@ final class JobsUIKitRegression: XCTestCase {
 
     func testPickerInitialOffWindowAndSynchronousWindowTransferKeepAwaiting() async throws {
         let frame = CGRect(x: 0, y: 0, width: 320, height: 640)
-        let firstWindow = UIWindow(frame: frame)
-        let secondWindow = UIWindow(frame: frame)
+        let firstWindow = try makeWindow(frame: frame)
+        let secondWindow = try makeWindow(frame: frame)
         let host = UIView(frame: frame)
         let picker = BRStringPicker().byDataSource(["picked"]).byPresent(in: host)
         let panel = try XCTUnwrap(host.subviews.compactMap { $0 as? BRPickerPanel }.first)
@@ -123,7 +128,7 @@ final class JobsUIKitRegression: XCTestCase {
 
     func testPickerHostLeavingWindowCancelsAndPickerCanBePresentedAgain() async throws {
         let frame = CGRect(x: 0, y: 0, width: 320, height: 640)
-        let window = UIWindow(frame: frame)
+        let window = try makeWindow(frame: frame)
         let host = UIView(frame: frame)
         window.addSubview(host)
         let picker = BRStringPicker().byDataSource(["picked"]).byPresent(in: host)
@@ -225,13 +230,23 @@ final class JobsUIKitRegression: XCTestCase {
         XCTAssertFalse(view.isRenderTruncated)
     }
 
-    func testScaleInvalidDesignDimensionsHaveFiniteWindowScale() {
+    func testScaleInvalidDesignDimensionsHaveFiniteWindowScale() throws {
         defer { JobsScale.setup(designWidth: 375, designHeight: 812) }
         JobsScale.setup(designWidth: .nan, designHeight: 0)
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 812))
+        let window = try makeWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 812))
         XCTAssertEqual(JobsScale.widthScale(in: window), 1, accuracy: 0.001)
         XCTAssertEqual(JobsScale.heightScale(in: window), 1, accuracy: 0.001)
     }
+    private func makeWindow(frame: CGRect) throws -> UIWindow {
+        let scenes = UIApplication.shared.connectedScenes.compactMap { scene in
+            return scene as? UIWindowScene
+        }
+        let scene = try XCTUnwrap(UIApplication.jobsKeyWindow()?.windowScene ?? scenes.first)
+        return UIWindow.jobsMake(scene: scene,
+                                  makeKeyVisible: false)
+            .byFrame(frame)
+    }
+
     func testServerCaptchaRejectsLocalAnswerAndIgnoresPreviousChallenge() async throws {
         let view = JobsSwiftGraphicCaptchaView(frame: CGRect(x: 0, y: 0, width: 100, height: 40))
         var completions: [(Result<JobsGraphicCaptchaChallenge, Error>) -> Void] = []

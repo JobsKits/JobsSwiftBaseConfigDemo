@@ -30,6 +30,7 @@ final class SafetyPresentDemoVC: BaseVC {
     private lazy var scrollView: UIScrollView = {
         UIScrollView
             .jobsMake { _ in }
+            .byAccessibilityIdentifier("jobs.safePresent.scroll")
             .byAlwaysBounceVertical(true)
             .byShowsVerticalScrollIndicator(false)
             .byBackgroundColor(JobsCor.clear)
@@ -95,6 +96,7 @@ final class SafetyPresentDemoVC: BaseVC {
 
     private lazy var systemPresentButton: UIButton = {
         UIButton.sys()
+            .byAccessibilityIdentifier("jobs.safePresent.system")
             .byConfiguration(
             UIButton.Configuration
                 .filled()
@@ -133,6 +135,7 @@ final class SafetyPresentDemoVC: BaseVC {
 
     private lazy var innerPresentView: DemoInnerPresentView = {
         DemoInnerPresentView()
+            .byAccessibilityIdentifier("jobs.safePresent.inner")
             .byBackgroundColor(JobsCor.systemGreen.withAlphaComponent(0.14))
             .byCornerRadius(18)
             .byClipsToBounds(true)
@@ -140,6 +143,7 @@ final class SafetyPresentDemoVC: BaseVC {
 
     private lazy var halfSheetButton: UIButton = {
         UIButton.sys()
+            .byAccessibilityIdentifier("jobs.safePresent.halfSheet")
             .byConfiguration(
             UIButton.Configuration
                 .tinted()

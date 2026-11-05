@@ -144,29 +144,25 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
     private func iconImage(color: UIColor) -> UIImage {
         let size = CGSize(width: 26,
                           height: 26)
-        UIGraphicsBeginImageContextWithOptions(size,
-                                               false,
-                                               0)
-        let path = UIBezierPath.make()
-        let center = CGPoint(x: size.width / 2,
-                             y: size.height / 2)
-        for i in 0 ..< 10 {
-            let radius: CGFloat = i.isMultiple(of: 2) ? 12 : 5
-            let angle = CGFloat(i) * .pi / 5 - .pi / 2
-            let point = CGPoint(x: center.x + cos(angle) * radius,
-                                y: center.y + sin(angle) * radius)
-            if i == 0 {
-                path.byMove(to: point)
-            } else {
-                path.byAddLine(to: point)
+        return JobsGraphics.image(size: size) { _ in
+            let path = UIBezierPath.make()
+            let center = CGPoint(x: size.width / 2,
+                                 y: size.height / 2)
+            for i in 0 ..< 10 {
+                let radius: CGFloat = i.isMultiple(of: 2) ? 12 : 5
+                let angle = CGFloat(i) * .pi / 5 - .pi / 2
+                let point = CGPoint(x: center.x + cos(angle) * radius,
+                                    y: center.y + sin(angle) * radius)
+                if i == 0 {
+                    path.byMove(to: point)
+                } else {
+                    path.byAddLine(to: point)
+                }
             }
-        }
-        path.byClose()
-        color.setFill()
-        path.byFill()
-        let image = UIGraphicsGetImageFromCurrentImageContext() ?? .make { _ in }
-        UIGraphicsEndImageContext()
-        return image
+            path.byClose()
+            color.setFill()
+            path.byFill()
+        } ?? .make { _ in }
     }
 
     @objc private func modeChanged(_ sender: UISegmentedControl) {

@@ -51,27 +51,22 @@ extension UIImage {
     }
     // MARK: 填充一个固定颜色
     public func filled(by color: UIColor) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(size,
-                                               false,
-                                               scale)
-        defer {
-            UIGraphicsEndImageContext()
-        }
-        guard let ctx = UIGraphicsGetCurrentContext(),
-              let cgImage = self.cgImage else {
+        guard let cgImage = self.cgImage else {
             return jobsSolidBlue()
         }
         let rect = CGRect(origin: .zero,
                           size: size)
-        ctx.translateBy(x: 0,
-                        y: size.height)
-        ctx.scaleBy(x: 1,
-                    y: -1)
-        ctx.clip(to: rect,
-                 mask: cgImage)
-        ctx.setFillColor(color.cgColor)
-        ctx.fill(rect)
-        return UIGraphicsGetImageFromCurrentImageContext() ?? jobsSolidBlue()
+        return JobsGraphics.image(size: size,
+                                   scale: scale) { context in
+            context.translateBy(x: 0,
+                                y: size.height)
+            context.scaleBy(x: 1,
+                            y: -1)
+            context.clip(to: rect,
+                         mask: cgImage)
+            context.setFillColor(color.cgColor)
+            context.fill(rect)
+        } ?? jobsSolidBlue()
     }
 
     public func rotated(_ radians: CGFloat) -> UIImage {

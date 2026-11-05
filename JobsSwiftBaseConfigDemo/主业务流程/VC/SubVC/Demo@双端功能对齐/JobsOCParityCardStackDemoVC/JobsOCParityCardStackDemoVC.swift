@@ -26,6 +26,7 @@ final class JobsCardStackDemoVC: BaseVC {
     private lazy var cards: [JobsSwipeCardView] = {
         (0 ..< 10).map { index in
             let card = JobsSwipeCardView(index: index)
+                .byAccessibilityIdentifier("jobs.gesture.cardStack.\(index)")
             card.addPanAction { [weak self, weak card] gesture in
                 guard let self, let card else {
                     return
@@ -233,6 +234,7 @@ private final class JobsSwipeCardView: UIView {
         UILabel
             .jobsMake { _ in }
             .byText("\(index)")
+            .byAccessibilityIdentifier("jobs.cardStack.number.\(index)")
             .byFont(JobsFont.boldSystemFont(ofSize: 72))
             .byTextColor(JobsCor.systemRed)
             .byTextAlignment(.center)

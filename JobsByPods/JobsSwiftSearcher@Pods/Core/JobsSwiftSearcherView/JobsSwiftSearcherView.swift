@@ -587,26 +587,22 @@ private extension JobsSwiftSearcherView {
     func searchIconImage(with color: UIColor) -> UIImage? {
         let size = CGSize(width: 16,
                           height: 16)
-        UIGraphicsBeginImageContextWithOptions(size,
-                                               false,
-                                               0)
-        color.setStroke()
-        let circlePath = UIBezierPath.make(ovalIn: CGRect(x: 2.2,
-                                                          y: 2.2,
-                                                          width: 8.8,
-                                                          height: 8.8))
-        circlePath.lineWidth = 1.6
-        circlePath.stroke()
-        let handlePath = UIBezierPath.make()
-        handlePath.lineWidth = 1.8
-        handlePath.lineCapStyle = .round
-        handlePath
-            .byMove(to: CGPoint(x: 9.4, y: 9.4))
-            .byAddLine(to: CGPoint(x: 13.4, y: 13.4))
-        handlePath.stroke()
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image
+        return JobsGraphics.image(size: size) { _ in
+            color.setStroke()
+            let circlePath = UIBezierPath.make(ovalIn: CGRect(x: 2.2,
+                                                              y: 2.2,
+                                                              width: 8.8,
+                                                              height: 8.8))
+            circlePath.lineWidth = 1.6
+            circlePath.stroke()
+            let handlePath = UIBezierPath.make()
+            handlePath.lineWidth = 1.8
+            handlePath.lineCapStyle = .round
+            handlePath
+                .byMove(to: CGPoint(x: 9.4, y: 9.4))
+                .byAddLine(to: CGPoint(x: 13.4, y: 13.4))
+            handlePath.stroke()
+        }
     }
 
     @objc func textFieldEditingChanged() {

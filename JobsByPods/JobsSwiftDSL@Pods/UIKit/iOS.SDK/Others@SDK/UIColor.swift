@@ -196,9 +196,15 @@ extension UIColor {
         let bString = String(cString[startIndex ... endIndex])
         // 5）十六进制转数值（00~FF -> 0~255）
         var r: CUnsignedInt = 0, g: CUnsignedInt = 0, b: CUnsignedInt = 0
-        Scanner(string: rString).scanHexInt32(&r)
-        Scanner(string: gString).scanHexInt32(&g)
-        Scanner(string: bString).scanHexInt32(&b)
+        if #available(iOS 13.0, tvOS 13.0, macOS 10.15, *) {
+            r = UInt32(Scanner(string: rString).scanUInt64(representation: .hexadecimal) ?? 0)
+            g = UInt32(Scanner(string: gString).scanUInt64(representation: .hexadecimal) ?? 0)
+            b = UInt32(Scanner(string: bString).scanUInt64(representation: .hexadecimal) ?? 0)
+        } else {
+            Scanner(string: rString).scanHexInt32(&r)
+            Scanner(string: gString).scanHexInt32(&g)
+            Scanner(string: bString).scanHexInt32(&b)
+        }
         // 6）归一化到 0~1 并初始化 UIColor（默认 alpha = 1）
         self.init(red: CGFloat(r) / 255.0,
                   green: CGFloat(g) / 255.0,

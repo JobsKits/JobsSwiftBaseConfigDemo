@@ -10,6 +10,10 @@ import XCTest
 import JobsSwiftTimer
 import JobsSwiftTimerMgr
 
+// 用途：验证手势解锁页面加载，以及 JobsSwiftTimer / TimerMgr 的并发、取消、前后台与生命周期行为。
+// 运行：由 JobsSwiftBaseConfigDemoTests 自动发现，可在 Xcode 按 ⌘U 或由 CI 执行宿主单元测试。
+// 边界：依赖真实 iOS App 宿主，只属于单元测试 Target，普通运行 App 不会执行这些断言。
+
 private final class JobsTimerTestProbe: @unchecked Sendable {
 
     private let lock = NSLock()

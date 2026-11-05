@@ -60,7 +60,7 @@ final class UploadFileDemoVC: JobsNetworkingDemoBaseVC {
                                   mimeType: "text/plain")
                         ],
                                                         form: [
-                            "note": AnySendable("upload from demo")
+                            "note": JobsValue("upload from demo")
                         ])
                         let resp: UploadResp = try await self.agent.upload(request,
                                                                            as: UploadResp.self)

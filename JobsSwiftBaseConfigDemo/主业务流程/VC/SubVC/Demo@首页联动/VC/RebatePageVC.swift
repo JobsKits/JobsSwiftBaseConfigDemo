@@ -70,6 +70,7 @@ final class RebatePageVC: BaseVC,
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero,
                     style: .plain)
+            .byAccessibilityIdentifier("jobs.linkage.page.rebate")
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(CashbackCardCell.self)

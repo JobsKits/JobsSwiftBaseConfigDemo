@@ -12,6 +12,8 @@ import Flutter
 
 extension AppDelegate {
 
+    // 保留系统旧回调供旧生命周期和 Flutter 插件使用；现代 Scene 由 SceneDelegate 独立转发。
+    @available(iOS, introduced: 9.0, deprecated: 26.0)
     override func application(_ application: UIApplication,
                               open url: URL,
                               options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
@@ -23,6 +25,7 @@ extension AppDelegate {
                                  options: options)
     }
 
+    @available(iOS, introduced: 8.0, deprecated: 26.0)
     override func application(_ application: UIApplication,
                               continue userActivity: NSUserActivity,
                               restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
@@ -35,6 +38,7 @@ extension AppDelegate {
                                  restorationHandler: restorationHandler)
     }
 
+    @available(iOS, introduced: 9.0, deprecated: 26.0)
     override func application(_ application: UIApplication,
                               performActionFor shortcutItem: UIApplicationShortcutItem,
                               completionHandler: @escaping (Bool) -> Void) {
@@ -71,6 +75,8 @@ extension AppDelegate {
                           fetchCompletionHandler: completionHandler)
     }
 
+    // 这是 Flutter 的旧插件兼容回调；宿主未配置自动后台刷新任务，不能凭空替插件注册 BGTask。
+    @available(iOS, introduced: 6.0, deprecated: 13.0)
     override func application(_ application: UIApplication,
                               performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         guard JobsDeviceLaunchGate.shared.allowsBusinessInitialization else {

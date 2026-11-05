@@ -19,7 +19,7 @@ extension JXSegmentedIndicatorGradientView {
     /// 宽度增量（历史命名兼容：gradientViewWidthIncrement 会同步到 indicatorWidthIncrement）
     @discardableResult
     public func byGradientViewWidthIncrement(_ v: CGFloat) -> Self {
-        gradientViewWidthIncrement = v
+        indicatorWidthIncrement = v
         return self
     }
 

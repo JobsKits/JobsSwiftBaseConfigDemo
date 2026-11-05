@@ -107,7 +107,7 @@ Podfile 会先检查脚本是否存在，缺失时只告警并继续；调用时
 
 ## <span id="jobs-toc-heading-7" data-jobs-toc="v2">六、移除与排错 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-移除时先删除业务中的 `import JobsSPMDemoKit`，再从 PROJECT 的 Package Dependencies 与 App Target 的 Frameworks 中移除 Product。
+> 移除时先删除业务中的 `import JobsSPMDemoKit`，再从 PROJECT 的 Package Dependencies 与 App Target 的 Frameworks 中移除 Product。
 
 | 现象 | 优先检查 |
 | --- | --- |

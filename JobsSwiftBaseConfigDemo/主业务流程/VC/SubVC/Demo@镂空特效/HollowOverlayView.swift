@@ -19,6 +19,53 @@ import JobsByQuartzCore
 
 final class HollowOverlayView: UIView {
 
+#if DEBUG
+    private var isCoverageRun: Bool {
+        ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route")
+    }
+
+    override var isAccessibilityElement: Bool {
+        get {
+            isCoverageRun || super.isAccessibilityElement
+        }
+        set {
+            super.isAccessibilityElement = newValue
+        }
+    }
+
+    override var accessibilityIdentifier: String? {
+        get {
+            isCoverageRun ? "jobs.coverage.hollow.hole" : super.accessibilityIdentifier
+        }
+        set {
+            super.accessibilityIdentifier = newValue
+        }
+    }
+
+    /// 手势只接收洞附近的触摸，巡检坐标也以真实洞区域为准。
+    override var accessibilityFrame: CGRect {
+        get {
+            guard isCoverageRun else {
+                return super.accessibilityFrame
+            }
+            return UIAccessibility.convertToScreenCoordinates(holeRect,
+                                                               in: self)
+        }
+        set {
+            super.accessibilityFrame = newValue
+        }
+    }
+
+    override var accessibilityValue: String? {
+        get {
+            isCoverageRun ? NSCoder.string(for: holeRect) : super.accessibilityValue
+        }
+        set {
+            super.accessibilityValue = newValue
+        }
+    }
+#endif
+
     enum HoleShape {
 
         case oval

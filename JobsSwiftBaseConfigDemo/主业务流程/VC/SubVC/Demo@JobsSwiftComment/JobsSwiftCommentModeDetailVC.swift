@@ -69,6 +69,14 @@ final class JobsSwiftCommentModeDetailVC: BaseVC {
         setupNavigation()
         updatePreferredContentSizeIfNeeded()
         commentView.byVisible(true)
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            let page = replyDetailStyle
+                ? "reply.\(commentArr.first?.messageID ?? "missing")"
+                : "main"
+            view.byAccessibilityIdentifier("jobs.comment.page.\(mode).\(page)")
+        }
+        #endif
     }
 
     override func viewDidLayoutSubviews() {

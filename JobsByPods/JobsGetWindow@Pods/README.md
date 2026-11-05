@@ -23,6 +23,7 @@
 > 中文架构入口：[架构脉络与关键设计](#jobs-architecture)。
 
 - `UIWindowScene.keyWindowCompat` 统一处理 iOS 15+ `keyWindow` 与旧系统 `windows` 回退。
+- `UIWindowScene.interfaceOrientationCompat` 读取所属 Scene 的方向：iOS 16+ 使用 `effectiveGeometry`，iOS 13–15 使用原 Scene 属性；未连接窗口时由调用方保留空结果，不跨 Scene 猜测方向。
 - `legacyKeyWindowPreiOS13()` 仅作为已退役的 Jobs 兼容入口保留，其 deprecated message 指向 Jobs 替代 API；底层系统版本差异由实现内部处理。
 
 <a id="jobs-architecture"></a>

@@ -28,6 +28,7 @@ final class SphereDemoVC: BaseVC {
     private let horizontalInset: CGFloat = 0
     private lazy var sphereView: SphereTagCloudView = {
         SphereTagCloudView()
+            .byAccessibilityIdentifier("jobs.gesture.sphere")
             .byPerspective(2.2)                          // 透视强度：越大越“扁”，越小越“立体”（建议 1.5~3）
         .byScaleRange(min: 0.35,
                       max: 1.0)           // 深度映射到缩放的范围
@@ -60,6 +61,11 @@ final class SphereDemoVC: BaseVC {
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(title: "拖动旋转 / 捏合缩放 / 点按标签".tr)
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            sphereView.byAutoRotating(false)
+        }
+        #endif
         sphereView.byVisible(YES)
     }
 
@@ -69,6 +75,7 @@ final class SphereDemoVC: BaseVC {
                                for: .normal)
             .byTitle(title,
                      for: .normal)
+            .byAccessibilityIdentifier("jobs.sphere.tag.\(title)")
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 14,

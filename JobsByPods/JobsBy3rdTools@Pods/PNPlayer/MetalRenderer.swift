@@ -211,6 +211,12 @@ public class MetalRenderer: NSObject {
         }
         return self
     }
+#if DEBUG
+    /// 只读巡检观测，沿用渲染器实际使用的Camera矩阵，不修改相机输入。
+    public var jobsCoverageCameraSignature: String {
+        String(describing: cameraController.viewMatrix)
+    }
+#endif
     // MARK: - Interaction
     public func handlePan(_ gesture: UIPanGestureRecognizer,
                           in view: UIView) {

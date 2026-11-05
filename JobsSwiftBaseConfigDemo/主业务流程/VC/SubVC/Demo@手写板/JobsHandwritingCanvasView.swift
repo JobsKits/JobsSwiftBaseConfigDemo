@@ -28,6 +28,30 @@ final class JobsHandwritingCanvasView: UIView {
         !normalizedStrokes.isEmpty
     }
 
+    override var isAccessibilityElement: Bool {
+        get {
+            return true
+        }
+        set {
+        }
+    }
+
+    override var accessibilityLabel: String? {
+        get {
+            return "手写画布"
+        }
+        set {
+        }
+    }
+
+    override var accessibilityValue: String? {
+        get {
+            return hasStrokes ? "有笔迹" : "空白"
+        }
+        set {
+        }
+    }
+
     private var normalizedStrokes: [[NormalizedPoint]] = []
     private var strokeLayers: [CAShapeLayer] = []
     private var lastLayoutSize = CGSize.zero

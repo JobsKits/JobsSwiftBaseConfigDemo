@@ -44,10 +44,10 @@
 - `JOBS_POD_INSTALL_INTERACTION=check-only` 或 `skip` 只展示说明并跳过全部 SwiftPM 操作，不清空日志、不解析依赖、不构建或测试；其它模式值报错退出。
 - 已确认执行时，依次处理普通 Package 与独立 Macro Demo，执行 `swift package resolve`、`swift build`、`swift test`，默认 `RUN_CLIENT=1` 时运行提供 `JobsSPMDemoClient` 的包；`RUN_CLIENT=0` 跳过 Client。默认 `DO_RESET=0` 不清缓存，显式设置 `DO_RESET=1` 才在各包验证前执行 `swift package reset`。
 - 日志在 `/tmp/【MacOS】🧠编译通过方可集成进SPM.log`，确认后覆盖；启用 `PIPE_FAIL`，SwiftPM 失败不会被 `tee` 的成功状态掩盖，验证任一包失败即返回非零。
-- [隔离回归](../ScriptsByPods/配置Flutter环境.sh/Tests/interaction_regression.rb)覆盖 Flutter、Unity 和本脚本的真实 TTY 回车 / EOF、无 TTY、旧钩子标记及模式优先级，并用假 `swift` 验证正常流程和解析 / 构建 / 测试 / Client / reset 五类失败传播，共 49 项。没有运行真实 SwiftPM 编译：
+- [隔离回归](../ScriptsByPods/配置Flutter环境.sh/Tests/interaction_regression.rb/interaction_regression.rb)覆盖 Flutter、Unity 和本脚本的真实 TTY 回车 / EOF、无 TTY、旧钩子标记及模式优先级，并用假 `swift` 验证正常流程和解析 / 构建 / 测试 / Client / reset 五类失败传播，共 49 项。没有运行真实 SwiftPM 编译：
 
   ```shell
-  ruby './ScriptsByPods/配置Flutter环境.sh/Tests/interaction_regression.rb' --run
+  ruby './ScriptsByPods/配置Flutter环境.sh/Tests/interaction_regression.rb/interaction_regression.rb' --run
   ```
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

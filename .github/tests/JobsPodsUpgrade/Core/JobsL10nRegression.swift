@@ -7,6 +7,10 @@
 
 import Foundation
 
+/// 验证语言切换与系统语言跟随、Bundle 回退、翻译 slot 绑定、重绑和捕获释放时的重入安全。
+/// 由本目录 run_regressions.rb 编译为独立命令行程序，偏好读写使用隔离的 UserDefaults suite。
+/// 仅覆盖 Foundation 语言管理；UIKit 控件刷新另验，本文件不加入主 App target。
+
 private final class BindingTarget: NSObject {
     var title = ""
     var subtitle = ""

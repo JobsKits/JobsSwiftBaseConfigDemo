@@ -58,6 +58,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     private lazy var scrollView: UIScrollView = {
         UIScrollView
             .jobsMake { _ in }
+            .byAccessibilityIdentifier("jobs.motionIcon.scroll")
             .byShowsVerticalScrollIndicator(NO)
             .byAlwaysBounceVertical(YES)
             .byAddTo(view) { [unowned self] make in
@@ -456,6 +457,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
 
     private lazy var viewCopiedPhotosButton: UIButton = {
         UIButton.sys()
+            .byAccessibilityIdentifier("jobs.motionIcon.openCopiedPhotos")
             .byConfiguration(
             UIButton.Configuration.tinted()
                 .byTitle("查看已复制照片".tr)

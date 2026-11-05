@@ -1,5 +1,9 @@
 require_relative 'select_simulator'
 
+# 用途：验证模拟器选择的 SDK 匹配、数字版本排序、可用性、设备类型和非法 UDID 拒绝规则。
+# 运行：在本文件目录执行 ruby ./selection_regression.rb，由同目录 select_simulator.rb 提供真实选择逻辑。
+# 边界：运行时和设备清单是内存夹具，不启动模拟器、不构建或安装 App；仅供选择器回归。
+
 def runtime(version, **attributes)
   { 'identifier' => "com.apple.CoreSimulator.SimRuntime.iOS-#{version.tr('.', '-')}",
     'version' => version, 'isAvailable' => true, 'supportedArchitectures' => ['arm64'] }.merge(attributes.transform_keys(&:to_s))

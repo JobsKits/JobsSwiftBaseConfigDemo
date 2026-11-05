@@ -41,11 +41,11 @@ public final class JobsAppDoorVC: JobsAppDoorBaseVC {
                                                     showsModeSwitcher: false)
 
     private lazy var railButton: UIButton = {
-        UIButton.sys()
+        let button = UIButton.sys()
             .jobsAppDoorAppearance(title: verticalTitle(for: .register),
                                    titleColor: JobsAppDoorPalette.gold,
-                                   font: JobsFont.systemFont(ofSize: 13,
-                                                             weight: .medium),
+                                   font: JobsFont.systemFont(ofSize: 18,
+                                                             weight: .semibold),
                                    backgroundColor: JobsAppDoorPalette.cardBackground,
                                    cornerRadius: 0)
             .byImage(JobsAppDoorResource.image(named: "AppDoorBackLogin")
@@ -62,6 +62,12 @@ public final class JobsAppDoorVC: JobsAppDoorBaseVC {
                 switchMode(to: currentMode == .login ? .register : .login)
             }
             .byAddTo(panelView)
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            button.byAccessibilityIdentifier("jobs.auth.\(currentMode).switch")
+        }
+        #endif
+        return button
     }()
 
     public override func submissionStateDidChange(_ state: JobsAppDoorSubmissionState) {
@@ -249,10 +255,11 @@ private extension JobsAppDoorVC {
     func refreshRailAppearance() {
         let loginMode = currentMode == .login
         railButton
+            .byAccessibilityIdentifier("jobs.auth.\(currentMode).switch")
             .jobsAppDoorAppearance(title: verticalTitle(for: loginMode ? .register : .login),
                                    titleColor: loginMode ? JobsAppDoorPalette.gold : JobsAppDoorPalette.cardBackground,
-                                   font: JobsFont.systemFont(ofSize: loginMode ? 13 : 12,
-                                                             weight: .medium),
+                                   font: JobsFont.systemFont(ofSize: 18,
+                                                             weight: .semibold),
                                    backgroundColor: loginMode ? JobsAppDoorPalette.cardBackground : JobsAppDoorPalette.fieldStroke,
                                    cornerRadius: 0)
             .byImagePlacement(.top,

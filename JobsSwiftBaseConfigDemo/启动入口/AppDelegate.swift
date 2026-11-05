@@ -335,10 +335,12 @@ extension AppDelegate {
     func 日志框架接入() {
         dynamicLogLevel = .verbose   // Debug 包：全开
         // dynamicLogLevel = .warning // Release 包：只保留 warn/error
-        /// iOS 10+ 推荐
-        DDLog.add(DDOSLogger.sharedInstance)
-        /// Xcode Console
-        DDLog.add(DDTTYLogger.sharedInstance!)
+        // 新系统只注册统一日志，避免重复输出及 DDTTYLogger 的迁移告警。
+        if #available(iOS 10.0, *) {
+            DDLog.add(DDOSLogger.sharedInstance)
+        } else if let logger = DDTTYLogger.sharedInstance {
+            DDLog.add(logger)
+        }
     /// 写入文件日志（线上排查神器）
     //        let fileLogger = DDFileLogger()                 // 文件 logger
     //        fileLogger.rollingFrequency = 60 * 60 * 24      // 每 24h 滚动一个新文件

@@ -11,21 +11,19 @@ import AppKit
 import UIKit
 #endif
 
-import JobsSwiftDSL
+import JobsSwiftBaseDefines
 
 extension UIWindow {
 
-    /// 返回一个“保证非空”的 UIWindow
-    /// - 优先 jobsKeyWindow（真实窗口）
-    /// - 取不到时兜底创建一个离屏窗口，避免 unwrap 报错
-    // TODO: Static compatibility access cannot select a scene; prefer the consumer's own window.
-    public static var wd: UIWindow {
+    /// 优先查询真实窗口；现代系统尚无 Scene 时明确返回空。
+    public static var wd: UIWindow? {
         if let real = UIApplication.jobsKeyWindow() {
             return real
+        }
+        if #available(iOS 26.0, tvOS 26.0, *) {
+            return nil
         } else {
-            // ✅ 构造一个兜底 window（不会显示，只用于防止 nil）
-            return UIWindow(frame: UIScreen.main.bounds)
-                .byWindowLevel(.alert + 1)
+            return legacyWindow().byWindowLevel(.alert + 1)
         }
     }
     /// 实例访问也保持一致
@@ -36,55 +34,49 @@ extension UIWindow {
     @discardableResult
     public static func jobsMake(root: UIViewController? = nil,
                                 level: UIWindow.Level = .normal,
-                                makeKeyVisible: Bool = true) -> UIWindow {
+                                makeKeyVisible: Bool = true) -> UIWindow? {
         // iOS 13+ 走 scene 路径；iOS 12- 走 frame 路径
         if #available(iOS 13.0, *) {
-            return jobsMake(scene: nil,
-                            root: root,
-                            level: level,
-                            makeKeyVisible: makeKeyVisible)
+            let scenes = UIApplication.shared.connectedScenes.compactMap {
+                $0 as? UIWindowScene
+            }
+            let scene = scenes.first {
+                $0.activationState == .foregroundActive
+            } ?? scenes.first
+            if let scene {
+                return jobsMake(scene: scene,
+                                 root: root,
+                                 level: level,
+                                 makeKeyVisible: makeKeyVisible)
+            }
+        }
+        if #available(iOS 26.0, tvOS 26.0, *) {
+            return nil
         } else {
-            return UIWindow(frame: UIScreen.main.bounds)
+            return legacyWindow()
                 .byRootViewController(root)
                 .byWindowLevel(level)
                 ._makeIfNeeded(makeKeyVisible)
         }
     }
-    /// 新建并附着到“最合适”的前台 scene（iOS 26+ 不要再用 init(frame:)）
+
+    /// 显式 Scene 入口保证成功构造，不跨窗口猜测业务归属。
     @available(iOS 13.0, tvOS 13.0, *)
     @discardableResult
-    public static func jobsMake(scene: UIWindowScene? = nil,
+    public static func jobsMake(scene: UIWindowScene,
                                 root: UIViewController? = nil,
                                 level: UIWindow.Level = .normal,
                                 makeKeyVisible: Bool = true) -> UIWindow {
-        let targetScene: UIWindowScene? = {
-            if let scene {
-                return scene
-            }
-            return UIApplication.shared.connectedScenes
-                .compactMap {
-                    $0 as? UIWindowScene
-                }
-                .first {
-                    $0.activationState == .foregroundActive
-                }
-                ?? UIApplication.shared.connectedScenes.compactMap {
-                $0 as? UIWindowScene
-            }
-                    .first
-        }()
-        let win: UIWindow
-        if let s = targetScene {
-            win = UIWindow(windowScene: s)
-        } else {
-            // 极端兜底：没拿到 scene 时也能创建（理论上很少见）
-            // TODO: A scene-less legacy caller must pass its own UIWindowScene to jobsMake(scene:).
-            win = UIWindow(frame: UIScreen.main.bounds)
-        }
-        return win
+        return UIWindow(windowScene: scene)
             .byRootViewController(root)
             .byWindowLevel(level)
             ._makeIfNeeded(makeKeyVisible)
+    }
+
+    @available(iOS, introduced: 2.0, deprecated: 26.0)
+    @available(tvOS, introduced: 9.0, deprecated: 26.0)
+    private static func legacyWindow() -> UIWindow {
+        return UIWindow(frame: JobsDisplay.bounds())
     }
     // 顶层 VC（跨 UINavigationController / UITabBarController / presented 链）
     public static func jobsTopMost(from base: UIViewController?) -> UIViewController? {

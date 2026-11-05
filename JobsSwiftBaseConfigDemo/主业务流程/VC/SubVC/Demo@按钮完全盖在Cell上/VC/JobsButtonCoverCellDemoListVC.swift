@@ -64,6 +64,7 @@ final class JobsButtonCoverCellDemoListVC: BaseVC {
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero,
                     style: .insetGrouped)
+            .byAccessibilityIdentifier("jobs.list.JobsButtonCoverCellDemoListVC")
             .byDataSource(self)
             .byDelegate(self)
             .bySeparatorStyle(.singleLine)
@@ -102,6 +103,7 @@ extension JobsButtonCoverCellDemoListVC: UITableViewDataSource,
             .byDequeueReusableCell(withType: UITableViewCell.self,
                                    for: indexPath)
             .byAccessoryType(.disclosureIndicator)
+            .byAccessibilityIdentifier("jobs.route.JobsButtonCoverCellDemoListVC.\(row)")
             .byListConfig {
                 $0
                     .byText(row.title)

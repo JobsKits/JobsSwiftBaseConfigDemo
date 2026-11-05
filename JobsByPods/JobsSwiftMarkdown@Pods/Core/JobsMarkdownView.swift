@@ -209,7 +209,11 @@ public final class JobsMarkdownView: UIView {
                      completionHandler: completion ?? { _ in })
     }
 
+    @available(iOS, introduced: 8.0, deprecated: 17.0)
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        if #available(iOS 17.0, *) {
+            return
+        }
         super.traitCollectionDidChange(previousTraitCollection)
         guard configuration.appearance == .automatic,
               traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else {
@@ -223,6 +227,14 @@ public final class JobsMarkdownView: UIView {
 private extension JobsMarkdownView {
 
     func jobsCommonInit() {
+        if #available(iOS 17.0, *) {
+            _ = registerForTraitChanges(UITraitCollection.systemTraitsAffectingColorAppearance) { (view: JobsMarkdownView, _) in
+                guard view.configuration.appearance == .automatic else {
+                    return
+                }
+                view.webView.jobsEval("window.JobsMarkdownRuntime.refreshAppearance('automatic');")
+            }
+        }
         byBackgroundColor(JobsCor.systemBackground)
         webView.byVisible(YES)
         loadingView.byVisible(YES)

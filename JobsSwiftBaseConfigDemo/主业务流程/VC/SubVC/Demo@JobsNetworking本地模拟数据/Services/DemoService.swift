@@ -36,8 +36,8 @@ final class DemoService {
 
     func requestData(method: HTTPMethod,
                      path: String,
-                     query: [String: AnySendable]? = nil,
-                     body: [String: AnySendable]? = nil,
+                     query: [String: JobsValue]? = nil,
+                     body: [String: JobsValue]? = nil,
                      encoding: JobsParameterEncoding) async throws -> Data {
         try await agent.send(JobsRequest(path: path,
                                          method: method,

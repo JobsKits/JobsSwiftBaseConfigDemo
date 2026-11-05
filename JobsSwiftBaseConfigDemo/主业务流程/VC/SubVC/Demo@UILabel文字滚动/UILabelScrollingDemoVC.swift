@@ -255,7 +255,7 @@ final class UILabelScrollingDemoVC: BaseVC {
         shortLabel.byVisible(YES)
         controlsStackView.byVisible(YES)
         if #available(iOS 17.0, tvOS 17.0, *) {
-            _ = registerForTraitChanges([UITraitUserInterfaceStyle.self]) {
+            _ = registerForTraitChanges(UITraitCollection.systemTraitsAffectingColorAppearance) {
             (controller: UILabelScrollingDemoVC, _) in
                 controller.refreshTheme()
             }
@@ -276,13 +276,15 @@ final class UILabelScrollingDemoVC: BaseVC {
         pingPongLabel.byPauseTextScroll()
     }
 
+    @available(iOS, introduced: 8.0, deprecated: 17.0)
+    @available(tvOS, introduced: 9.0, deprecated: 17.0)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        if #available(iOS 17.0, tvOS 17.0, *) {
+            return
+        }
         super.traitCollectionDidChange(previousTraitCollection)
         guard #available(iOS 13.0, tvOS 13.0, *),
               previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) == true else {
-            return
-        }
-        if #available(iOS 17.0, tvOS 17.0, *) {
             return
         }
         refreshTheme()

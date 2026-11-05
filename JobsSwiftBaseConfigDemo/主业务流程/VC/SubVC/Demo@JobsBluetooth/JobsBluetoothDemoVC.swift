@@ -33,6 +33,7 @@ final class JobsBluetoothDemoVC: BaseVC {
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero,
                     style: .insetGrouped)
+            .byAccessibilityIdentifier("jobs.list.JobsBluetoothDemoVC")
             .byDataSource(self)
             .byDelegate(self)
             .byRowHeight(76)
@@ -72,6 +73,7 @@ extension JobsBluetoothDemoVC: UITableViewDataSource,
         return tableView
             .byDequeueReusableCell(withType: UITableViewCell.self,
                                    for: indexPath)
+            .byAccessibilityIdentifier("jobs.route.JobsBluetoothDemoVC.feature.\(indexPath.row)")
             .byContentConfiguration { content in
                 content = UIListContentConfiguration
                     .jobsSubtitleCell(text: title,

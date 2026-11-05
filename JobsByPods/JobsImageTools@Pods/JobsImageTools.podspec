@@ -26,7 +26,10 @@ Pod::Spec.new do |s|
   }
 
   s.source_files = '**/*.{swift,h,m,mm}'
-  s.ios.frameworks = 'UIKit'
+  s.ios.frameworks = [
+    'UIKit',
+    'AVFoundation'
+  ]
   
   s.dependency 'Kingfisher'
   s.dependency 'SDWebImage'

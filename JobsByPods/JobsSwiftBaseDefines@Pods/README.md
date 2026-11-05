@@ -6,6 +6,8 @@ JobsFont 提供系统字体静态工厂的 Jobs 等价入口；上层代码使�
 
 JobsCor 提供 UIKit 基础色、系统色和动态语义色的 Jobs 等价入口；上层代码使用 JobsCor.clear、JobsCor.white、JobsCor.systemBlue 等属性，底层统一承接 UIColor。
 
+`JobsDisplay.bounds(in:)` 优先从调用视图的窗口读取屏幕尺寸；无调用视图的兼容入口择取前台 Scene。iOS 26+ 没有 Scene 时返回零尺寸，等待窗口连接后重新布局；旧系统保留主屏幕回退。`JobsGraphics.image(size:opaque:scale:drawing:)` 在 iOS 17+ 使用标准色域的 `UIGraphicsImageRenderer`，旧系统保留 CGContext 绘制，统一校验尺寸并保留调用方指定的透明度和像素比例。
+
 `JobsThemeCenter` 提供主题数据包解析、状态持久化、弱引用资源绑定和 `JobsThemeDidChange` 通知。App 在主工程资源目录维护 `JobsThemeResources.json`，框架只消费 `background.*`、`text.*` 等 Key，不包含具体业务色值。切换主题只重放已登记的背景色、文字色以及显式声明的主题图片，不遍历 Scene、Window 或控制器树，也不写入 `overrideUserInterfaceStyle`。
 
 <a id="jobs-architecture"></a>

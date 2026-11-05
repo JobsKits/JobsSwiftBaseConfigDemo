@@ -69,6 +69,7 @@ final class JobsBluetoothFeatureDemoVC: BaseVC {
         UILabel
             .jobsMake { _ in }
             .byText("当前演示：\(featureTitle)\n默认启用 Mock Transport，可在模拟器直接验证点击链路和数据回调。")
+            .byAccessibilityIdentifier("jobs.bluetooth.description")
             .byFont(JobsFont.systemFont(ofSize: 15))
             .byNumberOfLines(0)
             .byTextColor(JobsCor.label)

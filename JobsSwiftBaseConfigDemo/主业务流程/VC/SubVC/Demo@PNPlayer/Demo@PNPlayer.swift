@@ -44,6 +44,7 @@ class PNPlayerDemoVC: BaseVC {
         MTKView
             .jobsMake(frame: .zero,
                       device: device)
+            .byAccessibilityIdentifier("jobs.coverage.pn.metal")
             .byClearColor(MTLClearColor(red: 0,
                                         green: 0,
                                         blue: 0,
@@ -67,6 +68,11 @@ class PNPlayerDemoVC: BaseVC {
                 if let view = gr.view as? MTKView {
                     renderer?.handlePan(pan,
                                         in: view)
+#if DEBUG
+                    if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route"), let renderer {
+                        view.byAccessibilityLabel("camera:" + renderer.jobsCoverageCameraSignature)
+                    }
+#endif
                 }
                 showControlsTemporarily()
             }
@@ -99,6 +105,11 @@ class PNPlayerDemoVC: BaseVC {
         super.viewDidLoad()
         metalView.byVisible(YES)
         controlsView.byVisible(YES)
+#if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route"), let renderer {
+            metalView.byAccessibilityLabel("camera:" + renderer.jobsCoverageCameraSignature)
+        }
+#endif
         guard let renderer else {
             showPlaybackFailure(NSError(domain: "PNPlayerDemo",
                                         code: 1,

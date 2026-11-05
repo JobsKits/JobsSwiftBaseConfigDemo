@@ -30,6 +30,7 @@ final class JobsSwiftCommentDemoVC: BaseVC {
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero,
                     style: .insetGrouped)
+            .byAccessibilityIdentifier("jobs.list.JobsSwiftCommentDemoVC")
             .byDelegate(self)
             .byDataSource(self)
             .bySeparatorStyle(.singleLine)
@@ -80,6 +81,7 @@ extension JobsSwiftCommentDemoVC: UITableViewDelegate,
         let mode = modeArr[indexPath.row]
         return cell
             .byText(JobsSwiftCommentConfig.title(by: mode))
+            .byAccessibilityIdentifier("jobs.route.JobsSwiftCommentDemoVC.\(mode)")
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .semibold))
             .byTitleCor(JobsCor.label)

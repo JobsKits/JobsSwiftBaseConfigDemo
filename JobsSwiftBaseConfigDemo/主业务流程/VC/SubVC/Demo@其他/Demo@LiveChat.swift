@@ -25,6 +25,7 @@ final class LiveChatDemoVC: BaseVC,
 
     private lazy var btnDefault: UIButton = { [unowned self] in
         UIButton.sys()
+            .byAccessibilityIdentifier("jobs.liveChat.openDefault")
             .byTitle("默认展示（presentChat）".tr,
                      for: .normal)
             .byTitleColor(JobsCor.white,
@@ -48,6 +49,7 @@ final class LiveChatDemoVC: BaseVC,
 
     private lazy var btnCustom: UIButton = { [unowned self] in
         UIButton.sys()
+            .byAccessibilityIdentifier("jobs.liveChat.openCustom")
             .byTitle("自定义展示（半屏）".tr,
                      for: .normal)
             .byTitleColor(JobsCor.label,
@@ -106,12 +108,15 @@ final class LiveChatDemoVC: BaseVC,
                 sheet.detents = [.medium(), .large()]
             }
         }
+        chatVC.view.byAccessibilityIdentifier("jobs.liveChat.page")
         present(chatVC,
                 animated: true,
                 completion: nil)
     }
     // MARK: - LiveChatDelegate（可选）
     func chatPresented() {
+        let controller = presentedViewController ?? navigationController?.presentedViewController
+        controller?.view.byAccessibilityIdentifier("jobs.liveChat.page")
         print("✅ LiveChat 打开")
     }
 

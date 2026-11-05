@@ -27,6 +27,7 @@ final class CashbackRootVC: BaseVC {
 
     // MARK: - Data
     private let segments = ["活动".tr, "任务".tr, "VIP".tr, "利息宝".tr, "返水".tr]
+    private let segmentRouteIDs = ["activity", "task", "vip", "interest", "rebate"]
     // MARK: - Segment DataSource（懒加载 + 链式）
     private lazy var segmentedDataSource: JXSegmentedTitleDataSource = {
         JXSegmentedTitleDataSource()
@@ -107,6 +108,14 @@ final class CashbackRootVC: BaseVC {
         segmentedHairline.byVisible(YES)
         listContainer.byVisible(YES)
     }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        for index in segmentRouteIDs.indices {
+            segmentedView.collectionView.cellForItem(at: IndexPath(item: index, section: 0))?
+                .byAccessibilityIdentifier("jobs.linkage.segment.\(segmentRouteIDs[index])")
+        }
+    }
 }
 // MARK: - JXSegmentedViewDelegate
 extension CashbackRootVC: JXSegmentedViewDelegate {}
@@ -119,10 +128,11 @@ extension CashbackRootVC: JXSegmentedListContainerViewDataSource {
 
     func listContainerView(_ listContainerView: JXSegmentedListContainerView,
                            initListAt index: Int) -> JXSegmentedListContainerViewListDelegate {
-        if segments[index] == "返水" {
+        if index == 4 {
             return RebatePageVC()
         } else {
-            return PlaceholderListVC(title: segments[index])
+            return PlaceholderListVC(title: segments[index],
+                                     routeID: segmentRouteIDs[index])
         }
     }
 }

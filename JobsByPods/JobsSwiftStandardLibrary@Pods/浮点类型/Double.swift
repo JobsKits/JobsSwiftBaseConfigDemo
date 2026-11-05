@@ -11,6 +11,8 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+
 /// 定义于 Swift 标准库
 
 public extension Double {
@@ -39,12 +41,12 @@ public extension Double {
 
     // TODO: Legacy scalar properties have no scene context; use w(in:) / h(in:) in layout.
     static var screenWidth: CGFloat {
-        return min(UIScreen.main.bounds.width,
-                   UIScreen.main.bounds.height)
+        return min(JobsDisplay.bounds().width,
+                   JobsDisplay.bounds().height)
     }
     static var screenHeight: CGFloat {
-        return max(UIScreen.main.bounds.width,
-                   UIScreen.main.bounds.height)
+        return max(JobsDisplay.bounds().width,
+                   JobsDisplay.bounds().height)
     }
 
     func w(in view: UIView) -> CGFloat {

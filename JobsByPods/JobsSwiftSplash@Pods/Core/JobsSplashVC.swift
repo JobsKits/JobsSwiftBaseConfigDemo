@@ -343,27 +343,36 @@ public final class JobsSplashVC: BaseVC {
                                  fallbackName: String?,
                                  fallbackFileExtension: String?,
                                  fallbackBundle: Bundle) {
-        if let cachedURL = JobsSplashMediaCache.shared.cachedVideoFileURL(for: url) {
-            remoteVideoDownloadNoticeLabel.byVisible(false)
-            playVideo(cachedURL)
-            return
-        }
         if let fallbackName,
            let fallbackURL = resourceURL(name: fallbackName,
                                          defaultExtension: fallbackFileExtension,
                                          bundle: fallbackBundle) {
             playVideo(fallbackURL)
         }
-        remoteVideoDownloadNoticeLabel.byVisible(true)
-        JobsSplashMediaCache.shared.preloadVideo(url) { [weak self] _ in
-            guard let self, !self.hasFinished else {
-                return
+        JobsSplashMediaCache.shared.cachedVideoFileURL(for: url) { [weak self] cachedURL in
+            DispatchQueue.main.async {
+                guard let self, !self.hasFinished else {
+                    return
+                }
+                if let cachedURL {
+                    self.remoteVideoDownloadNoticeLabel.byVisible(false)
+                    self.playVideo(cachedURL)
+                    return
+                }
+                self.remoteVideoDownloadNoticeLabel.byVisible(true)
+                JobsSplashMediaCache.shared.preloadVideo(url) { [weak self] _ in
+                    guard let self, !self.hasFinished else {
+                        return
+                    }
+                    self.remoteVideoDownloadNoticeLabel.byVisible(false)
+                }
             }
-            self.remoteVideoDownloadNoticeLabel.byVisible(false)
         }
     }
 
     private func playVideo(_ url: URL) {
+        player?.pause()
+        playerLayer?.removeFromSuperlayer()
         let player = AVPlayer(url: url)
         let playerLayer = AVPlayerLayer(player: player)
         playerLayer.videoGravity = configuration.videoGravity

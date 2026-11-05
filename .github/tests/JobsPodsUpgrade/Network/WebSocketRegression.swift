@@ -7,6 +7,10 @@
 
 import Foundation
 
+/// 通过真实 URLSessionWebSocketTask 验证本机回显、pong、心跳超时，以及连接中和重连时的对象释放。
+/// 由本目录 run_regressions.rb 编译为独立命令行程序，并传入本机 WebSocket 服务地址后执行。
+/// 不覆盖公网 TLS 或后台场景；本文件不加入主 App target。
+
 @main
 struct WebSocketRegression {
     static func main() async throws {

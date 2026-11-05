@@ -8,6 +8,10 @@
 import Foundation
 import JobsSwiftBlock
 
+/// 验证 JobsSwiftBlock 工厂保留具体类型、配置只执行一次，以及对象与纯 Swift 宿主的回调注册、替换和移除。
+/// 由 CI 工作流或 JobsPodsUpgrade/Core/run_regressions.rb 编译为独立命令行程序后执行。
+/// 本文件包含独立 @main 测试入口，不加入主 App target。
+
 private class JobsFactoryProbe: NSObject, JobsCallbackable {
     var value = 0
 }

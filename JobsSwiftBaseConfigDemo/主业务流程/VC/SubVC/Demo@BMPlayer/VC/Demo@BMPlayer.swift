@@ -48,6 +48,7 @@ final class BMPlayerDemoVC: BaseVC {
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero,
                     style: .insetGrouped)
+            .byAccessibilityIdentifier("jobs.list.BMPlayerDemoVC")
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(UITableViewCell.self)
@@ -87,6 +88,7 @@ extension BMPlayerDemoVC : UITableViewDataSource,
             .byDequeueReusableCell(withType: UITableViewCell.self,
                                    for: indexPath)
             .byText(Row(rawValue: indexPath.row)?.title)
+            .byAccessibilityIdentifier("jobs.route.BMPlayerDemoVC.\(Row.allCases[indexPath.row])")
             .byAccessoryType(.disclosureIndicator)
             .onResult { _ in
             }

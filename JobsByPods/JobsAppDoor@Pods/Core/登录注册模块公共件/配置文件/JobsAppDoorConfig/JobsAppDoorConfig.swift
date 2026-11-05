@@ -8,6 +8,7 @@
 import CoreGraphics
 import Foundation
 import UIKit
+import JobsSwiftBaseDefines
 
 public enum JobsAppDoorBackgroundType: Equatable {
 
@@ -66,23 +67,23 @@ public struct JobsAppDoorConfig {
     @available(*, deprecated, message: "Use contentLayout(in:) with the caller view bounds.")
     public var registerContentY: CGFloat {
         return max(80,
-                   contentLayout(in: UIScreen.main.bounds).registerY)
+                   contentLayout(in: JobsDisplay.bounds()).registerY)
     }
     @available(*, deprecated, message: "Use contentLayout(in:) with the caller view bounds.")
     public var loginContentHeight: CGFloat {
-        return contentLayout(in: UIScreen.main.bounds).loginHeight
+        return contentLayout(in: JobsDisplay.bounds()).loginHeight
     }
     @available(*, deprecated, message: "Use contentLayout(in:) with the caller view bounds.")
     public var loginContentY: CGFloat {
-        return contentLayout(in: UIScreen.main.bounds).loginY
+        return contentLayout(in: JobsDisplay.bounds()).loginY
     }
     @available(*, deprecated, message: "Use contentLayout(in:) with the caller view bounds.")
     public var forgotPasswordContentHeight: CGFloat {
-        return contentLayout(in: UIScreen.main.bounds).forgotHeight
+        return contentLayout(in: JobsDisplay.bounds()).forgotHeight
     }
     @available(*, deprecated, message: "Use contentLayout(in:) with the caller view bounds.")
     public var forgotPasswordContentY: CGFloat {
-        return contentLayout(in: UIScreen.main.bounds).forgotY
+        return contentLayout(in: JobsDisplay.bounds()).forgotY
     }
 
     public func contentLayout(in bounds: CGRect) -> (registerY: CGFloat,

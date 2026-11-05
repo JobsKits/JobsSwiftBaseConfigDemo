@@ -76,7 +76,7 @@
 
 ### <span id="jobs-toc-heading-5" data-jobs-toc="v2">3、灵活调度策略 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-**`JobsSwiftTaskCenter`** 支持多种任务调度策略：
+> **`JobsSwiftTaskCenter`** 支持多种任务调度策略：
 
 | 类型 | 示例 |
 |---|---|

@@ -13,6 +13,7 @@ import UIKit
 
 import Foundation
 import ImageIO
+import AVFoundation
 
 #if canImport(Kingfisher)
 import Kingfisher
@@ -64,7 +65,7 @@ public struct JobsImageLoadOptions {
 
     public init(preferredLoader: JobsImageLoaderPreference = .automatic,
                 targetSize: CGSize? = nil,
-                scale: CGFloat = JobsImageLoader.defaultScale,
+                scale: CGFloat = JobsImageLoader.defaultScale(in: .current),
                 forceRefresh: Bool = false) {
         self.preferredLoader = preferredLoader
         self.targetSize = targetSize
@@ -106,6 +107,61 @@ public final class JobsImageLoadToken {
 public final class JobsImageLoader {
 
     public static let shared = JobsImageLoader()
+
+    /// 缩略图统一异步交付到主线程；取消令牌同时取消底层图像生成。
+    @discardableResult
+    public static func videoThumbnail(at url: URL,
+                                       time: CMTime,
+                                       completion: @MainActor @escaping (UIImage?) -> Void) -> JobsImageLoadToken {
+        let generator = AVAssetImageGenerator(asset: AVURLAsset(url: url))
+        generator.appliesPreferredTrackTransform = true
+        let deliver: (CGImage?) -> Void = { image in
+            let thumbnail = image.map {
+                UIImage(cgImage: $0)
+            }
+            DispatchQueue.main.async {
+                completion(thumbnail)
+            }
+        }
+        if #available(iOS 16.0, tvOS 16.0, macOS 13.0, *) {
+            let task = Task {
+                guard !Task.isCancelled else {
+                    deliver(nil)
+                    return
+                }
+                let result = try? await generator.image(at: time)
+                guard !Task.isCancelled else {
+                    deliver(nil)
+                    return
+                }
+                deliver(result?.image)
+            }
+            return JobsImageLoadToken {
+                task.cancel()
+                generator.cancelAllCGImageGeneration()
+            }
+        } else {
+            let workItem = DispatchWorkItem {
+                deliver(legacyVideoThumbnail(generator: generator,
+                                              time: time))
+            }
+            DispatchQueue.global(qos: .userInitiated).async(execute: workItem)
+            return JobsImageLoadToken {
+                workItem.cancel()
+                generator.cancelAllCGImageGeneration()
+            }
+        }
+    }
+
+    @available(iOS, introduced: 4.0, deprecated: 18.0)
+    @available(tvOS, introduced: 9.0, deprecated: 18.0)
+    @available(macOS, introduced: 10.7, deprecated: 15.0)
+    private static func legacyVideoThumbnail(generator: AVAssetImageGenerator,
+                                               time: CMTime) -> CGImage? {
+        return try? generator.copyCGImage(at: time,
+                                          actualTime: nil)
+    }
+
     @available(*, deprecated, message: "Use defaultScale(in:) with the rendering view traitCollection or pass scale in load options.")
     public static var defaultScale: CGFloat {
         #if os(iOS) || os(tvOS)

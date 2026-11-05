@@ -125,7 +125,11 @@ extension JobsSwiftCommentView: UITableViewDataSource,
                         depth: row.depth,
                         parentComment: row.parentComment)
         }
-        return cell
+        return cell.byAccessibilityIdentifier(
+            row.isMoreRow
+                ? "jobs.comment.more.\(row.rootID)"
+                : "jobs.comment.item.\(row.comment.messageID)"
+        )
     }
 
     public func tableView(_ tableView: UITableView,

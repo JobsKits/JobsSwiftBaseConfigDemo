@@ -8,12 +8,54 @@
 import UIKit
 import GKNavigationBarSwift
 import JobsInheritance
+import JobsSwiftDSL
 import JobsByUIKit
 import JobsViewPush
 import JobsSwiftBaseDefines
 import SnapKit
 
 final class JobsSideDrawerDemoVC: BaseVC {
+
+#if DEBUG
+    private var coverageConfiguration: JobsSideDrawerConfiguration?
+    private lazy var coverageMinimumButton: UIButton = {
+        UIButton.sys()
+            .byAccessibilityIdentifier("jobs.coverage.drawer.boundary.min")
+            .byTitle("组件比例 20%")
+            .onTap { [weak self] _ in
+                guard let self else {
+                    return
+                }
+                ratioSlider.byValue(ratioSlider.minimumValue)
+                updateRatio()
+            }
+    }()
+    private lazy var coverageMaximumButton: UIButton = {
+        UIButton.sys()
+            .byAccessibilityIdentifier("jobs.coverage.drawer.boundary.max")
+            .byTitle("组件比例 90%")
+            .onTap { [weak self] _ in
+                guard let self else {
+                    return
+                }
+                ratioSlider.byValue(ratioSlider.maximumValue)
+                updateRatio()
+            }
+    }()
+    private lazy var coverageBoundaryBar: UIStackView = {
+        UIStackView.jobsMake { _ in }
+            .byAxis(.horizontal)
+            .byDistribution(.fillEqually)
+            .bySpacing(12)
+            .byAddArrangedSubview(coverageMinimumButton)
+            .byAddArrangedSubview(coverageMaximumButton)
+            .byAddTo(view) { [unowned self] make in
+                make.left.right.equalTo(self.view.safeAreaLayoutGuide).inset(16)
+                make.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(8)
+                make.height.equalTo(34)
+            }
+    }()
+#endif
 
     private lazy var directionControl: UISegmentedControl = {
         UISegmentedControl(items: ["上".tr, "下".tr, "左".tr, "右".tr])
@@ -33,6 +75,7 @@ final class JobsSideDrawerDemoVC: BaseVC {
     private lazy var ratioSlider: UISlider = {
         UISlider
             .jobsMake { _ in }
+            .byAccessibilityIdentifier("jobs.coverage.drawer.ratio")
             .byMinimumValue(0.2)
             .byMaximumValue(0.9)
             .byValue(0.5)
@@ -43,10 +86,12 @@ final class JobsSideDrawerDemoVC: BaseVC {
 
     private lazy var ratioLabel: UILabel = {
         UILabel.jobsMake { _ in }
+            .byAccessibilityIdentifier("jobs.coverage.drawer.status")
     }()
 
     private lazy var previewButton: UIButton = {
         UIButton.sys()
+            .byAccessibilityIdentifier("jobs.coverage.drawer.preview")
             .byTitle("立即预览".tr)
             .onTap { [weak self] _ in
                 self?.preview()
@@ -88,6 +133,11 @@ final class JobsSideDrawerDemoVC: BaseVC {
             }
         }
         updateRatio()
+#if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            coverageBoundaryBar.byVisible(YES)
+        }
+#endif
     }
 
     @objc private func updateRatio() {
@@ -103,6 +153,11 @@ final class JobsSideDrawerDemoVC: BaseVC {
                                                         onDidClose: { [weak self] in
             self?.dismissPreview()
         })
+#if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            coverageConfiguration = configuration
+        }
+#endif
         pageViews.removeAll()
         pageLabels.removeAll()
         drawerPage = makePage(text: "侧滑菜单\n点击遮罩原路返回",
@@ -112,6 +167,8 @@ final class JobsSideDrawerDemoVC: BaseVC {
         guard let drawerPage, let mainPage else {
             return
         }
+        drawerPage.byAccessibilityIdentifier("jobs.coverage.drawer.menu")
+        mainPage.byAccessibilityIdentifier("jobs.coverage.drawer.main")
         if carrierControl.selectedSegmentIndex == 0 {
             drawerPageController = UIViewController.jobsMake { _ in }
             drawerPageController?.view = drawerPage
@@ -137,6 +194,9 @@ final class JobsSideDrawerDemoVC: BaseVC {
         present(sideDrawerController,
                 animated: false) {
             sideDrawerController.openDrawer()
+#if DEBUG
+            self.recordCoverageDrawerOpened()
+#endif
         }
     }
 
@@ -147,6 +207,13 @@ final class JobsSideDrawerDemoVC: BaseVC {
     }
 
     private func resetPreview() {
+#if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route"),
+           let controller = sideDrawerController, !controller.isOpen,
+           let state = coverageDrawerState(controller) {
+            ratioLabel.byAccessibilityLabel(state)
+        }
+#endif
         sideDrawerController = nil
         drawerPageController = nil
         mainPageController = nil
@@ -155,6 +222,34 @@ final class JobsSideDrawerDemoVC: BaseVC {
         pageViews.removeAll()
         pageLabels.removeAll()
     }
+
+#if DEBUG
+    private func coverageDrawerState(_ controller: JobsSideDrawerVC) -> String? {
+        guard let configuration = coverageConfiguration else {
+            return nil
+        }
+        let carrier = drawerPageController == nil ? "UIView" : "UIViewController"
+        return "drawer:" + (controller.isOpen ? "open:" : "closed:") +
+            String(describing: configuration.direction) + ":" +
+            String(describing: configuration.contentMode) + ":" +
+            String(format: "%.2f", configuration.presentedRatio) + ":" + carrier
+    }
+
+    private func recordCoverageDrawerOpened() {
+        guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route"),
+              let controller = sideDrawerController, controller.view.window != nil,
+              controller.isOpen, let state = coverageDrawerState(controller) else {
+            return
+        }
+        controller.view
+            .byAccessibilityIdentifier("jobs.coverage.drawer.presented")
+            .byAccessibilityLabel(state)
+        let controls = controller.view.subviews.compactMap { $0 as? UIControl }
+        if controls.count == 1 {
+            controls[0].byAccessibilityIdentifier("jobs.coverage.drawer.dim")
+        }
+    }
+#endif
 
     private func makePage(text: String,
                           color: UIColor) -> UIView {

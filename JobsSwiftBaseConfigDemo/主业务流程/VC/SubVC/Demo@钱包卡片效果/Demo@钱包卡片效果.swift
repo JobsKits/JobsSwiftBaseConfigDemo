@@ -60,6 +60,7 @@ final class JobsWalletDemoVC: BaseVC {
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero,
                     style: .insetGrouped)
+            .byAccessibilityIdentifier("jobs.list.JobsWalletDemoVC")
             .byDataSource(self)
             .byDelegate(self)
             .bySeparatorStyle(.singleLine)
@@ -100,6 +101,7 @@ extension JobsWalletDemoVC: UITableViewDataSource,
             .byDequeueReusableCell(withType: UITableViewCell.self,
                                    for: indexPath)
             .byAccessoryType(.disclosureIndicator)
+            .byAccessibilityIdentifier("jobs.route.JobsWalletDemoVC.\(row)")
             .byListConfig {
                 $0
                     .byText(row.title)

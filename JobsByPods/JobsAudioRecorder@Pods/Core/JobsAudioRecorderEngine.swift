@@ -63,14 +63,29 @@ public final class JobsAudioRecorderEngine: NSObject {
 
     public override init() {
         super.init()
-        for name in [AVAudioSession.interruptionNotification, AVAudioSession.mediaServicesWereResetNotification] {
+        let interruptionNotification: Notification.Name
+        if #available(iOS 27.0, *) {
+            interruptionNotification = AVAudioSession.didBecomeInactiveNotification
+        } else {
+            interruptionNotification = AVAudioSession.interruptionNotification
+        }
+        for name in [interruptionNotification, AVAudioSession.mediaServicesWereResetNotification] {
             observations.append(NotificationCenter.default.addObserver(forName: name,
                                                                        object: nil,
                                                                        queue: .main) { [weak self] note in
                 guard let self, let recorder = self.recorder else {
                     return
                 }
-                if note.name == AVAudioSession.interruptionNotification {
+                if #available(iOS 27.0, *) {
+                    // 主动结束录音也会停用会话，仅系统中断才走异常结束。
+                    if note.name == interruptionNotification {
+                        guard let context = note.userInfo?[AVAudioSession.deactivationContextKey]
+                            as? AVAudioSession.DeactivationContext,
+                              context.interruptionContext != nil else {
+                            return
+                        }
+                    }
+                } else if note.name == interruptionNotification {
                     let raw = (note.userInfo?[AVAudioSessionInterruptionTypeKey] as? NSNumber)?.uintValue
                     guard raw == AVAudioSession.InterruptionType.began.rawValue else {
                         return
@@ -86,10 +101,15 @@ public final class JobsAudioRecorderEngine: NSObject {
     }
 
     public func requestPermission(_ completion: @escaping (Bool) -> Void) {
-        AVAudioSession.sharedInstance().requestRecordPermission { granted in
+        let handler: (Bool) -> Void = { granted in
             DispatchQueue.main.async {
                 completion(granted)
             }
+        }
+        if #available(iOS 17.0, *) {
+            AVAudioApplication.requestRecordPermission(completionHandler: handler)
+        } else {
+            AVAudioSession.sharedInstance().requestRecordPermission(handler)
         }
     }
 

@@ -64,7 +64,12 @@ class SceneDelegate: UIResponder,
         let restorationActivity = JobsSceneCoordinator.demoActivity(from: connectionOptions,
                                                                     session: session)
         let opensSceneDemo = restorationActivity != nil
+        #if DEBUG
+        let learningDemo = RootListVC.debugCoverageLaunchController()
+            ?? JobsMicroAppLabRoute.debugLaunchController()
+        #else
         let learningDemo = JobsMicroAppLabRoute.debugLaunchController()
+        #endif
         let homeViewController: UIViewController
         if let learningDemo {
             homeViewController = learningDemo.jobsNav.jobsNavContainer

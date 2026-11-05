@@ -554,6 +554,11 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        if #available(iOS 17.0, tvOS 17.0, *) {
+            _ = registerForTraitChanges(UITraitCollection.systemTraitsAffectingColorAppearance) { (controller: AnimatedButtonNumberDemoVC, _) in
+                controller.applyThemeChrome()
+            }
+        }
         jobsSetupGKNav(title: "UIButton 数字动效 Demo".tr)
         applyThemeChrome()
         scrollView.byVisible(YES)
@@ -582,7 +587,12 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
         btn_5ImageRotator.stop()
     }
 
+    @available(iOS, introduced: 8.0, deprecated: 17.0)
+    @available(tvOS, introduced: 9.0, deprecated: 17.0)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        if #available(iOS 17.0, tvOS 17.0, *) {
+            return
+        }
         super.traitCollectionDidChange(previousTraitCollection)
         guard previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) == true else {
             return

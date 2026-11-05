@@ -7,6 +7,7 @@
 
 import Foundation
 import CommonCrypto
+import CryptoKit
 
 // MARK: 属性
 public extension String {
@@ -20,6 +21,19 @@ public extension String {
     /// "32313213".md5() ➤ 53ee308c00c3fad3dde79e7bfba55dba
     /// - Returns: 字符串的MD5值
     func md5() -> String {
+        if #available(iOS 13.0, tvOS 13.0, macOS 10.15, *) {
+            return Insecure.MD5.hash(data: Data(utf8)).map {
+                String(format: "%02x", $0)
+            }.joined()
+        } else {
+            return legacyMD5()
+        }
+    }
+
+    @available(iOS, introduced: 2.0, deprecated: 13.0)
+    @available(tvOS, introduced: 9.0, deprecated: 13.0)
+    @available(macOS, introduced: 10.4, deprecated: 10.15)
+    private func legacyMD5() -> String {
         let str = self.cString(using: String.Encoding.utf8)
         let utf8 = self.lengthOfBytes(using: String.Encoding.utf8)
         let strLen = CUnsignedInt(utf8)

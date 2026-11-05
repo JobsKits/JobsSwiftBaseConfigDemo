@@ -50,6 +50,54 @@ import SDWebImage
 
 final class JobsMarqueeDemoVC: BaseVC {
 
+#if DEBUG
+    private var coverageOriginalButtonSets: [[UIButton]] = []
+    private var coverageTemplateButton: UIButton?
+    private lazy var coverageCaseField: UITextField = {
+        UITextField.jobsMake { _ in }
+            .byAccessibilityIdentifier("jobs.coverage.marquee.caseIndex")
+            .byBorderStyle(.roundedRect)
+            .byKeyboardType(.numbersAndPunctuation)
+            .byReturnKeyType(.done)
+            .byText("0")
+            .onJobsEvent(.editingDidEndOnExit) { [weak self] (field: UITextField) in
+                field.resignFirstResponder()
+                self?.applyCoverageMarqueeCase()
+            }
+    }()
+    private lazy var coverageApplyButton: UIButton = {
+        UIButton.sys()
+            .byAccessibilityIdentifier("jobs.coverage.marquee.apply")
+            .byTitle("巡检原按钮 / 显示 clone")
+            .onTap { [weak self] _ in
+                self?.view.endEditing(true)
+                self?.applyCoverageMarqueeCase()
+            }
+    }()
+    private lazy var coverageControls: UIStackView = {
+        UIStackView.jobsMake { _ in }
+            .byAxis(.horizontal)
+            .bySpacing(8)
+            .byAddArrangedSubview(coverageCaseField)
+            .byAddArrangedSubview(coverageApplyButton)
+            .byAddTo(view) { [unowned self] make in
+                make.left.right.equalTo(self.view.safeAreaLayoutGuide).inset(12)
+                make.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(4)
+                make.height.equalTo(40)
+            }
+    }()
+    private lazy var coverageTemplateHost: UIView = {
+        UIView.jobsMake { _ in }
+            .byAccessibilityIdentifier("jobs.coverage.marquee.templateHost")
+            .byBackgroundColor(JobsCor.systemBackground)
+            .byAddTo(view) { [unowned self] make in
+                make.left.right.equalTo(self.view.safeAreaLayoutGuide).inset(12)
+                make.bottom.equalTo(self.coverageControls.snp.top).offset(-4)
+                make.height.equalTo(64)
+            }
+    }()
+#endif
+
     private let horizontalInset: CGFloat = 16
     private let verticalSpacing: CGFloat = 12
     private let marqueeHeight: CGFloat = 50
@@ -126,6 +174,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemYellow.withAlphaComponent(0.2),
@@ -165,6 +217,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemYellow.withAlphaComponent(0.2),
@@ -204,6 +260,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             }
             ])
             .byBackgroundColor(.randomColor)
@@ -265,6 +325,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemGreen.withAlphaComponent(0.2),
@@ -304,6 +368,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemGreen.withAlphaComponent(0.2),
@@ -343,6 +411,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             }
             ])
             .byBackgroundColor(.randomColor)
@@ -396,6 +468,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemOrange.withAlphaComponent(0.2),
@@ -435,6 +511,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemOrange.withAlphaComponent(0.2),
@@ -474,6 +554,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             }
             ])
             .byBackgroundColor(.randomColor)
@@ -527,6 +611,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemPink.withAlphaComponent(0.2),
@@ -566,6 +654,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemPink.withAlphaComponent(0.2),
@@ -605,6 +697,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             }
             ])
             .byBackgroundColor(.randomColor)
@@ -658,6 +754,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.2),
@@ -697,6 +797,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.2),
@@ -736,6 +840,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             }
             ])
             .byBackgroundColor(.randomColor)
@@ -789,6 +897,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemTeal.withAlphaComponent(0.2),
@@ -828,6 +940,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemTeal.withAlphaComponent(0.2),
@@ -867,6 +983,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             }
             ])
             .byBackgroundColor(.randomColor)
@@ -920,6 +1040,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemPurple.withAlphaComponent(0.2),
@@ -959,6 +1083,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemPurple.withAlphaComponent(0.2),
@@ -998,6 +1126,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             }
             ])
             .byBackgroundColor(.randomColor)
@@ -1051,6 +1183,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemIndigo.withAlphaComponent(0.2),
@@ -1090,6 +1226,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemIndigo.withAlphaComponent(0.2),
@@ -1129,6 +1269,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             }
             ])
             .byBackgroundColor(.randomColor)
@@ -1182,6 +1326,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             }
             ])
             .byBackgroundColor(.randomColor)
@@ -1265,6 +1413,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             }
             ])
             .byBackgroundColor(.randomColor)
@@ -1301,6 +1453,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byImage("米老鼠".img,
@@ -1322,6 +1478,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byImage("迪斯尼".img,
@@ -1343,6 +1503,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             }
             ])
             .byBackgroundColor(.randomColor)
@@ -1390,6 +1554,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byBorderColor(JobsCor.systemGray3)
@@ -1412,6 +1580,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byBorderColor(JobsCor.systemGray3)
@@ -1434,6 +1606,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             }
             ])
             .byBackgroundColor(.randomColor)
@@ -1489,6 +1665,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byTitle("我是UIButton主标题@Kingfisher".tr)
@@ -1519,6 +1699,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
                 UIButton.sys()
                     .byTitle("我是UIButton主标题@Kingfisher".tr)
@@ -1549,6 +1733,10 @@ final class JobsMarqueeDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("长按结束")
                 }
+#if DEBUG
+                jobsCoverageMarqueeLongPressState(btn,
+                                                  gr)
+#endif
             },
             ])
             .byBackgroundColor(.randomColor)
@@ -1626,10 +1814,92 @@ final class JobsMarqueeDemoVC: BaseVC {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+#if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            allMarquees.forEach { $0.stop() }
+            if coverageOriginalButtonSets.isEmpty {
+                coverageOriginalButtonSets = allMarquees.map { $0.dataSourceButtons }
+                let inset = scrollView.contentInset
+                scrollView.byContentInset(UIEdgeInsets(top: inset.top,
+                                                        left: inset.left,
+                                                        bottom: inset.bottom + 130,
+                                                        right: inset.right))
+            }
+            coverageControls.byVisible(YES)
+            coverageTemplateHost.byVisible(YES)
+            applyCoverageMarqueeCase()
+            return
+        }
+#endif
         allMarquees.forEach {
             $0.start()
         }
     }
+
+#if DEBUG
+    private func applyCoverageMarqueeCase() {
+        guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route"),
+              view.window != nil,
+              let requested = Int(coverageCaseField.text ?? "") else {
+            return
+        }
+        let cases = coverageOriginalButtonSets.enumerated().flatMap { group, buttons in
+            buttons.indices.map { (group, $0) }
+        }
+        guard cases.indices.contains(requested) else {
+            return
+        }
+        let (group, item) = cases[requested]
+        let sourceButtons = coverageOriginalButtonSets[group]
+        let original = sourceButtons[item]
+        coverageTemplateButton?.removeFromSuperview()
+        coverageTemplateButton = original
+        original
+            .byAccessibilityIdentifier("jobs.coverage.marquee.template")
+            .byAddTo(coverageTemplateHost) { make in
+                make.edges.equalToSuperview()
+            }
+        let marquee = allMarquees[group]
+        let rotated = Array(sourceButtons[item...]) + Array(sourceButtons[..<item])
+        marquee.byDataSourceButtons(rotated)
+        view.layoutIfNeeded()
+        marquee.layoutIfNeeded()
+        allMarquees.forEach { $0.stop() }
+        let frame = marquee.convert(marquee.bounds, to: scrollView)
+        scrollView.scrollRectToVisible(frame, animated: false)
+        view.layoutIfNeeded()
+        // 只给真实可见 clone 挂定位锚点；不为 clone 另装替代业务的回调。
+        func buttons(in view: UIView) -> [UIButton] {
+            view.subviews.flatMap { child in
+                (child as? UIButton).map { [$0] } ?? buttons(in: child)
+            }
+        }
+        let candidates = buttons(in: marquee).filter { button in
+            button.byAccessibilityIdentifier(nil)
+            let rect = button.convert(button.bounds, to: marquee)
+            return button.title(for: .normal) == original.title(for: .normal) &&
+                   rect.intersects(marquee.bounds) && !button.isHidden && button.alpha > 0
+        }
+        let visible = candidates.sorted { lhs, rhs in
+            let a = lhs.convert(lhs.bounds, to: marquee).intersection(marquee.bounds)
+            let b = rhs.convert(rhs.bounds, to: marquee).intersection(marquee.bounds)
+            if a.width * a.height != b.width * b.height {
+                return a.width * a.height > b.width * b.height
+            }
+            return a.minX + a.minY < b.minX + b.minY
+        }
+        if let clone = visible.first {
+            clone.byAccessibilityIdentifier("jobs.coverage.marquee.clone")
+            let recognizerCount = (clone.gestureRecognizers ?? []).filter {
+                $0 is UILongPressGestureRecognizer && $0.isEnabled
+            }.count
+            clone.accessibilityValue = "gr:unobserved;enabledRecognizers:\(recognizerCount)"
+        }
+        original.accessibilityValue = "gr:unobserved"
+        view.bringSubviewToFront(coverageTemplateHost)
+        view.bringSubviewToFront(coverageControls)
+    }
+#endif
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -1638,3 +1908,21 @@ final class JobsMarqueeDemoVC: BaseVC {
         }
     }
 }
+
+#if DEBUG
+@MainActor
+private func jobsCoverageMarqueeLongPressState(_ button: UIButton,
+                                               _ gesture: UILongPressGestureRecognizer) {
+    guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") else {
+        return
+    }
+    if gesture.state == .began, button.alpha < 1 {
+        button.byAccessibilityLabel("longPress:began")
+    } else if gesture.state == .ended {
+        let completed = button.accessibilityLabel == "longPress:began" && button.alpha == 1
+        button.byAccessibilityLabel(completed ? "longPress:completed" : "longPress:invalidLifecycle")
+    } else if gesture.state == .cancelled || gesture.state == .failed {
+        button.byAccessibilityLabel("longPress:cancelled")
+    }
+}
+#endif

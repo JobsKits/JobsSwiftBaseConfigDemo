@@ -61,6 +61,7 @@ final class MosaicDemoListVC: BaseVC {
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero,
                     style: .insetGrouped)
+            .byAccessibilityIdentifier("jobs.list.MosaicDemoListVC")
             .byDataSource(self)
             .byDelegate(self)
             .bySeparatorStyle(.singleLine)
@@ -99,6 +100,7 @@ extension MosaicDemoListVC: UITableViewDataSource,
             .byDequeueReusableCell(withType: UITableViewCell.self,
                                    for: indexPath)
             .byAccessoryType(.disclosureIndicator)
+            .byAccessibilityIdentifier("jobs.route.MosaicDemoListVC.\(row)")
             .byListConfig {
                 $0
                     .byText(row.title)

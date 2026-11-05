@@ -31,7 +31,7 @@ final class MethodTBVCell: UITableViewCell {
     // TODO: The legacy class method has no table view context; use cellSizeByData(_:in:) for sizing.
     @available(*, deprecated, message: "Use cellSizeByData(_:in:) with the table view.")
     static func cellSizeByData(_ data: Any?) -> CGSize {
-        return CGSize(width: UIScreen.main.bounds.width,
+        return CGSize(width: JobsDisplay.bounds().width,
                       height: 88)
     }
 

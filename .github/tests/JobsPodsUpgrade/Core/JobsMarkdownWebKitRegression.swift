@@ -8,6 +8,10 @@
 import AppKit
 import WebKit
 
+/// 在真实 WKWebView 中验证 Markdown 资源、CSP、内容规则与锚点，并比较禁止和允许远程内容的行为。
+/// 由本目录 run_regressions.rb --webkit 在 macOS 桌面运行，并通过本机临时 HTTP 服务核对请求数量。
+/// 这是依赖 AppKit 的独立探针；不覆盖 UIKit JobsMarkdownView，也不加入 iOS App 或测试 target。
+
 @MainActor
 private final class MarkdownProbe: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
     var done = false

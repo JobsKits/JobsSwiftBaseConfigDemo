@@ -42,11 +42,13 @@ final class JobsMarkdownDocumentsDemoVC: BaseVC {
         searchBar.autocapitalizationType = .none
         searchBar.autocorrectionType = .no
         searchBar.byDelegate(self)
+        searchBar.searchTextField.byAccessibilityIdentifier("jobs.markdown.search")
         return searchBar
     }()
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero,
                     style: .insetGrouped)
+            .byAccessibilityIdentifier("jobs.list.JobsMarkdownDocumentsDemoVC")
             .byBackgroundColor(JobsCor.systemGroupedBackground)
             .byDataSource(self)
             .byDelegate(self)
@@ -118,7 +120,9 @@ extension JobsMarkdownDocumentsDemoVC: UITableViewDataSource {
         guard catalogError == nil else {
             return cell.byError(catalogError?.localizedDescription ?? "Markdown 文档清单读取失败".tr)
         }
-        return cell.byDocument(visibleDocuments[indexPath.row])
+        return cell
+            .byDocument(visibleDocuments[indexPath.row])
+            .byAccessibilityIdentifier("jobs.markdown.document.\(visibleDocuments[indexPath.row].id)")
     }
 }
 
@@ -200,6 +204,10 @@ private final class JobsMarkdownDocumentDemoVC: BaseVC {
     private let document: JobsMarkdownDocument
     private let catalog: JobsMarkdownCatalog
     private let initialAnchor: String?
+    #if DEBUG
+    private var coverageDidRender = false
+    private var coverageDocumentMarker: UILabel?
+    #endif
     private lazy var markdownView: JobsMarkdownView = {
         JobsMarkdownView()
             .byConfiguration(JobsMarkdownConfiguration())
@@ -235,11 +243,42 @@ private final class JobsMarkdownDocumentDemoVC: BaseVC {
         markdownView.delegate = self
         markdownView.load(document)
     }
+
+    #if DEBUG
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        publishCoverageDocumentMarker()
+    }
+
+    private func publishCoverageDocumentMarker() {
+        guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route"),
+              coverageDidRender,
+              view.window != nil else {
+            return
+        }
+        if coverageDocumentMarker == nil {
+            coverageDocumentMarker = UILabel.jobsMake { marker in
+                marker
+                    .byFrame(CGRect(x: 8, y: 104, width: 1, height: 1))
+                    .byTextColor(JobsCor.clear)
+                    .byUserInteractionEnabled(false)
+                    .byAddTo(view)
+            }
+        }
+        coverageDocumentMarker?
+            .byText("document:\(document.id)")
+            .byAccessibilityIdentifier("jobs.markdown.reader")
+    }
+    #endif
 }
 
 extension JobsMarkdownDocumentDemoVC: JobsMarkdownViewDelegate {
 
     func markdownViewDidFinishRendering(_ markdownView: JobsMarkdownView) {
+        #if DEBUG
+        coverageDidRender = true
+        publishCoverageDocumentMarker()
+        #endif
         guard let initialAnchor, !initialAnchor.isEmpty else {
             return
         }
@@ -272,6 +311,10 @@ extension JobsMarkdownDocumentDemoVC: JobsMarkdownViewDelegate {
 
     func markdownView(_ markdownView: JobsMarkdownView,
                       didFail error: Error) {
+        #if DEBUG
+        coverageDidRender = false
+        coverageDocumentMarker?.byAccessibilityIdentifier(nil)
+        #endif
         error.localizedDescription.toast
     }
 }

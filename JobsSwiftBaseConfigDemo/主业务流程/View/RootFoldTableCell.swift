@@ -268,13 +268,15 @@ final class RootFoldTableCell: UITableViewCell,
         syncVisibleInnerTextScrollingState()
     }
 
+    @available(iOS, introduced: 8.0, deprecated: 17.0)
+    @available(tvOS, introduced: 9.0, deprecated: 17.0)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        if #available(iOS 17.0, tvOS 17.0, *) {
+            return
+        }
         super.traitCollectionDidChange(previousTraitCollection)
         guard #available(iOS 13.0, tvOS 13.0, *),
               previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) == true else {
-            return
-        }
-        if #available(iOS 17.0, tvOS 17.0, *) {
             return
         }
         refreshTheme()
@@ -315,6 +317,9 @@ extension RootFoldTableCell {
                    pinItem: @escaping (Int) -> Void) -> Self {
         pinnedSectionStyle = false
         self.items = items
+        if let first = items.first {
+            self.byAccessibilityIdentifier("jobs.coverage.root.group." + String(describing: first.vcType))
+        }
         self.onSelectItem = onSelectItem
         self.onPinItem = pinItem
         pinAccessoryIndex = nil
@@ -866,6 +871,7 @@ extension RootFoldTableCell {
         let imageName = pinnedSectionStyle ? "minus.circle.fill" : "pin.fill"
         let image = imageName.sysImg.withRenderingMode(.alwaysTemplate)
         return UIButton.sys()
+            .byAccessibilityIdentifier("jobs.coverage.root.pin." + String(describing: items[index].vcType))
             .byImage(image)
             .byImage(image,
                      for: .highlighted)
@@ -930,6 +936,7 @@ extension RootFoldTableCell: UITableViewDataSource,
                 .byAccessoryType(.none)
         }
         let item = items[indexPath.row]
+        cell.byAccessibilityIdentifier("jobs.coverage.root.demo." + String(describing: item.vcType))
         /// 复用旧 Cell 时先退出动态 UIListContentConfiguration，恢复可直接配置的 UILabel。
         cell
             .byContentConfiguration(nil)

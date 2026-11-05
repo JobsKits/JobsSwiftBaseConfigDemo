@@ -12,6 +12,20 @@ import JobsSwiftDSL
 import SnapKit
 import JobsSwiftGraphicCaptcha
 
+#if DEBUG
+private final class JobsAppDoorCoverageValidationLabel: UILabel {
+
+    var readState: (() -> String)?
+
+    override var accessibilityValue: String? {
+        get {
+            readState?()
+        }
+        set {}
+    }
+}
+#endif
+
 public final class JobsAppDoorFormView: UIView {
 
     public let configuration: JobsAppDoorConfig
@@ -40,6 +54,31 @@ public final class JobsAppDoorFormView: UIView {
     private var inputViews: [JobsAppDoorField: JobsAppDoorInputView] = [:]
     private var remembersPassword = true
     public private(set) var isSubmitting = false
+    #if DEBUG
+    private var coverageLastCaptchaValidationLength = -1
+    private lazy var coverageValidationProbe: JobsAppDoorCoverageValidationLabel = {
+        let label = JobsAppDoorCoverageValidationLabel()
+            .byText("表单校验状态")
+            .byTextColor(JobsCor.clear)
+            .byFrame(CGRect(x: 1, y: 1, width: 1, height: 1))
+            .byUserInteractionEnabled(false)
+            .byAddTo(self)
+        label.readState = { [weak self] in
+            self?.coverageValidationState ?? "formUnavailable"
+        }
+        return label
+    }()
+
+    private var coverageValidationState: String {
+        let nonEmpty = orderedFields.allSatisfy { field in
+            inputViews[field]?.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
+        }
+        let passwordsEqual = mode != .register || inputViews[.password]?.text == inputViews[.confirmPassword]?.text
+        let captchaValid = !orderedFields.contains(.graphicCaptcha) || inputViews[.graphicCaptcha]?.validateGraphicCaptcha() == true
+        let captchaLength = inputViews[.graphicCaptcha]?.text.trimmingCharacters(in: .whitespacesAndNewlines).count ?? 0
+        return "nonEmpty=\(nonEmpty);passwordsEqual=\(passwordsEqual);captchaValid=\(captchaValid);captchaLength=\(captchaLength);lastValidatedCaptchaLength=\(coverageLastCaptchaValidationLength);submitting=\(isSubmitting);enabled=\(submitButton.isEnabled)"
+    }
+    #endif
 
     private lazy var scrollView: UIScrollView = {
         UIScrollView
@@ -96,7 +135,9 @@ public final class JobsAppDoorFormView: UIView {
                     return
                 }
                 remembersPassword.toggle()
-                sender.byImage(rememberImage(selected: remembersPassword),
+                sender
+                    .byAccessibilityIdentifier("jobs.auth.remember.\(remembersPassword)")
+                    .byImage(rememberImage(selected: remembersPassword),
                                for: .normal)
             }
     }()
@@ -134,7 +175,7 @@ public final class JobsAppDoorFormView: UIView {
         UIButton.sys()
             .jobsAppDoorAppearance(title: submitTitle(),
                                    titleColor: submitTitleColor(),
-                                   font: JobsFont.systemFont(ofSize: 15,
+                                   font: JobsFont.systemFont(ofSize: 18,
                                                              weight: .semibold),
                                    backgroundColor: submitBackgroundColor(enabled: false),
                                    cornerRadius: 25)
@@ -162,8 +203,8 @@ public final class JobsAppDoorFormView: UIView {
         UIButton.sys()
             .jobsAppDoorAppearance(title: verticalModeTitle(),
                                    titleColor: railTitleColor(),
-                                   font: JobsFont.systemFont(ofSize: 13,
-                                                             weight: .medium),
+                                   font: JobsFont.systemFont(ofSize: 18,
+                                                             weight: .semibold),
                                    backgroundColor: railBackgroundColor(),
                                    cornerRadius: 0)
             .byImage(JobsAppDoorResource.image(named: "AppDoorBackLogin")
@@ -253,11 +294,12 @@ public final class JobsAppDoorFormView: UIView {
         self.mode = mode
         titleLabel
             .byText(title())
+            .byAccessibilityIdentifier("jobs.auth.mode.\(mode)")
             .byFont(titleFont())
         fieldsStack.bySpacing(mode == .login ? 20 : 12)
         submitButton.jobsAppDoorAppearance(title: submitTitle(),
                                            titleColor: submitTitleColor(),
-                                           font: JobsFont.systemFont(ofSize: 15,
+                                           font: JobsFont.systemFont(ofSize: 18,
                                                                      weight: .semibold),
                                            backgroundColor: submitBackgroundColor(enabled: false),
                                            cornerRadius: 25)
@@ -268,8 +310,23 @@ public final class JobsAppDoorFormView: UIView {
                                          backgroundColor: JobsCor.clear,
                                          cornerRadius: 0)
         loginOptionsStack.byHidden(mode != .login)
-        validationLabel.byText("")
+        submitButton.byAccessibilityIdentifier("jobs.auth.\(mode).submit")
+        scrollView.byAccessibilityIdentifier("jobs.auth.\(mode).scroll")
+        homeButton.byAccessibilityIdentifier("jobs.auth.\(mode).home")
+        if showsModeSwitcher {
+            modeButton.byAccessibilityIdentifier("jobs.auth.\(mode).switch")
+        }
+        forgotButton.byAccessibilityIdentifier("jobs.auth.login.forgot")
+        rememberButton.byAccessibilityIdentifier("jobs.auth.remember.\(remembersPassword)")
+        validationLabel
+            .byText("")
+            .byAccessibilityIdentifier("jobs.auth.\(mode).validation")
         rebuildFields()
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            coverageValidationProbe.byAccessibilityIdentifier("jobs.auth.\(mode).validationState")
+        }
+        #endif
         refreshRailAppearance()
         installLayout()
         refreshSubmitState()
@@ -335,7 +392,7 @@ private extension JobsAppDoorFormView {
         titleLabel.snp.remakeConstraints { make in
             make.top.equalToSuperview().offset(mode == .login ? 20 : 14)
             make.centerX.equalToSuperview()
-            make.height.equalTo(mode == .login ? 24 : 20)
+            make.height.equalTo(28)
             make.left.greaterThanOrEqualToSuperview().offset(20)
             make.right.lessThanOrEqualToSuperview().inset(20)
         }
@@ -372,7 +429,7 @@ private extension JobsAppDoorFormView {
         }
         let count = CGFloat(orderedFields.count)
         return max(394,
-                   166 + count * 50 + max(0,
+                   174 + count * 50 + max(0,
                                           count - 1) * 12)
     }
 
@@ -384,6 +441,12 @@ private extension JobsAppDoorFormView {
         orderedFields = fieldsForMode()
         for field in orderedFields {
             let inputView = inputViews[field] ?? makeInputView(field: field)
+            inputView.textField.byAccessibilityIdentifier("jobs.auth.\(mode).field.\(field)")
+            #if DEBUG
+            if field == .phone {
+                inputView.installCoverageCountryIdentifier("jobs.auth.\(mode).country")
+            }
+            #endif
             inputViews[field] = inputView
             fieldsStack.addArrangedSubview(inputView)
             inputView.snp.makeConstraints { make in
@@ -455,8 +518,8 @@ private extension JobsAppDoorFormView {
         modeButton
             .jobsAppDoorAppearance(title: verticalModeTitle(),
                                    titleColor: railTitleColor(),
-                                   font: JobsFont.systemFont(ofSize: mode == .login ? 13 : 12,
-                                                             weight: .medium),
+                                   font: JobsFont.systemFont(ofSize: 18,
+                                                             weight: .semibold),
                                    backgroundColor: railBackgroundColor(),
                                    cornerRadius: 0)
             .byImagePlacement(.top,
@@ -470,7 +533,7 @@ private extension JobsAppDoorFormView {
         submitButton
             .jobsAppDoorAppearance(title: submitTitle(),
                                    titleColor: submitTitleColor(),
-                                   font: JobsFont.systemFont(ofSize: 15,
+                                   font: JobsFont.systemFont(ofSize: 18,
                                                              weight: .semibold),
                                    backgroundColor: submitBackgroundColor(enabled: valid),
                                    cornerRadius: 25)
@@ -492,6 +555,11 @@ private extension JobsAppDoorFormView {
     }
 
     func validationMessage(includeEmptyMessage: Bool) -> String? {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            coverageLastCaptchaValidationLength = inputViews[.graphicCaptcha]?.text.trimmingCharacters(in: .whitespacesAndNewlines).count ?? 0
+        }
+        #endif
         let hasEmptyValue = orderedFields.contains { field in
             inputViews[field]?.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty != false
         }
@@ -524,11 +592,8 @@ private extension JobsAppDoorFormView {
     }
 
     func titleFont() -> UIFont {
-        mode == .login
-            ? JobsFont.systemFont(ofSize: 20,
-                                  weight: .regular)
-            : JobsFont.systemFont(ofSize: 18,
-                                  weight: .semibold)
+        JobsFont.systemFont(ofSize: 22,
+                            weight: .semibold)
     }
 
     func submitTitle() -> String {

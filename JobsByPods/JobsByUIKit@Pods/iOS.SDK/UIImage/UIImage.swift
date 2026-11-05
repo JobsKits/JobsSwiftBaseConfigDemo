@@ -88,16 +88,12 @@ extension UIImage {
         guard size.width > 0, size.height > 0 else {
             return nil
         }
-        UIGraphicsBeginImageContextWithOptions(size,
-                                               opaque,
-                                               0)
-        defer {
-            UIGraphicsEndImageContext()
+        return JobsGraphics.image(size: size,
+                                   opaque: opaque) { _ in
+            color.setFill()
+            UIRectFill(CGRect(origin: .zero,
+                              size: size))
         }
-        color.setFill()
-        UIRectFill(CGRect(origin: .zero,
-                          size: size))
-        return UIGraphicsGetImageFromCurrentImageContext()
     }
     // MARK: - 按钮背景/控件填充👉将任意 UIColor 转换成一张纯色 UIImage
     public static func jobs_fromColor(_ color: UIColor,
@@ -105,13 +101,10 @@ extension UIImage {
                                                             height: 1)) -> UIImage {
         let rect = CGRect(origin: .zero,
                           size: size)
-        UIGraphicsBeginImageContextWithOptions(size,
-                                               false,
-                                               0)
-        color.setFill()
-        UIRectFill(rect)
-        let image = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage.make { _ in }
-        UIGraphicsEndImageContext()
+        let image = JobsGraphics.image(size: size) { _ in
+            color.setFill()
+            UIRectFill(rect)
+        } ?? UIImage.make { _ in }
         return image.resizableImage(withCapInsets: .zero,
                                     resizingMode: .stretch)
     }
@@ -152,15 +145,10 @@ extension UIImage {
                                                 height: 1)) -> UIImage {
         let rect = CGRect(origin: .zero,
                           size: size)
-        UIGraphicsBeginImageContextWithOptions(rect.size,
-                                               false,
-                                               0)
-        defer {
-            UIGraphicsEndImageContext()
-        }
-        color.setFill()
-        UIRectFill(rect)
-        return UIGraphicsGetImageFromCurrentImageContext() ?? UIImage.make { _ in }
+        return JobsGraphics.image(size: rect.size) { _ in
+            color.setFill()
+            UIRectFill(rect)
+        } ?? UIImage.make { _ in }
     }
 }
 /// 功能性方法
@@ -180,17 +168,13 @@ extension UIImage {
         let drawingScale = outputLength / shortest
         let outputSize = CGSize(width: outputLength,
                                 height: outputLength)
-        UIGraphicsBeginImageContextWithOptions(outputSize,
-                                               false,
-                                               outputScale)
-        defer {
-            UIGraphicsEndImageContext()
+        return JobsGraphics.image(size: outputSize,
+                                   scale: outputScale) { _ in
+            draw(in: CGRect(x: (outputLength - size.width * drawingScale) / 2,
+                            y: (outputLength - size.height * drawingScale) / 2,
+                            width: size.width * drawingScale,
+                            height: size.height * drawingScale))
         }
-        draw(in: CGRect(x: (outputLength - size.width * drawingScale) / 2,
-                        y: (outputLength - size.height * drawingScale) / 2,
-                        width: size.width * drawingScale,
-                        height: size.height * drawingScale))
-        return UIGraphicsGetImageFromCurrentImageContext()
     }
 
     // MARK: - 拉伸适配（默认边距）
@@ -214,59 +198,47 @@ extension UIImage {
                                 height: shortest)
         let rect = CGRect(origin: .zero,
                           size: outputSize)
-        UIGraphicsBeginImageContextWithOptions(outputSize,
-                                               false,
-                                               scale)
-        defer {
-            UIGraphicsEndImageContext()
+        return JobsGraphics.image(size: outputSize,
+                                   scale: scale) { _ in
+            let clipRadius = max(0,
+                                 cornerRadius ?? shortest * 0.5)
+            let clipPath: UIBezierPath = (cornerRadius == nil)
+                ? UIBezierPath.make(ovalIn: rect)
+                : UIBezierPath.make(roundedRect: rect,
+                                    cornerRadius: clipRadius)
+            clipPath.addClip()
+            draw(in: CGRect(x: (shortest - size.width)  / 2,
+                            y: (shortest - size.height) / 2,
+                            width: size.width,
+                            height: size.height))
+            if borderWidth > 0 {
+                let inset = borderWidth / 2
+                let strokeRect = rect.insetBy(dx: inset,
+                                              dy: inset)
+                let strokeRadius = (cornerRadius == nil)
+                    ? strokeRect.width * 0.5
+                    : max(0,
+                          clipRadius - inset)
+                let strokePath: UIBezierPath = (cornerRadius == nil)
+                    ? UIBezierPath.make(ovalIn: strokeRect)
+                    : UIBezierPath.make(roundedRect: strokeRect,
+                                        cornerRadius: strokeRadius)
+                borderColor.setStroke()
+                strokePath.lineWidth = borderWidth
+                strokePath.stroke()
+            }
         }
-        let clipRadius = max(0,
-                             cornerRadius ?? shortest * 0.5)
-        let clipPath: UIBezierPath = (cornerRadius == nil)
-            ? UIBezierPath.make(ovalIn: rect)
-            : UIBezierPath.make(roundedRect: rect,
-                                cornerRadius: clipRadius)
-        clipPath.addClip()
-        draw(in: CGRect(x: (shortest - size.width)  / 2,
-                        y: (shortest - size.height) / 2,
-                        width: size.width,
-                        height: size.height))
-        if borderWidth > 0 {
-            let inset = borderWidth / 2
-            let strokeRect = rect.insetBy(dx: inset,
-                                          dy: inset)
-            let strokeRadius = (cornerRadius == nil)
-                ? strokeRect.width * 0.5
-                : max(0,
-                      clipRadius - inset)
-            let strokePath: UIBezierPath = (cornerRadius == nil)
-                ? UIBezierPath.make(ovalIn: strokeRect)
-                : UIBezierPath.make(roundedRect: strokeRect,
-                                    cornerRadius: strokeRadius)
-            borderColor.setStroke()
-            strokePath.lineWidth = borderWidth
-            strokePath.stroke()
-        }
-        return UIGraphicsGetImageFromCurrentImageContext()
     }
     // MARK: - 生成圆形图标
     static func circleIcon(diameter: CGFloat,
                            color: UIColor) -> UIImage {
         let size = CGSize(width: diameter,
                           height: diameter)
-        UIGraphicsBeginImageContextWithOptions(size,
-                                               false,
-                                               0)
-        defer {
-            UIGraphicsEndImageContext()
-        }
-        guard let ctx = UIGraphicsGetCurrentContext() else {
-            return UIImage.make { _ in }
-        }
-        ctx.setFillColor(color.cgColor)
-        ctx.fillEllipse(in: CGRect(origin: .zero,
-                                   size: size))
-        return UIGraphicsGetImageFromCurrentImageContext() ?? UIImage.make { _ in }
+        return JobsGraphics.image(size: size) { context in
+            context.setFillColor(color.cgColor)
+            context.fillEllipse(in: CGRect(origin: .zero,
+                                           size: size))
+        } ?? UIImage.make { _ in }
     }
     // MARK: - 图片叠加（overlay 居中 + 左右间距）
     func overlayed(with overlay: UIImage,
@@ -275,26 +247,22 @@ extension UIImage {
         guard size.width > 0, size.height > 0 else {
             return self
         }
-        UIGraphicsBeginImageContextWithOptions(size,
-                                               false,
-                                               self.scale)
-        defer {
-            UIGraphicsEndImageContext()
-        }
-        self.draw(in: CGRect(origin: .zero,
-                             size: size))
-        let maxWidth = max(0,
-                           size.width - 2 * horizontalInset)
-        guard maxWidth > 0, overlay.size.width > 0 else {
-            return UIGraphicsGetImageFromCurrentImageContext() ?? self
-        }
-        let overlayHeight = overlay.size.height * (maxWidth / overlay.size.width)
-        let overlayRect = CGRect(x: horizontalInset,
-                                 y: (size.height - overlayHeight) / 2,
-                                 width: maxWidth,
-                                 height: overlayHeight)
-        overlay.draw(in: overlayRect)
-        return UIGraphicsGetImageFromCurrentImageContext() ?? self
+        return JobsGraphics.image(size: size,
+                                   scale: self.scale) { _ in
+            self.draw(in: CGRect(origin: .zero,
+                                 size: size))
+            let maxWidth = max(0,
+                               size.width - 2 * horizontalInset)
+            guard maxWidth > 0, overlay.size.width > 0 else {
+                return
+            }
+            let overlayHeight = overlay.size.height * (maxWidth / overlay.size.width)
+            let overlayRect = CGRect(x: horizontalInset,
+                                     y: (size.height - overlayHeight) / 2,
+                                     width: maxWidth,
+                                     height: overlayHeight)
+            overlay.draw(in: overlayRect)
+        } ?? self
     }
     //MARK: - 压缩图片至指定大小（字节）
     func compressed(to maxByteSize: Int,
@@ -336,13 +304,10 @@ extension UIImage {
                 return d
             }
             autoreleasepool {
-                UIGraphicsBeginImageContextWithOptions(newSize,
-                                                       false,
-                                                       0)
-                currentImage.draw(in: CGRect(origin: .zero,
-                                             size: newSize))
-                let resized = UIGraphicsGetImageFromCurrentImageContext()
-                UIGraphicsEndImageContext()
+                let resized = JobsGraphics.image(size: newSize) { _ in
+                    currentImage.draw(in: CGRect(origin: .zero,
+                                                 size: newSize))
+                }
                 if let img = resized {
                     currentImage = img
                 }

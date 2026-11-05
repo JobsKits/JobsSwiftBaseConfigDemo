@@ -45,6 +45,7 @@ final class FeedListVC: BaseVC,
                 UIButton.sys()
                     .byTitle("暂无数据".tr,
                              for: .normal)
+                    .byAccessibilityIdentifier("jobs.feed.loadSamples")
                     .bySubTitle("点我加载本地示例数据".tr,
                                 for: .normal)
                     .byImage("tray".sysImg,
@@ -106,7 +107,7 @@ final class FeedListVC: BaseVC,
         let cell = tableView.byDequeueReusableCell(withType: FeedListCell.self,
                                                    for: indexPath)
         cell.fill(items[indexPath.row])
-        return cell
+        return cell.byAccessibilityIdentifier("jobs.feed.item.\(indexPath.row)")
     }
     func tableView(_ tableView: UITableView,
                    didSelectRowAt indexPath: IndexPath) {

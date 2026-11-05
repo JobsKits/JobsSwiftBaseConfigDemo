@@ -2,10 +2,14 @@
 //  JobsSwiftBaseConfigDemoUITests.swift
 //  JobsSwiftBaseConfigDemoUITests
 //
-//  Created by Jobs on 18/1/2569 BE.
+//  Created by Jobs on 2026年1月18日，星期日.
 //
 
 import XCTest
+
+// 用途：通过独立 UI 测试进程启动 App，检查悬浮熔断按钮长按不崩溃，并测量启动性能。
+// 运行：在 Xcode 测试导航器选择 JobsSwiftBaseConfigDemoUITests，或按 ⌘U 运行 Scheme 中启用的测试。
+// 边界：属于 UI 测试 Target；当前 CI 仅选择单元测试 Target，本文件不会随普通 App 启动执行。
 
 final class JobsSwiftBaseConfigDemoUITests: XCTestCase {
     override func setUpWithError() throws {

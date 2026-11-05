@@ -644,9 +644,14 @@ extension UIScrollView {
         var inset = self.contentInset
         inset.bottom += extra
         self.contentInset = inset
-        var indicator = self.scrollIndicatorInsets
-        indicator.bottom += extra
-        self.scrollIndicatorInsets = indicator
+        if #available(iOS 13.0, tvOS 13.0, *) {
+            verticalScrollIndicatorInsets.bottom += extra
+            horizontalScrollIndicatorInsets.bottom += extra
+        } else {
+            var indicator = scrollIndicatorInsets
+            indicator.bottom += extra
+            scrollIndicatorInsets = indicator
+        }
         return self
     }
     /// 仅增加“横向”可滑动距离：右侧加大（常用）
@@ -657,9 +662,14 @@ extension UIScrollView {
         var inset = self.contentInset
         inset.right += extra
         self.contentInset = inset
-        var indicator = self.scrollIndicatorInsets
-        indicator.right += extra
-        self.scrollIndicatorInsets = indicator
+        if #available(iOS 13.0, tvOS 13.0, *) {
+            verticalScrollIndicatorInsets.right += extra
+            horizontalScrollIndicatorInsets.right += extra
+        } else {
+            var indicator = scrollIndicatorInsets
+            indicator.right += extra
+            scrollIndicatorInsets = indicator
+        }
         return self
     }
 }

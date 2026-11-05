@@ -22,14 +22,16 @@ public enum JobsIndicatorStyle {
         case .medium:
             if #available(iOS 13.0, *) {
                 return .medium
+            } else {
+                return .gray
             }
-            return .gray
         /// 处理 .large 分支
         case .large:
             if #available(iOS 13.0, *) {
                 return .large
+            } else {
+                return .whiteLarge
             }
-            return .whiteLarge
         }
     }
 }

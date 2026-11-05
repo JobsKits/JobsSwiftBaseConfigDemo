@@ -11,19 +11,22 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
+
 // MARK: - 背景色兜底
 extension UIButton {
 
     public func setBgCor(_ color: UIColor,
                          forState: UIControl.State) {
-        UIGraphicsBeginImageContext(CGSize(width: 1, height: 1))
-        UIGraphicsGetCurrentContext()?.setFillColor(color.cgColor)
-        UIGraphicsGetCurrentContext()?.fill(CGRect(x: 0,
-                                                   y: 0,
-                                                   width: 1,
-                                                   height: 1))
-        UIGraphicsEndImageContext()
-        setBackgroundImage(UIGraphicsGetImageFromCurrentImageContext(),
+        let size = CGSize(width: 1,
+                          height: 1)
+        let image = JobsGraphics.image(size: size,
+                                        scale: 1) { context in
+            context.setFillColor(color.cgColor)
+            context.fill(CGRect(origin: .zero,
+                                size: size))
+        }
+        setBackgroundImage(image,
                            for: forState)
     }
 
@@ -31,14 +34,12 @@ extension UIButton {
                                    forState state: UIControl.State) {
         let size = CGSize(width: 1,
                           height: 1)
-        UIGraphicsBeginImageContextWithOptions(size,
-                                               false,
-                                               0)
-        color.setFill()
-        UIBezierPath(rect: CGRect(origin: .zero,
-                                  size: size)).fill()
-        UIGraphicsEndImageContext()
-        setBackgroundImage(UIGraphicsGetImageFromCurrentImageContext(),
+        let image = JobsGraphics.image(size: size) { context in
+            context.setFillColor(color.cgColor)
+            context.fill(CGRect(origin: .zero,
+                                size: size))
+        }
+        setBackgroundImage(image,
                            for: state)
     }
 }

@@ -1,6 +1,9 @@
-# Select an available iPhone from the selected Xcode SDK generation, without booting or changing devices.
 require 'json'
 require 'rubygems/version'
+
+# 用途：供 CI 选择匹配当前 SDK 主版本的可用 arm64 iPhone，按数字版本优先选择最新运行时。
+# 运行：ruby ./select_simulator.rb SDK_VERSION RUNTIMES_JSON DEVICES_JSON；也可 require 后调用 JobsSimulatorSelection.select。
+# 边界：只读取传入的模拟器清单并输出选择结果，不启动或修改设备；它是测试准备工具，不是 App 源码。
 
 module JobsSimulatorSelection
   IOS_RUNTIME = /\Acom\.apple\.CoreSimulator\.SimRuntime\.iOS-\d+(?:-\d+)*\z/.freeze

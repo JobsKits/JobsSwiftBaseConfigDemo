@@ -27,6 +27,7 @@ final class UIButtonDemoVC: BaseVC {
     private lazy var scroll: UIScrollView = {
         UIScrollView
             .jobsMake { _ in }
+            .byAccessibilityIdentifier("jobs.coverage.UIButtonDemoVC.scroll")
             .byAlwaysBounceVertical(true)
             .byShowsVerticalScrollIndicator(true)
             .byContentInsetAdjustmentBehavior(.automatic)   // iOS 11+
@@ -374,6 +375,7 @@ extension UIButtonDemoVC {
                                                   left: 12,
                                                   bottom: 10,
                                                   right: 12))
+                .byAccessibilityIdentifier("jobs.coverage.button.longPress.0")
                 .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                     if gr.state == .began {
                         btn.byAlpha(0.7)
@@ -383,7 +385,11 @@ extension UIButtonDemoVC {
                         btn.byAlpha(1.0)
                         print("长按结束")
                     }
-                }
+#if DEBUG
+                jobsCoverageUIButtonDemoVCLongPressState(btn,
+                                               gr)
+#endif
+            }
             addDemoButton(btnLong)
         }
         // 14) onTap 统一封装（UIAction / addTarget 兜底）
@@ -457,3 +463,21 @@ extension UIButtonDemoVC {
         stack.addArrangedSubview(button)
     }
 }
+
+#if DEBUG
+@MainActor
+private func jobsCoverageUIButtonDemoVCLongPressState(_ button: UIButton,
+                                          _ gesture: UILongPressGestureRecognizer) {
+    guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") else {
+        return
+    }
+    if gesture.state == .began, button.alpha < 1 {
+        button.byAccessibilityLabel("longPress:began")
+    } else if gesture.state == .ended {
+        let completed = button.accessibilityLabel == "longPress:began" && button.alpha == 1
+        button.byAccessibilityLabel(completed ? "longPress:completed" : "longPress:invalidLifecycle")
+    } else if gesture.state == .cancelled || gesture.state == .failed {
+        button.byAccessibilityLabel("longPress:cancelled")
+    }
+}
+#endif

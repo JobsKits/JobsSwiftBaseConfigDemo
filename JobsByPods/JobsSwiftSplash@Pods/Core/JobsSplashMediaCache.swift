@@ -22,6 +22,7 @@ public final class JobsSplashMediaCache {
     private let pendingVideoURLsKey = "JobsSwiftSplash.pendingVideoURLs"
     private let stateQueue = DispatchQueue(label: "com.jobs.splash.video-preload")
     private var videoTasks: [URL: URLSessionDownloadTask] = [:]
+    private var checkingVideoURLs: Set<URL> = []
     private var videoCompletions: [URL: [(URL) -> Void]] = [:]
     private var videoRetryAttempts: [URL: Int] = [:]
     private var scheduledVideoRetries: Set<URL> = []
@@ -50,11 +51,7 @@ public final class JobsSplashMediaCache {
                 return
             }
             pendingURLs.forEach {
-                if self.cachedVideoFileURL(for: $0) != nil {
-                    self.removePendingVideoURL($0)
-                } else {
-                    self.startVideoDownload($0)
-                }
+                self.checkOrStartVideoPreload($0)
             }
         }
     }
@@ -86,7 +83,7 @@ public final class JobsSplashMediaCache {
                       !self.scheduledVideoRetries.contains(url) else {
                     continue
                 }
-                self.startVideoDownload(url)
+                self.checkOrStartVideoPreload(url)
             }
         }
     }
@@ -113,19 +110,65 @@ public final class JobsSplashMediaCache {
         try? fileManager.removeItem(at: localFileURL(for: remoteURL))
     }
 
-    func cachedVideoFileURL(for remoteURL: URL) -> URL? {
+    private struct VideoFileVersion: Equatable {
+
+        let identifier: NSObject?
+        let size: Int?
+        let modificationDate: Date?
+    }
+
+    private func videoFileVersion(at url: URL) -> VideoFileVersion? {
+        guard let values = try? url.resourceValues(forKeys: [.fileResourceIdentifierKey,
+                                                            .fileSizeKey,
+                                                            .contentModificationDateKey]) else {
+            return nil
+        }
+        return VideoFileVersion(identifier: values.fileResourceIdentifier as? NSObject,
+                                size: values.fileSize,
+                                modificationDate: values.contentModificationDate)
+    }
+
+    func cachedVideoFileURL(for remoteURL: URL,
+                            completion: @escaping (URL?) -> Void) {
         fileLock.lock()
-        defer {
+        guard let url = cachedFileURL(for: remoteURL),
+              let version = videoFileVersion(at: url) else {
             fileLock.unlock()
+            completion(nil)
+            return
         }
-        guard let url = cachedFileURL(for: remoteURL) else {
-            return nil
+        fileLock.unlock()
+        validateVideo(at: url) { [weak self] playable in
+            guard let self else {
+                completion(nil)
+                return
+            }
+            self.fileLock.lock()
+            // 异步检查期间缓存可能被替换；不能删除或返回另一个版本的文件。
+            let unchanged = self.videoFileVersion(at: url) == version
+            if unchanged && !playable {
+                try? self.fileManager.removeItem(at: url)
+            }
+            self.fileLock.unlock()
+            completion(unchanged && playable ? url : nil)
         }
-        guard AVURLAsset(url: url).isPlayable else {
-            try? fileManager.removeItem(at: url)
-            return nil
+    }
+
+    private func validateVideo(at url: URL,
+                               completion: @escaping (Bool) -> Void) {
+        if #available(iOS 16.0, *) {
+            Task {
+                let playable = (try? await AVURLAsset(url: url).load(.isPlayable)) == true
+                completion(playable)
+            }
+        } else {
+            completion(legacyVideoIsPlayable(at: url))
         }
-        return url
+    }
+
+    @available(iOS, introduced: 4.0, deprecated: 16.0)
+    private func legacyVideoIsPlayable(at url: URL) -> Bool {
+        return AVURLAsset(url: url).isPlayable
     }
 
     private func isDecodableImage(_ url: URL) -> Bool {
@@ -198,15 +241,6 @@ public final class JobsSplashMediaCache {
 
     func preloadVideo(_ remoteURL: URL,
                       completion: ((URL) -> Void)? = nil) {
-        if let cachedURL = cachedVideoFileURL(for: remoteURL) {
-            stateQueue.async { [weak self] in
-                self?.removePendingVideoURL(remoteURL)
-            }
-            DispatchQueue.main.async {
-                completion?(cachedURL)
-            }
-            return
-        }
         stateQueue.async { [weak self] in
             guard let self else {
                 return
@@ -216,11 +250,29 @@ public final class JobsSplashMediaCache {
                 self.videoCompletions[remoteURL,
                                       default: []].append(completion)
             }
-            guard self.videoTasks[remoteURL] == nil,
-                  !self.scheduledVideoRetries.contains(remoteURL) else {
+            self.checkOrStartVideoPreload(remoteURL)
+        }
+    }
+
+    private func checkOrStartVideoPreload(_ remoteURL: URL) {
+        guard videoTasks[remoteURL] == nil,
+              !scheduledVideoRetries.contains(remoteURL),
+              checkingVideoURLs.insert(remoteURL).inserted else {
+            return
+        }
+        cachedVideoFileURL(for: remoteURL) { [weak self] cachedURL in
+            guard let self else {
                 return
             }
-            self.startVideoDownload(remoteURL)
+            self.stateQueue.async {
+                self.checkingVideoURLs.remove(remoteURL)
+                if let cachedURL {
+                    self.handleVideoDownloadResult(.success(cachedURL),
+                                                    for: remoteURL)
+                } else {
+                    self.startVideoDownload(remoteURL)
+                }
+            }
         }
     }
 
@@ -232,27 +284,71 @@ public final class JobsSplashMediaCache {
             guard let self else {
                 return
             }
-            let result: Result<URL, Error>
+            let stagedResult: Result<URL, Error>
             if let error {
-                result = .failure(error)
+                stagedResult = .failure(error)
             } else if let response = response as? HTTPURLResponse,
                       !(200 ... 299).contains(response.statusCode) {
-                result = .failure(self.downloadError(code: response.statusCode,
-                                                     description: "Remote video returned HTTP \(response.statusCode)."))
-            } else if let temporaryURL, AVURLAsset(url: temporaryURL).isPlayable {
-                result = self.persistDownloadedFile(temporaryURL,
-                                                    for: remoteURL)
+                stagedResult = .failure(self.downloadError(code: response.statusCode,
+                                                           description: "Remote video returned HTTP \(response.statusCode)."))
+            } else if let temporaryURL {
+                // URLSession 回调结束即回收下载临时文件，必须先取得独立副本再异步校验。
+                stagedResult = self.retainDownloadedVideo(temporaryURL,
+                                                          for: remoteURL)
             } else {
-                result = .failure(self.downloadError(code: -1,
-                                                     description: "Remote video download returned no playable file."))
+                stagedResult = .failure(self.downloadError(code: -1,
+                                                           description: "Remote video download returned no file."))
             }
-            self.stateQueue.async { [weak self] in
-                self?.handleVideoDownloadResult(result,
-                                                for: remoteURL)
+            switch stagedResult {
+            case let .success(stagedURL):
+                self.validateVideo(at: stagedURL) { [weak self] playable in
+                    defer {
+                        try? FileManager.default.removeItem(at: stagedURL)
+                    }
+                    guard let self else {
+                        return
+                    }
+                    let result: Result<URL, Error> = playable
+                        ? self.persistDownloadedFile(stagedURL, for: remoteURL)
+                        : .failure(self.downloadError(code: -1,
+                                                      description: "Remote video is not playable."))
+                    self.stateQueue.async {
+                        self.handleVideoDownloadResult(result,
+                                                       for: remoteURL)
+                    }
+                }
+            case let .failure(error):
+                self.stateQueue.async {
+                    self.handleVideoDownloadResult(.failure(error),
+                                                   for: remoteURL)
+                }
             }
         }
         videoTasks[remoteURL] = task
         task.resume()
+    }
+
+    private func retainDownloadedVideo(_ temporaryURL: URL,
+                                       for remoteURL: URL) -> Result<URL, Error> {
+        do {
+            let values = try temporaryURL.resourceValues(forKeys: [.fileSizeKey])
+            fileLock.lock()
+            let budget = diskBudget
+            fileLock.unlock()
+            guard let size = values.fileSize, size > 0, size <= budget else {
+                return .failure(downloadError(code: -2,
+                                              description: "Remote video is empty or exceeds the disk budget."))
+            }
+            let fileExtension = remoteURL.pathExtension.isEmpty ? "data" : remoteURL.pathExtension
+            let retainedURL = fileManager.temporaryDirectory
+                .appendingPathComponent("JobsSplashVideo-\(UUID().uuidString)")
+                .appendingPathExtension(fileExtension)
+            try fileManager.copyItem(at: temporaryURL,
+                                     to: retainedURL)
+            return .success(retainedURL)
+        } catch {
+            return .failure(error)
+        }
     }
 
     private func persistDownloadedFile(_ temporaryURL: URL,
@@ -355,12 +451,7 @@ public final class JobsSplashMediaCache {
                     return
                 }
                 self.scheduledVideoRetries.remove(remoteURL)
-                guard self.cachedVideoFileURL(for: remoteURL) == nil else {
-                    self.handleVideoDownloadResult(.success(self.localFileURL(for: remoteURL)),
-                                                   for: remoteURL)
-                    return
-                }
-                self.startVideoDownload(remoteURL)
+                self.checkOrStartVideoPreload(remoteURL)
             }
         }
     }

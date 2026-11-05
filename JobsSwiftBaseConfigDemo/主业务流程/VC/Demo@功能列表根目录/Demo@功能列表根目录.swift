@@ -38,11 +38,148 @@ import MJRefresh
 
 final class RootListVC: BaseVC {
 
-    private static let demoSectionOrderUserDefaultsKey = "com.BSports.JobsSwiftDemoListSectionOrderUserDefaultsKey"
+    #if DEBUG
+    /// 直接复用页面注册工厂，避免列表的搜索、折叠和持久化排序影响确定性巡检。
+    static func debugCoverageLaunchController() -> UIViewController? {
+        let arguments = ProcessInfo.processInfo.arguments
+        guard let optionIndex = arguments.firstIndex(of: "--jobs-coverage-route") else {
+            return nil
+        }
+        guard arguments.indices.contains(optionIndex + 1) else {
+            print("[JobsCoverage] 缺少页面路由 ID")
+            return UIViewController.jobsMake { _ in }
+        }
+        let routeID = arguments[optionIndex + 1]
+        let registry = RootListVC()
+        let items: [DemoItem] = registry.makeDemo2D().flatMap(\.items) + [
+            ("目录设置", RootListSettingsVC.self),
+            ("我的", JobsMeCenterVC.self)
+        ]
+        print("[JobsCoverage] availableRoutes=\(items.map { String(describing: $0.vcType) }.sorted().joined(separator: ","))")
+        let target: UIViewController
+        if routeID == "RootListVC" {
+            target = registry
+        } else if let item = items.first(where: { String(describing: $0.vcType) == routeID }) {
+            target = item.vcType.init().byTitle(item.title)
+        } else {
+            print("[JobsCoverage] 当前构建不包含页面：\(routeID)")
+            return UIViewController.jobsMake { _ in }
+        }
+        JobsCoverageReadyLabel.install(on: registry, routeID: "RootListVC")
+        if target !== registry {
+            JobsCoverageReadyLabel.install(on: target, routeID: routeID)
+        }
+        let navigationController = registry.jobsNav.jobsNavContainer
+        if target !== registry {
+            navigationController.byViewControllers([registry, target])
+        }
+        return navigationController
+    }
+    #endif
+
+    private static var demoSectionOrderUserDefaultsKey: String {
+        #if DEBUG
+        return coveragePreferenceKey("com.BSports.JobsSwiftDemoListSectionOrderUserDefaultsKey")
+        #else
+        return "com.BSports.JobsSwiftDemoListSectionOrderUserDefaultsKey"
+        #endif
+    }
     private static let demoSearchHistoryUserDefaultsKey = "com.BSports.JobsSwiftDemoSearchHistoryUserDefaultsKey"
-    private static let pinnedDemoUserDefaultsKey = "com.BSports.JobsSwiftPinnedDemoUserDefaultsKey"
+    private static var pinnedDemoUserDefaultsKey: String {
+        #if DEBUG
+        return coveragePreferenceKey("com.BSports.JobsSwiftPinnedDemoUserDefaultsKey")
+        #else
+        return "com.BSports.JobsSwiftPinnedDemoUserDefaultsKey"
+        #endif
+    }
     private static let maximumDemoSearchHistoryCount = 20
     private static let demoProjectTitle = "JobsSwiftBaseConfigDemo"
+
+    #if DEBUG
+    private static var initializedCoveragePreferenceKeys = Set<String>()
+
+    private static func coveragePreferenceKey(_ original: String) -> String {
+        guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") else {
+            return original
+        }
+        let key = "jobs.coverage." + original
+        if initializedCoveragePreferenceKeys.insert(key).inserted {
+            UserDefaults.standard.removeObject(forKey: key)
+        }
+        return key
+    }
+
+    private lazy var coverageRootOrderLabel: UILabel = {
+        UILabel.jobsMake { _ in }
+            .byTextColor(JobsCor.clear)
+            .byFrame(CGRect(x: 8, y: 112, width: 1, height: 1))
+            .byAccessibilityIdentifier("jobs.root.groupOrder")
+            .byUserInteractionEnabled(false)
+            .byAddTo(view)
+    }()
+
+    private var coverageRootDragPreparedCount = 0
+    private var coverageRootDragBeganCount = 0
+    private var coverageRootDropCount = 0
+    private var coverageRootDragSourceRow = -1
+    private var coverageRootDropDestinationRow = -1
+    private lazy var coverageRootDragStateLabel: UILabel = {
+        UILabel.jobsMake { _ in }
+            .byTextColor(JobsCor.clear)
+            .byFrame(CGRect(x: 8, y: 114, width: 1, height: 1))
+            .byAccessibilityIdentifier("jobs.coverage.root.dragState")
+            .byUserInteractionEnabled(false)
+            .byAddTo(view)
+    }()
+
+    private func refreshCoverageRootDragState() {
+        guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") else {
+            return
+        }
+        coverageRootDragStateLabel.byText(
+            "prepared:\(coverageRootDragPreparedCount);began:\(coverageRootDragBeganCount);drop:\(coverageRootDropCount);source:\(coverageRootDragSourceRow);destination:\(coverageRootDropDestinationRow)"
+        )
+    }
+
+    private func refreshCoverageRootOrder() {
+        guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") else {
+            return
+        }
+        refreshCoverageRootDragState()
+        coverageRootOrderLabel.byText(allDemo2D.compactMap { group in
+            group.items.first.map { String(describing: $0.vcType) }
+        }.joined(separator: ","))
+    }
+
+    private var coverageActiveRootGestures = Set<String>()
+    private lazy var coverageRootGestureLabel: UILabel = {
+        UILabel.jobsMake { _ in }
+            .byText("idle")
+            .byTextColor(JobsCor.clear)
+            .byFrame(CGRect(x: 8, y: 110, width: 1, height: 1))
+            .byAccessibilityIdentifier("jobs.root.gesture.state")
+            .byUserInteractionEnabled(false)
+            .byAddTo(view)
+    }()
+
+    private func recordCoverageRootGesture(_ name: String,
+                                           state: UIGestureRecognizer.State,
+                                           condition: Bool = true) {
+        guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") else {
+            return
+        }
+        if state == .began, condition {
+            coverageActiveRootGestures.insert(name)
+            coverageRootGestureLabel.byText("\(name):began")
+        } else if state == .ended,
+                  condition,
+                  coverageActiveRootGestures.remove(name) != nil {
+            coverageRootGestureLabel.byText("\(name):completed")
+        } else if state == .cancelled || state == .failed {
+            coverageActiveRootGestures.remove(name)
+        }
+    }
+    #endif
 
     private enum FunctionMenuAction: CaseIterable {
 
@@ -320,6 +457,7 @@ final class RootListVC: BaseVC {
     // ================================== 悬浮控件（原逻辑不动） ==================================
     private lazy var suspendBtn: UIButton = {
         UIButton.sys()
+            .byAccessibilityIdentifier("jobs.root.time")
             .byTitle("当前时间".tr,
                      for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 18,
@@ -357,6 +495,7 @@ final class RootListVC: BaseVC {
 
     private lazy var suspendSpinBtn: UIButton = {
         UIButton.sys()
+            .byAccessibilityIdentifier("jobs.root.spin")
             .byTitle("0",
                      for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 22,
@@ -367,7 +506,10 @@ final class RootListVC: BaseVC {
                                for: .normal)
             .byCornerRadius(25)
             .byMasksToBounds(true)
-            .onLongPress(minimumPressDuration: 0.8) { _, _ in
+            .onLongPress(minimumPressDuration: 0.8) { [weak self] _, gesture in
+                #if DEBUG
+                self?.recordCoverageRootGesture("spin", state: gesture.state)
+                #endif
                 "长按了悬浮按钮".tr.toast
             }
             .onTap { [weak self] btn in
@@ -439,6 +581,10 @@ final class RootListVC: BaseVC {
             /// 处理 .began 分支
                 case .began:
                     self.suspendFuseLongPressConsumed = true
+                    #if DEBUG
+                    recordCoverageRootGesture("fuse", state: .began,
+                                              condition: suspendFuseLongPressConsumed)
+                    #endif
                     btn.byFusePressStart(ringConfig: JobsFuseOuterRingConfig(lineWidth: 4,
                                                                              strokeColor: JobsCor.white,
                                                                              trackColor: JobsCor.white.withAlphaComponent(0.22),
@@ -454,9 +600,17 @@ final class RootListVC: BaseVC {
             /// 合并处理 .ended、.cancelled、.failed 分支
                 case .ended, .cancelled, .failed:
                     btn.byFusePressStop()
+                    #if DEBUG
+                    let endedNormally = gr.state == .ended
+                    #endif
                 // 给 UIControl 的 touchUpInside 留一点时间，避免长按结束后被当成短按
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.20) { [weak self] in
                         self?.suspendFuseLongPressConsumed = false
+                        #if DEBUG
+                        self?.recordCoverageRootGesture("fuse",
+                                                        state: endedNormally ? .ended : .cancelled,
+                                                        condition: self?.suspendFuseLongPressConsumed == false)
+                        #endif
                     }
             /// 未匹配已知分支时执行兜底处理
                 default:
@@ -517,6 +671,7 @@ final class RootListVC: BaseVC {
 
     private lazy var functionMenuButton: UIButton = {
         UIButton.sys()
+            .byAccessibilityIdentifier("jobs.root.functionMenu.open")
             .byFrame(CGRect(x: 0,
                             y: 0,
                             width: 32,
@@ -549,6 +704,7 @@ final class RootListVC: BaseVC {
     private lazy var functionMenuTableView: UITableView = {
         let tableView = UITableView(frame: .zero,
                                     style: .plain)
+            .byAccessibilityIdentifier("jobs.root.functionMenu.panel")
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(UITableViewCell.self)
@@ -642,6 +798,7 @@ final class RootListVC: BaseVC {
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero,
                     style: .insetGrouped)
+            .byAccessibilityIdentifier("jobs.root.demoTable")
         // ✅ 关键：禁用预估高度，避免首次布局“画错一遍”
         .byEstimatedRowHeight(0)
             .byEstimatedSectionHeaderHeight(0)
@@ -706,6 +863,7 @@ final class RootListVC: BaseVC {
         view.byBackgroundColor(RootListPreferences.pageBackgroundColor)
         jobsSetupGKNav(title: "演武堂".tr,
                        leftButton: UIButton.sys()
+                           .byAccessibilityIdentifier("jobs.root.navigationMenu")
                            .byFrame(CGRect(x: 0,
                                            y: 0,
                                            width: 32,
@@ -727,12 +885,20 @@ final class RootListVC: BaseVC {
                            .onTapAppend { _ in
                 print("追加的点按事件")
             }
-                           .onLongPress(minimumPressDuration: 0.8) { btn, gr in
+                           .onLongPress(minimumPressDuration: 0.8) { [weak self] btn, gr in
                 if gr.state == .began {
                     btn.byAlpha(0.6)
+                    #if DEBUG
+                    self?.recordCoverageRootGesture("navigationMenu", state: .began,
+                                                    condition: btn.alpha < 1)
+                    #endif
                     print("长按开始 on \(btn)")
                 } else if gr.state == .ended || gr.state == .cancelled {
                     btn.byAlpha(1.0)
+                    #if DEBUG
+                    self?.recordCoverageRootGesture("navigationMenu", state: gr.state,
+                                                    condition: btn.alpha == 1)
+                    #endif
                     print("长按结束")
                 }
             }
@@ -857,6 +1023,7 @@ extension RootListVC {
         UIAlertController
             .makeAlert("隐藏悬浮时间？".tr,
                        "隐藏后可在“设置”中重新开启。".tr)
+            .byView { $0.byAccessibilityIdentifier("jobs.root.hideTime.alert") }
             .byAddCancel("取消".tr)
             .byAddDestructive("隐藏".tr) { [weak self] _ in
                 guard let self else {
@@ -870,7 +1037,12 @@ extension RootListVC {
     }
 
     private func refreshSuspendTimeButtonVisibility() {
-        let visible = RootListPreferences.showsSuspendTimeButton
+        var visible = RootListPreferences.showsSuspendTimeButton
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            visible = true
+        }
+        #endif
         suspendBtn.byVisible(visible)
         if visible {
             suspendBtnTimer?.resume()
@@ -1221,6 +1393,9 @@ extension RootListVC {
             }
         }
         allDemo2D = demoGroupsKeepingOtherLast(allDemo2D)
+        #if DEBUG
+        refreshCoverageRootOrder()
+        #endif
     }
 
     private func saveDemoSectionOrder() {
@@ -1230,6 +1405,9 @@ extension RootListVC {
         },
                                   forKey: Self.demoSectionOrderUserDefaultsKey)
         UserDefaults.standard.synchronize()
+        #if DEBUG
+        refreshCoverageRootOrder()
+        #endif
     }
 
     private func normalizedDemoSearchText(_ text: String?) -> String {
@@ -1246,6 +1424,11 @@ extension RootListVC {
                 return items.isEmpty ? nil : (title: group.title, items: items)
             }
             expandedGroups = demo2D.isEmpty ? [] : [0]
+            #if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+                expandedGroups = []
+            }
+            #endif
             return
         }
         demo2D = allDemo2D.compactMap { group in
@@ -1813,6 +1996,13 @@ extension RootListVC: UITableViewDragDelegate,
               canDragDemoGroup(at: indexPath) else {
             return []
         }
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            coverageRootDragPreparedCount += 1
+            coverageRootDragSourceRow = indexPath.row
+            refreshCoverageRootDragState()
+        }
+        #endif
         let title = demo2D[indexPath.row].title
         let dragItem = UIDragItem(itemProvider: NSItemProvider(object: title as NSString))
         dragItem.localObject = title
@@ -1835,6 +2025,12 @@ extension RootListVC: UITableViewDragDelegate,
             return
         }
         session.localContext = tableView
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            coverageRootDragBeganCount += 1
+            refreshCoverageRootDragState()
+        }
+        #endif
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
     }
 
@@ -1871,6 +2067,14 @@ extension RootListVC: UITableViewDragDelegate,
               canDragDemoGroup(at: sourceIndexPath) else {
             return
         }
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            coverageRootDropCount += 1
+            coverageRootDragSourceRow = sourceIndexPath.row
+            coverageRootDropDestinationRow = destinationIndexPath.row
+            refreshCoverageRootDragState()
+        }
+        #endif
         if sourceIndexPath != destinationIndexPath {
             moveDemoGroup(from: sourceIndexPath,
                           to: destinationIndexPath)
@@ -1901,6 +2105,38 @@ extension RootListVC: UITableViewDragDelegate,
                          section: section)
     }
 }
+
+#if DEBUG
+/// 只有真正的目标页面已入窗才发布就绪标记；无效路由和门禁拦截页不会发布。
+private final class JobsCoverageReadyLabel: UILabel {
+
+    var routeID = ""
+    weak var target: UIViewController?
+
+    static func install(on target: UIViewController, routeID: String) {
+        jobsMake { marker in
+            marker.routeID = routeID
+            marker.target = target
+            marker
+                .byFrame(CGRect(x: 8, y: 100, width: 1, height: 1))
+                .byTextColor(JobsCor.clear)
+                .byUserInteractionEnabled(false)
+                .byAddTo(target.view)
+        }
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        guard let window,
+              target?.viewIfLoaded?.window === window else {
+            byAccessibilityIdentifier(nil)
+            return
+        }
+        byText("巡检页面已就绪")
+            .byAccessibilityIdentifier("jobs.coverage.ready.\(routeID)")
+    }
+}
+#endif
 
 // MARK: —— UIScrollViewDelegate
 extension RootListVC: UIScrollViewDelegate {

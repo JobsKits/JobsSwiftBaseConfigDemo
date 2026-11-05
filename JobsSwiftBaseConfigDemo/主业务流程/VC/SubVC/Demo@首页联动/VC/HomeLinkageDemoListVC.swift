@@ -60,6 +60,7 @@ final class HomeLinkageDemoListVC: BaseVC {
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero,
                     style: .insetGrouped)
+            .byAccessibilityIdentifier("jobs.list.HomeLinkageDemoListVC")
             .byDataSource(self)
             .byDelegate(self)
             .bySeparatorStyle(.singleLine)
@@ -98,6 +99,7 @@ extension HomeLinkageDemoListVC: UITableViewDataSource,
             .byDequeueReusableCell(withType: UITableViewCell.self,
                                    for: indexPath)
             .byAccessoryType(.disclosureIndicator)
+            .byAccessibilityIdentifier("jobs.route.HomeLinkageDemoListVC.\(row)")
             .byListConfig {
                 $0
                     .byText(row.title)

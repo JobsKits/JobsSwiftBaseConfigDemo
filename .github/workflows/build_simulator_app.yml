@@ -69,11 +69,11 @@ jobs:
         run: |
           set -euo pipefail
           (
-            ruby 'ScriptsByPods/拉取Flutter侧三方资源.sh/Tests/podfile_readiness.rb'
-            ruby 'ScriptsByPods/配置Flutter环境.sh/Tests/interaction_regression.rb' --run
-            /bin/zsh 'ScriptsByPods/配置Flutter环境.sh/配置Flutter环境.sh'
-            /bin/zsh 'ScriptsByPods/拉取Flutter侧三方资源.sh/拉取Flutter侧三方资源.sh'
-            ruby 'ScriptsByPods/拉取Flutter侧三方资源.sh/Tests/podfile_readiness.rb' --verify-project
+            ruby 'ScriptsByPods/【MacOS】拉取Flutter侧三方资源.sh/Tests/podfile_readiness.rb/podfile_readiness.rb'
+            ruby 'ScriptsByPods/【MacOS】配置Flutter环境.sh/Tests/interaction_regression.rb/interaction_regression.rb' --run
+            /bin/zsh 'ScriptsByPods/【MacOS】配置Flutter环境.sh/【MacOS】配置Flutter环境.sh'
+            /bin/zsh 'ScriptsByPods/【MacOS】拉取Flutter侧三方资源.sh/【MacOS】拉取Flutter侧三方资源.sh'
+            ruby 'ScriptsByPods/【MacOS】拉取Flutter侧三方资源.sh/Tests/podfile_readiness.rb/podfile_readiness.rb' --verify-project
           ) 2>&1 | tee "${RUNNER_TEMP}/flutter-setup.log"
 
       - name: Prepare test Simulator

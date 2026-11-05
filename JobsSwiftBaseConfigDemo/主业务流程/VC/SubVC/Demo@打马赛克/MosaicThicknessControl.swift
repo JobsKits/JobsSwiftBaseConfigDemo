@@ -17,6 +17,39 @@ import JobsSwiftDSL
 
 final class MosaicThicknessControl: UIControl {
 
+#if DEBUG
+    private var isCoverageRun: Bool {
+        ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route")
+    }
+
+    override var isAccessibilityElement: Bool {
+        get {
+            isCoverageRun || super.isAccessibilityElement
+        }
+        set {
+            super.isAccessibilityElement = newValue
+        }
+    }
+
+    override var accessibilityIdentifier: String? {
+        get {
+            isCoverageRun ? "jobs.coverage.mosaic.thickness" : super.accessibilityIdentifier
+        }
+        set {
+            super.accessibilityIdentifier = newValue
+        }
+    }
+
+    override var accessibilityValue: String? {
+        get {
+            isCoverageRun ? String(describing: value) : super.accessibilityValue
+        }
+        set {
+            super.accessibilityValue = newValue
+        }
+    }
+#endif
+
     private let minBlockSize: CGFloat = 4
     private let maxBlockSize: CGFloat = 52
 

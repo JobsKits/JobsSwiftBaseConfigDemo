@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import JobsByUIKit
+import JobsSwiftBaseDefines
 import JobsSwiftDSL
 import JobsScale
 import JobsImageTools
@@ -31,7 +32,7 @@ final class MosaicWholeImageDemoVC: MosaicBaseDemoVC,
     private var renderVersion = 0
 
     private lazy var thicknessButton: UIButton = {
-        UIButton.sys()
+        let button = UIButton.sys()
             .byFrame(CGRect(x: 0,
                             y: 0,
                             width: 32.w,
@@ -51,6 +52,12 @@ final class MosaicWholeImageDemoVC: MosaicBaseDemoVC,
                     self.applyMosaic(blockSize: self.thicknessControl.value)
                 }
             }
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            button.byAccessibilityIdentifier("jobs.coverage.mosaic.thickness.toggle")
+        }
+        #endif
+        return button
     }()
 
     private lazy var thicknessControl: MosaicThicknessControl = {

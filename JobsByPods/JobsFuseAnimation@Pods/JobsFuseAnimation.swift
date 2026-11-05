@@ -809,7 +809,11 @@ public final class JobsChargingAnimationView: UIView {
         jobs_syncChargingTimerState()
     }
 
+    @available(iOS, introduced: 8.0, deprecated: 17.0)
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        if #available(iOS 17.0, *) {
+            return
+        }
         super.traitCollectionDidChange(previousTraitCollection)
         jobs_applyChargingColors(animated: false)
     }
@@ -900,6 +904,11 @@ public final class JobsChargingAnimationView: UIView {
     }
 
     private func jobs_setupChargingAnimation() {
+        if #available(iOS 17.0, *) {
+            _ = registerForTraitChanges(UITraitCollection.systemTraitsAffectingColorAppearance) { (view: JobsChargingAnimationView, _) in
+                view.jobs_applyChargingColors(animated: false)
+            }
+        }
         isUserInteractionEnabled = false
         byBackgroundColor(JobsCor.clear)
         NotificationCenter.default.addObserver(self,

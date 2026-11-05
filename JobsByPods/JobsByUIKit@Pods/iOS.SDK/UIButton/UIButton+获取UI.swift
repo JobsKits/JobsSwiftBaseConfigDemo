@@ -231,32 +231,32 @@ extension UIButton {
 // MARK: - 获取@contentEdgeInsets、imageEdgeInsets（兼容Configuration）
 extension UIButton {
 
-    /// ✅ 业务视角下的「内容内边距」：
-    /// - iOS/tvOS 15+ 且使用 UIButton.Configuration 时：读取 cfg.contentInsets
-    /// - 否则：读取 legacy contentEdgeInsets（⚠️ iOS15+ deprecated 但仍可存取）
+    /// 新系统读取 Configuration；未配置时无附加边距，旧系统保留原属性。
     public var jobs_contentEdgeInsets: UIEdgeInsets {
-        if #available(iOS 15.0, tvOS 15.0, *), let cfg = self.configuration {
+        if #available(iOS 15.0, tvOS 15.0, *) {
+            guard let cfg = self.configuration else {
+                return .zero
+            }
             return jobs_uiEdgeInsets(from: cfg.contentInsets)
+        } else {
+            return jobs_readLegacyContentEdgeInsets
         }
-        return jobs_legacyContentEdgeInsets
     }
-    /// ✅ 业务视角下的「图片内边距」：
-    /// - iOS/tvOS 15+ 且使用 UIButton.Configuration 时：legacy imageEdgeInsets 会被系统忽略
-    ///   所以这里返回 .zero（并建议改用 cfg.imagePadding / cfg.imagePlacement）
-    /// - 否则：读取 legacy imageEdgeInsets
+    /// 新系统的图片布局由 Configuration 管理，不再应用旧图片偏移。
     public var jobs_imageEdgeInsets: UIEdgeInsets {
-        if #available(iOS 15.0, tvOS 15.0, *), self.configuration != nil {
+        if #available(iOS 15.0, tvOS 15.0, *) {
             return .zero
+        } else {
+            return jobs_readLegacyImageEdgeInsets
         }
-        return jobs_legacyImageEdgeInsets
     }
-    /// ✅ 读取 legacy contentEdgeInsets（避免直接引用 deprecated API 产生 warning）
+    /// 保留历史入口；新系统按 Configuration 查询，不读取旧属性。
     public var jobs_legacyContentEdgeInsets: UIEdgeInsets {
-        jobs_kvcEdgeInsets("contentEdgeInsets")
+        return jobs_contentEdgeInsets
     }
-    /// ✅ 读取 legacy imageEdgeInsets（避免直接引用 deprecated API 产生 warning）
+    /// 保留历史入口；新系统返回零偏移，图片间距读取 jobs_cfgImagePadding。
     public var jobs_legacyImageEdgeInsets: UIEdgeInsets {
-        jobs_kvcEdgeInsets("imageEdgeInsets")
+        return jobs_imageEdgeInsets
     }
     /// iOS/tvOS 15+：Configuration 模式下等价信息
     @available(iOS 15.0, tvOS 15.0, *)
@@ -277,13 +277,16 @@ extension UIButton {
 
 extension UIButton {
 
-    /// 用 KVC 读取 UIEdgeInsets，避免直接触达 iOS15+ deprecated 的属性导致编译 warning。
-    /// - Note: 在使用 UIButton.Configuration 时，这些 legacy 值「可能存在但不会生效」。
-    fileprivate func jobs_kvcEdgeInsets(_ key: String) -> UIEdgeInsets {
-        guard let v = self.value(forKey: key) as? NSValue else {
-            return .zero
-        }
-        return v.uiEdgeInsetsValue
+    @available(iOS, introduced: 2.0, deprecated: 15.0)
+    @available(tvOS, introduced: 9.0, deprecated: 15.0)
+    private var jobs_readLegacyContentEdgeInsets: UIEdgeInsets {
+        return contentEdgeInsets
+    }
+
+    @available(iOS, introduced: 2.0, deprecated: 15.0)
+    @available(tvOS, introduced: 9.0, deprecated: 15.0)
+    private var jobs_readLegacyImageEdgeInsets: UIEdgeInsets {
+        return imageEdgeInsets
     }
 
     @available(iOS 15.0, tvOS 15.0, *)

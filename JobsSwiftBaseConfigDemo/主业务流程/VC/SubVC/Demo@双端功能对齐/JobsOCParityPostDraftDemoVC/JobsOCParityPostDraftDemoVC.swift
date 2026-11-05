@@ -15,6 +15,7 @@ import AVFoundation
 import JobsByUIKit
 import JobsInheritance
 import JobsSwiftBaseDefines
+import JobsImageTools
 import JobsSwiftTools
 import JobsToast
 import GKNavigationBarSwift
@@ -32,11 +33,30 @@ final class JobsPostDraftDemoVC: BaseVC {
         let videoPath: String?
     }
 
+#if DEBUG
+    private var coverageDraftData: Data?
+    private lazy var coverageDeleteButton: UIButton = {
+        UIButton.sys()
+            .byAccessibilityIdentifier("jobs.coverage.post.fixtureDelete")
+            .byTitle("组件：移到真实删除区")
+            .byTitleFont(JobsFont.systemFont(ofSize: 11))
+            .onTap { [weak self] _ in
+                self?.finishCoverageImageInDeleteZone()
+            }
+            .byAddTo(view) { [unowned self] make in
+                make.right.equalTo(self.view.safeAreaLayoutGuide).inset(12)
+                make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(4)
+                make.width.equalTo(170)
+                make.height.equalTo(32)
+            }
+    }()
+#endif
     private let draftKey = "JobsPostDraftDemoVC.Draft"
     private let maximumTextCount = 10
     private let maximumImageCount = 9
     private var images: [UIImage] = []
     private var videoURL: URL?
+    private var videoThumbnailToken: JobsImageLoadToken?
     private var imageButtons: [UIButton] = []
     private var gridHeightConstraint: Constraint?
     private var lastMediaGridWidth: CGFloat = 0
@@ -220,6 +240,11 @@ final class JobsPostDraftDemoVC: BaseVC {
         addImageButton.byVisible(YES)
         deleteZoneLabel.byVisible(NO)
         loadDraft()
+#if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            coverageDeleteButton.byVisible(YES)
+        }
+#endif
         reloadMediaGrid()
         refreshState()
     }
@@ -293,11 +318,13 @@ final class JobsPostDraftDemoVC: BaseVC {
     }
 
     private func reloadMediaGrid() {
+        videoThumbnailToken?.cancel()
+        videoThumbnailToken = nil
         imageButtons.forEach {
             $0.removeFromSuperview()
         }
         if let videoURL {
-            let videoButton = makeMediaButton(image: makeVideoThumbnail(videoURL) ?? "video.fill".sysImg,
+            let videoButton = makeMediaButton(image: "video.fill".sysImg,
                                               tag: -1)
             videoButton
                 .byTitle("▶︎",
@@ -306,6 +333,15 @@ final class JobsPostDraftDemoVC: BaseVC {
                 .byTitleColor(JobsCor.white,
                               for: .normal)
             imageButtons = [videoButton]
+            videoThumbnailToken = JobsImageLoader.videoThumbnail(at: videoURL,
+                                                                  time: CMTime(seconds: 0.2,
+                                                                               preferredTimescale: 600)) { [weak self, weak videoButton] image in
+                guard let self, self.videoURL == videoURL, let image else {
+                    return
+                }
+                videoButton?.byImage(image,
+                                     for: .normal)
+            }
         } else {
             imageButtons = images.enumerated().map { index, image in
                 makeMediaButton(image: image,
@@ -352,22 +388,14 @@ final class JobsPostDraftDemoVC: BaseVC {
         case .changed:
             button.byTransform(CGAffineTransform(translationX: translation.x,
                                                  y: translation.y))
+#if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route"), !button.transform.isIdentity {
+                button.byAccessibilityLabel("post:dragging")
+            }
+#endif
         /// 进入删除区则删除，否则回到原位
         case .ended:
-            let buttonFrame = button.convert(button.bounds,
-                                             to: view)
-            if buttonFrame.intersects(deleteZoneLabel.frame) {
-                if button.tag == -1 {
-                    videoURL = nil
-                } else if images.indices.contains(button.tag) {
-                    images.remove(at: button.tag)
-                }
-                reloadMediaGrid()
-                refreshState()
-            } else {
-                restoreImageButton(button)
-            }
-            deleteZoneLabel.byVisible(NO)
+            finishImagePan(button)
         /// 取消或失败时恢复原位
         case .cancelled, .failed:
             restoreImageButton(button)
@@ -377,6 +405,47 @@ final class JobsPostDraftDemoVC: BaseVC {
             break
         }
     }
+
+    private func finishImagePan(_ button: UIButton) {
+        let buttonFrame = button.convert(button.bounds, to: view)
+        if buttonFrame.intersects(deleteZoneLabel.frame) {
+            if button.tag == -1 {
+                videoURL = nil
+            } else if images.indices.contains(button.tag) {
+                images.remove(at: button.tag)
+            }
+            reloadMediaGrid()
+            refreshState()
+        } else {
+            restoreImageButton(button)
+#if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route"),
+               button.accessibilityLabel == "post:dragging", button.transform.isIdentity {
+                button.byAccessibilityLabel("post:restored")
+            }
+#endif
+        }
+        deleteZoneLabel.byVisible(NO)
+    }
+
+#if DEBUG
+    private func finishCoverageImageInDeleteZone() {
+        guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route"), view.window != nil else {
+            return
+        }
+        deleteZoneLabel.byVisible(YES)
+        view.layoutIfNeeded()
+        guard let button = imageButtons.first else {
+            return
+        }
+        let origin = button.convert(button.bounds, to: view)
+        let target = deleteZoneLabel.frame
+        button.byTransform(CGAffineTransform(translationX: target.midX - origin.midX,
+                                            y: target.midY - origin.midY))
+        // 组件夹具只安排真实几何位置，结束仍走与原pan相同的删除逻辑。
+        finishImagePan(button)
+    }
+#endif
 
     private func restoreImageButton(_ button: UIButton) {
         UIView.jobsAnimateWithSpring(0.30,
@@ -391,6 +460,7 @@ final class JobsPostDraftDemoVC: BaseVC {
     private func makeMediaButton(image: UIImage?,
                                  tag: Int) -> UIButton {
         UIButton.sys()
+            .byAccessibilityIdentifier("jobs.coverage.post.media." + String(tag))
             .byTag(tag)
             .byImage(image,
                      for: .normal)
@@ -404,18 +474,12 @@ final class JobsPostDraftDemoVC: BaseVC {
             }
     }
 
-    private func makeVideoThumbnail(_ url: URL) -> UIImage? {
-        let generator = AVAssetImageGenerator(asset: AVAsset(url: url))
-        generator.appliesPreferredTrackTransform = true
-        guard let cgImage = try? generator.copyCGImage(at: CMTime(seconds: 0.2,
-                                                                  preferredTimescale: 600),
-                                                       actualTime: nil) else {
-            return nil
-        }
-        return UIImage(cgImage: cgImage)
-    }
-
     private func refreshState() {
+#if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            view.byAccessibilityLabel("postMedia:" + String(images.count) + ":video=" + String(videoURL != nil))
+        }
+#endif
         let textCount = postTextView.text.count
         placeholderLabel.byVisible(textCount == 0)
         countLabel.byText("\(textCount)/\(maximumTextCount)")
@@ -427,6 +491,14 @@ final class JobsPostDraftDemoVC: BaseVC {
     }
 
     private func loadDraft() {
+#if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            // 只用随包素材安排触摸样本；不读用户草稿或照片库。
+            images = ["Ani".img, "唐老鸭".img]
+            snapshot = currentDraft()
+            return
+        }
+#endif
         guard let data = UserDefaults.standard.data(forKey: draftKey),
               let draft = try? JSONDecoder.make { _ in }.decode(Draft.self,
                                                                 from: data) else {
@@ -455,6 +527,13 @@ final class JobsPostDraftDemoVC: BaseVC {
     private func saveDraft() {
         let draft = currentDraft()
         if let data = try? JSONEncoder.make { _ in }.encode(draft) {
+#if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+                coverageDraftData = data
+                snapshot = draft
+                return
+            }
+#endif
             UserDefaults.standard.set(data,
                                       forKey: draftKey)
             snapshot = draft
@@ -462,6 +541,12 @@ final class JobsPostDraftDemoVC: BaseVC {
     }
 
     private func clearDraft() {
+#if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            coverageDraftData = nil
+            return
+        }
+#endif
         UserDefaults.standard.removeObject(forKey: draftKey)
     }
 

@@ -72,6 +72,14 @@ public final class JobsDebugPanel {
             return self
         }
         started = true
+        #if DEBUG
+        let arguments = ProcessInfo.processInfo.arguments
+        if let option = arguments.firstIndex(of: "--jobs-coverage-route"),
+           arguments.indices.contains(option + 1),
+           arguments[option + 1] == "JobsDebugPanelDemoVC" {
+            floatingEntryHidden = false
+        }
+        #endif
         _ = UIApplication.jobsDebugPanelShakeHook
         let center = NotificationCenter.default
         let activationNames: [Notification.Name] = [

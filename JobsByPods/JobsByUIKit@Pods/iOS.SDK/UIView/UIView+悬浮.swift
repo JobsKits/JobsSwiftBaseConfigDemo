@@ -11,6 +11,7 @@ import AppKit
 import UIKit
 #endif
 
+import JobsSwiftBaseDefines
 import ObjectiveC
 import JobsSwiftDSL
 
@@ -194,7 +195,9 @@ extension UIView {
                                  config,
                                  .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         // 2) 容器
-        let container: UIView = config.container ?? window ?? superview ?? Self._fallbackWindow()
+        guard let container: UIView = config.container ?? window ?? superview ?? Self._fallbackWindow() else {
+            return self
+        }
         container.layoutIfNeeded()
         // 3) 添加
         if superview == nil {
@@ -507,30 +510,10 @@ extension UIView {
     }
     /// 悬浮视图@窗口几何
     /// 构造一个兜底窗口（极少会走到这里）
-    private static func _fallbackWindow() -> UIWindow {
-        if #available(iOS 13.0, *),
-           let scene = UIApplication.shared.connectedScenes
-               .compactMap({
-                $0 as? UIWindowScene
-            })
-               .first {
-            let win = UIWindow(windowScene: scene)
-                .byFrame(scene.coordinateSpace.bounds)
-                .byWindowLevel(.alert + 1)
-                .byHidden(false)
-            if win.rootViewController == nil {
-                win.byRootViewController(UIViewController())
-            }
-            return win
-        } else {
-            // TODO: No scene is available for legacy callers; supply SuspendConfig.container from the caller view.
-            let win = UIWindow(frame: UIScreen.main.bounds)
-                .byWindowLevel(.alert + 1)
-                .byHidden(false)
-            if win.rootViewController == nil {
-                win.byRootViewController(UIViewController())
-            }
-            return win
-        }
+    private static func _fallbackWindow() -> UIWindow? {
+        return UIWindow.jobsMake(root: UIViewController.jobsMake { _ in },
+                                  level: .alert + 1,
+                                  makeKeyVisible: false)?
+            .byHidden(false)
     }
 }

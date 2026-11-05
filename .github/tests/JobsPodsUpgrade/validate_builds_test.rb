@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# Isolated command/coverage regressions; fake tools never compile or modify the installed Pods project.
 require 'json'
 require 'open3'
 require 'tmpdir'
@@ -7,6 +6,10 @@ require 'fileutils'
 require 'rbconfig'
 require 'rexml/document'
 require 'digest'
+
+# 用途：隔离验证 validate_builds.rb 的批量成员、命令、成功证据及失败或中断处理。
+# 运行：在本文件目录执行 ruby ./validate_builds_test.rb。
+# 边界：工程和工具均为临时夹具，不真正编译、不改已安装的 Pods 工程；不替代真实构建门禁。
 
 SOURCE = File.expand_path('validate_builds.rb', __dir__)
 POD_NAMES = (0...63).map { |index| format('Pod%03d', index) } + ['JobsAppIconRibbon']

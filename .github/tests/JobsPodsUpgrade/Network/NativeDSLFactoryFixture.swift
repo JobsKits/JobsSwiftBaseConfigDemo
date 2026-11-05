@@ -7,8 +7,9 @@
 
 import Foundation
 
-// 原生 CLI 回归只替代 UIKit DSL 模块中这两个无业务逻辑的构造/赋值入口。
-// iOS Pod / 宿主构建仍使用真实 JobsSwiftDSL，不能用此 fixture 替代模块构建。
+/// 为 macOS 网络回归提供 JSONDecoder 创建与日期解码策略设置两个最小入口，承接生产网络模块的 DSL 依赖。
+/// 由本目录 run_regressions.rb 编译为测试用 JobsSwiftDSL 模块，本文件没有独立执行入口。
+/// 不替代网络传输或密码实现；iOS 构建使用真实 DSL，不得把本替身加入主 App 或替代真实模块。
 public extension JSONDecoder {
     static func make(_ configure: (JSONDecoder) -> Void) -> JSONDecoder {
         let decoder = JSONDecoder()

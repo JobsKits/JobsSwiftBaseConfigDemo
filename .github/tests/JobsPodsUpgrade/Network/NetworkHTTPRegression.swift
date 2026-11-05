@@ -7,6 +7,10 @@
 
 import Foundation
 
+/// 通过真实 Alamofire 与本机 HTTP 服务验证 query / body、错误及短响应、下载摘要、原文件保护和 multipart 上传。
+/// 由本目录 run_regressions.rb 编译为独立命令行程序，并传入临时 HTTP 服务地址后执行。
+/// 不访问外网，不证明线上 TLS 或服务端部署；本文件不加入主 App target。
+
 @main
 struct NetworkHTTPRegression {
     static func main() async throws {

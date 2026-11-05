@@ -19,7 +19,7 @@ extension JXSegmentedIndicatorBackgroundView {
     /// 兼容旧命名：backgroundWidthIncrement（内部会同步到 indicatorWidthIncrement）
     @discardableResult
     public func byBackgroundWidthIncrement(_ v: CGFloat) -> Self {
-        backgroundWidthIncrement = v
+        indicatorWidthIncrement = v
         return self
     }
 }

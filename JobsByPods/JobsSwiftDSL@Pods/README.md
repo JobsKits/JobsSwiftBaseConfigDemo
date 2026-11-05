@@ -40,6 +40,9 @@
 - `JobsCor` 语义背景色、文字色经 `byBackgroundColor(...)`、`byTextColor(...)`、`byTitleColor(...)` 等 DSL 自动登记到 `JobsThemeCenter`；也可使用 `byThemeBackground(...)`、`byThemeTextColor(...)` 和 `byThemeImage(...)` 显式绑定主题 Key。
 - `UITableViewCell.byAccessoryType(...)` / `byEditingAccessoryType(...)` 保留系统原生箭头，未显式指定外观的 Cell 随 App 主题更新局部外观；移除箭头或改用自定义附件时恢复原外观，调用方显式指定的外观优先。不修改 Window 或控制器外观。
 - `UIButton.byClearConfigurationBackground()` 会持续清除普通、选中、高亮等状态下的配置背景，并在旧系统同步移除背景图，适合只保留前景图标 / 文字的导航按钮。
+- 按钮高亮／禁用图片调整和触摸反馈由统一配置更新回调承接，iOS 15+ 使用 `UIButton.Configuration`，旧系统保留原属性；已有业务配置回调继续执行。
+- Web 配置的 `byProcessPool(...)` 仅在仍支持独立进程池的旧系统设置池，现代 WebKit 由系统管理。`bySelectionGranularity(...)` 支持 Jobs 的 `.dynamic`／`.character` 枚举及旧枚举变量，iOS 11+ 固定按系统字符粒度处理；公开封装不再要求引用废弃的系统类型。
+- `UIWindow.wd` 和无 Scene 参数的 `UIWindow.jobsMake(...)` 返回 `UIWindow?`：iOS 26+ 没有 Scene 时返回空，旧系统保留离屏窗口回退。`UIWindow.jobsMake(scene:root:...)` 接收明确的非空 Scene 并返回 `UIWindow`；需要确定窗口归属时使用此入口。
 - 发现封装缺口时先在本 Pod 的正确类型层补齐，再同步业务代码与 Xcode CodeSnippets。
 
 ## <span id="jobs-toc-heading-3" data-jobs-toc="v2">二、目录结构 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->

@@ -63,9 +63,24 @@ public final class JobsAppDoorInputView: UIView {
     public func setCountry(flag: String,
                            code: String) {
         countryCode = code.hasPrefix("+") ? code : "+\(code)"
-        countryCodeButton?.byTitle("\(flag) \(countryCode)",
+        countryCodeButton?.byTitle("\(flag)\u{00A0}\(countryCode)",
                                    for: .normal)
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            countryCodeButton?.accessibilityValue = countryCode
+        }
+        #endif
     }
+
+    #if DEBUG
+    func installCoverageCountryIdentifier(_ identifier: String) {
+        guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") else {
+            return
+        }
+        countryCodeButton?.byAccessibilityIdentifier(identifier)
+        countryCodeButton?.accessibilityValue = countryCode
+    }
+    #endif
 
     public func validateGraphicCaptcha() -> Bool {
         guard field == .graphicCaptcha else {
@@ -150,12 +165,14 @@ private extension JobsAppDoorInputView {
         /// 处理手机国码选择分支
         case .phone:
             let button = UIButton.sys()
-                .jobsAppDoorAppearance(title: "🇨🇳 +86",
+                .jobsAppDoorAppearance(title: "🇨🇳\u{00A0}+86",
                                        titleColor: JobsAppDoorPalette.fieldStroke,
                                        font: JobsFont.systemFont(ofSize: 12,
                                                                  weight: .semibold),
                                        backgroundColor: JobsCor.clear,
                                        cornerRadius: 0)
+                .jobsAppDoorSingleLineTitle(minimumScaleFactor: 0.85)
+                .byContentEdgeInsets(.zero)
                 .onTap { [weak self] _ in
                     self?.onCountryCodeRequest?()
                 }
@@ -167,7 +184,7 @@ private extension JobsAppDoorInputView {
             countryCodeButton = button
             textField.snp.remakeConstraints { make in
                 make.top.bottom.equalToSuperview()
-                make.left.equalTo(button.snp.right)
+                make.left.equalTo(button.snp.right).offset(4)
                 make.right.equalToSuperview().inset(8)
             }
         /// 处理短信验证码倒计时分支

@@ -51,6 +51,7 @@ final class FriendsVC: BaseVC {
 
     private lazy var exampleButton: UIButton = {
         UIButton.sys()
+            .byAccessibilityIdentifier("jobs.friends.detail")
             .byTitle("显示".tr,
                      for: .normal)
             .byTitle("隐藏".tr,

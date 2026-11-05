@@ -23,6 +23,7 @@ final class JobsDebugButtonVC: BaseVC {
         UIButton.custom()
             .byBgImage(JobsDebugPanelResource.buttonImage)
             .byAccessibilityLabel("打开调试面板；可拖动；长按隐藏，摇动手机再次显示")
+            .byAccessibilityIdentifier("JobsDebugPanelButton")
             .onTap { [weak self] _ in
                 guard let window = self?.view.window as? JobsDebugOverlayWindow,
                       let host = window.hostWindow else {

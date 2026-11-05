@@ -12,7 +12,7 @@ import JobsSwiftBaseDefines
 
 final class JobsNetworkingPostDemoVC: JobsNetworkingMethodDemoVC {
 
-    private var requestBody: [String: AnySendable] {
+    private var requestBody: [String: JobsValue] {
         [
             "pageNo": .init(1),
             "pageSize": .init(10),

@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import AVFoundation
+import MediaPlayer
 import JobsByUIKit
 import JobsInheritance
 import JobsSwiftBaseDefines
@@ -48,6 +50,30 @@ open class JobsAppDoorBaseVC: BaseVC {
 
     private var keyboardObservers: [NSObjectProtocol] = []
     private var volumePanelShowing = false
+    private lazy var volumeDismissGesture: UITapGestureRecognizer = {
+        UITapGestureRecognizer
+            .jobsMake { _ in }
+            .byDelegate(self)
+            .byCancelsTouchesInView(false)
+            .byDelaysTouchesBegan(false)
+            .byDelaysTouchesEnded(false)
+    }()
+    #if !targetEnvironment(simulator)
+    private var systemVolumeObservation: NSKeyValueObservation?
+    private lazy var systemVolumeView: MPVolumeView = {
+        MPVolumeView
+            .jobsMake { _ in }
+            .byAccessibilityIdentifier("jobs.auth.volume.slider")
+            .byTintColor(JobsAppDoorPalette.gold)
+            .byTransform(CGAffineTransform(rotationAngle: -.pi / 2))
+            .byAddTo(volumePanelView) { make in
+                make.centerX.equalToSuperview()
+                make.centerY.equalToSuperview().offset(10)
+                make.width.equalTo(134)
+                make.height.equalTo(28)
+            }
+    }()
+    #endif
 
     final lazy var backgroundView: JobsAppDoorBackgroundView = {
         JobsAppDoorBackgroundView()
@@ -88,7 +114,7 @@ open class JobsAppDoorBaseVC: BaseVC {
     }()
 
     final lazy var volumeButton: UIButton = {
-        UIButton.sys()
+        let button = UIButton.sys()
             .jobsAppDoorAppearance(titleColor: JobsAppDoorPalette.gold,
                                    backgroundColor: JobsAppDoorPalette.cardBackground,
                                    cornerRadius: 18,
@@ -106,10 +132,16 @@ open class JobsAppDoorBaseVC: BaseVC {
                 make.right.equalTo(self.view.safeAreaLayoutGuide.snp.right).inset(14)
                 make.size.equalTo(CGSize(width: 36, height: 36))
             }
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            button.byAccessibilityIdentifier("jobs.auth.volume.toggle")
+        }
+        #endif
+        return button
     }()
 
     final lazy var volumePanelView: UIView = {
-        UIView
+        let panel = UIView
             .jobsMake { _ in }
             .byBackgroundColor(JobsAppDoorPalette.cardBackground.withAlphaComponent(0.92))
             .byCornerRadius(14)
@@ -125,10 +157,16 @@ open class JobsAppDoorBaseVC: BaseVC {
                 make.centerX.equalTo(volumeButton)
                 make.size.equalTo(CGSize(width: 52, height: 188))
             }
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            panel.byAccessibilityIdentifier("jobs.auth.volume.panel")
+        }
+        #endif
+        return panel
     }()
 
     final lazy var volumePercentLabel: UILabel = {
-        UILabel
+        let label = UILabel
             .jobsMake { _ in }
             .byTextColor(JobsAppDoorPalette.gold)
             .byTextAlignment(.center)
@@ -141,10 +179,16 @@ open class JobsAppDoorBaseVC: BaseVC {
                 make.left.right.equalToSuperview()
                 make.height.equalTo(20)
             }
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            label.byAccessibilityIdentifier("jobs.auth.volume.percent")
+        }
+        #endif
+        return label
     }()
 
     final lazy var volumeSlider: UISlider = {
-        UISlider
+        let slider = UISlider
             .jobsMake { _ in }
             .byMinimumValue(0)
             .byMaximumValue(1)
@@ -162,6 +206,12 @@ open class JobsAppDoorBaseVC: BaseVC {
                 make.width.equalTo(134)
                 make.height.equalTo(28)
             }
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            slider.byAccessibilityIdentifier("jobs.auth.volume.slider")
+        }
+        #endif
+        return slider
     }()
 
     public init(configuration: JobsAppDoorConfig = .defaultConfig) {
@@ -187,7 +237,22 @@ open class JobsAppDoorBaseVC: BaseVC {
         backgroundView.configure(configuration)
         backgroundView.byVisible(true)
         volumeButton.byHidden(configuration.backgroundType != .video)
+        view.jobs_addGestureRetView(volumeDismissGesture)
         observeKeyboard()
+        #if !targetEnvironment(simulator)
+        if configuration.backgroundType == .video {
+            systemVolumeObservation = AVAudioSession.sharedInstance().observe(\.outputVolume,
+                                                                              options: [.new]) { [weak self] _, _ in
+                DispatchQueue.main.async {
+                    guard let self else {
+                        return
+                    }
+                    self.backgroundView.setVolume(1)
+                    self.updateVolumePercentText()
+                }
+            }
+        }
+        #endif
     }
 
     open override func viewWillAppear(_ animated: Bool) {
@@ -240,6 +305,11 @@ open class JobsAppDoorBaseVC: BaseVC {
     final func openCountryCodePicker(for inputView: JobsAppDoorInputView) {
         view.endEditing(true)
         let controller = JobsSwiftCountryCodeCtrl()
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            controller.view.byAccessibilityIdentifier("jobs.auth.country.picker")
+        }
+        #endif
         controller.countrySelectionHandler = { [weak inputView] country in
             inputView?.setCountry(flag: country.flag,
                                   code: country.code)
@@ -385,7 +455,13 @@ private extension JobsAppDoorBaseVC {
             .byHidden(false)
             .byUserInteractionEnabled(visible)
         if visible {
+            #if targetEnvironment(simulator)
             volumeSlider.byValue(backgroundView.currentVolume)
+            #else
+            // 真机直接使用公开系统音量控件，避免与播放器增益叠乘。
+            backgroundView.setVolume(1)
+            systemVolumeView.byVisible(true)
+            #endif
         }
         updateVolumePercentText()
         let alpha: CGFloat = visible ? 1 : 0
@@ -399,7 +475,7 @@ private extension JobsAppDoorBaseVC {
                 .byTransform(transform)
         }
         let completion: (Bool) -> Void = { [weak self] _ in
-            if !visible {
+            if self?.volumePanelShowing == false {
                 self?.volumePanelView.byHidden(true)
             }
         }
@@ -412,7 +488,7 @@ private extension JobsAppDoorBaseVC {
                                      delay: 0,
                                      dampingRatio: 0.86,
                                      initialVelocity: 0.2,
-                                     options: [.curveEaseInOut, .allowUserInteraction],
+                                     options: [.curveEaseInOut, .allowUserInteraction, .beginFromCurrentState],
                                      animations: animations,
                                      completion: completion)
     }
@@ -424,7 +500,12 @@ private extension JobsAppDoorBaseVC {
     }
 
     func updateVolumePercentText() {
-        let percent = Int((backgroundView.currentVolume * 100).rounded())
+        #if targetEnvironment(simulator)
+        let volume = backgroundView.currentVolume
+        #else
+        let volume = AVAudioSession.sharedInstance().outputVolume
+        #endif
+        let percent = Int((volume * 100).rounded())
         volumePercentLabel.byText("\(percent)%")
     }
 
@@ -452,5 +533,24 @@ private extension JobsAppDoorBaseVC {
                                        keyboardVisible: false)
         }
         keyboardObservers = [showObserver, hideObserver]
+    }
+}
+
+extension JobsAppDoorBaseVC: UIGestureRecognizerDelegate {
+
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                                  shouldReceive touch: UITouch) -> Bool {
+        guard gestureRecognizer === volumeDismissGesture, volumePanelShowing else {
+            return false
+        }
+        let point = touch.location(in: view)
+        let insidePanel = volumePanelView.frame.contains(point)
+        let insideButton = volumeButton.frame.contains(point)
+        if !insidePanel && !insideButton {
+            setVolumePanelVisible(false,
+                                  animated: true)
+        }
+        // 只观察触摸起点，原控件继续接收同一次点击或拖动。
+        return false
     }
 }

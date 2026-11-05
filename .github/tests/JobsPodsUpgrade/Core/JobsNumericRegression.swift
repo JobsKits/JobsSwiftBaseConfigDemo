@@ -8,6 +8,10 @@
 import Foundation
 import ObjectiveC
 
+/// 验证容错解码、时间戳单位、整数边界、数组 Builder 快照及 Snowflake 时钟回退与并发唯一性。
+/// 由本目录 run_regressions.rb 联合生产源码编译为独立命令行程序后执行。
+/// ISO 日期工厂使用测试替身；不替代真实 UIKit / DSL 构建，也不加入主 App target。
+
 private var formatterCaptureKey: UInt8 = 0
 
 private final class NumericReleaseCapture {

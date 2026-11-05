@@ -163,6 +163,21 @@ class MosaicBaseDemoVC: BaseVC {
     }
 
     private func loadRemoteImage() {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            guard let fixture = UIImage.make(named: "Ani") else {
+                loadingLabel.byText("巡检测试图片缺失：Ani")
+                return
+            }
+            // 手势回归使用随包图片，仍执行原图规范化和子页面的同一绘画初始化。
+            let image = fixture.jobs_mosaicNormalized()
+            originalImage = image
+            imageView.byImage(image)
+            loadingLabel.byHidden(true)
+            onImageLoaded(image)
+            return
+        }
+        #endif
         guard let url = URL(string: MosaicDemoImageURLProvider.sampleImage) else {
             loadingLabel.byText("图片地址无效".tr)
             return

@@ -37,8 +37,28 @@ final class GestureUnlockDemoVC: BaseVC {
     private let store = PatternStore()
     private let horizontalInset: CGFloat = 20
 
+    #if DEBUG
+    private lazy var coveragePatternStatusLabel: UILabel = {
+        UILabel.jobsMake { _ in }
+            .byText("initial")
+            .byTextColor(JobsCor.clear)
+            .byFrame(CGRect(x: 8, y: 106, width: 1, height: 1))
+            .byAccessibilityIdentifier("jobs.gesture.pattern.status")
+            .byUserInteractionEnabled(false)
+            .byAddTo(view)
+    }()
+
+    private func recordCoveragePatternStatus(_ status: String) {
+        guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") else {
+            return
+        }
+        coveragePatternStatusLabel.byText(status)
+    }
+    #endif
+
     private lazy var modeControl: UISegmentedControl = {
         UISegmentedControl(items: ["设置/重置".tr, "验证".tr])
+            .byAccessibilityIdentifier("jobs.gesture.pattern.mode")
             .bySelectedSegmentIndex(1)
             .onJobsChange { [weak self] (seg: UISegmentedControl) in
                 guard let self else {
@@ -76,6 +96,7 @@ final class GestureUnlockDemoVC: BaseVC {
     private lazy var hintLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
+            .byAccessibilityIdentifier("jobs.gesture.pattern.hint")
             .byNumberOfLines(0)
             .byTextAlignment(.center)
             .byFont(JobsFont.systemFont(ofSize: 15,
@@ -89,6 +110,7 @@ final class GestureUnlockDemoVC: BaseVC {
 
     private lazy var unlockView: GestureUnlockView = {
         GestureUnlockView()
+            .byAccessibilityIdentifier("jobs.gesture.pattern.canvas")
             .byBackgroundColor(JobsCor.clear)
             .byAddTo(view) { [unowned self] unlock, make in
                 make.top.equalTo(self.hintLabel.snp.bottom).offset(16)
@@ -101,6 +123,7 @@ final class GestureUnlockDemoVC: BaseVC {
 
     private lazy var resetButton: UIButton = {
         UIButton.sys()
+            .byAccessibilityIdentifier("jobs.gesture.pattern.reset")
             .byBackgroundColor(JobsCor.systemGreen,
                                for: .normal)
             .byTitle("清除/重来".tr,
@@ -145,6 +168,9 @@ final class GestureUnlockDemoVC: BaseVC {
         resetButton.byVisible(YES)
         configureUnlockView()
         refreshStateFromStorage()
+        #if DEBUG
+        installCoverageComponentControls()
+        #endif
     }
 }
 // MARK: - GestureUnlockViewDelegate（分类解耦）
@@ -157,6 +183,9 @@ extension GestureUnlockDemoVC: GestureUnlockViewDelegate {
                            didComplete pattern: GesturePattern) {
         // ✅ 长度不足：提示完成后清除之前手势痕迹
         guard pattern.indices.count >= view.configuration.minimumPatternLength else {
+            #if DEBUG
+            recordCoveragePatternStatus("minimumLength")
+            #endif
             toastErrorAndClear("至少连接 \(view.configuration.minimumPatternLength) 个点")
             return
         }
@@ -166,6 +195,9 @@ extension GestureUnlockDemoVC: GestureUnlockViewDelegate {
             flowState = .confirmFirst(temp: pattern)
             view.showSelected()
             hintLabel.byText("请再绘制一次进行确认".tr)
+            #if DEBUG
+            recordCoveragePatternStatus("confirmRequired")
+            #endif
             delayedReset()
         /// 处理 .confirmFirst 分支
         case .confirmFirst(let temp):
@@ -175,15 +207,24 @@ extension GestureUnlockDemoVC: GestureUnlockViewDelegate {
                 hintLabel.byText("设置成功 ✅ 现在可以用它解锁了".tr)
                 flowState = .verify
                 modeControl.bySelectedSegmentIndex(1)
+                #if DEBUG
+                recordCoveragePatternStatus("created")
+                #endif
                 delayedReset()
             } else {
                 flowState = .createFirst
+                #if DEBUG
+                recordCoveragePatternStatus("confirmMismatch")
+                #endif
                 // ✅ 两次不一致：提示完成后清除之前手势痕迹
                 toastErrorAndClear("两次不一致，请重新设置")
             }
         /// 处理 .verify 分支
         case .verify:
             guard store.hasPattern else {
+                #if DEBUG
+                recordCoveragePatternStatus("missingPattern")
+                #endif
                 "还没设置手势，先去“设置/重置”".tr.toast
                 unlockView.reset() // 防止残留（即使理论上此时应该不可输入）
                 return
@@ -191,8 +232,14 @@ extension GestureUnlockDemoVC: GestureUnlockViewDelegate {
             if store.verify(pattern: pattern) {
                 view.showSelected()
                 hintLabel.byText("解锁成功 ✅".tr)
+                #if DEBUG
+                recordCoveragePatternStatus("verified")
+                #endif
                 delayedReset()
             } else {
+                #if DEBUG
+                recordCoveragePatternStatus("verificationFailed")
+                #endif
                 // ✅ 手势错误：提示完成后清除之前手势痕迹
                 toastErrorAndClear("手势错误")
             }
@@ -201,6 +248,38 @@ extension GestureUnlockDemoVC: GestureUnlockViewDelegate {
 }
 
 extension GestureUnlockDemoVC {
+
+    #if DEBUG
+    private func installCoverageComponentControls() {
+        guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") else {
+            return
+        }
+        let patterns: [(String, String, [Int])] = [
+            ("A", "组件图案 A", [0, 2, 5, 5]),
+            ("B", "组件图案 B", [0, 6, 7, 7]),
+            ("short", "组件短图案", [0, 1])
+        ]
+        let buttons = patterns.map { key, title, indices in
+            UIButton.sys()
+                .byTitle(title, for: .normal)
+                .byTitleFont(JobsFont.systemFont(ofSize: 11))
+                .byAccessibilityIdentifier("jobs.component.pattern.\(key)")
+                .onTap { [weak self] _ in
+                    self?.unlockView.debugReplayNodeSequence(indices)
+                }
+        }
+        UIStackView.jobsMake { _ in }
+            .byAxis(.horizontal)
+            .byDistribution(.fillEqually)
+            .bySpacing(8)
+            .byAddArrangedSubviews(buttons)
+            .byAddTo(view) { [unowned self] make in
+                make.left.right.equalTo(self.view.safeAreaLayoutGuide).inset(12)
+                make.bottom.equalTo(self.view.safeAreaLayoutGuide).inset(2)
+                make.height.equalTo(30)
+            }
+    }
+    #endif
 
     private func configureUnlockView() {
         var config = GestureUnlockConfiguration()
@@ -237,6 +316,11 @@ extension GestureUnlockDemoVC {
     private func toastErrorAndClear(_ text: String,
                                     clearAfter delay: TimeInterval = 0.65) {
         unlockView.showError()
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            hintLabel.byText(text)
+        }
+        #endif
         text.toast
         clearGestureTrace(after: delay)
     }

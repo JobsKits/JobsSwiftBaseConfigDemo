@@ -348,10 +348,31 @@ final class MomentPostCell: UITableViewCell,
     }
     // ============================== Inline “全文/收起” ==============================
     private static let toggleURL = URL(string: "https://github.com/JobsKits/JobsSwiftBaseConfigDemo")!
+
+    @available(iOS 17.0, *)
+    func textView(_ textView: UITextView,
+                  primaryActionFor textItem: UITextItem,
+                  defaultAction: UIAction) -> UIAction? {
+        guard case let .link(url) = textItem.content,
+              url == Self.toggleURL else {
+            return defaultAction
+        }
+        return UIAction.make(title: defaultAction.title) { [weak self] _ in
+            guard let self else {
+                return
+            }
+            self.onToggleExpand?(self)
+        }
+    }
+
+    @available(iOS, introduced: 10.0, deprecated: 17.0)
     func textView(_ textView: UITextView,
                   shouldInteractWith URL: URL,
                   in characterRange: NSRange,
                   interaction: UITextItemInteraction) -> Bool {
+        if #available(iOS 17.0, *) {
+            return true
+        }
         if URL.absoluteString == Self.toggleURL.absoluteString {
             onToggleExpand?(self) // ✅ 带 cell
             return false

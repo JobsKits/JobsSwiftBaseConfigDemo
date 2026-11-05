@@ -25,6 +25,7 @@ final class SafetyPushDemoVC: BaseVC {
     private lazy var topButton: UIButton = {
         let mainTitle = "从上进入"
         return UIButton.sys()
+            .byAccessibilityIdentifier("jobs.safePush.top")
             .byTitle(mainTitle.tr,
                      for: .normal)
             .byTitleColor(JobsCor.systemBlue,
@@ -83,6 +84,7 @@ final class SafetyPushDemoVC: BaseVC {
     private lazy var bottomButton: UIButton = {
         let mainTitle = "从下进入"
         return UIButton.sys()
+            .byAccessibilityIdentifier("jobs.safePush.bottom")
             .byTitle(mainTitle.tr,
                      for: .normal)
             .byTitleColor(JobsCor.systemBlue,
@@ -141,6 +143,7 @@ final class SafetyPushDemoVC: BaseVC {
     private lazy var leftButton: UIButton = {
         let mainTitle = "从左进入"
         return UIButton.sys()
+            .byAccessibilityIdentifier("jobs.safePush.left")
             .byTitle(mainTitle.tr,
                      for: .normal)
             .byTitleColor(JobsCor.systemBlue,
@@ -199,6 +202,7 @@ final class SafetyPushDemoVC: BaseVC {
     private lazy var rightButton: UIButton = {
         let mainTitle = "从右进入（系统默认）"
         return UIButton.sys()
+            .byAccessibilityIdentifier("jobs.safePush.right")
             .byTitle(mainTitle.tr,
                      for: .normal)
             .byTitleColor(JobsCor.systemBlue,

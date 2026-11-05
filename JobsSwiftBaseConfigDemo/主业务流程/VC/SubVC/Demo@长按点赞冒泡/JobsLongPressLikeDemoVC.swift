@@ -43,6 +43,7 @@ final class JobsLongPressLikeDemoVC: BaseVC {
 
     private lazy var likeButton: UIButton = {
         UIButton.sys()
+            .byAccessibilityIdentifier("jobs.gesture.like")
             .byImage("hand.thumbsup.fill".sysImg,
                      for: .normal)
             .byTintColor(JobsCor.secondaryLabel)

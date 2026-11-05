@@ -11,6 +11,90 @@ import AppKit
 import UIKit
 #endif
 
+/// 优先使用调用方屏幕；无调用方的兼容入口选择前台 Scene，未连接时返回零尺寸。
+public enum JobsDisplay {
+
+    public static func bounds(in view: UIView? = nil) -> CGRect {
+        if #available(iOS 13.0, tvOS 13.0, *) {
+            if let view {
+                return view.window?.windowScene?.screen.bounds ?? view.bounds
+            }
+            let scenes = UIApplication.shared.connectedScenes.compactMap {
+                $0 as? UIWindowScene
+            }
+            let scene = scenes.first {
+                $0.activationState == .foregroundActive
+            } ?? scenes.first {
+                $0.activationState == .foregroundInactive
+            } ?? scenes.first
+            if let scene {
+                return scene.screen.bounds
+            }
+        }
+        if #available(iOS 26.0, tvOS 26.0, *) {
+            return view?.bounds ?? .zero
+        } else {
+            return legacyScreenBounds
+        }
+    }
+
+    @available(iOS, introduced: 2.0, deprecated: 26.0)
+    @available(tvOS, introduced: 9.0, deprecated: 26.0)
+    private static var legacyScreenBounds: CGRect {
+        return UIScreen.main.bounds
+    }
+}
+
+/// 统一离屏绘制，保留旧系统的 CGContext 管线及调用方指定的像素比例。
+public enum JobsGraphics {
+
+    public static func image(size: CGSize,
+                             opaque: Bool = false,
+                             scale: CGFloat = 0,
+                             drawing: (CGContext) -> Void) -> UIImage? {
+        guard size.width.isFinite, size.height.isFinite,
+              size.width > 0, size.height > 0 else {
+            return nil
+        }
+        if #available(iOS 17.0, tvOS 17.0, *) {
+            let format = UIGraphicsImageRendererFormat.default()
+            format.opaque = opaque
+            if scale > 0 {
+                format.scale = scale
+            }
+            format.preferredRange = .standard
+            return UIGraphicsImageRenderer(size: size,
+                                            format: format).image { context in
+                drawing(context.cgContext)
+            }
+        } else {
+            return legacyImage(size: size,
+                                opaque: opaque,
+                                scale: scale,
+                                drawing: drawing)
+        }
+    }
+
+    @available(iOS, introduced: 2.0, deprecated: 17.0)
+    @available(tvOS, introduced: 9.0, deprecated: 17.0)
+    private static func legacyImage(size: CGSize,
+                                     opaque: Bool,
+                                     scale: CGFloat,
+                                     drawing: (CGContext) -> Void) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size,
+                                               opaque,
+                                               scale)
+        defer {
+            UIGraphicsEndImageContext()
+        }
+        guard let context = UIGraphicsGetCurrentContext() else {
+            return nil
+        }
+        drawing(context)
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
+}
+
 public struct FramePatch {
 
     public var x: CGFloat?

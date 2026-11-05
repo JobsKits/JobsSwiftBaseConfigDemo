@@ -189,21 +189,27 @@ extension RichTextDemoVC: UITextViewDelegate {
     // iOS 17+
     @available(iOS 17.0, *)
     func textView(_ textView: UITextView,
-                  primaryActionFor textItem: UITextItem) -> UIAction? {
+                  primaryActionFor textItem: UITextItem,
+                  defaultAction: UIAction) -> UIAction? {
         if case let .link(url) = textItem.content {
-            handleURL(url,
-                      source: "Delegate")
-            return nil
+            return UIAction.make(title: defaultAction.title,
+                                  image: defaultAction.image) { [weak self] _ in
+                self?.handleURL(url,
+                                 source: "Delegate")
+            }
         }
-        return nil
+        return defaultAction
     }
     // iOS 16 及以下
     @available(iOS, introduced: 10.0, deprecated: 17.0,
-    message: "Use textView(_:primaryActionFor:) on iOS17+ instead")
+    message: "Use textView(_:primaryActionFor:defaultAction:) on iOS17+ instead")
     func textView(_ textView: UITextView,
                   shouldInteractWith URL: URL,
                   in characterRange: NSRange,
                   interaction: UITextItemInteraction) -> Bool {
+        if #available(iOS 17.0, *) {
+            return true
+        }
         handleURL(URL,
                   source: "Delegate")
         return false
@@ -215,6 +221,7 @@ extension RichTextDemoVC: UITextViewDelegate {
             customerAlertController = UIAlertController(title: "\(source) 点击",
                                                         message: "点了：专属客服".tr,
                                                         preferredStyle: .alert)
+            customerAlertController?.view.byAccessibilityIdentifier("jobs.richText.customer.alert")
             customerAlertController?.addAction(UIAlertAction(title: "确定".tr,
                                                              style: .default))
             if let customerAlertController {

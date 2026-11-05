@@ -7,6 +7,10 @@
 
 import Foundation
 
+/// 验证 Runtime patch 的继承隔离、ABI 拒绝、参数快照、替换、乱序回滚及并发安装与回滚。
+/// 由本目录 run_regressions.rb 联合 JobsSwiftPatch 生产源码编译为独立命令行程序后执行。
+/// 仅操作本文件的测试类型，不参与主 App 运行，也不加入主 App target。
+
 private class PatchBase: NSObject {
     @objc dynamic func payload() -> NSDictionary { ["kind": "base"] }
     @objc dynamic func count() -> Int { 3 }

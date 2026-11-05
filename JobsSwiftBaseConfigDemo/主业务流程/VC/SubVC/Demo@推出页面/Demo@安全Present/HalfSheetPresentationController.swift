@@ -23,6 +23,7 @@ final class HalfSheetPresentationController: UIPresentationController {
     private lazy var dimmingView: UIView = {
         let v = UIView(frame: containerView?.bounds ?? .zero)
         v
+            .byAccessibilityIdentifier("jobs.safePresent.halfSheet.dim")
             .byBackgroundColor(JobsCor.black.withAlphaComponent(0.38))
             .byAlpha(1)
         v.addGestureRecognizer(UITapGestureRecognizer(target: self,

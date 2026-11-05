@@ -8,14 +8,14 @@ jobs_pod_install_guard_path = File.join(
   __dir__,
   'ScriptsByPods',
   '【MacOS】📦Pod Install离线保护.command',
-  'jobs_pod_install_offline_guard.rb'
+  'jobs_pod_install_offline_guard.rb', 'jobs_pod_install_offline_guard.rb'
 )
 require jobs_pod_install_guard_path
 JobsPodInstallOfflineGuard.guard!(__dir__)
 
 # 同步准备当前安装进程的网络链路，让选源和后续源码下载继承同一配置。
 jobs_pod_network_dir = File.join(__dir__, 'ScriptsByPods', '【MacOS】🌐CocoaPods网络适配.command')
-jobs_pod_network_path = File.join(jobs_pod_network_dir, 'jobs_cocoapods_network.rb')
+jobs_pod_network_path = File.join(jobs_pod_network_dir, 'jobs_cocoapods_network.rb', 'jobs_cocoapods_network.rb')
 begin
   if File.file?(jobs_pod_network_path)
     require jobs_pod_network_path
@@ -31,7 +31,7 @@ end
 jobs_pod_dependency_command = File.basename($PROGRAM_NAME) == 'pod' &&
   %w[install update].include?(ARGV.find { |argument| !argument.start_with?('-') })
 if jobs_pod_dependency_command
-  jobs_pod_download_fallback_path = File.join(jobs_pod_network_dir, 'jobs_cocoapods_download_fallback.rb')
+  jobs_pod_download_fallback_path = File.join(jobs_pod_network_dir, 'jobs_cocoapods_download_fallback.rb', 'jobs_cocoapods_download_fallback.rb')
   begin
     if File.file?(jobs_pod_download_fallback_path)
       require jobs_pod_download_fallback_path
@@ -49,7 +49,7 @@ jobs_specs_source_path = File.join(
   __dir__,
   'ScriptsByPods',
   '【MacOS】🌐CocoaPods源自动选择.command',
-  'jobs_cocoapods_source.rb'
+  'jobs_cocoapods_source.rb', 'jobs_cocoapods_source.rb'
 )
 begin
   if File.file?(jobs_specs_source_path)
@@ -528,17 +528,25 @@ end
 
 # 给宿主工程（App/Unity 导出的 user project）写入设置
 def jobs_patch_user_projects!(installer)
-  installer.aggregate_targets.each do |agg|
-    next unless (user_project = agg.user_project)
+  installer.aggregate_targets.group_by(&:user_project).each do |user_project, aggregates|
+    next unless user_project
 
     user_project.native_targets.each do |t|
-      jobs_apply_build_settings!(
-        t,
-        {
-          'ENABLE_USER_SCRIPT_SANDBOXING' => JOBS_DISABLE_SCRIPT_SANDBOXING,
-          'IPHONEOS_DEPLOYMENT_TARGET'    => JOBS_DEPLOYMENT_TARGET
-        }
-      )
+      t.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = JOBS_DEPLOYMENT_TARGET
+        sandbox_key = 'ENABLE_USER_SCRIPT_SANDBOXING'
+        # Pods 已提供相同设置时继承 xcconfig，避免 target 覆盖警告。
+        inherits_sandbox_setting = aggregates.any? do |aggregate|
+          aggregate.user_targets.include?(t) &&
+            aggregate.xcconfigs[config.name]&.to_hash&.[](sandbox_key) == JOBS_DISABLE_SCRIPT_SANDBOXING
+        end
+
+        if inherits_sandbox_setting
+          config.build_settings.delete(sandbox_key)
+        else
+          config.build_settings[sandbox_key] = JOBS_DISABLE_SCRIPT_SANDBOXING
+        end
+      end
     end
 
     user_project.save
@@ -599,7 +607,7 @@ FLUTTER_APPLICATION_PATH = File.expand_path('./my_flutter', __dir__)
 
 # 每次 pod install 都先检查 Flutter 环境（FVM 安装支持 Homebrew → 官方回退）
 jobs_run_external_script(
-  'ScriptsByPods/配置Flutter环境.sh',
+  'ScriptsByPods/【MacOS】配置Flutter环境.sh',
   desc: 'Prepare Flutter environment (FVM with official fallback + flutter pub get)',
   base_dir: __dir__,
   log_path: '/tmp/配置Flutter环境.log',
@@ -609,7 +617,7 @@ jobs_run_external_script(
 unless jobs_flutter_podhelper_ready?(FLUTTER_APPLICATION_PATH)
   # 遍历工程找到 Flutter 目录，执行 flutter pub get，刷新 podhelper.rb / Generated.xcconfig
   jobs_run_external_script(
-    'ScriptsByPods/拉取Flutter侧三方资源.sh',
+    'ScriptsByPods/【MacOS】拉取Flutter侧三方资源.sh',
     desc: 'Ensure Flutter podhelper.rb (flutter pub get)',
     base_dir: __dir__,
     log_path: '/tmp/拉取Flutter侧三方资源.log',
@@ -647,7 +655,7 @@ pre_install do |installer|
   jobs_clean_unity_build_artifacts!(__dir__) if jobs_unity_integrated?(__dir__)
 
   jobs_run_external_script(
-    'ScriptsByPods/清理Unity缓存.sh',
+    'ScriptsByPods/【MacOS】清理Unity缓存.sh',
     desc: 'Clean Unity cache (optional)',
     base_dir: __dir__,
     log_path: '/tmp/清理Unity缓存.log',
@@ -657,7 +665,7 @@ pre_install do |installer|
   )
 
   jobs_run_external_script(
-    'ScriptsByPods/解压Unity大资源.sh',
+    'ScriptsByPods/【MacOS】解压Unity大资源.sh',
     desc: 'Unpack Unity large resources (optional)',
     base_dir: __dir__,
     log_path: '/tmp/解压Unity大资源.log',

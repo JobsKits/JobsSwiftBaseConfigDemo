@@ -144,6 +144,7 @@ final class JobsDockingScrollDemoVC: BaseVC {
         UILabel
             .jobsMake { _ in }
             .byText("按住绿色区域上下拖动\n上滑吸顶，下滑回到底部".tr)
+            .byAccessibilityIdentifier("jobs.gesture.docking.handle")
             .byFont(JobsFont.boldSystemFont(ofSize: 16))
             .byTextColor(JobsCor.label)
             .byTextAlignment(.center)

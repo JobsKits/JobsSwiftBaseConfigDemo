@@ -14,6 +14,13 @@ import UIKit
 import WebKit
 import JobsSwiftBlock
 
+/// 旧系统的选词粒度；现代 WebKit 固定按字符处理。
+public enum JobsWebSelectionGranularity: Int {
+
+    case dynamic = 0
+    case character = 1
+}
+
 // 统一在主线程（WKWebViewConfiguration 本身就是 @MainActor）
 @MainActor
 extension WKWebViewConfiguration {
@@ -26,13 +33,22 @@ extension WKWebViewConfiguration {
     }
     // MARK: - 基础
     @discardableResult
-    public func byProcessPool(_ pool: WKProcessPool) -> Self {
+    public func byProcessPool<Pool: AnyObject>(_ pool: Pool) -> Self {
         if #available(iOS 15.0, tvOS 15.0, macOS 12.0, *) {
             return self
         } else {
-            self.processPool = pool
-            return self
+            return byLegacyProcessPool(pool)
         }
+    }
+
+    @available(iOS, introduced: 8.0, deprecated: 15.0)
+    @available(tvOS, introduced: 9.0, deprecated: 15.0)
+    @available(macOS, introduced: 10.10, deprecated: 12.0)
+    private func byLegacyProcessPool(_ pool: AnyObject) -> Self {
+        if let pool = pool as? WKProcessPool {
+            processPool = pool
+        }
+        return self
     }
     /// 直接拿到 `preferences` 引用修改（WKPreferences 是引用类型）
     @discardableResult
@@ -139,13 +155,31 @@ extension WKWebViewConfiguration {
     }
 
     @discardableResult
-    public func bySelectionGranularity(_ g: WKSelectionGranularity) -> Self {
-        if #available(iOS 11.0, *) {
+    public func bySelectionGranularity(_ granularity: JobsWebSelectionGranularity) -> Self {
+        return bySelectionGranularityValue(granularity.rawValue)
+    }
+
+    /// 保留接收旧系统枚举变量的源码兼容入口，不在公开签名暴露已废弃类型。
+    @discardableResult
+    public func bySelectionGranularity<Granularity: RawRepresentable>(_ granularity: Granularity) -> Self
+        where Granularity.RawValue == Int {
+        return bySelectionGranularityValue(granularity.rawValue)
+    }
+
+    private func bySelectionGranularityValue(_ rawValue: Int) -> Self {
+        if #available(iOS 11.0, tvOS 11.0, macOS 10.13, *) {
             return self
         } else {
-            self.selectionGranularity = g
-            return self
+            return byLegacySelectionGranularity(rawValue)
         }
+    }
+
+    @available(iOS, introduced: 8.0, deprecated: 11.0)
+    @available(tvOS, introduced: 9.0, deprecated: 11.0)
+    @available(macOS, introduced: 10.10, deprecated: 10.13)
+    private func byLegacySelectionGranularity(_ rawValue: Int) -> Self {
+        selectionGranularity = WKSelectionGranularity(rawValue: rawValue) ?? .character
+        return self
     }
 
     @available(iOS 9.0, *)

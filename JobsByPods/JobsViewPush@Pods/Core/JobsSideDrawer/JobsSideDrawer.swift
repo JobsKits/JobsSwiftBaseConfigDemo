@@ -92,7 +92,7 @@ public final class JobsSideDrawerVC: UIViewController {
 
     // TODO: Legacy static width has no container. Use defaultMenuWidth(in:) for new callers.
     public static var defaultMenuWidth: CGFloat {
-        UIScreen.main.bounds.width * 0.5
+        JobsDisplay.bounds().width * 0.5
     }
     public static func defaultMenuWidth(in view: UIView) -> CGFloat {
         return view.bounds.width * 0.5

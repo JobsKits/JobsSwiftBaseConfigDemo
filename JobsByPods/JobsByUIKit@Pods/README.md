@@ -41,6 +41,7 @@
 - 空 `UIImage` 使用 `UIImage.make { image in ... }`，调用侧不直接写 `UIImage()`；`DateFormatter.make { ... }` 和 `NSUserActivity.make(activityType:configure:)` 分别承接无参格式器与带参 Activity 创建。
 - 明确 Bundle 的本地图片使用 `UIImage.make(named:in:compatibleWith:configure:)`；返回 `UIImage?`，资源不存在时保留 `nil`，不强制替换成未知占位图。
 - SDWebImage / Kingfisher 的按钮图片回调会避开 `UIButton.Configuration` 内部视图替换期间的过渡动画，不在回调中强制布局；前景 shimmer 直接作用于当前 `imageView.layer`，不再向 `UIButton` 插入 overlay 或启用 UIButton overlay 的 `layoutSubviews` swizzle。
+- `UIButton.jobs_contentEdgeInsets` 在 iOS / tvOS 15+ 读取 `Configuration.contentInsets` 并转换 RTL 方向；无 Configuration 时返回零。`jobs_imageEdgeInsets` 在新系统返回零偏移，图片布局读取 `jobs_cfgImagePadding` / `jobs_cfgImagePlacement`；旧系统才读取原边距属性。历史 `jobs_legacyContentEdgeInsets` / `jobs_legacyImageEdgeInsets` 入口转发相同规则，前景 shimmer 共用这些兼容查询，不通过 KVC 访问废弃属性。
 - `UIViewController.jobsSetupGKNav(...)` 在写入标题和左右按钮后，会强制显示并置顶 GK 导航栏、恢复真实透明度，同时隐藏系统导航栏，避免导航容器残留状态导致 Demo 子页面无导航栏。
 - 从 `RootListVC` Demo 根列表进入的每个导航 / 模态子页面，以及类名以 `DemoVC` 结尾的独立演示页，右上角最多只显示一个透明背景的主题入口；没有页面业务动作时直接切换主题，月亮 / 太阳图标与无障碍文案表达下一次点击会切换到的主题；存在业务动作时使用 Demo 总入口同款 `ellipsis.circle` 展开下拉列表，展开后切换为填充图标与“收起”语义，把主题切换与全部页面动作统一收纳。`JobsNavigationDemoVC` 使用同一规则写入系统导航栏。
 - 主题入口调用 `JobsThemeCenter.shared.toggle()`；主题状态、JSON 数据包和弱引用资源绑定由 `JobsSwiftBaseDefines` 承担。切换时只重放已标记的背景色、文字色和显式主题图片，并发布 `.JobsThemeDidChange`，不遍历 Scene / Window / 控制器树。

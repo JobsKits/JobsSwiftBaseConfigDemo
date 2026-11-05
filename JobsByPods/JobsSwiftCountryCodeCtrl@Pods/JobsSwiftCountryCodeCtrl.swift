@@ -85,9 +85,24 @@ public final class JobsSwiftCountryCodeCtrl: UIViewController {
                        regionCode: regionCode)
     }
 
-    private static let selectedCountryNameKey = "com.jobs.JobsSwiftCountryCodeCtrl.selectedCountryName"
-    private static let selectedCountryCodeKey = "com.jobs.JobsSwiftCountryCodeCtrl.selectedCountryCode"
-    private static let selectedCountryRegionCodeKey = "com.jobs.JobsSwiftCountryCodeCtrl.selectedCountryRegionCode"
+    private static var selectedCountryNameKey: String {
+        selectionPreferenceKey("com.jobs.JobsSwiftCountryCodeCtrl.selectedCountryName")
+    }
+    private static var selectedCountryCodeKey: String {
+        selectionPreferenceKey("com.jobs.JobsSwiftCountryCodeCtrl.selectedCountryCode")
+    }
+    private static var selectedCountryRegionCodeKey: String {
+        selectionPreferenceKey("com.jobs.JobsSwiftCountryCodeCtrl.selectedCountryRegionCode")
+    }
+
+    private static func selectionPreferenceKey(_ original: String) -> String {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            return "jobs.coverage." + original
+        }
+        #endif
+        return original
+    }
 
     private var sortedNameDict: [String: [String]] = [:]
     private lazy var indexArray: [String] = {
@@ -119,6 +134,11 @@ public final class JobsSwiftCountryCodeCtrl: UIViewController {
         view.byBackgroundColor(JobsCor.systemGroupedBackground)
         sortedNameDict = loadCountryCodeDictionary()
         tableView.byVisible(true)
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            tableView.byAccessibilityIdentifier("jobs.country.list")
+        }
+        #endif
     }
 }
 
@@ -300,6 +320,11 @@ extension JobsSwiftCountryCodeCtrl: UITableViewDataSource {
             ?? UITableViewCell(style: .subtitle,
                                reuseIdentifier: identifier)
         let country = countryInfo(at: indexPath)
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            cell.byAccessibilityIdentifier(country.map { "jobs.country.option." + $0.regionCode })
+        }
+        #endif
         return cell
             .bySelectionStyle(.none)
             .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)

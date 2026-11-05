@@ -108,12 +108,17 @@ final class LuckyWheelView: UIView {
                 btn.playTapBounce(haptic: .light)
             }
         /// 长按反馈（按钮自身的视觉反馈）
+        .byAccessibilityIdentifier("jobs.coverage.wheel.longPress.0")
         .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                 if gr.state == .began {
                     btn.byAlpha(0.6)
                 } else if gr.state == .ended || gr.state == .cancelled {
                     btn.byAlpha(1.0)
                 }
+#if DEBUG
+                jobsCoverageLuckyWheelDemoVCLongPressState(btn,
+                                               gr)
+#endif
             }
             .byAddTo(self) { make in
                 make.center.equalToSuperview()
@@ -188,6 +193,66 @@ final class LuckyWheelView: UIView {
     private var segmentTapHandler: ((LuckyWheelSegment) -> Void)?
     /// 长按回调：返回命中的扇形模型 + 手势
     private var segmentLongPressHandler: ((LuckyWheelSegment, UILongPressGestureRecognizer) -> Void)?
+#if DEBUG
+    private var coverageSegmentEvents: [Int: String] = [:]
+    private var coverageLongPressBegan: Set<Int> = []
+
+    private var isCoverageRun: Bool {
+        ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route")
+    }
+
+    /// 保留中心按钮和每个扇形的可访问性，容器不吞掉真实子控件。
+    private final class CoverageSegmentLabel: UILabel {
+
+        weak var wheel: LuckyWheelView?
+        var segmentIndex = 0
+
+        override var isAccessibilityElement: Bool {
+            get {
+                wheel?.isCoverageRun == true || super.isAccessibilityElement
+            }
+            set {
+                super.isAccessibilityElement = newValue
+            }
+        }
+
+        override var accessibilityIdentifier: String? {
+            get {
+                guard wheel?.isCoverageRun == true else {
+                    return super.accessibilityIdentifier
+                }
+                return "jobs.coverage.wheel.segment.\(segmentIndex)"
+            }
+            set {
+                super.accessibilityIdentifier = newValue
+            }
+        }
+
+        override var accessibilityLabel: String? {
+            get {
+                guard let wheel, wheel.isCoverageRun else {
+                    return super.accessibilityLabel
+                }
+                return wheel.coverageSegmentEvents[segmentIndex] ?? super.accessibilityLabel
+            }
+            set {
+                super.accessibilityLabel = newValue
+            }
+        }
+
+        override var accessibilityValue: String? {
+            get {
+                guard let wheel, wheel.isCoverageRun else {
+                    return super.accessibilityValue
+                }
+                return String(describing: wheel.currentAngle)
+            }
+            set {
+                super.accessibilityValue = newValue
+            }
+        }
+    }
+#endif
     // MARK: - Init ==============================
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -277,8 +342,15 @@ extension LuckyWheelView {
             // ==== 文本：整体“对准圆心” ===========================
             let midAngle = (startAngle + endAngle) / 2
             if let attr = makeSegmentAttributedText(for: segment) {
-                let label = UILabel
-                    .jobsMake { _ in }
+                #if DEBUG
+                let label = CoverageSegmentLabel.jobsMake { label in
+                    label.wheel = self
+                    label.segmentIndex = index
+                }
+                #else
+                let label = UILabel.jobsMake { _ in }
+                #endif
+                label
                     .byNumberOfLines(0)
                     .byTextAlignment(.center)
                     .byBgCor(JobsCor.clear)
@@ -432,6 +504,11 @@ extension LuckyWheelView {
         }
         let segment = segments[index]
         segmentTapHandler?(segment)
+#if DEBUG
+        if isCoverageRun, segmentTapHandler != nil {
+            coverageSegmentEvents[index] = "segmentTap:completed"
+        }
+#endif
     }
 
     private func handleSegmentLongPress(_ gr: UILongPressGestureRecognizer) {
@@ -449,6 +526,28 @@ extension LuckyWheelView {
         let segment = segments[index]
         segmentLongPressHandler?(segment,
                                  gr)
+#if DEBUG
+        guard isCoverageRun, segmentLongPressHandler != nil else {
+            return
+        }
+        switch gr.state {
+        /// 原回调确实收到了长按开始。
+        case .began:
+            coverageLongPressBegan.insert(index)
+            coverageSegmentEvents[index] = "segmentLongPress:began"
+        /// 只有同一扇形收到完整生命周期才算完成。
+        case .ended:
+            let completed = coverageLongPressBegan.remove(index) != nil
+            coverageSegmentEvents[index] = completed ? "segmentLongPress:completed" : "segmentLongPress:invalidLifecycle"
+        /// 取消保留为取消，不能伪装成完成。
+        case .cancelled, .failed:
+            coverageLongPressBegan.remove(index)
+            coverageSegmentEvents[index] = "segmentLongPress:cancelled"
+        /// 中间状态不替代原处理逻辑。
+        default:
+            break
+        }
+#endif
     }
     // MARK: - 手势拖动旋转 ===============================
     private func handlePan(_ gesture: UIPanGestureRecognizer) {
@@ -695,3 +794,21 @@ extension LuckyWheelView {
         return self
     }
 }
+
+#if DEBUG
+@MainActor
+private func jobsCoverageLuckyWheelDemoVCLongPressState(_ button: UIButton,
+                                          _ gesture: UILongPressGestureRecognizer) {
+    guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") else {
+        return
+    }
+    if gesture.state == .began, button.alpha < 1 {
+        button.byAccessibilityLabel("longPress:began")
+    } else if gesture.state == .ended {
+        let completed = button.accessibilityLabel == "longPress:began" && button.alpha == 1
+        button.byAccessibilityLabel(completed ? "longPress:completed" : "longPress:invalidLifecycle")
+    } else if gesture.state == .cancelled || gesture.state == .failed {
+        button.byAccessibilityLabel("longPress:cancelled")
+    }
+}
+#endif

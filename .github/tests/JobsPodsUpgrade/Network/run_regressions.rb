@@ -1,9 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# JobsPodsUpgrade network / device regressions.
-# Uses real production Swift and Alamofire; a tiny Foundation DSL fixture is
-# isolated to native CLI compilation. iOS Pod/host builds use the real DSL.
 
 require 'fileutils'
 require 'digest'
@@ -13,6 +10,10 @@ require 'socket'
 require 'tempfile'
 require 'tmpdir'
 require 'timeout'
+
+# 用途：编译并运行网络、密码、蓝牙和 WebSocket 回归，验证真实 Swift 核心与本机协议交互。
+# 运行：在本文件目录执行 ruby ./run_regressions.rb [--output-dir DIR]；需要 Swift 工具链和已安装的 Alamofire 源码。
+# 边界：仅 CLI 的 Foundation 工厂使用 fixture，蓝牙由 Mock 控制；不安装依赖、不替代 iOS Pod / 宿主构建，不编入 App。
 
 options = { root: File.expand_path('../../../..', __dir__), output: nil, timeout: 600, swift_jobs: 1 }
 OptionParser.new do |parser|

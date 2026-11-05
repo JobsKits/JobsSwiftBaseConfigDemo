@@ -35,7 +35,7 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 
 ### <span id="jobs-toc-heading-3" data-jobs-toc="v2">1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-通过 Config 描述提示时长、边距、偏移和外观，JobsToast 负责展示、点击与消失。窗口关联记录当前提示，新的提示进入时处理已有实例，便利入口统一调用方式。
+通过 Config 描述提示时长、边距、偏移和外观，JobsToast 负责展示、点击与消失。窗口关联记录当前提示，新的提示进入时处理已有实例，便利入口统一调用方式。 iOS 26+ 尚无可用 Scene 时不构造离屏窗口；展示安全跳过并立即完成回调，调用方可在窗口连接后再次展示。
 
 ### <span id="jobs-toc-heading-4" data-jobs-toc="v2">1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 

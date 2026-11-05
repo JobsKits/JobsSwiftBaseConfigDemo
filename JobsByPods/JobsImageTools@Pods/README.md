@@ -58,6 +58,7 @@
 - 强制重新下载依赖控件记录的远程地址，无法从任意 UIImage 反推出原始 URL。
 - 缓存删除与屏幕上已显示图片更新是两件事；UIImageView、按钮前景图和背景图需要分别处理。
 - UI 树遍历与控件更新遵循主线程要求，下载与磁盘缓存的完成时机应通过回调衔接。
+- `JobsImageLoader.videoThumbnail(at:time:completion:)` 在 iOS 16+ 异步生成视频缩略图，旧系统在后台线程使用原生成接口；结果统一回主线程，返回的 `JobsImageLoadToken` 可取消底层任务。复用 Cell 和媒体编辑页仍应核对当前 URL，避免过期结果覆盖新内容。本模块直接链接 `AVFoundation`。
 
 ### <span id="jobs-toc-heading-5" data-jobs-toc="v2">1.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 

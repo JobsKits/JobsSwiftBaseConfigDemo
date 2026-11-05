@@ -150,7 +150,13 @@ public extension JobsToast {
                      showDelay: TimeInterval = 0,
                      showOptions: UIView.AnimationOptions = [.curveEaseOut]) -> JobsToast {
         // 在主线程里安全获取 window
-        let targetWindow = window ?? UIWindow.wd
+        guard let targetWindow = window ?? UIWindow.wd else {
+            completion?()
+            return JobsToast()
+                .byApply(config)
+                .byText(text)
+                .byTap(tap)
+        }
         // 每窗只保留一个
         removeExistingToast(from: targetWindow)
         // 构建并上屏

@@ -10,6 +10,10 @@ import JobsSwiftTaskCenter
 import JobsSwiftTimer
 import JobsSwiftWorker
 
+/// 验证 Task / Worker 交叉执行、取消、最终事件、异步排空、同键替换和对象回收，检查状态机及死锁边界。
+/// 由本目录 run_regressions.rb 联合 TaskCenter / Worker 生产源码编译为独立命令行程序后执行。
+/// 计时驱动使用 TimerFixture；不证明生产计时器各内核或 iOS UI 绑定，本文件不加入主 App target。
+
 private final class Locked<Value>: @unchecked Sendable {
     private let lock = NSLock()
     private var storage: Value

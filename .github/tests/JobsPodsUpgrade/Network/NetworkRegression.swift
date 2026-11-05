@@ -8,6 +8,10 @@
 import Foundation
 import Alamofire
 
+/// 使用可控 HTTPClient 验证真实网络 Agent 的缓存键、LRU、值快照、取消重试、执行身份、参数及文件保护。
+/// 由本目录 run_regressions.rb 链接生产网络源码与 Alamofire，编译为独立命令行程序后执行。
+/// 本组控制回调时序，真实 HTTP 传输由 NetworkHTTPRegression 对照验证；本文件不加入主 App target。
+
 @main
 struct NetworkRegression {
     static func main() async throws {

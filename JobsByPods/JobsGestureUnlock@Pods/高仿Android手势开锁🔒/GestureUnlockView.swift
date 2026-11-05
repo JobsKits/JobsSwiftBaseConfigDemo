@@ -123,6 +123,30 @@ public final class GestureUnlockView: UIView {
         setVisualState(.selected)
     }
 
+    #if DEBUG
+    /// 组件测试复用真实命中、跨点补点和完成回调，不代表系统连续触摸事件。
+    @discardableResult
+    public func debugReplayNodeSequence(_ indices: [Int]) -> Bool {
+        guard isInputEnabled,
+              bounds.width > 0,
+              bounds.height > 0,
+              indices.allSatisfy({ nodes.indices.contains($0) }) else {
+            return false
+        }
+        layoutIfNeeded()
+        delegate?.gestureUnlockViewDidBeginInput(self)
+        reset(animated: false)
+        inputIsActive = true
+        for index in indices {
+            let point = nodes[index].center
+            currentTouchPoint = point
+            trySelectNode(at: point)
+        }
+        finishInput()
+        return true
+    }
+    #endif
+
     // MARK: - Build / Layout
 
     private func rebuildNodes() {
@@ -196,6 +220,10 @@ public final class GestureUnlockView: UIView {
         guard isInputEnabled, inputIsActive else {
             return
         }
+        finishInput()
+    }
+
+    private func finishInput() {
         inputIsActive = false
         currentTouchPoint = nil
         updateLinePath()

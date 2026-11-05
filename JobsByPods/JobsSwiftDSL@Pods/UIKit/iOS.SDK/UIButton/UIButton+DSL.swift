@@ -23,6 +23,17 @@ private var _jobsConfigPatchListKey: UInt8 = 0
 private var _jobsLegacyImagePlacementKey: UInt8 = 0
 private var _jobsTitleEdgeInsets15Key: UInt8 = 0
 private var _jobsClearConfigurationBackgroundInstalledKey: UInt8 = 0
+private var _jobsButtonPresentationKey: UInt8 = 0
+
+@available(iOS 15.0, tvOS 15.0, *)
+private final class _JobsButtonPresentation {
+
+    var adjustsHighlightedImage: Bool?
+    var adjustsDisabledImage: Bool?
+    var showsTouch = false
+    var imageTransformer: UIConfigurationColorTransformer?
+    var glowShadow: (color: CGColor?, opacity: Float, offset: CGSize, radius: CGFloat)?
+}
 
 extension UIButton {
 
@@ -63,13 +74,37 @@ extension UIButton {
 
     @discardableResult
     public func byAdjustsImageWhenHighlighted(_ on: Bool?) -> Self {
-        self.adjustsImageWhenHighlighted = on ?? false
+        if #available(iOS 15.0, *) {
+            _jobsButtonPresentation.adjustsHighlightedImage = on ?? false
+            _ensureUnifiedUpdateHandlerInstalled()
+            byUpdateConfig()
+        } else {
+            self.adjustsImageWhenHighlighted = on ?? false
+        }
+        return self
+    }
+
+    @discardableResult
+    public func byAdjustsImageWhenDisabled(_ on: Bool?) -> Self {
+        if #available(iOS 15.0, *) {
+            _jobsButtonPresentation.adjustsDisabledImage = on ?? false
+            _ensureUnifiedUpdateHandlerInstalled()
+            byUpdateConfig()
+        } else {
+            self.adjustsImageWhenDisabled = on ?? false
+        }
         return self
     }
 
     @discardableResult
     public func byShowsTouchWhenHighlighted(_ on: Bool?) -> Self {
-        self.showsTouchWhenHighlighted = on ?? false
+        if #available(iOS 15.0, *) {
+            _jobsButtonPresentation.showsTouch = on ?? false
+            _ensureUnifiedUpdateHandlerInstalled()
+            byUpdateConfig()
+        } else {
+            self.showsTouchWhenHighlighted = on ?? false
+        }
         return self
     }
 
@@ -235,14 +270,17 @@ extension UIButton {
 
     @discardableResult
     public func byAdjustsImageWhenHighlighted(_ builder: () -> Bool?) -> Self {
-        self.adjustsImageWhenHighlighted = builder() ?? false
-        return self
+        return byAdjustsImageWhenHighlighted(builder())
+    }
+
+    @discardableResult
+    public func byAdjustsImageWhenDisabled(_ builder: () -> Bool?) -> Self {
+        return byAdjustsImageWhenDisabled(builder())
     }
 
     @discardableResult
     public func byShowsTouchWhenHighlighted(_ builder: () -> Bool?) -> Self {
-        self.showsTouchWhenHighlighted = builder() ?? false
-        return self
+        return byShowsTouchWhenHighlighted(builder())
     }
 
     @discardableResult
@@ -576,6 +614,18 @@ extension UIButton {
     @discardableResult
     public func byImagePlacementLegacy(_ placement: JobsDirection,
                                        padding: CGFloat) -> Self {
+        if #available(iOS 15.0, *) {
+            return byImagePlacement(placement.toDirectionalEdge,
+                                    padding: padding)
+        } else {
+            return _jobsApplyLegacyImagePlacement(placement,
+                                                  padding: padding)
+        }
+    }
+
+    @available(iOS, introduced: 2.0, deprecated: 15.0)
+    private func _jobsApplyLegacyImagePlacement(_ placement: JobsDirection,
+                                               padding: CGFloat) -> Self {
         // iOS12: 用 edgeInsets 模拟 imagePlacement
         // 依赖 imageView/titleLabel 的尺寸，所以先 layout 一次
         layoutIfNeeded()
@@ -738,6 +788,7 @@ extension UIButton {
     }
     /// When legacy imagePlacement(.top/.bottom/.left/.right) has been applied on iOS 12,
     /// changing contentEdgeInsets should also shift image/title insets, otherwise the legacy negative offsets can "push back".
+    @available(iOS, introduced: 2.0, deprecated: 15.0)
     private func _jobsSyncLegacyInsetsIfNeeded(old: UIEdgeInsets,
                                                new: UIEdgeInsets) {
         switch _jobsLegacyImagePlacement {
@@ -1079,6 +1130,61 @@ extension UIButton {
         _ensureUnifiedUpdateHandlerInstalled()
         return self
     }
+
+    @available(iOS 15.0, tvOS 15.0, *)
+    private var _jobsButtonPresentation: _JobsButtonPresentation {
+        if let value = objc_getAssociatedObject(self,
+                                               &_jobsButtonPresentationKey) as? _JobsButtonPresentation {
+            return value
+        }
+        let value = _JobsButtonPresentation()
+        value.imageTransformer = configuration?.imageColorTransformer
+        objc_setAssociatedObject(self,
+                                 &_jobsButtonPresentationKey,
+                                 value,
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return value
+    }
+
+    @available(iOS 15.0, tvOS 15.0, *)
+    private func _jobsApplyButtonPresentation(to configuration: inout UIButton.Configuration) {
+        guard let presentation = objc_getAssociatedObject(self,
+                                                         &_jobsButtonPresentationKey) as? _JobsButtonPresentation else {
+            return
+        }
+        let suppressImageAdjustment = !isEnabled
+            ? presentation.adjustsDisabledImage == false
+            : isHighlighted && presentation.adjustsHighlightedImage == false
+        if presentation.adjustsHighlightedImage != nil || presentation.adjustsDisabledImage != nil {
+            configuration.imageColorTransformer = presentation.imageTransformer
+        }
+        if suppressImageAdjustment {
+            let baseColor = configuration.baseForegroundColor ?? tintColor ?? JobsCor.label
+            let imageColor = presentation.imageTransformer?(baseColor) ?? baseColor
+            configuration.imageColorTransformer = UIConfigurationColorTransformer { _ in
+                imageColor
+            }
+        }
+        // 配置按钮不再支持旧触摸光晕；保留同样的按压反馈，并在松手时恢复原阴影。
+        if presentation.showsTouch && isHighlighted && isEnabled {
+            if presentation.glowShadow == nil {
+                presentation.glowShadow = (layer.shadowColor,
+                                           layer.shadowOpacity,
+                                           layer.shadowOffset,
+                                           layer.shadowRadius)
+            }
+            layer.shadowColor = JobsCor.white.cgColor
+            layer.shadowOpacity = 0.6
+            layer.shadowOffset = .zero
+            layer.shadowRadius = 10
+        } else if let shadow = presentation.glowShadow {
+            layer.shadowColor = shadow.color
+            layer.shadowOpacity = shadow.opacity
+            layer.shadowOffset = shadow.offset
+            layer.shadowRadius = shadow.radius
+            presentation.glowShadow = nil
+        }
+    }
     // MARK: - Install unified configurationUpdateHandler (iOS15+)
     @available(iOS 15.0, tvOS 15.0, *)
     private func _ensureUnifiedUpdateHandlerInstalled() {
@@ -1174,6 +1280,7 @@ extension UIButton {
                 }
                 )
             }
+            btn._jobsApplyButtonPresentation(to: &cfg)
             btn.configuration = cfg
         }
     }

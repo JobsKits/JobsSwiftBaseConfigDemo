@@ -210,6 +210,7 @@ final class BaseWebViewDemoVC: BaseVC {
         jobsSetupGKNav(title: "WebView",
                        rightButtons: [
                 UIButton.sys()
+                    .byAccessibilityIdentifier("jobs.web.openVideo")
                 /// 按钮图片@图文关系
                 .byImage("play.rectangle".sysImg,
                          for: .normal)

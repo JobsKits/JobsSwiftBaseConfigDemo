@@ -35,6 +35,7 @@ final class JobsNetworkingDemoVC: BaseVC {
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero,
                     style: .insetGrouped)
+            .byAccessibilityIdentifier("jobs.list.JobsNetworkingDemoVC")
             .byRegisterCell(MethodTBVCell.self)
             .byBackgroundColor(JobsCor.systemGroupedBackground)
             .byNoContentInsetAdjustment()
@@ -63,6 +64,7 @@ final class JobsNetworkingDemoVC: BaseVC {
                     .byDequeueReusableCell(withType: MethodTBVCell.self,
                                            for: indexPath)
                     .byData(self.dataSources[indexPath.row])
+                    .byAccessibilityIdentifier("jobs.route.JobsNetworkingDemoVC.\(self.dataSources[indexPath.row].methodType.rawValue)")
             }
             .didSelectRowAt { [weak self] _, tv, indexPath in
                 guard let self else {

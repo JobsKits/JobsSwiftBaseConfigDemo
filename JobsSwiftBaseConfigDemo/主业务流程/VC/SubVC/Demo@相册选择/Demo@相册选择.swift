@@ -329,7 +329,31 @@ final class PhotoAlbumDemoVC: BaseVC {
         collectionView.byVisible(YES)
         filterHintLabel.byVisible(NO)
         reloadPreviewAndScrollMode()
+        #if DEBUG
+        installCoverageFilterFixture()
+        #endif
     }
+
+    #if DEBUG
+    private func installCoverageFilterFixture() {
+        guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") else {
+            return
+        }
+        let button = UIButton.sys()
+            .byTitle("滤镜示例", for: .normal)
+            .byAccessibilityIdentifier("jobs.photo.openFixtureFilter")
+            .onTap { [weak self] _ in
+                guard let self,
+                      let image = UIImage.make(named: "JobsMotionAppIconPrimaryPreview") else {
+                    print("[JobsCoverage] 缺少打包示例图，不能进入滤镜测试")
+                    return
+                }
+                showPhotoFilter(image)
+            }
+        jobsSetupGKNav(title: "相机 / 相册 / 录制 / 滤镜".tr,
+                       rightButtons: [button])
+    }
+    #endif
 
     private func showCameraVideo(_ url: URL) {
         mode = .cameraVideo

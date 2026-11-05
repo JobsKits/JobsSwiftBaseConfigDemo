@@ -60,6 +60,7 @@ class DemoDetailVC: BaseVC {
             title: (demoNavigationTitle ?? "🍰 自定义高度 HalfSheet (320)").tr
         )
         UIButton.sys()
+            .byAccessibilityIdentifier("jobs.demoDetail.close")
         // 普通文字：未选中状态标题
         .byTitle("关闭".tr,
                  for: .normal)

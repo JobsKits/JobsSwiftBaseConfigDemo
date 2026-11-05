@@ -12,6 +12,7 @@ import UIKit
 #endif
 
 import JobsByUIKit
+import JobsSwiftDSL
 import JobsInheritance
 import JobsSwiftBaseDefines
 import JobsSwiftUILabelScrolling
@@ -75,6 +76,7 @@ final class JobsInteractiveLabelDemoVC: BaseVC {
     private lazy var statusLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
+            .byAccessibilityIdentifier("jobs.coverage.interactive.status")
             .byText("状态：等待轻点或长按".tr)
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byTextColor(JobsCor.secondaryLabel)
@@ -116,7 +118,9 @@ final class JobsInteractiveLabelDemoVC: BaseVC {
                                                      action: #selector(handleLabelLongPress(_:)))
         longPress.minimumPressDuration = 0.45
         label.addGestureRecognizer(longPress)
-        label.accessibilityLabel = name
+        label
+            .byAccessibilityIdentifier("jobs.coverage.interactive." + name)
+            .byAccessibilityLabel(name)
     }
 
     @objc private func handleLabelTap(_ gesture: UITapGestureRecognizer) {

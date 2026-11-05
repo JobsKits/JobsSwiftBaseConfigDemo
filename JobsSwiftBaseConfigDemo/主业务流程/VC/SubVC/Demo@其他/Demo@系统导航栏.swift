@@ -53,6 +53,7 @@ final class JobsNavigationDemoVC: BaseVC {
                 print("👉 点击了左侧『返回』按钮")
                 goBack(nil)
             }
+            .byAccessibilityIdentifier("jobs.coverage.navigation.longPress.0")
             .onLongPress(minimumPressDuration: 0.6) { btn, gr in
                 if gr.state == .began {
                     btn.byAlpha(0.6)
@@ -61,6 +62,10 @@ final class JobsNavigationDemoVC: BaseVC {
                     btn.byAlpha(1.0)
                     print("返回按钮长按结束")
                 }
+#if DEBUG
+                jobsCoverageJobsNavigationDemoVCLongPressState(btn,
+                                               gr)
+#endif
             }
     }()
     // MARK: - 右侧：铃铛按钮（带红点 + NEW 角标）
@@ -92,6 +97,7 @@ final class JobsNavigationDemoVC: BaseVC {
                 print("👉 点击了右侧『铃铛』按钮")
                 "点击了右侧『铃铛』按钮".tr.toast
             }
+            .byAccessibilityIdentifier("jobs.coverage.navigation.longPress.1")
             .onLongPress(minimumPressDuration: 0.8) { btn, gr in
                 if gr.state == .began {
                     btn.byAlpha(0.6)
@@ -102,6 +108,10 @@ final class JobsNavigationDemoVC: BaseVC {
                     print("铃铛长按结束")
                     "铃铛长按结束".tr.toast
                 }
+#if DEBUG
+                jobsCoverageJobsNavigationDemoVCLongPressState(btn,
+                                               gr)
+#endif
             }
     }()
     // MARK: - 导航栏标题视图
@@ -392,3 +402,21 @@ extension JobsNavigationDemoVC {
         }
     }
 }
+
+#if DEBUG
+@MainActor
+private func jobsCoverageJobsNavigationDemoVCLongPressState(_ button: UIButton,
+                                          _ gesture: UILongPressGestureRecognizer) {
+    guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") else {
+        return
+    }
+    if gesture.state == .began, button.alpha < 1 {
+        button.byAccessibilityLabel("longPress:began")
+    } else if gesture.state == .ended {
+        let completed = button.accessibilityLabel == "longPress:began" && button.alpha == 1
+        button.byAccessibilityLabel(completed ? "longPress:completed" : "longPress:invalidLifecycle")
+    } else if gesture.state == .cancelled || gesture.state == .failed {
+        button.byAccessibilityLabel("longPress:cancelled")
+    }
+}
+#endif

@@ -22,7 +22,14 @@ import GKNavigationBarSwift
 
 final class JobsHandwritingDemoVC: BaseVC {
 
-    private static let savedStrokesKey = "com.jobs.handwriting.savedStrokes.v1"
+    private static var savedStrokesKey: String {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
+            return "com.jobs.coverage.handwriting.savedStrokes.v1"
+        }
+        #endif
+        return "com.jobs.handwriting.savedStrokes.v1"
+    }
 
     private var hasUnsavedChanges = false
     private var isLeaveAlertShowing = false
@@ -31,6 +38,7 @@ final class JobsHandwritingDemoVC: BaseVC {
 
     private lazy var backButton: UIButton = {
         UIButton.sys()
+            .byAccessibilityIdentifier("jobs.handwriting.back")
             .byFrame(CGRect(x: 0,
                             y: 0,
                             width: 32.w,
@@ -44,6 +52,7 @@ final class JobsHandwritingDemoVC: BaseVC {
 
     private lazy var saveButton: UIButton = {
         UIButton.sys()
+            .byAccessibilityIdentifier("jobs.handwriting.save")
             .byTitle("保存".tr,
                      for: .normal)
             .byTitleColor(JobsCor.systemBlue,
@@ -74,6 +83,7 @@ final class JobsHandwritingDemoVC: BaseVC {
 
     private lazy var clearButton: UIButton = {
         UIButton.sys()
+            .byAccessibilityIdentifier("jobs.handwriting.clear")
             .byTitle("清空手写板".tr,
                      for: .normal)
             .byTitleColor(JobsCor.systemRed,
@@ -92,6 +102,7 @@ final class JobsHandwritingDemoVC: BaseVC {
 
     private lazy var canvasView: JobsHandwritingCanvasView = {
         let canvasView = JobsHandwritingCanvasView()
+            .byAccessibilityIdentifier("jobs.gesture.handwriting.canvas")
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(16)
             .byBorderColor(JobsCor.systemGray4)

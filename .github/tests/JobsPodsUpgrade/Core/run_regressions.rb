@@ -7,7 +7,10 @@ require 'socket'
 require 'timeout'
 require 'tmpdir'
 
-# Foundation 状态机回归使用 Timer / ISO 工厂 fixture；不替代真实 iOS Pod 编译。
+# 用途：编译并运行 Core 基础能力的命令行回归，覆盖闭包存储、数值、补丁、任务调度和多语言。
+# 运行：在本文件目录执行 ruby ./run_regressions.rb [--output DIR] [--webkit]；需要 macOS 与所选 Xcode 工具链。
+# 边界：Timer / ISO 工厂使用 fixture，WebKit 探针按需开启；不替代真实 iOS Pod 或宿主编译，不编入 App。
+
 options = { output: nil, webkit: ENV['JOBS_CORE_WEBKIT'] == '1' }
 OptionParser.new do |parser|
   parser.banner = 'ruby run_regressions.rb [--output DIR] [--webkit]'

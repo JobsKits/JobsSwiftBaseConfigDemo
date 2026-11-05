@@ -7,6 +7,10 @@
 
 import Foundation
 
+/// 验证认证加密防篡改、错误密钥与参数拒绝、旧 CBC 格式迁移、UTF-8 及 PBKDF2 含 NUL 的测试向量。
+/// 由本目录 run_regressions.rb 联合密码模块生产源码编译为独立命令行程序后执行。
+/// 使用 macOS 系统密码能力，不覆盖 iOS 设备分支；本文件不加入主 App target。
+
 @main
 struct CryptoRegression {
     static func main() throws {

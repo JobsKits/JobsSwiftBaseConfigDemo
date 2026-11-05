@@ -7,7 +7,9 @@
 
 import Foundation
 
-/// macOS Foundation 回归只验证 Task/Worker 状态机；此计时器不是生产 JobsTimer 的替代实现。
+/// 为 macOS Foundation 回归提供基于 GCD 的最小计时驱动，供 Task / Worker 状态机测试使用。
+/// 由上级目录 run_regressions.rb 与真实计时器配置、枚举和协议一起编译为测试用 JobsSwiftTimer 模块。
+/// 不验证生产 JobsTimer 的各内核、RunLoop 或 UI 绑定；不得加入主 App 或替代生产计时器。
 public final class JobsTimer: JobsSwiftTimerProtocol {
     private let lock = NSLock()
     private let config: JobsSwiftTimerConfig

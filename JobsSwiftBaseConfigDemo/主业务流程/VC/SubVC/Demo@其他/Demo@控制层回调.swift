@@ -49,11 +49,31 @@ final class JobsControlEventsDemoVC: BaseVC {
         view.addGestureRecognizer(
             UITapGestureRecognizer
                 .byConfig { [unowned self] gr in
+#if DEBUG
+                let wasEditing = self.stack.arrangedSubviews.compactMap { $0 as? UITextField }.contains { $0.isFirstResponder }
+#endif
                 self.view.endEditing(true)
+#if DEBUG
+                if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route"), wasEditing,
+                   !self.stack.arrangedSubviews.compactMap({ $0 as? UITextField }).contains(where: { $0.isFirstResponder }) {
+                    self.view.byAccessibilityLabel("keyboard:dismissed")
+                }
+#endif
             }
                 .byCancelsTouchesInView(false)
         )
     }
+#if DEBUG
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        guard ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route"),
+              let field = stack.arrangedSubviews.compactMap({ $0 as? UITextField }).first else {
+            return
+        }
+        field.becomeFirstResponder()
+        view.byAccessibilityLabel(field.isFirstResponder ? "keyboard:shown" : "keyboard:unavailable")
+    }
+#endif
 }
 
 extension JobsControlEventsDemoVC {

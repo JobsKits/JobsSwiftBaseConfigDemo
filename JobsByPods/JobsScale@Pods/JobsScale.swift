@@ -94,7 +94,7 @@ public enum JobsScale {
     /// - 默认用 Screen.size（优先 window.bounds，天然横竖屏正确，不依赖 connectedScenes）
     /// - 若启用 useSafeArea，则尝试从“主界面 normal window”扣除 safeAreaInsets；失败则回退 Screen.size
     public static var screenSize: CGSize {
-        let base = Screen.size
+        let base = Screen.compatibilitySize
         guard useSafeArea else {
             return base
         }
@@ -229,28 +229,34 @@ extension BinaryInteger {
 
     /// UI 宽度缩放（像素对齐）
     public var w: CGFloat {
-        JobsScale.pixelAlign(CGFloat(self) * JobsScale.x)
+        JobsScale.pixelAlign(CGFloat(self) * JobsScale.x,
+                             traitCollection: .current)
     }
     /// UI 高度缩放（像素对齐）
     public var h: CGFloat {
-        JobsScale.pixelAlign(CGFloat(self) * JobsScale.y)
+        JobsScale.pixelAlign(CGFloat(self) * JobsScale.y,
+                             traitCollection: .current)
     }
     /// 字体缩放（独立比例尺，像素对齐）
     public var fz: CGFloat {
-        JobsScale.pixelAlign(CGFloat(self) * JobsScale.fontScale)
+        JobsScale.pixelAlign(CGFloat(self) * JobsScale.fontScale,
+                             traitCollection: .current)
     }
 }
 
 extension BinaryFloatingPoint {
 
     public var w: CGFloat {
-        JobsScale.pixelAlign(CGFloat(self) * JobsScale.x)
+        JobsScale.pixelAlign(CGFloat(self) * JobsScale.x,
+                             traitCollection: .current)
     }
     public var h: CGFloat {
-        JobsScale.pixelAlign(CGFloat(self) * JobsScale.y)
+        JobsScale.pixelAlign(CGFloat(self) * JobsScale.y,
+                             traitCollection: .current)
     }
     public var fz: CGFloat {
-        JobsScale.pixelAlign(CGFloat(self) * JobsScale.fontScale)
+        JobsScale.pixelAlign(CGFloat(self) * JobsScale.fontScale,
+                             traitCollection: .current)
     }
 }
 
@@ -259,7 +265,7 @@ public enum Screen {
 
     /// 屏幕尺寸（以点为单位）
     /// - 优先 window.bounds.size：天然随横竖屏变化
-    /// - 回退 UIScreen.main.bounds.size：在 iOS 8+ 通常是“竖屏坐标系”，但作为兜底足够
+    /// - 无窗口时，现代系统等待 Scene，旧系统保留主屏幕兜底。
     // TODO: Legacy size/width/height cannot select a consumer scene. Use size(in:) for layout.
     public static func size(in view: UIView) -> CGSize {
         return view.bounds.size
@@ -267,21 +273,35 @@ public enum Screen {
 
     @available(*, deprecated, message: "Use Screen.size(in:) with the consumer view.")
     public static var size: CGSize {
+        return compatibilitySize
+    }
+
+    fileprivate static var compatibilitySize: CGSize {
         #if os(iOS) || os(tvOS)
         if let window = UIApplication.jobsKeyWindow(preferMainScreen: true),
            window.bounds.size != .zero {
             return window.bounds.size
         }
-        return UIScreen.main.bounds.size
+        if #available(iOS 26.0, tvOS 26.0, *) {
+            return .zero
+        } else {
+            return legacyScreenSize
+        }
         #else
         return .zero
         #endif
     }
 
+    @available(iOS, introduced: 2.0, deprecated: 26.0)
+    @available(tvOS, introduced: 9.0, deprecated: 26.0)
+    private static var legacyScreenSize: CGSize {
+        return UIScreen.main.bounds.size
+    }
+
     public static var width: CGFloat  {
-        size.width
+        compatibilitySize.width
     }
     public static var height: CGFloat {
-        size.height
+        compatibilitySize.height
     }
 }

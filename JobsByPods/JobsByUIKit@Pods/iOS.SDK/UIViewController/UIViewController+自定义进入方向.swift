@@ -353,8 +353,8 @@ extension UIViewController {
             return self
         }
         // 宿主选择
-        guard var host = from?.jobsNearestVC() ?? UIWindow.wd.rootViewController else {
-            assertionFailure("❌ byPresent: no host VC")
+        guard var host = from?.jobsNearestVC() ?? UIWindow.wd?.rootViewController else {
+            // Scene 尚未连接时没有展示宿主，等待调用方在窗口就绪后重试。
             return self
         }
         if let top = UIApplication.jobsTopMostVC(from: host,

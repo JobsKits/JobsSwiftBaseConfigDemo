@@ -26,6 +26,8 @@
 
 - `JobsAudioRecordButton.minimumValidDuration` 默认 `3` 秒；不足时先走 `onCancel` 删除临时录音，再走 `onTooShort` 交给业务层提示。
 - 导火索复用 `JobsFuseAnimation.byFusePressStart(...)` / `byFusePressStop(...)`；门槛位置按 `minimumValidDuration / duration` 自动换算。
+- 麦克风权限在 iOS 17+ 使用 `AVAudioApplication`，旧系统保留 `AVAudioSession`；授权结果统一回主线程。
+- iOS 27+ 使用会话停用通知及其中断上下文，仅系统中断触发异常结束；旧系统保留中断开始通知。主动结束录音不重复交付结果。
 
 ## <span id="jobs-toc-heading-1" data-jobs-toc="v2">Jobs DSL 调用约定 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 

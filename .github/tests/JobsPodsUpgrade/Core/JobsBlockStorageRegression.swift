@@ -8,6 +8,10 @@
 import Foundation
 import JobsSwiftBlock
 
+/// 验证回调移除或替换时，捕获对象析构重入存储仍能安全读写和调用，覆盖 NSObject 与纯 Swift 宿主。
+/// 由本目录 run_regressions.rb 链接真实 JobsSwiftBlock 后，作为独立命令行程序执行。
+/// 只检查回调存储与释放边界，不替代业务状态的并发隔离；本文件不加入主 App target。
+
 private final class ObjectHost: NSObject, JobsCallbackable {}
 private final class SwiftHost: JobsCallbackable {}
 

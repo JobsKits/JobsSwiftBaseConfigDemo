@@ -29,9 +29,9 @@ public func jobsGetMainWindowBefore13() -> UIWindow? {
     }
     if #available(iOS 13.0, *) {
         return nil
+    } else {
+        return UIApplication.shared.keyWindow
     }
-    return UIApplication.shared.perform(#selector(getter: UIApplication.keyWindow))?
-        .takeUnretainedValue() as? UIWindow
 }
 
 @inline(__always)

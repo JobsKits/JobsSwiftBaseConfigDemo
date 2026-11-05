@@ -24,6 +24,7 @@ final class SlideToUnlockDemoVC: BaseVC {
 
     private lazy var slideView: SlideToUnlockView = {
         SlideToUnlockView()
+            .byAccessibilityIdentifier("jobs.gesture.slideUnlock")
             .byBackgroundColor(JobsCor.clear)
         //            .byDirection(.rightToLeft)      // 从右往左滑动解锁
         .bySkeletonEnabled(true)          // 开启骨架屏闪动

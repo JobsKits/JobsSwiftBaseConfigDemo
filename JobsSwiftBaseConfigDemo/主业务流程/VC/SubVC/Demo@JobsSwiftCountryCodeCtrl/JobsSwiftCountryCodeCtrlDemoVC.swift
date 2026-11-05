@@ -45,6 +45,7 @@ final class JobsSwiftCountryCodeCtrlDemoVC: BaseVC {
 
     private lazy var selectButton: UIButton = {
         UIButton.sys()
+            .byAccessibilityIdentifier("jobs.country.open")
             .byTitle("选择".tr,
                      for: .normal)
             .byTitleColor(JobsCor.systemBackground,
@@ -67,6 +68,11 @@ final class JobsSwiftCountryCodeCtrlDemoVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        if #available(iOS 17.0, *) {
+            _ = registerForTraitChanges(UITraitCollection.systemTraitsAffectingColorAppearance) { (controller: JobsSwiftCountryCodeCtrlDemoVC, _) in
+                controller.applyThemeChrome()
+            }
+        }
         jobsSetupGKNav(title: "JobsSwiftCountryCodeCtrl".tr)
         applyThemeChrome()
         countryCodeTextField.byVisible(true)
@@ -74,7 +80,11 @@ final class JobsSwiftCountryCodeCtrlDemoVC: BaseVC {
         refreshSelectedCountry()
     }
 
+    @available(iOS, introduced: 8.0, deprecated: 17.0)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        if #available(iOS 17.0, *) {
+            return
+        }
         super.traitCollectionDidChange(previousTraitCollection)
         guard #available(iOS 13.0, *),
               previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) == true else {
@@ -97,6 +107,7 @@ private extension JobsSwiftCountryCodeCtrlDemoVC {
     }
 
     func pushCountryCodeCtrl() {
+        countryCodeController.view.byAccessibilityIdentifier("jobs.country.picker")
         if #available(iOS 13.0, *) {
             countryCodeController.byOverrideUserInterfaceStyle(traitCollection.userInterfaceStyle)
         }

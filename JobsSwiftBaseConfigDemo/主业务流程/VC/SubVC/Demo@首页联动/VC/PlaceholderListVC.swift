@@ -23,8 +23,10 @@ final class PlaceholderListVC: BaseVC,
                                JXSegmentedListContainerViewListDelegate {
 
     private let titleText: String
-    init(title: String) {
+    private let routeID: String
+    init(title: String, routeID: String = "placeholder") {
         self.titleText = title
+        self.routeID = routeID
         super.init(nibName: nil,
                    bundle: nil)
     }
@@ -35,6 +37,7 @@ final class PlaceholderListVC: BaseVC,
         UILabel
             .jobsMake { _ in }
             .byText("这里是「\(titleText)」示例页面")
+            .byAccessibilityIdentifier("jobs.linkage.page.\(routeID)")
             .byFont(JobsFont.systemFont(ofSize: 16,
                                         weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)

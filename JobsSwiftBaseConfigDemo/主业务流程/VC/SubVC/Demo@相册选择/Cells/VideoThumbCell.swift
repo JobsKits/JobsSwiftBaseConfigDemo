@@ -16,6 +16,7 @@ import AVFoundation
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
+import JobsImageTools
 import SnapKit
 /// 多个视频缩略格：显示首帧缩略图（不自动播放）
 
@@ -32,6 +33,7 @@ public final class VideoThumbCell: UICollectionViewCell {
     }()
     private let playBadge = UIImageView(image: "play.circle.fill".sysImg)
     private var currentURL: URL?
+    private var thumbnailToken: JobsImageLoadToken?
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView
@@ -54,6 +56,8 @@ public final class VideoThumbCell: UICollectionViewCell {
     }
     public override func prepareForReuse() {
         super.prepareForReuse()
+        thumbnailToken?.cancel()
+        thumbnailToken = nil
         currentURL = nil
         iv.byImage(nil)
     }
@@ -95,28 +99,16 @@ public final class VideoThumbCell: UICollectionViewCell {
     }
 
     private func render(_ url: URL) {
+        thumbnailToken?.cancel()
         currentURL = url
         iv.byImage(nil)
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            let asset = AVAsset(url: url)
-            let gen = AVAssetImageGenerator(asset: asset)
-            gen.appliesPreferredTrackTransform = true
-            let time = CMTime(seconds: 0.1,
-                              preferredTimescale: 600)
-            guard let cg = try? gen.copyCGImage(at: time,
-                                                actualTime: nil) else {
+        thumbnailToken = JobsImageLoader.videoThumbnail(at: url,
+                                                         time: CMTime(seconds: 0.1,
+                                                                      preferredTimescale: 600)) { [weak self] image in
+            guard let self, self.currentURL == url, let image else {
                 return
             }
-            let img = UIImage(cgImage: cg)
-            DispatchQueue.main.async {
-                guard let self else {
-                    return
-                }
-                guard self.currentURL == url else {
-                    return
-                } // ✅ 防复用串图
-                self.iv.byImage(img)
-            }
+            self.iv.byImage(image)
         }
     }
 }

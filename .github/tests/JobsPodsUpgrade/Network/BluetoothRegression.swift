@@ -7,6 +7,10 @@
 
 import Foundation
 
+/// 验证蓝牙扫描重启、命令匹配、超时重试、优先级、断连取消、迟到响应、回调重入与对象释放。
+/// 由本目录 run_regressions.rb 编译为独立命令行程序，使用真实 Manager / Command 和 Mock 传输控制事件。
+/// 不申请蓝牙权限或连接物理外设，不证明真机蓝牙链路；本文件不加入主 App target。
+
 @main
 @MainActor
 struct BluetoothRegression {

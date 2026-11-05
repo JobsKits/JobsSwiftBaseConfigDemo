@@ -198,7 +198,8 @@ public final class JobsIconfont {
                                  color: UIColor = .systemGray3) -> UIImage {
         iconImage(asset.fallbackGlyph,
                   size: size,
-                  color: color)
+                  color: color,
+                  traitCollection: .current)
     }
 
     @discardableResult

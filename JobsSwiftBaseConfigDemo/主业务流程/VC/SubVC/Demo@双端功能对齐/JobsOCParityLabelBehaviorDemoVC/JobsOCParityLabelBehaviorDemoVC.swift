@@ -57,6 +57,7 @@ final class JobsLabelBehaviorDemoVC: BaseVC {
     private lazy var tableView: UITableView = {
         UITableView(frame: .zero,
                     style: .insetGrouped)
+            .byAccessibilityIdentifier("jobs.list.JobsLabelBehaviorDemoVC")
             .byDataSource(self)
             .byDelegate(self)
             .byRowHeight(74)
@@ -156,6 +157,7 @@ extension JobsLabelBehaviorDemoVC: UITableViewDataSource,
             .byTextDisplayMode(.singleLineTailTruncation)
         return cell
             .byAccessoryType(.disclosureIndicator)
+            .byAccessibilityIdentifier("jobs.route.JobsLabelBehaviorDemoVC.\(item.target).\(item.kind)")
             .bySelectionStyle(.default)
             .byBackgroundColor(JobsCor.secondarySystemGroupedBackground)
     }

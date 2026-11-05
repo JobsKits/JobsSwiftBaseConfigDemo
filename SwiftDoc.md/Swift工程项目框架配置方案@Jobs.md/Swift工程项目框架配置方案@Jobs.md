@@ -196,7 +196,7 @@
 | 响应式与异步 | [**RxSwift**](https://github.com/ReactiveX/RxSwift)、[**PromiseKit**](https://github.com/mxcl/PromiseKit) | 按模块选择，不在同一条业务链中无意义混用多套异步模型。 |
 | 图片与媒体 | [**Kingfisher**](https://github.com/onevcat/Kingfisher)、[**SDWebImage**](https://github.com/SDWebImage/SDWebImage)、[**lottie-ios**](https://github.com/airbnb/lottie-ios)、[**BMPlayer**](https://github.com/BrikerMan/BMPlayer)、[**HaishinKit**](https://github.com/HaishinKit/HaishinKit.swift) | 资源加载、缓存、占位、取消、复用防串图和播放器生命周期由包装层统一。 |
 | 数据与安全 | [**WCDB**](https://github.com/Tencent/wcdb)、[**ObjectBox**](https://github.com/objectbox/objectbox-swift)、[**Cache**](https://github.com/hyperoslo/Cache)、[**KeychainAccess**](https://github.com/kishikawakatsumi/KeychainAccess) | 数据所有权、迁移、线程模型、加密和清理策略由具体模块声明。 |
-| 工程工具 | [**CocoaLumberjack**](https://github.com/CocoaLumberjack/CocoaLumberjack)、[**DeviceKit**](https://github.com/devicekit/DeviceKit)、[**PhoneNumberKit**](https://github.com/marmelroy/PhoneNumberKit) | 基础能力只暴露稳定门面，第三方类型不向业务模型扩散。 |
+| 工程工具 | [**CocoaLumberjack**](https://github.com/CocoaLumberjack/CocoaLumberjack)、[**DeviceKit**](https://github.com/devicekit/DeviceKit) | 基础能力只暴露稳定门面，第三方类型不向业务模型扩散。 |
 
 #### <span id="jobs-toc-heading-8" data-jobs-toc="v2">3.1.1、ObjectBox Swift 集成基线 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
@@ -4149,6 +4149,8 @@ ruby -c Podfile.deps
 - `pod install`、`xcodebuild`、清缓存、下载依赖等有副作用命令，只在任务确实需要时执行并明确范围。
 - workspace 构建失败时区分本轮改动、项目格式 / 缓存、第三方依赖和既有环境错误，不把所有失败都归因于当前文档或组件。
 - 静态通过、模块编译通过、App 编译通过、模拟器表现和真机表现是五种不同证据，交付时分别说明。
+- 页面巡检清单与执行脚本放在本工程 `ScriptsByDevTools/【MacOS】🧪iOS自动巡检.command/`，分别支持 iOS 模拟器与 iPhone 真机。Debug 的 `--jobs-coverage-route` 入口复用真实页面工厂，目标真正入窗后才发布就绪标记；Release 不启用该路由。登录 Demo 仍执行本地输入校验，未接入的服务端认证不能记录为登录成功。
+- `JobsGestureUnlock` 的 Debug 公开入口 `debugReplayNodeSequence(_:)` 复用原节点命中、补点、去重与结束回调，只作为组件状态机测试，不生成系统触摸。九宫格 Demo 同时保留真实短轨迹及四点 A/B 触摸场景，报告分开统计；巡检保存图案和目录排序使用独立偏好键，不覆盖正常演示状态。调用方式见对应 Pod 的 README 与宿主 Demo；公共 Xcode CodeSnippets 当前没有该测试入口的既有片段。
 
 ### <span id="jobs-toc-heading-114" data-jobs-toc="v2">12.3、文档防漂移 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 

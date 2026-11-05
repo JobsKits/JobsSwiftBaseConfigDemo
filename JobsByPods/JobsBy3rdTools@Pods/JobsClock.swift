@@ -115,7 +115,12 @@ open class JobsClockView: UIView {
     }
 
     #if os(iOS) || os(tvOS)
+    @available(iOS, introduced: 8.0, deprecated: 17.0)
+    @available(tvOS, introduced: 9.0, deprecated: 17.0)
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        if #available(iOS 17.0, tvOS 17.0, *) {
+            return
+        }
         super.traitCollectionDidChange(previousTraitCollection)
         guard previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) != false else {
             return
@@ -128,6 +133,11 @@ open class JobsClockView: UIView {
 extension JobsClockView {
 
     private func commonInit() {
+        if #available(iOS 17.0, tvOS 17.0, *) {
+            _ = registerForTraitChanges(UITraitCollection.systemTraitsAffectingColorAppearance) { (view: JobsClockView, _) in
+                view.applyTheme()
+            }
+        }
         self.byBackgroundColor(JobsCor.clear)
         dialLayer.byHidden(NO)
         tickLayer.byHidden(NO)
