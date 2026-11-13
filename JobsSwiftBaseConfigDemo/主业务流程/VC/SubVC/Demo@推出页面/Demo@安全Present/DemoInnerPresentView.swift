@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsByUIKit
@@ -23,7 +25,7 @@ final class DemoInnerPresentView: UIView {
     private lazy var titleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("👉 点我 (View 内触发 presentSafely)".tr)
+            .tr_setText("👉 点我 (View 内触发 presentSafely)".tr)
             .byNumberOfLines(0)
             .byTextColor(JobsCor.systemGreen)
             .byFont(JobsFont.systemFont(ofSize: 16,
@@ -33,7 +35,7 @@ final class DemoInnerPresentView: UIView {
     private lazy var detailLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("👆 点击绿色区域也会触发 presentSafely".tr)
+            .tr_setText("👆 点击绿色区域也会触发 presentSafely".tr)
             .byNumberOfLines(0)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13))

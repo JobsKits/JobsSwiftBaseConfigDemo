@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsByUIKit
@@ -120,7 +122,7 @@ final class QRCodeDemoVC: BaseVC {
     private lazy var logoQRLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("带中心 Logo 的二维码".tr)
+            .tr_setText("带中心 Logo 的二维码".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 15,
                                         weight: .regular))
@@ -163,7 +165,7 @@ final class QRCodeDemoVC: BaseVC {
     private lazy var barcodeLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("Code128 条形码".tr)
+            .tr_setText("Code128 条形码".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 15,
                                         weight: .regular))

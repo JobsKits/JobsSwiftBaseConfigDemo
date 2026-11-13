@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -26,8 +28,7 @@ final class LiveChatDemoVC: BaseVC,
     private lazy var btnDefault: UIButton = { [unowned self] in
         UIButton.sys()
             .byAccessibilityIdentifier("jobs.liveChat.openDefault")
-            .byTitle("默认展示（presentChat）".tr,
-                     for: .normal)
+            .tr_setTitle("默认展示（presentChat）".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
@@ -50,8 +51,7 @@ final class LiveChatDemoVC: BaseVC,
     private lazy var btnCustom: UIButton = { [unowned self] in
         UIButton.sys()
             .byAccessibilityIdentifier("jobs.liveChat.openCustom")
-            .byTitle("自定义展示（半屏）".tr,
-                     for: .normal)
+            .tr_setTitle("自定义展示（半屏）".tr, for: .normal)
             .byTitleColor(JobsCor.label,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
@@ -83,6 +83,7 @@ final class LiveChatDemoVC: BaseVC,
     // MARK: - 默认方式（SDK 自带展示）
     @objc private func onDefault() {
         LiveChat.delegate = self
+        LiveChat.windowScene = view.window?.windowScene
         LiveChat.customPresentationStyleEnabled = false
         guard !LiveChat.isChatPresented else {
             return
@@ -93,6 +94,7 @@ final class LiveChatDemoVC: BaseVC,
     // MARK: - 自定义方式（来决定怎么展示）
     @objc private func onCustom() {
         LiveChat.delegate = self
+        LiveChat.windowScene = view.window?.windowScene
         LiveChat.customPresentationStyleEnabled = true
         guard let chatVC = LiveChat.chatViewController else {
             assertionFailure("chatViewController == nil，确认已设置 customPresentationStyleEnabled = true")
@@ -115,7 +117,12 @@ final class LiveChatDemoVC: BaseVC,
     }
     // MARK: - LiveChatDelegate（可选）
     func chatPresented() {
-        let controller = presentedViewController ?? navigationController?.presentedViewController
+        // 默认展示使用 SDK 自己的窗口，不会出现在宿主的 presentedViewController 中。
+        let sdkBundle = Bundle(for: LiveChat.self)
+        let sdkController = view.window?.windowScene?.windows.compactMap(\.rootViewController).first {
+            Bundle(for: type(of: $0)) == sdkBundle
+        }
+        let controller = presentedViewController ?? navigationController?.presentedViewController ?? sdkController
         controller?.view.byAccessibilityIdentifier("jobs.liveChat.page")
         print("✅ LiveChat 打开")
     }

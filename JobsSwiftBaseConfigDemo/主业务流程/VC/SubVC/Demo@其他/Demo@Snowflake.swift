@@ -10,7 +10,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import JobsInheritance
 import JobsByUIKit
@@ -30,7 +33,7 @@ final class SnowflakeDemoVC: BaseVC {
     private lazy var resultLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("未开始".tr)
+            .tr_setText("未开始".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14))
@@ -47,10 +50,8 @@ final class SnowflakeDemoVC: BaseVC {
     // 生成按钮
     private lazy var genButton: UIButton = {
         UIButton.sys()
-            .byTitle("开始生成".tr,
-                     for: .normal)
-            .byTitle("生成中…".tr,
-                     for: .selected)
+            .tr_setTitle("开始生成".tr, for: .normal)
+            .tr_setTitle("生成中…".tr, for: .selected)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,

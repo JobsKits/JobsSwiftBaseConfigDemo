@@ -9,6 +9,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsInheritance
@@ -25,7 +27,7 @@ final class JobsDouyinRefreshDemoVC: BaseVC {
     private lazy var hintLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("红、绿双球交叉换位并错峰跳跃；组件可独立用于下拉刷新、加载态或空白页。".tr)
+            .tr_setText("红、绿双球交叉换位并错峰跳跃；组件可独立用于下拉刷新、加载态或空白页。".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 15))
             .byTextAlignment(.center)
@@ -72,7 +74,7 @@ final class JobsDouyinRefreshDemoVC: BaseVC {
     private lazy var statusLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("正在刷新…".tr)
+            .tr_setText("正在刷新…".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .medium))
@@ -138,7 +140,7 @@ final class JobsDouyinRefreshDemoVC: BaseVC {
 
     private lazy var simulateButton: UIButton = {
         UIButton.sys()
-            .byTitle("模拟一次 2 秒刷新".tr)
+            .tr_setTitle("模拟一次 2 秒刷新".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .semibold))
             .byTitleColor(JobsCor.white)

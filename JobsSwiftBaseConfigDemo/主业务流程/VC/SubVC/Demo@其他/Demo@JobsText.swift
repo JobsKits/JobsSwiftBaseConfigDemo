@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -73,8 +75,7 @@ final class JobsTextDemoVC: BaseVC {
 
     private lazy var boldBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("加粗".tr,
-                     for: .normal)
+            .tr_setTitle("加粗".tr, for: .normal)
             .onTap(jobs_weakify(self) { me, _ in
             me.onBold()
         })
@@ -87,8 +88,7 @@ final class JobsTextDemoVC: BaseVC {
 
     private lazy var redBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("红色".tr,
-                     for: .normal)
+            .tr_setTitle("红色".tr, for: .normal)
             .onTap { [weak self] _ in
                 self?.onRed()
             }
@@ -101,8 +101,7 @@ final class JobsTextDemoVC: BaseVC {
 
     private lazy var appendBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("拼接“ +World”".tr,
-                     for: .normal)
+            .tr_setTitle("拼接“ +World”".tr, for: .normal)
             .onTap { [weak self] _ in
                 self?.onAppend()
             }
@@ -115,8 +114,7 @@ final class JobsTextDemoVC: BaseVC {
 
     private lazy var resetBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("还原".tr,
-                     for: .normal)
+            .tr_setTitle("还原".tr, for: .normal)
             .onTap { [weak self] _ in
                 self?.onReset()
             }
@@ -129,8 +127,7 @@ final class JobsTextDemoVC: BaseVC {
 
     private lazy var exportRTFBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("导出为 RTF".tr,
-                     for: .normal)
+            .tr_setTitle("导出为 RTF".tr, for: .normal)
             .onTap { [weak self] _ in
                 self?.onExportRTF()
             }
@@ -143,8 +140,7 @@ final class JobsTextDemoVC: BaseVC {
 
     private lazy var importRTFBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("从 RTF 导入".tr,
-                     for: .normal)
+            .tr_setTitle("从 RTF 导入".tr, for: .normal)
             .onTap { [weak self] _ in
                 self?.onImportRTF()
             }

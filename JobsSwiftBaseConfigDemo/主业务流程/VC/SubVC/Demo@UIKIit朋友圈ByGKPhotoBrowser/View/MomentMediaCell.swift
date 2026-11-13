@@ -67,8 +67,11 @@ final class MomentMediaCell: UICollectionViewCell {
             return self
         }
         playBadge.byVisible(m.isVideo)
-        imageViewRef.jobs_setImage(m.coverURL,
-                                   shimmerConfig: nil,
+        imageViewRef
+            .byImage("Ani".img)
+            .jobs_setImage(m.coverURL,
+                           fallback: "Ani".img,
+                           shimmerConfig: nil,
                                    targetSize: imageViewRef.bounds.size)
         return self
     }

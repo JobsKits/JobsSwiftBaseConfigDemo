@@ -10,7 +10,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import JobsByUIKit
 import JobsSwiftBaseDefines
@@ -83,8 +86,7 @@ final class JobsWebSocketDemoVC: BaseVC {
 
     private lazy var sendBtn: UIButton = {
         UIButton.sys()
-            .byTitle("发送".tr,
-                     for: .normal)
+            .tr_setTitle("发送".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
                                              weight: .medium))
             .onTap { [weak self] _ in
@@ -127,7 +129,7 @@ final class JobsWebSocketDemoVC: BaseVC {
     private lazy var statusLab: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("状态：未连接".tr)
+            .tr_setText("状态：未连接".tr)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
@@ -142,7 +144,7 @@ final class JobsWebSocketDemoVC: BaseVC {
     private lazy var logTextView: UITextView = {
         UITextView
             .jobsMake { _ in }
-            .byText("操作日志".tr)
+            .tr_setText("操作日志".tr)
             .byEditable(false)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 13,
                                                   weight: .regular))

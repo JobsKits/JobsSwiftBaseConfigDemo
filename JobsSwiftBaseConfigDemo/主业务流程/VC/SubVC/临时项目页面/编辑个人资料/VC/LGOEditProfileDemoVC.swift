@@ -162,7 +162,7 @@ final class LGOEditProfileDemoVC: BaseVC {
             }
             .byToolbar { cfg in
                 cfg
-                    .byTitle("")
+                    .byTitle("".tr)
                     .byCancelText("取消")
                     .byConfirmText("完成")
             }
@@ -181,7 +181,7 @@ final class LGOEditProfileDemoVC: BaseVC {
             }
             .byToolbar { cfg in
                 cfg
-                    .byTitle("")
+                    .byTitle("".tr)
                     .byCancelText("取消")
                     .byConfirmText("完成")
             }

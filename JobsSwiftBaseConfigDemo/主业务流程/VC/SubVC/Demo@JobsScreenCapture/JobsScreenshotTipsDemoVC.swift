@@ -55,7 +55,7 @@ final class JobsScreenshotTipsDemoVC: BaseVC {
     private lazy var statusTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("等待截屏操作".tr)
+            .tr_setText("等待截屏操作".tr)
             .byFont(JobsFont.systemFont(ofSize: 21,
                                         weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -69,7 +69,7 @@ final class JobsScreenshotTipsDemoVC: BaseVC {
     private lazy var statusDetailLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("系统截屏 0 次 · 按钮截屏 0 次".tr)
+            .tr_setText("系统截屏 0 次 · 按钮截屏 0 次".tr)
             .byFont(JobsFont.systemFont(ofSize: 15,
                                         weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -85,7 +85,7 @@ final class JobsScreenshotTipsDemoVC: BaseVC {
     private lazy var guideLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("真机可同时按下侧边键与音量加键；也可以点击下方按钮主动截取当前页面并保存到相册。程序主动截屏不会触发系统截屏通知，因此这里分开计数。".tr)
+            .tr_setText("真机可同时按下侧边键与音量加键；也可以点击下方按钮主动截取当前页面并保存到相册。程序主动截屏不会触发系统截屏通知，因此这里分开计数。".tr)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)

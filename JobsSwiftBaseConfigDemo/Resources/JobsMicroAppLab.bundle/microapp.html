@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Jobs 教学微应用</title>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title data-jobs-i18n="Jobs 教学微应用">Jobs 教学微应用</title>
 <style>
 :root{color-scheme:light;--bg:#f2f2f7;--fg:#15151a;--card:#fff;--muted:#45454e}
 html[data-theme=dark]{color-scheme:dark;--bg:#1c1c1e;--fg:#f4f4f7;--card:#2c2c2e;--muted:#c8c8d0}
@@ -13,16 +13,44 @@ input,button{font:inherit;line-height:1.4;max-width:100%;min-height:44px;border:
 input{flex:1 1 10rem;min-width:0}
 button{flex:0 1 auto;cursor:pointer;white-space:normal;overflow-wrap:anywhere}
 #result{white-space:pre-wrap;font-size:0.875em;margin-top:12px;overflow-wrap:anywhere}
-</style></head>
-<body><h2>教学微应用 · v2</h2><p>网页渲染 UI，Swift 提供白名单能力。</p>
+</style><script>
+// Jobs-owned lesson UI only; API names, URLs, and user drafts are never translated.
+window.jobsT = key => window.jobsWebLocalization?.strings?.[key] ?? key;
+window.jobsTF = (key, ...values) => {
+  let i = 0;
+  return window.jobsT(key).replace(/%@|%d/g, () => String(values[i++] ?? ''));
+};
+window.jobsSetLocalization = payload => {
+  window.jobsWebLocalization = payload;
+  document.documentElement.lang = payload.language || 'en';
+  document.querySelectorAll('[data-jobs-i18n]').forEach(el => {
+    el.textContent = window.jobsT(el.dataset.jobsI18n);
+  });
+  document.querySelectorAll('[data-jobs-i18n-aria]').forEach(el => {
+    el.setAttribute('aria-label', window.jobsT(el.dataset.jobsI18nAria));
+  });
+  document.querySelectorAll('[data-jobs-i18n-value]').forEach(el => {
+    const next = window.jobsT(el.dataset.jobsI18nValue);
+    if (el.dataset.jobsPreviousValue === undefined || el.value === el.dataset.jobsPreviousValue) {
+      el.value = next;
+    }
+    el.dataset.jobsPreviousValue = next;
+  });
+  window.jobsRenderLocalized?.();
+};
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.jobsWebLocalization) window.jobsSetLocalization(window.jobsWebLocalization);
+});
+</script></head>
+<body><h2 data-jobs-i18n="教学微应用 · v2">教学微应用 · v2</h2><p data-jobs-i18n="网页渲染 UI，Swift 提供白名单能力。">网页渲染 UI，Swift 提供白名单能力。</p>
 <form class="draft-form" onsubmit="event.preventDefault();callHost('saveDraft',{text:document.getElementById('draft').value})">
-<input id="draft" maxlength="140" value="来自微应用的草稿" aria-label="微应用草稿"><button type="submit">保存草稿</button>
-</form><div id="result" role="status">等待宿主调用</div>
+<input id="draft" maxlength="140" value="来自微应用的草稿" aria-label="微应用草稿" data-jobs-i18n-aria="微应用草稿" data-jobs-i18n-value="来自微应用的草稿" data-jobs-previous-value="来自微应用的草稿"><button type="submit" data-jobs-i18n="保存草稿">保存草稿</button>
+</form><div id="result" role="status" data-jobs-i18n="等待宿主调用">等待宿主调用</div>
 <script>
 // Bridge 是消息契约，不拼接原生方法名；生产端由宿主再校验来源、权限和参数。
 window.callHost=(action,payload)=>{
-  if(!window.webkit?.messageHandlers?.jobsLab){document.getElementById('result').textContent='需要 Jobs iOS 宿主';return;}
+  if(!window.webkit?.messageHandlers?.jobsLab){document.getElementById('result').textContent=jobsT('需要 Jobs iOS 宿主');return;}
   window.webkit.messageHandlers.jobsLab.postMessage({action,payload:payload??{}});
 };
-window.receiveNative=result=>{document.getElementById('result').textContent=result.message;};
+window.receiveNative=result=>{const el=document.getElementById('result');el.removeAttribute('data-jobs-i18n');el.textContent=result.message;};
 </script></body></html>

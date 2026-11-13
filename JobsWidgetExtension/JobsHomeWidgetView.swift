@@ -32,7 +32,7 @@ struct JobsHomeWidgetView: View {
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(.white.opacity(0.72))
 
-            Text("演武堂 · 小组件")
+            Text(verbatim: entry.text("演武堂 · 小组件"))
                 .font(widgetFamily == .systemSmall ? .headline : .title3.bold())
                 .foregroundStyle(.white)
                 .lineLimit(1)
@@ -41,7 +41,7 @@ struct JobsHomeWidgetView: View {
                 .font((widgetFamily == .systemSmall ? Font.title2 : Font.title).monospacedDigit().bold())
                 .foregroundStyle(.white)
 
-            Text("今日进度 \(entry.counter) / 12")
+            Text(verbatim: String(format: entry.text("今日进度 %d / 12"), entry.counter))
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(.white.opacity(0.88))
 
@@ -49,7 +49,7 @@ struct JobsHomeWidgetView: View {
                 .tint(.white)
 
             if widgetFamily != .systemSmall {
-                Text("宿主 Demo 更新后，桌面时间线会同步刷新。")
+                Text(verbatim: entry.text("宿主 Demo 更新后，桌面时间线会同步刷新。"))
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.76))
                     .lineLimit(widgetFamily == .systemLarge ? 2 : 1)
@@ -59,15 +59,22 @@ struct JobsHomeWidgetView: View {
                 Spacer(minLength: 4)
                 Divider()
                     .overlay(.white.opacity(0.28))
-                Label("长按桌面可编辑或移除小组件", systemImage: "hand.tap.fill")
+                Label(entry.text("长按桌面可编辑或移除小组件"), systemImage: "hand.tap.fill")
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.78))
-                Text("最近同步 \(entry.updatedAt, style: .time)")
+                Text(verbatim: updatedTimeText)
                     .font(.caption2)
                     .foregroundStyle(.white.opacity(0.66))
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .environment(\.locale, Locale(identifier: entry.languageCode))
+    }
+
+    private var updatedTimeText: String {
+        let locale = Locale(identifier: entry.languageCode)
+        let time = entry.updatedAt.formatted(.dateTime.hour().minute().locale(locale))
+        return String(format: entry.text("最近同步 %@"), time)
     }
 
     private var background: some View {

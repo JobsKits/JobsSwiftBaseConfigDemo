@@ -23,6 +23,7 @@ extension String {
         "tl",
         "zh-Hans", "zh-Hant",
         "vi", "th", "tr", "ja",
+        "bo", "fr", "de", "es", "ru", "ko",
         "pt-BR", "es-MX",
         "ar", "ar-EG"
     ]

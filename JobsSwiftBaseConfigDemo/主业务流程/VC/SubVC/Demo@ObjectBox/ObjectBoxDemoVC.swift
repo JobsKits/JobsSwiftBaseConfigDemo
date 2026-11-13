@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsToast
@@ -19,6 +21,7 @@ import JobsInheritance
 import JobsSwiftBaseDefines
 import ObjectBox
 import SnapKit
+import JobsEmptyView
 import GKNavigationBarSwift
 
 final class ObjectBoxDemoVC: BaseVC {
@@ -39,7 +42,7 @@ final class ObjectBoxDemoVC: BaseVC {
     private lazy var nameTextField: UITextField = {
         UITextField
             .jobsMake { _ in }
-            .byPlaceholder("输入姓名".tr)
+            .tr_setPlaceholder("输入姓名".tr)
             .byBorderStyle(.roundedRect)
             .byAddTo(view) { [unowned self] make in
                 if view.jobs_hasVisibleTopBar() {
@@ -49,14 +52,14 @@ final class ObjectBoxDemoVC: BaseVC {
                 }
                 make.left.equalToSuperview().offset(16)
                 make.right.equalToSuperview().inset(16)
-                make.height.equalTo(40)
+                make.height.equalTo(44)
             }
     }()
 
     private lazy var ageTextField: UITextField = {
         UITextField
             .jobsMake { _ in }
-            .byPlaceholder("输入年龄".tr)
+            .tr_setPlaceholder("输入年龄".tr)
             .byBorderStyle(.roundedRect)
             .byKeyboardType(.numberPad)
             .byAddTo(view) { [unowned self] make in
@@ -67,7 +70,11 @@ final class ObjectBoxDemoVC: BaseVC {
 
     private lazy var addButton: UIButton = {
         UIButton.sys()
-            .byTitle("新增".tr)
+            .tr_setTitle("新增".tr, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTitleColor(JobsCor.white)
+            .byBackgroundColor(JobsCor.systemBlue)
+            .byCornerRadius(10)
             .onTap { [weak self] _ in
                 guard let self else {
                     return
@@ -90,14 +97,18 @@ final class ObjectBoxDemoVC: BaseVC {
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(ageTextField.snp.bottom).offset(16)
                 make.left.equalToSuperview().offset(16)
-                make.height.equalTo(40)
-                make.width.equalTo(100)
+                make.height.equalTo(44)
+                make.width.equalTo(view).multipliedBy(0.5).offset(-22)
             }
     }()
 
     private lazy var updateButton: UIButton = {
         UIButton.sys()
-            .byTitle("修改选中项".tr)
+            .tr_setTitle("修改选中项".tr, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTitleColor(JobsCor.label)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
+            .byCornerRadius(10)
             .onTap { [weak self] _ in
                 guard let self else {
                     return
@@ -141,7 +152,11 @@ final class ObjectBoxDemoVC: BaseVC {
 
     private lazy var deleteButton: UIButton = {
         UIButton.sys()
-            .byTitle("删除选中项".tr)
+            .tr_setTitle("删除选中项".tr, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTitleColor(JobsCor.label)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
+            .byCornerRadius(10)
             .onTap { [weak self] _ in
                 guard let self else {
                     return
@@ -165,14 +180,18 @@ final class ObjectBoxDemoVC: BaseVC {
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(addButton.snp.bottom).offset(12)
                 make.left.equalToSuperview().offset(16)
-                make.height.equalTo(40)
-                make.width.equalTo(100)
+                make.height.equalTo(44)
+                make.width.equalTo(view).multipliedBy(0.5).offset(-22)
             }
     }()
 
     private lazy var queryButton: UIButton = {
         UIButton.sys()
-            .byTitle("查询全部".tr)
+            .tr_setTitle("查询全部".tr, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTitleColor(JobsCor.label)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
+            .byCornerRadius(10)
             .onTap { [weak self] _ in
                 guard let self else {
                     return
@@ -188,7 +207,11 @@ final class ObjectBoxDemoVC: BaseVC {
 
     private lazy var clearInputButton: UIButton = {
         UIButton.sys()
-            .byTitle("清空输入".tr)
+            .tr_setTitle("清空输入".tr, for: .normal)
+            .byTitleFont(JobsFont.systemFont(ofSize: 16, weight: .semibold))
+            .byTitleColor(JobsCor.label)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
+            .byCornerRadius(10)
             .onTap { [weak self] _ in
                 guard let self else {
                     return
@@ -200,8 +223,8 @@ final class ObjectBoxDemoVC: BaseVC {
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(deleteButton.snp.bottom).offset(12)
                 make.left.equalToSuperview().offset(16)
-                make.height.equalTo(40)
-                make.width.equalTo(100)
+                make.height.equalTo(44)
+                make.width.equalTo(view).multipliedBy(0.5).offset(-22)
             }
     }()
 
@@ -214,9 +237,20 @@ final class ObjectBoxDemoVC: BaseVC {
             .byNoContentInsetAdjustment()
             .bySeparatorStyle(.singleLine)
             .byNoSectionHeaderTopPadding()
+            .byEmptyButtonProvider { [weak self] in
+                UIButton.sys()
+                    .tr_setTitle("暂无数据".tr, for: .normal)
+                    .bySubTitle("查询全部".tr, for: .normal)
+                    .byImage("tray".sysImg, for: .normal)
+                    .byImagePlacement(.top)
+                    .onTap { [weak self] _ in
+                        self?.loadAllPersons()
+                    }
+            }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(clearInputButton.snp.bottom).offset(16)
-                make.left.right.bottom.equalToSuperview()
+                make.left.right.equalToSuperview()
+                make.bottom.equalTo(view.safeAreaLayoutGuide)
             }
     }()
 

@@ -144,7 +144,7 @@ final class JobsRandomNumberDemoVC: BaseVC {
                 make.height.equalTo(44)
             }
         UILabel.jobsMake { _ in }
-            .byText("巡检：点击背景刷新全部随机数")
+            .byText("巡检：点击背景刷新全部随机数".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 12))
             .byTextAlignment(.center)

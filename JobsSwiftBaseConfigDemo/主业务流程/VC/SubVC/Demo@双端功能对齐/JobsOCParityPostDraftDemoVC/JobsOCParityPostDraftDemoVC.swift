@@ -9,7 +9,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import AVFoundation
 import JobsByUIKit
@@ -38,7 +41,7 @@ final class JobsPostDraftDemoVC: BaseVC {
     private lazy var coverageDeleteButton: UIButton = {
         UIButton.sys()
             .byAccessibilityIdentifier("jobs.coverage.post.fixtureDelete")
-            .byTitle("组件：移到真实删除区")
+            .tr_setTitle("组件：移到真实删除区".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 11))
             .onTap { [weak self] _ in
                 self?.finishCoverageImageInDeleteZone()
@@ -79,8 +82,7 @@ final class JobsPostDraftDemoVC: BaseVC {
 
     private lazy var publishButton: UIButton = {
         UIButton.sys()
-            .byTitle("发布".tr,
-                     for: .normal)
+            .tr_setTitle("发布".tr, for: .normal)
             .byTitleFont(JobsFont.boldSystemFont(ofSize: 14))
             .byTitleColor(JobsCor.white,
                           for: .normal)
@@ -132,7 +134,7 @@ final class JobsPostDraftDemoVC: BaseVC {
     private lazy var placeholderLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("撩骚内容，写在这里哦~".tr)
+            .tr_setText("撩骚内容，写在这里哦~".tr)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.placeholderText)
             .byAddTo(postTextView) { make in
@@ -200,7 +202,7 @@ final class JobsPostDraftDemoVC: BaseVC {
     private lazy var deleteZoneLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("拖到这里删除".tr)
+            .tr_setText("拖到这里删除".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 16))
             .byTextColor(JobsCor.white)
             .byTextAlignment(.center)

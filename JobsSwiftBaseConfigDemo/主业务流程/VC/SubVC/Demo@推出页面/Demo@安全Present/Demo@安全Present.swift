@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsInheritance
@@ -65,7 +67,7 @@ final class SafetyPresentDemoVC: BaseVC {
     private lazy var heroTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("🛡️ 安全 Present")
+            .tr_setText("🛡️ 安全 Present".tr)
             .byNumberOfLines(0)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.boldSystemFont(ofSize: 24))
@@ -74,7 +76,7 @@ final class SafetyPresentDemoVC: BaseVC {
     private lazy var heroDetailLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("防重入 · UIView 触发 · 320pt Half Sheet")
+            .tr_setText("防重入 · UIView 触发 · 320pt Half Sheet".tr)
             .byNumberOfLines(0)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 14))

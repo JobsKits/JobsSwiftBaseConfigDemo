@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsInheritance
 import JobsSwiftBaseDefines
 import JobsByUIKit
@@ -43,8 +45,7 @@ final class FeedListVC: BaseVC,
         // 空态按钮（点击加载首屏）
         .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据".tr,
-                             for: .normal)
+                    .tr_setTitle("暂无数据".tr, for: .normal)
                     .byAccessibilityIdentifier("jobs.feed.loadSamples")
                     .bySubTitle("点我加载本地示例数据".tr,
                                 for: .normal)

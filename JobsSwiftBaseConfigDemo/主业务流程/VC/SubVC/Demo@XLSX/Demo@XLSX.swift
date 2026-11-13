@@ -12,12 +12,15 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
 import JobsSwiftBaseDefines
 import SnapKit
+import JobsEmptyView
 import CoreXLSX
 import GKNavigationBarSwift
 
@@ -31,8 +34,7 @@ final class XLSXDemoVC: BaseVC {
     // MARK: UI（链式 DSL）
     private lazy var openButton: UIButton = {
         UIButton.sys()
-            .byTitle("打开 .xlsx".tr,
-                     for: .normal)
+            .tr_setTitle("打开 .xlsx".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
             .byTitleColor(JobsCor.systemBlue,
@@ -51,14 +53,14 @@ final class XLSXDemoVC: BaseVC {
                     make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(12)
                 }
                 make.left.equalToSuperview().offset(16)
-                make.height.equalTo(36)
+                make.height.equalTo(44)
+                make.width.equalTo(view).multipliedBy(0.5).offset(-22)
             }
     }()
 
     private lazy var localButton: UIButton = {
         UIButton.sys()
-            .byTitle("加载本地".tr,
-                     for: .normal)
+            .tr_setTitle("加载本地".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
             .byTitleColor(JobsCor.systemBlue,
@@ -72,7 +74,9 @@ final class XLSXDemoVC: BaseVC {
             }
             .byAddTo(view) { make in
                 make.centerY.equalTo(self.openButton.snp.centerY)
-                make.left.greaterThanOrEqualTo(self.openButton.snp.right).offset(12)
+                make.left.equalTo(self.openButton.snp.right).offset(12)
+                make.right.equalToSuperview().inset(16)
+                make.height.equalTo(44)
             }
     }()
 
@@ -82,8 +86,9 @@ final class XLSXDemoVC: BaseVC {
                 self?.currentSheetIndex = sc.selectedSegmentIndex
             }
             .byAddTo(view) { make in
-                make.centerY.equalTo(self.openButton.snp.centerY)
-                make.left.greaterThanOrEqualTo(self.localButton.snp.right).offset(12)
+                make.top.equalTo(self.openButton.snp.bottom).offset(12)
+                make.left.equalToSuperview().offset(16)
+                make.height.equalTo(36)
                 make.right.equalToSuperview().inset(16)
             }
     }()
@@ -96,9 +101,20 @@ final class XLSXDemoVC: BaseVC {
             .byDataSource(self)
             .byDelegate(self)
             .byBackgroundColor(JobsCor.systemBackground)
+            .byEmptyButtonProvider { [weak self] in
+                UIButton.sys()
+                    .tr_setTitle("暂无数据".tr, for: .normal)
+                    .bySubTitle("点我填充示例数据".tr, for: .normal)
+                    .byImage("tablecells".sysImg, for: .normal)
+                    .byImagePlacement(.top)
+                    .onTap { [weak self] _ in
+                        self?.loadLocalDemo()
+                    }
+            }
             .byAddTo(view) { make in
-                make.top.equalTo(self.openButton.snp.bottom).offset(12)
-                make.left.right.bottom.equalToSuperview()
+                make.top.equalTo(self.sheetControl.snp.bottom).offset(12)
+                make.left.right.equalToSuperview()
+                make.bottom.equalTo(self.view.safeAreaLayoutGuide)
             }
     }()
 
@@ -139,6 +155,8 @@ final class XLSXDemoVC: BaseVC {
             title: "CoreXLSX"
         )
         sheetControl.apportionsSegmentWidthsByContent = true
+        tableView.byVisible(true)
+        tableView.reloadData()
         spinner.byHidesWhenStopped(true)
         // 可选：如果 Bundle 里有 sample.xlsx，自动加载
         if let url = Bundle.main.url(forResource: "sample",

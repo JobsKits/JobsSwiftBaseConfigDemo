@@ -9,7 +9,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import JobsByUIKit
 import JobsInheritance
@@ -53,8 +56,7 @@ final class JobsHandwritingDemoVC: BaseVC {
     private lazy var saveButton: UIButton = {
         UIButton.sys()
             .byAccessibilityIdentifier("jobs.handwriting.save")
-            .byTitle("保存".tr,
-                     for: .normal)
+            .tr_setTitle("保存".tr, for: .normal)
             .byTitleColor(JobsCor.systemBlue,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
@@ -67,7 +69,7 @@ final class JobsHandwritingDemoVC: BaseVC {
     private lazy var tipLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("可使用手指或 Apple Pencil 书写；右上角保存后，下次进入会恢复笔迹。".tr)
+            .tr_setText("可使用手指或 Apple Pencil 书写；右上角保存后，下次进入会恢复笔迹。".tr)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)

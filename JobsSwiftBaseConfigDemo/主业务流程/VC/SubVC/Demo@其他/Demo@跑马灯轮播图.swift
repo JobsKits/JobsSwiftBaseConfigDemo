@@ -10,7 +10,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import JobsToast
 import JobsScale
@@ -59,7 +62,7 @@ final class JobsMarqueeDemoVC: BaseVC {
             .byBorderStyle(.roundedRect)
             .byKeyboardType(.numbersAndPunctuation)
             .byReturnKeyType(.done)
-            .byText("0")
+            .tr_setText("0".tr)
             .onJobsEvent(.editingDidEndOnExit) { [weak self] (field: UITextField) in
                 field.resignFirstResponder()
                 self?.applyCoverageMarqueeCase()
@@ -68,7 +71,7 @@ final class JobsMarqueeDemoVC: BaseVC {
     private lazy var coverageApplyButton: UIButton = {
         UIButton.sys()
             .byAccessibilityIdentifier("jobs.coverage.marquee.apply")
-            .byTitle("巡检原按钮 / 显示 clone")
+            .tr_setTitle("巡检原按钮 / 显示 clone".tr, for: .normal)
             .onTap { [weak self] _ in
                 self?.view.endEditing(true)
                 self?.applyCoverageMarqueeCase()
@@ -139,8 +142,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemYellow.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向上连续 · 公告 1".tr,
-                             for: .normal)
+                    .tr_setTitle("向上连续 · 公告 1".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -182,8 +184,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemYellow.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向上连续 · 公告 2".tr,
-                             for: .normal)
+                    .tr_setTitle("向上连续 · 公告 2".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -225,8 +226,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemYellow.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向上连续 · 公告 3".tr,
-                             for: .normal)
+                    .tr_setTitle("向上连续 · 公告 3".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -266,7 +266,7 @@ final class JobsMarqueeDemoVC: BaseVC {
 #endif
             }
             ])
-            .byBackgroundColor(.randomColor)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byAddTo(self.scrollView) { [unowned self] make in
                 if #available(iOS 11.0, *) {
                     make.top.equalTo(self.scrollView.contentLayoutGuide.snp.top).offset(10)
@@ -290,8 +290,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemGreen.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向下连续 · 公告 1".tr,
-                             for: .normal)
+                    .tr_setTitle("向下连续 · 公告 1".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -333,8 +332,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemGreen.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向下连续 · 公告 2".tr,
-                             for: .normal)
+                    .tr_setTitle("向下连续 · 公告 2".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -376,8 +374,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemGreen.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向下连续 · 公告 3".tr,
-                             for: .normal)
+                    .tr_setTitle("向下连续 · 公告 3".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -417,7 +414,7 @@ final class JobsMarqueeDemoVC: BaseVC {
 #endif
             }
             ])
-            .byBackgroundColor(.randomColor)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.upContinuousMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -433,8 +430,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemOrange.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向左连续 · 公告 1".tr,
-                             for: .normal)
+                    .tr_setTitle("向左连续 · 公告 1".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -476,8 +472,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemOrange.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向左连续 · 公告 2".tr,
-                             for: .normal)
+                    .tr_setTitle("向左连续 · 公告 2".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -519,8 +514,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemOrange.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向左连续 · 公告 3".tr,
-                             for: .normal)
+                    .tr_setTitle("向左连续 · 公告 3".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -560,7 +554,7 @@ final class JobsMarqueeDemoVC: BaseVC {
 #endif
             }
             ])
-            .byBackgroundColor(.randomColor)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.downContinuousMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -576,8 +570,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemPink.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向右连续 · 公告 1".tr,
-                             for: .normal)
+                    .tr_setTitle("向右连续 · 公告 1".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -619,8 +612,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemPink.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向右连续 · 公告 2".tr,
-                             for: .normal)
+                    .tr_setTitle("向右连续 · 公告 2".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -662,8 +654,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemPink.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向右连续 · 公告 3".tr,
-                             for: .normal)
+                    .tr_setTitle("向右连续 · 公告 3".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -703,7 +694,7 @@ final class JobsMarqueeDemoVC: BaseVC {
 #endif
             }
             ])
-            .byBackgroundColor(.randomColor)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.leftContinuousMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -719,8 +710,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向上间隔 · 公告 1".tr,
-                             for: .normal)
+                    .tr_setTitle("向上间隔 · 公告 1".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -762,8 +752,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向上间隔 · 公告 2".tr,
-                             for: .normal)
+                    .tr_setTitle("向上间隔 · 公告 2".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -805,8 +794,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向上间隔 · 公告 3".tr,
-                             for: .normal)
+                    .tr_setTitle("向上间隔 · 公告 3".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -846,7 +834,7 @@ final class JobsMarqueeDemoVC: BaseVC {
 #endif
             }
             ])
-            .byBackgroundColor(.randomColor)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.rightContinuousMarquee.snp.bottom).offset(self.verticalSpacing * 2)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -862,8 +850,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemTeal.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向下间隔 · 公告 1".tr,
-                             for: .normal)
+                    .tr_setTitle("向下间隔 · 公告 1".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -905,8 +892,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemTeal.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向下间隔 · 公告 2".tr,
-                             for: .normal)
+                    .tr_setTitle("向下间隔 · 公告 2".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -948,8 +934,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemTeal.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向下间隔 · 公告 3".tr,
-                             for: .normal)
+                    .tr_setTitle("向下间隔 · 公告 3".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -989,7 +974,7 @@ final class JobsMarqueeDemoVC: BaseVC {
 #endif
             }
             ])
-            .byBackgroundColor(.randomColor)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.upFrequencyMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -1005,8 +990,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemPurple.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向左间隔 · Banner 1".tr,
-                             for: .normal)
+                    .tr_setTitle("向左间隔 · Banner 1".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -1048,8 +1032,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemPurple.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向左间隔 · Banner 2".tr,
-                             for: .normal)
+                    .tr_setTitle("向左间隔 · Banner 2".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -1091,8 +1074,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemPurple.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向左间隔 · Banner 3".tr,
-                             for: .normal)
+                    .tr_setTitle("向左间隔 · Banner 3".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -1132,7 +1114,7 @@ final class JobsMarqueeDemoVC: BaseVC {
 #endif
             }
             ])
-            .byBackgroundColor(.randomColor)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.downFrequencyMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -1148,8 +1130,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemIndigo.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向右间隔 · Banner 1".tr,
-                             for: .normal)
+                    .tr_setTitle("向右间隔 · Banner 1".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -1191,8 +1172,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemIndigo.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向右间隔 · Banner 2".tr,
-                             for: .normal)
+                    .tr_setTitle("向右间隔 · Banner 2".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -1234,8 +1214,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemIndigo.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("向右间隔 · Banner 3".tr,
-                             for: .normal)
+                    .tr_setTitle("向右间隔 · Banner 3".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -1275,7 +1254,7 @@ final class JobsMarqueeDemoVC: BaseVC {
 #endif
             }
             ])
-            .byBackgroundColor(.randomColor)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.leftFrequencyMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -1291,8 +1270,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemRed.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("极端 · 只有 1 个按钮".tr,
-                             for: .normal)
+                    .tr_setTitle("极端 · 只有 1 个按钮".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -1332,7 +1310,7 @@ final class JobsMarqueeDemoVC: BaseVC {
 #endif
             }
             ])
-            .byBackgroundColor(.randomColor)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.rightFrequencyMarquee.snp.bottom).offset(self.verticalSpacing * 2)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -1348,8 +1326,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemRed.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("极端 · 按钮 1/2".tr,
-                             for: .normal)
+                    .tr_setTitle("极端 · 按钮 1/2".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -1378,8 +1355,7 @@ final class JobsMarqueeDemoVC: BaseVC {
                 UIButton.sys()
                     .byBackgroundColor(JobsCor.systemRed.withAlphaComponent(0.2),
                                        for: .normal)
-                    .byTitle("极端 · 按钮 2/2".tr,
-                             for: .normal)
+                    .tr_setTitle("极端 · 按钮 2/2".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -1419,7 +1395,7 @@ final class JobsMarqueeDemoVC: BaseVC {
 #endif
             }
             ])
-            .byBackgroundColor(.randomColor)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.oneButtonMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -1509,7 +1485,7 @@ final class JobsMarqueeDemoVC: BaseVC {
 #endif
             }
             ])
-            .byBackgroundColor(.randomColor)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.twoButtonsMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -1612,7 +1588,7 @@ final class JobsMarqueeDemoVC: BaseVC {
 #endif
             }
             ])
-            .byBackgroundColor(.randomColor)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.localImageButtonsMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)
@@ -1739,7 +1715,7 @@ final class JobsMarqueeDemoVC: BaseVC {
 #endif
             },
             ])
-            .byBackgroundColor(.randomColor)
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byAddTo(self.scrollView) { [unowned self] make in
                 make.top.equalTo(self.sdWebImageButtonsMarquee.snp.bottom).offset(self.verticalSpacing)
                 make.left.right.height.equalTo(self.upContinuousMarquee)

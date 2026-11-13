@@ -10,7 +10,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import JobsByUIKit
 import JobsSwiftDSL
@@ -44,7 +47,7 @@ final class TipsGrantPermissionView: UIView {
     private lazy var titleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("温馨提示".tr)
+            .tr_setText("温馨提示".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 17,
                                         weight: .semibold))
@@ -64,7 +67,7 @@ final class TipsGrantPermissionView: UIView {
     private lazy var messageLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("开启照片、视频权限，如果不允许\n您将无法选择相册里的照片进行上传".tr)
+            .tr_setText("开启照片、视频权限，如果不允许\n您将无法选择相册里的照片进行上传".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byNumberOfLines(0)
@@ -78,7 +81,7 @@ final class TipsGrantPermissionView: UIView {
     private lazy var hintLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("设置-隐私安全-照片和视频".tr)
+            .tr_setText("设置-隐私安全-照片和视频".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 12))
             .byNumberOfLines(0)
@@ -95,8 +98,7 @@ final class TipsGrantPermissionView: UIView {
                                      g: 199 / 255,
                                      b: 140 / 25,
                                      a: 1))
-            .byTitle("去开启".tr,
-                     for: .normal)
+            .tr_setTitle("去开启".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,

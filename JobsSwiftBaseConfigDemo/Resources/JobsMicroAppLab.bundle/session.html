@@ -1,7 +1,37 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>独立会话</title><style>:root{--bg:#f2f2f7;--fg:#17171b;--muted:#45454e;color-scheme:light}html[data-theme=dark]{--bg:#1c1c1e;--fg:#f6f6f8;--muted:#c8c8d0;color-scheme:dark}body{font:16px -apple-system,sans-serif;background:var(--bg);color:var(--fg);margin:18px}h2{font-size:21px}p{color:var(--muted);line-height:1.5}pre{white-space:pre-wrap}</style></head><body><h2 id="account">独立账号容器</h2><p>每个账号使用自己的 WKWebsiteDataStore。请通过原生按钮写入/读取。</p><pre id="draft">当前 Web Store 暂无草稿</pre>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title data-jobs-i18n="独立会话">独立会话</title><style>:root{--bg:#f2f2f7;--fg:#17171b;--muted:#45454e;color-scheme:light}html[data-theme=dark]{--bg:#1c1c1e;--fg:#f6f6f8;--muted:#c8c8d0;color-scheme:dark}body{font:16px -apple-system,sans-serif;background:var(--bg);color:var(--fg);margin:18px}h2{font-size:21px}p{color:var(--muted);line-height:1.5}pre{white-space:pre-wrap}</style><script>
+// Jobs-owned lesson UI only; API names, URLs, and user drafts are never translated.
+window.jobsT = key => window.jobsWebLocalization?.strings?.[key] ?? key;
+window.jobsTF = (key, ...values) => {
+  let i = 0;
+  return window.jobsT(key).replace(/%@|%d/g, () => String(values[i++] ?? ''));
+};
+window.jobsSetLocalization = payload => {
+  window.jobsWebLocalization = payload;
+  document.documentElement.lang = payload.language || 'en';
+  document.querySelectorAll('[data-jobs-i18n]').forEach(el => {
+    el.textContent = window.jobsT(el.dataset.jobsI18n);
+  });
+  document.querySelectorAll('[data-jobs-i18n-aria]').forEach(el => {
+    el.setAttribute('aria-label', window.jobsT(el.dataset.jobsI18nAria));
+  });
+  document.querySelectorAll('[data-jobs-i18n-value]').forEach(el => {
+    const next = window.jobsT(el.dataset.jobsI18nValue);
+    if (el.dataset.jobsPreviousValue === undefined || el.value === el.dataset.jobsPreviousValue) {
+      el.value = next;
+    }
+    el.dataset.jobsPreviousValue = next;
+  });
+  window.jobsRenderLocalized?.();
+};
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.jobsWebLocalization) window.jobsSetLocalization(window.jobsWebLocalization);
+});
+</script></head><body><h2 id="account" data-jobs-i18n="独立账号容器">独立账号容器</h2><p data-jobs-i18n="每个账号使用自己的 WKWebsiteDataStore。请通过原生按钮写入/读取。">每个账号使用自己的 WKWebsiteDataStore。请通过原生按钮写入/读取。</p><pre id="draft" data-jobs-i18n="当前 Web Store 暂无草稿">当前 Web Store 暂无草稿</pre>
 <script>
-window.setAccount=account=>{document.getElementById('account').textContent='当前账号 '+account;window.inspectSession();};
-window.writeSession=account=>{try{localStorage.setItem('draft','账号 '+account+' 的 Web 草稿 @ '+new Date().toLocaleTimeString());return window.inspectSession();}catch(e){return 'Web 草稿写入失败: '+e;}};
-window.inspectSession=()=>{let text;try{text=localStorage.getItem('draft')||'暂无 Web 草稿';}catch(e){text='此来源不允许 localStorage: '+e;}document.getElementById('draft').textContent=text;return text;};
+let currentAccount = null;
+window.setAccount=account=>{currentAccount=account;const el=document.getElementById('account');el.removeAttribute('data-jobs-i18n');el.textContent=jobsTF('当前账号 %@',account);window.inspectSession();};
+window.writeSession=account=>{try{localStorage.setItem('draft',jobsTF('账号 %@ 的 Web 草稿 @ %@',account,new Date().toLocaleTimeString(window.jobsWebLocalization?.language)));return window.inspectSession();}catch(e){return jobsTF('Web 草稿写入失败：%@',e);}};
+window.inspectSession=()=>{let text;try{text=localStorage.getItem('draft')||jobsT('暂无 Web 草稿');}catch(e){text=jobsTF('此来源不允许 localStorage：%@',e);}const el=document.getElementById('draft');el.removeAttribute('data-jobs-i18n');el.textContent=text;return text;};
+window.jobsRenderLocalized=()=>{if(currentAccount!==null)window.setAccount(currentAccount);};
 </script></body></html>

@@ -113,6 +113,14 @@ open class JobsAppDoorBaseVC: BaseVC {
             .byAddTo(view)
     }()
 
+    final var customerServiceWidth: CGFloat {
+        let font = customerServiceButton.titleLabel?.font ?? JobsFont.systemFont(ofSize: 10)
+        let widestLine = ["在线客服", "7×24小时"].map {
+            (JobsAppDoorResource.text($0) as NSString).size(withAttributes: [.font: font]).width
+        }.max() ?? 0
+        return max(118, min(280, ceil(widestLine) + 48))
+    }
+
     final lazy var volumeButton: UIButton = {
         let button = UIButton.sys()
             .jobsAppDoorAppearance(titleColor: JobsAppDoorPalette.gold,

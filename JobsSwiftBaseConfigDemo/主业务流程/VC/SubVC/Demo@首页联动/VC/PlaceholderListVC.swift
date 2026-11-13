@@ -17,6 +17,7 @@ import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
 import SnapKit
+import Jobsl10n
 import JXSegmentedView
 
 final class PlaceholderListVC: BaseVC,
@@ -36,13 +37,15 @@ final class PlaceholderListVC: BaseVC,
     private lazy var tipLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("这里是「\(titleText)」示例页面")
+            .byText("这里是「%@」示例页面".tr(titleText.tr))
             .byAccessibilityIdentifier("jobs.linkage.page.\(routeID)")
             .byFont(JobsFont.systemFont(ofSize: 16,
                                         weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
+            .byNumberOfLines(0)
             .byAddTo(view) { make in
                 make.center.equalToSuperview()
+                make.left.right.equalToSuperview().inset(24)
             }
     }()
 
@@ -50,6 +53,13 @@ final class PlaceholderListVC: BaseVC,
         super.viewDidLoad()
         view.byBackgroundColor(JobsCor.systemBackground)
         tipLabel.byVisible(YES)
+        TRBind.bind(tipLabel,
+                    key: "这里是「%@」示例页面") { [weak self] target, format in
+            guard let self else {
+                return
+            }
+            target.byText(String(format: format, self.titleText.tr))
+        }
     }
 
     func listView() -> UIView {

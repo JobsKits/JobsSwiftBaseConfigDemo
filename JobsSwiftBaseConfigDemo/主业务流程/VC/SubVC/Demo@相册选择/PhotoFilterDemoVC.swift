@@ -33,7 +33,7 @@ final class PhotoFilterDemoVC: BaseVC {
 
     private lazy var saveButton: UIButton = {
         UIButton.sys()
-            .byTitle("保存".tr)
+            .tr_setTitle("保存".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .semibold))
             .byTitleColor(JobsCor.white)
@@ -55,7 +55,7 @@ final class PhotoFilterDemoVC: BaseVC {
     private lazy var intensityTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("强度 100%".tr)
+            .tr_setText("强度 100%".tr)
             .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 14,
                                                        weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
@@ -71,7 +71,7 @@ final class PhotoFilterDemoVC: BaseVC {
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview().inset(20)
                 make.bottom.equalTo(saveButton.snp.top).offset(-12)
-                make.height.equalTo(32)
+                make.height.equalTo(44)
             }
     }()
 
@@ -101,7 +101,7 @@ final class PhotoFilterDemoVC: BaseVC {
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview().inset(20)
                 make.bottom.equalTo(intensityRowView.snp.top).offset(-12)
-                make.height.equalTo(36)
+                make.height.equalTo(44)
             }
     }()
 
@@ -123,7 +123,7 @@ final class PhotoFilterDemoVC: BaseVC {
     private lazy var statusLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("原图 · 100%".tr)
+            .tr_setText("原图 · 100%".tr)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .medium))
             .byTextColor(JobsCor.white)

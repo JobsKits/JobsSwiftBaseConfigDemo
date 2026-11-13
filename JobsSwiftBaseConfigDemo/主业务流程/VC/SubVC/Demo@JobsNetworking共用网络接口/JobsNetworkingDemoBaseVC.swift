@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsScale
@@ -28,10 +30,12 @@ class JobsNetworkingDemoBaseVC: BaseVC {
     lazy var runButton: UIButton = {
         UIButton.sys()
         /// 背景色
-        .byBackgroundColor(JobsCor.systemGreen,
+        .byBackgroundColor(JobsCor.systemBlue,
                            for: .normal)
+        .byTitleColor(JobsCor.white,
+                      for: .normal)
         /// 普通字符串@设置主标题
-        .byTitle("点我运行".tr)
+        .tr_setTitle("点我运行".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
             .byAddTo(view) { [unowned self] make in

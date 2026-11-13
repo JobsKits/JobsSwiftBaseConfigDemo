@@ -11,4 +11,10 @@ struct JobsWidgetEntry: TimelineEntry {
     let date: Date
     let counter: Int
     let updatedAt: Date
+    let languageCode: String
+    let localizedStrings: [String: String]
+
+    func text(_ key: String) -> String {
+        return localizedStrings[key] ?? key
+    }
 }

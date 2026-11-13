@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -124,11 +126,10 @@ final class GestureUnlockDemoVC: BaseVC {
     private lazy var resetButton: UIButton = {
         UIButton.sys()
             .byAccessibilityIdentifier("jobs.gesture.pattern.reset")
-            .byBackgroundColor(JobsCor.systemGreen,
+            .byBackgroundColor(JobsCor.systemBlue,
                                for: .normal)
-            .byTitle("清除/重来".tr,
-                     for: .normal)
-            .byTitleColor(JobsCor.systemBlue,
+            .tr_setTitle("清除/重来".tr, for: .normal)
+            .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
@@ -155,6 +156,8 @@ final class GestureUnlockDemoVC: BaseVC {
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.unlockView.snp.bottom).offset(16)
                 make.centerX.equalToSuperview()
+                make.height.greaterThanOrEqualTo(44)
+                make.width.greaterThanOrEqualTo(140)
             }
     }()
 

@@ -14,6 +14,8 @@ import JobsSwiftDSL
 import SnapKit
 import UIKit
 
+import Jobsl10n
+
 final class JobsIconfontCacheDemoVC: BaseVC {
 
     private var automaticSecondLoadPending = true
@@ -30,7 +32,7 @@ final class JobsIconfontCacheDemoVC: BaseVC {
     private lazy var statusLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("首次加载准备中".tr)
+            .tr_setText("首次加载准备中".tr)
             .byFont(JobsFont.systemFont(ofSize: 15,
                                         weight: .medium))
             .byTextColor(JobsCor.label)
@@ -111,7 +113,7 @@ final class JobsIconfontCacheDemoVC: BaseVC {
     }
 
     private func clearAndReload() {
-        statusLabel.byText("正在统一清理三套缓存…")
+        statusLabel.byText("正在统一清理三套缓存…".tr)
         JobsIconfont.shared.clearImageCache { [weak self] in
             self?.loadImage(forceRefresh: true,
                             phase: "清理后的强制重载")

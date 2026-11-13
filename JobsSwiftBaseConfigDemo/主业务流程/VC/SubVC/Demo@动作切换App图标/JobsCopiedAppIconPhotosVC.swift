@@ -9,6 +9,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import GKNavigationBarSwift
@@ -58,7 +60,7 @@ final class JobsCopiedAppIconPhotosVC: BaseVC {
 
     private lazy var deleteButton: UIButton = {
         UIButton.sys()
-            .byTitle("全部删除".tr)
+            .tr_setTitle("全部删除".tr, for: .normal)
             .byTitleColor(JobsCor.systemRed)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
                                              weight: .medium))
@@ -76,7 +78,7 @@ final class JobsCopiedAppIconPhotosVC: BaseVC {
     private lazy var emptyStateLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("还没有照片副本\n请返回上页，从相册选择并复制一张照片。".tr)
+            .tr_setText("还没有照片副本\n请返回上页，从相册选择并复制一张照片。".tr)
             .byFont(JobsFont.systemFont(ofSize: 15,
                                         weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)

@@ -43,7 +43,14 @@ final class AlamofireClient: HTTPClient,
     private var requests: [String: Request] = [:]
 
     init(config: JobsRequestConfig) {
-        let sessionConfiguration = URLSessionConfiguration.default
+        let sessionConfiguration = config.usesEphemeralSession
+            ? URLSessionConfiguration.ephemeral
+            : URLSessionConfiguration.default
+        if config.usesEphemeralSession {
+            sessionConfiguration.urlCache = nil
+            sessionConfiguration.requestCachePolicy = .reloadIgnoringLocalCacheData
+            sessionConfiguration.urlCredentialStorage = nil
+        }
         sessionConfiguration.timeoutIntervalForRequest = config.timeout
         if let sslPinning = config.sslPinning, !sslPinning.pinnedHosts.isEmpty {
             var evaluators: [String: ServerTrustEvaluating] = [:]

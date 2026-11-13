@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsNetworking
@@ -31,9 +33,11 @@ class JobsNetworkingMethodDemoVC: BaseVC {
         }
     }
 
+    private var statusFormatKey = "点击按钮发起请求"
+
     var statusText = "点击按钮发起请求" {
         didSet {
-            statusLabel.byText("状态：\(statusText)")
+            statusLabel.byText("状态：%@".tr(statusText))
         }
     }
 
@@ -87,7 +91,7 @@ class JobsNetworkingMethodDemoVC: BaseVC {
     private lazy var pathLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("接口：\(item.path)")
+            .byText("接口：%@".tr(item.path))
             .byFont(JobsFont.systemFont(ofSize: 15,
                                         weight: .medium))
             .byNumberOfLines(0)
@@ -100,7 +104,7 @@ class JobsNetworkingMethodDemoVC: BaseVC {
     private lazy var statusLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("状态：\(statusText)")
+            .byText("状态：%@".tr(statusText))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
             .byAddTo(contentView) { [unowned self] make in
@@ -111,8 +115,7 @@ class JobsNetworkingMethodDemoVC: BaseVC {
 
     private lazy var requestButton: UIButton = {
         UIButton.sys()
-            .byTitle("发起请求".tr,
-                     for: .normal)
+            .tr_setTitle("发起请求".tr, for: .normal)
             .byBackgroundColor(JobsCor.systemBlue.withAlphaComponent(0.12))
             .byCornerRadius(10)
             .onTap { [weak self] _ in
@@ -130,8 +133,7 @@ class JobsNetworkingMethodDemoVC: BaseVC {
 
     private lazy var errorButton: UIButton = {
         UIButton.sys()
-            .byTitle("触发错误".tr,
-                     for: .normal)
+            .tr_setTitle("触发错误".tr, for: .normal)
             .byBackgroundColor(JobsCor.systemRed.withAlphaComponent(0.12))
             .byCornerRadius(10)
             .onTap { [weak self] _ in
@@ -220,6 +222,25 @@ class JobsNetworkingMethodDemoVC: BaseVC {
         requestPreviewTextView.byText(requestPreviewText)
         renderTextView.byText(renderResultText)
         rawTextView.byText(rawResponseText)
+        TRBind.bind(pathLabel,
+                    key: "接口：%@") { [weak self] target, format in
+            guard let self else {
+                return
+            }
+            target.byText(String(format: format, self.item.path))
+        }
+        TRBind.bind(statusLabel,
+                    key: "状态：%@") { [weak self] target, format in
+            guard let self else {
+                return
+            }
+            target.byText(String(format: format, self.statusFormatKey.tr(self.item.methodType.title)))
+        }
+    }
+
+    private func setRequestStatus(_ key: String) {
+        statusFormatKey = key
+        statusText = key.tr(item.methodType.title)
     }
 
     func performRequest(triggerError: Bool) async throws {
@@ -253,7 +274,7 @@ extension JobsNetworkingMethodDemoVC {
     func sendRequest(triggerError: Bool) {
         requestButton.byEnabled(false)
         errorButton.byEnabled(false)
-        statusText = "\(item.methodType.title) 请求中..."
+        setRequestStatus("%@ 请求中...")
         requestPreviewText = buildRequestPreview(triggerError: triggerError)
         Task {
             do {
@@ -347,7 +368,7 @@ extension JobsNetworkingMethodDemoVC {
                     guard let self else {
                         return
                     }
-                    self.statusText = "\(self.item.methodType.title) 请求异常"
+                    self.setRequestStatus("%@ 请求异常")
                     self.renderResultText = message
                     self.rawResponseText = message
                     self.finishRequest()
@@ -362,7 +383,7 @@ extension JobsNetworkingMethodDemoVC {
                     guard let self else {
                         return
                     }
-                    self.statusText = "\(self.item.methodType.title) 请求异常"
+                    self.setRequestStatus("%@ 请求异常")
                     self.renderResultText = message
                     self.rawResponseText = message
                     self.finishRequest()
@@ -373,14 +394,14 @@ extension JobsNetworkingMethodDemoVC {
 
     func handleSuccess(render: String,
                        raw: String) {
-        statusText = "\(item.methodType.title) 请求成功"
+        setRequestStatus("%@ 请求成功")
         renderResultText = render
         rawResponseText = raw
         finishRequest()
     }
 
     func handleFailure(_ raw: String) {
-        statusText = "\(item.methodType.title) 请求失败"
+        setRequestStatus("%@ 请求失败")
         renderResultText = raw
         rawResponseText = raw
         finishRequest()

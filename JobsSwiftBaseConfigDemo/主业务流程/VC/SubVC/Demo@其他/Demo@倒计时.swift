@@ -10,7 +10,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import JobsToast
 import JobsByUIKit
@@ -79,8 +82,7 @@ final class JobsCountdownDemoVC: BaseVC {
     /// 另一种方式@创建倒计时按钮
     private lazy var startButton: UIButton = {
         UIButton.sys()
-            .byTitle("开始".tr,
-                     for: .normal)
+            .tr_setTitle("开始".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 22,
                                              weight: .bold))
             .byTitleColor(JobsCor.white,
@@ -130,7 +132,7 @@ final class JobsCountdownDemoVC: BaseVC {
             .jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
-            .byText("1️⃣ 基础 60s（控制台打印）".tr)
+            .tr_setText("1️⃣ 基础 60s（控制台打印）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(contentView.snp.top).offset(20)
@@ -143,10 +145,8 @@ final class JobsCountdownDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemBlue,
                                for: .normal)
-            .byTitle("获取验证码".tr,
-                     for: .normal)
-            .byTitle("获取验证码".tr,
-                     for: .selected)
+            .tr_setTitle("获取验证码".tr, for: .normal)
+            .tr_setTitle("获取验证码".tr, for: .selected)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleColor(JobsCor.white,
@@ -180,7 +180,7 @@ final class JobsCountdownDemoVC: BaseVC {
             .jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
-            .byText("2️⃣ 每秒换色闪烁".tr)
+            .tr_setText("2️⃣ 每秒换色闪烁".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(button1Basic.snp.bottom).offset(24)
@@ -193,10 +193,8 @@ final class JobsCountdownDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemTeal,
                                for: .normal)
-            .byTitle("开始闪烁倒计时".tr,
-                     for: .normal)
-            .byTitle("开始闪烁倒计时".tr,
-                     for: .selected)
+            .tr_setTitle("开始闪烁倒计时".tr, for: .normal)
+            .tr_setTitle("开始闪烁倒计时".tr, for: .selected)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleColor(JobsCor.white,
@@ -231,7 +229,7 @@ final class JobsCountdownDemoVC: BaseVC {
             .jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
-            .byText("3️⃣ 上数到 10（0.5s 间隔）".tr)
+            .tr_setText("3️⃣ 上数到 10（0.5s 间隔）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(button2Flash.snp.bottom).offset(24)
@@ -244,10 +242,8 @@ final class JobsCountdownDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemGreen,
                                for: .normal)
-            .byTitle("0.5s 起步".tr,
-                     for: .normal)
-            .byTitle("0.5s 起步".tr,
-                     for: .selected)
+            .tr_setTitle("0.5s 起步".tr, for: .normal)
+            .tr_setTitle("0.5s 起步".tr, for: .selected)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleColor(JobsCor.white,
@@ -282,7 +278,7 @@ final class JobsCountdownDemoVC: BaseVC {
             .jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
-            .byText("4️⃣ 进入即渲染（renderOnInit）".tr)
+            .tr_setText("4️⃣ 进入即渲染（renderOnInit）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(button3Up.snp.bottom).offset(24)
@@ -295,10 +291,8 @@ final class JobsCountdownDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemIndigo,
                                for: .normal)
-            .byTitle("进入已显示".tr,
-                     for: .normal)
-            .byTitle("进入已显示".tr,
-                     for: .selected)
+            .tr_setTitle("进入已显示".tr, for: .normal)
+            .tr_setTitle("进入已显示".tr, for: .selected)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleColor(JobsCor.white,
@@ -330,7 +324,7 @@ final class JobsCountdownDemoVC: BaseVC {
             .jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
-            .byText("5️⃣ 富文本标题（JobsRichText）".tr)
+            .tr_setText("5️⃣ 富文本标题（JobsRichText）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(button4RenderOnInit.snp.bottom).offset(24)
@@ -343,10 +337,8 @@ final class JobsCountdownDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemPurple,
                                for: .normal)
-            .byTitle("富文本倒计时".tr,
-                     for: .normal)
-            .byTitle("富文本倒计时".tr,
-                     for: .selected)
+            .tr_setTitle("富文本倒计时".tr, for: .normal)
+            .tr_setTitle("富文本倒计时".tr, for: .selected)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleColor(JobsCor.white,
@@ -399,7 +391,7 @@ final class JobsCountdownDemoVC: BaseVC {
             .jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
-            .byText("6️⃣ 附件 + 文本富文本".tr)
+            .tr_setText("6️⃣ 附件 + 文本富文本".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(button5RichText.snp.bottom).offset(24)
@@ -412,10 +404,8 @@ final class JobsCountdownDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemPink,
                                for: .normal)
-            .byTitle("附件说明".tr,
-                     for: .normal)
-            .byTitle("附件说明".tr,
-                     for: .selected)
+            .tr_setTitle("附件说明".tr, for: .normal)
+            .tr_setTitle("附件说明".tr, for: .selected)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleColor(JobsCor.white,
@@ -463,7 +453,7 @@ final class JobsCountdownDemoVC: BaseVC {
             .jobsMake { _ in }
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
-            .byText("7️⃣ 运行中允许点击（弹 Toast 提示）".tr)
+            .tr_setText("7️⃣ 运行中允许点击（弹 Toast 提示）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
                 make.top.equalTo(button6Attachment.snp.bottom).offset(24)
@@ -476,10 +466,8 @@ final class JobsCountdownDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemOrange,
                                for: .normal)
-            .byTitle("运行可点".tr,
-                     for: .normal)
-            .byTitle("运行可点".tr,
-                     for: .selected)
+            .tr_setTitle("运行可点".tr, for: .normal)
+            .tr_setTitle("运行可点".tr, for: .selected)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleColor(JobsCor.white,

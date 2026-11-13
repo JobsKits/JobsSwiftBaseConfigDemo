@@ -10,7 +10,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import JobsScale
 import JobsByUIKit
@@ -58,7 +61,7 @@ final class JobsSysProgressDemoVC: BaseVC {
     private lazy var timeLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("剩余：-- 秒".tr)
+            .tr_setText("剩余：-- 秒".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 18,
                                                        weight: .medium))
@@ -150,8 +153,7 @@ final class JobsSysProgressDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemGreen,
                                for: .normal)
-            .byTitle("开始倒计时".tr,
-                     for: .normal)
+            .tr_setTitle("开始倒计时".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.boldSystemFont(ofSize: 16))
@@ -240,8 +242,7 @@ final class JobsSysProgressDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemGray,
                                for: .normal)
-            .byTitle("取消".tr,
-                     for: .normal)
+            .tr_setTitle("取消".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16))

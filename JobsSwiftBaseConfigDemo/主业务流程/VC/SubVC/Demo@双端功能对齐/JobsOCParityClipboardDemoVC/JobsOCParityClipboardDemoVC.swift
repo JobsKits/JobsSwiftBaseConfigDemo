@@ -9,6 +9,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsByUIKit
@@ -25,7 +27,7 @@ final class JobsClipboardCueDemoVC: BaseVC {
     private lazy var copyLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("请点击复制：\(copiedText)".tr)
+            .byText("请点击复制：%@".tr(copiedText))
             .byFont(JobsFont.systemFont(ofSize: 20))
             .byTextColor(JobsCor.systemRed)
             .byTextAlignment(.center)
@@ -52,7 +54,7 @@ final class JobsClipboardCueDemoVC: BaseVC {
     private lazy var pasteTextView: UITextView = {
         UITextView
             .jobsMake { _ in }
-            .byText("请粘贴！！！".tr)
+            .tr_setText("请粘贴！！！".tr)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.label)
             .byBackgroundColor(JobsCor.systemGray6)
@@ -74,6 +76,13 @@ final class JobsClipboardCueDemoVC: BaseVC {
         jobsSetupGKNav(title: "系统剪贴板及粘贴提示".tr)
         copyLabel.byVisible(YES)
         pasteTextView.byVisible(YES)
+        TRBind.bind(copyLabel,
+                    key: "请点击复制：%@") { [weak self] target, format in
+            guard let self else {
+                return
+            }
+            target.byText(String(format: format, self.copiedText))
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {

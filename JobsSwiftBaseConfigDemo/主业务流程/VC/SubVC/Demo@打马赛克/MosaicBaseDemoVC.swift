@@ -9,6 +9,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsSwiftBaseDefines
@@ -68,7 +70,7 @@ class MosaicBaseDemoVC: BaseVC {
     lazy var loadingLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("图片加载中...".tr)
+            .tr_setText("图片加载中...".tr)
             .byTextColor(JobsCor.white)
             .byFont(JobsFont.systemFont(ofSize: 15,
                                         weight: .medium))
@@ -166,7 +168,7 @@ class MosaicBaseDemoVC: BaseVC {
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("--jobs-coverage-route") {
             guard let fixture = UIImage.make(named: "Ani") else {
-                loadingLabel.byText("巡检测试图片缺失：Ani")
+                loadingLabel.byText("巡检测试图片缺失：Ani".tr)
                 return
             }
             // 手势回归使用随包图片，仍执行原图规范化和子页面的同一绘画初始化。

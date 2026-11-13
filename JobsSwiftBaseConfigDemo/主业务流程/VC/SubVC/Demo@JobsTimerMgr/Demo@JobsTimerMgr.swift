@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsInheritance
@@ -52,9 +54,9 @@ private final class JobsTimerMgrDemoUIBridge: @unchecked Sendable {
         aCount = 0
         bCount = 0
         Task { @MainActor [weak vc] in
-            vc?.countALabel.byText("A 持续任务\n0 次")
-            vc?.countBLabel.byText("B 后台取消\n0 次")
-            vc?.oneShotLabel.byText("一次性任务\n未启动")
+            vc?.countALabel.byText("A 持续任务\n0 次".tr)
+            vc?.countBLabel.byText("B 后台取消\n0 次".tr)
+            vc?.oneShotLabel.byText("一次性任务\n未启动".tr)
         }
     }
 
@@ -135,7 +137,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private lazy var heroTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("一个管理器，统一驾驭三种计时内核".tr)
+            .tr_setText("一个管理器，统一驾驭三种计时内核".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 23))
             .byTextColor(JobsCor.label)
             .byNumberOfLines(0)
@@ -171,7 +173,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private lazy var guideTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("这个 Demo 要证明什么？".tr)
+            .tr_setText("这个 Demo 要证明什么？".tr)
             .byFont(JobsFont.systemFont(ofSize: 16,
                                         weight: .bold))
             .byTextColor(JobsCor.label)
@@ -211,7 +213,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private lazy var kindTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("先选择 A 的计时内核".tr)
+            .tr_setText("先选择 A 的计时内核".tr)
             .byFont(JobsFont.systemFont(ofSize: 16,
                                         weight: .bold))
             .byTextColor(JobsCor.label)
@@ -224,7 +226,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private lazy var kindDetailLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("选择只影响 A；点击“同 ID 替换 A”会切换到下一个内核，但 identifier 保持不变。".tr)
+            .tr_setText("选择只影响 A；点击“同 ID 替换 A”会切换到下一个内核，但 identifier 保持不变。".tr)
             .byNumberOfLines(0)
             .byLineBreakMode(.byWordWrapping)
             .byFont(JobsFont.systemFont(ofSize: 13,
@@ -252,7 +254,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private lazy var kindFootnoteLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("当前 GCD：适合普通周期任务，按秒观察最直观。".tr)
+            .tr_setText("当前 GCD：适合普通周期任务，按秒观察最直观。".tr)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 12,
                                         weight: .medium))
@@ -273,7 +275,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private lazy var statusTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("实时实验状态".tr)
+            .tr_setText("实时实验状态".tr)
             .byFont(JobsFont.systemFont(ofSize: 16,
                                         weight: .bold))
             .byTextColor(JobsCor.label)
@@ -286,7 +288,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     fileprivate lazy var statusLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("等待开始：先创建 A + B，再按下面的实验顺序操作。".tr)
+            .tr_setText("等待开始：先创建 A + B，再按下面的实验顺序操作。".tr)
             .byNumberOfLines(0)
             .byLineBreakMode(.byWordWrapping)
             .byFont(JobsFont.systemFont(ofSize: 13,
@@ -305,7 +307,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     fileprivate lazy var countALabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("A 持续任务\n0 次")
+            .tr_setText("A 持续任务\n0 次".tr)
             .byNumberOfLines(2)
             .byTextAlignment(.center)
             .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 13,
@@ -319,7 +321,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     fileprivate lazy var countBLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("B 后台取消\n0 次")
+            .tr_setText("B 后台取消\n0 次".tr)
             .byNumberOfLines(2)
             .byTextAlignment(.center)
             .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 13,
@@ -333,7 +335,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     fileprivate lazy var oneShotLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("一次性任务\n未启动")
+            .tr_setText("一次性任务\n未启动".tr)
             .byNumberOfLines(2)
             .byTextAlignment(.center)
             .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 13,
@@ -603,7 +605,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private lazy var logTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("实验日志".tr)
+            .tr_setText("实验日志".tr)
             .byFont(JobsFont.systemFont(ofSize: 16,
                                         weight: .bold))
             .byTextColor(JobsCor.label)
@@ -616,7 +618,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
 
     private lazy var clearLogBtn: UIButton = {
         UIButton.sys()
-            .byTitle("清除日志".tr)
+            .tr_setTitle("清除日志".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 12,
                                              weight: .semibold))
             .byTitleColor(JobsCor.systemRed)
@@ -642,7 +644,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     private lazy var logHintLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("每次操作、前后台切换和 Manager 状态变化都会记录在这里。".tr)
+            .tr_setText("每次操作、前后台切换和 Manager 状态变化都会记录在这里。".tr)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 12,
                                         weight: .regular))
@@ -665,7 +667,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
                                         left: 10,
                                         bottom: 10,
                                         right: 10))
-            .byText("")
+            .byText("".tr)
             .byAddTo(logCard) { [unowned self] make in
                 make.top.equalTo(self.logHintLabel.snp.bottom).offset(10)
                 make.left.right.equalToSuperview().inset(12)
@@ -1051,7 +1053,7 @@ final class JobsTimerMgrDemoVC: BaseVC {
     @MainActor
     private func clearLog() {
         logView
-            .byText("")
+            .byText("".tr)
             .byContentOffsetBy(.zero)
     }
 

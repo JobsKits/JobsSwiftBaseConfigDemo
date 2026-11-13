@@ -10,7 +10,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import ObjectiveC
 import JobsSwiftDSL
@@ -31,7 +34,7 @@ final class TabBarDemoVC: BaseVC {
     private var coverageLongPressCount = 0
     private lazy var coverageLongPressLabel: UILabel = {
         UILabel.jobsMake { _ in }
-            .byText("0")
+            .tr_setText("0".tr)
             .byTextColor(JobsCor.clear)
             .byFrame(CGRect(x: 8, y: 108, width: 1, height: 1))
             .byAccessibilityIdentifier("jobs.tabbar.discount.longPressCount")
@@ -47,7 +50,7 @@ final class TabBarDemoVC: BaseVC {
             .byHorizontalOnly(true)                // ✅ 只允许横向
         .bySuppressChildVerticalScrolls(true)  // ✅（可选）禁子 VC 内纵向滚动
         .byBarBackgroundColor(JobsCor.secondarySystemBackground)
-            .byCustomBarHeight(nil)              // 默认：49 + 安全区
+            .byCustomBarHeight(108)              // 图标、主副标题和底部安全区均保留空间。
         .byBarBottomOffset(0)                // 贴底
         .byBarBackgroundImage(nil)
         // 布局策略（1 居中；2~5 等分；>5 继续按“5 等分”的单元宽/间距去排，超出横滑）
@@ -80,8 +83,7 @@ final class TabBarDemoVC: BaseVC {
                 /// 普通按钮@（无副标题、不配置事件、无富文本）
                 UIButton.sys()
                     .byNormalBgColor(JobsCor.clear)
-                    .byTitle("首页".tr,
-                             for: .normal)
+                    .tr_setTitle("首页".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleColor(JobsCor.systemRed,
@@ -107,7 +109,7 @@ final class TabBarDemoVC: BaseVC {
                                    bottom: 1,
                                    right: 4))
                     .byBackgroundColor(JobsCor.systemRed)
-                    .byFont(JobsFont.systemFont(ofSize: 9,
+                    .byFont(JobsFont.systemFont(ofSize: 11,
                                                 weight: .semibold))
                     .byShadow(color: JobsCor.black.withAlphaComponent(0.25),
                               radius: 1,
@@ -118,8 +120,7 @@ final class TabBarDemoVC: BaseVC {
                 /// 普通按钮@（配置事件）
                 UIButton.sys()
                     .byNormalBgColor(JobsCor.clear)
-                    .byTitle("优惠".tr,
-                             for: .normal)
+                    .tr_setTitle("优惠".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleColor(JobsCor.systemRed,
@@ -194,8 +195,7 @@ final class TabBarDemoVC: BaseVC {
                                                right: 2)),
                 UIButton.sys()
                     .byNormalBgColor(JobsCor.clear)
-                    .byTitle("好友".tr,
-                             for: .normal)
+                    .tr_setTitle("好友".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleColor(JobsCor.systemRed,
@@ -213,8 +213,7 @@ final class TabBarDemoVC: BaseVC {
                                                right: 10)),
                 /// ✅ 倒计时按钮@（点击触发）—— 适配新版 JobsSwiftTimer（替代旧 startTimer/onCountdownTick/onCountdownFinish）
                 UIButton.sys()
-                    .byTitle("活动".tr,
-                             for: .normal)
+                    .tr_setTitle("活动".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleColor(JobsCor.systemRed,
@@ -253,8 +252,7 @@ final class TabBarDemoVC: BaseVC {
             },
                 UIButton.sys()
                     .byNormalBgColor(JobsCor.clear)
-                    .byTitle("客服".tr,
-                             for: .normal)
+                    .tr_setTitle("客服".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleColor(JobsCor.systemRed,
@@ -273,8 +271,7 @@ final class TabBarDemoVC: BaseVC {
                 /// 普通按钮@（展示副标题）
                 UIButton.sys()
                     .byNormalBgColor(JobsCor.clear)
-                    .byTitle("我的".tr,
-                             for: .normal)
+                    .tr_setTitle("我的".tr, for: .normal)
                     .byTitleColor(JobsCor.label,
                                   for: .normal)
                     .byTitleColor(JobsCor.systemRed,

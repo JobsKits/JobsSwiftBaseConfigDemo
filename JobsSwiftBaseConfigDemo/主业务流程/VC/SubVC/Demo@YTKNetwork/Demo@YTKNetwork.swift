@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsSwiftDSL
 import JobsScale
 import JobsByUIKit
@@ -46,8 +48,7 @@ final class YTKNetworkDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemGreen,
                                for: .normal)
-            .byTitle("单请求：GET /ip".tr,
-                     for: .normal)
+            .tr_setTitle("单请求：GET /ip".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -91,8 +92,7 @@ final class YTKNetworkDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemBlue,
                                for: .normal)
-            .byTitle("批量：IP + Headers".tr,
-                     for: .normal)
+            .tr_setTitle("批量：IP + Headers".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -139,8 +139,7 @@ final class YTKNetworkDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemOrange,
                                for: .normal)
-            .byTitle("链式：POST → GET".tr,
-                     for: .normal)
+            .tr_setTitle("链式：POST → GET".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -179,8 +178,7 @@ final class YTKNetworkDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemPurple,
                                for: .normal)
-            .byTitle("上传头像：Multipart".tr,
-                     for: .normal)
+            .tr_setTitle("上传头像：Multipart".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,

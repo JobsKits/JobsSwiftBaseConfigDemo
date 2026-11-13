@@ -10,7 +10,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import JobsByUIKit
 import JobsSwiftDSL
@@ -95,7 +98,7 @@ final class SafeCodableDemoVC: BaseVC {
     private lazy var jsonTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("JSON（可编辑）".tr)
+            .tr_setText("JSON（可编辑）".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 14))
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom).offset(10)
@@ -121,8 +124,7 @@ final class SafeCodableDemoVC: BaseVC {
 
     private lazy var decodeDirtyButton: UIButton = {
         UIButton.sys()
-            .byTitle("解码：脏数据".tr,
-                     for: .normal)
+            .tr_setTitle("解码：脏数据".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byBackgroundColor(JobsCor.systemBlue,
@@ -140,8 +142,7 @@ final class SafeCodableDemoVC: BaseVC {
 
     private lazy var decodeCleanButton: UIButton = {
         UIButton.sys()
-            .byTitle("解码：规范数据".tr,
-                     for: .normal)
+            .tr_setTitle("解码：规范数据".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byBackgroundColor(JobsCor.systemGreen,
@@ -162,7 +163,7 @@ final class SafeCodableDemoVC: BaseVC {
     private lazy var valuesTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("解析结果".tr)
+            .tr_setText("解析结果".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 14))
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.decodeDirtyButton.snp.bottom).offset(16)
@@ -181,7 +182,7 @@ final class SafeCodableDemoVC: BaseVC {
     private lazy var logTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("解码日志".tr)
+            .tr_setText("解码日志".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 14))
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.avatarURLLabel.snp.bottom).offset(16)
@@ -310,7 +311,7 @@ extension SafeCodableDemoVC {
             createdAtLabel,
             homepageLabel,
             avatarURLLabel].forEach {
-            $0.byText("")
+            $0.byText("".tr)
         }
     }
 
@@ -323,6 +324,6 @@ extension SafeCodableDemoVC {
     }
 
     private func clearLog() {
-        logTextView.byText("")
+        logTextView.byText("".tr)
     }
 }

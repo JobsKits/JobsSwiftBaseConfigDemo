@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -42,8 +44,7 @@ final class GKPhotoBrowserByUIKitDemoVC: BaseVC {
             .byNoSectionHeaderTopPadding()
             .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据".tr,
-                             for: .normal)
+                    .tr_setTitle("暂无数据".tr, for: .normal)
                     .bySubTitle("点我填充示例数据".tr,
                                 for: .normal)
                     .byImage("tray".sysImg,

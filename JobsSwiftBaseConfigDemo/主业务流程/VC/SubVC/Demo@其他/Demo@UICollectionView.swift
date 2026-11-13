@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsEmptyView
@@ -54,7 +56,7 @@ final class EmptyCollectionViewDemoVC: BaseVC {
         // 空态按钮
         //            .byEmptyButtonProvider { [unowned self] in
         //                UIButton.sys()
-        //                    .byTitle("暂无数据（竖向）".tr, for: .normal)
+        //                    .tr_setTitle("暂无数据（竖向）".tr, for: .normal)
         //                    .bySubTitle("点我填充示例数据".tr, for: .normal)
         //                    .byImage("square.grid.2x2".sysImg, for: .normal)
         //                    .byImagePlacement(.top)
@@ -118,8 +120,7 @@ final class EmptyCollectionViewDemoVC: BaseVC {
         // 空态按钮
         .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据（横向）".tr,
-                             for: .normal)
+                    .tr_setTitle("暂无数据（横向）".tr, for: .normal)
                     .bySubTitle("点我填充示例数据".tr,
                                 for: .normal)
                     .byImage("rectangle.grid.1x2".sysImg,

@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsSwiftBaseDefines
@@ -40,7 +42,7 @@ final class LottieDemoVC: BaseVC {
 
     private lazy var playBtn: UIButton = {
         UIButton.sys()
-            .byTitle("▶︎ 播放".tr)
+            .tr_setTitle("▶︎ 播放".tr, for: .normal)
             .onJobsTap { [weak self] (_: UIButton) in
                 self?.containerView.lottiePlay()
             }
@@ -48,7 +50,7 @@ final class LottieDemoVC: BaseVC {
 
     private lazy var pauseBtn: UIButton = {
         UIButton.sys()
-            .byTitle("❚❚ 暂停".tr)
+            .tr_setTitle("❚❚ 暂停".tr, for: .normal)
             .onJobsTap { [weak self] (_: UIButton) in
                 self?.containerView.lottiePause()
             }
@@ -56,7 +58,7 @@ final class LottieDemoVC: BaseVC {
 
     private lazy var stopBtn: UIButton = {
         UIButton.sys()
-            .byTitle("■ 停止".tr)
+            .tr_setTitle("■ 停止".tr, for: .normal)
             .onJobsTap { [weak self] (_: UIButton) in
                 guard let self else {
                     return
@@ -68,7 +70,7 @@ final class LottieDemoVC: BaseVC {
 
     private lazy var replaceBtn: UIButton = {
         UIButton.sys()
-            .byTitle("⇄ 替换动画".tr)
+            .tr_setTitle("⇄ 替换动画".tr, for: .normal)
             .onJobsTap { [weak self] (_: UIButton) in
                 guard let self else {
                     return

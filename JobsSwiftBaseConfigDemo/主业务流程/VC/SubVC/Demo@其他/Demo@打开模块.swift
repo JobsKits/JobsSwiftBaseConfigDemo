@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
@@ -24,8 +26,7 @@ final class JobsOpenDemoVC: BaseVC {
     // ================================== UI ==================================
     private lazy var btnOpenWeb: UIButton = {
         UIButton.sys()
-            .byTitle("🌐 打开百度".tr,
-                     for: .normal)
+            .tr_setTitle("🌐 打开百度".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
             .byTitleColor(JobsCor.white,
@@ -39,8 +40,7 @@ final class JobsOpenDemoVC: BaseVC {
 
     private lazy var btnOpenChineseURL: UIButton = {
         UIButton.sys()
-            .byTitle("🔍 打开含中文参数URL".tr,
-                     for: .normal)
+            .tr_setTitle("🔍 打开含中文参数URL".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
             .byTitleColor(JobsCor.white,
@@ -54,8 +54,7 @@ final class JobsOpenDemoVC: BaseVC {
 
     private lazy var btnOpenScheme: UIButton = {
         UIButton.sys()
-            .byTitle("💬 打开微信 Scheme".tr,
-                     for: .normal)
+            .tr_setTitle("💬 打开微信 Scheme".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
             .byTitleColor(JobsCor.white,
@@ -69,8 +68,7 @@ final class JobsOpenDemoVC: BaseVC {
 
     private lazy var btnCall: UIButton = {
         UIButton.sys()
-            .byTitle("📞 拨打电话（tel://）".tr,
-                     for: .normal)
+            .tr_setTitle("📞 拨打电话（tel://）".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
             .byTitleColor(JobsCor.white,
@@ -84,8 +82,7 @@ final class JobsOpenDemoVC: BaseVC {
 
     private lazy var btnCallPrompt: UIButton = {
         UIButton.sys()
-            .byTitle("☎️ 拨打电话（telprompt://）".tr,
-                     for: .normal)
+            .tr_setTitle("☎️ 拨打电话（telprompt://）".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
             .byTitleColor(JobsCor.white,
@@ -99,8 +96,7 @@ final class JobsOpenDemoVC: BaseVC {
     // ========================== ✉️ 邮件相关 demo ==========================
     private lazy var btnMailSimple: UIButton = {
         UIButton.sys()
-            .byTitle("✉️ 发邮件（最简单）".tr,
-                     for: .normal)
+            .tr_setTitle("✉️ 发邮件（最简单）".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
             .byTitleColor(JobsCor.white,
@@ -114,8 +110,7 @@ final class JobsOpenDemoVC: BaseVC {
 
     private lazy var btnMailText: UIButton = {
         UIButton.sys()
-            .byTitle("✉️ 发邮件（主题+正文）".tr,
-                     for: .normal)
+            .tr_setTitle("✉️ 发邮件（主题+正文）".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
             .byTitleColor(JobsCor.white,
@@ -130,8 +125,7 @@ final class JobsOpenDemoVC: BaseVC {
 
     private lazy var btnMailHTML: UIButton = {
         UIButton.sys()
-            .byTitle("✉️ 群发/抄送（HTML）".tr,
-                     for: .normal)
+            .tr_setTitle("✉️ 群发/抄送（HTML）".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
             .byTitleColor(JobsCor.white,

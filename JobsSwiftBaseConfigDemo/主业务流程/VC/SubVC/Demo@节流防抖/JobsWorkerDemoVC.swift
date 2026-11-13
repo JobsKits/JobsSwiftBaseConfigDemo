@@ -101,7 +101,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     private lazy var demoTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("交互演示区".tr)
+            .tr_setText("交互演示区".tr)
             .byFont(JobsFont.systemFont(ofSize: 20,
                                         weight: .bold))
             .byTextColor(JobsCor.label)
@@ -114,7 +114,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     private lazy var demoDescLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("这里不是功能列表页，而是行为演示页。你只需要点按钮、输入文字，然后观察最下面的日志输出。".tr)
+            .tr_setText("这里不是功能列表页，而是行为演示页。你只需要点按钮、输入文字，然后观察最下面的日志输出。".tr)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -128,7 +128,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     private lazy var summaryLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("当前状态：count = 0，keyword = <empty>".tr)
+            .tr_setText("当前状态：count = 0，keyword = <empty>".tr)
             .byFont(JobsFont.systemFont(ofSize: 15,
                                         weight: .medium))
             .byTextColor(JobsCor.systemBlue)
@@ -142,7 +142,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     private lazy var inputTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("关键词输入（观察 debounce / distinctUntilChanged / combineLatest）".tr)
+            .tr_setText("关键词输入（观察 debounce / distinctUntilChanged / combineLatest）".tr)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -155,7 +155,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     private lazy var inputViewField: UITextField = {
         UITextField
             .jobsMake { _ in }
-            .byPlaceholder("请输入搜索词，例如：会员、折扣、年卡".tr)
+            .tr_setPlaceholder("请输入搜索词，例如：会员、折扣、年卡".tr)
             .byBorderStyle(.roundedRect)
             .byClearButtonMode(.whileEditing)
             .byOnInput { [weak self] _, value, _, _, _, _ in
@@ -174,7 +174,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     private lazy var countTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("计数操作（观察 ever / once / interval / skip / take / everAll / combineLatest）".tr)
+            .tr_setText("计数操作（观察 ever / once / interval / skip / take / everAll / combineLatest）".tr)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -265,7 +265,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     private lazy var capabilityTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("本页重点".tr)
+            .tr_setText("本页重点".tr)
             .byFont(JobsFont.systemFont(ofSize: 20,
                                         weight: .bold))
             .byTextColor(JobsCor.label)
@@ -314,7 +314,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     private lazy var logTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("实时日志".tr)
+            .tr_setText("实时日志".tr)
             .byFont(JobsFont.systemFont(ofSize: 20,
                                         weight: .bold))
             .byTextColor(JobsCor.label)
@@ -327,7 +327,7 @@ public final class JobsWorkerDemoVC: BaseVC {
     private lazy var logDescLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("这里会倒序输出 Worker 的实际触发结果。看这里，比看代码更直观。".tr)
+            .tr_setText("这里会倒序输出 Worker 的实际触发结果。看这里，比看代码更直观。".tr)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)

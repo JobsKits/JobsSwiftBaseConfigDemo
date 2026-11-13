@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
@@ -28,22 +30,15 @@ final class LocalNotificationDemoVC: BaseVC {
     private lazy var btn: UIButton = {
         UIButton.sys()
         /// 背景色
-        .byBackgroundColor(JobsCor.systemGreen,
+        .byBackgroundColor(JobsCor.systemBlue,
                            for: .normal)
         /// 普通字符串@设置主标题
-        .byTitle("点我".tr,
-                 for: .normal)
-            .byTitleColor(JobsCor.systemBlue,
+        .tr_setTitle("推送本地通知".tr, for: .normal)
+            .byTitleColor(JobsCor.white,
                           for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 16,
+            .byCornerRadius(12)
+            .byTitleFont(JobsFont.systemFont(ofSize: 17,
                                              weight: .medium))
-        /// 普通字符串@设置副标题
-        .bySubTitle("推送本地通知".tr,
-                    for: .normal)
-            .bySubTitleColor(JobsCor.systemPink,
-                             for: .normal)
-            .bySubTitleFont(JobsFont.systemFont(ofSize: 14,
-                                                weight: .medium))
         /// 普通@点按事件触发
         .onTap { [weak self] sender in
                 guard let self else {
@@ -54,7 +49,8 @@ final class LocalNotificationDemoVC: BaseVC {
             }
             .byAddTo(view) { [unowned self] make in
                 make.center.equalToSuperview()
-                make.size.equalTo(CGSize(width: 100, height: 60))
+                make.width.equalTo(280)
+                make.height.equalTo(52)
             }
     }()
 

@@ -28,6 +28,8 @@ public struct JobsRequestConfig: Sendable {
     public var traceHeaderKeys: (requestId: String, traceId: String, spanId: String)
     public var envelopeStrategy: JobsEnvelopeStrategy
     public var observer: JobsEventObserver
+    /// 短期敏感会话使用独立内存 Cookie，关闭系统 URL 缓存与凭据存储。
+    public var usesEphemeralSession: Bool
 
     public init(baseURL: URL,
                 timeout: TimeInterval = 30,
@@ -39,7 +41,8 @@ public struct JobsRequestConfig: Sendable {
                 sslPinning: JobsSSLPinning? = nil,
                 traceHeaderKeys: (requestId: String, traceId: String, spanId: String) = ("X-Request-ID", "X-Trace-ID", "X-Span-ID"),
                 envelopeStrategy: JobsEnvelopeStrategy = .none,
-                observer: JobsEventObserver = EmptyEventObserver()) {
+                observer: JobsEventObserver = EmptyEventObserver(),
+                usesEphemeralSession: Bool = false) {
         self.baseURL = baseURL
         self.timeout = timeout
         self.version = version
@@ -51,6 +54,7 @@ public struct JobsRequestConfig: Sendable {
         self.traceHeaderKeys = traceHeaderKeys
         self.envelopeStrategy = envelopeStrategy
         self.observer = observer
+        self.usesEphemeralSession = usesEphemeralSession
     }
 }
 

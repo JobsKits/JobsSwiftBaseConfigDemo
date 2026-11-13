@@ -9,6 +9,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsByUIKit
@@ -24,7 +26,7 @@ final class SwiftPackageManagerDemoVC: BaseVC {
     private lazy var introLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("一个本地 Package，同时演示 Library Product、资源 Bundle、泛型 API、actor 并发、Swift Macro、Executable 与测试。App 页面只负责调用公开 API。".tr)
+            .tr_setText("一个本地 Package，同时演示 Library Product、资源 Bundle、泛型 API、actor 并发、Swift Macro、Executable 与测试。App 页面只负责调用公开 API。".tr)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 15,
                                         weight: .medium))
@@ -84,7 +86,7 @@ final class SwiftPackageManagerDemoVC: BaseVC {
             .byTextColor(JobsCor.label)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(12)
-            .byText("点击上方按钮，观察 Package 公开能力的运行结果。".tr)
+            .tr_setText("点击上方按钮，观察 Package 公开能力的运行结果。".tr)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(buttonStack.snp.bottom).offset(16)
                 make.left.right.equalToSuperview().inset(20)
@@ -164,7 +166,7 @@ private extension SwiftPackageManagerDemoVC {
     }
 
     func runAllExamples() {
-        resultView.byText("")
+        resultView.byText("".tr)
         appendResult("【Library Product】\n\(JobsSPMDemoKit.packageSummary)")
         do {
             let catalog = try JobsSPMDemoCatalog.loadBundled()

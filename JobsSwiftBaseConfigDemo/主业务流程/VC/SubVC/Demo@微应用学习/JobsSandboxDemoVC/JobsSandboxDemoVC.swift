@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Jobsl10n
 import JobsByUIKit
 import JobsSwiftBaseDefines
 import SnapKit
@@ -18,7 +19,7 @@ import SnapKit
 final class JobsSandboxDemoVC: JobsMicroAppLabBaseVC {
 
     override var lessonTitle: String {
-        return "沙箱运行环境"
+        return "沙箱 / 逻辑目录隔离"
     }
     override var lessonSummary: String {
         "同一 App 容器中的 module-a / module-b 各有一份草稿。写入后切换读取，测试 ../ 越界与清空当前模块。"
@@ -46,7 +47,7 @@ final class JobsSandboxDemoVC: JobsMicroAppLabBaseVC {
             return
         }
         self.namespace = self.namespace == "module-a" ? "module-b" : "module-a"
-        self.switchButton.byTitle("切换到 \(self.namespace == "module-a" ? "module-b" : "module-a")")
+        self.switchButton.byTitle(String(format: "切换到 %@".tr, self.namespace == "module-a" ? "module-b" : "module-a"))
         self.readDraft()
     }
     private lazy var writeButton: UIButton = lessonButton("写入当前模块草稿",
@@ -56,8 +57,8 @@ final class JobsSandboxDemoVC: JobsMicroAppLabBaseVC {
         }
         self.perform { store in
             self.sequence += 1
-            try store.write("\(self.namespace) 的草稿 #\(self.sequence)，保存于 \(Date())")
-            self.record("写入成功：\(self.namespace) / draft.txt")
+            try store.write(String(format: "%@ 的草稿 #%d，保存于 %@".tr, self.namespace, self.sequence, Date().description))
+            self.record(String(format: "写入成功：%@ / draft.txt".tr, self.namespace))
         }
     }
     private lazy var readButton: UIButton = lessonButton("重新读取当前模块",
@@ -71,7 +72,7 @@ final class JobsSandboxDemoVC: JobsMicroAppLabBaseVC {
         }
         self.perform { store in
             _ = try store.read(filename: "../module-b/draft.txt")
-            self.record("异常：越界请求未被拒绝。")
+            self.record("异常：越界请求未被拒绝。".tr)
         }
     }
     private lazy var resetButton: UIButton = lessonButton("清空当前模块草稿",
@@ -81,18 +82,32 @@ final class JobsSandboxDemoVC: JobsMicroAppLabBaseVC {
         }
         self.perform { store in
             try store.reset()
-            self.record("已清空 \(self.namespace)，其它模块不受影响。")
+            self.record(String(format: "已清空 %@，其它模块不受影响。".tr, self.namespace))
         }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        TRBind.bind(switchButton,
+                    key: "切换到 %@",
+                    slot: "title.0") { [weak self] button, format in
+            guard let self else {
+                return
+            }
+            button.byTitle(String(format: format, self.namespace == "module-a" ? "module-b" : "module-a"))
+        }
         readDraft()
     }
 
     private func readDraft() {
         perform { store in
-            self.directoryLabel.byText("当前命名空间：\(self.namespace)\n\n\(store.directoryPath)\n\nApplication Support / 原子写入 / 文件保护")
+            TRBind.bind(self.directoryLabel,
+                        key: "当前命名空间：%@\n\n%@\n\nApplication Support / 原子写入 / 文件保护") { [weak self] label, format in
+                guard let self else {
+                    return
+                }
+                label.byText(String(format: format, self.namespace, store.directoryPath))
+            }
             self.record("\(self.namespace)：\(try store.read())")
         }
     }

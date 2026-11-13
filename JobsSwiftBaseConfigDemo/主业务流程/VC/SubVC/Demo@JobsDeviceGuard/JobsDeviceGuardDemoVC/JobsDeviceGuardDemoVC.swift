@@ -6,6 +6,8 @@
 //
 
 import UIKit
+
+import Jobsl10n
 import GKNavigationBarSwift
 import JobsByUIKit
 import JobsInheritance
@@ -20,7 +22,7 @@ final class JobsDeviceGuardDemoVC: BaseVC {
     private lazy var explanationLabel: UILabel = {
         UILabel.jobsMake { label in
             label
-                .byText("运行时检测设备风险，不能禁止 iOS 安装。路径、已加载镜像、可选沙盒写入分别计算证据；两类命中才标记越狱，单类为可疑。未命中不代表设备安全，未知及不支持环境不自动放行。")
+                .tr_setText("运行时检测设备风险，不能禁止 iOS 安装。路径、已加载镜像、可选沙盒写入分别计算证据；两类命中才标记越狱，单类为可疑。未命中不代表设备安全，未知及不支持环境不自动放行。".tr)
                 .byNumberOfLines(0)
                 .byFont(JobsFont.systemFont(ofSize: 14))
                 .byTextColor(JobsCor.label)
@@ -33,7 +35,7 @@ final class JobsDeviceGuardDemoVC: BaseVC {
 
     private lazy var inspectButton: UIButton = {
         UIButton.sys()
-            .byTitle("重新检测（只读）")
+            .tr_setTitle("重新检测（只读）".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
                                              weight: .semibold))
             .byTitleColor(JobsCor.label)
@@ -51,7 +53,7 @@ final class JobsDeviceGuardDemoVC: BaseVC {
 
     private lazy var writeProbeButton: UIButton = {
         UIButton.sys()
-            .byTitle("检测并探测沙盒写入")
+            .tr_setTitle("检测并探测沙盒写入".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
                                              weight: .semibold))
             .byTitleColor(JobsCor.label)
@@ -69,7 +71,7 @@ final class JobsDeviceGuardDemoVC: BaseVC {
 
     private lazy var gateButton: UIButton = {
         UIButton.sys()
-            .byTitle("演示敏感业务门禁（先复检）")
+            .tr_setTitle("演示敏感业务门禁（先复检）".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
                                              weight: .semibold))
             .byTitleColor(JobsCor.label)
@@ -95,7 +97,7 @@ final class JobsDeviceGuardDemoVC: BaseVC {
                 .byTextColor(JobsCor.label)
                 .byBackgroundColor(JobsCor.secondarySystemBackground)
                 .byAccessibilityIdentifier("deviceGuard.report")
-                .byText("尚未检测，点击重新检测。")
+                .tr_setText("尚未检测，点击重新检测。".tr)
                 .byAddTo(view) { [unowned self] make in
                     make.top.equalTo(gateButton.snp.bottom).offset(12)
                     make.left.right.equalTo(explanationLabel)

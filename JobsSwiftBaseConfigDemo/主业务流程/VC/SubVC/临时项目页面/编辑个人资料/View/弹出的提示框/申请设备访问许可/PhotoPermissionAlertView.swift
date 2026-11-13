@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsByUIKit
@@ -49,7 +51,7 @@ final class PhotoPermissionAlertView: UIView {
     private lazy var titleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("要允许“AC”访问此设备的照片和视频吗?".tr)
+            .tr_setText("要允许“AC”访问此设备的照片和视频吗?".tr)
             .byTextColor(JobsCor.label)
             .byFont(.init(regular: 16)!)
             .byNumberOfLines(0)

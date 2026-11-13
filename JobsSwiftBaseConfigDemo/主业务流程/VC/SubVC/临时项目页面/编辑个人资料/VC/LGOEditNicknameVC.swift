@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsInheritance
@@ -105,7 +107,7 @@ final class LGOEditNicknameVC: BaseVC {
     private lazy var tipLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("长度限制12个字节，仅免费修改1次".tr)
+            .tr_setText("长度限制12个字节，仅免费修改1次".tr)
             .byFont(JobsFont.systemFont(ofSize: 12))
             .byTextColor(JobsCor.red)
             .byNumberOfLines(0)

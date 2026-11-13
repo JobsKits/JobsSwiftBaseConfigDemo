@@ -23,7 +23,7 @@ enum JobsSceneCoordinator {
     private static let timeFormatter: DateFormatter = {
         DateFormatter.make { formatter in
             formatter
-                .byLocale(Locale(identifier: "zh_Hans_CN"))
+                .byLocale(Locale(identifier: "en_US_POSIX"))
                 .byDateFormat("HH:mm:ss.SSS")
         }
     }()
@@ -32,7 +32,7 @@ enum JobsSceneCoordinator {
                              sourceSession: UISceneSession? = nil) -> NSUserActivity {
         NSUserActivity.make(activityType: activityType) { activity in
             activity
-                .byTitle("SceneDelegate 多场景 Demo")
+                .byTitle("SceneDelegate 多场景 Demo".tr)
                 .byTargetContentIdentifier(activityType)
                 .byUserInfo([
                     counterUserInfoKey: counter,

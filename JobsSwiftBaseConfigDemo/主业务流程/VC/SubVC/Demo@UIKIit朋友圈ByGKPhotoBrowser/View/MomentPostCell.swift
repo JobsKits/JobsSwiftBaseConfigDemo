@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsImageTools
@@ -178,8 +180,7 @@ final class MomentPostCell: UITableViewCell,
         UIButton.sys()
             .byBackgroundColor(JobsCor.clear,
                                for: .normal)
-            .byTitle("评论".tr,
-                     for: .normal)
+            .tr_setTitle("评论".tr, for: .normal)
             .byTitleColor(JobsCor.systemBlue,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 13,
@@ -199,8 +200,7 @@ final class MomentPostCell: UITableViewCell,
         UIButton.sys()
             .byBackgroundColor(JobsCor.clear,
                                for: .normal)
-            .byTitle("赞".tr,
-                     for: .normal)
+            .tr_setTitle("赞".tr, for: .normal)
             .byTitleColor(JobsCor.systemBlue,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 13,
@@ -274,8 +274,7 @@ final class MomentPostCell: UITableViewCell,
         mediaHeightConstraint?.update(offset: 0)
         mediaView.render([])
         timeLabel.byText(nil)
-        likeButton.byTitle("赞".tr,
-                           for: .normal)
+        likeButton.tr_setTitle("赞".tr, for: .normal)
         commentsBG.byVisible(false)
         commentsStack.arrangedSubviews.forEach {
             $0.removeFromSuperview()
@@ -499,8 +498,11 @@ final class MomentPostCell: UITableViewCell,
     }
     // ============================== Avatar ==============================
     private func setAvatar(_ urlString: String) {
-        avatar.jobs_setImage(urlString,
-                             shimmerConfig: nil,
+        avatar
+            .byImage("Ani".img)
+            .jobs_setImage(urlString,
+                           fallback: "Ani".img,
+                           shimmerConfig: nil,
                              targetSize: CGSize(width: 40, height: 40))
     }
     // ============================== Utils ==============================

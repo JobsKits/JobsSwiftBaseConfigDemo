@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Jobsl10n
 import WebKit
 import JobsByUIKit
 
@@ -23,7 +24,7 @@ final class JobsLabBridgeHandler: NSObject,
               message.webView === webView,
               message.frameInfo.isMainFrame,
               message.frameInfo.request.url?.standardizedFileURL == expected.standardizedFileURL else {
-            onResult?("已拒绝 Bridge：仅允许已注册本地微应用的主 frame。")
+            onResult?("已拒绝 Bridge：仅允许已注册本地微应用的主 frame。".tr)
             return
         }
         let result = handle(message.body)
@@ -44,29 +45,29 @@ final class JobsLabBridgeHandler: NSObject,
         guard let envelope = body as? [String: Any],
               let action = envelope["action"] as? String,
               Set(envelope.keys).isSubset(of: ["action", "payload"]) else {
-            return (false, "已拒绝 Bridge：消息格式不正确。")
+            return (false, "已拒绝 Bridge：消息格式不正确。".tr)
         }
         switch action {
         /// 只返回明确允许的非敏感宿主信息
         case "getHostInfo":
-            return (true, "Bridge 成功：Swift 宿主 / 教学微应用 v1 / iOS \(ProcessInfo.processInfo.operatingSystemVersion.majorVersion)")
+            return (true, String(format: "Bridge 成功：Swift 宿主 / 教学微应用 v1 / iOS %d".tr, ProcessInfo.processInfo.operatingSystemVersion.majorVersion))
         /// 网页提交受长度约束的文本，由宿主决定存储位置
         case "saveDraft":
             guard let payload = envelope["payload"] as? [String: Any],
                   payload.count == 1,
                   let text = payload["text"] as? String,
                   !text.isEmpty, text.count <= 140 else {
-                return (false, "已拒绝 Bridge：草稿必须为 1–140 字文本。")
+                return (false, "已拒绝：草稿必须为 1–140 字文本。".tr)
             }
             do {
                 try JobsLabSandboxStore(namespace: "microapp").write(text)
-                return (true, "Bridge 成功：草稿已写入 microapp 命名空间。")
+                return (true, "Bridge 成功：草稿已写入 microapp 命名空间。".tr)
             } catch {
-                return (false, "Bridge 写入失败：\(error.localizedDescription)")
+                return (false, String(format: "Bridge 写入失败：%@".tr, error.localizedDescription))
             }
         /// 通讯录等未授权能力不向微应用开放
         default:
-            return (false, "已拒绝 Bridge：\(action) 不在能力白名单。")
+            return (false, String(format: "已拒绝 Bridge：%@ 不在能力白名单。".tr, action))
         }
     }
 }

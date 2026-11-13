@@ -9,6 +9,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsByUIKit
@@ -89,7 +91,7 @@ final class JobsLandscapeSwitchDemoVC: BaseVC {
     private lazy var resultLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("请选择上方功能".tr)
+            .tr_setText("请选择上方功能".tr)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)

@@ -10,6 +10,7 @@ import JobsByUIKit
 import JobsSwiftBaseDefines
 import JobsSwiftDeviceGuard
 import SnapKit
+import Jobsl10n
 
 /// 独立系统控制器，不进入 BaseVC、业务导航、开屏或 Flutter 管线。
 final class JobsDeviceBlockedVC: UIViewController {
@@ -53,7 +54,7 @@ final class JobsDeviceBlockedVC: UIViewController {
     private lazy var titleLabel: UILabel = {
         UILabel.jobsMake { label in
             label
-                .byText("设备环境受限")
+                .tr_setText("设备环境受限".tr)
                 .byFont(JobsFont.systemFont(ofSize: 24,
                                             weight: .semibold))
                 .byTextColor(JobsCor.label)
@@ -66,7 +67,7 @@ final class JobsDeviceBlockedVC: UIViewController {
     private lazy var messageLabel: UILabel = {
         UILabel.jobsMake { label in
             label
-                .byText("当前设备环境未通过应用启动校验。\n为保护账户与数据，应用已停止业务初始化。\n请使用未越狱的设备重新打开应用。")
+                .tr_setText("当前设备环境未通过应用启动校验。\n为保护账户与数据，应用已停止业务初始化。\n请使用未越狱的设备重新打开应用。".tr)
                 .byFont(JobsFont.systemFont(ofSize: 16))
                 .byTextColor(JobsCor.label)
                 .byTextAlignment(.center)
@@ -78,7 +79,7 @@ final class JobsDeviceBlockedVC: UIViewController {
     private lazy var statusLabel: UILabel = {
         UILabel.jobsMake { label in
             label
-                .byText("检测状态：\(launchDecision.report.verdict.rawValue)\n如需帮助，请联系应用服务方。")
+                .byText("检测状态：%@\n如需帮助，请联系应用服务方。".tr(launchDecision.report.verdict.rawValue))
                 .byFont(JobsFont.systemFont(ofSize: 13))
                 .byTextColor(JobsCor.label)
                 .byTextAlignment(.center)
@@ -123,6 +124,13 @@ final class JobsDeviceBlockedVC: UIViewController {
             .byAccessibilityIdentifier("launchGate.blocked.root")
         assembleViews()
         configureAppearance()
+        TRBind.bind(statusLabel,
+                    key: "检测状态：%@\n如需帮助，请联系应用服务方。") { [weak self] target, format in
+            guard let self else {
+                return
+            }
+            target.byText(String(format: format, self.launchDecision.report.verdict.rawValue))
+        }
     }
 
     private func configureAppearance() {

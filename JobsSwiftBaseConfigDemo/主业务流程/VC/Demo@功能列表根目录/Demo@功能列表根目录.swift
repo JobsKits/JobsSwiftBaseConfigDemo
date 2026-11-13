@@ -13,8 +13,9 @@ import UIKit
 import JobsViewPush
 #endif
 
-import JobsSwiftDSL
 import Jobsl10n
+
+import JobsSwiftDSL
 import JobsScale
 import JobsToast
 import JobsByUIKit
@@ -61,6 +62,10 @@ final class RootListVC: BaseVC {
             target = registry
         } else if let item = items.first(where: { String(describing: $0.vcType) == routeID }) {
             target = item.vcType.init().byTitle(item.title)
+        } else if let module = Bundle.main.object(forInfoDictionaryKey: "CFBundleExecutable") as? String,
+                  let type = NSClassFromString("\(module).\(routeID)") as? UIViewController.Type,
+                  Bundle(for: type) == Bundle.main {
+            target = type.init()
         } else {
             print("[JobsCoverage] 当前构建不包含页面：\(routeID)")
             return UIViewController.jobsMake { _ in }
@@ -315,6 +320,7 @@ final class RootListVC: BaseVC {
                     ("PWA：原生离线包与 Service Worker", JobsPWADemoVC.self)
                 ]),
             (title: "系统能力与硬件通信".tr, items: [
+                    ("ARKit · 空间实验室", JobsARKitDemoVC.self),
                     ("设备越狱风险检测与业务门禁", JobsDeviceGuardDemoVC.self),
                     ("本地录音与音频管理", JobsAudioRecorderDemoVC.self),
                     ("📶 JobsBluetooth 全能力 Demo", JobsBluetoothDemoVC.self),
@@ -454,14 +460,25 @@ final class RootListVC: BaseVC {
                 ])
         ]
     }
-    // ================================== 悬浮控件（原逻辑不动） ==================================
+    // 悬浮时间限制在列表外的独立区域，拖动也不会挡住 Demo 入口。
+    private lazy var suspendTimeContainer: UIView = {
+        UIView
+            .jobsMake { _ in }
+            .byAddTo(view) { [unowned self] make in
+                make.left.right.equalToSuperview()
+                make.top.equalTo(gk_navigationBar.snp.bottom)
+                make.height.equalTo(82)
+            }
+    }()
+
     private lazy var suspendBtn: UIButton = {
         UIButton.sys()
             .byAccessibilityIdentifier("jobs.root.time")
-            .byTitle("当前时间".tr,
-                     for: .normal)
+            .tr_setTitle("当前时间".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 18,
                                              weight: .bold))
+            .byTitleAdjustsFontSizeToFitWidth(true)
+            .byTitleMinimumScaleFactor(0.7)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byBackgroundColor(JobsCor.systemBlue,
@@ -480,14 +497,16 @@ final class RootListVC: BaseVC {
                 }
                 "点击了悬浮按钮".tr.toast
             }
-            .bySuspend { cfg in
-                cfg
-                    .byContainer(view)
+            .bySuspend { [unowned self] cfg in
+                _ = suspendTimeContainer
+                view.byLayoutIfNeeded()
+                return cfg
+                    .byContainer(suspendTimeContainer)
                     .byStart { _ in
                         CGPoint(x: 15,
-                                y: 120)  // 这里就是“safeArea 内部坐标”，不用再加 safeAreaInsets.top
+                                y: 8)
                     }
-                    .byFallbackSize(CGSize(width: 110, height: 66))
+                    .byFallbackSize(CGSize(width: 166, height: 66))
                     .byDocking(.nearestEdge)
                     .byHapticOnDock(true)
             }
@@ -496,7 +515,7 @@ final class RootListVC: BaseVC {
     private lazy var suspendSpinBtn: UIButton = {
         UIButton.sys()
             .byAccessibilityIdentifier("jobs.root.spin")
-            .byTitle("0",
+            .byTitle("0".tr,
                      for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 22,
                                              weight: .bold))
@@ -539,10 +558,13 @@ final class RootListVC: BaseVC {
 
     private lazy var suspendFuseBtn: UIButton = {
         UIButton.sys()
-            .byTitle("按".tr,
-                     for: .normal)
+            .tr_setTitle("按".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 10,
                                              weight: .bold))
+            .byNumberOfLines(1)
+            .byTitleAdjustsFontSizeToFitWidth(true)
+            .byTitleMinimumScaleFactor(0.65)
+            .byContentEdgeInsets(UIEdgeInsets(top: 6, left: 3, bottom: 6, right: 3))
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byBackgroundColor(JobsCor.systemPurple,
@@ -735,8 +757,7 @@ final class RootListVC: BaseVC {
 
     private lazy var demoSearchCancelButton: UIButton = {
         UIButton.sys()
-            .byTitle("取消".tr,
-                     for: .normal)
+            .tr_setTitle("取消".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleColor(JobsCor.white.withAlphaComponent(0.78),
@@ -821,11 +842,7 @@ final class RootListVC: BaseVC {
                                          right: 0))
             .byAddTo(view) { [unowned self] make in
                 make.left.bottom.right.equalToSuperview()
-                if view.jobs_hasVisibleTopBar() {
-                    make.top.equalTo(self.gk_navigationBar.snp.bottom)
-                } else {
-                    make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-                }
+                make.top.equalTo(suspendTimeContainer.snp.bottom)
             }
     }()
     // MARK: - Lifecycle
@@ -1044,6 +1061,7 @@ extension RootListVC {
         }
         #endif
         suspendBtn.byVisible(visible)
+        layoutSuspendTimeContainer(visible: visible)
         if visible {
             suspendBtnTimer?.resume()
         } else {
@@ -1051,16 +1069,27 @@ extension RootListVC {
         }
     }
 
+    private func layoutSuspendTimeContainer(visible: Bool) {
+        suspendTimeContainer.snp.remakeConstraints { [unowned self] make in
+            make.left.right.equalToSuperview()
+            make.height.equalTo(visible ? 82 : 0)
+            if !demoSearchBar.isHidden {
+                make.top.equalTo(demoSearchBar.snp.bottom).offset(6)
+            } else if view.jobs_hasVisibleTopBar() {
+                make.top.equalTo(gk_navigationBar.snp.bottom)
+            } else {
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            }
+        }
+    }
+
     // ================================== 运行时语言刷新 ==================================
     private func refreshLocalizedContent() {
         demoNavigationTitleLabel.byText("演武堂".tr)
         demoSearchBar.byPlaceholder("输入关键词搜索 Demo".tr)
-        demoSearchCancelButton.byTitle("取消".tr,
-                                       for: .normal)
-        suspendBtn.byTitle("当前时间".tr,
-                           for: .normal)
-        suspendFuseBtn.byTitle("按".tr,
-                               for: .normal)
+        demoSearchCancelButton.tr_setTitle("取消".tr, for: .normal)
+        suspendBtn.tr_setTitle("当前时间".tr, for: .normal)
+        suspendFuseBtn.tr_setTitle("按".tr, for: .normal)
         if let tabBarController = view.window?.rootViewController as? UITabBarController,
            let items = tabBarController.tabBar.items,
            items.count >= 3 {
@@ -1158,8 +1187,7 @@ extension RootListVC {
                 onMainAsync(self) { vc in
                     let btn = vc.suspendBtn
                     if btn.title(for: .normal) != "当前时间" {
-                        btn.byTitle("当前时间".tr,
-                                    for: .normal)
+                        btn.tr_setTitle("当前时间".tr, for: .normal)
                     }
                     btn
                         .bySubTitle(nowClock(),
@@ -1684,22 +1712,13 @@ extension RootListVC {
     private func setSearchEnabled(_ enabled: Bool) {
         demoSearchBar.byVisible(enabled)
         demoSearchCancelButton.byVisible(enabled)
-        tableView.snp.remakeConstraints { [unowned self] make in
-            make.left.bottom.right.equalToSuperview()
-            if enabled {
-                make.top.equalTo(demoSearchBar.snp.bottom).offset(6)
-            } else if view.jobs_hasVisibleTopBar() {
-                make.top.equalTo(self.gk_navigationBar.snp.bottom)
-            } else {
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            }
-        }
+        layoutSuspendTimeContainer(visible: !suspendBtn.isHidden)
         if enabled {
             tableView.reloadData()
             updateFooterAvailability()
             demoSearchBar.becomeFirstResponder()
         } else {
-            demoSearchBar.byText("")
+            demoSearchBar.byText("".tr)
             applySearchKeyword("")
             demoSearchBar.resignFirstResponder()
             tableView.reloadData()
@@ -1893,7 +1912,9 @@ extension RootListVC: UITableViewDataSource,
             return 54
         }
         if hasPinnedDemoSection && indexPath.section == 0 {
-            return RootFoldTableCell.expandedHeight(itemCount: pinnedDemoItems.count)
+            return RootFoldTableCell.expandedHeight(itemCount: pinnedDemoItems.count,
+                                                    groupTitle: "置顶".tr,
+                                                    width: tableView.bounds.width - tableView.layoutMargins.left - tableView.layoutMargins.right)
         }
         guard indexPath.section == demoGroupTableSection,
               demo2D.indices.contains(indexPath.row) else {
@@ -1901,9 +1922,13 @@ extension RootListVC: UITableViewDataSource,
         }
         let row = indexPath.row
         guard expandedGroups.contains(row) else {
-            return RootFoldTableCell.collapsedHeight()
+            return RootFoldTableCell.collapsedHeight(groupTitle: demo2D[row].title,
+                                                     itemCount: demo2D[row].items.count,
+                                                     width: tableView.bounds.width - tableView.layoutMargins.left - tableView.layoutMargins.right)
         }
-        return RootFoldTableCell.expandedHeight(itemCount: demo2D[row].items.count)
+        return RootFoldTableCell.expandedHeight(itemCount: demo2D[row].items.count,
+                                                groupTitle: demo2D[row].title,
+                                                width: tableView.bounds.width - tableView.layoutMargins.left - tableView.layoutMargins.right)
     }
     func tableView(_ tableView: UITableView,
                    didSelectRowAt indexPath: IndexPath) {

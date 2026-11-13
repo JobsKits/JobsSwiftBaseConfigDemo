@@ -48,7 +48,7 @@ final class JobsScreenshotProtectionDemoVC: BaseVC {
     private lazy var sensitiveTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("敏感内容安全区".tr)
+            .tr_setText("敏感内容安全区".tr)
             .byFont(JobsFont.systemFont(ofSize: 22,
                                         weight: .bold))
             .byTextColor(JobsCor.white)
@@ -62,7 +62,7 @@ final class JobsScreenshotProtectionDemoVC: BaseVC {
     private lazy var sensitiveValueLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("账号：Jobs\n授权码：2026-0721-DEMO".tr)
+            .tr_setText("账号：Jobs\n授权码：2026-0721-DEMO".tr)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 17,
                                                   weight: .semibold))
             .byTextColor(JobsCor.white)

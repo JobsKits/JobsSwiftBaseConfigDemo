@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsSwiftBaseDefines
 import JobsScale
 import JobsByUIKit
@@ -278,8 +280,7 @@ extension UIButtonDemoVC {
         // 10) 主动作切换 selected（iOS15+）
         do {
             let btnToggle = UIButton.sys()
-                .byTitle("10) 点击切换 selected".tr,
-                         for: .normal)
+                .tr_setTitle("10) 点击切换 selected".tr, for: .normal)
                 .byTitleColor(JobsCor.white,
                               for: .normal)
                 .byTitleFont(JobsFont.systemFont(ofSize: 15,

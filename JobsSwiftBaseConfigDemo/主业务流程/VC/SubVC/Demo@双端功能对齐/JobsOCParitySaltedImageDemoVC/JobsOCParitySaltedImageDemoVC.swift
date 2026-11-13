@@ -9,7 +9,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import JobsByUIKit
 import JobsInheritance
@@ -120,8 +123,7 @@ private final class JobsSaltedImageCodecDemoVC: BaseVC {
 
     private lazy var chooseButton: UIButton = {
         UIButton.sys()
-            .byTitle("点击按钮".tr,
-                     for: .normal)
+            .tr_setTitle("点击按钮".tr, for: .normal)
             .bySubTitle("选取相册图片".tr,
                         for: .normal)
             .byImage("plus.circle.fill".sysImg,
@@ -148,8 +150,7 @@ private final class JobsSaltedImageCodecDemoVC: BaseVC {
 
     private lazy var restoreButton: UIButton = {
         UIButton.sys()
-            .byTitle("点击按钮".tr,
-                     for: .normal)
+            .tr_setTitle("点击按钮".tr, for: .normal)
             .bySubTitle("编码转译成图片".tr,
                         for: .normal)
             .byImage("photo.badge.arrow.down".sysImg,
@@ -177,7 +178,7 @@ private final class JobsSaltedImageCodecDemoVC: BaseVC {
     private lazy var encodedTextView: UITextView = {
         UITextView
             .jobsMake { _ in }
-            .byText("暂无编码数据！！！".tr)
+            .tr_setText("暂无编码数据！！！".tr)
             .byFont(JobsFont.monospacedSystemFont(ofSize: 12,
                                                   weight: .regular))
             .byTextColor(JobsCor.label)

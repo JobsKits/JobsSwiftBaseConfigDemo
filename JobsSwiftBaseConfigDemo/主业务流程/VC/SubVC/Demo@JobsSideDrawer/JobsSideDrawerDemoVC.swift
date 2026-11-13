@@ -6,6 +6,8 @@
 //
 
 import UIKit
+
+import Jobsl10n
 import GKNavigationBarSwift
 import JobsInheritance
 import JobsSwiftDSL
@@ -21,7 +23,7 @@ final class JobsSideDrawerDemoVC: BaseVC {
     private lazy var coverageMinimumButton: UIButton = {
         UIButton.sys()
             .byAccessibilityIdentifier("jobs.coverage.drawer.boundary.min")
-            .byTitle("组件比例 20%")
+            .tr_setTitle("组件比例 20%".tr, for: .normal)
             .onTap { [weak self] _ in
                 guard let self else {
                     return
@@ -33,7 +35,7 @@ final class JobsSideDrawerDemoVC: BaseVC {
     private lazy var coverageMaximumButton: UIButton = {
         UIButton.sys()
             .byAccessibilityIdentifier("jobs.coverage.drawer.boundary.max")
-            .byTitle("组件比例 90%")
+            .tr_setTitle("组件比例 90%".tr, for: .normal)
             .onTap { [weak self] _ in
                 guard let self else {
                     return
@@ -92,7 +94,7 @@ final class JobsSideDrawerDemoVC: BaseVC {
     private lazy var previewButton: UIButton = {
         UIButton.sys()
             .byAccessibilityIdentifier("jobs.coverage.drawer.preview")
-            .byTitle("立即预览".tr)
+            .tr_setTitle("立即预览".tr, for: .normal)
             .onTap { [weak self] _ in
                 self?.preview()
             }

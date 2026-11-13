@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsInheritance
@@ -69,7 +71,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
 
     private lazy var btnTopBanner: UIButton = {
         UIButton.sys()
-            .byTitle("顶部 Banner（2s 自动消失）".tr)
+            .tr_setTitle("顶部 Banner（2s 自动消失）".tr, for: .normal)
             .onTap { [weak self] (_: UIButton) in
                 let anim = EKAttributes.animTranslationInOut
                 var attr = EKAttributes()
@@ -95,7 +97,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
 
     private lazy var btnCenterToast: UIButton = {
         UIButton.sys()
-            .byTitle("中心 Toast（缩放进入）".tr)
+            .tr_setTitle("中心 Toast（缩放进入）".tr, for: .normal)
             .onTap { [weak self] (_: UIButton) in
                 let anim = EKAttributes.animScaleInFadeOut
                 var attr = EKAttributes()
@@ -121,7 +123,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
 
     private lazy var btnBottomSheet: UIButton = {
         UIButton.sys()
-            .byTitle("底部半高 Sheet（可拖动&键盘避让）".tr)
+            .tr_setTitle("底部半高 Sheet（可拖动&键盘避让）".tr, for: .normal)
             .onTap { [weak self] (_: UIButton) in
                 let anim = EKAttributes.animTranslationInOut
                 var attr = EKAttributes()
@@ -150,7 +152,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
 
     private lazy var btnFullscreen: UIButton = {
         UIButton.sys()
-            .byTitle("全屏公告（点遮罩关闭）".tr)
+            .tr_setTitle("全屏公告（点遮罩关闭）".tr, for: .normal)
             .onTap { [weak self] (_: UIButton) in
                 guard let self else {
                     return
@@ -182,7 +184,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
 
     private lazy var btnCenterConfirmToast: UIButton = {
         UIButton.sys()
-            .byTitle("中心 Toast（确认按钮关闭）".tr)
+            .tr_setTitle("中心 Toast（确认按钮关闭）".tr, for: .normal)
             .onTap { [weak self] (_: UIButton) in
                 let anim = EKAttributes.animScaleInFadeOut
                 var attr = EKAttributes()
@@ -213,7 +215,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
 
     private lazy var btnQueue: UIButton = {
         UIButton.sys()
-            .byTitle("队列与优先级（先排队，再插队）".tr)
+            .tr_setTitle("队列与优先级（先排队，再插队）".tr, for: .normal)
             .onTap { [weak self] (_: UIButton) in
                 func enqueue(_ title: String,
                              priority: EKAttributes.Precedence.Priority = .normal) {
@@ -260,7 +262,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
 
     private lazy var btnStatusBar: UIButton = {
         UIButton.sys()
-            .byTitle("状态栏样式切换（light/dark）".tr)
+            .tr_setTitle("状态栏样式切换（light/dark）".tr, for: .normal)
             .onTap { [weak self] (_: UIButton) in
                 let t = EKAttributes.animTranslationInOut
                 var a1 = EKAttributes()
@@ -301,7 +303,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
 
     private lazy var btnDismissAll: UIButton = {
         UIButton.sys()
-            .byTitle("手动关闭所有".tr)
+            .tr_setTitle("手动关闭所有".tr, for: .normal)
             .onTap { (_: UIButton) in
                 SwiftEntryKit.dismiss(.all,
                                       with: nil)
@@ -317,7 +319,7 @@ final class SwiftEntryKitDemoVC: BaseVC {
     private lazy var label: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("📢 这是一则全屏公告\n点空白可关闭".tr)
+            .tr_setText("📢 这是一则全屏公告\n点空白可关闭".tr)
             .byTextAlignment(.center)
             .byFont(JobsFont.boldSystemFont(ofSize: 22))
             .byNumberOfLines(0)

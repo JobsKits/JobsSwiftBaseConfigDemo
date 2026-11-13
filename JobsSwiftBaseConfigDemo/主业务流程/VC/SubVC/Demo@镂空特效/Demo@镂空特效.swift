@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsByUIKit
@@ -25,7 +27,7 @@ final class TransparentRegionVC: BaseVC {
     private lazy var titleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("iOS-UIView设置阴影效果".tr)
+            .tr_setText("iOS-UIView设置阴影效果".tr)
             .byTextAlignment(.center)
             .byNumberOfLines(0)
             .byTextColor(JobsCor.label)

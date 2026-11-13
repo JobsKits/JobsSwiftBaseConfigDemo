@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -27,16 +29,14 @@ final class FlutterDemoVC: BaseVC {
     private lazy var exampleButton: UIButton = {
         UIButton.sys()
         /// 背景色
-        .byBackgroundColor(JobsCor.systemGreen,
+        .byBackgroundColor(JobsCor.systemBlue,
                            for: .normal)
         /// 普通字符串@设置主标题
-        .byTitle("显示".tr,
-                 for: .normal)
-            .byTitle("隐藏".tr,
-                     for: .selected)
-            .byTitleColor(JobsCor.systemBlue,
+        .tr_setTitle("显示".tr, for: .normal)
+            .tr_setTitle("隐藏".tr, for: .selected)
+            .byTitleColor(JobsCor.white,
                           for: .normal)
-            .byTitleColor(JobsCor.systemRed,
+            .byTitleColor(JobsCor.white,
                           for: .selected)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))

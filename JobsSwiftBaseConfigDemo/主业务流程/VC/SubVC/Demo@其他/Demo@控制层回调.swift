@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsSwiftBaseDefines
 import JobsScale
 import JobsByUIKit
@@ -23,6 +25,17 @@ import GKNavigationBarSwift
 
 final class JobsControlEventsDemoVC: BaseVC {
 
+    private lazy var scrollView: UIScrollView = {
+        UIScrollView
+            .jobsMake { _ in }
+            .byAlwaysBounceVertical(true)
+            .byAddTo(view) { [unowned self] make in
+                make.top.equalTo(gk_navigationBar.snp.bottom)
+                make.left.right.equalToSuperview()
+                make.bottom.equalTo(view.safeAreaLayoutGuide)
+            }
+    }()
+
     // 统一用一个垂直栈承载所有 Demo
     private lazy var stack: UIStackView = {
         UIStackView
@@ -31,10 +44,9 @@ final class JobsControlEventsDemoVC: BaseVC {
             .byAlignment(.fill)
             .bySpacing(14)
             .byDistribution(.equalSpacing)
-            .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(gk_navigationBar.snp.bottom).offset(10.h)
-                make.left.right.equalToSuperview().inset(16)
-                make.bottom.lessThanOrEqualTo(view.safeAreaLayoutGuide).inset(16)
+            .byAddTo(scrollView) { [unowned self] make in
+                make.edges.equalTo(scrollView.contentLayoutGuide).inset(16)
+                make.width.equalTo(scrollView.frameLayoutGuide).offset(-32)
             }
     }()
 
@@ -135,11 +147,9 @@ extension JobsControlEventsDemoVC {
         stack.addArrangedSubview(
             UIButton.sys()
             // 普通文字：未选中状态标题
-            .byTitle("显示".tr,
-                     for: .normal)
+            .tr_setTitle("显示".tr, for: .normal)
             // 选中状态标题
-            .byTitle("隐藏".tr,
-                     for: .selected)
+            .tr_setTitle("隐藏".tr, for: .selected)
             // 文字颜色：区分状态
             .byTitleColor(JobsCor.systemBlue,
                           for: .normal)

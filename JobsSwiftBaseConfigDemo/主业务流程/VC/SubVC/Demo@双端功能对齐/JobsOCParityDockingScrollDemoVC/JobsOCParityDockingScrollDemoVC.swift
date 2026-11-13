@@ -9,6 +9,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsByUIKit
@@ -57,7 +59,7 @@ final class JobsDockingScrollDemoVC: BaseVC {
     private lazy var usageTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("JobsScrollViewVC")
+            .tr_setText("JobsScrollViewVC".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byTextColor(JobsCor.label)
             .byAddTo(usageCard) { make in
@@ -86,7 +88,7 @@ final class JobsDockingScrollDemoVC: BaseVC {
     private lazy var topAnchorLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("最高点：上滑后吸附到这里".tr)
+            .tr_setText("最高点：上滑后吸附到这里".tr)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
             .byTextColor(JobsCor.systemBlue)
@@ -99,7 +101,7 @@ final class JobsDockingScrollDemoVC: BaseVC {
     private lazy var bottomAnchorLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("最低点：下滑释放回到初始位置".tr)
+            .tr_setText("最低点：下滑释放回到初始位置".tr)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
             .byTextColor(JobsCor.systemOrange)
@@ -143,7 +145,7 @@ final class JobsDockingScrollDemoVC: BaseVC {
     private lazy var dragHintLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("按住绿色区域上下拖动\n上滑吸顶，下滑回到底部".tr)
+            .tr_setText("按住绿色区域上下拖动\n上滑吸顶，下滑回到底部".tr)
             .byAccessibilityIdentifier("jobs.gesture.docking.handle")
             .byFont(JobsFont.boldSystemFont(ofSize: 16))
             .byTextColor(JobsCor.label)

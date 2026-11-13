@@ -9,6 +9,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsByUIKit
@@ -34,7 +36,7 @@ final class JobsContextMenuDemoVC: BaseVC {
     private lazy var headerLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("選擇場館".tr)
+            .tr_setText("選擇場館".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byTextColor(JobsCor.label)
             .byTextAlignment(.center)

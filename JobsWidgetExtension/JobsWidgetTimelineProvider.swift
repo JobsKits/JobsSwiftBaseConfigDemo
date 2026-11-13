@@ -9,10 +9,13 @@ import WidgetKit
 
 struct JobsWidgetTimelineProvider: TimelineProvider {
     func placeholder(in context: Context) -> JobsWidgetEntry {
-        JobsWidgetEntry(
+        let localization = JobsWidgetSharedStore.localization
+        return JobsWidgetEntry(
             date: Date(),
             counter: JobsWidgetSharedStore.defaultCounter,
-            updatedAt: Date()
+            updatedAt: Date(),
+            languageCode: localization.languageCode,
+            localizedStrings: localization.strings
         )
     }
 
@@ -31,10 +34,13 @@ struct JobsWidgetTimelineProvider: TimelineProvider {
     }
 
     private func currentEntry() -> JobsWidgetEntry {
-        JobsWidgetEntry(
+        let localization = JobsWidgetSharedStore.localization
+        return JobsWidgetEntry(
             date: Date(),
             counter: JobsWidgetSharedStore.counter,
-            updatedAt: JobsWidgetSharedStore.updatedAt
+            updatedAt: JobsWidgetSharedStore.updatedAt,
+            languageCode: localization.languageCode,
+            localizedStrings: localization.strings
         )
     }
 }

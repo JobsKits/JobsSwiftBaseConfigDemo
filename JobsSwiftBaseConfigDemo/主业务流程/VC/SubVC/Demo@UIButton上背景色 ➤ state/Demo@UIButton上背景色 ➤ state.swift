@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsInheritance
@@ -32,14 +34,13 @@ final class UIButtonBackgroundColorDemoVC: BaseVC {
         UIButton.sys()
             .byTitle("Hi",
                      for: .normal)
-            .byTitle("Selected（再点切回）".tr,
-                     for: .selected)
+            .tr_setTitle("Selected（再点切回）".tr, for: .selected)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .semibold))
         /// ✅ 核心：按 state 设置背景色
-        .byTitleColor(JobsCor.yellow,
+        .byTitleColor(JobsCor.black,
                       for: .normal)
-            .byTitleColor(JobsCor.red,
+            .byTitleColor(JobsCor.white,
                           for: .disabled)
             .byBackgroundColor(JobsCor.systemGreen,
                                for: .normal)
@@ -60,8 +61,7 @@ final class UIButtonBackgroundColorDemoVC: BaseVC {
 
     private lazy var toggleEnabledButton: UIButton = {
         UIButton.sys()
-            .byTitle("切换 isEnabled".tr,
-                     for: .normal)
+            .tr_setTitle("切换 isEnabled".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,

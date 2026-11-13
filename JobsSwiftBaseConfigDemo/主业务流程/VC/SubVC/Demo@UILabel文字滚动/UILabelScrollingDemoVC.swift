@@ -9,7 +9,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import GKNavigationBarSwift
 import JobsByUIKit
@@ -49,7 +52,7 @@ final class UILabelScrollingDemoVC: BaseVC {
     private lazy var introLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("CoreText 完整排版 + CALayer 绘制 + JobsSwiftTimer 驱动。只有文字溢出时才进入滚动管线。")
+            .tr_setText("CoreText 完整排版 + CALayer 绘制 + JobsSwiftTimer 驱动。只有文字溢出时才进入滚动管线。".tr)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .regular))
@@ -80,7 +83,7 @@ final class UILabelScrollingDemoVC: BaseVC {
     private lazy var continuousLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("UILabel+Scrolling：从标题开头完整滚到结尾，再以固定间距无缝接回开头。")
+            .tr_setText("UILabel+Scrolling：从标题开头完整滚到结尾，再以固定间距无缝接回开头。".tr)
             .byNumberOfLines(1)
             .byFont(JobsFont.systemFont(ofSize: 16,
                                         weight: .semibold))
@@ -152,7 +155,7 @@ final class UILabelScrollingDemoVC: BaseVC {
     private lazy var shortLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("短文案：保持 UILabel 原生绘制")
+            .tr_setText("短文案：保持 UILabel 原生绘制".tr)
             .byNumberOfLines(1)
             .byFont(JobsFont.systemFont(ofSize: 16,
                                         weight: .regular))
@@ -168,8 +171,7 @@ final class UILabelScrollingDemoVC: BaseVC {
 
     private lazy var pauseButton: UIButton = {
         UIButton.sys()
-            .byTitle("暂停".tr,
-                     for: .normal)
+            .tr_setTitle("暂停".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
                                              weight: .semibold))
             .byTitleColor(JobsCor.white,
@@ -186,8 +188,7 @@ final class UILabelScrollingDemoVC: BaseVC {
 
     private lazy var resumeButton: UIButton = {
         UIButton.sys()
-            .byTitle("继续".tr,
-                     for: .normal)
+            .tr_setTitle("继续".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
                                              weight: .semibold))
             .byTitleColor(JobsCor.white,

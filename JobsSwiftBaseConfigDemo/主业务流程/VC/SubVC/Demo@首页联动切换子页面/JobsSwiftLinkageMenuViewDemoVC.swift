@@ -9,6 +9,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsSwiftBaseDefines
@@ -45,7 +47,7 @@ final class JobsSwiftLinkageMenuViewDemoVC: BaseVC {
     private lazy var callbackLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("当前菜单：日常.1".tr)
+            .tr_setText("当前菜单：日常.1".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byNumberOfLines(1)

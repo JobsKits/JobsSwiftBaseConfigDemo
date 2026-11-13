@@ -9,6 +9,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsByUIKit
@@ -26,7 +28,7 @@ final class JobsInteractiveLabelDemoVC: BaseVC {
     private lazy var introLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("对齐 OC 的 JobsBaseLabel / BaseLabel：展示内边距、背景、异形圆角，以及轻点和长按手势。".tr)
+            .tr_setText("对齐 OC 的 JobsBaseLabel / BaseLabel：展示内边距、背景、异形圆角，以及轻点和长按手势。".tr)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
@@ -77,7 +79,7 @@ final class JobsInteractiveLabelDemoVC: BaseVC {
         UILabel
             .jobsMake { _ in }
             .byAccessibilityIdentifier("jobs.coverage.interactive.status")
-            .byText("状态：等待轻点或长按".tr)
+            .tr_setText("状态：等待轻点或长按".tr)
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)

@@ -14,12 +14,14 @@ import JobsSwiftDSL
 import SnapKit
 import UIKit
 
+import Jobsl10n
+
 final class JobsIconfontTextFontDemoVC: BaseVC {
 
     private lazy var sampleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("阿里妈妈·智造字\nAI 让设计更有温度\n012345678".tr)
+            .tr_setText("阿里妈妈·智造字\nAI 让设计更有温度\n012345678".tr)
             .byJobsIconfontText(size: 34)
             .byTextColor(JobsCor.label)
             .byTextAlignment(.center)
@@ -29,7 +31,7 @@ final class JobsIconfontTextFontDemoVC: BaseVC {
     private lazy var sizeLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("字号：34".tr)
+            .tr_setText("字号：34".tr)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
@@ -50,7 +52,7 @@ final class JobsIconfontTextFontDemoVC: BaseVC {
     private lazy var fallbackLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("字体缺失时，JobsIconfont 自动回退系统字体".tr)
+            .tr_setText("字体缺失时，JobsIconfont 自动回退系统字体".tr)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .regular))
             .byTextColor(JobsCor.tertiaryLabel)

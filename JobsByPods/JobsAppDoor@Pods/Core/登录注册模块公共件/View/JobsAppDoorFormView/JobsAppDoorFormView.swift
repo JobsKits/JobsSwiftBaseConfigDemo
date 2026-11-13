@@ -128,7 +128,7 @@ public final class JobsAppDoorFormView: UIView {
                      for: .normal)
             .byImagePlacement(.left,
                               padding: 4)
-            .jobsAppDoorSingleLineTitle()
+            .jobsAppDoorMultilineTitle()
             .byContentHorizontalAlignment(.left)
             .onTap { [weak self] sender in
                 guard let self else {
@@ -155,7 +155,7 @@ public final class JobsAppDoorFormView: UIView {
                      for: .normal)
             .byImagePlacement(.left,
                               padding: 4)
-            .jobsAppDoorSingleLineTitle()
+            .jobsAppDoorMultilineTitle()
             .byContentHorizontalAlignment(.right)
             .onTap { [weak self] _ in
                 self?.onModeRequest?(.forgotPassword)
@@ -402,8 +402,8 @@ private extension JobsAppDoorFormView {
         }
         loginOptionsStack.snp.remakeConstraints { make in
             make.top.equalTo(fieldsStack.snp.bottom).offset(18)
-            make.left.right.equalTo(fieldsStack).inset(17)
-            make.height.equalTo(28)
+            make.left.right.equalTo(fieldsStack)
+            make.height.equalTo(44)
         }
         homeButton.snp.remakeConstraints { make in
             make.left.right.equalTo(fieldsStack)
@@ -425,7 +425,7 @@ private extension JobsAppDoorFormView {
 
     var minimumContentHeight: CGFloat {
         if mode == .login {
-            return 360
+            return 400
         }
         let count = CGFloat(orderedFields.count)
         return max(394,

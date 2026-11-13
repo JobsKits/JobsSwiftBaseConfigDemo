@@ -15,8 +15,11 @@ import QuartzCore
 import GKNavigationBarSwift
 import JobsByUIKit
 import JobsInheritance
+import JobsNetworking
+import Jobsl10n
 import JobsSwiftBaseDefines
 import JobsSwiftDSL
+import JobsSwiftTimer
 import SnapKit
 
 final class JobsSwiftUserInfoVC: BaseVC {
@@ -29,6 +32,92 @@ final class JobsSwiftUserInfoVC: BaseVC {
     private var deviceFields: [JobsUserInfoField] = []
     private var copyAlertController: UIAlertController?
     private var expandedSections = [true, true]
+    private var collectionClient = JobsDeviceCollectionClient()
+    private var collectionSession: JobsDeviceCollectionSession?
+    private var pairingURL: URL?
+    private var collectionRequest: JobsRequestToken?
+    private var collectionGeneration = UUID()
+    private var collectionPoll: DispatchWorkItem?
+    private var collectionObservers: [NSObjectProtocol] = []
+    private var collectionStatus = "initial"
+    private var collectionBusy = false
+    private var collectionVisible = false
+    private var collectionAlert: UIAlertController?
+
+    private lazy var collectionPanel: UIView = {
+        UIView.jobsMake { _ in }
+            .byBackgroundColor(JobsCor.clear)
+    }()
+
+    private lazy var collectionStatusLabel: UILabel = {
+        UILabel.jobsMake { _ in }
+            .byFont(JobsFont.systemFont(ofSize: 14))
+            .byTextColor(JobsCor.label)
+            .byNumberOfLines(0)
+            .byAddTo(collectionPanel) { make in
+                make.top.leading.trailing.equalToSuperview().inset(12)
+            }
+    }()
+
+    private lazy var collectButton: UIButton = {
+        UIButton.sys()
+            .byAccessibilityIdentifier("JobsDeviceCollection.start")
+            .byNumberOfLines(0)
+            .byTitleFont(JobsFont.systemFont(ofSize: 14,
+                                             weight: .semibold))
+            .onTap { [weak self] _ in
+                self?.confirmCollection()
+            }
+            .byAddTo(collectionPanel) { make in
+                make.top.equalTo(self.collectionStatusLabel.snp.bottom).offset(12)
+                make.leading.equalToSuperview().offset(12)
+                make.width.equalToSuperview().multipliedBy(0.5).offset(-18)
+                make.height.greaterThanOrEqualTo(52)
+            }
+    }()
+
+    private lazy var refreshCollectionButton: UIButton = {
+        UIButton.sys()
+            .byAccessibilityIdentifier("JobsDeviceCollection.refresh")
+            .byNumberOfLines(0)
+            .byTitleFont(JobsFont.systemFont(ofSize: 14))
+            .onTap { [weak self] _ in
+                self?.refreshCollection()
+            }
+            .byAddTo(collectionPanel) { make in
+                make.top.height.width.equalTo(self.collectButton)
+                make.trailing.equalToSuperview().inset(12)
+            }
+    }()
+
+    private lazy var resumeCollectionButton: UIButton = {
+        UIButton.sys()
+            .byAccessibilityIdentifier("JobsDeviceCollection.open")
+            .byNumberOfLines(0)
+            .byTitleFont(JobsFont.systemFont(ofSize: 14))
+            .onTap { [weak self] _ in
+                self?.openCollectionPage()
+            }
+            .byAddTo(collectionPanel) { make in
+                make.top.equalTo(self.collectButton.snp.bottom).offset(8)
+                make.leading.width.equalTo(self.collectButton)
+                make.height.greaterThanOrEqualTo(52)
+            }
+    }()
+
+    private lazy var clearCollectionButton: UIButton = {
+        UIButton.sys()
+            .byAccessibilityIdentifier("JobsDeviceCollection.clear")
+            .byNumberOfLines(0)
+            .byTitleFont(JobsFont.systemFont(ofSize: 14))
+            .onTap { [weak self] _ in
+                self?.clearCollection()
+            }
+            .byAddTo(collectionPanel) { make in
+                make.top.height.width.equalTo(self.resumeCollectionButton)
+                make.trailing.bottom.equalToSuperview().inset(12)
+            }
+    }()
 
     private lazy var sectionTitleLabels: [UILabel] = {
         (0 ..< 2).map { _ in
@@ -117,6 +206,7 @@ final class JobsSwiftUserInfoVC: BaseVC {
                                            right: 16))
             .byEstimatedRowHeight(72)
             .byRowHeight(UITableView.automaticDimension)
+            .byTableHeaderView(collectionPanel)
             .byAddTo(view) { make in
                 make.left.right.equalToSuperview().inset(16)
                 make.bottom.equalToSuperview()
@@ -136,6 +226,291 @@ final class JobsSwiftUserInfoVC: BaseVC {
         RootListPreferences.applyThemeChrome(to: self)
         view.byBackgroundColor(JobsCor.systemGroupedBackground)
         tableView.byVisible(YES)
+        configureCollection()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        collectionVisible = true
+        refreshCollection()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        collectionVisible = false
+        cancelCollectionRequest()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        layoutCollectionPanel()
+    }
+
+    deinit {
+        collectionRequest?.cancel()
+        collectionPoll?.cancel()
+        collectionObservers.forEach {
+            NotificationCenter.default.removeObserver($0)
+        }
+    }
+
+    private func configureCollection() {
+        collectionStatusLabel.byVisible(YES)
+        for button in [collectButton, refreshCollectionButton, resumeCollectionButton, clearCollectionButton] {
+            JobsThemeCenter.shared.bind(button,
+                                        slot: "JobsDeviceCollection.action") { object, center in
+                guard let button = object as? UIButton else {
+                    return
+                }
+                let configuration = button.configuration ?? .plain()
+                button
+                    .byConfiguration(configuration
+                        .byBackground(configuration.background
+                            .byBackgroundColor(center.resolvedColor(.backgroundGroupedSecondary))
+                            .byCornerRadius(10)))
+                    .byTitleColor(center.resolvedColor(.textPrimary))
+            }
+        }
+        collectionObservers.append(NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
+                                                                           object: nil,
+                                                                           queue: .main) { [weak self] _ in
+            guard let self, collectionVisible else {
+                return
+            }
+            refreshCollection()
+        })
+        collectionObservers.append(NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification,
+                                                                           object: nil,
+                                                                           queue: .main) { [weak self] _ in
+            self?.cancelCollectionRequest()
+        })
+        collectionObservers.append(NotificationCenter.default.addObserver(forName: .JobsLanguageDidChange,
+                                                                           object: nil,
+                                                                           queue: .main) { [weak self] _ in
+            self?.updateCollectionUI()
+        })
+        updateCollectionUI()
+    }
+
+    private func layoutCollectionPanel() {
+        let width = tableView.bounds.width
+        guard width > 0 else {
+            return
+        }
+        let size = collectionPanel.systemLayoutSizeFitting(CGSize(width: width, height: 0),
+                                                          withHorizontalFittingPriority: .required,
+                                                          verticalFittingPriority: .fittingSizeLevel)
+        let height = ceil(size.height)
+        guard abs(collectionPanel.frame.height - height) > 0.5 || collectionPanel.frame.width != width else {
+            return
+        }
+        collectionPanel.byFrame(CGRect(x: 0, y: 0, width: width, height: height))
+        tableView.byTableHeaderView(collectionPanel)
+    }
+
+    private func updateCollectionUI() {
+        let text = JobsDeviceCollectionText.text
+        collectionStatusLabel.byText(text(collectionBusy ? "busy" : collectionStatus))
+        collectButton
+            .byTitle(text("start"))
+            .byEnabled(!collectionBusy)
+        refreshCollectionButton
+            .byTitle(text("refresh"))
+            .byEnabled(!collectionBusy)
+        resumeCollectionButton
+            .byTitle(text("resume"))
+            .byEnabled(!collectionBusy && pairingURL != nil)
+        clearCollectionButton
+            .byTitle(text("clear"))
+            .byEnabled(!collectionBusy && collectionSession != nil)
+        deviceFields = JobsDeviceInfo.fields(collection: collectionSession)
+        tableView.byReloadData()
+        view.bySetNeedsLayout()
+    }
+
+    private func confirmCollection() {
+        guard !collectionBusy, presentedViewController == nil else {
+            return
+        }
+        let text = JobsDeviceCollectionText.text
+        collectionAlert = UIAlertController.makeAlert(text("title"), "\(text("consent"))\n\n\(collectionClient.siteAddress)")
+            .byAddCancel(text("cancel")) { [weak self] _ in
+                self?.collectionAlert = nil
+            }
+            .byAddOK(text("agree")) { [weak self] _ in
+                self?.collectionAlert = nil
+                self?.performCollectionRequest("api/pair", method: .post)
+            }
+            .byPresent(self)
+    }
+
+    private func refreshCollection() {
+        guard !collectionBusy else {
+            return
+        }
+        expireCollectionIfNeeded()
+        performCollectionRequest("api/session")
+    }
+
+    private func clearCollection() {
+        guard !collectionBusy else {
+            return
+        }
+        let previousClient = collectionClient
+        cancelCollectionRequest()
+        collectionSession = nil
+        pairingURL = nil
+        collectionClient = JobsDeviceCollectionClient()
+        collectionStatus = "clearFailed"
+        // 先丢弃本机结果和 Cookie；取消远端清除也不能把旧数据重新恢复。
+        performCollectionRequest("api/session", method: .delete, client: previousClient)
+    }
+
+    private func cancelCollectionRequest() {
+        collectionGeneration = UUID()
+        collectionPoll?.cancel()
+        collectionPoll = nil
+        collectionRequest?.cancel()
+        collectionRequest = nil
+        collectionBusy = false
+    }
+
+    private func expireCollectionIfNeeded() {
+        if let expiration = collectionSession?.expirationDate, expiration <= Date() {
+            collectionSession = nil
+            pairingURL = nil
+            collectionClient = JobsDeviceCollectionClient()
+            collectionStatus = "expired"
+            updateCollectionUI()
+        }
+    }
+
+    private func performCollectionRequest(_ path: String,
+                                          method: HTTPMethod = .get,
+                                          client: JobsDeviceCollectionClient? = nil) {
+        collectionPoll?.cancel()
+        collectionPoll = nil
+        collectionGeneration = UUID()
+        let generation = collectionGeneration
+        collectionBusy = true
+        updateCollectionUI()
+        collectionRequest = (client ?? collectionClient).request(path,
+                                                                  method: method) { [weak self] result in
+            DispatchQueue.main.async { [weak self] in
+                guard let self, collectionGeneration == generation else {
+                    return
+                }
+                collectionBusy = false
+                collectionRequest = nil
+                handleCollectionResponse(result, method: method)
+                updateCollectionUI()
+                scheduleCollectionRefresh()
+            }
+        }
+    }
+
+    private func handleCollectionResponse(_ result: Result<JobsDeviceCollectionSession.Response, JobsError>,
+                                           method: HTTPMethod) {
+        expireCollectionIfNeeded()
+        switch result {
+        /// 失败时保留本地公开信息及尚未过期的已收结果。
+        case .failure(let error):
+            if method == .delete {
+                collectionStatus = "clearFailed"
+                return
+            }
+            if case .decode = error {
+                collectionStatus = "invalid"
+            } else if case .http(statusCode: 429, data: _) = error {
+                collectionStatus = "rateLimited"
+            } else {
+                collectionStatus = "offline"
+            }
+        /// 只接受符合现有服务协议的会话和一次性配对链接。
+        case .success(let response):
+            guard response.ok, response.session?.isValid != false else {
+                collectionStatus = "invalid"
+                return
+            }
+            guard method != .post || response.session != nil else {
+                collectionStatus = "invalid"
+                return
+            }
+            if method == .delete {
+                collectionSession = nil
+                pairingURL = nil
+                collectionClient = JobsDeviceCollectionClient()
+                collectionStatus = "initial"
+                return
+            }
+            let previousSession = collectionSession
+            collectionSession = response.session
+            if let session = response.session {
+                if session.expirationDate! <= Date() {
+                    expireCollectionIfNeeded()
+                    return
+                }
+                collectionStatus = session.callbackError == nil ? "waiting" : "rejected"
+                if session.state == "received" {
+                    collectionStatus = session.device?.hasValidUDID == true ? "received" : "browser"
+                }
+                if method == .post {
+                    guard let token = response.pairToken,
+                          let url = collectionClient.pairingURL(token: token) else {
+                        pairingURL = nil
+                        collectionStatus = "invalid"
+                        return
+                    }
+                    pairingURL = url
+                    openCollectionPage()
+                }
+            } else {
+                pairingURL = nil
+                collectionStatus = previousSession == nil ? collectionStatus : "expired"
+                if collectionStatus == "offline" || collectionStatus == "invalid" {
+                    collectionStatus = "initial"
+                }
+            }
+        }
+    }
+
+    private func openCollectionPage() {
+        expireCollectionIfNeeded()
+        guard let pairingURL else {
+            return
+        }
+        pairingURL.absoluteString.open(jobsByVoidBlock: { [weak self] result in
+            switch result {
+            /// 打开默认浏览器，不把调起成功当作系统安装成功。
+            case .opened:
+                break
+            /// 系统限制或 URL 无法打开时保留配对入口供重试。
+            default:
+                self?.collectionStatus = "openingFailed"
+                self?.updateCollectionUI()
+            }
+        })
+    }
+
+    private func scheduleCollectionRefresh() {
+        guard collectionVisible,
+              UIApplication.shared.applicationState == .active,
+              let session = collectionSession,
+              let expiration = session.expirationDate else {
+            return
+        }
+        let remaining = expiration.timeIntervalSinceNow
+        guard remaining > 0 else {
+            expireCollectionIfNeeded()
+            return
+        }
+        let delay = session.state == "received" ? remaining : min(8, remaining)
+        let work = DispatchWorkItem { [weak self] in
+            self?.refreshCollection()
+        }
+        collectionPoll = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay,
+                                      execute: work)
     }
 
     private func loadUserInfoFields() -> [JobsUserInfoField] {
@@ -172,21 +547,27 @@ final class JobsSwiftUserInfoVC: BaseVC {
     }
 
     private func sectionTitle(_ section: Int) -> String {
-        section == 0 ? "用户信息".tr : "本机信息".tr
+        section == 0 ? "用户信息".tr : JobsDeviceCollectionText.text(collectionSession?.device == nil ? "localTitle" : "collectedTitle")
     }
 
     private func updateSectionHeader(_ section: Int) {
-        let state = expandedSections[section] ? "已展开".tr : "已收起".tr
-        let action = expandedSections[section] ? "收起".tr : "展开".tr
+        let text = JobsDeviceCollectionText.text
+        let state = section == 0
+            ? (expandedSections[section] ? "已展开".tr : "已收起".tr)
+            : text(expandedSections[section] ? "expanded" : "collapsed")
+        let action = section == 0
+            ? (expandedSections[section] ? "收起".tr : "展开".tr)
+            : text(expandedSections[section] ? "collapse" : "expand")
         let corners = expandedSections[section]
             ? Self.topCorners
             : Self.topCorners.union(Self.bottomCorners)
         sectionTitleLabels[section].byText(sectionTitle(section))
-        sectionCountLabels[section].byText("\(fields(in: section).count) 项")
+        let count = section == 0 ? "\(fields(in: section).count) 项" : String(format: text("items"), fields(in: section).count)
+        sectionCountLabels[section].byText(count)
         sectionActionLabels[section].byText(action)
         sectionChevronViews[section].byImage((expandedSections[section] ? "chevron.up" : "chevron.down").sysImg)
         let button = sectionHeaderButtons[section]
-            .byAccessibilityLabel("\(sectionTitle(section))，\(fields(in: section).count)项，\(state)，点击\(action)")
+            .byAccessibilityLabel("\(sectionTitle(section)) · \(count) · \(state) · \(action)")
         applyCorners(to: button,
                      corners: corners,
                      radius: Self.sectionHeaderCornerRadius)
@@ -335,12 +716,9 @@ final class JobsSwiftUserInfoVC: BaseVC {
             return
         }
         field.value.paste()
-        let message = field.isSystemRestricted
-            ? "已复制%@的系统限制说明".tr(field.name)
-            : "已复制%@".tr(field.name)
-        copyAlertController = UIAlertController.makeAlert("复制成功".tr,
-                                                          message)
-            .byAddOK("确定".tr) { [weak self] _ in
+        copyAlertController = UIAlertController.makeAlert(JobsDeviceCollectionText.text("copy"),
+                                                          field.name)
+            .byAddOK(JobsDeviceCollectionText.text("ok")) { [weak self] _ in
                 self?.copyAlertController = nil
             }
             .byPresent(self)
@@ -384,7 +762,7 @@ extension JobsSwiftUserInfoVC: UITableViewDataSource,
         guard section == 1 else {
             return "点击任意信息可复制当前显示内容。".tr
         }
-        return "点击任意信息可复制；受限项仅复制系统限制说明。iOS 16 及以上可能仅返回 iPhone / iPad 等通用设备名称。".tr
+        return JobsDeviceCollectionText.text(collectionStatus)
     }
 
     func tableView(_ tableView: UITableView,
@@ -411,7 +789,7 @@ extension JobsSwiftUserInfoVC: UITableViewDataSource,
                                              weight: .semibold))
             .byTitleNumberOfLines(0)
             .byTitleCor(RootListPreferences.foldPrimaryTextColor)
-            .bySecondaryText(field.value)
+            .bySecondaryText(field.sourceDescription.map { "\(field.value)\n\(JobsDeviceCollectionText.text("source"))：\($0)" } ?? field.value)
             .byDetailTitleFont(JobsFont.systemFont(ofSize: 14))
             .byDetailTitleNumberOfLines(0)
             .byAccessoryType(.none)

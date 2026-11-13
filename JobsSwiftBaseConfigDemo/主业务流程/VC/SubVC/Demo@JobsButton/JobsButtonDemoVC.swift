@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsByUIKit
@@ -31,7 +33,7 @@ final class JobsButtonDemoVC: BaseVC {
         UILabel
             .jobsMake { _ in }
             .byNumberOfLines(0)
-            .byText("JobsButton Demo：4种模式 + 点击/长按（叠加不覆盖）\n\n• 点击：会依次触发多段回调（叠加）\n• 长按：同样支持叠加\n• 图片：前景图/背景图都用 Kingfisher 链式加载".tr)
+            .tr_setText("JobsButton Demo：4种模式 + 点击/长按（叠加不覆盖）\n\n• 点击：会依次触发多段回调（叠加）\n• 长按：同样支持叠加\n• 图片：前景图/背景图都用 Kingfisher 链式加载".tr)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.left)

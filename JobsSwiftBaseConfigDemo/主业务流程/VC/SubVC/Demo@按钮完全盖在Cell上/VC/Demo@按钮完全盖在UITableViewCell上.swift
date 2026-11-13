@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsSwiftDSL
 import JobsToast
 import JobsByUIKit
@@ -41,8 +43,7 @@ final class BtnFullOnTBVCellDemoVC: BaseVC {
         // ✅ 空态 API：reloadData 后自动评估，无需手动 updateEmptyState
         .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据".tr,
-                             for: .normal)
+                    .tr_setTitle("暂无数据".tr, for: .normal)
                     .bySubTitle("点我填充示例数据".tr,
                                 for: .normal)
                     .byImage("tray".sysImg,

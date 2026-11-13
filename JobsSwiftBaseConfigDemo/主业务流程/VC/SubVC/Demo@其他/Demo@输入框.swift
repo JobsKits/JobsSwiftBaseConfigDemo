@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import ObjectiveC
@@ -27,7 +29,7 @@ final class UITextFieldDemoVC: BaseVC {
     private lazy var emailTF: UITextField = {
         UITextField
             .jobsMake { _ in }
-            .byPlaceholder("请输入邮箱（去空格 / 最长 8）".tr)
+            .tr_setPlaceholder("请输入邮箱（去空格 / 最长 8）".tr)
             .byPlaceholderColor(JobsCor.placeholderText)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.label)
@@ -88,7 +90,7 @@ final class UITextFieldDemoVC: BaseVC {
     private lazy var passwordTF: UITextField = {
         UITextField
             .jobsMake { _ in }
-            .byPlaceholder("请输入密码（最长 5）".tr)
+            .tr_setPlaceholder("请输入密码（最长 5）".tr)
             .byPlaceholderColor(JobsCor.placeholderText)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.label)

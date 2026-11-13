@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Jobsl10n
 
 private final class JobsAppDoorBundleToken: NSObject { }
 
@@ -42,11 +43,21 @@ public enum JobsAppDoorResource {
     }
 
     public static func text(_ key: String) -> String {
-        NSLocalizedString(key,
-                          tableName: "JobsAppDoor",
-                          bundle: bundle,
-                          value: key,
-                          comment: "")
+        let missing = "__JobsAppDoorMissingLocalization__"
+        let hostText = LanguageManager.shared.localizedBundle.localizedString(forKey: key,
+                                                                              value: missing,
+                                                                              table: nil)
+        if hostText != missing {
+            return hostText
+        }
+        let code = LanguageManager.shared.currentLanguageCode
+        let resource = bundle.path(forResource: code, ofType: "lproj")
+            .flatMap(Bundle.init(path:)) ?? bundle
+        return NSLocalizedString(key,
+                                 tableName: "JobsAppDoor",
+                                 bundle: resource,
+                                 value: key,
+                                 comment: "")
     }
 
     public static func countdownText(seconds: Int) -> String {

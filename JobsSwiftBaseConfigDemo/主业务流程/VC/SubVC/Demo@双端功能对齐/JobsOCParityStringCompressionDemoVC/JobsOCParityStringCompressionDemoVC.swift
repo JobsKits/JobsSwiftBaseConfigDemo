@@ -9,7 +9,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import JobsByUIKit
 import JobsInheritance
@@ -94,7 +97,7 @@ final class JobsStringCompressionDemoVC: BaseVC {
     private lazy var sourceTextView: UITextView = {
         UITextView
             .jobsMake { _ in }
-            .byText("这是一个需要压缩的字符串".tr)
+            .tr_setText("这是一个需要压缩的字符串".tr)
             .byFont(JobsFont.systemFont(ofSize: 15))
             .byTextColor(JobsCor.label)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
@@ -172,8 +175,7 @@ final class JobsStringCompressionDemoVC: BaseVC {
 
     private lazy var recompressButton: UIButton = {
         UIButton.sys()
-            .byTitle("重新压缩".tr,
-                     for: .normal)
+            .tr_setTitle("重新压缩".tr, for: .normal)
             .byTitleFont(JobsFont.boldSystemFont(ofSize: 16))
             .byTitleColor(JobsCor.white,
                           for: .normal)
@@ -231,8 +233,8 @@ final class JobsStringCompressionDemoVC: BaseVC {
               let archivedData = try? NSKeyedArchiver.archivedData(withRootObject: sourceData,
                                                                    requiringSecureCoding: false) else {
             informationValueLabel.byText("压缩失败".tr)
-            compressedValueLabel.byText("")
-            restoredValueLabel.byText("")
+            compressedValueLabel.byText("".tr)
+            restoredValueLabel.byText("".tr)
             return
         }
         let base64 = archivedData.base64EncodedString()

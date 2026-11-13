@@ -12,8 +12,9 @@ import AppKit
 import UIKit
 #endif
 
-import JobsSwiftDSL
 import Jobsl10n
+
+import JobsSwiftDSL
 import JobsToast
 import JobsByUIKit
 import JobsTextTools
@@ -30,8 +31,7 @@ final class JobsNavigationDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.clear,
                                for: .normal)
-            .byTitle("返回".tr,
-                     for: .normal)
+            .tr_setTitle("返回".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 12,
@@ -73,8 +73,7 @@ final class JobsNavigationDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.clear,
                                for: .normal)
-            .byTitle("铃".tr,
-                     for: .normal)
+            .tr_setTitle("铃".tr, for: .normal)
             .byTitleColor(JobsCor.systemBlue,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 12,
@@ -313,7 +312,7 @@ extension JobsNavigationDemoVC {
         subTitleLabel
             .byAttributedString(nil)
             .byText("主标题 / 副标题".tr)
-            .byFont(JobsFont.systemFont(ofSize: 10,
+            .byFont(JobsFont.systemFont(ofSize: 11,
                                         weight: .medium))
             .byTextColor(JobsCor.red)
             .bySizeToFit()

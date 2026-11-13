@@ -10,7 +10,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import JobsScale
 import JobsByUIKit
@@ -95,7 +98,7 @@ final class JobsProgressDemoVC: BaseVC {
                 progressView.setProgress(0,
                                          animated: false)
                 lastAppliedPercent = 0
-                percentTextField.byText("0")
+                percentTextField.byText("0".tr)
                 stateLabel.byText("方向切换：已归零".tr)
             }
             .byAddTo(view) { [unowned self] make in
@@ -108,8 +111,7 @@ final class JobsProgressDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemOrange,
                                for: .normal)
-            .byTitle("模式：100→0".tr,
-                     for: .normal)   // 初始和 progressView.byValueMode(.countDown) 对齐
+            .tr_setTitle("模式：100→0".tr, for: .normal)   // 初始和 progressView.byValueMode(.countDown) 对齐
         .byTitleColor(JobsCor.white,
                       for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -139,7 +141,7 @@ final class JobsProgressDemoVC: BaseVC {
                 self.progressView.setProgress(0,
                                               animated: false)
                 self.lastAppliedPercent = 0
-                self.percentTextField.byText("0")
+                self.percentTextField.byText("0".tr)
                 self.stateLabel.byText("模式切换：已归零".tr)
             }
             .byAddTo(view) { [unowned self] make in
@@ -158,7 +160,7 @@ final class JobsProgressDemoVC: BaseVC {
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .medium))
-            .byText("Ready".tr)
+            .tr_setText("Ready".tr)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(modeToggleButton.snp.bottom).offset(10)
                 make.left.equalToSuperview().offset(20.w)
@@ -234,7 +236,7 @@ final class JobsProgressDemoVC: BaseVC {
             .jobsMake { _ in }
             .byBorderStyle(.roundedRect)
             .byKeyboardType(.numberPad)
-            .byPlaceholder("输入 0~100".tr)
+            .tr_setPlaceholder("输入 0~100".tr)
             .byTextAlignment(.center)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(progressView.snp.bottom).offset(16)
@@ -250,8 +252,7 @@ final class JobsProgressDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemBlue,
                                for: .normal)
-            .byTitle("设置".tr,
-                     for: .normal)
+            .tr_setTitle("设置".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 14,
@@ -283,7 +284,7 @@ final class JobsProgressDemoVC: BaseVC {
     private lazy var dragTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("可拖动".tr)
+            .tr_setText("可拖动".tr)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
@@ -315,8 +316,7 @@ final class JobsProgressDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemGreen,
                                for: .normal)
-            .byTitle("开始".tr,
-                     for: .normal)
+            .tr_setTitle("开始".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -346,8 +346,7 @@ final class JobsProgressDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemRed,
                                for: .normal)
-            .byTitle("停止".tr,
-                     for: .normal)
+            .tr_setTitle("停止".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -372,8 +371,7 @@ final class JobsProgressDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemPurple,
                                for: .normal)
-            .byTitle("随机".tr,
-                     for: .normal)
+            .tr_setTitle("随机".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -404,8 +402,7 @@ final class JobsProgressDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemGray,
                                for: .normal)
-            .byTitle("回退".tr,
-                     for: .normal)
+            .tr_setTitle("回退".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -453,7 +450,7 @@ final class JobsProgressDemoVC: BaseVC {
         randomButton.byVisible(YES)
         backButton.byVisible(YES)
         // 初始值对齐
-        percentTextField.byText("0")
+        percentTextField.byText("0".tr)
         stateLabel.byText("Ready".tr)
     }
 }

@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsByUIKit
@@ -25,7 +27,7 @@ final class UIAlertDemoVC: BaseVC {
     // MARK: 最简单的 Alert：主/副标题 + 取消_确定@按钮行为监听 + 中间弹出 + 点击空白区域不可取消
     private lazy var simpleAlertBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("① 简单 Alert".tr)
+            .tr_setTitle("① 简单 Alert".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
             .onTap { [weak self] _ in
@@ -52,7 +54,7 @@ final class UIAlertDemoVC: BaseVC {
     // MARK: 主/副标题 + 设置背景图（本地/网络）+ 输入框@监听（输入_删除）回调 + 取消_确定@按钮行为监听 + 中间弹出 + 点击空白区域不可取消
     private lazy var textFieldAlertBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("② 输入框 Alert（读取文本）".tr)
+            .tr_setTitle("② 输入框 Alert（读取文本）".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
             .onTap { [weak self] _ in
@@ -107,7 +109,7 @@ final class UIAlertDemoVC: BaseVC {
     // MARK: 主标题 + 相机_相册_取消@按钮行为监听 + 屏幕底部弹出 + 点击空白区域可取消
     private lazy var actionSheetAutoBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("③ ActionSheet（自动锚点）".tr)
+            .tr_setTitle("③ ActionSheet（自动锚点）".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
             .onTap { [weak self] _ in
@@ -136,7 +138,7 @@ final class UIAlertDemoVC: BaseVC {
     // MARK: 主标题 + 删除_取消@按钮行为监听 + 从按钮自身位置（锚点）弹出 + 点击空白区域可取消
     private lazy var actionSheetFromButtonBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("④ 从当前按钮处弹出".tr)
+            .tr_setTitle("④ 从当前按钮处弹出".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
             .onTap { [weak self] sender in

@@ -19,6 +19,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import Combine
 import JobsInheritance
 import JobsByUIKit
@@ -463,8 +465,7 @@ final class MoyaDemoVC: BaseVC {
     /// 清空输出按钮（就地约束，位于 resultView 之上右侧）
     private lazy var btnClear: UIButton = {
         UIButton.sys()
-            .byTitle("清空输出".tr,
-                     for: .normal)
+            .tr_setTitle("清空输出".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byBackgroundColor(JobsCor.systemRed)
@@ -514,7 +515,7 @@ extension MoyaDemoVC {
             guard let self else {
                 return
             }
-            self.resultView.byText("")
+            self.resultView.byText("".tr)
         }
     }
     // =============== 回显 & 工具 ===============

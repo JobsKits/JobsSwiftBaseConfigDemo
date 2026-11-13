@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
@@ -36,8 +38,7 @@ final class IrregularButtonDemoVC: BaseVC {
         return IrregularButton(type: .custom)
             .byBackgroundColor(JobsCor.orange,
                                for: .normal)
-            .byTitle("按钮".tr,
-                     for: .normal)
+            .tr_setTitle("按钮".tr, for: .normal)
             .byPoints([
                 .init(x: 0,
                       y: 0),
@@ -71,8 +72,7 @@ final class IrregularButtonDemoVC: BaseVC {
         return IrregularButton(type: .custom)
             .byBackgroundColor(JobsCor.green,
                                for: .normal)
-            .byTitle("按钮".tr,
-                     for: .normal)
+            .tr_setTitle("按钮".tr, for: .normal)
             .byPoints([
                 .init(x: 0,
                       y: 50),
@@ -104,8 +104,7 @@ final class IrregularButtonDemoVC: BaseVC {
         return IrregularButton(type: .custom)
             .byBackgroundColor(JobsCor.cyan,
                                for: .normal)
-            .byTitle("按钮".tr,
-                     for: .normal)
+            .tr_setTitle("按钮".tr, for: .normal)
             .byPoints([
                 .init(x: 120 / 4,
                       y: 50),
@@ -139,8 +138,7 @@ final class IrregularButtonDemoVC: BaseVC {
         return IrregularButton(type: .custom)
             .byBackgroundColor(JobsCor.purple,
                                for: .normal)
-            .byTitle("按钮".tr,
-                     for: .normal)
+            .tr_setTitle("按钮".tr, for: .normal)
             .byPoints([
                 .init(x: a,
                       y: w / 4),
@@ -176,8 +174,7 @@ final class IrregularButtonDemoVC: BaseVC {
         return IrregularButton(type: .custom)
             .byBackgroundColor(JobsCor.brown,
                                for: .normal)
-            .byTitle("按钮".tr,
-                     for: .normal)
+            .tr_setTitle("按钮".tr, for: .normal)
             .byPoints([
                 .init(x: 0,
                       y: 0),
@@ -209,8 +206,7 @@ final class IrregularButtonDemoVC: BaseVC {
         return IrregularButton(type: .custom)
             .byBackgroundColor(JobsCor.magenta,
                                for: .normal)
-            .byTitle("按钮".tr,
-                     for: .normal)
+            .tr_setTitle("按钮".tr, for: .normal)
             .byPoints([
                 .init(x: 0,
                       y: 150),

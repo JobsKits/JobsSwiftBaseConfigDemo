@@ -20,7 +20,7 @@ import JobsInheritance
 import SnapKit
 import GKNavigationBarSwift
 
-final class JobsSwiftCommentModeDetailVC: BaseVC {
+class JobsSwiftCommentModeDetailVC: BaseVC {
 
     var mode: JobsSwiftCommentMode = .netEase
     var popupStyle = false
@@ -191,7 +191,7 @@ private extension JobsSwiftCommentModeDetailVC {
     }
 
     func openReplyPage(by comment: JobsSwiftCommentModel) {
-        replyDetailViewController = JobsSwiftCommentModeDetailVC()
+        replyDetailViewController = JobsSwiftCommentReplyDetailVC()
         replyDetailViewController?.mode = .toutiao
         replyDetailViewController?.replyDetailStyle = true
         replyDetailViewController?.commentArr = [comment]
@@ -226,3 +226,6 @@ private extension JobsSwiftCommentModeDetailVC {
         }
     }
 }
+
+// 回复详情是独立页面类型，避免同类页面防重逻辑拦截正常的主列表 → 回复导航。
+private final class JobsSwiftCommentReplyDetailVC: JobsSwiftCommentModeDetailVC {}

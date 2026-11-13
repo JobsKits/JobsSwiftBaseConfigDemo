@@ -87,4 +87,22 @@ extension UIButton {
         }
         return self
     }
+
+    /// 长语种的辅助操作保留完整标题，交由表单提供足够触摸高度。
+    @discardableResult
+    func jobsAppDoorMultilineTitle() -> Self {
+        if #available(iOS 15.0, *) {
+            var buttonConfiguration = configuration ?? .plain()
+            buttonConfiguration.titleLineBreakMode = .byWordWrapping
+            buttonConfiguration.contentInsets = NSDirectionalEdgeInsets(top: 0,
+                                                                         leading: 4,
+                                                                         bottom: 0,
+                                                                         trailing: 4)
+            byConfiguration(buttonConfiguration)
+        }
+        titleLabel?
+            .byNumberOfLines(0)
+            .byLineBreakMode(.byWordWrapping)
+        return self
+    }
 }

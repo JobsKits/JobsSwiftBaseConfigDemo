@@ -10,7 +10,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import AVFoundation
 import JobsInheritance
@@ -66,7 +69,7 @@ final class HKLiveVC: BaseVC {
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextAlignment(.center)
-            .byText("准备就绪".tr)
+            .tr_setText("准备就绪".tr)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview().inset(16)
                 make.bottom.equalTo(recordButton.snp.top).offset(-12)
@@ -79,10 +82,8 @@ final class HKLiveVC: BaseVC {
                                for: .normal)
             .byBackgroundColor(JobsCor.systemGray,
                                for: .disabled)
-            .byTitle("开始推流".tr,
-                     for: .normal)
-            .byTitle("停止推流".tr,
-                     for: .selected)
+            .tr_setTitle("开始推流".tr, for: .normal)
+            .tr_setTitle("停止推流".tr, for: .selected)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,

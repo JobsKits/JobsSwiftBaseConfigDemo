@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsByUIKit
@@ -25,7 +27,7 @@ final class SheetContentView: UIView,
     private lazy var titleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("底部表单（键盘联动）".tr)
+            .tr_setText("底部表单（键盘联动）".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byTextColor(JobsCor.label)
             .byAddTo(self) { make in
@@ -36,7 +38,7 @@ final class SheetContentView: UIView,
     private lazy var textField: UITextField = {
         UITextField
             .jobsMake { _ in }
-            .byPlaceholder("输入点什么…".tr)
+            .tr_setPlaceholder("输入点什么…".tr)
             .byBorderStyle(.roundedRect)
             .byAddTo(self) { [unowned self] make in
                 make.top.equalTo(titleLabel.snp.bottom).offset(12)
@@ -46,7 +48,7 @@ final class SheetContentView: UIView,
     }()
     private lazy var confirmBtn: UIButton = {
         UIButton.sys()
-            .byTitle("确定".tr)
+            .tr_setTitle("确定".tr, for: .normal)
             .onTap { [weak self] (_: UIButton) in
                 self?.endEditing(true)
                 SwiftEntryKit.dismiss()

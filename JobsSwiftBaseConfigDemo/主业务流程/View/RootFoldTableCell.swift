@@ -38,22 +38,21 @@ final class RootFoldTableCell: UITableViewCell,
     // MARK: - Layout
     private static let vInset: CGFloat = 8
     private static let cardHorizontalInset: CGFloat = 10
-    private static let titleFont = JobsFont.systemFont(ofSize: 16,
+    private static let titleFont = JobsFont.systemFont(ofSize: 17,
                                                        weight: .medium)
-    private static let subTitleFont = JobsFont.systemFont(ofSize: 12,
+    private static let subTitleFont = JobsFont.systemFont(ofSize: 13,
                                                           weight: .regular)
     private static let headerTitleTop: CGFloat = 11
     private static let headerTitleGap: CGFloat = 5
     private static let headerTitleBottom: CGFloat = 10
     private static let titleHeight = ceil(titleFont.lineHeight)
     private static let subTitleHeight = ceil(subTitleFont.lineHeight)
-    private static let headerSubTitleTop = headerTitleTop + titleHeight + headerTitleGap
     private static let headerH = max(64,
                                      headerTitleTop + titleHeight + headerTitleGap + subTitleHeight + headerTitleBottom)
-    private static let innerRowH: CGFloat = 50
-    private static let innerTitleFont = JobsFont.systemFont(ofSize: 15,
+    private static let innerRowH: CGFloat = 56
+    private static let innerTitleFont = JobsFont.systemFont(ofSize: 17,
                                                             weight: .regular)
-    private static let innerSubTitleFont = JobsFont.systemFont(ofSize: 11,
+    private static let innerSubTitleFont = JobsFont.systemFont(ofSize: 12,
                                                                weight: .regular)
     private static let innerTop: CGFloat = 10
     private static let innerBottom: CGFloat = 10
@@ -73,6 +72,8 @@ final class RootFoldTableCell: UITableViewCell,
     private var isExpanded: Bool = false
     private var chargingProgressPhase = 0
     private var innerTableHeight: Constraint?
+    private var headerHeightConstraint: Constraint?
+    private var groupTitle = ""
     // MARK: - Lazy UI
     private lazy var card: UIView = {
         UIView
@@ -91,9 +92,9 @@ final class RootFoldTableCell: UITableViewCell,
     private lazy var header: UIView = {
         UIView
             .jobsMake { _ in }
-            .byAddTo(card) { make in
+            .byAddTo(card) { [unowned self] make in
                 make.top.left.right.equalToSuperview()
-                make.height.equalTo(Self.headerH).priority(999)
+                headerHeightConstraint = make.height.equalTo(Self.headerH).priority(999).constraint
             }
     }()
 
@@ -102,13 +103,12 @@ final class RootFoldTableCell: UITableViewCell,
             .jobsMake { _ in }
             .byFont(Self.titleFont)
             .byTextColor(RootListPreferences.foldPrimaryTextColor)
-            .byNumberOfLines(1)
-            .byLineBreakMode(.byTruncatingTail)
+            .byNumberOfLines(0)
+            .byLineBreakMode(.byWordWrapping)
             .byAddTo(header) { [unowned self] make in
                 make.top.equalToSuperview().offset(Self.headerTitleTop)
                 make.left.equalToSuperview().offset(16)
-                make.right.lessThanOrEqualTo(self.chevron.snp.left).offset(-10)
-                make.height.equalTo(Self.titleHeight)
+                make.right.equalTo(self.chevron.snp.left).offset(-10)
             }
     }()
 
@@ -120,7 +120,7 @@ final class RootFoldTableCell: UITableViewCell,
             .byNumberOfLines(1)
             .byLineBreakMode(.byTruncatingTail)
             .byAddTo(header) { [unowned self] make in
-                make.top.equalToSuperview().offset(Self.headerSubTitleTop)
+                make.top.equalTo(titleLab.snp.bottom).offset(Self.headerTitleGap)
                 make.left.equalTo(self.titleLab)
                 make.right.lessThanOrEqualTo(self.chevron.snp.left).offset(-10)
                 make.height.equalTo(Self.subTitleHeight)
@@ -252,6 +252,9 @@ final class RootFoldTableCell: UITableViewCell,
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        headerHeightConstraint?.update(offset: Self.measuredHeaderHeight(groupTitle: groupTitle,
+                                                                        itemCount: items.count,
+                                                                        width: contentView.bounds.width))
         applyInsets()      // 水平边距@距离TableView
         applyCornerStyle() // 圆角
         innerTableView.visibleCells.forEach {
@@ -285,12 +288,31 @@ final class RootFoldTableCell: UITableViewCell,
 
 extension RootFoldTableCell {
 
-    static func collapsedHeight() -> CGFloat {
-        headerH + vInset * 2
+    private static func measuredHeaderHeight(groupTitle: String,
+                                              itemCount: Int,
+                                              width: CGFloat) -> CGFloat {
+        guard width > 78 else {
+            return headerH
+        }
+        let text = "\(groupTitle)  (\(itemCount))"
+        let bounds = (text as NSString).boundingRect(with: CGSize(width: width - 78,
+                                                                  height: .greatestFiniteMagnitude),
+                                                     options: [.usesLineFragmentOrigin, .usesFontLeading],
+                                                     attributes: [.font: titleFont],
+                                                     context: nil)
+        return max(headerH, headerTitleTop + ceil(bounds.height) + headerTitleGap + subTitleHeight + headerTitleBottom)
     }
 
-    static func expandedHeight(itemCount: Int) -> CGFloat {
-        collapsedHeight()
+    static func collapsedHeight(groupTitle: String = "",
+                                itemCount: Int = 0,
+                                width: CGFloat = 0) -> CGFloat {
+        measuredHeaderHeight(groupTitle: groupTitle, itemCount: itemCount, width: width) + vInset * 2
+    }
+
+    static func expandedHeight(itemCount: Int,
+                               groupTitle: String = "",
+                               width: CGFloat = 0) -> CGFloat {
+        collapsedHeight(groupTitle: groupTitle, itemCount: itemCount, width: width)
             + innerTop
             + CGFloat(itemCount) * innerRowH
             + innerBottom
@@ -316,6 +338,7 @@ extension RootFoldTableCell {
                    onSelectItem: @escaping (Int) -> Void,
                    pinItem: @escaping (Int) -> Void) -> Self {
         pinnedSectionStyle = false
+        self.groupTitle = groupTitle
         self.items = items
         if let first = items.first {
             self.byAccessibilityIdentifier("jobs.coverage.root.group." + String(describing: first.vcType))
@@ -343,6 +366,7 @@ extension RootFoldTableCell {
                          selectItem: @escaping (Int) -> Void,
                          unpinItem: @escaping (Int) -> Void) -> Self {
         pinnedSectionStyle = true
+        self.groupTitle = groupTitle
         self.items = items
         self.onSelectItem = selectItem
         self.onPinItem = unpinItem
@@ -465,7 +489,7 @@ extension RootFoldTableCell {
 
     private func subTitleText(expanded: Bool) -> String {
         let stateText = pinnedSectionStyle ? "已置顶".tr : (expanded ? "已展开".tr : "点击展开".tr)
-        return "\(items.count) 个 Demo · \(stateText)"
+        return "\(items.count) Demo · \(stateText)"
     }
 
     private func isChargingProgressItem(_ item: DemoItem) -> Bool {

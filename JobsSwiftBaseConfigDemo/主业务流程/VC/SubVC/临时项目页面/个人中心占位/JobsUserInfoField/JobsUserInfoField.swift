@@ -10,4 +10,5 @@ struct JobsUserInfoField {
     let name: String
     let value: String
     var isSystemRestricted = false
+    var sourceDescription: String? = nil
 }

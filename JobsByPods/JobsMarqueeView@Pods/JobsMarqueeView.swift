@@ -719,9 +719,11 @@ public final class JobsMarqueeView: UIView {
     private func cloneButton(from source: UIButton) -> UIButton {
         let button = UIButton.sys()
         button.jobs_isClone = true
+        var copiesConfiguration = false
         // 0) 先处理 iOS15+ configuration（放最前，避免后续把字体/样式冲掉）
         if #available(iOS 15.0, *) {
             if let cfg = source.configuration {
+                copiesConfiguration = true
                 button.byConfiguration(cfg)
             // 如果你希望 clone 的配置更新策略和 source 一致，可以打开：
             // button.automaticallyUpdatesConfiguration = source.automaticallyUpdatesConfiguration
@@ -754,7 +756,8 @@ public final class JobsMarqueeView: UIView {
                                              for: st)
                 }
             }
-            if let color = source.titleColor(for: st) {
+            // Configuration 已携带实际前景色；旧 titleColor 此时常返回默认蓝色，不能覆盖复制后的样式。
+            if !copiesConfiguration, let color = source.titleColor(for: st) {
                 button.byTitleColor(color,
                                     for: st)
             }

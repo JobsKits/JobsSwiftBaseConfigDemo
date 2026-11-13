@@ -10,7 +10,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import JobsInheritance
 import JobsByUIKit
@@ -47,7 +50,7 @@ final class UnityDemoVC: BaseVC {
     private lazy var tipLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("Unity 仅在真机运行；首次冷启动会同步初始化，后续默认暂停并隐藏以避免重复冷启动".tr)
+            .tr_setText("Unity 仅在真机运行；首次冷启动会同步初始化，后续默认暂停并隐藏以避免重复冷启动".tr)
             .byTextColor(JobsCor.systemRed)
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byNumberOfLines(0)
@@ -82,7 +85,7 @@ final class UnityDemoVC: BaseVC {
             .byBorderStyle(.roundedRect)
             .byKeyboardType(.decimalPad)
             .byTextAlignment(.center)
-            .byPlaceholder("自动关闭时间（秒）默认 3".tr)
+            .tr_setPlaceholder("自动关闭时间（秒）默认 3".tr)
             .byText("3")
             .byAddTo(view) { [unowned self] make in
                 make.centerX.equalToSuperview()
@@ -96,8 +99,7 @@ final class UnityDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemRed,
                                for: .normal)
-            .byTitle("开始 Unity".tr,
-                     for: .normal)
+            .tr_setTitle("开始 Unity".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,

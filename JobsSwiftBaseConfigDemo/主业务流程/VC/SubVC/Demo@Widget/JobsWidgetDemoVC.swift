@@ -9,7 +9,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 #if canImport(WidgetKit)
 import WidgetKit
@@ -75,7 +78,7 @@ final class JobsWidgetDemoVC: BaseVC {
     private lazy var introLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("宿主联调页：切换 Widget family，修改状态，观察时间线快照如何重新排版。".tr)
+            .tr_setText("宿主联调页：切换 Widget family，修改状态，观察时间线快照如何重新排版。".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .regular))
@@ -132,7 +135,7 @@ final class JobsWidgetDemoVC: BaseVC {
     private lazy var previewTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("演武堂 · 小组件".tr)
+            .tr_setText("演武堂 · 小组件".tr)
             .byTextColor(JobsCor.white)
             .byFont(JobsFont.systemFont(ofSize: 20,
                                         weight: .bold))
@@ -181,8 +184,7 @@ final class JobsWidgetDemoVC: BaseVC {
 
     private lazy var increaseButton: UIButton = {
         UIButton.sys()
-            .byTitle("计数 +1".tr,
-                     for: .normal)
+            .tr_setTitle("计数 +1".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
@@ -241,7 +243,7 @@ final class JobsWidgetDemoVC: BaseVC {
     private lazy var footnoteLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("已接入真实 Widget Extension 与 App Group。真机运行宿主 App 一次后：回到系统桌面 → 长按空白处 → 点击“+” 或“添加小组件” → 搜索“SwiftDemo”（进入后显示“演武堂小组件”） → 选择尺寸并添加。\n\n本页“计数 +1”和“刷新时间线”会重载桌面 Widget；iOS 不允许 App 直接弹出系统小组件库。".tr)
+            .tr_setText("已接入真实 Widget Extension 与 App Group。真机运行宿主 App 一次后：回到系统桌面 → 长按空白处 → 点击“+” 或“添加小组件” → 搜索“SwiftDemo”（进入后显示“演武堂小组件”） → 选择尺寸并添加。\n\n本页“计数 +1”和“刷新时间线”会重载桌面 Widget；iOS 不允许 App 直接弹出系统小组件库。".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .regular))
@@ -310,7 +312,7 @@ private extension JobsWidgetDemoVC {
     private func refreshPreview(status: String) {
         let time = currentTimeText()
         previewTimeLabel.byText(time)
-        previewCounterLabel.byText("今日进度 \(counter) / 12".tr)
+        previewCounterLabel.byText("今日进度 %d / 12".tr(counter))
         previewDescriptionLabel.byText(widgetFamily.summary)
         timelineLabel.byText("\(status) · \(time)")
     }

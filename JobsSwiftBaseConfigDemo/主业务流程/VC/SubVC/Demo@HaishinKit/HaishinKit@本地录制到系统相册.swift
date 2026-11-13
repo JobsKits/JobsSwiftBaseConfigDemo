@@ -10,7 +10,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import AVFoundation
 import Photos
@@ -55,7 +58,7 @@ final class HKLocalRecordVC: BaseVC {
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextAlignment(.center)
-            .byText("准备就绪".tr)
+            .tr_setText("准备就绪".tr)
             .byAddTo(view) { [unowned self] make in
                 make.left.right.equalToSuperview().inset(16)
                 make.bottom.equalTo(recordButtonOuterRingView.snp.top).offset(-12)
@@ -79,10 +82,8 @@ final class HKLocalRecordVC: BaseVC {
     /// 开始/停止录制按钮
     private lazy var recordButton: UIButton = {
         UIButton.sys()
-            .byTitle("开始录制".tr,
-                     for: .normal)
-            .byTitle("停止录制".tr,
-                     for: .selected)
+            .tr_setTitle("开始录制".tr, for: .normal)
+            .tr_setTitle("停止录制".tr, for: .selected)
             .byTitleColor(JobsCor.clear,
                           for: .normal)
             .byTitleColor(JobsCor.clear,

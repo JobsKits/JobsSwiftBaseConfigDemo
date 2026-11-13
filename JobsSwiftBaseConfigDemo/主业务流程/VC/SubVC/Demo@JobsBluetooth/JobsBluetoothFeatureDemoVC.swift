@@ -19,6 +19,7 @@ import JobsScale
 import JobsSwiftBaseDefines
 import JobsSwiftDSL
 import SnapKit
+import Jobsl10n
 
 /// 单项蓝牙能力的独立演示页，页面内直接展示执行状态和数据，不再依赖控制台。
 final class JobsBluetoothFeatureDemoVC: BaseVC {
@@ -68,7 +69,7 @@ final class JobsBluetoothFeatureDemoVC: BaseVC {
     private lazy var descriptionLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("当前演示：\(featureTitle)\n默认启用 Mock Transport，可在模拟器直接验证点击链路和数据回调。")
+            .byText("当前演示：%@\n默认启用 Mock Transport，可在模拟器直接验证点击链路和数据回调。".tr(featureTitle.tr))
             .byAccessibilityIdentifier("jobs.bluetooth.description")
             .byFont(JobsFont.systemFont(ofSize: 15))
             .byNumberOfLines(0)
@@ -80,7 +81,7 @@ final class JobsBluetoothFeatureDemoVC: BaseVC {
     }()
     private lazy var executeButton: UIButton = {
         UIButton.sys()
-            .byTitle("执行 \(featureTitle)")
+            .byTitle("执行 %@".tr(featureTitle.tr))
             .byTitleFont(JobsFont.boldSystemFont(ofSize: 16))
             .byTitleColor(JobsCor.white)
             .byBackgroundColor(JobsCor.systemBlue)
@@ -129,6 +130,20 @@ final class JobsBluetoothFeatureDemoVC: BaseVC {
         descriptionLabel.byVisible(true)
         executeButton.byVisible(true)
         logTextView.byVisible(true)
+        TRBind.bind(descriptionLabel,
+                    key: "当前演示：%@\n默认启用 Mock Transport，可在模拟器直接验证点击链路和数据回调。") { [weak self] target, format in
+            guard let self else {
+                return
+            }
+            target.byText(String(format: format, self.featureTitle.tr))
+        }
+        TRBind.bind(executeButton,
+                    key: "执行 %@") { [weak self] target, format in
+            guard let self else {
+                return
+            }
+            target.byTitle(String(format: format, self.featureTitle.tr), for: .normal)
+        }
         appendLog("详情页已进入，点击蓝色按钮开始演示。")
     }
 

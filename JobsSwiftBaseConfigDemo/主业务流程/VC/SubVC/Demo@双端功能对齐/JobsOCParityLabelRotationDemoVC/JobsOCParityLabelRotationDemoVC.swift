@@ -9,6 +9,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsByUIKit
@@ -36,7 +38,7 @@ final class JobsLabelRotationDemoVC: BaseVC {
     private lazy var rotatingLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("输入的内容".tr)
+            .tr_setText("输入的内容".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 22))
             .byTextColor(JobsCor.systemBlue)
             .byTextAlignment(.center)
@@ -53,7 +55,7 @@ final class JobsLabelRotationDemoVC: BaseVC {
     private lazy var directionLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("文字方向：朝左".tr)
+            .tr_setText("文字方向：朝左".tr)
             .byFont(JobsFont.systemFont(ofSize: 13))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)

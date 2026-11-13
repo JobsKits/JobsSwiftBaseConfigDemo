@@ -134,8 +134,9 @@ private extension JobsAppDoorVC {
         customerServiceButton.snp.makeConstraints { make in
             make.top.equalTo(panelView.snp.bottom).offset(12)
             make.centerX.equalTo(view.safeAreaLayoutGuide)
-            make.width.equalTo(118)
-            make.height.equalTo(38)
+            make.width.equalTo(customerServiceWidth).priority(.high)
+            make.width.lessThanOrEqualTo(view.safeAreaLayoutGuide).offset(-40)
+            make.height.equalTo(44)
         }
         panelView.byVisible(true)
         logoView.byVisible(true)

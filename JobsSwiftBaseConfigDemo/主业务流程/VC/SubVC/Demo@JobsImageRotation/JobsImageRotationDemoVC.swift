@@ -24,7 +24,7 @@ final class JobsImageRotationDemoVC: BaseVC {
     private lazy var descriptionLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("无刻度、固定时针，仅分针绕圆心旋转；方向与速度由外界传入。".tr)
+            .tr_setText("无刻度、固定时针，仅分针绕圆心旋转；方向与速度由外界传入。".tr)
             .byFont(JobsFont.systemFont(ofSize: 15))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)
@@ -58,7 +58,7 @@ final class JobsImageRotationDemoVC: BaseVC {
     private lazy var clockwiseLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("默认顺时针 · 6 秒/周".tr)
+            .tr_setText("默认顺时针 · 6 秒/周".tr)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
@@ -72,7 +72,7 @@ final class JobsImageRotationDemoVC: BaseVC {
     private lazy var counterclockwiseLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("逆时针 · 3 秒/周".tr)
+            .tr_setText("逆时针 · 3 秒/周".tr)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
@@ -132,7 +132,7 @@ final class JobsImageRotationDemoVC: BaseVC {
     private lazy var statusLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("等待开始".tr)
+            .tr_setText("等待开始".tr)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)

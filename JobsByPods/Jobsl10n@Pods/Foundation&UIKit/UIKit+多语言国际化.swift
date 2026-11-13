@@ -46,6 +46,14 @@ extension UIButton {
                     slot: "title.\(state.rawValue)") { btn, text in
             btn.setTitle(text,
                          for: state)
+            // 配置按钮显示 configuration.title，单改 legacy title 会保留切换前的语言。
+            if #available(iOS 15.0, tvOS 15.0, *),
+               var configuration = btn.configuration,
+               state == .normal || (state == .selected && btn.isSelected) {
+                configuration.title = text
+                btn.configuration = configuration
+                btn.setNeedsUpdateConfiguration()
+            }
         }
         return self
     }

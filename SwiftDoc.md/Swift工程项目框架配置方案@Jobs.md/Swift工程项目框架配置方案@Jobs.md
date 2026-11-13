@@ -3541,6 +3541,7 @@ DemoDetailVC().onResult { name in
 
 - `JobsNetworking/Core` 承担请求模型、RequestConfig、Agent、上传、下载、缓存和统一错误；`AF5` 是兼容适配，`Async` 提供 iOS 13+ async/await，`PromiseKit` 按需接入。
 - 当前宿主同时选择 `JobsNetworking/Async` 与 `JobsNetworking/AF5`。业务页只描述接口和展示状态，不自行拼接 BaseURL、请求头、Token、重试和缓存键。
+- 短期设备采集等敏感会话在 `JobsRequestConfig` 中设 `usesEphemeralSession: true`；默认 `false` 保留既有行为。每个 agent 使用独立内存 Cookie，同一配对流程必须复用同一 agent；系统 URLCache 与凭据存储关闭。业务仍需显式关闭日志、observer 中的敏感记录及 `cachePolicy`，并可传 `diskCache: JobsMemoryCache()` 避免创建磁盘业务缓存。设备采集使用绝对 HTTPS URL，防止 Demo 全局 BaseURL 切换改变凭据接收方，流程见根 README 的设备信息入口。
 - BaseURL 至少按 Debug、Test、Release 或真实业务环境配置；切换入口、持久化、日志脱敏和发布默认值必须可审计。
 - 多入口探活与动态路由是可选容灾能力，不是所有 App 的默认前提。需要时按以下顺序处理：
 

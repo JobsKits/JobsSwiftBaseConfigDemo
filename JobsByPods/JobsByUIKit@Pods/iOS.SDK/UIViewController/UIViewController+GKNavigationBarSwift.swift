@@ -534,6 +534,7 @@ extension UIViewController {
         let darkModeEnabled = JobsThemeCenter.shared.isDarkMode
         jobsAddDemoActionMenuRow(to: menuContainer,
                                  title: darkModeEnabled ? "切换为白天".tr : "切换为黑夜".tr,
+                                 identifier: "jobs.demo.menu.theme",
                                  image: JobsThemeCenter.shared.resolvedImage(.themeToggle)?
                                      .withRenderingMode(.alwaysTemplate),
                                  index: 0,
@@ -548,6 +549,7 @@ extension UIViewController {
             jobsAddDemoActionMenuRow(to: menuContainer,
                                      title: jobsDemoActionTitle(for: sourceButton,
                                                                 index: index),
+                                     identifier: "jobs.demo.menu.\(sourceButton.accessibilityIdentifier ?? String(index))",
                                      image: sourceButton.jobs_foregroundImage(
                     for: sourceButton.jobs_effectiveState
                 ),
@@ -581,11 +583,13 @@ extension UIViewController {
     /// 菜单行复用原按钮图标，点按后先收起列表再执行对应动作。
     private func jobsAddDemoActionMenuRow(to menuContainer: UIView,
                                           title: String,
+                                          identifier: String,
                                           image: UIImage?,
                                           index: Int,
                                           rowCount: Int,
                                           action: @escaping () -> Void) {
         let rowButton = UIButton.sys()
+            .byAccessibilityIdentifier(identifier)
             .byTitle(title,
                      for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,

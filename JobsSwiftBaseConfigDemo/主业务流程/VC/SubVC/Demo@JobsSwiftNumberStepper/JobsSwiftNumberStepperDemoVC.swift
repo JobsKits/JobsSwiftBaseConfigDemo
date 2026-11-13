@@ -9,6 +9,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import GKNavigationBarSwift
@@ -59,7 +61,7 @@ final class JobsSwiftNumberStepperDemoVC: BaseVC {
     private lazy var introLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("减号 + 整数输入框 + 加号。上下限均为可选配置；到达已设置的边界时，对应按钮会自动禁用并置灰。".tr)
+            .tr_setText("减号 + 整数输入框 + 加号。上下限均为可选配置；到达已设置的边界时，对应按钮会自动禁用并置灰。".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byNumberOfLines(0)

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Jobsl10n
 import WebKit
 import JobsInheritance
 import JobsByUIKit
@@ -17,7 +18,7 @@ import SnapKit
 class JobsMicroAppLabBaseVC: BaseVC {
 
     var lessonTitle: String {
-        return "微应用学习"
+        return "微应用工程学习".tr
     }
     var lessonSummary: String {
         return ""
@@ -26,6 +27,7 @@ class JobsMicroAppLabBaseVC: BaseVC {
         return []
     }
     private var history: [String] = []
+    private let localizedWebViews = NSHashTable<WKWebView>.weakObjects()
     private var stageHeightConstraint: Constraint?
     private var stageHeight: CGFloat = 220
     private weak var sizingWebView: WKWebView?
@@ -63,7 +65,7 @@ class JobsMicroAppLabBaseVC: BaseVC {
     private lazy var summaryLabel: UILabel = {
         UILabel.jobsMake { label in
             label
-                .byText(lessonSummary)
+                .tr_setText(lessonSummary.tr)
                 .byFont(JobsFont.systemFont(ofSize: 15))
                 .byTextColor(JobsCor.label)
                 .byNumberOfLines(0)
@@ -99,9 +101,13 @@ class JobsMicroAppLabBaseVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        jobsSetupGKNav(title: lessonTitle)
+        jobsSetupGKNav(title: lessonTitle.tr)
         bindTheme()
         assembleLesson()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(lessonLanguageDidChange),
+                                               name: .JobsLanguageDidChange,
+                                               object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(contentSizeCategoryDidChange),
                                                name: UIContentSizeCategory.didChangeNotification,
@@ -152,7 +158,7 @@ class JobsMicroAppLabBaseVC: BaseVC {
     }
 
     func record(_ message: String) {
-        history.insert(message,
+        history.insert(message.tr,
                        at: 0)
         history = Array(history.prefix(24))
         statusView.byText(history.joined(separator: "\n\n"))
@@ -165,7 +171,7 @@ class JobsMicroAppLabBaseVC: BaseVC {
                       action: @escaping () -> Void) -> UIButton {
         let button = UIButton.sys()
             .byConfiguration(UIButton.Configuration.gray())
-            .byTitle(title)
+            .tr_setTitle(title.tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
                                              weight: .semibold))
             .byNumberOfLines(0)
@@ -206,15 +212,93 @@ class JobsMicroAppLabBaseVC: BaseVC {
                             fittingContent: Bool = false) {
         guard let url = Self.resourceURL(name),
               FileManager.default.fileExists(atPath: url.path) else {
-            record("资源缺失：\(name)。请重新构建主 App 资源。")
+            record(String(format: "资源缺失：%@。请重新构建主 App 资源。".tr, name))
             return
         }
         if fittingContent {
             configureLocalWebSizing(webView,
                                     entry: url)
         }
+        prepareLocalWebLanguage(webView)
         webView.byLoadFileURL(url,
                               allowingReadAccessTo: url.deletingLastPathComponent())
+    }
+
+    private static let localWebTextKeys = [
+        "Jobs 教学微应用",
+        "教学微应用 · v2",
+        "网页渲染 UI，Swift 提供白名单能力。",
+        "微应用草稿",
+        "保存草稿",
+        "等待宿主调用",
+        "需要 Jobs iOS 宿主",
+        "独立会话",
+        "独立账号容器",
+        "每个账号使用自己的 WKWebsiteDataStore。请通过原生按钮写入/读取。",
+        "当前 Web Store 暂无草稿",
+        "当前账号 %@",
+        "账号 %@ 的 Web 草稿 @ %@",
+        "Web 草稿写入失败：%@",
+        "暂无 Web 草稿",
+        "此来源不允许 localStorage：%@",
+        "Jobs 离线学习包",
+        "Jobs 离线学习包 · v2",
+        "这段文字与按钮来自本地 HTML。Native bundle 模式断网可用；部署到 HTTPS/localhost 后才尝试注册真正的 Service Worker。",
+        "离线交互 +1",
+        "正在检查运行来源…",
+        "Native bundled 离线包\nfile:// 不注册 Service Worker",
+        "当前浏览器/容器未开放 Service Worker API",
+        "SW 已注册：%@",
+        "已受 SW 控制，可断网刷新",
+        "首次安装完成，等待 controllerchange 或再次刷新",
+        "SW controller 已生效，可断网普通刷新验证缓存",
+        "SW 注册失败：%@",
+        "来自微应用的草稿",
+    ]
+
+    private var localWebPayload: String {
+        let bundle = LanguageManager.shared.localizedBundle
+        let strings = Dictionary(uniqueKeysWithValues: Self.localWebTextKeys.map { key in
+            (key, bundle.localizedString(forKey: key, value: key, table: nil))
+        })
+        let payload: [String: Any] = ["language": LanguageManager.shared.currentLanguageCode,
+                                     "strings": strings]
+        guard let data = try? JSONSerialization.data(withJSONObject: payload),
+              let json = String(data: data, encoding: .utf8) else {
+            return "{}"
+        }
+        return json
+    }
+
+    private func prepareLocalWebLanguage(_ webView: WKWebView) {
+        localizedWebViews.add(webView)
+        let marker = "/* JobsLocalLessonLanguage */"
+        let controller = webView.configuration.userContentController
+        let otherScripts = controller.userScripts.filter { !$0.source.hasPrefix(marker) }
+        controller.removeAllUserScripts()
+        otherScripts.forEach { controller.addUserScript($0) }
+        let script = marker + "if(location.protocol==='file:' && /\\/JobsMicroAppLab\\.bundle\\/(microapp|session|index)\\.html$/.test(location.pathname)){window.jobsWebLocalization=\(localWebPayload);}"
+        controller.byAddUserScript(source: script,
+                                   injectionTime: .atDocumentStart,
+                                   forMainFrameOnly: true)
+    }
+
+    private func applyLocalWebLanguage(_ webView: WKWebView) {
+        guard let current = webView.url?.standardizedFileURL,
+              ["microapp.html", "session.html", "index.html"].contains(where: {
+                  Self.resourceURL($0)?.standardizedFileURL == current
+              }) else {
+            return
+        }
+        webView.jobsEval("window.jobsSetLocalization?.(\(localWebPayload))") { [weak self] _, _ in
+            self?.refreshLocalWebHeight()
+        }
+    }
+
+    @objc private func lessonLanguageDidChange() {
+        jobsSetupGKNav(title: lessonTitle.tr)
+        summaryLabel.tr_setText(lessonSummary.tr)
+        localizedWebViews.allObjects.forEach { applyLocalWebLanguage($0) }
     }
 
     @objc private func contentSizeCategoryDidChange() {
@@ -226,6 +310,7 @@ class JobsMicroAppLabBaseVC: BaseVC {
 
     func applyWebTheme(_ webView: WKWebView,
                        isDark: Bool) {
+        applyLocalWebLanguage(webView)
         webView.jobsEval("document.documentElement.dataset.theme='\(isDark ? "dark" : "light")'") { [weak self] _, _ in
             self?.refreshLocalWebHeight()
         }

@@ -13,6 +13,9 @@ import UIKit
 #endif
 
 import UserNotifications
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
 import JobsSwiftDSL
 import Jobsl10n
 import JobsScale
@@ -663,6 +666,18 @@ extension AppDelegate {
         IQKeyboardToolbarManager.shared.isEnabled = false
     }
 
+    @objc private func syncWidgetLanguage() {
+        let bundle = LanguageManager.shared.localizedBundle
+        let strings = Dictionary(uniqueKeysWithValues: JobsWidgetSharedStore.localizationKeys.map { key in
+            (key, bundle.localizedString(forKey: key, value: key, table: nil))
+        })
+        JobsWidgetSharedStore.saveLocalization(languageCode: LanguageManager.shared.currentLanguageCode,
+                                               strings: strings)
+        #if canImport(WidgetKit)
+        WidgetCenter.shared.reloadTimelines(ofKind: JobsWidgetSharedStore.widgetKind)
+        #endif
+    }
+
     func 多语言化() {
         TRLang.bundleProvider = {
             LanguageManager.shared.localizedBundle
@@ -670,5 +685,11 @@ extension AppDelegate {
         TRLang.localeCodeProvider = {
             LanguageManager.shared.currentLanguageCode
         }
+        NotificationCenter.default.removeObserver(self, name: .JobsLanguageDidChange, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(syncWidgetLanguage),
+                                               name: .JobsLanguageDidChange,
+                                               object: nil)
+        syncWidgetLanguage()
     }
 }

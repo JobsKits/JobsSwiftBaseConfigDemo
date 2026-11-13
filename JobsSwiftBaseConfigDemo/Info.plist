@@ -62,7 +62,7 @@
 
     <!-- 相机权限：用于拍照、扫码、视频录制等需要调用摄像头的场景 -->
     <key>NSCameraUsageDescription</key>
-    <string>NSCameraUsageDescription</string>
+    <string>Camera access supports ARKit surface detection and augmented reality, photos, and video.</string>
 
     <!-- 麦克风权限：用于录音、视频通话、语音消息等需要采集声音的场景 -->
 	<key>NSMicrophoneUsageDescription</key>

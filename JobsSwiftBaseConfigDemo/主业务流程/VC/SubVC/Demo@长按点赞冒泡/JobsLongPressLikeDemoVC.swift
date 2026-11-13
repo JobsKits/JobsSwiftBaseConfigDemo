@@ -9,6 +9,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsInheritance
@@ -26,7 +28,7 @@ final class JobsLongPressLikeDemoVC: BaseVC {
     private lazy var hintLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("短按切换点赞状态；长按图标立即变红，持续冒泡并伴随震动与声音反馈".tr)
+            .tr_setText("短按切换点赞状态；长按图标立即变红，持续冒泡并伴随震动与声音反馈".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 15))
             .byTextAlignment(.center)

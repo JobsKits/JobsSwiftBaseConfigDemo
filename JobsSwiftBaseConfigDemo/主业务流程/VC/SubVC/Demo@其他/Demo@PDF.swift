@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import PDFKit
 import JobsToast
 import JobsByUIKit
@@ -33,8 +35,7 @@ final class PDFDemoVC: BaseVC {
 
     private lazy var previousPageButton: UIButton = {
         UIButton.sys()
-            .byTitle("上一页".tr,
-                     for: .normal)
+            .tr_setTitle("上一页".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 8,
                                              weight: .medium))
             .byImage("chevron.up.circle".sysImg,
@@ -52,8 +53,7 @@ final class PDFDemoVC: BaseVC {
 
     private lazy var nextPageButton: UIButton = {
         UIButton.sys()
-            .byTitle("下一页".tr,
-                     for: .normal)
+            .tr_setTitle("下一页".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 8,
                                              weight: .medium))
             .byImage("chevron.down.circle".sysImg,
@@ -71,8 +71,7 @@ final class PDFDemoVC: BaseVC {
 
     private lazy var shareButton: UIButton = {
         UIButton.sys()
-            .byTitle("分享".tr,
-                     for: .normal)
+            .tr_setTitle("分享".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 8,
                                              weight: .medium))
             .byImage("globe".sysImg,

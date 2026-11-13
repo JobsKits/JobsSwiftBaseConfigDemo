@@ -96,7 +96,7 @@ final class JobsSwiftCalendarDemoVC: BaseVC {
     private lazy var selectedLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("请选择日期".tr)
+            .tr_setText("请选择日期".tr)
             .byFont(JobsFont.systemFont(ofSize: 15,
                                         weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)

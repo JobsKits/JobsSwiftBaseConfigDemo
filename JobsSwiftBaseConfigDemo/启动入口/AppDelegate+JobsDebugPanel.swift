@@ -19,15 +19,15 @@ extension AppDelegate {
             .byEnvironments([
                 JobsDebugEnvironment()
                     .byIdentifier("local")
-                    .byTitle("本地 Mock")
+                    .byTitle("本地 Mock".tr)
                     .byBaseURL("http://127.0.0.1:18080"),
                 JobsDebugEnvironment()
                     .byIdentifier("httpbin")
-                    .byTitle("公共测试")
+                    .byTitle("公共测试".tr)
                     .byBaseURL("https://httpbin.org"),
                 JobsDebugEnvironment()
                     .byIdentifier("postman")
-                    .byTitle("联调测试")
+                    .byTitle("联调测试".tr)
                     .byBaseURL("https://postman-echo.com")
             ])
             .byEnvironmentDidChange { environment in
@@ -35,14 +35,14 @@ extension AppDelegate {
             }
             .byAddAction(
             JobsDebugAction()
-                .byTitle("调试面板使用示例")
+                .byTitle("调试面板使用示例".tr)
                 .byAction { source in
                 source.navigationController?.pushViewControllerByAnimated(JobsDebugPanelDemoVC())
             }
         )
             .byAddAction(
             JobsDebugAction()
-                .byTitle("查看当前环境")
+                .byTitle("查看当前环境".tr)
                 .byAction { source in
                 let environment = JobsDebugPanel.shared.selectedEnvironment
                 let message = "\(environment?.title ?? "未配置")\n\(environment?.urlString ?? "")"

@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
@@ -59,7 +61,7 @@ final class LunarDemoVC: BaseVC {
             .jobsMake { _ in }
             .byDatePickerMode(.dateAndTime)
             .byPreferredDatePickerStyle(.inline)
-            .byLocale(Locale(identifier: "zh-Hans"))
+            .byLocale(Locale(identifier: LanguageManager.shared.currentLanguageCode))
             .onJobsChange { [weak self] (_: UIDatePicker) in
                 self?.onDateChanged()
             }
@@ -75,8 +77,7 @@ final class LunarDemoVC: BaseVC {
             .byNoSectionHeaderTopPadding()
             .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据".tr,
-                             for: .normal)
+                    .tr_setTitle("暂无数据".tr, for: .normal)
                     .bySubTitle("点我填充示例数据".tr,
                                 for: .normal)
                     .byImage("tray".sysImg,
@@ -144,6 +145,10 @@ final class LunarDemoVC: BaseVC {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(appLanguageDidChange),
+                                               name: .JobsLanguageDidChange,
+                                               object: nil)
         view.byBackgroundColor(JobsCor.systemBackground)
         jobsSetupGKNav(
             title: "日历".tr
@@ -201,6 +206,12 @@ final class LunarDemoVC: BaseVC {
         }
     }
     // MARK: - Actions
+    @objc private func appLanguageDidChange() {
+        datePicker.byLocale(Locale(identifier: LanguageManager.shared.currentLanguageCode))
+        tableView.byReloadData()
+        recalcHeaderIfNeeded()
+    }
+
     @objc private func onDateChanged() {
         buildInteractiveRows(for: datePicker.date)
         tableView.byReloadSections(IndexSet(integer: Section.interactive.rawValue),

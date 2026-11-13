@@ -464,37 +464,30 @@ final class RootListSettingsVC: BaseVC {
         case deinitTips
     }
 
-    private enum LanguageSettingItem: Int,
+    private enum LanguageSettingItem: String,
                                       CaseIterable {
 
-        case chinese
-        case english
-        case tagalog
+        case simplifiedChinese = "zh-Hans"
+        case traditionalChinese = "zh-Hant"
+        case tibetan = "bo"
+        case english = "en"
+        case japanese = "ja"
+        case french = "fr"
+        case spanish = "es"
+        case german = "de"
+        case russian = "ru"
+        case korean = "ko"
+        case tagalog = "tl"
+
         var languageCode: String {
-            switch self {
-            /// 处理 .chinese 分支
-            case .chinese:
-                return "zh-Hans"
-            /// 处理 .english 分支
-            case .english:
-                return "en"
-            /// 处理 .tagalog 分支
-            case .tagalog:
-                return "tl"
-            }
+            return rawValue
         }
+
         var title: String {
-            switch self {
-            /// 处理 .chinese 分支
-            case .chinese:
-                return "中文".tr
-            /// 处理 .english 分支
-            case .english:
-                return "英文".tr
-            /// 处理 .tagalog 分支
-            case .tagalog:
-                return "他加禄语".tr
-            }
+            return ["zh-Hans": "简体中文", "zh-Hant": "繁體中文", "bo": "བོད་ཡིག",
+                    "en": "English", "ja": "日本語", "fr": "Français",
+                    "es": "Español", "de": "Deutsch", "ru": "Русский",
+                    "ko": "한국어", "tl": "Tagalog"][rawValue] ?? rawValue
         }
     }
 
@@ -510,8 +503,9 @@ final class RootListSettingsVC: BaseVC {
             .byDelegate(self)
             .byRegisterCell(UITableViewCell.self)
             .bySeparatorStyle(.singleLine)
-            .byRowHeight(56)
-            .byEstimatedRowHeight(0)
+            .byAccessibilityIdentifier("jobs.settings.table")
+            .byRowHeight(UITableView.automaticDimension)
+            .byEstimatedRowHeight(64)
             .byEstimatedSectionHeaderHeight(0)
             .byEstimatedSectionFooterHeight(0)
             .bySectionHeaderTopPadding(0)
@@ -750,7 +744,7 @@ extension RootListSettingsVC: UITableViewDataSource,
 
     func tableView(_ tableView: UITableView,
                    heightForRowAt indexPath: IndexPath) -> CGFloat {
-        56
+        UITableView.automaticDimension
     }
 
     func tableView(_ tableView: UITableView,
@@ -766,9 +760,9 @@ extension RootListSettingsVC: UITableViewDataSource,
             .byTitleCor(RootListPreferences.primaryTextColor)
             .byTextLabel {
                 $0
-                    .byNumberOfLines(1)
-                    .byAdjustsFontSizeToFitWidth(settingSection != .general && indexPath.row == 0)
-                    .byMinimumScaleFactor(settingSection != .general && indexPath.row == 0 ? 0.72 : 1)
+                    .byNumberOfLines(0)
+                    .byLineBreakMode(.byWordWrapping)
+                    .byDynamicFont(JobsFont.systemFont(ofSize: 16), style: .body)
             }
             .byBackgroundColor(RootListPreferences.cardBackgroundColor)
             .byContentView {
@@ -785,6 +779,7 @@ extension RootListSettingsVC: UITableViewDataSource,
         case .general:
             let item = GeneralSettingItem.allCases[indexPath.row]
             cell
+                .byAccessibilityIdentifier("jobs.settings.general.\(item.rawValue)")
                 .byText(generalTitle(for: item))
                 .byAccessoryType(.disclosureIndicator)
         /// 处理 .splashContent 分支
@@ -804,11 +799,13 @@ extension RootListSettingsVC: UITableViewDataSource,
         case .language:
             if indexPath.row == 0 {
                 cell
+                    .byAccessibilityIdentifier("jobs.settings.language")
                     .byText(expandableSectionTitle(for: settingSection))
                     .byAccessoryView(expansionAccessoryView(for: settingSection))
             } else {
                 let item = LanguageSettingItem.allCases[indexPath.row - 1]
                 cell
+                    .byAccessibilityIdentifier("jobs.settings.language.\(item.languageCode)")
                     .byText(item.title)
                     .byAccessoryType(item.languageCode == currentLanguageCode() ? .checkmark : .none)
                     .byIndentationLevel(1)

@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsSwiftBaseDefines
@@ -28,7 +30,7 @@ final class KeyboardDemoVC: BaseVC {
     private lazy var textField: UITextField = {
         UITextField
             .jobsMake { _ in }
-            .byPlaceholder("请输入文字，弹出键盘试试".tr)
+            .tr_setPlaceholder("请输入文字，弹出键盘试试".tr)
             .byBorderStyle(.roundedRect)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom).offset(80.h)
@@ -51,7 +53,7 @@ final class KeyboardDemoVC: BaseVC {
     private lazy var label: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("我是底部栏，会跟随键盘上移".tr)
+            .tr_setText("我是底部栏，会跟随键盘上移".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
             .byAddTo(bottomBar) { make in

@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import Combine
 import JobsByUIKit
 import JobsSwiftDSL
@@ -491,8 +493,7 @@ final class AFDemoVC: BaseVC {
 
     private lazy var btnClear: UIButton = {
         UIButton.sys()
-            .byTitle("清空输出".tr,
-                     for: .normal)
+            .tr_setTitle("清空输出".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byBackgroundColor(JobsCor.systemRed)
@@ -515,7 +516,7 @@ final class AFDemoVC: BaseVC {
 
     private func clear() {
         DispatchQueue.main.async { [weak self] in
-            self?.resultView.byText("")
+            self?.resultView.byText("".tr)
         }
     }
 

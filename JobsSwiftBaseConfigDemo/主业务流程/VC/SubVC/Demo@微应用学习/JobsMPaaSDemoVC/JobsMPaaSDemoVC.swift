@@ -6,6 +6,8 @@
 //
 
 import UIKit
+
+import Jobsl10n
 import JobsByUIKit
 import JobsSwiftBaseDefines
 import SnapKit
@@ -15,7 +17,7 @@ import SnapKit
 final class JobsMPaaSDemoVC: JobsMicroAppLabBaseVC {
 
     override var lessonTitle: String {
-        return "mPaaS 平台适配"
+        return "mPaaS / 平台适配教学"
     }
     override var lessonSummary: String {
         "本地教学适配器，未接商用 mPaaS SDK。先尝试打开未登录的应用，再登录、查询目录并进入同一个微应用容器。"
@@ -28,7 +30,7 @@ final class JobsMPaaSDemoVC: JobsMicroAppLabBaseVC {
     private lazy var catalogLabel: UILabel = {
         UILabel.jobsMake { label in
             label
-                .byText("宿主 App\n↓ JobsMiniPlatformAdapter\n鉴权 / 注册目录 / 离线包 / 路由\n↓\nWKWebView + 白名单 Bridge")
+                .tr_setText("宿主 App\n↓ JobsMiniPlatformAdapter\n鉴权 / 注册目录 / 离线包 / 路由\n↓\nWKWebView + 白名单 Bridge".tr)
                 .byNumberOfLines(0)
                 .byTextColor(JobsCor.label)
                 .byFont(JobsFont.systemFont(ofSize: 15))
@@ -44,12 +46,12 @@ final class JobsMPaaSDemoVC: JobsMicroAppLabBaseVC {
         }
         if self.adapter.currentUser == nil {
             self.adapter.login()
-            self.loginButton.byTitle("退出教学账号")
-            self.record("教学账号登录成功；仅创建本地演示身份。")
+            self.loginButton.tr_setTitle("退出教学账号".tr, for: .normal)
+            self.record("教学账号登录成功；仅创建本地演示身份。".tr)
         } else {
             self.adapter.logout()
-            self.loginButton.byTitle("登录教学账号")
-            self.record("教学账号已退出，后续打开需要重新登录。")
+            self.loginButton.tr_setTitle("登录教学账号".tr, for: .normal)
+            self.record("教学账号已退出，后续打开需要重新登录。".tr)
         }
     }
     private lazy var catalogButton: UIButton = lessonButton("读取注册目录与本地包",
@@ -59,7 +61,7 @@ final class JobsMPaaSDemoVC: JobsMicroAppLabBaseVC {
         }
         do {
             self.catalogLabel.byText(try self.adapter.packageDescription())
-            self.record("目录加载成功：1 个已注册应用；资源存在性已校验。")
+            self.record("目录加载成功：1 个已注册应用；资源存在性已校验。".tr)
         } catch {
             self.record(error.localizedDescription)
         }
@@ -76,13 +78,13 @@ final class JobsMPaaSDemoVC: JobsMicroAppLabBaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         catalogLabel.byVisible(true)
-        record("本地适配器已装配，当前未登录。")
+        record("本地适配器已装配，当前未登录。".tr)
     }
 
     private func openApplication(_ appID: String) {
         do {
             try adapter.validateOpen(appID: appID)
-            record("鉴权/目录/包检查通过，正在打开容器。")
+            record("鉴权/目录/包检查通过，正在打开容器。".tr)
             navigationController?.pushViewControllerByAnimated(JobsMicroApplicationDemoVC())
         } catch {
             record(error.localizedDescription)

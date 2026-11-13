@@ -11,12 +11,13 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsSwiftPatch
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
-import Jobsl10n
 import SnapKit
 import GKNavigationBarSwift
 
@@ -40,7 +41,7 @@ final class JobsSwiftPatchDemoVC: BaseVC {
     private lazy var titleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("Swift 热更新 Demo".tr)
+            .tr_setText("Swift 热更新 Demo".tr)
             .byFont(JobsFont.systemFont(ofSize: 24,
                                         weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -55,7 +56,7 @@ final class JobsSwiftPatchDemoVC: BaseVC {
     private lazy var subtitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("点击按钮后模拟下载进度；进度结束后读取本地预置补丁数据，通过 Runtime 临时改变当前页面 UI。".tr)
+            .tr_setText("点击按钮后模拟下载进度；进度结束后读取本地预置补丁数据，通过 Runtime 临时改变当前页面 UI。".tr)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -69,7 +70,7 @@ final class JobsSwiftPatchDemoVC: BaseVC {
     private lazy var statusLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("等待开始".tr)
+            .tr_setText("等待开始".tr)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .regular))
             .byTextColor(JobsCor.tertiaryLabel)
@@ -95,8 +96,7 @@ final class JobsSwiftPatchDemoVC: BaseVC {
 
     private lazy var hotRefreshButton: UIButton = {
         UIButton.sys()
-            .byTitle("开始热更新演示".tr,
-                     for: .normal)
+            .tr_setTitle("开始热更新演示".tr, for: .normal)
             .byTitleColor(JobsCor.systemBackground,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -238,8 +238,7 @@ private extension JobsSwiftPatchDemoVC {
             .byProgressTintColor(JobsCor.systemBlue)
             .byHidden(true)
         hotRefreshButton
-            .byTitle("开始热更新演示".tr,
-                     for: .normal)
+            .tr_setTitle("开始热更新演示".tr, for: .normal)
             .byEnabled(true)
     }
 

@@ -11,12 +11,13 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsSwiftCountryCodeCtrl
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftBaseDefines
-import Jobsl10n
 import SnapKit
 import GKNavigationBarSwift
 
@@ -27,8 +28,8 @@ final class JobsSwiftCountryCodeCtrlDemoVC: BaseVC {
     private lazy var countryCodeTextField: UITextField = {
         UITextField
             .jobsMake { _ in }
-            .byText("")
-            .byPlaceholder("请选择国家 / 地区代码".tr)
+            .byText("".tr)
+            .tr_setPlaceholder("请选择国家 / 地区代码".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .regular))
@@ -46,8 +47,7 @@ final class JobsSwiftCountryCodeCtrlDemoVC: BaseVC {
     private lazy var selectButton: UIButton = {
         UIButton.sys()
             .byAccessibilityIdentifier("jobs.country.open")
-            .byTitle("选择".tr,
-                     for: .normal)
+            .tr_setTitle("选择".tr, for: .normal)
             .byTitleColor(JobsCor.systemBackground,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 14,

@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsInheritance
@@ -49,7 +51,7 @@ final class JobsCountdownLayerDemoVC: BaseVC {
     private lazy var hintLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("点击按钮：开始 / 暂停 / 继续（完成后再点 = 重新开始）".tr)
+            .tr_setText("点击按钮：开始 / 暂停 / 继续（完成后再点 = 重新开始）".tr)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)
             .byNumberOfLines(0)

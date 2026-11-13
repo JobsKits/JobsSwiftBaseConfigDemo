@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
@@ -38,8 +40,7 @@ final class EmptyTableViewDemoVC: BaseVC {
             .byNoSectionHeaderTopPadding()
             .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据".tr,
-                             for: .normal)
+                    .tr_setTitle("暂无数据".tr, for: .normal)
                     .bySubTitle("点我填充示例数据".tr,
                                 for: .normal)
                     .byImage("tray".sysImg,
@@ -85,8 +86,7 @@ final class EmptyTableViewDemoVC: BaseVC {
         jobsSetupGKNav(title: "UITableView@空态刷新".tr,
                        rightButtons: [
                 UIButton.sys()
-                    .byTitle("空数据刷新".tr,
-                             for: .normal)
+                    .tr_setTitle("空数据刷新".tr, for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 8,
                                                      weight: .medium))
                 /// 按钮图片@图文关系
@@ -111,8 +111,7 @@ final class EmptyTableViewDemoVC: BaseVC {
                 make.size.equalTo(CGSize(width: 70, height: 44))
             }),
                 UIButton.sys()
-                    .byTitle("数据刷新".tr,
-                             for: .normal)
+                    .tr_setTitle("数据刷新".tr, for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 8,
                                                      weight: .medium))
                 /// 按钮图片@图文关系

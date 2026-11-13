@@ -88,7 +88,9 @@ final class JobsSwiftCommentCell: UITableViewCell {
                              config: config))
             .byHidden(metaLabel.text?.isEmpty ?? true)
         let showsReplyEntrance = config.showsReplyEntrance && !comment.children.isEmpty && depth == 0
-        replyButton.byHidden(!showsReplyEntrance)
+        replyButton
+            .byHidden(!showsReplyEntrance)
+            .byAccessibilityIdentifier(showsReplyEntrance ? "jobs.comment.reply.\(comment.messageID)" : nil)
         if showsReplyEntrance {
             replyButton.byTitle("查看 \(comment.children.count) 条回复")
         }
@@ -181,6 +183,9 @@ private extension JobsSwiftCommentCell {
         contentStack.addArrangedSubview(contentLabel)
         contentStack.addArrangedSubview(metaLabel)
         contentStack.addArrangedSubview(replyButton)
+        replyButton.snp.makeConstraints { make in
+            make.height.greaterThanOrEqualTo(44)
+        }
         verticalStack
             .byAxis(.horizontal)
             .byAlignment(.top)

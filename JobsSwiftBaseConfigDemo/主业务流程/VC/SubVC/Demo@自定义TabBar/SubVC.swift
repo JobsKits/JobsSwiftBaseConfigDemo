@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
@@ -52,10 +54,8 @@ final class FriendsVC: BaseVC {
     private lazy var exampleButton: UIButton = {
         UIButton.sys()
             .byAccessibilityIdentifier("jobs.friends.detail")
-            .byTitle("显示".tr,
-                     for: .normal)
-            .byTitle("隐藏".tr,
-                     for: .selected)
+            .tr_setTitle("显示".tr, for: .normal)
+            .tr_setTitle("隐藏".tr, for: .selected)
             .byTitleColor(JobsCor.systemBlue,
                           for: .normal)
             .byTitleColor(JobsCor.systemRed,

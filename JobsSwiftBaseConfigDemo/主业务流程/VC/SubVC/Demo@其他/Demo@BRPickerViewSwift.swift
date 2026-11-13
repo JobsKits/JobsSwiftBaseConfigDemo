@@ -10,7 +10,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import JobsInheritance
 import JobsSwiftBaseDefines
@@ -370,7 +373,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var secText: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("文本选择器（BRTextPickerView）".tr)
+            .tr_setText("文本选择器（BRTextPickerView）".tr)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)
@@ -386,7 +389,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var secSys: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("日期选择器（系统样式）".tr)
+            .tr_setText("日期选择器（系统样式）".tr)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)
@@ -402,7 +405,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var secCustom: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("日期选择器（自定义样式）".tr)
+            .tr_setText("日期选择器（自定义样式）".tr)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)
@@ -418,8 +421,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnSingle: UIButton = {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemBlue)
-            .byTitle("单列（学历）".tr,
-                     for: .normal)
+            .tr_setTitle("单列（学历）".tr, for: .normal)
             .byTitleColor(JobsCor.systemBackground,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -447,8 +449,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnMulti: UIButton = {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemBlue)
-            .byTitle("多列（尺码/颜色）".tr,
-                     for: .normal)
+            .tr_setTitle("多列（尺码/颜色）".tr, for: .normal)
             .byTitleColor(JobsCor.systemBackground,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -476,8 +477,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnCascade: UIButton = {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemBlue)
-            .byTitle("三级联动（省/市/区）".tr,
-                     for: .normal)
+            .tr_setTitle("三级联动（省/市/区）".tr, for: .normal)
             .byTitleColor(JobsCor.systemBackground,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -505,8 +505,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnSysDate: UIButton = {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemIndigo)
-            .byTitle("系统：Date（年月日）".tr,
-                     for: .normal)
+            .tr_setTitle("系统：Date（年月日）".tr, for: .normal)
             .byTitleColor(JobsCor.systemBackground,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -534,8 +533,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnSysDateTime: UIButton = {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemIndigo)
-            .byTitle("系统：Date & Time".tr,
-                     for: .normal)
+            .tr_setTitle("系统：Date & Time".tr, for: .normal)
             .byTitleColor(JobsCor.systemBackground,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -563,8 +561,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnSysTime: UIButton = {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemIndigo)
-            .byTitle("系统：Time（12h）".tr,
-                     for: .normal)
+            .tr_setTitle("系统：Time（12h）".tr, for: .normal)
             .byTitleColor(JobsCor.systemBackground,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -592,8 +589,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnSysCount: UIButton = {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemIndigo)
-            .byTitle("系统：CountDownTimer".tr,
-                     for: .normal)
+            .tr_setTitle("系统：CountDownTimer".tr, for: .normal)
             .byTitleColor(JobsCor.systemBackground,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -621,8 +617,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnYMD: UIButton = {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemTeal)
-            .byTitle("自定义：YMD（年月日）".tr,
-                     for: .normal)
+            .tr_setTitle("自定义：YMD（年月日）".tr, for: .normal)
             .byTitleColor(JobsCor.systemBackground,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -650,8 +645,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnYM: UIButton = {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemTeal)
-            .byTitle("自定义：YM（年月）".tr,
-                     for: .normal)
+            .tr_setTitle("自定义：YM（年月）".tr, for: .normal)
             .byTitleColor(JobsCor.systemBackground,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -679,8 +673,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnY: UIButton = {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemTeal)
-            .byTitle("自定义：Y（年）".tr,
-                     for: .normal)
+            .tr_setTitle("自定义：Y（年）".tr, for: .normal)
             .byTitleColor(JobsCor.systemBackground,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -708,8 +701,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnMD: UIButton = {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemTeal)
-            .byTitle("自定义：MD（月日）".tr,
-                     for: .normal)
+            .tr_setTitle("自定义：MD（月日）".tr, for: .normal)
             .byTitleColor(JobsCor.systemBackground,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -737,8 +729,7 @@ final class BRPickerDemoVC: BaseVC {
     private lazy var btnHM: UIButton = {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemTeal)
-            .byTitle("自定义：HM（时:分，步进=5）".tr,
-                     for: .normal)
+            .tr_setTitle("自定义：HM（时:分，步进=5）".tr, for: .normal)
             .byTitleColor(JobsCor.systemBackground,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,

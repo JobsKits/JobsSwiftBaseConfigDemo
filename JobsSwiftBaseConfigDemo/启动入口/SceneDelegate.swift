@@ -15,6 +15,7 @@ import UIKit
 import AVFoundation
 import ImageIO
 import JobsByUIKit
+import Jobsl10n
 import JobsSwiftDSL
 import JobsBy3rdTools
 import JobsSwiftTools
@@ -109,7 +110,7 @@ class SceneDelegate: UIResponder,
                 content: splashContentForNextLaunch()
             )
                                      .byCountdownSeconds(5)
-                                     .byLanguage(.system)
+                                     .byLanguage(.code(LanguageManager.shared.currentLanguageCode))
             //            .byLanguage(.code("zh-Hans"))
             .bySkipButtonVisible(true)
             //            .bySkipButtonFrame(CGRect(x: 20, y: 60, width: 80, height: 36))

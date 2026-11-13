@@ -94,7 +94,11 @@ public enum JobsScale {
     /// - 默认用 Screen.size（优先 window.bounds，天然横竖屏正确，不依赖 connectedScenes）
     /// - 若启用 useSafeArea，则尝试从“主界面 normal window”扣除 safeAreaInsets；失败则回退 Screen.size
     public static var screenSize: CGSize {
-        let base = Screen.compatibilitySize
+        let measured = Screen.compatibilitySize
+        // Scene 的窗口尚未成为 key 时保持 1:1，避免首轮约束被永久写成 0。
+        let base = measured.width > 0 && measured.height > 0
+            ? measured
+            : CGSize(width: designW, height: designH)
         guard useSafeArea else {
             return base
         }

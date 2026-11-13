@@ -9,7 +9,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import JobsByUIKit
 import JobsViewPush
@@ -39,7 +42,7 @@ final class JobsViewPushDemoVC: BaseVC {
     private lazy var ratioLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("覆盖比例：65%".tr)
+            .tr_setText("覆盖比例：65%".tr)
             .byFont(JobsFont.systemFont(ofSize: 16,
                                         weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -67,7 +70,7 @@ final class JobsViewPushDemoVC: BaseVC {
     private lazy var tipLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("推出后可沿来路拖动退出；比例不足 100% 时，点击露出的底层区域也会退出。".tr)
+            .tr_setText("推出后可沿来路拖动退出；比例不足 100% 时，点击露出的底层区域也会退出。".tr)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)
@@ -157,8 +160,7 @@ private final class JobsViewPushDemoPanel: UIView {
 
     private lazy var closeButton: UIButton = {
         UIButton.sys()
-            .byTitle("主动退出".tr,
-                     for: .normal)
+            .tr_setTitle("主动退出".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,

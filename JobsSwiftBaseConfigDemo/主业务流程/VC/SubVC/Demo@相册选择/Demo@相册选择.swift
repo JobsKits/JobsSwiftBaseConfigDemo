@@ -9,7 +9,11 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
+import JobsEmptyView
 
 import AVFoundation
 import Photos
@@ -144,8 +148,7 @@ final class PhotoAlbumDemoVC: BaseVC {
 
     private lazy var recordBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("录制视频".tr,
-                     for: .normal)
+            .tr_setTitle("录制视频".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
             .byTitleColor(JobsCor.white,
@@ -185,8 +188,7 @@ final class PhotoAlbumDemoVC: BaseVC {
     // 相册单选视频
     private lazy var pickOneVideoBtn: UIButton = { [unowned self] in
         UIButton.sys()
-            .byTitle("选择一个视频".tr,
-                     for: .normal)
+            .tr_setTitle("选择一个视频".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
             .byTitleColor(JobsCor.white,
@@ -267,7 +269,9 @@ final class PhotoAlbumDemoVC: BaseVC {
             .byAddTo(view) { [unowned self] v, make in
                 make.top.equalTo(self.pickMultiVideoBtn.snp.bottom).offset(16)
                 make.left.right.equalToSuperview().inset(24)
-                make.height.equalTo(v.snp.width)
+                make.height.equalTo(v.snp.width).priority(.high)
+                make.height.greaterThanOrEqualTo(120)
+                make.bottom.lessThanOrEqualTo(self.view.safeAreaLayoutGuide).inset(16)
             }
     }()
 
@@ -287,6 +291,16 @@ final class PhotoAlbumDemoVC: BaseVC {
             .byRegisterCell(ImageCell.self)
             .byRegisterCell(VideoCell.self)
             .byRegisterCell(VideoThumbCell.self)
+            .byEmptyButtonProvider { [weak self] in
+                UIButton.sys()
+                    .tr_setTitle("选择图片".tr, for: .normal)
+                    .bySubTitle("暂无数据".tr, for: .normal)
+                    .byImage("photo.on.rectangle".sysImg, for: .normal)
+                    .byImagePlacement(.top)
+                    .onTap { [weak self] _ in
+                        self?.albumBtn.bySendActions(for: .touchUpInside)
+                    }
+            }
             .byAddTo(self.previewContainer) { [unowned self] make in
                 make.edges.equalToSuperview().inset(gridInsets)
             }
@@ -295,7 +309,7 @@ final class PhotoAlbumDemoVC: BaseVC {
     private lazy var filterHintLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("点击照片进入滤镜工作台".tr)
+            .tr_setText("点击照片进入滤镜工作台".tr)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
             .byTextColor(JobsCor.white)
@@ -340,7 +354,7 @@ final class PhotoAlbumDemoVC: BaseVC {
             return
         }
         let button = UIButton.sys()
-            .byTitle("滤镜示例", for: .normal)
+            .byTitle("滤镜示例".tr, for: .normal)
             .byAccessibilityIdentifier("jobs.photo.openFixtureFilter")
             .onTap { [weak self] _ in
                 guard let self,
@@ -425,7 +439,7 @@ extension PhotoAlbumDemoVC: UICollectionViewDataSource {
             return albumVideoURLs.count
         /// 空态
         case .none:
-            return 1
+            return 0
         }
     }
     func collectionView(_ collectionView: UICollectionView,

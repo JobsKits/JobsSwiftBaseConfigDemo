@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsSwiftBaseDefines
 import JobsInheritance
 import JobsByUIKit
@@ -62,8 +64,7 @@ class DemoDetailVC: BaseVC {
         UIButton.sys()
             .byAccessibilityIdentifier("jobs.demoDetail.close")
         // 普通文字：未选中状态标题
-        .byTitle("关闭".tr,
-                 for: .normal)
+        .tr_setTitle("关闭".tr, for: .normal)
         // 字体统一
         .byTitleFont(JobsFont.boldSystemFont(ofSize: 16))
         // 点按事件（统一入口）
@@ -101,7 +102,7 @@ class HalfSheetDemoVC: DemoDetailVC {
             .byClipsToBounds(true)
         UILabel
             .jobsMake { _ in }
-            .byText("")
+            .byText("".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byTextAlignment(.center)
             .byAddTo(view) { make in

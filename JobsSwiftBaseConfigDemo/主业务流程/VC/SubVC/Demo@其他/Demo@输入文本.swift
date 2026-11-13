@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsSwiftDSL
@@ -60,7 +62,7 @@ final class UITextViewDemoVC: BaseVC {
     private lazy var title1: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("1️⃣ 输入监听（byOnInput）".tr)
+            .tr_setText("1️⃣ 输入监听（byOnInput）".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 15))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
@@ -126,7 +128,7 @@ final class UITextViewDemoVC: BaseVC {
     private lazy var title2: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("2️⃣ 金额输入（formatter + validator + maxLength）".tr)
+            .tr_setText("2️⃣ 金额输入（formatter + validator + maxLength）".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 15))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
@@ -188,7 +190,7 @@ final class UITextViewDemoVC: BaseVC {
     private lazy var title3: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("3️⃣ 手机号输入（3-4-4 分组 + 11 位校验）".tr)
+            .tr_setText("3️⃣ 手机号输入（3-4-4 分组 + 11 位校验）".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 15))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
@@ -244,7 +246,7 @@ final class UITextViewDemoVC: BaseVC {
     private lazy var title4: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("4️⃣ 富文本 + 链接样式 + DataDetector".tr)
+            .tr_setText("4️⃣ 富文本 + 链接样式 + DataDetector".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 15))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
@@ -336,7 +338,7 @@ final class UITextViewDemoVC: BaseVC {
     private lazy var title6: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("6️⃣ 双向绑定示例：A ⇄ B ⇄ Value".tr)
+            .tr_setText("6️⃣ 双向绑定示例：A ⇄ B ⇄ Value".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 15))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
@@ -440,7 +442,7 @@ final class UITextViewDemoVC: BaseVC {
     private lazy var title7: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("7️⃣ 删除键监听".tr)
+            .tr_setText("7️⃣ 删除键监听".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 15))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(contentView) { [unowned self] make in
@@ -458,7 +460,7 @@ final class UITextViewDemoVC: BaseVC {
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.label)
             .byBackgroundColor(JobsCor.secondarySystemBackground)
-            .byText("删除我试试看 👇".tr)
+            .tr_setText("删除我试试看 👇".tr)
         /// 效果@等于父系方法UIControl.byAddAction.editingChanged，只不过比父系方法先调用
         .byOnInput(limit: nil) { [weak self] char, value, mode, isLimited , text , tv in
                 guard let self else {

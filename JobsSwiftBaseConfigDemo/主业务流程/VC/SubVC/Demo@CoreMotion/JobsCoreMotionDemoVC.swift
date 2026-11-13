@@ -9,6 +9,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import CoreMotion
@@ -73,7 +75,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     private lazy var introTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("握住手机，动一动你的手腕".tr)
+            .tr_setText("握住手机，动一动你的手腕".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 23))
             .byTextColor(JobsCor.label)
             .byAddTo(contentView) { make in
@@ -85,7 +87,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     private lazy var introDetailLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("倾斜、抬腕和转身都会得到画面反馈；三轴数字只作为辅助读数。".tr)
+            .tr_setText("倾斜、抬腕和转身都会得到画面反馈；三轴数字只作为辅助读数。".tr)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -124,7 +126,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     private lazy var stateTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("正在建立你的中心姿势…".tr)
+            .tr_setText("正在建立你的中心姿势…".tr)
             .byFont(JobsFont.systemFont(ofSize: 18,
                                         weight: .bold))
             .byTextColor(JobsCor.label)
@@ -138,7 +140,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     private lazy var stateDetailLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("保持当前握姿一秒，画面会把这里当成原点。".tr)
+            .tr_setText("保持当前握姿一秒，画面会把这里当成原点。".tr)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -259,7 +261,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     private lazy var avatarCaptionLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("这是你".tr)
+            .tr_setText("这是你".tr)
             .byFont(JobsFont.systemFont(ofSize: 11,
                                         weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)
@@ -303,7 +305,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     private lazy var intensityTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("动作强度 0% · 静止".tr)
+            .tr_setText("动作强度 0% · 静止".tr)
             .byFont(JobsFont.systemFont(ofSize: 12,
                                         weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)
@@ -375,7 +377,7 @@ final class JobsCoreMotionDemoVC: BaseVC {
     private lazy var rawDataTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("陀螺仪角速度 · rad/s".tr)
+            .tr_setText("陀螺仪角速度 · rad/s".tr)
             .byFont(JobsFont.systemFont(ofSize: 12,
                                         weight: .semibold))
             .byTextColor(JobsCor.secondaryLabel)
@@ -402,11 +404,15 @@ final class JobsCoreMotionDemoVC: BaseVC {
 
     private lazy var recalibrateButton: UIButton = {
         UIButton.sys()
-            .byTitle("◎  以当前姿势为中心".tr)
+            .tr_setTitle("◎  以当前姿势为中心".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
                                              weight: .semibold))
             .byTitleColor(JobsCor.white)
+            .byTitleColor(JobsCor.secondaryLabel,
+                          for: .disabled)
             .byBackgroundColor(JobsCor.systemBlue)
+            .byBackgroundColor(JobsCor.secondarySystemFill,
+                               for: .disabled)
             .byCornerRadius(14)
             .onTap { [weak self] _ in
                 guard let self else {
@@ -516,7 +522,7 @@ private extension JobsCoreMotionDemoVC {
         let titleLabel = UILabel
             .jobsMake { _ in }
             .byText(title)
-            .byFont(JobsFont.systemFont(ofSize: 10,
+            .byFont(JobsFont.systemFont(ofSize: 11,
                                         weight: .semibold))
             .byTextColor(color)
             .byTextAlignment(.center)

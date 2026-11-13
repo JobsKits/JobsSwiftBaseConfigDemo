@@ -45,6 +45,14 @@ enum JobsSplashLocalization {
             languageCode = code
         }
         for candidate in languageCandidates(languageCode) {
+            // 宿主扩展的语言不要求重新生成 Pods 资源工程；独立使用时仍走组件自带 Bundle。
+            if let path = Bundle.main.path(forResource: candidate, ofType: "lproj"),
+               let host = Bundle(path: path),
+               host.localizedString(forKey: "jobs_splash_skip",
+                                    value: "__JobsSplashMissingLocalization__",
+                                    table: nil) != "__JobsSplashMissingLocalization__" {
+                return host
+            }
             if let path = resourceBundle.path(forResource: candidate,
                                               ofType: "lproj"),
                let bundle = Bundle(path: path) {

@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsInheritance
 import JobsByUIKit
 import JobsSwiftDSL
@@ -87,8 +89,7 @@ final class RedPacketRainDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemGreen,
                                for: .normal)
-            .byTitle("开始红包雨".tr,
-                     for: .normal)
+            .tr_setTitle("开始红包雨".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
@@ -103,16 +104,14 @@ final class RedPacketRainDemoVC: BaseVC {
                 // 开始下红包雨
                     rainView.byStart()
                     toggleButton
-                        .byTitle("停止红包雨".tr,
-                                 for: .normal)
+                        .tr_setTitle("停止红包雨".tr, for: .normal)
                         .byBackgroundColor(JobsCor.systemRed,
                                            for: .normal)
                 } else {
                 // 停止继续生成，但保留屏幕上已有红包慢慢落完
                     rainView.byStop(clear: false)
                     toggleButton
-                        .byTitle("开始红包雨".tr,
-                                 for: .normal)
+                        .tr_setTitle("开始红包雨".tr, for: .normal)
                         .byBackgroundColor(JobsCor.systemGreen,
                                            for: .normal)
                 }

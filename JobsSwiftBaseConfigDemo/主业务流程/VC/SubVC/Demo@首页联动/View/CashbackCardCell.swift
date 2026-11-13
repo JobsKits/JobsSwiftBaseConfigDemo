@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsByUIKit
@@ -80,7 +82,7 @@ final class CashbackCardCell: UITableViewCell {
     private lazy var subLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("神秘彩金等你来拿".tr)
+            .tr_setText("神秘彩金等你来拿".tr)
             .byFont(JobsFont.systemFont(ofSize: 16))
             .byTextColor(JobsCor.secondaryLabel)
             .byAddTo(cardView) { [unowned self] make in

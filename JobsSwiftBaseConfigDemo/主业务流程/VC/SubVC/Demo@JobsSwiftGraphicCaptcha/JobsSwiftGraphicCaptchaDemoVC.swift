@@ -9,6 +9,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsSwiftBaseDefines
@@ -76,7 +78,7 @@ final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
     private lazy var lengthLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("长度：".tr)
+            .tr_setText("长度：".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 15))
     }()
@@ -98,13 +100,13 @@ final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
             .byClearButtonMode(.whileEditing)
             .byAutocapitalizationType(.none)
             .byAutocorrectionType(.no)
-            .byPlaceholder("输入图形验证码".tr)
+            .tr_setPlaceholder("输入图形验证码".tr)
     }()
 
     private lazy var resultLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("等待输入校验".tr)
+            .tr_setText("等待输入校验".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 15,
                                         weight: .medium))
@@ -119,6 +121,7 @@ final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
                 .byTitle("刷新".tr)
                 .byCornerStyle(.medium)
         )
+            .tr_setTitle("刷新".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
                                              weight: .medium))
             .onTap { [weak self] _ in
@@ -133,6 +136,7 @@ final class JobsSwiftGraphicCaptchaDemoVC: BaseVC {
                 .byTitle("校验".tr)
                 .byCornerStyle(.medium)
         )
+            .tr_setTitle("校验".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
                                              weight: .medium))
             .onTap { [weak self] _ in

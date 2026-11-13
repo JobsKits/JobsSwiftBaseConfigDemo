@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsSwiftBaseDefines
 import WebKit
 import JobsToast
@@ -134,8 +136,7 @@ final class BaseWebViewDemoVC: BaseVC {
                     .byBackgroundColor(JobsCor.clear)
                     .byImage("chevron.left".sysImg,
                              for: .normal)
-                    .byTitle("返回".tr,
-                             for: .normal)
+                    .tr_setTitle("返回".tr, for: .normal)
                     .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                                      weight: .medium))
                     .byTitleColor(JobsCor.label,
@@ -211,6 +212,7 @@ final class BaseWebViewDemoVC: BaseVC {
                        rightButtons: [
                 UIButton.sys()
                     .byAccessibilityIdentifier("jobs.web.openVideo")
+                    .byAccessibilityLabel("播放视频".tr)
                 /// 按钮图片@图文关系
                 .byImage("play.rectangle".sysImg,
                          for: .normal)

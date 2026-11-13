@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsSwiftBaseDefines
@@ -29,9 +31,11 @@ final class CNIDDemoVC: BaseVC {
     private lazy var textField: UITextField = {
         UITextField
             .jobsMake { _ in }
-            .byPlaceholder("请输入身份证号码".tr)
+            .tr_setPlaceholder("请输入身份证号码".tr)
             .byBorderStyle(.roundedRect)
             .byClearButtonMode(.whileEditing)
+            .byFont(JobsFont.systemFont(ofSize: 17))
+            .byTextColor(JobsCor.label)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(gk_navigationBar.snp.bottom).offset(10.h)
                 make.left.right.equalToSuperview().inset(24)
@@ -41,8 +45,11 @@ final class CNIDDemoVC: BaseVC {
 
     private lazy var exampleButton: UIButton = {
         UIButton.sys()
-            .byTitle("自动填入示例".tr)
+            .tr_setTitle("自动填入示例".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15))
+            .byBackgroundColor(JobsCor.secondarySystemBackground)
+            .byTitleColor(JobsCor.label)
+            .byCornerRadius(12)
             .onTap { [weak self] _ in
                 guard let self else {
                     return
@@ -52,15 +59,18 @@ final class CNIDDemoVC: BaseVC {
             }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(textField.snp.bottom).offset(12)
-                make.centerX.equalToSuperview()
-                make.height.equalTo(36)
+                make.left.right.equalToSuperview().inset(24)
+                make.height.equalTo(44)
             }
     }()
 
     private lazy var checkButton: UIButton = {
         UIButton.sys()
-            .byTitle("开始校验".tr)
+            .tr_setTitle("开始校验".tr, for: .normal)
             .byTitleFont(JobsFont.boldSystemFont(ofSize: 16))
+            .byBackgroundColor(JobsCor.systemBlue)
+            .byTitleColor(JobsCor.white)
+            .byCornerRadius(12)
             .onTap { [weak self] _ in
                 guard let self else {
                     return
@@ -82,7 +92,7 @@ final class CNIDDemoVC: BaseVC {
             }
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(exampleButton.snp.bottom).offset(20)
-                make.centerX.equalToSuperview()
+                make.left.right.equalToSuperview().inset(24)
                 make.height.equalTo(44)
             }
     }()
@@ -106,14 +116,6 @@ final class CNIDDemoVC: BaseVC {
         jobsSetupGKNav(
             title: "身份证校验 Demo".tr
         )
-        bgImageView()
-            .byImage("唐老鸭".img)
-        onMainAsync(self) { vc in
-            self.bgImageView()
-                .byImage(await "https://picsum.photos/400/300".kfLoadImage(fallbackImage: "唐老鸭".img))
-            self.bgImageView()
-                .byImage(await "https://picsum.photos/400/300".sdLoadImage(fallbackImage: "唐老鸭".img))
-        }
         printDemo()// 打印示例
         textField.byAlpha(1) // 输入框
         exampleButton.byAlpha(1) // 示例按钮（自动填充）

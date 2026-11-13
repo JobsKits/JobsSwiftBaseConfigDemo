@@ -9,6 +9,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import CoreMotion
@@ -83,7 +85,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     private lazy var introTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("摇一摇，切换 App 图标".tr)
+            .tr_setText("摇一摇，切换 App 图标".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 23))
             .byTextColor(JobsCor.label)
             .byAddTo(contentView) { make in
@@ -95,7 +97,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     private lazy var introDetailLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("Demo 只读取加速度计：高通滤波去掉重力后识别手摇动作。每次有效摇动只请求切换一次，最终仍需确认 iOS 系统弹窗。".tr)
+            .tr_setText("Demo 只读取加速度计：高通滤波去掉重力后识别手摇动作。每次有效摇动只请求切换一次，最终仍需确认 iOS 系统弹窗。".tr)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -121,7 +123,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     private lazy var featureTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("启用手摇自动切换".tr)
+            .tr_setText("启用手摇自动切换".tr)
             .byFont(JobsFont.systemFont(ofSize: 16,
                                         weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -144,7 +146,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     private lazy var featureDetailLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("关闭后停止加速度计；下方仍可手动选图标。".tr)
+            .tr_setText("关闭后停止加速度计；下方仍可手动选图标。".tr)
             .byFont(JobsFont.systemFont(ofSize: 12,
                                         weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -196,7 +198,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     private lazy var motionStateTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("等待加速度计…".tr)
+            .tr_setText("等待加速度计…".tr)
             .byFont(JobsFont.systemFont(ofSize: 17,
                                         weight: .bold))
             .byTextColor(JobsCor.label)
@@ -210,7 +212,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     private lazy var motionStateDetailLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("握稳手机后快速左右摇动。".tr)
+            .tr_setText("握稳手机后快速左右摇动。".tr)
             .byFont(JobsFont.systemFont(ofSize: 12,
                                         weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -241,7 +243,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     private lazy var accelerationLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("加速度 x: --   y: --   z: --".tr)
+            .tr_setText("加速度 x: --   y: --   z: --".tr)
             .byFont(JobsFont.monospacedDigitSystemFont(ofSize: 12,
                                                        weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
@@ -256,7 +258,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     private lazy var currentIconLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("当前图标：读取中…".tr)
+            .tr_setText("当前图标：读取中…".tr)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -269,7 +271,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     private lazy var iconStatusLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("手摇功能已就绪。".tr)
+            .tr_setText("手摇功能已就绪。".tr)
             .byFont(JobsFont.systemFont(ofSize: 11,
                                         weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -283,7 +285,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     private lazy var iconSelectorTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("手动选择预置图标".tr)
+            .tr_setText("手动选择预置图标".tr)
             .byFont(JobsFont.systemFont(ofSize: 17,
                                         weight: .bold))
             .byTextColor(JobsCor.label)
@@ -296,7 +298,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     private lazy var iconSelectorDetailLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("点选也会调用公开 API，并弹出 iOS 的切换确认。备用素材均来自 iconfont。".tr)
+            .tr_setText("点选也会调用公开 API，并弹出 iOS 的切换确认。备用素材均来自 iconfont。".tr)
             .byFont(JobsFont.systemFont(ofSize: 12,
                                         weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -353,7 +355,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     private lazy var photoTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("从设备相册选择照片".tr)
+            .tr_setText("从设备相册选择照片".tr)
             .byFont(JobsFont.systemFont(ofSize: 17,
                                         weight: .bold))
             .byTextColor(JobsCor.label)
@@ -405,7 +407,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     private lazy var photoPlaceholderLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("相册\n预览".tr)
+            .tr_setText("相册\n预览".tr)
             .byFont(JobsFont.systemFont(ofSize: 16,
                                         weight: .semibold))
             .byTextColor(JobsCor.tertiaryLabel)
@@ -419,7 +421,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     private lazy var photoDetailLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("选择后会居中裁成方形副本；过大时缩到 1024 × 1024，并保存在 App 私有目录。".tr)
+            .tr_setText("选择后会居中裁成方形副本；过大时缩到 1024 × 1024，并保存在 App 私有目录。".tr)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
@@ -480,7 +482,7 @@ final class JobsMotionAppIconDemoVC: BaseVC {
     private lazy var photoLimitationLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("⚠️ iOS 不能把运行时相册照片直接设为桌面 AppIcon；点右上角“？”查看开发期接入步骤。".tr)
+            .tr_setText("⚠️ iOS 不能把运行时相册照片直接设为桌面 AppIcon；点右上角“？”查看开发期接入步骤。".tr)
             .byFont(JobsFont.systemFont(ofSize: 12,
                                         weight: .medium))
             .byTextColor(JobsCor.systemOrange)

@@ -9,6 +9,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsByUIKit
@@ -47,7 +49,7 @@ final class JobsMotionAppIconCell: UICollectionViewCell {
     private lazy var sourceLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byFont(JobsFont.systemFont(ofSize: 9,
+            .byFont(JobsFont.systemFont(ofSize: 11,
                                         weight: .regular))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
@@ -62,8 +64,8 @@ final class JobsMotionAppIconCell: UICollectionViewCell {
     private lazy var currentBadgeLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("当前".tr)
-            .byFont(JobsFont.systemFont(ofSize: 10,
+            .tr_setText("当前".tr)
+            .byFont(JobsFont.systemFont(ofSize: 11,
                                         weight: .bold))
             .byTextColor(JobsCor.white)
             .byTextAlignment(.center)

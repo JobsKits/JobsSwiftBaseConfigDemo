@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Jobsl10n
 import WebKit
 import JobsByUIKit
 import JobsSwiftBaseDefines
@@ -38,7 +39,7 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC,
     private lazy var addressField: UITextField = {
         let field = UITextField.jobsMake { field in
             field
-                .byPlaceholder("https://你的域名/pwa/index.html")
+                .byPlaceholder("https://你的域名/pwa/index.html".tr)
                 .byPlaceholderColor(JobsCor.label)
                 .byBorderStyle(.roundedRect)
                 .byKeyboardType(.URL)
@@ -50,7 +51,7 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC,
                 .byAccessibilityIdentifier("lab.pwaAddress")
                 .byAddTo(stageView) { make in
                     make.top.left.equalToSuperview().offset(8)
-                    make.height.equalTo(38)
+                    make.height.equalTo(44)
                     make.right.equalToSuperview().inset(76)
                 }
         }
@@ -84,11 +85,11 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC,
                 }
         }
     }()
-    private lazy var offlineButton: UIButton = lessonButton("加载 App 内置离线包",
+    private lazy var offlineButton: UIButton = lessonButton("打开 / 重载本地离线包",
                                                             identifier: "lab.pwaOffline") { [weak self] in
         self?.loadOfflinePackage()
     }
-    private lazy var inspectButton: UIButton = lessonButton("检测当前 SW / Cache 状态",
+    private lazy var inspectButton: UIButton = lessonButton("查看 SW / Cache 真实状态",
                                                             identifier: "lab.pwaInspect") { [weak self] in
         self?.inspectPWA()
     }
@@ -108,7 +109,7 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC,
             make.centerY.equalTo(addressField)
             make.right.equalToSuperview().inset(8)
             make.width.equalTo(60)
-            make.height.equalTo(38)
+            make.height.equalTo(44)
         }
         loadOfflinePackage()
     }
@@ -119,14 +120,14 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC,
         displayBundledPage("index.html",
                            in: webView,
                            fittingContent: true)
-        record("Native 离线包：从 App Bundle 加载，不依赖网络，不注册 Service Worker。")
+        record("Native 离线包：从 App Bundle 加载，不依赖网络，不注册 Service Worker。".tr)
     }
 
     private func openRemotePWA() {
         let text = addressField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         guard let url = URL(string: text), url.scheme?.lowercased() == "https",
               url.host != nil, url.user == nil, url.password == nil else {
-            record("请输入有效 HTTPS PWA 地址；不接受账号密码、file 或自定义 scheme。")
+            record("请输入有效 HTTPS PWA 地址；不接受账号密码、file 或自定义 scheme。".tr)
             return
         }
         // URL 键盘没有完成键；开始加载时退出输入，避免遮住回退后的网页按钮。
@@ -135,14 +136,14 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC,
         showingBundled = false
         useScrollableWebViewport(webView)
         webView.loadURL(text)
-        record("请求 HTTPS PWA：\(url.host ?? "")；加载失败将恢复内置离线包。")
+        record(String(format: "请求 HTTPS PWA：%@；加载失败将恢复内置离线包。".tr, url.host ?? ""))
         let generation = navigationGeneration
         DispatchQueue.main.asyncAfter(deadline: .now() + 8) { [weak self] in
             guard let self, self.navigationGeneration == generation, self.webView.isLoading else {
                 return
             }
             self.webView.byStopLoading()
-            self.record("远程加载超时，恢复 Native 离线包。")
+            self.record("远程加载超时，恢复 Native 离线包。".tr)
             self.loadOfflinePackage()
         }
     }
@@ -153,8 +154,8 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC,
           const result={origin:location.origin,scheme:location.protocol,secureContext:isSecureContext,
             serviceWorkerAPI:('serviceWorker' in navigator),cacheAPI:('caches' in window)};
           try {
-            result.controller=navigator.serviceWorker?.controller?.scriptURL||'未受 SW 控制';
-            result.registrations=('serviceWorker' in navigator)?(await navigator.serviceWorker.getRegistrations()).map(r=>({scope:r.scope,active:r.active?.state||'无'})):[];
+            result.controller=navigator.serviceWorker?.controller?.scriptURL||'not-controlled-by-SW';
+            result.registrations=('serviceWorker' in navigator)?(await navigator.serviceWorker.getRegistrations()).map(r=>({scope:r.scope,active:r.active?.state||'none'})):[];
             result.caches=('caches' in window)?await caches.keys():[];
           } catch(e) {result.reason=String(e);}
           return JSON.stringify(result,null,2);
@@ -170,10 +171,11 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC,
             switch result {
             /// 显示实际检测结果，空数组也如实保留
             case .success(let value):
-                self.record("\(self.showingBundled ? "Native 离线包（非 SW）" : "HTTPS PWA 检测")\n\(value as? String ?? "无返回值")")
+                let mode = self.showingBundled ? "Native 离线包（非 SW）".tr : "HTTPS PWA 检测".tr
+                self.record(mode + "\n" + (value as? String ?? "无返回值".tr))
             /// 某些来源不开放 API，给出实际错误
             case .failure(let error):
-                self.record("PWA 检测失败：\(error.localizedDescription)")
+                self.record(String(format: "PWA 检测失败：%@".tr, error.localizedDescription))
             }
         }
     }
@@ -188,7 +190,7 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC,
                 return
             }
             self.loadOfflinePackage()
-            self.record("练习容器缓存已清空；App 内置资源仍保留。")
+            self.record("练习容器缓存已清空；App 内置资源仍保留。".tr)
         }
     }
 
@@ -206,9 +208,9 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC,
         if showingBundled {
             applyWebTheme(webView,
                           isDark: JobsThemeCenter.shared.isDarkMode)
-            record("内置离线包加载完成：index.html + manifest.webmanifest + sw.js。file:// 不注册 SW。")
+            record("内置离线包加载完成：index.html + manifest.webmanifest + sw.js。file:// 不注册 SW。".tr)
         } else {
-            record("HTTPS 页面加载完成；点击检测查看实际 SW / Cache 状态。")
+            record("HTTPS 页面加载完成；点击检测查看实际 SW / Cache 状态。".tr)
         }
     }
 
@@ -219,10 +221,10 @@ final class JobsPWADemoVC: JobsMicroAppLabBaseVC,
             return
         }
         guard !showingBundled else {
-            record("内置资源加载失败：\(error.localizedDescription)")
+            record(String(format: "内置资源加载失败：%@".tr, error.localizedDescription))
             return
         }
-        record("HTTPS 加载失败：\(error.localizedDescription)，恢复内置离线包。")
+        record(String(format: "HTTPS 加载失败：%@，恢复内置离线包。".tr, error.localizedDescription))
         loadOfflinePackage()
     }
 

@@ -10,7 +10,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import JobsSwiftDSL
 import JobsByUIKit
@@ -142,8 +145,7 @@ final class TimerDemoVC: BaseVC {
     // MARK: - 开始按钮（正计时）
     private lazy var startButton: UIButton = {
         UIButton.sys()
-            .byTitle("开始".tr,
-                     for: .normal)
+            .tr_setTitle("开始".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 22,
                                              weight: .bold))
             .byTitleColor(JobsCor.white,
@@ -217,7 +219,7 @@ final class TimerDemoVC: BaseVC {
     private lazy var hintLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("Fire：触发回调后销毁定时器；\n停止：销毁但不触发回调。".tr)
+            .tr_setText("Fire：触发回调后销毁定时器；\n停止：销毁但不触发回调。".tr)
             .byFont(JobsFont.systemFont(ofSize: 12))
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.left)
@@ -231,8 +233,7 @@ final class TimerDemoVC: BaseVC {
     // MARK: - 倒计时演示按钮
     private lazy var countdownButton: UIButton = {
         UIButton.sys()
-            .byTitle("获取验证码".tr,
-                     for: .normal)
+            .tr_setTitle("获取验证码".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byBackgroundColor(JobsCor.systemGreen,
@@ -378,8 +379,7 @@ extension TimerDemoVC {
                 strongSelf.countdownRemaining -= interval
                 if strongSelf.countdownRemaining <= 0 {
                     strongSelf.countdownRemaining = 0
-                    strongSelf.countdownButton.byTitle("获取验证码".tr,
-                                                       for: .normal)
+                    strongSelf.countdownButton.tr_setTitle("获取验证码".tr, for: .normal)
                     strongSelf.lastFireLabel.byText("Last: " + fmt(Date()))
                     print("✅ [\(strongSelf.currentKind)] 倒计时完成")
                     strongSelf.countdownTimer?.stop()
@@ -445,8 +445,7 @@ extension TimerDemoVC {
                                 Int(ceil(countdownRemaining)))
             if remainInt <= 0 {
                 countdownRemaining = 0
-                countdownButton.byTitle("获取验证码".tr,
-                                        for: .normal)
+                countdownButton.tr_setTitle("获取验证码".tr, for: .normal)
                 print("✅ [\(currentKind)] 倒计时完成（Fire）")
             } else {
                 countdownButton.byTitle("还剩 \(remainInt)s",
@@ -474,11 +473,9 @@ extension TimerDemoVC {
         countdownState = .stopped
         updateControlButtons(by: .stopped)
         // UI 复位（按你原 demo 习惯：start 允许再次点击）
-        startButton.byTitle("开始".tr,
-                            for: .normal)
+        startButton.tr_setTitle("开始".tr, for: .normal)
         if countdownState == .stopped {
-            countdownButton.byTitle("获取验证码".tr,
-                                    for: .normal)
+            countdownButton.tr_setTitle("获取验证码".tr, for: .normal)
         }
     }
 
@@ -560,8 +557,7 @@ extension TimerDemoVC {
                     strongSelf.countdownRemaining -= interval
                     if strongSelf.countdownRemaining <= 0 {
                         strongSelf.countdownRemaining = 0
-                        strongSelf.countdownButton.byTitle("获取验证码".tr,
-                                                           for: .normal)
+                        strongSelf.countdownButton.tr_setTitle("获取验证码".tr, for: .normal)
                         strongSelf.lastFireLabel.byText("Last: " + fmt(Date()))
                         print("✅ [\(strongSelf.currentKind)] 倒计时完成")
                         strongSelf.countdownTimer?.stop()

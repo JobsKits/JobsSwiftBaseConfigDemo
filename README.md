@@ -2,6 +2,8 @@
 
 本工程的[iPhone 真机与 iOS 模拟器自动巡检教程](./ScriptsByDevTools/【MacOS】🧪iOS自动巡检.command/README.md)位于自己的 `ScriptsByDevTools`；只操作本工程已安装的 App，报告保存在该脚本包内。开发辅助入口见[ScriptsByDevTools 说明](./ScriptsByDevTools/README.md)。
 
+[ARKit 空间实验室](./JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@ARKit/README.md)提供苹果官方增强现实框架介绍、世界追踪、水平面检测与锚点放置，支持机器人等三维模型的缩放 / 旋转、十语言和三主题；模拟器可使用明确标注的离线预览，真实 AR 需要受支持的实体设备。
+
 > **项目定位：** `JobsSwiftBaseConfigDemo`，面向 iOS 开发者的 Swift UIKit 基础工程、可复用本地 Pod 与原生 / 跨端能力实验集，用于快速验证组件和工程方案。
 >
 > **状态与维护：** 维护中（本地提交历史见统计章节）；负责人 Jobs，未登记独立维护团队。运行 / 硬件 / 生产功能须按对应证据验收。
@@ -451,7 +453,10 @@
 
 设备安全入口使用打包的 `JobsDeviceGuardShield` 模板矢量图，素材为 [**iconfont**](https://www.iconfont.cn/collections/detail?cid=52407) 的 `fontawesome5 / shield-alt`（图标 ID `44771661`），由 Font Awesome 提供，按 [**CC BY 4.0 / Font Awesome Free 许可**](https://fontawesome.com/license/free)署名使用。原始 SVG 从该图标集合下载，仅转换为 PDF 以保留矢量缩放，不在运行时请求图片。
 
-- 首页左上角半屏菜单 → 用户信息：进入“用户与设备信息”页面，以“用户信息 / 本机信息”两个分组保留 `UserData.json` 字段和独立的 [JobsDeviceInfo](<./JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/临时项目页面/个人中心占位/JobsDeviceInfo/JobsDeviceInfo.swift>) 模块。两个分组默认展开，点击各自标题区可独立收起 / 展开；收起时同时隐藏该组内容和说明。页面与 OC 新旧工程统一使用内缩圆角卡片、分组背景和主次文字层级，标题区显示条目数，右侧提供当前可执行的展开 / 收起动作及箭头；分组状态切换在同一次无动画事务内完成布局，标题与内容组成完整圆角卡片，深浅色同步刷新。UDID、设备名称、IMEI、系统版本和序列号均可点击复制当前显示内容，并弹出“复制成功”；普通应用无法读取的 UDID、IMEI 和硬件序列号只展示、复制系统限制说明，不使用 IDFV 冒充 UDID。设备名称使用 [UIDevice.name](https://developer.apple.com/documentation/uikit/uidevice/name)，iOS 16 及以上可能只返回通用名称。
+- 首页左上角半屏菜单 → 用户信息：进入“用户与设备信息”页面，保留 `UserData.json` 用户信息与独立 [JobsDeviceInfo](<./JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/临时项目页面/个人中心占位/JobsDeviceInfo/JobsDeviceInfo.swift>) 设备信息模块。两组默认展开并可独立收起；内缩圆角卡片、计数、展开动作及主次文字沿宿主主题同步，点击字段复制数值并弹出确认。设备信息先展示本机公开 API 的设备名称与系统版本；UDID 等硬件字段通过[设备采集站](https://jobs-device-info-pages.pages.dev/)获取，未提供或未回传的字段保持明确缺值，不用 IDFV 冒充 UDID。本机设备名称与本次采集的型号名称分开，系统／手工／资料映射／浏览器来源逐项标注。
+  - 点击“联网采集”同意后创建短期配对，并打开默认浏览器；请在本机 Safari 完成网页同意、下载描述文件，再到设置安装，返回 App 自动刷新，也可使用“打开采集网页／刷新结果”重试。接口为 `POST /api/pair`、`GET /api/session`、`DELETE /api/session`，复用同一 JobsNetworking agent 的独立内存 Cookie；配对链接不携硬件编号，不转发链接，结果只代表本次采集设备，不能用于设备身份认证。浏览器基础信息缺少真实 UDID 时会提示重新选择苹果系统确认。
+  - 默认 HTTPS 地址如上；可通过主 Bundle `JobsDeviceInfoBaseURL` 配置 HTTPS 服务根地址，`JobsDeviceInfoRequestTimeout` 配置单次超时（默认6秒，限制2～15秒），请求零自动重试且禁用业务缓存与日志。每次进入／手动刷新和回到前台查询，等待中前台每8秒查询；收到结果后停止轮询，只保留到期清理，后台／离页取消请求，15分钟过期清除本轮展示和 Cookie。网络失败保留本地公开信息及未过期结果，并保留刷新入口；不会编造硬件编号。清除操作先丢弃本地结果与 Cookie，再请求服务端删除；删除失败或中断时远端仍按原15分钟期限到期。
+  - 采集语言入口支持简体中文、繁体中文、藏文、英文、日文、法文、西班牙文、德文、俄罗斯文、韩文和跟随 App；仅保存语言偏好，不持久化 UDID、Cookie 或配对凭据。主题沿宿主当前外观；无服务器或模拟器也可直接离线查看本机公开信息，硬件采集需真机系统确认。此功能不新增网络图片或图标依赖。
 
 **UDID / IMEI 为什么拿不到**
 

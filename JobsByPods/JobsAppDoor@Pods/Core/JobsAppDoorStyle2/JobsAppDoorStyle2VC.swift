@@ -187,8 +187,9 @@ private extension JobsAppDoorStyle2VC {
         customerServiceButton.snp.remakeConstraints { make in
             make.top.equalTo(form.snp.bottom).offset(8)
             make.centerX.equalTo(view.safeAreaLayoutGuide)
-            make.width.equalTo(118)
-            make.height.equalTo(38)
+            make.width.equalTo(customerServiceWidth).priority(.high)
+            make.width.lessThanOrEqualTo(view.safeAreaLayoutGuide).offset(-40)
+            make.height.equalTo(44)
         }
     }
 

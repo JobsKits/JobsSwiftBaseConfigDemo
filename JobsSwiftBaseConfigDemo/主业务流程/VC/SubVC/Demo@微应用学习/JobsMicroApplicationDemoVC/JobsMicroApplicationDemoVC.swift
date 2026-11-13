@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Jobsl10n
 import WebKit
 import JobsByUIKit
 import JobsSwiftBaseDefines
@@ -19,7 +20,7 @@ final class JobsMicroApplicationDemoVC: JobsMicroAppLabBaseVC,
                                         WKNavigationDelegate {
 
     override var lessonTitle: String {
-        return "微应用 / 微程序"
+        return "微应用 / Native-JS Bridge"
     }
     override var lessonSummary: String {
         "本地 HTML 微应用 ↔ Swift 宿主。先点击合法调用，再试越权与错误参数；网页里的草稿按钮也会真正写入文件。"
@@ -64,11 +65,11 @@ final class JobsMicroApplicationDemoVC: JobsMicroAppLabBaseVC,
                                                            identifier: "lab.bridgeDenied") { [weak self] in
         self?.webView.jobsEval("window.callHost('exportContacts')")
     }
-    private lazy var invalidButton: UIButton = lessonButton("测试拒绝：草稿参数类型错误",
+    private lazy var invalidButton: UIButton = lessonButton("③ JS 提交错误草稿参数",
                                                             identifier: "lab.bridgeInvalid") { [weak self] in
         self?.webView.jobsEval("window.callHost('saveDraft',{text:42})")
     }
-    private lazy var reloadButton: UIButton = lessonButton("重新加载本地微应用",
+    private lazy var reloadButton: UIButton = lessonButton("重新加载业务包",
                                                            identifier: "lab.reload") { [weak self] in
         guard let self else {
             return
@@ -84,7 +85,7 @@ final class JobsMicroApplicationDemoVC: JobsMicroAppLabBaseVC,
         displayBundledPage("microapp.html",
                            in: webView,
                            fittingContent: true)
-        record("等待本地微应用加载；允许 getHostInfo / saveDraft 两项能力。")
+        record("等待本地微应用加载；允许 getHostInfo / saveDraft 两项能力。".tr)
     }
 
     override func themeDidChange(isDark: Bool) {
@@ -99,7 +100,7 @@ final class JobsMicroApplicationDemoVC: JobsMicroAppLabBaseVC,
                  didFinish navigation: WKNavigation!) {
         applyWebTheme(webView,
                       isDark: JobsThemeCenter.shared.isDarkMode)
-        record("微应用加载完成：file 本地包；Bridge 来源校验已开启。")
+        record("微应用加载完成：file 本地包；Bridge 来源校验已开启。".tr)
     }
 
     func webView(_ webView: WKWebView,
@@ -108,7 +109,7 @@ final class JobsMicroApplicationDemoVC: JobsMicroAppLabBaseVC,
         let allowed = navigationAction.request.url?.standardizedFileURL
             == Self.resourceURL("microapp.html")?.standardizedFileURL
         if !allowed {
-            record("已拒绝微应用导航：只允许已注册入口。")
+            record("已拒绝微应用导航：只允许已注册入口。".tr)
         }
         decisionHandler(allowed ? .allow : .cancel)
     }

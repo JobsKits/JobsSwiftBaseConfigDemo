@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Jobsl10n
+import JobsByUIKit
 
 /// 本地教学适配器：完成注册目录、会话门禁和容器路由；没有连接商业 mPaaS 或它的发布后台。
 /// 商业接入顺序：控制台建应用/.config → 官方 CocoaPods mPaaS 基线/TinyApp → 初始化容器 → 发布 appId/包 → 路由。
@@ -31,7 +33,7 @@ final class JobsLocalMiniPlatformAdapter: JobsMiniPlatformAdapter {
             throw PlatformError.missingPackage
         }
         let size = try Data(contentsOf: url).count
-        return "appId: \(registeredAppID)\n版本: 1.0.0\n入口: microapp.html\n包大小: \(size) bytes\n发布来源: App 内置资源（未接云端发布）"
+        return String(format: "appId: %@\n版本: 1.0.0\n入口: microapp.html\n包大小: %d bytes\n发布来源: App 内置资源（未接云端发布）".tr, registeredAppID, size)
     }
 
     func validateOpen(appID: String) throws {
@@ -54,13 +56,13 @@ final class JobsLocalMiniPlatformAdapter: JobsMiniPlatformAdapter {
             switch self {
             /// 容器路由前校验宿主身份
             case .loginRequired:
-                return "已拒绝打开：请先登录教学账号。"
+                return "已拒绝打开：请先登录教学账号。".tr
             /// 注册目录之外的 appId 不允许路由
             case .unregisteredApp:
-                return "已拒绝打开：appId 未注册。"
+                return "已拒绝打开：appId 未注册。".tr
             /// 资源缺失时不创建空白容器
             case .missingPackage:
-                return "离线包缺失，请重新构建主 App。"
+                return "离线包缺失，请重新构建主 App。".tr
             }
         }
     }

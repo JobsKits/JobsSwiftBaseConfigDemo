@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Jobsl10n
 import WebKit
 import JobsByUIKit
 import JobsSwiftBaseDefines
@@ -20,7 +21,7 @@ final class JobsMultiSessionDemoVC: JobsMicroAppLabBaseVC,
                                     WKNavigationDelegate {
 
     override var lessonTitle: String {
-        return "应用多开 / 多会话"
+        return "多账户 / 会话隔离"
     }
     override var lessonSummary: String {
         "A/B 是同一宿主内的独立账号。写入 A → 切 B 读取 → 写入 B → 切 A，观察文件草稿与 Web localStorage 各自保留。"
@@ -33,11 +34,11 @@ final class JobsMultiSessionDemoVC: JobsMicroAppLabBaseVC,
     private lazy var webA = makeSessionWebView()
     private lazy var webB = makeSessionWebView()
 
-    private lazy var accountAButton: UIButton = lessonButton("切换到账号 A",
+    private lazy var accountAButton: UIButton = lessonButton("切换到账户 A",
                                                              identifier: "lab.sessionA") { [weak self] in
         self?.selectAccount("A")
     }
-    private lazy var accountBButton: UIButton = lessonButton("切换到账号 B",
+    private lazy var accountBButton: UIButton = lessonButton("切换到账户 B",
                                                              identifier: "lab.sessionB") { [weak self] in
         self?.selectAccount("B")
     }
@@ -45,7 +46,7 @@ final class JobsMultiSessionDemoVC: JobsMicroAppLabBaseVC,
                                                           identifier: "lab.sessionWrite") { [weak self] in
         self?.writeDraft()
     }
-    private lazy var readButton: UIButton = lessonButton("重新读取当前账号",
+    private lazy var readButton: UIButton = lessonButton("读取当前账户（验证隔离）",
                                                          identifier: "lab.sessionRead") { [weak self] in
         self?.readDraft()
     }
@@ -93,15 +94,15 @@ final class JobsMultiSessionDemoVC: JobsMicroAppLabBaseVC,
     private func writeDraft() {
         do {
             sequence += 1
-            try accountStore(activeAccount).write("账号 \(activeAccount) 的独立草稿 #\(sequence)")
+            try accountStore(activeAccount).write(String(format: "账号 %@ 的独立草稿 #%d".tr, activeAccount, sequence))
             let account = activeAccount
             activeWebView.jobsEval("window.writeSession('\(account)')") { [weak self] result, error in
                 guard let self else {
                     return
                 }
-                self.record("账号 \(account) Web 写入：\(result as? String ?? error?.localizedDescription ?? "无返回值")")
+                self.record(String(format: "账号 %@ Web 写入：%@".tr, account, result as? String ?? error?.localizedDescription ?? "无返回值".tr))
             }
-            record("账号 \(account) 文件写入成功；Web 写入结果另行回显。")
+            record(String(format: "账号 %@ 文件写入成功；Web 写入结果另行回显。".tr, account))
         } catch {
             record(error.localizedDescription)
         }
@@ -110,7 +111,7 @@ final class JobsMultiSessionDemoVC: JobsMicroAppLabBaseVC,
     private func readDraft() {
         let account = activeAccount
         do {
-            record("账号 \(account) 读取：\(try accountStore(account).read())")
+            record(String(format: "账号 %@ 读取：%@".tr, account, try accountStore(account).read()))
         } catch {
             record(error.localizedDescription)
         }
@@ -119,9 +120,9 @@ final class JobsMultiSessionDemoVC: JobsMicroAppLabBaseVC,
                 return
             }
             if let result = result as? String {
-                self.record("账号 \(account) Web Store：\(result)")
+                self.record(String(format: "账号 %@ Web Store：%@".tr, account, result))
             } else if let error {
-                self.record("Web Store 尚未就绪，页面加载后重读：\(error.localizedDescription)")
+                self.record(String(format: "Web Store 尚未就绪，页面加载后重读：%@".tr, error.localizedDescription))
             }
         }
     }
@@ -143,7 +144,7 @@ final class JobsMultiSessionDemoVC: JobsMicroAppLabBaseVC,
             }
             self.displayBundledPage("session.html",
                                     in: web)
-            self.record("账号 \(account) 已退出并清空；另一账号数据保留。")
+            self.record(String(format: "账号 %@ 已退出并清空；另一账号数据保留。".tr, account))
         }
     }
 

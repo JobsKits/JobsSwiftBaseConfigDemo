@@ -10,7 +10,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import JobsToast
 import JobsByUIKit
@@ -72,14 +75,13 @@ final class FSPopoverDemoVC: BaseVC {
     private lazy var popoverContentTitleLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("这是自定义内容".tr)
+            .tr_setText("这是自定义内容".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 16))
             .byTextAlignment(.center)
     }()
     private lazy var popoverContentCloseButton: UIButton = {
         UIButton.sys()
-            .byTitle("我知道了".tr,
-                     for: .normal)
+            .tr_setTitle("我知道了".tr, for: .normal)
             .byTitleColor(JobsCor.systemBlue,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -90,18 +92,17 @@ final class FSPopoverDemoVC: BaseVC {
     }()
     private lazy var exampleButton: UIButton = {
         UIButton.sys()
-            .byBackgroundColor(JobsCor.systemGreen,
+            .byBackgroundColor(JobsCor.systemBlue,
                                for: .normal)
-            .byTitle("从按钮处弹出列表 ▶︎".tr,
-                     for: .normal)
-            .byTitle("隐藏".tr,
-                     for: .selected)
-            .byTitleColor(JobsCor.systemBlue,
+            .tr_setTitle("从按钮处弹出列表 ▶︎".tr, for: .normal)
+            .tr_setTitle("隐藏".tr, for: .selected)
+            .byTitleColor(JobsCor.white,
                           for: .normal)
-            .byTitleColor(JobsCor.systemRed,
+            .byTitleColor(JobsCor.white,
                           for: .selected)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
                                              weight: .medium))
+            .byTintColor(JobsCor.white)
             .byImage("list.bullet".sysImg,
                      for: .normal)
             .byContentEdgeInsets(.init(top: 10,
@@ -130,8 +131,7 @@ final class FSPopoverDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor(JobsCor.systemIndigo,
                                for: .normal)
-            .byTitle("从右上角弹出【自定义内容】 ▶︎".tr,
-                     for: .normal)
+            .tr_setTitle("从右上角弹出【自定义内容】 ▶︎".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
@@ -156,8 +156,7 @@ final class FSPopoverDemoVC: BaseVC {
         UIButton.sys()
             .byBackgroundColor("#4c4d4e".cor,
                                for: .normal)
-            .byTitle("测试 JobsDialogBox ▶︎".tr,
-                     for: .normal)
+            .tr_setTitle("测试 JobsDialogBox ▶︎".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(.PingFangSC.Regular(12))

@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsTextTools
@@ -53,10 +55,8 @@ final class MessageListDemoVC: BaseVC {
     // MARK: - Nav Buttons
     private lazy var rightEditButton: UIButton = {
         UIButton.sys()
-            .byTitle("编辑".tr,
-                     for: .normal)
-            .byTitle("完成".tr,
-                     for: .selected)
+            .tr_setTitle("编辑".tr, for: .normal)
+            .tr_setTitle("完成".tr, for: .selected)
             .byTitleColor(JobsCor.label,
                           for: .normal)
             .byTitleColor(JobsCor.label,
@@ -82,10 +82,8 @@ final class MessageListDemoVC: BaseVC {
     // MARK: - BottomBar Buttons
     private lazy var bottomSelectAllButton: UIButton = {
         UIButton.sys()
-            .byTitle("全选".tr,
-                     for: .normal)
-            .byTitle("取消".tr,
-                     for: .selected)
+            .tr_setTitle("全选".tr, for: .normal)
+            .tr_setTitle("取消".tr, for: .selected)
             .byTitleColor(JobsCor.label,
                           for: .normal)
             .byTitleColor(JobsCor.label,
@@ -106,8 +104,7 @@ final class MessageListDemoVC: BaseVC {
 
     private lazy var bottomDeleteButton: UIButton = {
         UIButton.sys()
-            .byTitle("删除".tr,
-                     for: .normal)
+            .tr_setTitle("删除".tr, for: .normal)
             .byTitleColor(JobsCor.systemRed,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
@@ -161,8 +158,7 @@ final class MessageListDemoVC: BaseVC {
             .byNoSectionHeaderTopPadding()
             .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据".tr,
-                             for: .normal)
+                    .tr_setTitle("暂无数据".tr, for: .normal)
                     .bySubTitle("点我填充示例数据".tr,
                                 for: .normal)
                     .byImage("tray".sysImg,

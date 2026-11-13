@@ -10,7 +10,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import JobsImageRotation
 import JobsScale
@@ -52,7 +55,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
     private lazy var titleLab1: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("① 无图：主标题（普通字符串）".tr)
+            .tr_setText("① 无图：主标题（普通字符串）".tr)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -85,7 +88,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
     private lazy var titleLab2: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("② 无图：副标题（富文本，只动数字）".tr)
+            .tr_setText("② 无图：副标题（富文本，只动数字）".tr)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -118,7 +121,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
     private lazy var titleLab3: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("③ 有图：主标题（富文本，只动数字，图文关系不变）".tr)
+            .tr_setText("③ 有图：主标题（富文本，只动数字，图文关系不变）".tr)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -151,7 +154,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
     private lazy var titleLab4: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("④ 有图：副标题（普通字符串，只动数字）".tr)
+            .tr_setText("④ 有图：副标题（普通字符串，只动数字）".tr)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .semibold))
             .byTextColor(JobsCor.label)
@@ -333,8 +336,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
     /// 数字动效按钮@副标题（普通文本）
     private lazy var btn_3: UIButton = {
         UIButton.sys()
-            .byTitle("会员价格".tr,
-                     for: .normal)
+            .tr_setTitle("会员价格".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
@@ -388,8 +390,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
     /// 数字动效按钮@副标题（富文本）
     private lazy var btn_4: UIButton = {
         UIButton.sys()
-            .byTitle("限时折扣".tr,
-                     for: .normal)
+            .tr_setTitle("限时折扣".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,
@@ -471,8 +472,7 @@ final class AnimatedButtonNumberDemoVC: BaseVC {
     /// 数字动效按钮@副标题（富文本）+ 前景图逆时针旋转
     private lazy var btn_5: UIButton = {
         UIButton.sys()
-            .byTitle("限时折扣".tr,
-                     for: .normal)
+            .tr_setTitle("限时折扣".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,

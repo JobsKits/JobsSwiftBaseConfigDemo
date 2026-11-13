@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsByUIKit
@@ -28,7 +30,7 @@ final class FMDBDemoVC: BaseVC {
     private lazy var hintLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("FMDB Demo：新增 / 查询 / 更新首条 / 删除末条 / 清空".tr)
+            .tr_setText("FMDB Demo：新增 / 查询 / 更新首条 / 删除末条 / 清空".tr)
             .byNumberOfLines(0)
             .byFont(JobsFont.systemFont(ofSize: 14))
             .byTextColor(JobsCor.secondaryLabel)
@@ -46,7 +48,7 @@ final class FMDBDemoVC: BaseVC {
     private lazy var nameField: UITextField = {
         UITextField
             .jobsMake { _ in }
-            .byPlaceholder("姓名（例如：Jobs）".tr)
+            .tr_setPlaceholder("姓名（例如：Jobs）".tr)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.hintLabel.snp.bottom).offset(16)
                 make.left.equalToSuperview().offset(horizontalInset)
@@ -58,7 +60,7 @@ final class FMDBDemoVC: BaseVC {
     private lazy var ageField: UITextField = {
         UITextField
             .jobsMake { _ in }
-            .byPlaceholder("年龄（例如：18）".tr)
+            .tr_setPlaceholder("年龄（例如：18）".tr)
             .byKeyboardType(.numberPad)
             .byAddTo(view) { [unowned self] make in
                 make.top.equalTo(self.nameField.snp.bottom).offset(10)
@@ -68,7 +70,7 @@ final class FMDBDemoVC: BaseVC {
 
     private lazy var addButton: UIButton = {
         UIButton.custom()
-            .byTitle("新增".tr)
+            .tr_setTitle("新增".tr, for: .normal)
             .byTitleColor(JobsCor.systemBlue,
                           for: .normal)
             .onTap { [weak self] sender in
@@ -90,7 +92,7 @@ final class FMDBDemoVC: BaseVC {
 
     private lazy var queryButton: UIButton = {
         UIButton.custom()
-            .byTitle("查询全部".tr)
+            .tr_setTitle("查询全部".tr, for: .normal)
             .byTitleColor(JobsCor.systemBlue,
                           for: .normal)
             .onTap { [weak self] sender in
@@ -103,7 +105,7 @@ final class FMDBDemoVC: BaseVC {
 
     private lazy var updateButton: UIButton = {
         UIButton.custom()
-            .byTitle("更新首条".tr)
+            .tr_setTitle("更新首条".tr, for: .normal)
             .byTitleColor(JobsCor.systemBlue,
                           for: .normal)
             .onTap { [weak self] sender in
@@ -126,7 +128,7 @@ final class FMDBDemoVC: BaseVC {
 
     private lazy var deleteButton: UIButton = {
         UIButton.custom()
-            .byTitle("删除末条".tr)
+            .tr_setTitle("删除末条".tr, for: .normal)
             .byTitleColor(JobsCor.systemBlue,
                           for: .normal)
             .onTap { [weak self] sender in
@@ -145,7 +147,7 @@ final class FMDBDemoVC: BaseVC {
 
     private lazy var clearButton: UIButton = {
         UIButton.custom()
-            .byTitle("清空".tr)
+            .tr_setTitle("清空".tr, for: .normal)
             .byTitleColor(JobsCor.systemBlue,
                           for: .normal)
             .onTap { [weak self] sender in

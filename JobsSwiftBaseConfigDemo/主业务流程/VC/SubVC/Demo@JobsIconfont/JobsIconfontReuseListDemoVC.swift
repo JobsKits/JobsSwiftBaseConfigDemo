@@ -120,7 +120,7 @@ private final class JobsIconfontReuseCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         iconView.byCancelJobsIconfontLoad()
-        stateLabel.byText("已取消旧任务")
+        stateLabel.byText("已取消旧任务".tr)
     }
 
     @discardableResult
@@ -131,12 +131,12 @@ private final class JobsIconfontReuseCell: UITableViewCell {
                                 targetSize: CGSize(width: 50, height: 50)) { [weak self] event in
             switch event {
             case .placeholder:
-                self?.stateLabel.byText("本地占位图")
+                self?.stateLabel.byText("本地占位图".tr)
             case .success(let loader,
                           let cache):
                 self?.stateLabel.byText("\(loader.rawValue)｜\(cache ? "缓存" : "网络")")
             case .failure:
-                self?.stateLabel.byText("失败兜底")
+                self?.stateLabel.byText("失败兜底".tr)
             }
         }
         return self

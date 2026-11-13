@@ -16,7 +16,7 @@ struct JobsHomeWidget: Widget {
             JobsHomeWidgetView(entry: entry)
         }
         .configurationDisplayName("演武堂小组件")
-        .description("在手机桌面查看当前时间和 Demo 进度。")
+        .description(Text(verbatim: JobsWidgetSharedStore.localizedText("在手机桌面查看当前时间和 Demo 进度。")))
         .supportedFamilies([
             .systemSmall,
             .systemMedium,

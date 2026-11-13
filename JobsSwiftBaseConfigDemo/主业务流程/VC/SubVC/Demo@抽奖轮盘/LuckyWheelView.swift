@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsByUIKit
 import JobsSwiftDSL
 import JobsSwiftTimer
@@ -87,8 +89,7 @@ final class LuckyWheelView: UIView {
         .byBackgroundColor(JobsCor.systemGreen,
                            for: .normal)
         /// 普通标题
-        .byTitle("点我\n抽奖".tr,
-                 for: .normal)
+        .tr_setTitle("点我\n抽奖".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 16,

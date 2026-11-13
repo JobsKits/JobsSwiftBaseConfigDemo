@@ -12,6 +12,8 @@ import AppKit
 import UIKit
 #endif
 
+import Jobsl10n
+
 import JobsSwiftBaseDefines
 import JobsByUIKit
 import JobsSwiftDSL
@@ -58,8 +60,7 @@ final class 自定义注解DemoVC: BaseVC {
             .byNoSectionHeaderTopPadding()
             .byEmptyButtonProvider { [unowned self] in
                 UIButton.sys()
-                    .byTitle("暂无数据".tr,
-                             for: .normal)
+                    .tr_setTitle("暂无数据".tr, for: .normal)
                     .bySubTitle("点我填充示例数据".tr,
                                 for: .normal)
                     .byImage("tray".sysImg,
@@ -137,8 +138,7 @@ final class 自定义注解DemoVC: BaseVC {
 
     private lazy var renameButton: UIButton = {
         UIButton.sys()
-            .byTitle("① 改 #2 的 name（id 不变）".tr,
-                     for: .normal)
+            .tr_setTitle("① 改 #2 的 name（id 不变）".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
@@ -159,8 +159,7 @@ final class 自定义注解DemoVC: BaseVC {
 
     private lazy var replaceButton: UIButton = {
         UIButton.sys()
-            .byTitle("② 替换 #2（id → 99）".tr,
-                     for: .normal)
+            .tr_setTitle("② 替换 #2（id → 99）".tr, for: .normal)
             .byTitleColor(JobsCor.white,
                           for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,

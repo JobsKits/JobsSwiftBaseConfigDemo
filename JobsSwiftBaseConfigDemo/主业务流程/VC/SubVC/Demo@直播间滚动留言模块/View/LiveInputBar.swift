@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsByUIKit
@@ -34,7 +36,7 @@ final class LiveInputBar: UIView {
 
     private lazy var sendButton: UIButton = {
         UIButton.sys()
-            .byTitle("发送".tr)
+            .tr_setTitle("发送".tr, for: .normal)
             .byTitleFont(JobsFont.systemFont(ofSize: 15,
                                              weight: .semibold))
             .byTitleColor(JobsCor.white)

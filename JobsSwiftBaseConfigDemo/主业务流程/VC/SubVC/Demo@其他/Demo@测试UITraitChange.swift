@@ -10,7 +10,10 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
 #endif
+
+import Jobsl10n
 
 import QuartzCore
 import JobsScale
@@ -29,7 +32,7 @@ final class TraitChangeDemoVC: BaseVC {
     private lazy var titleLabel : UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("Trait 变化监听 Demo".tr)
+            .tr_setText("Trait 变化监听 Demo".tr)
             .byFont(JobsFont.boldSystemFont(ofSize: 18))
             .byTextAlignment(.natural)              // ✅ 新增
         .byTextColor(JobsCor.label)
@@ -42,7 +45,7 @@ final class TraitChangeDemoVC: BaseVC {
     private lazy var subtitleLabel : UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("本页演示 iOS 17+ 的 UITraitChangeObservable：深浅色、Dynamic Type、Size Class、布局方向、Scale/Gamut 变化触发后，只刷新真正受影响的 UI。".tr)
+            .tr_setText("本页演示 iOS 17+ 的 UITraitChangeObservable：深浅色、Dynamic Type、Size Class、布局方向、Scale/Gamut 变化触发后，只刷新真正受影响的 UI。".tr)
             .byNumberOfLines(0)
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.natural)
@@ -110,7 +113,7 @@ final class TraitChangeDemoVC: BaseVC {
     private lazy var dynamicText : UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("Dynamic Type 预览：系统字号变化会触发 preferredFont 刷新。".tr)
+            .tr_setText("Dynamic Type 预览：系统字号变化会触发 preferredFont 刷新。".tr)
             .byNumberOfLines(0)
             .byTextColor(JobsCor.label)
             .byTextAlignment(.natural)              // ✅ 新增
@@ -158,8 +161,7 @@ final class TraitChangeDemoVC: BaseVC {
                            .byTintColor(JobsCor.systemBlue)
                            .byImage("chevron.left".sysImg,
                                     for: .normal)
-                           .byTitle("返回".tr,
-                                    for: .normal)
+                           .tr_setTitle("返回".tr, for: .normal)
                            .byTitleColor(JobsCor.systemBlue,
                                          for: .normal)
                            .onTap { [weak self] _ in

@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import GKNavigationBarSwift
@@ -35,7 +37,7 @@ final class JobsAppDoorDemoVC: BaseVC {
     private lazy var detailLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("同一套登录 / 注册 / 找回密码能力\n分别演示单面板换轨与独立卡片横滑")
+            .tr_setText("同一套登录 / 注册 / 找回密码能力\n分别演示单面板换轨与独立卡片横滑".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byTextAlignment(.center)
             .byFont(JobsFont.systemFont(ofSize: 14,

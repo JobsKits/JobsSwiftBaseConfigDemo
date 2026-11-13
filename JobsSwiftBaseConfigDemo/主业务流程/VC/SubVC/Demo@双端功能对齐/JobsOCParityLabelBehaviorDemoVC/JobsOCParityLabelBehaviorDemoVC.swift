@@ -288,6 +288,11 @@ private final class JobsLabelBehaviorDetailVC: BaseVC {
             button.byTitle(demoText(manualNewline: kind == .manualNewline),
                            for: .normal)
         }
+        // 本页演示 titleLabel 的排版规则，避免 Configuration 再次覆盖行数与缩放。
+        button.configurationUpdateHandler = nil
+        button.configuration = nil
+        button.setTitleColor(JobsCor.white, for: .normal)
+        button.backgroundColor = JobsCor.systemBrown
         guard let titleLabel = button.titleLabel else {
             return
         }

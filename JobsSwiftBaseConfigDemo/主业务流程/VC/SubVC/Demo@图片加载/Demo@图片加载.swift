@@ -10,6 +10,8 @@
 import AppKit
 #elseif os(iOS) || os(tvOS)
 import UIKit
+
+import Jobsl10n
 #endif
 
 import JobsInheritance
@@ -59,7 +61,7 @@ final class PicLoadDemoVC: BaseVC {
     private lazy var localImgLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("UIImageView（可点击、长按）➤ 字符串本地图".tr)
+            .tr_setText("UIImageView（可点击、长按）➤ 字符串本地图".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
@@ -75,7 +77,7 @@ final class PicLoadDemoVC: BaseVC {
         UIImageView
             .jobsMake { _ in }
             .byImage("Ani".img)
-            .byContentMode(.scaleToFill)
+            .byContentMode(.scaleAspectFit)
             .byClipsToBounds()
             .addTapAction { [weak self] (iv: UIImageView) in
                 "单击图片：\(iv)".toast
@@ -108,7 +110,7 @@ final class PicLoadDemoVC: BaseVC {
     private lazy var asyncImgLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("UIImageView（可点击、长按）➤ 字符串网络图（自动加载、呼吸请求、失败兜底）".tr)
+            .tr_setText("UIImageView（可点击、长按）➤ 字符串网络图（自动加载、呼吸请求、失败兜底）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
@@ -127,7 +129,7 @@ final class PicLoadDemoVC: BaseVC {
         /// 如果图片URL不为空，请求阶段是呼吸效果，请求失败 ==> 执行兜底图
         .jobs_setImage(JobsDemoImageURLProvider.common_400x300,
                        fallback: "Ani".img)
-            .byContentMode(.scaleToFill)
+            .byContentMode(.scaleAspectFit)
             .byClipsToBounds()
             .addTapAction { [weak self] (iv: UIImageView) in
                 "单击图片：\(iv)".toast
@@ -160,7 +162,7 @@ final class PicLoadDemoVC: BaseVC {
     private lazy var asyncImgSDLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("UIImageView（可点击、长按）➤ 字符串网络图（指定 SDWebImage、呼吸请求、失败兜底）".tr)
+            .tr_setText("UIImageView（可点击、长按）➤ 字符串网络图（指定 SDWebImage、呼吸请求、失败兜底）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
@@ -178,7 +180,7 @@ final class PicLoadDemoVC: BaseVC {
             .jobs_setImage(JobsDemoImageURLProvider.common_400x300,
                            fallback: "Ani".img,
                            preferredLoader: .sdwebimage)
-            .byContentMode(.scaleToFill)
+            .byContentMode(.scaleAspectFit)
             .byClipsToBounds()
             .addTapAction { [weak self] (iv: UIImageView) in
                 "单击图片：\(iv)".toast
@@ -211,7 +213,7 @@ final class PicLoadDemoVC: BaseVC {
     private lazy var wrapperImgKFLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("UIImageView（可点击、长按）➤ 字符串网络图（指定 Kingfisher、失败兜底）".tr)
+            .tr_setText("UIImageView（可点击、长按）➤ 字符串网络图（指定 Kingfisher、失败兜底）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
@@ -226,7 +228,7 @@ final class PicLoadDemoVC: BaseVC {
     private lazy var wrapperImgView: UIImageView = {
         UIImageView
             .jobsMake { _ in }
-            .byContentMode(.scaleToFill)
+            .byContentMode(.scaleAspectFit)
             .byClipsToBounds()
             .jobs_setImage(JobsDemoImageURLProvider.common_400x300,
                            fallback: "Ani".img,
@@ -263,7 +265,7 @@ final class PicLoadDemoVC: BaseVC {
     private lazy var wrapperImgSDLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("UIImageView（可点击、长按）➤ 字符串网络图（指定 URLSession、失败兜底）".tr)
+            .tr_setText("UIImageView（可点击、长按）➤ 字符串网络图（指定 URLSession、失败兜底）".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
@@ -278,7 +280,7 @@ final class PicLoadDemoVC: BaseVC {
     private lazy var wrapperImgViewSD: UIImageView = {
         UIImageView
             .jobsMake { _ in }
-            .byContentMode(.scaleToFill)
+            .byContentMode(.scaleAspectFit)
             .byClipsToBounds()
             .jobs_setImage(JobsDemoImageURLProvider.common_400x300,
                            fallback: "Ani".img,
@@ -316,7 +318,7 @@ final class PicLoadDemoVC: BaseVC {
     private lazy var btnBGLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("UIButton背景图(主副标题) ➤ 字符串网络图（带呼吸效果、失败兜底）@SDWebImage".tr)
+            .tr_setText("UIButton背景图(主副标题) ➤ 字符串网络图（带呼吸效果、失败兜底）@SDWebImage".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
@@ -332,7 +334,7 @@ final class PicLoadDemoVC: BaseVC {
         UIButton.sys()
             .byCornerRadius(12)
             .byClipsToBounds(true)
-            .byTitle("我是UIButton主标题@SDWebImage".tr)
+            .tr_setTitle("我是UIButton主标题@SDWebImage".tr, for: .normal)
             .byTitleColor(JobsCor.red)
             .bySubTitle("我是UIButton副标题@SDWebImage".tr)
             .bySubTitleColor(JobsCor.yellow)
@@ -368,7 +370,7 @@ final class PicLoadDemoVC: BaseVC {
     private lazy var btnImageLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("UIButton前景图(主副标题) ➤ 字符串网络图（指定 SDWebImage、失败兜底）@SDWebImage".tr)
+            .tr_setText("UIButton前景图(主副标题) ➤ 字符串网络图（指定 SDWebImage、失败兜底）@SDWebImage".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
@@ -387,7 +389,7 @@ final class PicLoadDemoVC: BaseVC {
             .byBorderWidth(1)
             .byBorderColor(JobsCor.systemGray3)
             .byClipsToBounds(true)
-            .byTitle("我是UIButton主标题@SDWebImage".tr)
+            .tr_setTitle("我是UIButton主标题@SDWebImage".tr, for: .normal)
             .byTitleColor(JobsCor.red)
             .bySubTitle("我是UIButton副标题@SDWebImage".tr)
             .bySubTitleColor(JobsCor.green)
@@ -427,7 +429,7 @@ final class PicLoadDemoVC: BaseVC {
     private lazy var btnBGKFLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("UIButton背景图(主副标题) ➤ 字符串网络图（呼吸效果、失败兜底）@Kingfisher".tr)
+            .tr_setText("UIButton背景图(主副标题) ➤ 字符串网络图（呼吸效果、失败兜底）@Kingfisher".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
@@ -443,7 +445,7 @@ final class PicLoadDemoVC: BaseVC {
         UIButton.sys()
             .byCornerRadius(12)
             .byClipsToBounds(true)
-            .byTitle("我是UIButton主标题@Kingfisher".tr)
+            .tr_setTitle("我是UIButton主标题@Kingfisher".tr, for: .normal)
             .byTitleColor(JobsCor.red)
             .bySubTitle("我是UIButton副标题@Kingfisher".tr)
             .bySubTitleColor(JobsCor.yellow)
@@ -485,7 +487,7 @@ final class PicLoadDemoVC: BaseVC {
     private lazy var btnImageKFLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("UIButton前景图(主副标题) ➤ 字符串网络图（指定 Kingfisher、失败兜底）@Kingfisher".tr)
+            .tr_setText("UIButton前景图(主副标题) ➤ 字符串网络图（指定 Kingfisher、失败兜底）@Kingfisher".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 13,
                                         weight: .semibold))
@@ -504,7 +506,7 @@ final class PicLoadDemoVC: BaseVC {
             .byBorderWidth(1)
             .byBorderColor(JobsCor.systemGray3)
             .byClipsToBounds(true)
-            .byTitle("我是UIButton主标题@Kingfisher".tr)
+            .tr_setTitle("我是UIButton主标题@Kingfisher".tr, for: .normal)
             .byTitleColor(JobsCor.red)
             .bySubTitle("我是UIButton副标题@Kingfisher".tr)
             .bySubTitleColor(JobsCor.green)

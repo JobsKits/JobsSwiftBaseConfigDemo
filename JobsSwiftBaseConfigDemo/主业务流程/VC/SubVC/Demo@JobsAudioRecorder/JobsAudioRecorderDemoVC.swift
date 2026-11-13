@@ -14,6 +14,8 @@ import JobsSwiftDSL
 import SnapKit
 import UIKit
 
+import Jobsl10n
+
 final class JobsAudioRecorderDemoVC: BaseVC {
 
     private let recorder = JobsAudioRecorderEngine.shared
@@ -32,7 +34,7 @@ final class JobsAudioRecorderDemoVC: BaseVC {
     private lazy var durationTitleLabel: UILabel = {
         let label = UILabel.jobsMake { _ in }
         label
-            .byText("录音时长".tr)
+            .tr_setText("录音时长".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 16,
                                         weight: .medium))
@@ -51,7 +53,7 @@ final class JobsAudioRecorderDemoVC: BaseVC {
     private lazy var durationUnitLabel: UILabel = {
         let label = UILabel.jobsMake { _ in }
         label
-            .byText("秒".tr)
+            .tr_setText("秒".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(JobsFont.systemFont(ofSize: 15,
                                         weight: .regular))
@@ -75,7 +77,7 @@ final class JobsAudioRecorderDemoVC: BaseVC {
     private lazy var listTitleLabel: UILabel = {
         let label = UILabel.jobsMake { _ in }
         label
-            .byText("本地录音".tr)
+            .tr_setText("本地录音".tr)
             .byTextColor(JobsCor.label)
             .byFont(JobsFont.systemFont(ofSize: 17,
                                         weight: .semibold))

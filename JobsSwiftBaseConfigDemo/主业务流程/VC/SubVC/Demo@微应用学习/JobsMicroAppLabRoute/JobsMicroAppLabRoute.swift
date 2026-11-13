@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Jobsl10n
 
 enum JobsMicroAppLabRoute {
 

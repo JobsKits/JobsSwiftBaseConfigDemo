@@ -7,6 +7,8 @@
 
 import UIKit
 
+import Jobsl10n
+
 import GKNavigationBarSwift
 import JobsByUIKit
 import JobsInheritance
@@ -122,7 +124,7 @@ final class JobsSceneDelegateDemoVC: BaseVC {
     private lazy var logLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("等待 Scene 生命周期事件…".tr)
+            .tr_setText("等待 Scene 生命周期事件…".tr)
             .byTextColor(JobsCor.secondaryLabel)
             .byFont(UIFont.monospacedSystemFont(ofSize: 12,
                                                 weight: .regular))
@@ -137,6 +139,15 @@ final class JobsSceneDelegateDemoVC: BaseVC {
         counter = JobsSceneCoordinator.restoredCounter(from: restorationActivity)
         super.init(nibName: nil,
                    bundle: nil)
+    }
+
+    // 目录通过 UIViewController.Type 创建页面，也必须提供对应的指定初始化器。
+    override init(nibName nibNameOrNil: String?,
+                  bundle nibBundleOrNil: Bundle?) {
+        restorationActivity = nil
+        counter = 0
+        super.init(nibName: nibNameOrNil,
+                   bundle: nibBundleOrNil)
     }
 
     required init?(coder: NSCoder) {
@@ -390,7 +401,7 @@ private extension JobsSceneDelegateDemoVC {
             """
         )
         guard let scene = currentScene else {
-            sessionLabel.byText("当前页面尚未绑定 UIWindowScene")
+            sessionLabel.byText("当前页面尚未绑定 UIWindowScene".tr)
             updateButtons()
             return
         }

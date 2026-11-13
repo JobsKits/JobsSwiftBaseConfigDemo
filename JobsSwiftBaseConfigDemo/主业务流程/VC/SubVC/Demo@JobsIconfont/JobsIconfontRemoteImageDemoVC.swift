@@ -14,6 +14,8 @@ import JobsSwiftDSL
 import SnapKit
 import UIKit
 
+import Jobsl10n
+
 final class JobsIconfontRemoteImageDemoVC: BaseVC {
 
     private let assets: [JobsIconfontRemoteAsset] = [.logo, .usageGuide, .invalidURL]
@@ -38,7 +40,7 @@ final class JobsIconfontRemoteImageDemoVC: BaseVC {
     private lazy var statusLabel: UILabel = {
         UILabel
             .jobsMake { _ in }
-            .byText("等待加载".tr)
+            .tr_setText("等待加载".tr)
             .byFont(JobsFont.systemFont(ofSize: 14,
                                         weight: .medium))
             .byTextColor(JobsCor.secondaryLabel)
@@ -133,7 +135,7 @@ final class JobsIconfontRemoteImageDemoVC: BaseVC {
                     "加载成功｜\(loader.rawValue)｜\(isCacheHit ? "缓存命中" : "网络返回")"
                 )
             case .failure:
-                self?.statusLabel.byText("URL 无效或网络失败｜继续显示框架内置兜底图")
+                self?.statusLabel.byText("URL 无效或网络失败｜继续显示框架内置兜底图".tr)
             }
         }
     }
