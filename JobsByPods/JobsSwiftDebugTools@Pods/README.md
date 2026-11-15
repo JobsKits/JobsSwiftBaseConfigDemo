@@ -51,6 +51,16 @@
   VCDebugDeallocDebug.showsDeinitTips.toggle()
   ```
 
+* 搜索等独占界面临时隐藏销毁提示，进入时设为 `true`，退出或销毁时恢复 `false`；不会改写上面的持久开关，也不影响业务 Toast。
+
+  ```swift
+  #if DEBUG
+  VCDebugDeallocDebug.temporarilySuppressesDeinitTips = true
+  // 独占界面退出时解除。
+  VCDebugDeallocDebug.temporarilySuppressesDeinitTips = false
+  #endif
+  ```
+
 <a id="jobs-architecture"></a>
 
 ## 三、架构脉络与关键设计 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
@@ -70,6 +80,7 @@
 - 当前观察方式交换 viewDidLoad 并关联监听器，不是直接替换控制器 dealloc。
 - 安装应只执行一次；关闭销毁 Toast 不等于停止观察和日志清理流程。
 - 提示开关持久化，默认保持原有开启行为，调试面板应调用公开入口调整。
+- 临时门禁只存在于内存，并在销毁回调生成及主队列实际展示前检查，避免已排队的提示进入独占界面后才出现。
 - 有销毁提示可辅助确认释放，但没有提示不能单凭现象就判定内存泄漏，还需核对安装与开关。
 
 ### 3.4、阅读与重建顺序 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>

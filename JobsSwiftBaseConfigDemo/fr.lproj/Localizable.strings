@@ -2225,3 +2225,29 @@
 "🧹 JobsSwiftRefresher（非正式协议闭包化）" = "🧹 JobsSwiftRefresher (délégation par closures)";
 "🪟 SceneDelegate 多场景与窗口会话" = "🪟 SceneDelegate · Scènes et sessions de fenêtres";
 "🪲 JobsDebugPanel 调试面板与环境切换" = "🪲 JobsDebugPanel · Débogage et environnements";
+
+"没有匹配的 Demo" = "Aucune démo correspondante";
+"轻点清空搜索，查看全部 Demo。" = "Touchez pour effacer la recherche et voir toutes les démos.";
+
+"清空关键词" = "Effacer la recherche";
+"试试其他关键词，或清空后查看搜索历史。" = "Essayez un autre mot-clé ou effacez la recherche pour voir l’historique.";
+"暂无搜索历史" = "Aucune recherche récente";
+"输入关键词，查找 Demo。" = "Saisissez un mot-clé pour trouver une démo.";
+
+// JobsSwiftSearcher：输入、推荐、历史与结果的统一组件。
+"输入关键词开始搜索。" = "Saisissez un mot-clé pour lancer la recherche.";
+"没有匹配结果" = "Aucun résultat correspondant";
+"搜索推荐" = "Suggestions de recherche";
+"Java 是运行在 Java 虚拟机上的编程语言。" = "Java est un langage de programmation qui s’exécute sur la machine virtuelle Java.";
+"Python 是常用于脚本、自动化和数据处理的编程语言。" = "Python est un langage de programmation souvent utilisé pour les scripts, l’automatisation et le traitement de données.";
+"Objective-C 是支持消息发送和运行时机制的编程语言。" = "Objective-C est un langage de programmation doté d’un mécanisme d’envoi de messages et d’un environnement d’exécution dynamique.";
+"Swift 是 Apple 平台应用开发使用的编程语言。" = "Swift est un langage de programmation utilisé pour développer des apps sur les plateformes Apple.";
+"iOS 是 iPhone 使用的操作系统。" = "iOS est le système d’exploitation de l’iPhone.";
+"UIKit 提供窗口、视图、控件和页面导航等原生界面能力。" = "UIKit fournit les fenêtres, les vues, les contrôles et la navigation des interfaces natives.";
+"JobsSwiftSearcher 统一管理输入、推荐词、搜索历史和结果区域。" = "JobsSwiftSearcher gère la saisie, les suggestions, l’historique de recherche et la zone de résultats.";
+"SnapKit 是基于 Auto Layout 的 Swift 布局库。" = "SnapKit est une bibliothèque de mise en page Swift basée sur Auto Layout.";
+"账号 A" = "Compte A";
+"账号 B" = "Compte B";
+"仅内存" = "Mémoire seule";
+"历史记录按账号独立保存。" = "L’historique de recherche est enregistré séparément pour chaque compte.";
+"临时搜索仅保留在当前页面内，不写入本地存储。" = "Les recherches temporaires restent sur cet écran et ne sont pas enregistrées dans le stockage local.";

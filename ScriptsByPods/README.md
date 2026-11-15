@@ -16,6 +16,8 @@
 
 * 每份自维护脚本均放在与完整文件名一致的目录内，包含真实脚本和对应 `README.md`。系统 Shell 入口使用 `【MacOS】`；挂载 Xcode Behavior 的入口使用 `【MacOS@Xcode】`；Ruby 辅助与测试脚本保留 `.rb` 原名，不添加系统前缀。复制时保留整个 `ScriptsByPods`，以携带全部相对依赖。
 
+* [Swift Pod Stability 测试](./jobs_swift_pods_tests.rb/README.md)读取已安装的 64 个独立测试 target，在临时 workspace 中执行 Debug XCTest 并保存官方结果与日志；可全量、按 Pod 定向或仅审计。仅手动或 CI 显式运行，不挂载到依赖安装与普通 App 编译。
+
 * 此目录存放用于 [**CocoaPods**](https://cocoapods.org/) 的安装辅助脚本，以及手动调用的 [Xcode 当前工程通用入口](<./【MacOS@Xcode】🫘当前工程Pod Install.command/README.md>)。入口包随本工程复制，使用与其它 iOS 工程相同的通用实现，不依赖外部脚本库。
 
 * 值得注意的是，运行脚本文件需要的授权操作，进一步放在了执行`pod install`期间

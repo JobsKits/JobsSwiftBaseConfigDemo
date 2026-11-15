@@ -16,7 +16,7 @@ concurrency:
 jobs:
   build-simulator-app:
     runs-on: xcode-27
-    timeout-minutes: 180
+    timeout-minutes: 240
     permissions:
       actions: write
       contents: read
@@ -183,6 +183,25 @@ jobs:
             --batch-pods --skip-host --output-dir "${RUNNER_TEMP}/JobsPodsUnitBuilds" \
             --derived-data "${RUNNER_TEMP}/DerivedData"
 
+      - name: Run each Pod Stability testspec
+        timeout-minutes: 50
+        shell: bash
+        run: |
+          set -euo pipefail
+          ruby ScriptsByPods/jobs_swift_pods_tests.rb/jobs_swift_pods_tests.rb \
+            --destination "${SIMULATOR_DESTINATION}" \
+            --output-dir "${RUNNER_TEMP}/JobsPodStability" \
+            --derived-data "${RUNNER_TEMP}/DerivedData"
+
+      - name: Upload Pod Stability test evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: Swift-Pod-Stability-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/JobsPodStability
+          if-no-files-found: warn
+          retention-days: 7
+
       - name: Build Simulator app and test bundle
         id: build
         timeout-minutes: 45
@@ -253,6 +272,7 @@ jobs:
             ${{ runner.temp }}/JobsPodsUnitBuilds
             ${{ runner.temp }}/JobsPodsCoreRegression
             ${{ runner.temp }}/JobsPodsNetworkRegression
+            ${{ runner.temp }}/JobsPodStability
             ${{ runner.temp }}/JobsPodsTests.xcresult
             ${{ runner.temp }}/jobs-pods-tests.log
           if-no-files-found: warn

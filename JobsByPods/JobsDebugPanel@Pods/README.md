@@ -77,6 +77,7 @@
 - 面板、环境列表及宿主 Demo 跟随 `JobsThemeCenter` 的有效主题；页面背景、单元格、文字、选中态和原生附件同步更新，App 外观与系统外观不同时也保持一致。已打开的页面随主题切换即时更新。
 - 圆按钮可单指拖动，位置限定在当前窗口安全区域内；旋转或窗口尺寸变化时重新限制位置。拖动不会打开菜单或触发长按隐藏，拖动后仍可点击打开；位置仅在当前 Scene 的本次启动内保留。
 - 圆按钮的显隐状态只存在内存中，不写入持久化配置。长按只隐藏窗口，保留控制器与拖动位置，不触发 deinit 提示；再次摇动恢复，重复摇动复用已有窗口。退到后台再回来不自动解除长按隐藏，重启后仍默认隐藏。`byHideForCurrentLaunch()` 保留兼容名称，当前语义为“隐藏至下次摇动”。背景图来自打包资源，无文字、无运行时网络图片。
+- 独占搜索等临时界面使用 `JobsDebugPanel.shared.byFloatingEntrySuppressed(true)` 抑制悬浮入口、摇动恢复、窗口激活刷新与显式打开；结束时成对传入 `false`。抑制不改长按隐藏状态、不持久化、不重建浮层或重置拖动位置；解除后只按原规则恢复，原本隐藏的入口继续隐藏。
 
 ## <span id="jobs-toc-heading-4" data-jobs-toc="v2">三、Demo 与离线预览 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 

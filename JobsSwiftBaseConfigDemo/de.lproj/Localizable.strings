@@ -2225,3 +2225,29 @@
 "🧹 JobsSwiftRefresher（非正式协议闭包化）" = "🧹 JobsSwiftRefresher (Delegation durch Closures)";
 "🪟 SceneDelegate 多场景与窗口会话" = "🪟 SceneDelegate · Szenen und Fenstersitzungen";
 "🪲 JobsDebugPanel 调试面板与环境切换" = "🪲 JobsDebugPanel · Debugging und Umgebungen";
+
+"没有匹配的 Demo" = "Keine passenden Demos";
+"轻点清空搜索，查看全部 Demo。" = "Tippe, um die Suche zu löschen und alle Demos anzuzeigen.";
+
+"清空关键词" = "Suche löschen";
+"试试其他关键词，或清空后查看搜索历史。" = "Versuche ein anderes Suchwort oder lösche die Suche, um den Suchverlauf zu sehen.";
+"暂无搜索历史" = "Keine letzten Suchanfragen";
+"输入关键词，查找 Demo。" = "Gib ein Suchwort ein, um eine Demo zu finden.";
+
+// JobsSwiftSearcher：输入、推荐、历史与结果的统一组件。
+"输入关键词开始搜索。" = "Gib einen Suchbegriff ein, um die Suche zu starten.";
+"没有匹配结果" = "Keine passenden Ergebnisse";
+"搜索推荐" = "Suchvorschläge";
+"Java 是运行在 Java 虚拟机上的编程语言。" = "Java ist eine Programmiersprache, die auf der Java Virtual Machine ausgeführt wird.";
+"Python 是常用于脚本、自动化和数据处理的编程语言。" = "Python ist eine Programmiersprache, die häufig für Skripte, Automatisierung und Datenverarbeitung verwendet wird.";
+"Objective-C 是支持消息发送和运行时机制的编程语言。" = "Objective-C ist eine Programmiersprache mit Nachrichtenversand und dynamischer Laufzeitumgebung.";
+"Swift 是 Apple 平台应用开发使用的编程语言。" = "Swift ist eine Programmiersprache für die Entwicklung von Apps auf Apple-Plattformen.";
+"iOS 是 iPhone 使用的操作系统。" = "iOS ist das Betriebssystem des iPhone.";
+"UIKit 提供窗口、视图、控件和页面导航等原生界面能力。" = "UIKit bietet native Fenster, Ansichten, Steuerelemente und Seitennavigation.";
+"JobsSwiftSearcher 统一管理输入、推荐词、搜索历史和结果区域。" = "JobsSwiftSearcher verwaltet Eingaben, Suchvorschläge, den Suchverlauf und den Ergebnisbereich.";
+"SnapKit 是基于 Auto Layout 的 Swift 布局库。" = "SnapKit ist eine Swift-Bibliothek für Layouts auf Basis von Auto Layout.";
+"账号 A" = "Konto A";
+"账号 B" = "Konto B";
+"仅内存" = "Nur im Speicher";
+"历史记录按账号独立保存。" = "Der Suchverlauf wird für jedes Konto getrennt gespeichert.";
+"临时搜索仅保留在当前页面内，不写入本地存储。" = "Temporäre Suchen bleiben nur auf dieser Seite und werden nicht lokal gespeichert.";

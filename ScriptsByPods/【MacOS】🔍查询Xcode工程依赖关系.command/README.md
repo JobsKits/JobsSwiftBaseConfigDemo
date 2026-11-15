@@ -166,6 +166,7 @@ flowchart TD
 
 ## <span id="jobs-toc-heading-12" data-jobs-toc="v2">八、日志文件 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
+- 确认后的脚本提示由内置日志函数同步显示并以纯文本落盘，无需额外日志程序。
 - 运行日志位置：
 
   ```text

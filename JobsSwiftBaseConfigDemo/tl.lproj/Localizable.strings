@@ -2225,3 +2225,29 @@
 "🧹 JobsSwiftRefresher（非正式协议闭包化）" = "🧹 JobsSwiftRefresher (delegasyon gamit ang closure)";
 "🪟 SceneDelegate 多场景与窗口会话" = "🪟 SceneDelegate · Mga Scene at session ng window";
 "🪲 JobsDebugPanel 调试面板与环境切换" = "🪲 JobsDebugPanel · Pag-debug at mga kapaligiran";
+
+"没有匹配的 Demo" = "Walang tumutugmang Demo";
+"轻点清空搜索，查看全部 Demo。" = "I-tap para i-clear ang paghahanap at makita ang lahat ng Demo.";
+
+"清空关键词" = "I-clear ang paghahanap";
+"试试其他关键词，或清空后查看搜索历史。" = "Subukan ang ibang keyword, o i-clear ang paghahanap para makita ang mga kamakailang paghahanap.";
+"暂无搜索历史" = "Wala pang kamakailang paghahanap";
+"输入关键词，查找 Demo。" = "Maglagay ng keyword para makahanap ng Demo.";
+
+// JobsSwiftSearcher：输入、推荐、历史与结果的统一组件。
+"输入关键词开始搜索。" = "Maglagay ng keyword para magsimulang maghanap.";
+"没有匹配结果" = "Walang tumugmang resulta";
+"搜索推荐" = "Mga mungkahing paghahanap";
+"Java 是运行在 Java 虚拟机上的编程语言。" = "Ang Java ay isang programming language na tumatakbo sa Java Virtual Machine.";
+"Python 是常用于脚本、自动化和数据处理的编程语言。" = "Ang Python ay isang programming language na madalas gamitin para sa mga script, awtomasyon, at pagproseso ng data.";
+"Objective-C 是支持消息发送和运行时机制的编程语言。" = "Ang Objective-C ay isang programming language na may pagpapadala ng mensahe at dynamic na runtime.";
+"Swift 是 Apple 平台应用开发使用的编程语言。" = "Ang Swift ay isang programming language na ginagamit sa paggawa ng mga app para sa mga platform ng Apple.";
+"iOS 是 iPhone 使用的操作系统。" = "Ang iOS ang operating system ng iPhone.";
+"UIKit 提供窗口、视图、控件和页面导航等原生界面能力。" = "Nagbibigay ang UIKit ng mga native na window, view, control, at paglipat sa mga screen.";
+"JobsSwiftSearcher 统一管理输入、推荐词、搜索历史和结果区域。" = "Pinamamahalaan ng JobsSwiftSearcher ang input, mga mungkahi, kasaysayan ng paghahanap, at lugar ng mga resulta.";
+"SnapKit 是基于 Auto Layout 的 Swift 布局库。" = "Ang SnapKit ay isang library ng layout para sa Swift na nakabatay sa Auto Layout.";
+"账号 A" = "Akawnt A";
+"账号 B" = "Akawnt B";
+"仅内存" = "Sa memorya lang";
+"历史记录按账号独立保存。" = "Hiwalay na iniimbak ang kasaysayan ng paghahanap para sa bawat akawnt.";
+"临时搜索仅保留在当前页面内，不写入本地存储。" = "Pansamantalang nananatili ang mga paghahanap sa pahinang ito at hindi isinusulat sa lokal na imbakan.";

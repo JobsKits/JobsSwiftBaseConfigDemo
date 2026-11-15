@@ -26,6 +26,9 @@ public enum VCDebugDeallocDebug {
 
     private static let showsDeinitTipsKey = "com.jobs.debug.showsControllerDeinitTips"
 
+    /// 独占界面的临时门禁，只影响销毁调试提示，不改变持久开关或业务 Toast。
+    public static var temporarilySuppressesDeinitTips = false
+
     /// 是否显示控制器销毁 Toast；未配置时保持历史默认值 `true`。
     public static var showsDeinitTips: Bool {
         get {
@@ -94,8 +97,12 @@ extension UIViewController {
             text = "🧹 \(clsName) [\(tag)] deinit"
         }
         let observer = _VCDebugDeinitObserver {
+            guard !VCDebugDeallocDebug.temporarilySuppressesDeinitTips else {
+                return
+            }
             DispatchQueue.main.async {
-                guard VCDebugDeallocDebug.showsDeinitTips else {
+                guard VCDebugDeallocDebug.showsDeinitTips,
+                      !VCDebugDeallocDebug.temporarilySuppressesDeinitTips else {
                     return
                 }
                 text.toast

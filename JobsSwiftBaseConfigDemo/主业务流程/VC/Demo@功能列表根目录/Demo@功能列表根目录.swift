@@ -14,6 +14,7 @@ import JobsViewPush
 #endif
 
 import Jobsl10n
+import JobsSwiftSearcher
 
 import JobsSwiftDSL
 import JobsScale
@@ -36,6 +37,11 @@ import JobsScreenCapture
 import GKNavigationBarSwift
 import SnapKit
 import MJRefresh
+
+#if DEBUG
+import JobsDebugPanel
+import JobsSwiftDebugTools
+#endif
 
 final class RootListVC: BaseVC {
 
@@ -217,6 +223,17 @@ final class RootListVC: BaseVC {
         suspendSpinBtnTimer?.stop()
         progressIndicatorTimer?.stop()
         suspendFuseTimer?.stop()
+        for (gesture, enabled) in demoSearchDrawerGestures {
+            gesture.byEnabled(enabled)
+        }
+        #if DEBUG
+        if isDemoSearchPresented {
+            Task { @MainActor in
+                JobsDebugPanel.shared.byFloatingEntrySuppressed(false)
+                VCDebugDeallocDebug.temporarilySuppressesDeinitTips = false
+            }
+        }
+        #endif
         try? timerMgr.remove(identifier: suspendBtnTimerID)
         try? timerMgr.remove(identifier: suspendSpinBtnTimerID)
         try? timerMgr.remove(identifier: progressIndicatorTimerID)
@@ -245,20 +262,12 @@ final class RootListVC: BaseVC {
     private typealias DemoItem  = (title: String, vcType: UIViewController.Type)
     private typealias DemoGroup = (title: String, items: [DemoItem])
     private var demoSearchKeyword = ""
-    private lazy var demoSearchHistory: [String] = {
-        let savedHistory = UserDefaults.standard.stringArray(forKey: Self.demoSearchHistoryUserDefaultsKey) ?? []
-        var history: [String] = []
-        for value in savedHistory {
-            let text = value.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !text.isEmpty,
-                  !history.contains(text),
-                  history.count < Self.maximumDemoSearchHistoryCount else {
-                continue
-            }
-            history.append(text)
-        }
-        return history
-    }()
+    private var isDemoSearchPresented = false
+    private var demoSearchHomeOffset = CGPoint.zero
+    private var demoSearchHomeExpandedGroups = Set<Int>()
+    private var demoSearchFloatingVisibility: (time: Bool, spin: Bool, fuse: Bool)?
+    private var demoSearchDrawerGestures: [(UIGestureRecognizer, Bool)] = []
+    private var demoSearchHeaderWasHidden = false
     /// ✅ 唯一数据源：外层=一级目录；内层=二级目录列表
     private lazy var g0 : [DemoItem] = {
         var temp: [DemoItem] = [
@@ -460,17 +469,6 @@ final class RootListVC: BaseVC {
                 ])
         ]
     }
-    // 悬浮时间限制在列表外的独立区域，拖动也不会挡住 Demo 入口。
-    private lazy var suspendTimeContainer: UIView = {
-        UIView
-            .jobsMake { _ in }
-            .byAddTo(view) { [unowned self] make in
-                make.left.right.equalToSuperview()
-                make.top.equalTo(gk_navigationBar.snp.bottom)
-                make.height.equalTo(82)
-            }
-    }()
-
     private lazy var suspendBtn: UIButton = {
         UIButton.sys()
             .byAccessibilityIdentifier("jobs.root.time")
@@ -498,16 +496,15 @@ final class RootListVC: BaseVC {
                 "点击了悬浮按钮".tr.toast
             }
             .bySuspend { [unowned self] cfg in
-                _ = suspendTimeContainer
-                view.byLayoutIfNeeded()
-                return cfg
-                    .byContainer(suspendTimeContainer)
-                    .byStart { _ in
+                cfg
+                    .byContainer(view)
+                    .byStart { [unowned self] container in
                         CGPoint(x: 15,
-                                y: 8)
+                                y: max(8, gk_navigationBar.frame.maxY - container.safeAreaInsets.top + 8))
                     }
                     .byFallbackSize(CGSize(width: 166, height: 66))
                     .byDocking(.nearestEdge)
+                    .byConfineInContainer(true)
                     .byHapticOnDock(true)
             }
     }()
@@ -755,64 +752,19 @@ final class RootListVC: BaseVC {
         return tableView
     }()
 
-    private lazy var demoSearchCancelButton: UIButton = {
-        UIButton.sys()
-            .tr_setTitle("取消".tr, for: .normal)
-            .byTitleColor(JobsCor.white,
-                          for: .normal)
-            .byTitleColor(JobsCor.white.withAlphaComponent(0.78),
-                          for: .highlighted)
-            .byTitleFont(JobsFont.systemFont(ofSize: 15,
-                                             weight: .semibold))
-            .byNumberOfLines(1)
-            .byLineBreakMode(.byClipping)
-            .byTitleAdjustsFontSizeToFitWidth(true)
-            .byTitleMinimumScaleFactor(0.8)
-            .byContentHorizontalAlignment(.center)
-            .byContentEdgeInsets(UIEdgeInsets(top: 0,
-                                              left: 12,
-                                              bottom: 0,
-                                              right: 12))
-            .byBackgroundColor(RootListPreferences.selectedTintColor,
-                               for: .normal)
-            .byBackgroundColor(RootListPreferences.selectedTintColor.withAlphaComponent(0.72),
-                               for: .highlighted)
-            .byCornerRadius(10)
-            .onTap { [weak self] _ in
-                self?.setSearchEnabled(false)
-            }
-            .byAddTo(view) { [unowned self] make in
-                make.right.equalToSuperview().inset(12)
-                make.width.greaterThanOrEqualTo(64)
-                make.height.equalTo(36)
-                if view.jobs_hasVisibleTopBar() {
-                    make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(18)
-                } else {
-                    make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(14)
-                }
-            }
-    }()
+    private var demoSearchActionColor: UIColor {
+        RootListPreferences.darkModeEnabled
+            ? UIColor(r: 139, g: 196, b: 235, a: 1)
+            : UIColor(r: 25, g: 94, b: 131, a: 1)
+    }
 
-    private lazy var demoSearchBar: UISearchBar = {
-        UISearchBar
-            .jobsMake { _ in }
-            .byPlaceholder("输入关键词搜索 Demo".tr)
-            .byDelegate(self)
-            .byShowsCancelButton(false)
-            .bySearchBarStyle(.minimal)
-            .byTranslucent(true)
-            .byBackgroundImage(UIImage.make { _ in })
-            .byBarTintColor(RootListPreferences.pageBackgroundColor)
-            .byBackgroundColor(JobsCor.clear)
+    private lazy var demoSearcherView: JobsSwiftSearcherView = {
+        JobsSwiftSearcherView(config: makeDemoSearchConfig())
+            .byActionColor(demoSearchActionColor)
+            .byVisible(false)
             .byAddTo(view) { [unowned self] make in
-                make.left.equalToSuperview().inset(8)
-                make.right.equalTo(demoSearchCancelButton.snp.left).offset(-4)
-                make.height.equalTo(56)
-                if view.jobs_hasVisibleTopBar() {
-                    make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(8)
-                } else {
-                    make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(4)
-                }
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                make.left.right.bottom.equalToSuperview()
             }
     }()
 
@@ -842,7 +794,11 @@ final class RootListVC: BaseVC {
                                          right: 0))
             .byAddTo(view) { [unowned self] make in
                 make.left.bottom.right.equalToSuperview()
-                make.top.equalTo(suspendTimeContainer.snp.bottom)
+                if view.jobs_hasVisibleTopBar() {
+                    make.top.equalTo(gk_navigationBar.snp.bottom)
+                } else {
+                    make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                }
             }
     }()
     // MARK: - Lifecycle
@@ -859,6 +815,9 @@ final class RootListVC: BaseVC {
             self.reloadDemoDataFromSource()
             self.refreshLocalizedContent()
             self.applyDemoListThemeChrome()
+            if self.demoSearchEnabled {
+                self.refreshDemoSearchPresentation()
+            }
             if self.tableView.window != nil {
                 self.tableView.reloadData()
             }
@@ -871,7 +830,13 @@ final class RootListVC: BaseVC {
         themeToken = NotificationCenter.default.addObserver(forName: .JobsThemeDidChange,
                                                             object: nil,
                                                             queue: .main) { [weak self] _ in
-            self?.applyDemoListThemeColors()
+            guard let self else {
+                return
+            }
+            self.applyDemoListThemeColors()
+            if self.demoSearchEnabled {
+                self.refreshDemoSearchPresentation()
+            }
         }
     }
 
@@ -924,8 +889,7 @@ final class RootListVC: BaseVC {
             },
                        rightButtons: [functionMenuButton])
         gk_navTitleView = demoNavigationTitleView
-        demoSearchBar.byVisible(NO)
-        demoSearchCancelButton.byVisible(NO)
+        demoSearcherView.byVisible(false)
         tableView.byVisible(YES)
         applyDemoListThemeChrome()
         view.addGestureRecognizer(functionMenuDismissTapGesture)
@@ -938,11 +902,12 @@ final class RootListVC: BaseVC {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        byGKNavBarHidden(false)
+        byGKNavBarHidden(demoSearchEnabled)
         jobsForceHideSystemNavBar(true)
         refreshLocalizedContent()
         applyDemoListThemeChrome()
         refreshSuspendTimeButtonVisibility()
+        refreshDemoSearchPresentation()
         let strategy = RootListPreferences.cellTextDisplayStrategy
         if strategy != appliedCellTextDisplayStrategy {
             appliedCellTextDisplayStrategy = strategy
@@ -954,7 +919,7 @@ final class RootListVC: BaseVC {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        byGKNavBarHidden(false)
+        byGKNavBarHidden(demoSearchEnabled)
         jobsForceHideSystemNavBar(true)
         guard tableView.window != nil else {
             guard !pendingDemoListAppearanceUpdate else {
@@ -990,12 +955,14 @@ extension RootListVC {
         tableView.beginUpdates()
         tableView.endUpdates()
         updateFooterAvailability()
-        if demoListHasAppeared && RootListPreferences.returnToTopAndRefreshEnabled {
+        if !demoSearchEnabled && demoListHasAppeared && RootListPreferences.returnToTopAndRefreshEnabled {
             reloadDemoListToTopAndRefresh()
         }
         demoListHasAppeared = true
         refreshSuspendTimeButtonVisibility()
-        suspendSpinBtnTimer?.resume()
+        if suspendSpinBtn.jobs_isSpinning {
+            suspendSpinBtnTimer?.resume()
+        }
         progressIndicatorTimer?.resume()
         updateVisibleProgressIndicators()
     }
@@ -1060,8 +1027,8 @@ extension RootListVC {
             visible = true
         }
         #endif
+        visible = visible && !demoSearchEnabled
         suspendBtn.byVisible(visible)
-        layoutSuspendTimeContainer(visible: visible)
         if visible {
             suspendBtnTimer?.resume()
         } else {
@@ -1069,13 +1036,13 @@ extension RootListVC {
         }
     }
 
-    private func layoutSuspendTimeContainer(visible: Bool) {
-        suspendTimeContainer.snp.remakeConstraints { [unowned self] make in
-            make.left.right.equalToSuperview()
-            make.height.equalTo(visible ? 82 : 0)
-            if !demoSearchBar.isHidden {
-                make.top.equalTo(demoSearchBar.snp.bottom).offset(6)
-            } else if view.jobs_hasVisibleTopBar() {
+    private func layoutDemoTable() {
+        guard !demoSearchEnabled else {
+            return
+        }
+        tableView.snp.remakeConstraints { [unowned self] make in
+            make.left.bottom.right.equalToSuperview()
+            if view.jobs_hasVisibleTopBar() {
                 make.top.equalTo(gk_navigationBar.snp.bottom)
             } else {
                 make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -1086,8 +1053,6 @@ extension RootListVC {
     // ================================== 运行时语言刷新 ==================================
     private func refreshLocalizedContent() {
         demoNavigationTitleLabel.byText("演武堂".tr)
-        demoSearchBar.byPlaceholder("输入关键词搜索 Demo".tr)
-        demoSearchCancelButton.tr_setTitle("取消".tr, for: .normal)
         suspendBtn.tr_setTitle("当前时间".tr, for: .normal)
         suspendFuseBtn.tr_setTitle("按".tr, for: .normal)
         if let tabBarController = view.window?.rootViewController as? UITabBarController,
@@ -1113,31 +1078,9 @@ extension RootListVC {
                 functionMenuTableView.reloadData()
             }
         }
-        demoSearchBar
-            .byBarTintColor(RootListPreferences.pageBackgroundColor)
-            .byBackgroundColor(JobsCor.clear)
-        demoSearchCancelButton
-            .byTitleColor(JobsCor.white,
-                          for: .normal)
-            .byTitleColor(JobsCor.white.withAlphaComponent(0.78),
-                          for: .highlighted)
-            .byBackgroundColor(RootListPreferences.selectedTintColor,
-                               for: .normal)
-            .byBackgroundColor(RootListPreferences.selectedTintColor.withAlphaComponent(0.72),
-                               for: .highlighted)
-        #if os(iOS)
-        if #available(iOS 13.0, *) {
-            demoSearchBar.searchTextField
-                .byBackgroundColor(RootListPreferences.foldCardBackgroundColor)
-                .byTextColor(RootListPreferences.primaryTextColor)
-                .byAttributedPlaceholder(
-                NSAttributedString(string: "输入关键词搜索 Demo".tr,
-                                   attributes: [
-                        .foregroundColor: RootListPreferences.secondaryTextColor
-                    ])
-            )
-        }
-        #endif
+        demoSearcherView
+            .byActionColor(demoSearchActionColor)
+            .byBackgroundColor(RootListPreferences.pageBackgroundColor)
         if tableView.window != nil {
             tableView.reloadData()
         }
@@ -1149,27 +1092,13 @@ extension RootListVC {
         applyDemoListThemeColors()
         gk_navShadowColor = JobsCor.clear
         gk_navLineHidden = true
-        gk_navigationBar.byShadowOpacity(0)
+        gk_navigationBar
+            .byShadowOpacity(0)
+            .byAccessibilityIdentifier("jobs.root.navigationBar")
         tableView.bySeparatorColor(RootListPreferences.separatorColor)
         functionMenuButton.byTintColor(RootListPreferences.primaryTextColor)
         loadedFunctionMenuTableView?
             .bySeparatorColor(RootListPreferences.separatorColor)
-        demoSearchBar.byTintColor(RootListPreferences.selectedTintColor)
-        demoSearchCancelButton.byCornerRadius(10)
-        #if os(iOS)
-        if #available(iOS 13.0, *) {
-            demoSearchBar.searchTextField
-                .byTintColor(RootListPreferences.selectedTintColor)
-                .byFont(JobsFont.systemFont(ofSize: 15,
-                                            weight: .regular))
-                .byCornerRadius(18)
-                .byBorderWidth(1)
-                .byBorderColor(RootListPreferences.separatorColor)
-                .byClipsToBounds(YES)
-            demoSearchBar.searchTextField.leftView?
-                .byTintColor(RootListPreferences.secondaryTextColor)
-        }
-        #endif
     }
 
     // ================================== JobsSwiftTimer（新版）创建与绑定 UI ==================================
@@ -1260,7 +1189,7 @@ extension RootListVC {
     }
 
     private var hasPinnedDemoSection: Bool {
-        !demoSearchActive && !pinnedDemoItems.isEmpty
+        !demoSearchEnabled && !pinnedDemoItems.isEmpty
     }
 
     private var demoGroupTableSection: Int {
@@ -1268,16 +1197,13 @@ extension RootListVC {
     }
 
     private var demoSearchEnabled: Bool {
-        !demoSearchBar.isHidden
+        isDemoSearchPresented
     }
 
     private var demoSearchActive: Bool {
         !demoSearchKeyword.isEmpty
     }
 
-    private var demoSearchLandingActive: Bool {
-        demoSearchEnabled && !demoSearchActive && !demoSearchHistory.isEmpty
-    }
 
     private func reloadDemoDataFromSource() {
         allDemo2D = makeDemo2D().map { group in
@@ -1442,7 +1368,35 @@ extension RootListVC {
         (text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
+    private func makeDemoSearchConfig() -> JobsSwiftSearcherConfig {
+        JobsSwiftSearcherConfig.defaultConfig
+            .byPlaceholder("输入关键词搜索 Demo")
+            .byShowsSearchButton(false)
+            .byShowsCancelButton(true)
+            .byEmptyHistoryMessage("输入关键词，查找 Demo。")
+            .byNoResultsTitle("没有匹配的 Demo")
+            .byHistoryStorageKey(Self.demoSearchHistoryUserDefaultsKey)
+            .byMaxHistoryCount(Self.maximumDemoSearchHistoryCount)
+            .byAccessibilityIdentifierPrefix("jobs.root.search")
+            .bySearchTextChangedBlock { [weak self] keyword in
+                guard let self else {
+                    return
+                }
+                self.applySearchKeyword(keyword)
+                self.tableView.byReloadData()
+                self.updateFooterAvailability()
+            }
+            .byCancelBlock { [weak self] in
+                self?.setSearchEnabled(false)
+            }
+    }
+
     private func applySearchKeyword(_ keyword: String) {
+        defer {
+            if demoSearchEnabled {
+                demoSearcherView.byResultCount(demoSearchActive ? demo2D.reduce(0) { $0 + $1.items.count } : 0)
+            }
+        }
         demoSearchKeyword = normalizedDemoSearchText(keyword)
         guard !demoSearchKeyword.isEmpty else {
             demo2D = allDemo2D.compactMap { group in
@@ -1472,104 +1426,18 @@ extension RootListVC {
         expandedGroups = Set(demo2D.indices)
     }
 
-    private func applySearchHistory(_ historyText: String) {
-        let text = normalizedDemoSearchText(historyText)
-        guard !text.isEmpty else {
-            return
-        }
-        demoSearchBar.byText(text)
-        applySearchKeyword(text)
-        tableView.reloadData()
-        updateFooterAvailability()
-    }
 
-    private func saveDemoSearchHistory(_ searchText: String?) {
-        let text = normalizedDemoSearchText(searchText)
-        guard !text.isEmpty else {
-            return
-        }
-        if let index = demoSearchHistory.firstIndex(of: text) {
-            demoSearchHistory.remove(at: index)
-        }
-        demoSearchHistory.insert(text,
-                                 at: 0)
-        if demoSearchHistory.count > Self.maximumDemoSearchHistoryCount {
-            demoSearchHistory.removeLast(demoSearchHistory.count - Self.maximumDemoSearchHistoryCount)
-        }
-        persistDemoSearchHistory()
-        tableView.reloadData()
-    }
 
-    private func deleteDemoSearchHistory(at index: Int) {
-        guard demoSearchHistory.indices.contains(index) else {
-            return
-        }
-        demoSearchHistory.remove(at: index)
-        persistDemoSearchHistory()
-        tableView.reloadData()
-        updateFooterAvailability()
-    }
 
-    private func clearDemoSearchHistory() {
-        demoSearchHistory.removeAll()
-        persistDemoSearchHistory()
-        tableView.reloadData()
-        updateFooterAvailability()
-    }
 
-    private func persistDemoSearchHistory() {
-        if demoSearchHistory.isEmpty {
-            UserDefaults.standard.removeObject(forKey: Self.demoSearchHistoryUserDefaultsKey)
-        } else {
-            UserDefaults.standard.set(demoSearchHistory,
-                                      forKey: Self.demoSearchHistoryUserDefaultsKey)
-        }
-    }
 
-    private func demoSearchHistoryHeaderView() -> UIView {
-        let headerView = UIView
-            .jobsMake { _ in }
-            .byBackgroundColor(JobsCor.clear)
-        UILabel
-            .jobsMake { _ in }
-            .byText("搜索历史".tr)
-            .byTextColor(RootListPreferences.primaryTextColor)
-            .byFont(JobsFont.systemFont(ofSize: 17,
-                                        weight: .semibold))
-            .byAddTo(headerView) { make in
-                make.left.equalToSuperview().offset(16)
-                make.centerY.equalToSuperview()
-            }
-        UIButton.sys()
-            .byTitle("清空".tr)
-            .byTitleColor(RootListPreferences.secondaryTextColor)
-            .byTitleColor(RootListPreferences.selectedTintColor,
-                          for: .highlighted)
-            .byTitleFont(JobsFont.systemFont(ofSize: 13,
-                                             weight: .regular))
-            .byNumberOfLines(1)
-            .byLineBreakMode(.byClipping)
-            .byTitleAdjustsFontSizeToFitWidth(true)
-            .byTitleMinimumScaleFactor(0.6)
-            .byContentEdgeInsets(.zero)
-            .byBackgroundColor(JobsCor.clear)
-            .onTap { [weak self] _ in
-                self?.clearDemoSearchHistory()
-            }
-            .byAddTo(headerView) { make in
-                make.right.equalToSuperview().inset(16)
-                make.centerY.equalToSuperview()
-                make.width.equalTo(52)
-                make.height.equalTo(32)
-            }
-        return headerView
-    }
+
 
     @objc private func handleFunctionMenuDismissTap(_ gesture: UITapGestureRecognizer) {
         let point = gesture.location(in: view)
-        let searchBarFrame = demoSearchBar.convert(demoSearchBar.bounds,
+        let searchBarFrame = demoSearcherView.convert(demoSearcherView.bounds,
                                                    to: view)
-        let pointInSearchBar = !demoSearchBar.isHidden && searchBarFrame.contains(point)
+        let pointInSearchBar = !demoSearcherView.isHidden && searchBarFrame.contains(point)
         if !pointInSearchBar {
             jobsDismissKeyboard()
         }
@@ -1710,21 +1578,79 @@ extension RootListVC {
     }
 
     private func setSearchEnabled(_ enabled: Bool) {
-        demoSearchBar.byVisible(enabled)
-        demoSearchCancelButton.byVisible(enabled)
-        layoutSuspendTimeContainer(visible: !suspendBtn.isHidden)
+        guard enabled != demoSearchEnabled else {
+            return
+        }
         if enabled {
-            tableView.reloadData()
-            updateFooterAvailability()
-            demoSearchBar.becomeFirstResponder()
-        } else {
-            demoSearchBar.byText("".tr)
+            demoSearchHomeOffset = tableView.contentOffset
+            demoSearchHomeExpandedGroups = expandedGroups
+            demoSearchFloatingVisibility = (!suspendBtn.isHidden, !suspendSpinBtn.isHidden, !suspendFuseBtn.isHidden)
+            demoSearchHeaderWasHidden = tableView.mj_header?.isHidden ?? false
+            demoSearchDrawerGestures = (jobsSideDrawer?.view.gestureRecognizers ?? [])
+                .filter { $0 is UIScreenEdgePanGestureRecognizer }
+                .map { ($0, $0.isEnabled) }
+        }
+        isDemoSearchPresented = enabled
+        if enabled {
+            demoSearcherView
+                .byResultContentView(tableView)
+                .byQuery("", recordHistory: false)
+                .byVisible(true)
             applySearchKeyword("")
-            demoSearchBar.resignFirstResponder()
-            tableView.reloadData()
+            tableView.byReloadData()
+            tableView.byContentOffsetBy(CGPoint(x: 0, y: -tableView.adjustedContentInset.top))
+            refreshDemoSearchPresentation()
             updateFooterAvailability()
+            demoSearcherView.focus()
+        } else {
+            demoSearcherView
+                .dismissKeyboard()
+                .byQuery("", recordHistory: false)
+                .byResultContentView(nil)
+                .byVisible(false)
+            applySearchKeyword("")
+            expandedGroups = demoSearchHomeExpandedGroups
+            tableView
+                .byVisible(true)
+                .byAddTo(view)
+            view.bySendToBack(tableView)
+            refreshDemoSearchPresentation()
+            layoutDemoTable()
+            tableView.byReloadData()
+            if tableView.window != nil {
+                tableView.layoutIfNeeded()
+            }
+            tableView.byContentOffsetBy(demoSearchHomeOffset)
+            updateFooterAvailability()
+            demoSearchFloatingVisibility = nil
+            demoSearchDrawerGestures.removeAll()
         }
     }
+
+    /// 搜索模式独占首页；键盘收起不代表退出，也不修改用户的悬浮入口偏好。
+    private func refreshDemoSearchPresentation() {
+        let searching = demoSearchEnabled
+        byGKNavBarHidden(searching)
+        gk_navigationBar.byHidden(searching)
+        for (gesture, enabled) in demoSearchDrawerGestures {
+            gesture.byEnabled(searching ? false : enabled)
+        }
+        tableView.mj_header?.byHidden(searching || demoSearchHeaderWasHidden)
+        refreshSuspendTimeButtonVisibility()
+        if searching {
+            suspendSpinBtn.byVisible(false)
+            suspendFuseBtn.byVisible(false)
+        } else if let visibility = demoSearchFloatingVisibility {
+            suspendBtn.byVisible(visibility.time && RootListPreferences.showsSuspendTimeButton)
+            suspendSpinBtn.byVisible(visibility.spin)
+            suspendFuseBtn.byVisible(visibility.fuse)
+        }
+        #if DEBUG
+        JobsDebugPanel.shared.byFloatingEntrySuppressed(searching)
+        VCDebugDeallocDebug.temporarilySuppressesDeinitTips = searching
+        #endif
+    }
+
 
     // MARK: - Footer 自动显隐逻辑
     private func updateFooterAvailability() {
@@ -1747,31 +1673,12 @@ extension RootListVC {
         }
     }
 }
-// MARK: —— UISearchBarDelegate
-extension RootListVC: UISearchBarDelegate {
-
-    func searchBar(_ searchBar: UISearchBar,
-                   textDidChange searchText: String) {
-        applySearchKeyword(searchText)
-        tableView.reloadData()
-        updateFooterAvailability()
-    }
-
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        saveDemoSearchHistory(searchBar.text)
-        searchBar.resignFirstResponder()
-    }
-
-}
 // MARK: —— UITableViewDataSource & UITableViewDelegate
 extension RootListVC: UITableViewDataSource,
                       UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
         if tableView === loadedFunctionMenuTableView {
-            return 1
-        }
-        if demoSearchLandingActive {
             return 1
         }
         return hasPinnedDemoSection ? 2 : 1
@@ -1781,9 +1688,6 @@ extension RootListVC: UITableViewDataSource,
                    numberOfRowsInSection section: Int) -> Int {
         if tableView === loadedFunctionMenuTableView {
             return FunctionMenuAction.allCases.count
-        }
-        if demoSearchLandingActive {
-            return demoSearchHistory.count
         }
         if hasPinnedDemoSection && section == 0 {
             return 1
@@ -1813,45 +1717,6 @@ extension RootListVC: UITableViewDataSource,
                     $0.byBackgroundColor(RootListPreferences.foldCardBackgroundColor)
                 }
                 .byAccessoryType(.none)
-        }
-        if demoSearchLandingActive {
-            let historyText = demoSearchHistory.indices.contains(indexPath.row) ? demoSearchHistory[indexPath.row] : ""
-            return tableView
-                .byDequeueReusableCell(withType: UITableViewCell.self,
-                                       for: indexPath)
-                .byContentView {
-                    $0.byBackgroundColor(RootListPreferences.cardBackgroundColor)
-                }
-                .byImageView {
-                    $0
-                        .byTintColor(RootListPreferences.secondaryTextColor)
-                        .byContentMode(.scaleAspectFit)
-                }
-                .byText(historyText)
-                .byTitleFont(JobsFont.systemFont(ofSize: 16,
-                                                 weight: .regular))
-                .byTitleCor(RootListPreferences.primaryTextColor)
-                .byImage("clock".sysImg.withRenderingMode(.alwaysTemplate))
-                .byAccessoryType(.none)
-                .byAccessoryView(
-                UIButton.sys()
-                    .byImage("xmark.circle.fill".sysImg.withRenderingMode(.alwaysTemplate))
-                    .byTintColor(RootListPreferences.secondaryTextColor)
-                    .byFrame(CGRect(x: 0,
-                                    y: 0,
-                                    width: 38,
-                                    height: 38))
-                    .byImageEdgeInsets(UIEdgeInsets(top: 8,
-                                                    left: 8,
-                                                    bottom: 8,
-                                                    right: 8))
-                    .onTap { [weak self] _ in
-                    self?.deleteDemoSearchHistory(at: indexPath.row)
-                }
-            )
-                .bySelectionStyle(.default)
-                .byBackgroundColor(RootListPreferences.cardBackgroundColor)
-                .byTintColor(RootListPreferences.secondaryTextColor)
         }
         if hasPinnedDemoSection && indexPath.section == 0 {
             return tableView
@@ -1888,7 +1753,7 @@ extension RootListVC: UITableViewDataSource,
                     return
                 }
                 if self.demoSearchActive {
-                    self.saveDemoSearchHistory(self.demoSearchKeyword)
+                    self.demoSearcherView.saveHistory(by: self.demoSearchKeyword)
                 }
                 let item = g.items[itemIndex]
             /// 这里推入控制器
@@ -1907,9 +1772,6 @@ extension RootListVC: UITableViewDataSource,
                    heightForRowAt indexPath: IndexPath) -> CGFloat {
         if tableView === loadedFunctionMenuTableView {
             return 44
-        }
-        if demoSearchLandingActive {
-            return 54
         }
         if hasPinnedDemoSection && indexPath.section == 0 {
             return RootFoldTableCell.expandedHeight(itemCount: pinnedDemoItems.count,
@@ -1938,13 +1800,6 @@ extension RootListVC: UITableViewDataSource,
             handleMenuAction(FunctionMenuAction.allCases[indexPath.row])
             return
         }
-        if demoSearchLandingActive {
-            guard demoSearchHistory.indices.contains(indexPath.row) else {
-                return
-            }
-            applySearchHistory(demoSearchHistory[indexPath.row])
-            return
-        }
         if hasPinnedDemoSection && indexPath.section == 0 {
             return
         }
@@ -1969,20 +1824,7 @@ extension RootListVC: UITableViewDataSource,
 
     func tableView(_ tableView: UITableView,
                    heightForHeaderInSection section: Int) -> CGFloat {
-        guard tableView !== loadedFunctionMenuTableView,
-              demoSearchLandingActive else {
-            return .leastNonzeroMagnitude
-        }
-        return 48
-    }
-
-    func tableView(_ tableView: UITableView,
-                   viewForHeaderInSection section: Int) -> UIView? {
-        guard tableView !== loadedFunctionMenuTableView,
-              demoSearchLandingActive else {
-            return nil
-        }
-        return demoSearchHistoryHeaderView()
+        .leastNonzeroMagnitude
     }
 
     func tableView(_ tableView: UITableView,
@@ -1990,23 +1832,7 @@ extension RootListVC: UITableViewDataSource,
         .leastNonzeroMagnitude
     }
 
-    func tableView(_ tableView: UITableView,
-                   canEditRowAt indexPath: IndexPath) -> Bool {
-        tableView !== loadedFunctionMenuTableView &&
-            demoSearchLandingActive &&
-            demoSearchHistory.indices.contains(indexPath.row)
-    }
 
-    func tableView(_ tableView: UITableView,
-                   commit editingStyle: UITableViewCell.EditingStyle,
-                   forRowAt indexPath: IndexPath) {
-        guard tableView !== loadedFunctionMenuTableView,
-              editingStyle == .delete,
-              demoSearchLandingActive else {
-            return
-        }
-        deleteDemoSearchHistory(at: indexPath.row)
-    }
 }
 
 // MARK: —— Demo 分组长按排序

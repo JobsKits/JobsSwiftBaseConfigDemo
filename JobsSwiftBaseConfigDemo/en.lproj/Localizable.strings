@@ -2225,3 +2225,29 @@
 "🧹 JobsSwiftRefresher（非正式协议闭包化）" = "🧹 JobsSwiftRefresher (closure-based delegation)";
 "🪟 SceneDelegate 多场景与窗口会话" = "🪟 SceneDelegate · Scenes and window sessions";
 "🪲 JobsDebugPanel 调试面板与环境切换" = "🪲 JobsDebugPanel · Debugging and environments";
+
+"没有匹配的 Demo" = "No matching demos";
+"轻点清空搜索，查看全部 Demo。" = "Tap to clear the search and see all demos.";
+
+"清空关键词" = "Clear search";
+"试试其他关键词，或清空后查看搜索历史。" = "Try another keyword, or clear your search to see recent searches.";
+"暂无搜索历史" = "No recent searches";
+"输入关键词，查找 Demo。" = "Enter a keyword to find a demo.";
+
+// JobsSwiftSearcher：输入、推荐、历史与结果的统一组件。
+"输入关键词开始搜索。" = "Enter a keyword to start searching.";
+"没有匹配结果" = "No matching results";
+"搜索推荐" = "Suggested searches";
+"Java 是运行在 Java 虚拟机上的编程语言。" = "Java is a programming language that runs on the Java Virtual Machine.";
+"Python 是常用于脚本、自动化和数据处理的编程语言。" = "Python is a programming language commonly used for scripting, automation, and data processing.";
+"Objective-C 是支持消息发送和运行时机制的编程语言。" = "Objective-C is a programming language with message passing and a dynamic runtime.";
+"Swift 是 Apple 平台应用开发使用的编程语言。" = "Swift is a programming language used to develop apps for Apple platforms.";
+"iOS 是 iPhone 使用的操作系统。" = "iOS is the operating system used by iPhone.";
+"UIKit 提供窗口、视图、控件和页面导航等原生界面能力。" = "UIKit provides native windows, views, controls, and screen navigation.";
+"JobsSwiftSearcher 统一管理输入、推荐词、搜索历史和结果区域。" = "JobsSwiftSearcher manages input, suggested searches, recent searches, and the results area.";
+"SnapKit 是基于 Auto Layout 的 Swift 布局库。" = "SnapKit is a Swift layout library built on Auto Layout.";
+"账号 A" = "Account A";
+"账号 B" = "Account B";
+"仅内存" = "Memory only";
+"历史记录按账号独立保存。" = "Recent searches are stored separately for each account.";
+"临时搜索仅保留在当前页面内，不写入本地存储。" = "Temporary searches stay on this screen and are not saved to local storage.";

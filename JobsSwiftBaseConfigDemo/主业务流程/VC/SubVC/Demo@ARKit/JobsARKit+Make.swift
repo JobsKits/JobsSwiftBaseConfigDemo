@@ -195,6 +195,13 @@ extension UIView {
 extension SCNCamera {
 
     @discardableResult
+    func byAROrthographicScale(_ value: Double) -> Self {
+        usesOrthographicProjection = true
+        orthographicScale = value
+        return self
+    }
+
+    @discardableResult
     func byARClipping(near: Double,
                       far: Double) -> Self {
         zNear = near

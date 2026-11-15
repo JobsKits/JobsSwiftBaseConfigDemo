@@ -63,4 +63,17 @@ Pod::Spec.new do |s|
     '**/*.tmp.*',
   ]
 
+  # Stability 单独编译 Tests；保留生产源码的测试排除规则。
+  s.test_spec 'Stability' do |test_spec|
+    test_spec.source_files = 'Tests/**/*Tests.swift'
+    test_spec.exclude_files = []
+    test_spec.frameworks = 'XCTest'
+    test_spec.ios.deployment_target = '15.6'
+    # 独立模拟器测试继承 Flutter helper 动态提供的 SDK 搜索路径。
+    test_spec.pod_target_xcconfig = {
+      'LD_RUNPATH_SEARCH_PATHS[sdk=iphonesimulator*]' => '$(inherited) $(FRAMEWORK_SEARCH_PATHS)'
+    }
+    test_spec.dependency 'JobsByUIKit'
+  end
+
 end

@@ -468,7 +468,10 @@
 <font color=red>**当前项目还没有接入采集页面和后端**</font>，页面仍显示、复制系统限制说明，不会用 IDFV 冒充 UDID，也不承诺“授权后两项都能拿到”。
 
 - 自建 Pod 使用 [.github/tests/JobsPodsUpgrade/validate_builds.rb](<./.github/tests/JobsPodsUpgrade/validate_builds.rb>) 验证小工程，再验证 workspace 主工程。默认逐 Pod 排查；CI 用 `--batch-pods` 将全部自建根 target 放入同一依赖图构建，减少重复构图。保存 JSON / 编译日志；失败时阻止宿主验收。最低宿主系统已对齐 iOS 15.6。验证入口与行为迁移见本文“自建 Pod 稳定性与编译门禁”。
-- [JobsDebugPanel](./JobsByPods/JobsDebugPanel@Pods/README.md) 是仅 Debug 集成的本地调试 Pod：启动默认隐藏，摇动手机后显示可拖动圆形按钮；push 功能列表与 URL 环境二级列表、自定义功能 Model DSL。长按隐藏全部悬浮入口，不弹出 deinit 提示，再次摇动可恢复；重复摇动复用浮层，重启仍等待摇动。圆按钮再次点击会退出菜单及本次工具页面，返回打开前的宿主页面；面板各层、Demo 与已打开页面跟随 JobsThemeCenter 的有效主题，App 与系统外观错配时保持一致；拖动限制在安全区域且不会误触点击或长按。`AppDelegate+JobsDebugPanel.swift` 配置三环境并接入 `JobsNetworking` 的后续相对路径请求；Demo 使用 3 秒超时与本地失败兜底，可无服务器直接预览。Release 不展示调试入口，弱网测试使用系统 [**Network Link Conditioner**](https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/On_Demand_Resources_Guide/TestingPerformance.html)。
+
+- 64 个源码 Pod 通过 `test_spec 'Stability'` 与 `:testspecs => ['Stability']` 接入独立 XCTest target；安装只生成测试 target，手动或 CI 显式执行[Pod Stability 测试](./ScriptsByPods/jobs_swift_pods_tests.rb/README.md)。生产 target 保留 Tests 排除规则；原有主工程测试与构建工具验证保留。
+- [JobsSwiftSearcher](<./JobsByPods/JobsSwiftSearcher@Pods/README.md>) 同时承接首页独占搜索与独立 Demo。输入、可选提交／取消、推荐、历史与账号隔离、JobsEmptyAuto 空态及结果容器由同一个 Pod 管理；首页只处理 Demo 过滤和跳转，沿用旧历史键，取消恢复原导航、滚动、展开、浮控与抽屉手势。空关键词仅看历史，有词只看匹配结果，清空回历史。独立 Demo 提供八个技术词的真实搜索／释义，以及账号 A／B 和仅内存模式；全部消费全局语言与主题。公开入口为 `byQuery(_:recordHistory:)`、`byResultCount(_:)`、`byResultContentView(_:)`、`focus()` 和 `dismissKeyboard()`；输入变化只触发一次，结果数更新不反向触发输入事件。
+- [JobsDebugPanel](./JobsByPods/JobsDebugPanel@Pods/README.md) 是仅 Debug 集成的本地调试 Pod：启动默认隐藏，摇动手机后显示可拖动圆形按钮；push 功能列表与 URL 环境二级列表、自定义功能 Model DSL。长按隐藏全部悬浮入口，不弹出 deinit 提示，再次摇动可恢复；重复摇动复用浮层，重启仍等待摇动。圆按钮再次点击会退出菜单及本次工具页面，返回打开前的宿主页面；面板各层、Demo 与已打开页面跟随 JobsThemeCenter 的有效主题，App 与系统外观错配时保持一致；拖动限制在安全区域且不会误触点击或长按。`AppDelegate+JobsDebugPanel.swift` 配置三环境并接入 `JobsNetworking` 的后续相对路径请求；Demo 使用 3 秒超时与本地失败兜底，可无服务器直接预览。首页独占搜索期间通过 `byFloatingEntrySuppressed(true)` 临时阻止调试入口及摇动恢复，取消搜索后按原显隐规则恢复，不改变长按状态或拖动位置。Release 不展示调试入口，弱网测试使用系统 [**Network Link Conditioner**](https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/On_Demand_Resources_Guide/TestingPerformance.html)。
 - 本工程已有 [**Flutter**](https://docs.flutter.dev/testing/build-modes) 内嵌模块，其 Release / Profile 不支持 iOS 模拟器。验证 Swift 宿主的 Release 宏、符号与资源隔离时，`xcodebuild -configuration Release` 可额外传 `FLUTTER_BUILD_MODE=debug`：仅内嵌 Flutter 使用 Debug，原生宿主仍为 Release；该产物不是完整 Flutter Release 包。完整真机 Release 还需现有 Unity 真机依赖及有效代码签名，工程最后的 IPA 保存阶段会拒绝无签名真机包。
 
 - [Podfile](./Podfile) 使用独立的 [CocoaPods 源自动选择模块](<./ScriptsByPods/【MacOS】🌐CocoaPods源自动选择.command/README.md>)，在 `pod install` / `pod update` 解析依赖前同步测试官方 CDN 与 GitHub Specs，按真实 podspec 请求结果、耗时与 Git 仓库连接决定公共源；两条线路接近时优先 CDN。模块与其它安装脚本统一放在 `ScriptsByPods`，失败时告警并保留缓存或默认源使用机会。迁移时携带完整脚本包与 Podfile 加载代码，保留 `Podfile.lock`；Specs 测试通过仍不保证后续源码下载成功。
@@ -2159,6 +2162,8 @@ Behaviors 属于 Xcode 用户设置，本机安装行为的 `Run` 路径登记�
 
 基础更新复用上述四个进程级跳过开关，保留必要依赖声明与工程配置；完整更新保留已有环境开关、实际 update 钩子及子脚本确认，不强制触发仅限 install 的前置任务。入口不加入 App target、Podfile 钩子或构建动作；独立日志为系统临时目录的 `jobs-xcode-pod-update.log.*`，保留真实退出码。可用 `--check --xcode-path` 只读定位。
 
+手动安装、更新及依赖报告的提示日志均由各自脚本内置函数同步显示并以纯文本落盘，无需额外日志程序。
+
 本机已在 `Xcode → Behaviors → 🫘当前工程 · Pod Update` 接入更新入口，与现有 Pod Install 行为并列；`Run` 使用工程相对路径 `ScriptsByPods/【MacOS@Xcode】🫘当前工程Pod Update.command/【MacOS@Xcode】🫘当前工程Pod Update.command`。更新脚本与工程展示引用随工程提供，用户级 Behaviors 不会由工程自动部署，换电脑首次仍需登记；完整登记和终端用法见包内 README。
 
 **安装前后：入口与行为**
@@ -2292,7 +2297,7 @@ Pod 编译、宿主与测试统一使用 arm64、iOS 15.6 和同一份 DerivedDa
 
 打包仅选择产品目录中的 `JobsSwiftBaseConfigDemo.app`，并校验 Info.plist 的 Bundle ID、主可执行文件名称及文件存在；主 App 缺失或身份不符时直接失败，不能用同目录的 `UITests-Runner.app` 或其它测试宿主替代。日志输出实际打包路径和 Bundle ID，方便与下载产物核对。
 
-任务总时限 180 分钟，Flutter 准备、模拟器准备、依赖安装、自建 Pod 批量编译、宿主编译与测试分别限时 20 / 10 / 20 / 60 / 45 / 20 分钟，为首次启动 runtime 和失败诊断预留时间。失败或取消时上传 `flutter-setup.log`、安装日志、SDK 版本、模拟器 runtime / 设备清单与选择结果、WebKit 探针及其链接依赖日志、Pod 批次 / 成员结果、回归结果、构建 / 测试日志及 `.xcresult`，保存 7 天；成功 App 保存 14 天，并替换该分支先前的模拟器 App artifact。源码或回归失败仍会阻断产物发布；runner 排队提示不代表编译错误。
+任务总时限 240 分钟，Flutter 准备、模拟器准备、依赖安装、自建 Pod 批量编译、Pod Stability 测试、宿主编译与测试分别限时 20 / 10 / 20 / 60 / 50 / 45 / 20 分钟，为首次启动 runtime 和失败诊断预留时间。失败或取消时上传 `flutter-setup.log`、安装日志、SDK 版本、模拟器 runtime / 设备清单与选择结果、WebKit 探针及其链接依赖日志、Pod 批次 / 成员结果、回归结果、构建 / 测试日志及 `.xcresult`，保存 7 天；成功 App 保存 14 天，并替换该分支先前的模拟器 App artifact。源码或回归失败仍会阻断产物发布；runner 排队提示不代表编译错误。
 
 CocoaPods 生成的 `[CP] Check Pods Manifest.lock`、`[CP] Embed Pods Frameworks`、`[CP] Copy Pods Resources` 仍负责锁文件一致性、framework 嵌入和资源复制，属于构建内阶段。
 
@@ -8485,6 +8490,8 @@ DemoDetailVC().onResult { name in
   #endif
   ```
 
+* `VCDebugDeallocDebug.temporarilySuppressesDeinitTips` 用于独占搜索期间临时隐藏销毁调试 Toast；进入设为 `true`，退出或销毁时恢复 `false`，调用放在 `#if DEBUG` 内。它不改持久 `showsDeinitTips`，也不拦截业务 Toast。完整示例见 [JobsSwiftDebugTools](<./JobsByPods/JobsSwiftDebugTools@Pods/README.md>)。
+
 ## <span id="jobs-toc-heading-161" data-jobs-toc="v2">四、[**Swift**](https://developer.apple.com/swift/) 语言特性 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 ### <span id="jobs-toc-heading-162" data-jobs-toc="v2">1、注解 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
@@ -13190,6 +13197,8 @@ static let demoHTML = """
 当前宿主最低系统为 iOS 15.6，与已集成 LiveChat 的要求一致；独立 Pod 的最低系统仍以各自 Podspec 和独立消费验证为准。生产 source glob 排除测试、示例和临时文件，实际使用 UserDefaults、文件时间或系统运行时间的模块随独立资源 bundle 交付隐私原因清单。
 
 ### <span id="jobs-toc-heading-360" data-jobs-toc="v2">稳定性接口与迁移 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
+
+64 个源码 Pod 在各自 podspec 中声明 `test_spec 'Stability'`，[Podfile.deps](./Podfile.deps) 用 `:testspecs => ['Stability']` 接入独立 XCTest target；生产 source glob 继续排除 `Tests`。测试使用 iOS 15.6 / Debug，不改变生产 Pod 的最低版本。安装仅生成测试 target，[独立执行入口](./ScriptsByPods/jobs_swift_pods_tests.rb/README.md)由手动或 CI 调用；没有运行时模块的 `JobsAppIconRibbon` 保留构建工具验证，原有主工程宿主测试继续执行。
 
 | 能力 | 当前合同与调用调整 |
 | --- | --- |

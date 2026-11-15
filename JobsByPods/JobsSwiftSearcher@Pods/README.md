@@ -18,7 +18,9 @@
   - [1.3、关键设计与边界](#jobs-toc-heading-9)
   - [1.4、阅读与重建顺序](#jobs-toc-heading-10)
 - [二、运行合同与边界](#jobs-toc-heading-11)
-- [三、生产交付与全量门禁](#jobs-toc-heading-12)
+  - [2.1、输入、结果与事件](#jobs-toc-heading-12)
+  - [2.2、当前宿主接入](#jobs-toc-heading-13)
+- [三、生产交付与全量门禁](#jobs-toc-heading-14)
 
 </details>
 <!-- jobs-toc:end -->
@@ -31,8 +33,8 @@ Swift 本地 Pod，用于在 Swift 侧承接 OC `JobsOCSearcher` 的搜索功能
 
 ## <span id="jobs-toc-heading-1" data-jobs-toc="v2">能力 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-- `JobsSwiftSearcherConfig` 管理占位文案、按钮文案、推荐标题、历史标题和存储 key。
-- `JobsSwiftSearcherView` 提供搜索框、搜索按钮、推荐词标签、历史列表、删除和清空历史。
+- `JobsSwiftSearcherConfig` 管理输入／提交／取消、推荐与历史文案、完整空态、结果区域、账号 scope 和持久化策略。
+- `JobsSwiftSearcherView` 统一输入头、可选提交与取消、推荐词、历史列表、空态和宿主结果 View；输入区独用时配置 `inputOnly`。
 - 历史记录使用 `UserDefaults` 持久化，同关键词会自动去重并置顶。
 - 搜索输入变化、提交、推荐词点击、历史变化都通过闭包回调给业务层。
 - 按钮创建、配置和事件统一使用 `JobsByUIKit` / `JobsSwiftDSL`。
@@ -68,11 +70,11 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 
 ### <span id="jobs-toc-heading-7" data-jobs-toc="v2">1.1、设计目的与职责划分 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-把搜索输入、推荐词和本地历史收口为可配置视图。Config 定义文案、历史存储键、容量与事件，View 管理输入和列表，真正的搜索请求由宿主执行。
+把首页搜索与独立搜索 Demo 的能力合并进同一个可配置视图。Config 定义文案、显示开关、历史上下文和事件；View 管理输入、推荐、历史／结果切换及 JobsEmptyAuto 空态。真正的过滤、请求、结果跳转和页面生命周期由宿主执行，组件不依赖首页菜单或 Debug 工具。
 
 ### <span id="jobs-toc-heading-8" data-jobs-toc="v2">1.2、运行脉络 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-输入或点选词条 → 分发变化与确认事件 → 保存或调整历史 → 宿主搜索 → 按需刷新推荐和历史
+输入／程序赋值 → 规范化关键词变化一次 → 宿主过滤并回传结果数 → 非空显示结果／无结果，清空返回推荐与历史；提交／选词沿用原历史记录与确认管线。
 
 ### <span id="jobs-toc-heading-9" data-jobs-toc="v2">1.3、关键设计与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
@@ -94,12 +96,56 @@ Pod 内 Jobs 自维护代码统一采用“一镜到底”：同一配置语义�
 
 ## <span id="jobs-toc-heading-11" data-jobs-toc="v2">二、运行合同与边界 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
-`historyScope` 可使用稳定账户标识，不要使用用户名或电话号码等敏感信息；实际键由 storageKey 与 scope 隔离。nil scope 保持旧全局存储兼容。`persistsHistory = false` 只保存当前实例内存，切换 scope 或持久化策略时清空旧实例历史。注销时可调用 `clearHistory()` 清除当前 scope；其它账户历史不会被误删。
+`historyScope` 可使用稳定账户标识，不要使用用户名或电话号码等敏感信息；实际键由 storageKey 与 scope 隔离。nil scope 保持旧全局存储兼容。`persistsHistory = false` 只保存在当前 View 的内存字典，各 storageKey／scope 分开；切走再切回可恢复当前页面的内存记录，释放页面后丢弃。持久与内存模式互不覆盖。注销时可调用 `clearHistory()` 清除当前 scope；其它账户历史不会被误删。
 
-历史容量归一化到 1～1000，去重并按最近使用排序。空历史显示 JobsEmptyAuto，点击重新读取当前 scope；推荐词和搜索请求仍由宿主负责。修改同一个 Config 对象的 scope 后调用 reloadWithConfig / reloadHistorySearches，组件会按保存的上次历史上下文隔离内存记录；scope 的 Base64 仅用于键名，不是加密。
+历史容量归一化到 1～1000，去重并按最近使用排序。空历史显示 JobsEmptyAuto，点击重新读取当前 scope；推荐词和搜索请求仍由宿主负责。修改同一个 Config 对象的 scope 后调用 reloadWithConfig / reloadHistorySearches，组件每次按当前实际 key 和策略读取对应上下文，即使原 Config 对象被原地修改也不会串账号；scope 的 Base64 仅用于键名，不是加密。可用 `historyUserDefaults` 注入独立 suite 验证，不影响默认标准存储。
 
 
-## <span id="jobs-toc-heading-12" data-jobs-toc="v2">三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
+### <span id="jobs-toc-heading-12" data-jobs-toc="v2">2.1、输入、结果与事件</span><!-- jobs-toc:heading-end -->
+
+- `normalizedQuery` 为去首尾空白后的只读关键词。`byQuery(_:recordHistory:)` 同时服务程序赋值、输入清空和点选；只有规范化值真实变化才发一次 `searchTextChangedBlock`，中文组合文本提交前暂缓过滤。
+- `byResultContentView(_:)` 由宿主注入结果视图，`byResultCount(_:)` 只更新展示，不触发输入回调。空词仅显示可选推荐和历史／空历史；非空仅显示注入的结果或无结果空态。清空关键词回到历史并聚焦输入。
+- `reloadWithConfig` 保留输入原文、规范化关键词和同一个输入控件的焦点；语言刷新只重绘文案。只给当前输入字段配置零高键盘附件，不更改全局 IQ 设置。iOS 15+ 内容区跟随 `keyboardLayoutGuide`，较早系统继续原容器布局与收键盘操作。
+- `showsSearchButton` 默认 `true`，`showsCancelButton` 默认 `false`，兼容旧配置。`inputOnly = true` 仅显示同一个输入头，建议按 64pt 固有高度装配，不另外维护输入实现。
+- Swift 原推荐／历史选择仍走提交并记录历史；推荐先调用旧 `recommendSelectedBlock`，通用 `itemSelectedBlock` 只通知本次选词。业务选择一个事件执行搜索，避免又在提交／选词回调重复请求。提交相同值不会再次发输入变化。
+- 可见按钮保留至少 44pt 触点，隐藏的 arrangedSubview 宽度约束采用可让位优先级，避免 UIStackView 折叠冲突。长推荐词换行，所有 UI 跟随 App 全局语言与主题；原生搜索图标、清除按钮和键盘也从有效主题派生 UIKit 外观。
+
+```swift
+import JobsSwiftSearcher
+
+private lazy var searchView: JobsSwiftSearcherView = {
+    JobsSwiftSearcherView(config: JobsSwiftSearcherConfig.defaultConfig
+        .byPlaceholder("输入关键词开始搜索。")
+        .byShowsCancelButton(true)
+        .byHistoryStorageKey("ProductSearchHistory")
+        .byHistoryScope("account-A")
+        .byPersistsHistory(true)
+        .byMaxHistoryCount(20)
+        .bySearchTextChangedBlock { [weak self] query in
+            self?.filterResults(query)
+        }
+        .byCancelBlock { [weak self] in
+            self?.closeSearch()
+        })
+        .byRecommendSearches(["Swift", "UIKit"])
+        .byResultContentView(resultsTable)
+        .byAddTo(view) { make in
+            make.edges.equalToSuperview()
+        }
+}()
+
+// 宿主完成过滤后只回传数量，不反向重设 query。
+searchView.byResultCount(filteredItems.count)
+```
+
+### <span id="jobs-toc-heading-13" data-jobs-toc="v2">2.2、当前宿主接入</span><!-- jobs-toc:heading-end -->
+
+- 首页 `RootListVC` 实际创建本 View，沿用旧历史 key `com.BSports.JobsSwiftDemoSearchHistoryUserDefaultsKey` 和容量 20；原自建搜索框、历史 UI／数组与 UserDefaults 写入已移除。首页不传推荐词，以保留空关键词只看历史的独占规则。
+- 首页只负责 Demo 过滤／跳转和进入前状态：原 table 在搜索时借给结果容器，取消后还原父视图、导航下方约束、滚动位置、展开组、刷新器与浮控／抽屉手势。搜索期间收键盘、前后台、主题／语言和摇动均不能解除临时门禁；Debug 门禁留在宿主，组件不耦合它们。
+- 独立 `JobsSwiftSearcherDemoVC` 使用同一 View，保留原八个推荐词，实际过滤技术词及释义，点击结果展示详情；账号 A／B 与仅内存按钮演示历史隔离。A 使用原 Demo 无 scope 历史键，保留旧数据；B 使用独立 scope，临时模式不写本地存储。
+
+
+## <span id="jobs-toc-heading-14" data-jobs-toc="v2">三、生产交付与全量门禁 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 生产源码排除 Tests / Test、Demo / Example、build / DerivedData、测试入口及临时文件；回归脚本位于宿主 `.github/tests/JobsPodsUpgrade`，不被 Pod 生产 target 编入。
 

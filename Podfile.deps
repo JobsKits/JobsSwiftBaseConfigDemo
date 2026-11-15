@@ -67,7 +67,7 @@ def testPods
 end
 # ============================== 调试框架（仅 Debug） ==============================
 def debugPods
-  pod 'JobsDebugPanel', :path => 'JobsByPods/JobsDebugPanel@Pods', :configurations => ['Debug']
+  pod 'JobsDebugPanel', :path => 'JobsByPods/JobsDebugPanel@Pods', :configurations => ['Debug'], :testspecs => ['Stability']
   # pod 'Bugly'
   # pod 'DoraemonKit'
   # pod 'CocoaDebug'
@@ -79,74 +79,77 @@ end
 # ============================== PodByJobs ==============================
 def byJobs
     pod 'JobsAppIconRibbon',                  :path => 'JobsByPods/JobsAppIconRibbon@Pods'
-    pod 'JobsSwiftWorker',                :path => 'JobsByPods/JobsSwiftWorker@Pods'
-    pod 'JobsSwiftDebugTools',                :path => 'JobsByPods/JobsSwiftDebugTools@Pods'
+    pod 'JobsSwiftWorker',                    :path => 'JobsByPods/JobsSwiftWorker@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftDebugTools',                :path => 'JobsByPods/JobsSwiftDebugTools@Pods', :testspecs => ['Stability']
 #    pod 'JobsNetworking/Core',                :path => 'JobsByPods/JobsNetworking@Pods' # iOS12/13/14... 都能用（主干）
 #    pod 'JobsNetworking/AF4',                 :path => 'JobsByPods/JobsNetworking@Pods'
+    # Stability 定义在根 spec；功能子规格继续独立选择。
+    pod 'JobsNetworking',                     :path => 'JobsByPods/JobsNetworking@Pods', :testspecs => ['Stability']
     pod 'JobsNetworking/Async',               :path => 'JobsByPods/JobsNetworking@Pods' # 只在 iOS13+ 工程里想用 async/await，再加这个
     pod 'JobsNetworking/AF5',                 :path => 'JobsByPods/JobsNetworking@Pods'
       
-    pod 'JobsSwiftDSL',                       :path => 'JobsByPods/JobsSwiftDSL@Pods'
-    pod 'BRPickerViewSwift',                  :path => 'JobsByPods/BRPickerViewSwift@Pods'
-    pod 'JobsBy3rdTools',                     :path => 'JobsByPods/JobsBy3rdTools@Pods'
-    pod 'JobsByPhotosUI',                     :path => 'JobsByPods/JobsByPhotosUI@Pods'
-    pod 'JobsByUIKit',                        :path => 'JobsByPods/JobsByUIKit@Pods'
-    pod 'JobsByWebKit',                       :path => 'JobsByPods/JobsByWebKit@Pods'
-    pod 'JobsSwiftMarkdown',                  :path => 'JobsByPods/JobsSwiftMarkdown@Pods'
-    pod 'JobsByPDFKit',                       :path => 'JobsByPods/JobsByPDFKit@Pods'
-    pod 'JobsByQuartzCore',                   :path => 'JobsByPods/JobsByQuartzCore@Pods'
-    pod 'JobsInheritance',                    :path => 'JobsByPods/JobsInheritance@Pods'
-    pod 'JobsSwiftOpen',                      :path => 'JobsByPods/JobsSwiftOpen@Pods'
-    pod 'JobsSwiftSplash',                    :path => 'JobsByPods/JobsSwiftSplash@Pods'
-    pod 'JobsSwiftWebSocket',                 :path => 'JobsByPods/JobsSwiftWebSocket@Pods'
-    pod 'JobsAppDoor',                        :path => 'JobsByPods/JobsAppDoor@Pods'
-    pod 'JobsFuseAnimation',                  :path => 'JobsByPods/JobsFuseAnimation@Pods'
-    pod 'Jobsl10n',                           :path => 'JobsByPods/Jobsl10n@Pods'
-    pod 'JobsSwiftTimer',                     :path => 'JobsByPods/JobsSwiftTimer@Pods'                # https://github.com/JobsKits/JobsSwiftTimer
-    pod 'JobsImageRotation',                  :path => 'JobsByPods/JobsImageRotation@Pods'
-    pod 'JobsAudioRecorder',                  :path => 'JobsByPods/JobsAudioRecorder@Pods'
-    pod 'JobsSwiftTimerMgr',                  :path => 'JobsByPods/JobsSwiftTimerMgr@Pods'             # https://github.com/JobsKits/JobsSwiftTimerMgr
-    pod 'JobsSwiftPatch',                     :path => 'JobsByPods/JobsSwiftPatch@Pods'
-    pod 'JobsSwiftTaskCenter',                :path => 'JobsByPods/JobsSwiftTaskCenter@Pods'
-    pod 'JobsSwiftDeviceGuard',               :path => 'JobsByPods/JobsSwiftDeviceGuard@Pods'
-    pod 'JobsProgressBar',                    :path => 'JobsByPods/JobsProgressBar@Pods'
-    pod 'JobsViewPush',                       :path => 'JobsByPods/JobsViewPush@Pods'
-    pod 'JobsSwiftLinkageMenuView',           :path => 'JobsByPods/JobsSwiftLinkageMenuView@Pods'
-    pod 'JobsSwiftComment',                   :path => 'JobsByPods/JobsSwiftComment@Pods'
-    pod 'JobsSwiftSearcher',                  :path => 'JobsByPods/JobsSwiftSearcher@Pods'
-    pod 'JobsSwiftCountryCodeCtrl',           :path => 'JobsByPods/JobsSwiftCountryCodeCtrl@Pods'
-    pod 'JobsSwiftCalendar',                  :path => 'JobsByPods/JobsSwiftCalendar@Pods'
-    pod 'JobsSwiftExcel',                     :path => 'JobsByPods/JobsSwiftExcel@Pods'
-    pod 'JobsWalletCard',                     :path => 'JobsByPods/JobsWalletCard@Pods'
-    pod 'JobsNavBar',                         :path => 'JobsByPods/JobsNavBar@Pods'
-    pod 'JobsToast',                          :path => 'JobsByPods/JobsToast@Pods'
-    pod 'JobsTextTools',                      :path => 'JobsByPods/JobsTextTools@Pods'
-    pod 'JobsImageTools',                     :path => 'JobsByPods/JobsImageTools@Pods'
-    pod 'JobsIconfont',                       :path => 'JobsByPods/JobsIconfont@Pods'
-    pod 'JobsScale',                          :path => 'JobsByPods/JobsScale@Pods'
-    pod 'JobsGetWindow',                      :path => 'JobsByPods/JobsGetWindow@Pods'
+    pod 'JobsSwiftDSL',                       :path => 'JobsByPods/JobsSwiftDSL@Pods', :testspecs => ['Stability']
+    pod 'BRPickerViewSwift',                  :path => 'JobsByPods/BRPickerViewSwift@Pods', :testspecs => ['Stability']
+    pod 'JobsBy3rdTools',                     :path => 'JobsByPods/JobsBy3rdTools@Pods', :testspecs => ['Stability']
+    pod 'JobsByPhotosUI',                     :path => 'JobsByPods/JobsByPhotosUI@Pods', :testspecs => ['Stability']
+    pod 'JobsByUIKit',                        :path => 'JobsByPods/JobsByUIKit@Pods', :testspecs => ['Stability']
+    pod 'JobsByWebKit',                       :path => 'JobsByPods/JobsByWebKit@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftMarkdown',                  :path => 'JobsByPods/JobsSwiftMarkdown@Pods', :testspecs => ['Stability']
+    pod 'JobsByPDFKit',                       :path => 'JobsByPods/JobsByPDFKit@Pods', :testspecs => ['Stability']
+    pod 'JobsByQuartzCore',                   :path => 'JobsByPods/JobsByQuartzCore@Pods', :testspecs => ['Stability']
+    pod 'JobsInheritance',                    :path => 'JobsByPods/JobsInheritance@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftOpen',                      :path => 'JobsByPods/JobsSwiftOpen@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftSplash',                    :path => 'JobsByPods/JobsSwiftSplash@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftWebSocket',                 :path => 'JobsByPods/JobsSwiftWebSocket@Pods', :testspecs => ['Stability']
+    pod 'JobsAppDoor',                        :path => 'JobsByPods/JobsAppDoor@Pods', :testspecs => ['Stability']
+    pod 'JobsFuseAnimation',                  :path => 'JobsByPods/JobsFuseAnimation@Pods', :testspecs => ['Stability']
+    pod 'Jobsl10n',                           :path => 'JobsByPods/Jobsl10n@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftTimer',                     :path => 'JobsByPods/JobsSwiftTimer@Pods', :testspecs => ['Stability'] # https://github.com/JobsKits/JobsSwiftTimer
+    pod 'JobsImageRotation',                  :path => 'JobsByPods/JobsImageRotation@Pods', :testspecs => ['Stability']
+    pod 'JobsAudioRecorder',                  :path => 'JobsByPods/JobsAudioRecorder@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftTimerMgr',                  :path => 'JobsByPods/JobsSwiftTimerMgr@Pods', :testspecs => ['Stability'] # https://github.com/JobsKits/JobsSwiftTimerMgr
+    pod 'JobsSwiftPatch',                     :path => 'JobsByPods/JobsSwiftPatch@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftTaskCenter',                :path => 'JobsByPods/JobsSwiftTaskCenter@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftDeviceGuard',               :path => 'JobsByPods/JobsSwiftDeviceGuard@Pods', :testspecs => ['Stability']
+    pod 'JobsProgressBar',                    :path => 'JobsByPods/JobsProgressBar@Pods', :testspecs => ['Stability']
+    pod 'JobsViewPush',                       :path => 'JobsByPods/JobsViewPush@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftLinkageMenuView',           :path => 'JobsByPods/JobsSwiftLinkageMenuView@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftComment',                   :path => 'JobsByPods/JobsSwiftComment@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftSearcher',                  :path => 'JobsByPods/JobsSwiftSearcher@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftCountryCodeCtrl',           :path => 'JobsByPods/JobsSwiftCountryCodeCtrl@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftCalendar',                  :path => 'JobsByPods/JobsSwiftCalendar@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftExcel',                     :path => 'JobsByPods/JobsSwiftExcel@Pods', :testspecs => ['Stability']
+    pod 'JobsWalletCard',                     :path => 'JobsByPods/JobsWalletCard@Pods', :testspecs => ['Stability']
+    pod 'JobsNavBar',                         :path => 'JobsByPods/JobsNavBar@Pods', :testspecs => ['Stability']
+    pod 'JobsToast',                          :path => 'JobsByPods/JobsToast@Pods', :testspecs => ['Stability']
+    pod 'JobsTextTools',                      :path => 'JobsByPods/JobsTextTools@Pods', :testspecs => ['Stability']
+    pod 'JobsImageTools',                     :path => 'JobsByPods/JobsImageTools@Pods', :testspecs => ['Stability']
+    pod 'JobsIconfont',                       :path => 'JobsByPods/JobsIconfont@Pods', :testspecs => ['Stability']
+    pod 'JobsScale',                          :path => 'JobsByPods/JobsScale@Pods', :testspecs => ['Stability']
+    pod 'JobsGetWindow',                      :path => 'JobsByPods/JobsGetWindow@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftRefresher',                 :path => 'JobsByPods/JobsSwiftRefresher@Pods', :testspecs => ['Stability']
     pod 'JobsSwiftRefresher/Lottie',          :path => 'JobsByPods/JobsSwiftRefresher@Pods'
     pod 'JobsSwiftRefresher/SDWebImage',      :path => 'JobsByPods/JobsSwiftRefresher@Pods'
-    pod 'JobsSwiftTools',                     :path => 'JobsByPods/JobsSwiftTools@Pods'
-    pod 'JobsCountdownButton',                :path => 'JobsByPods/JobsCountdownButton@Pods'
-    pod 'JobsMarqueeView',                    :path => 'JobsByPods/JobsMarqueeView@Pods'
-    pod 'JobsSwiftUILabelScrolling',          :path => 'JobsByPods/JobsSwiftUILabelScrolling@Pods'
-    pod 'JobsEmptyView',                      :path => 'JobsByPods/JobsEmptyView@Pods'
-    pod 'JobsGestureUnlock',                  :path => 'JobsByPods/JobsGestureUnlock@Pods'
-    pod 'JobsCryptoKit',                      :path => 'JobsByPods/JobsCryptoKit@Pods'
-    pod 'JobsLocalNotification',              :path => 'JobsByPods/JobsLocalNotification@Pods'
-    pod 'JobsScreenCapture',                  :path => 'JobsByPods/JobsScreenCapture@Pods'
-    pod 'JobsSwiftNumberStepper',             :path => 'JobsByPods/JobsSwiftNumberStepper@Pods'
-    pod 'JobsSwiftGraphicCaptcha',            :path => 'JobsByPods/JobsSwiftGraphicCaptcha@Pods'
-    pod 'JobsSwiftAppTools',                  :path => 'JobsByPods/JobsSwiftAppTools@Pods'
-    pod 'JobsLuckyEnvelopeRain',              :path => 'JobsByPods/JobsLuckyEnvelopeRain@Pods'
-    pod 'JobsSwiftStandardLibrary',           :path => 'JobsByPods/JobsSwiftStandardLibrary@Pods'
-    pod 'JobsBluetooth',                      :path => 'JobsByPods/JobsBluetooth@Pods'
-    pod 'JobsSwiftFoundation',                :path => 'JobsByPods/JobsSwiftFoundation@Pods' # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions
-    pod 'JobsSwiftMetalKit',                  :path => 'JobsByPods/MetalKit@Pods' # https://github.com/JobsKits/Jobs.Swift.MetalKit.Extensions
-    pod 'JobsSwiftBlock',                     :path => 'JobsByPods/JobsSwiftBlock@Pods' # https://github.com/JobsKits/JobsSwiftBlock
-    pod 'JobsSwiftBaseDefines',               :path => 'JobsByPods/JobsSwiftBaseDefines@Pods' # https://github.com/JobsKits/JobsSwiftBaseDefines
-    pod 'JobsSwiftBaseTools',                 :path => 'JobsByPods/JobsSwiftBaseTools@Pods' # https://github.com/JobsKits/JobsSwiftBaseTools
+    pod 'JobsSwiftTools',                     :path => 'JobsByPods/JobsSwiftTools@Pods', :testspecs => ['Stability']
+    pod 'JobsCountdownButton',                :path => 'JobsByPods/JobsCountdownButton@Pods', :testspecs => ['Stability']
+    pod 'JobsMarqueeView',                    :path => 'JobsByPods/JobsMarqueeView@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftUILabelScrolling',          :path => 'JobsByPods/JobsSwiftUILabelScrolling@Pods', :testspecs => ['Stability']
+    pod 'JobsEmptyView',                      :path => 'JobsByPods/JobsEmptyView@Pods', :testspecs => ['Stability']
+    pod 'JobsGestureUnlock',                  :path => 'JobsByPods/JobsGestureUnlock@Pods', :testspecs => ['Stability']
+    pod 'JobsCryptoKit',                      :path => 'JobsByPods/JobsCryptoKit@Pods', :testspecs => ['Stability']
+    pod 'JobsLocalNotification',              :path => 'JobsByPods/JobsLocalNotification@Pods', :testspecs => ['Stability']
+    pod 'JobsScreenCapture',                  :path => 'JobsByPods/JobsScreenCapture@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftNumberStepper',             :path => 'JobsByPods/JobsSwiftNumberStepper@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftGraphicCaptcha',            :path => 'JobsByPods/JobsSwiftGraphicCaptcha@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftAppTools',                  :path => 'JobsByPods/JobsSwiftAppTools@Pods', :testspecs => ['Stability']
+    pod 'JobsLuckyEnvelopeRain',              :path => 'JobsByPods/JobsLuckyEnvelopeRain@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftStandardLibrary',           :path => 'JobsByPods/JobsSwiftStandardLibrary@Pods', :testspecs => ['Stability']
+    pod 'JobsBluetooth',                      :path => 'JobsByPods/JobsBluetooth@Pods', :testspecs => ['Stability']
+    pod 'JobsSwiftFoundation',                :path => 'JobsByPods/JobsSwiftFoundation@Pods', :testspecs => ['Stability'] # https://github.com/JobsKits/Jobs.Swift.Foundation.Extensions
+    pod 'JobsSwiftMetalKit',                  :path => 'JobsByPods/MetalKit@Pods', :testspecs => ['Stability'] # https://github.com/JobsKits/Jobs.Swift.MetalKit.Extensions
+    pod 'JobsSwiftBlock',                     :path => 'JobsByPods/JobsSwiftBlock@Pods', :testspecs => ['Stability'] # https://github.com/JobsKits/JobsSwiftBlock
+    pod 'JobsSwiftBaseDefines',               :path => 'JobsByPods/JobsSwiftBaseDefines@Pods', :testspecs => ['Stability'] # https://github.com/JobsKits/JobsSwiftBaseDefines
+    pod 'JobsSwiftBaseTools',                 :path => 'JobsByPods/JobsSwiftBaseTools@Pods', :testspecs => ['Stability'] # https://github.com/JobsKits/JobsSwiftBaseTools
 end
 # ============================== 目标工程（新工程记得改名） ==============================
 # ❤️ 新工程需要修改这里：把目标名替换为实际 target 名字

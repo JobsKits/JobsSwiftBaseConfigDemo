@@ -743,6 +743,17 @@ extension RootListSettingsVC: UITableViewDataSource,
     }
 
     func tableView(_ tableView: UITableView,
+                   heightForHeaderInSection section: Int) -> CGFloat {
+        // 原生分组原间距为35pt；只缩组间留白，首组顶部仍交由系统计算。
+        section == SettingSection.general.rawValue ? UITableView.automaticDimension : 17.5
+    }
+
+    func tableView(_ tableView: UITableView,
+                   heightForFooterInSection section: Int) -> CGFloat {
+        section == SettingSection.allCases.count - 1 ? UITableView.automaticDimension : .leastNonzeroMagnitude
+    }
+
+    func tableView(_ tableView: UITableView,
                    heightForRowAt indexPath: IndexPath) -> CGFloat {
         UITableView.automaticDimension
     }

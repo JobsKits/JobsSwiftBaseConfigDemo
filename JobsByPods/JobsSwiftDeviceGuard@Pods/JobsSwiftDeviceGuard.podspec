@@ -14,4 +14,12 @@ Pod::Spec.new do |spec|
   spec.exclude_files = ['**/Tests/**/*', '**/Test/**/*', '**/Example/**/*', '**/Demo/**/*', '**/build/**/*', '**/DerivedData/**/*', '**/*.tmp.*']
   spec.frameworks    = ['Foundation']
   spec.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
+  # Stability 单独编译 Tests；保留生产源码的测试排除规则。
+  spec.test_spec 'Stability' do |test_spec|
+    test_spec.source_files = 'Tests/**/*Tests.swift'
+    test_spec.exclude_files = []
+    test_spec.frameworks = 'XCTest'
+    test_spec.ios.deployment_target = '15.6'
+  end
+
 end

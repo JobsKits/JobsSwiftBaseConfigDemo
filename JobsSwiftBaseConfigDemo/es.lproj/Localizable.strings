@@ -2225,3 +2225,29 @@
 "🧹 JobsSwiftRefresher（非正式协议闭包化）" = "🧹 JobsSwiftRefresher (delegación mediante closures)";
 "🪟 SceneDelegate 多场景与窗口会话" = "🪟 SceneDelegate · Escenas y sesiones de ventana";
 "🪲 JobsDebugPanel 调试面板与环境切换" = "🪲 JobsDebugPanel · Depuración y entornos";
+
+"没有匹配的 Demo" = "No hay demos coincidentes";
+"轻点清空搜索，查看全部 Demo。" = "Toca para borrar la búsqueda y ver todas las demos.";
+
+"清空关键词" = "Borrar búsqueda";
+"试试其他关键词，或清空后查看搜索历史。" = "Prueba otra palabra clave o borra la búsqueda para ver el historial.";
+"暂无搜索历史" = "No hay búsquedas recientes";
+"输入关键词，查找 Demo。" = "Introduce una palabra clave para encontrar una demo.";
+
+// JobsSwiftSearcher：输入、推荐、历史与结果的统一组件。
+"输入关键词开始搜索。" = "Introduce una palabra clave para empezar a buscar.";
+"没有匹配结果" = "No hay resultados coincidentes";
+"搜索推荐" = "Búsquedas sugeridas";
+"Java 是运行在 Java 虚拟机上的编程语言。" = "Java es un lenguaje de programación que se ejecuta en la máquina virtual de Java.";
+"Python 是常用于脚本、自动化和数据处理的编程语言。" = "Python es un lenguaje de programación que suele utilizarse para scripts, automatización y procesamiento de datos.";
+"Objective-C 是支持消息发送和运行时机制的编程语言。" = "Objective-C es un lenguaje de programación con envío de mensajes y un entorno de ejecución dinámico.";
+"Swift 是 Apple 平台应用开发使用的编程语言。" = "Swift es un lenguaje de programación utilizado para desarrollar apps en las plataformas de Apple.";
+"iOS 是 iPhone 使用的操作系统。" = "iOS es el sistema operativo del iPhone.";
+"UIKit 提供窗口、视图、控件和页面导航等原生界面能力。" = "UIKit proporciona ventanas, vistas, controles y navegación para interfaces nativas.";
+"JobsSwiftSearcher 统一管理输入、推荐词、搜索历史和结果区域。" = "JobsSwiftSearcher gestiona la entrada de texto, las sugerencias, el historial de búsqueda y el área de resultados.";
+"SnapKit 是基于 Auto Layout 的 Swift 布局库。" = "SnapKit es una biblioteca de diseño de interfaces para Swift basada en Auto Layout.";
+"账号 A" = "Cuenta A";
+"账号 B" = "Cuenta B";
+"仅内存" = "Solo en memoria";
+"历史记录按账号独立保存。" = "El historial de búsqueda se guarda por separado para cada cuenta.";
+"临时搜索仅保留在当前页面内，不写入本地存储。" = "Las búsquedas temporales permanecen en esta pantalla y no se guardan en el almacenamiento local.";

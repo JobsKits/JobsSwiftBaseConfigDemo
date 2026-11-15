@@ -535,7 +535,7 @@ LOG_READY=0
 # 确认前只显示说明，确认后才同步写日志。
 log() {
   if (( LOG_READY == 1 )); then
-    print -- "$1" | /usr/bin/jobs_prompt_tee "$LOG_FILE"
+    print -- "$1" | jobs_prompt_tee "$LOG_FILE"
   else
     print -- "$1"
   fi

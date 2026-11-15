@@ -31,6 +31,7 @@ public final class JobsDebugPanel {
     private var notificationTokens: [NSObjectProtocol] = []
     private var started = false
     private var floatingEntryHidden = true
+    private var floatingEntrySuppressed = false
 
     private init() {}
 
@@ -118,8 +119,18 @@ public final class JobsDebugPanel {
         return self
     }
 
+    /// 临时独占界面可抑制调试入口；解除时仍沿用用户原来的长按隐藏状态。
+    @discardableResult
+    public func byFloatingEntrySuppressed(_ suppressed: Bool) -> Self {
+        floatingEntrySuppressed = suppressed
+        refreshWindows()
+        return self
+    }
+
     fileprivate func showOnShake() {
-        guard started, UIApplication.shared.applicationState == .active else {
+        guard started,
+              !floatingEntrySuppressed,
+              UIApplication.shared.applicationState == .active else {
             return
         }
         floatingEntryHidden = false
@@ -221,6 +232,7 @@ public final class JobsDebugPanel {
         let active = hostWindow.windowScene?.activationState == .foregroundActive
             || (hostWindow.windowScene == nil && UIApplication.shared.applicationState == .active)
         guard active,
+              !floatingEntrySuppressed,
               let source = topController(from: hostWindow.rootViewController),
               !(source is JobsDebugMenuVC),
               !(source is JobsDebugEnvironmentsVC),
@@ -312,7 +324,10 @@ public final class JobsDebugPanel {
     }
 
     private func refreshWindows() {
-        guard started, !floatingEntryHidden else {
+        guard started, !floatingEntryHidden, !floatingEntrySuppressed else {
+            overlayWindows.values.forEach {
+                $0.byHidden(true)
+            }
             return
         }
         let scenes = UIApplication.shared.connectedScenes.compactMap {

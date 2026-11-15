@@ -137,6 +137,8 @@
     "ScriptsByPods/【MacOS】🔍查询Xcode工程依赖关系.command/Tests/network_regression.rb/README.md",
     "ScriptsByDevTools/【MacOS】🧪iOS自动巡检.command/Coverage/README.md",
     "ScriptsByDevTools/【MacOS】🧪iOS自动巡检.command/Coverage/CoverageTool.swift/README.md",
-    "JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@ARKit/README.md"
+    "JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@ARKit/README.md",
+    "ScriptsByPods/jobs_swift_pods_tests.rb/README.md",
+    "ScriptsByPods/jobs_swift_pods_tests.rb/Tests/run_regression.rb/README.md"
   ]
 }
