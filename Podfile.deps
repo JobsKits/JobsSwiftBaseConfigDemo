@@ -93,6 +93,11 @@ def byJobs
     pod 'JobsBy3rdTools',                     :path => 'JobsByPods/JobsBy3rdTools@Pods', :testspecs => ['Stability']
     pod 'JobsByPhotosUI',                     :path => 'JobsByPods/JobsByPhotosUI@Pods', :testspecs => ['Stability']
     pod 'JobsByUIKit',                        :path => 'JobsByPods/JobsByUIKit@Pods', :testspecs => ['Stability']
+    jobs_rust_ocr_dir = File.join(__dir__, 'JobsByPods', 'JobsRustOCR@Pods')
+    if File.file?(File.join(jobs_rust_ocr_dir, 'JobsRustOCR.podspec')) &&
+       !Dir.glob(File.join(jobs_rust_ocr_dir, '**', '*.xcframework', 'Info.plist')).empty?
+      pod 'JobsRustOCR',                        :path => 'JobsByPods/JobsRustOCR@Pods'
+    end
     pod 'JobsByWebKit',                       :path => 'JobsByPods/JobsByWebKit@Pods', :testspecs => ['Stability']
     pod 'JobsSwiftMarkdown',                  :path => 'JobsByPods/JobsSwiftMarkdown@Pods', :testspecs => ['Stability']
     pod 'JobsByPDFKit',                       :path => 'JobsByPods/JobsByPDFKit@Pods', :testspecs => ['Stability']

@@ -28,7 +28,7 @@ final class JobsMeCenterVC: BaseVC {
 
         case userInfo
         case crashLog
-        case favorites
+        case recent
         case settings
         case about
         var title: String {
@@ -39,9 +39,9 @@ final class JobsMeCenterVC: BaseVC {
             /// 处理 .crashLog 分支
             case .crashLog:
                 return "崩溃日志".tr
-            /// 处理 .favorites 分支
-            case .favorites:
-                return "收藏".tr
+            /// 最近使用复用首页真实注册表。
+            case .recent:
+                return "最近使用".tr
             /// 处理 .settings 分支
             case .settings:
                 return "设置".tr
@@ -58,9 +58,9 @@ final class JobsMeCenterVC: BaseVC {
             /// 处理 .crashLog 分支
             case .crashLog:
                 return "exclamationmark.triangle"
-            /// 处理 .favorites 分支
-            case .favorites:
-                return "star"
+            /// 最近使用。
+            case .recent:
+                return "clock.arrow.circlepath"
             /// 处理 .settings 分支
             case .settings:
                 return "gearshape"
@@ -164,10 +164,14 @@ extension JobsMeCenterVC: UITableViewDataSource,
         case .crashLog:
             CrashLogDemoVC()
                 .byPush(self)
-        /// 处理 .favorites 分支
-        case .favorites:
-            "收藏".tr.toast
-        /// FavoritesVC().byPush(self)
+        /// 最近使用真实页面。
+        case .recent:
+            let registry = findDemoRegistry(in: view.window?.rootViewController)
+            RootRecentDemosVC()
+                .byCatalogProvider { [weak registry] in
+                    registry?.recentDemoItems() ?? []
+                }
+                .byPush(self)
         case .settings:
             "设置".tr.toast
         /// SettingsVC().byPush(self)
@@ -176,5 +180,20 @@ extension JobsMeCenterVC: UITableViewDataSource,
         // AboutVC().byPush(self)
         }
         jobsSideDrawer?.closeDrawer(animated: true)
+    }
+
+    private func findDemoRegistry(in controller: UIViewController?) -> RootListVC? {
+        guard let controller else {
+            return nil
+        }
+        if let root = controller as? RootListVC {
+            return root
+        }
+        for child in controller.children {
+            if let root = findDemoRegistry(in: child) {
+                return root
+            }
+        }
+        return nil
     }
 }

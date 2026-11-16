@@ -68,12 +68,12 @@
     "JobsByPods/Jobsl10n@Pods/README.md",
     "JobsByPods/Jobsl10n@Pods/iOS多语言环境设置.md/iOS多语言环境设置.md",
     "JobsByPods/MetalKit@Pods/README.md",
-    "JobsByPods升级与编译验收报告.md",
-    "JobsByPods自建Pod审阅与升级建议报告.md",
+    "项目相关报告/JobsByPods升级与编译验收报告.md",
+    "项目相关报告/JobsByPods自建Pod审阅与升级建议报告.md",
     "JobsBySwiftPackageManager/README.md",
     "JobsBySwiftPackageManager/SwiftPackageDependence使用指南🧭.md/SwiftPackageDependence使用指南🧭.md",
     "JobsSwiftBaseConfigDemo/启动入口/JobsDeviceLaunchGate/README.md",
-    "OC新工程与Swift空壳排查报告.md",
+    "项目相关报告/OC新工程与Swift空壳排查报告.md",
     "PodspecDependencyReport/PodspecDependencies.md",
     "README.md",
     "ScriptsByDevTools/save_device_ipa_after_build.command/README.md",
@@ -139,6 +139,11 @@
     "ScriptsByDevTools/【MacOS】🧪iOS自动巡检.command/Coverage/CoverageTool.swift/README.md",
     "JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@ARKit/README.md",
     "ScriptsByPods/jobs_swift_pods_tests.rb/README.md",
-    "ScriptsByPods/jobs_swift_pods_tests.rb/Tests/run_regression.rb/README.md"
+    "ScriptsByPods/jobs_swift_pods_tests.rb/Tests/run_regression.rb/README.md",
+    "项目相关报告/App骨架功能盘点.md",
+    "项目相关报告/RustOCR接入盘点.md",
+    "JobsByPods/JobsRustOCR@Pods/README.md",
+    "JobsByPods/JobsRustOCR@Pods/Scripts/README.md",
+    "JobsByPods/JobsRustOCR@Pods/Source/JobsOCR/README.md"
   ]
 }

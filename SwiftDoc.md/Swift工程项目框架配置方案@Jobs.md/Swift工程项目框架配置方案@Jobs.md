@@ -4204,6 +4204,6 @@ ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --host-only --configuratio
 
 核心数值、任务、Worker、Patch、加密回归与 UIKit / WebView / Picker 的 XCTest 位于 [.github/tests/JobsPodsUpgrade](<../../.github/tests/JobsPodsUpgrade/>)（从工程根目录定位）。Timer fixture 仅验证上层状态机，实际 Timer 仍由 iOS 模块编译与宿主 XCTest 检查。单元编译、App 编译、模拟器测试与真机行为分别记录，不互相代替。
 
-升级与编译的历史证据见工程根目录《JobsByPods升级与编译验收报告.md》。当前自建模块的空壳排查与清理范围见[双端空壳排查报告](../../OC新工程与Swift空壳排查报告.md)；历史验收数量不代表当前模块数量。
+升级与编译的历史证据见项目相关报告目录《JobsByPods升级与编译验收报告.md》。当前自建模块的空壳排查与清理范围见[双端空壳排查报告](../../项目相关报告/OC新工程与Swift空壳排查报告.md)；历史验收数量不代表当前模块数量。
 
 <a id="🔚" href="#前言" style="font-size:17px; color:green; font-weight:bold;">我是有底线的➤点我回到首页</a>

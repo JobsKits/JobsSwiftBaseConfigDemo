@@ -46,7 +46,7 @@
 | 实际 App 隐私资源 | **17/17 存在，plist 内容与源码相同** | [实际 App 验证](</tmp/jobs-pods-upgrade-build/app-privacy-validation.json>) |
 | 原生 Release Simulator 整工程 | **通过**；exit 0，1988.37 秒；内嵌 Flutter Debug | [FinalReleaseVerified](</tmp/jobs-pods-upgrade-build/FinalReleaseVerified/results.json>) |
 
-持久化证据：[最终验收摘要](./.github/tests/JobsPodsUpgrade/Acceptance-2026-10-05.json) 的总状态为 `passed`，记录逐 Pod / 宿主编译历史、原生回归、真实 xcresult 计数、17 个 App 清单及 1020 项生产输入快照与配置散列；[README / Podspec 静态验收](./.github/tests/JobsPodsUpgrade/StaticValidation-2026-10-05.json) 记录 65 份 README、288 个本地链接、17 份源清单及 15 个显式 subspec，其中 12 个声明源码、1 个纯资源、2 个仅依赖入口。最终核对源码及两个测试文件散列无变化，Podfile.lock 与 Pods/Manifest.lock 一致。
+持久化证据：[最终验收摘要](../.github/tests/JobsPodsUpgrade/Acceptance-2026-10-05.json) 的总状态为 `passed`，记录逐 Pod / 宿主编译历史、原生回归、真实 xcresult 计数、17 个 App 清单及 1020 项生产输入快照与配置散列；[README / Podspec 静态验收](../.github/tests/JobsPodsUpgrade/StaticValidation-2026-10-05.json) 记录 65 份 README、288 个本地链接、17 份源清单及 15 个显式 subspec，其中 12 个声明源码、1 个纯资源、2 个仅依赖入口。最终核对源码及两个测试文件散列无变化，Podfile.lock 与 Pods/Manifest.lock 一致。
 
 完整日志和 xcresult 保留在本机 `/tmp/jobs-pods-upgrade-build/`；仓库保存验收摘要及散列，不打包全部临时构建产物。清理临时目录后，可用本报告中的门禁命令重新验证。
 

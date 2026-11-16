@@ -1,5 +1,13 @@
 # **iOS**@[**Swift**](https://developer.apple.com/swift/)<font color=red>靶场项目</font>蓝皮书📘
 
+OCR 自建核心按源码交付，入口为 [Source/JobsOCR](<./JobsByPods/JobsRustOCR@Pods/Source/JobsOCR/README.md>)；首次使用及修改源码后运行 [本地构建器](<./JobsByPods/JobsRustOCR@Pods/Scripts/README.md>)，再执行原有依赖安装和 App 构建。自建 `libJobsOCRCore.a` 只在本机生成，不提交到仓库；第三方运行时及模型来源、参数和验证见[源码交付盘点](<./项目相关报告/RustOCR接入盘点.md#source-delivery>)。
+
+App骨架资产（启动、导航、菜单、搜索、侧栏、分组、悬浮控件与设置）见[App骨架功能盘点](./项目相关报告/App骨架功能盘点.md)；项目报告统一归入 `项目相关报告/`，根 `README.md` 保留为仓库入口。
+
+Demo首页右上圆圈省略号打开带柔和投影的紧凑圆角菜单，提供搜索、全部展开／收缩与设置；菜单按真实按钮位置锚定，随主题、翻译长度及布局更新。左上侧栏的“最近使用”进入独立列表，按稳定Demo标识保存最近30项、去重前插并在重启后恢复；首页、搜索、置顶和最近列表打开均记录，目的页标题跟随当前语言。列表保留完整空态与刷新入口，返回后保留来源列表。源码入口和构建／交互验证范围以骨架盘点的SKEL-06、SKEL-09、SKEL-26为准。
+
+首页“系统能力与硬件通信 → Core Data 用户数据库”已接入 `JobsSwiftBaseConfigDemo.xcdatamodeld` 的 `User(name, age)` 与真实 [**SQLite**](https://www.sqlite.org/) 存储：添加用户、点行编辑、左滑删除、清空确认及错误重试；操作立即保存，默认空库，重启后按同一路径读回。页面复用全局语言／主题、本地数据库图标与完整空态，不请求业务API或网络图片。当前源码、存储路径、图标来源和分项验证见[Core Data专项资产](./项目相关报告/App骨架功能盘点.md#coredata-assets)，运行验收以该表所列范围为准。
+
 本工程的[iPhone 真机与 iOS 模拟器自动巡检教程](./ScriptsByDevTools/【MacOS】🧪iOS自动巡检.command/README.md)位于自己的 `ScriptsByDevTools`；只操作本工程已安装的 App，报告保存在该脚本包内。开发辅助入口见[ScriptsByDevTools 说明](./ScriptsByDevTools/README.md)。
 
 [ARKit 空间实验室](./JobsSwiftBaseConfigDemo/主业务流程/VC/SubVC/Demo@ARKit/README.md)提供苹果官方增强现实框架介绍、世界追踪、水平面检测与锚点放置，支持机器人等三维模型的缩放 / 旋转、十语言和三主题；模拟器可使用明确标注的离线预览，真实 AR 需要受支持的实体设备。
@@ -5005,7 +5013,7 @@ required init?(coder: NSCoder) {
 
   Demo 根列表的二级入口统一使用 `50pt` 固定行高；主标题和副标题由“设置 → 列表主/副标题”统一选择一般裁切、省略号、缩小字体、连续跑马灯或左右来回滚动，短文仍走 UILabel 原生绘制，深浅色下与同层普通 Label 保持同色。设置中的开屏内容、应用语言和列表文字策略均以一级 Cell 展示当前值，点击展开缩进的二级选项后再点选。Swift / OC 的 Label 分组统一覆盖动效数字、四种定尺寸文字策略、UILabel 与 UIButton.titleLabel 表现列表、可交互自定义 Label、圆点文本和文字旋转。
 
-  根列表可点击的二级 Cell 与右上角功能菜单 Cell 使用主题语义选中背景；功能菜单常态使用次级背景，与主页面形成层次，主题切换时同步刷新。
+  根列表可点击的二级 Cell 与右上角功能菜单 Cell 使用主题语义选中背景；功能菜单使用独立的明暗圆角表面与柔和投影，内层列表裁切圆角、外层保留阴影，主题切换时同步刷新。
 
   进度条相关二级入口（系统、自定义与兼容入口）的主标题前展示三格循环充电动效，只刷新当前可见入口，折叠或离屏时不更新不可见 Cell。
 
@@ -7112,6 +7120,12 @@ pickVideosFromLibrary(maxSelection: 1) { [weak self] urls in
 ### <span id="jobs-toc-heading-127" data-jobs-toc="v2">33、悬浮视图 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 
 Demo 根列表左下角显示“按”的悬浮按钮，短按会保留原有声音反馈，并使用滚动 DSL 在列表顶部与尾部之间动画切换；首次短按前往尾部，长按手写动画保持不变。
+
+首页时间浮控使用 `#1565C0` 深蓝与白字（对比约5.746），按当前语言标题与等宽 `HH:mm:ss` 的真实字体测量，基准18pt粗体随系统字号，两侧各16pt、上下各10pt留白。宽度由内容决定并受当前安全区约束；窄屏或大字换行增高，不再使用166pt固定宽度或缩字。每秒只更新秒值，语言／字号／旋转引起尺寸变化时保留原吸附边并重新约束位置；仅首次真实布局把初始点放在导航下，之后可在整个可见首页长按0.45秒后拖动吸边，浮钟处于导航之上保证触摸；原长按隐藏弹窗撤掉；显隐继续由设置管理，离开首页暂停计时。已通过11项字体／首布局／时区／12h XCTest、46.677秒世界页完整实体链及11.374秒最终深蓝／菜单实体短链；范围与待核项见[App骨架盘点](./项目相关报告/App骨架功能盘点.md)。
+
+首页“功能实验室”保留项目来源副标题；短按时间浮控 push 世界时钟，不增Demo条目或最近记录。世界页当前本地独立置顶，世界按当前有效UTC偏移各选1个城市代表，包含半小时、45分钟与UTC−12…+14；巴黎／纽约优先，日期、星期、秒值和夏令时由系统时区计算。原生“12小时制”开关默认关闭，切换后全部行立即刷新并记忆选择，AM／PM明确大写；只影响世界页，首页仍24h。页面可见且App前台时每秒刷新，离开或后台暂停，时区及显著时间变化重算；复用JobsSwiftTimerMgr及全局语言／主题。当前时区使用顶部独立圆角强调卡片，大号时间随系统字号，城市／IANA／UTC偏移与日期星期完整保留；制式开关左标题随当前值显示“24小时制”或“12小时制”，默认24小时，开启明确AM／PM。
+
+设置中的“返回首页时收缩分组”默认开启并保存在UserDefaults；仅具体Demo返回首页时收缩，关闭后优先保留原展开与滚动位置，不被旧“回顶部并刷新”清空。设置／搜索／世界时钟返回不触发收缩，手动展开收缩仍可用。开屏实际呈现期间浮钟隐藏并停止接收触摸，真实结束且首页可交互后恢复，原全屏拖动范围不变。首页时间Timer按每首页实例唯一标识注册，避免开屏暂停或销毁干扰另一首页；验证阶段与待验矩阵见骨架盘点。
 
 ```swift
 UIView().bySuspend { cfg in
@@ -13226,7 +13240,7 @@ ruby .github/tests/JobsPodsUpgrade/validate_builds.rb --host-only --configuratio
 
 核心数值、任务、Worker、Patch、加密回归与 UIKit / WebView / Picker 的 XCTest 位于 [.github/tests/JobsPodsUpgrade](<./.github/tests/JobsPodsUpgrade/>)（从工程根目录定位）。Timer fixture 仅验证上层状态机，实际 Timer 仍由 iOS 模块编译与宿主 XCTest 检查。单元编译、App 编译、模拟器测试与真机行为分别记录，不互相代替。
 
-升级与编译的历史证据见工程根目录《JobsByPods升级与编译验收报告.md》。当前自建模块的空壳排查与清理范围见[双端空壳排查报告](./OC新工程与Swift空壳排查报告.md)；历史验收数量不代表当前模块数量。
+升级与编译的历史证据见项目相关报告目录《JobsByPods升级与编译验收报告.md》。当前自建模块的空壳排查与清理范围见[双端空壳排查报告](./项目相关报告/OC新工程与Swift空壳排查报告.md)；历史验收数量不代表当前模块数量。
 
 ## 八、<span id="project-statistics">项目统计与接手指南</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 

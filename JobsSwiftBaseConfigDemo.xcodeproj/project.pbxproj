@@ -62,11 +62,11 @@
 
 /* Begin PBXFileReference section */
 		008CFEE4A86F6DDB91950AF7 /* JobsSPMDemoKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests/JobsSPMDemoKitTests/JobsSPMDemoKitTests.swift; sourceTree = "<group>"; };
-		04F18521264F05298682B3DA /* 【MacOS】🌐CocoaPods源自动选择.command */ = {isa = PBXFileReference; includeInIndex = 1; path = "【MacOS】🌐CocoaPods源自动选择.command"; sourceTree = "<group>"; };
+		04F18521264F05298682B3DA /* 【MacOS】🌐CocoaPods源自动选择.command */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "【MacOS】🌐CocoaPods源自动选择.command"; sourceTree = "<group>"; };
 		066C613E90CD604EDE80B8B6 /* 【MacOS@Xcode】🫘当前工程Pod Install.command */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "【MacOS@Xcode】🫘当前工程Pod Install.command"; sourceTree = "<group>"; };
 		08639405A0F945C7353658C8 /* 【MacOS】run_regression.zsh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "【MacOS】run_regression.zsh/【MacOS】run_regression.zsh"; sourceTree = "<group>"; };
 		0B62B8D777CD2849905E248F /* Pods-JobsSwiftBaseConfigDemoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JobsSwiftBaseConfigDemoTests.debug.xcconfig"; path = "Target Support Files/Pods-JobsSwiftBaseConfigDemoTests/Pods-JobsSwiftBaseConfigDemoTests.debug.xcconfig"; sourceTree = "<group>"; };
-		0DD861BAFBC3689CC1E7C538 /* JobsUIKitRegression.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = JobsUIKitRegression.swift; path = JobsUIKitRegression.swift; sourceTree = "<group>"; };
+		0DD861BAFBC3689CC1E7C538 /* JobsUIKitRegression.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = JobsUIKitRegression.swift; sourceTree = "<group>"; };
 		0EE3EF414B9F119AFDDAE8CB /* Acceptance-2026-10-05.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Acceptance-2026-10-05.json"; sourceTree = "<group>"; };
 		10DB764D70F11D65B3279C03 /* Pods-JobsSwiftBaseConfigDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JobsSwiftBaseConfigDemo.release.xcconfig"; path = "Target Support Files/Pods-JobsSwiftBaseConfigDemo/Pods-JobsSwiftBaseConfigDemo.release.xcconfig"; sourceTree = "<group>"; };
 		13EB1E6629EDC0DC4FC1A999 /* JobsSPMDemoMacroTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacroDemo/Tests/JobsSPMDemoMacroTests/JobsSPMDemoMacroTests.swift; sourceTree = "<group>"; };
@@ -123,9 +123,8 @@
 		C59C65362F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JobsSwiftBaseConfigDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C59C65452F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobsSwiftBaseConfigDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C59C654F2F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JobsSwiftBaseConfigDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C59C65732F1BFC1C0060EEAD /* 未尽事宜.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "未尽事宜.md"; sourceTree = "<group>"; };
 		CE4786AC19CD89DA6B9729FF /* NetworkHTTPRegression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHTTPRegression.swift; sourceTree = "<group>"; };
-		D366928565BC1831AE8811F1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		D366928565BC1831AE8811F1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		DE3D64F65113914D85311661 /* podfile_readiness.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = podfile_readiness.rb/podfile_readiness.rb; sourceTree = "<group>"; };
 		E4C27DCC8BA50F3AC5B5F458 /* interaction_test.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = interaction_test.rb/interaction_test.rb; sourceTree = "<group>"; };
 		F09D19105A925ED1F132E7C3 /* jobs_cocoapods_source.rb */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; path = jobs_cocoapods_source.rb/jobs_cocoapods_source.rb; sourceTree = "<group>"; };
@@ -148,10 +147,10 @@
 		C59C67882F1BFD620060EEAD /* Exceptions for "JobsSwiftBaseConfigDemo" folder in "JobsSwiftBaseConfigDemo" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"主业务流程/VC/TODO/Demo@自定义注解.swift",
-				Info.plist,
 				"启动入口/JobsDeviceLaunchGate/README.md",
 				"主业务流程/VC/SubVC/Demo@ARKit/README.md",
+				"主业务流程/VC/TODO/Demo@自定义注解.swift",
+				Info.plist,
 				"Resources/AppIcons/JobsAlternateComposerIcon-Gyroscope.icon",
 				"Resources/AppIcons/JobsAlternateComposerIcon-Planet.icon",
 				"Resources/AppIcons/JobsAlternateComposerIcon-Rocket.icon",
@@ -204,6 +203,13 @@
 				F10000072F22000100C0DE01 /* Exceptions for "JobsWidgetExtension" folder in "JobsWidgetExtension" target */,
 			);
 			path = JobsWidgetExtension;
+			sourceTree = "<group>";
+		};
+		F71515152026111500000001 /* 项目相关报告 */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
+			path = "项目相关报告";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -452,7 +458,7 @@
 		C59C652D2F1BFB190060EEAD = {
 			isa = PBXGroup;
 			children = (
-				C59C65732F1BFC1C0060EEAD /* 未尽事宜.md */,
+				F71515152026111500000001 /* 项目相关报告 */,
 				C59C65382F1BFB1A0060EEAD /* JobsSwiftBaseConfigDemo */,
 				D577F5E586CD239693B0DDEF /* 自动化测试 */,
 				F10000082F22000100C0DE01 /* JobsWidgetExtension */,
@@ -497,7 +503,6 @@
 				F09D19105A925ED1F132E7C3 /* jobs_cocoapods_source.rb */,
 				D366928565BC1831AE8811F1 /* README.md */,
 			);
-			name = "【MacOS】🌐CocoaPods源自动选择.command";
 			path = "【MacOS】🌐CocoaPods源自动选择.command";
 			sourceTree = "<group>";
 		};

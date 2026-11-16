@@ -744,6 +744,7 @@ extension RootFoldTableCell {
     private static var reportedMissingDemoIconVCNames = Set<String>()
     private static let demoIconSymbolNamesByVCType: [String: String] = {
         let names = [
+            "JobsRustOCRDemoVC": "doc.text.viewfinder",
             "FSPopoverDemoVC": "arrowtriangle.down.circle", "PicLoadDemoVC": "photo",
             "JobsIconfontDemoListVC": "square.text.square.fill",
             "BRPickerDemoVC": "slider.horizontal.3", "GKPhotoBrowserByUIKitDemoVC": "photo.on.rectangle",

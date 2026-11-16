@@ -2251,3 +2251,72 @@
 "仅内存" = "Memory only";
 "历史记录按账号独立保存。" = "Recent searches are stored separately for each account.";
 "临时搜索仅保留在当前页面内，不写入本地存储。" = "Temporary searches stay on this screen and are not saved to local storage.";
+
+"最近使用" = "Recently used";
+"尚无最近使用" = "No recently used demos";
+"打开一个 Demo 后会显示在这里，点击重新加载" = "Open a demo to see it here. Tap to reload.";
+
+// Core Data 用户模型与本地数据库 Demo。
+"Core Data 用户数据库" = "Core Data User Database";
+"User 模型定义姓名与年龄，SQLite 文件保存实际记录。本页仅演示本地持久化。" = "The User model defines a name and age. A SQLite file stores the actual records. This demo uses local persistence only.";
+"添加用户" = "Add user";
+"编辑用户" = "Edit user";
+"姓名" = "Name";
+"姓名不能为空。" = "Name cannot be empty.";
+"年龄须为 0～150 的整数。" = "Age must be a whole number from 0 to 150.";
+"尚无用户记录" = "No user records yet";
+"输入姓名和年龄，添加第一位用户" = "Enter a name and age to add the first user.";
+"点击记录编辑姓名与年龄，左滑删除。所有操作立即保存，重启后仍可读取。" = "Tap a record to edit the name and age; swipe left to delete it. Changes save immediately and remain available after restarting the app.";
+"确定删除本 Demo 的全部用户？此操作无法撤销。" = "Delete all users in this demo? This cannot be undone.";
+"重试" = "Retry";
+"Core Data 本地数据库" = "Core Data Local Database";
+"添加记录" = "Add record";
+"保存修改" = "Save changes";
+"删除记录" = "Delete record";
+"清空数据库" = "Clear database";
+"数据库操作失败" = "Database operation failed";
+"重试数据库加载" = "Retry loading database";
+"记录数量：%@" = "Records: %@";
+"数据库尚未就绪。" = "The database is not ready yet.";
+"不能读取数据库模型。" = "Unable to read the database model.";
+"重新加载" = "Reload";
+"数据库记录缺少必要字段。" = "A database record is missing required fields.";
+"功能实验室" = "Feature Lab";
+"世界时钟" = "World Clock";
+"当前时区" = "Current Time Zone";
+"世界时区" = "World Time Zones";
+"暂无时区" = "No Time Zones";
+"点击重新加载" = "Tap to Reload";
+"12小时制" = "12-Hour Time";
+"24小时制" = "24-Hour Time";
+"贝克岛（无人常住）" = "Baker Island (uninhabited)";
+
+"返回首页时收缩分组" = "Collapse groups on return to Home";
+
+// Rust OCR
+"Rust OCR 离线识别" = "Rust OCR · Offline Recognition";
+"同一 Rust 核心，图片识别完全离线" = "One Rust core, fully offline image recognition";
+"选择图片后开始离线识别" = "Choose an image to start offline recognition";
+"使用内置样例" = "Use bundled sample";
+"选择照片" = "Choose photo";
+"开始离线识别" = "Start offline recognition";
+"取消识别" = "Cancel recognition";
+"正在本机识别，请稍候" = "Recognizing on this device…";
+"尚无识别结果" = "No recognition results yet";
+"选择样例或照片，点击开始识别；结果仅在本机处理。" = "Choose a sample or photo, then start recognition. Processing stays on this device.";
+"无法读取所选图片" = "Unable to read the selected image";
+"识别失败，请重试" = "Recognition failed. Try again.";
+"未发现可识别文字" = "No recognizable text found";
+"离线识别完成" = "Offline recognition complete";
+"已取消识别" = "Recognition cancelled";
+"待识别图片" = "Image to recognize";
+"识别结果" = "Recognition results";
+"OCR 核心尚未安装" = "OCR core is not installed";
+
+// OCR camera and result actions.
+"相机不可用" = "Camera unavailable";
+"此设备没有可用相机。" = "This device has no available camera.";
+"请在系统设置中允许相机访问。" = "Allow camera access in system Settings.";
+"打开设置" = "Open Settings";
+"复制结果" = "Copy result";
+"已复制识别结果" = "Recognition result copied";

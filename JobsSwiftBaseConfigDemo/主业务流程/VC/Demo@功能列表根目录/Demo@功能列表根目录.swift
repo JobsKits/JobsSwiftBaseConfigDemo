@@ -45,6 +45,22 @@ import JobsSwiftDebugTools
 
 final class RootListVC: BaseVC {
 
+    static func recordRecentDemo(_ type: UIViewController.Type) {
+        RootRecentDemoStore().record("cls:\(String(reflecting: type))")
+    }
+
+    func recentDemoItems() -> [RootRecentDemoItem] {
+        var byIdentifier: [String: RootRecentDemoItem] = [:]
+        for group in makeDemo2D() {
+            for item in group.items {
+                byIdentifier[demoPersistentKey(for: item)] = (item.title, group.title, item.vcType)
+            }
+        }
+        return RootRecentDemoStore().identifiers(available: Set(byIdentifier.keys)).compactMap {
+            byIdentifier[$0]
+        }
+    }
+
     #if DEBUG
     /// 直接复用页面注册工厂，避免列表的搜索、折叠和持久化排序影响确定性巡检。
     static func debugCoverageLaunchController() -> UIViewController? {
@@ -200,7 +216,7 @@ final class RootListVC: BaseVC {
     }
     // ================================== JobsSwiftTimer（新版）统一管理 ==================================
     private let timerMgr = JobsSwiftTimerMgr.shared
-    private let suspendBtnTimerID = "RootListVC.suspendBtn.timer"
+    private let suspendBtnTimerID = "RootListVC.suspendBtn.\(UUID().uuidString)"
     private let suspendSpinBtnTimerID = "RootListVC.suspendSpinBtn.timer"
     private let progressIndicatorTimerID = "RootListVC.progressIndicator.timer"
 
@@ -250,6 +266,12 @@ final class RootListVC: BaseVC {
     private var appliedCellTextDisplayStrategy = RootListPreferences.cellTextDisplayStrategy
     /// 展开状态（一级目录展开行）
     private var expandedGroups = Set<Int>()
+    weak var demoSideDrawer: JobsSideDrawerVC?
+    private var pendingDemoReturn = false
+    private var demoDepartureExpandedGroups = Set<Int>()
+    private var demoDepartureContentOffset = CGPoint.zero
+    private var homeSplashVisible = false
+    private var homeInteractive = false
     private var pinnedDemoItems: [DemoItem] = []
     /// 防抖标记（原逻辑不动）
     private var isPullRefreshing = false
@@ -329,6 +351,8 @@ final class RootListVC: BaseVC {
                     ("PWA：原生离线包与 Service Worker", JobsPWADemoVC.self)
                 ]),
             (title: "系统能力与硬件通信".tr, items: [
+                    ("Rust OCR 离线识别", JobsRustOCRDemoVC.self),
+                    ("Core Data 用户数据库", JobsCoreDataDemoVC.self),
                     ("ARKit · 空间实验室", JobsARKitDemoVC.self),
                     ("设备越狱风险检测与业务门禁", JobsDeviceGuardDemoVC.self),
                     ("本地录音与音频管理", JobsAudioRecorderDemoVC.self),
@@ -469,31 +493,56 @@ final class RootListVC: BaseVC {
                 ])
         ]
     }
+    private var suspendTimeAvailableArea: CGRect?
+    private var suspendTimeLayoutSignature: String?
+    private var suspendTimeDragOffset: CGPoint?
+    private var didPlaceSuspendTimeButton = false
+
+    private var suspendTimeFontSize: CGFloat {
+        18 * JobsFont.preferredFont(forTextStyle: .body,
+                                   compatibleWith: traitCollection).pointSize / 17
+    }
+
+    private var suspendTimeTitleFont: UIFont {
+        JobsFont.systemFont(ofSize: suspendTimeFontSize,
+                            weight: .bold)
+    }
+
+    private var suspendTimeValueFont: UIFont {
+        JobsFont.monospacedDigitSystemFont(ofSize: suspendTimeFontSize,
+                                           weight: .bold)
+    }
+
     private lazy var suspendBtn: UIButton = {
         UIButton.sys()
             .byAccessibilityIdentifier("jobs.root.time")
             .tr_setTitle("当前时间".tr, for: .normal)
-            .byTitleFont(JobsFont.systemFont(ofSize: 18,
-                                             weight: .bold))
-            .byTitleAdjustsFontSizeToFitWidth(true)
-            .byTitleMinimumScaleFactor(0.7)
+            .byTitleFont(suspendTimeTitleFont)
+            .bySubTitle(nowClock())
+            .bySubTitleFont(suspendTimeValueFont)
+            .byTitlePadding(0)
+            .byContentInsets(NSDirectionalEdgeInsets(top: RootFloatingClockLayout.verticalPadding,
+                                                     leading: RootFloatingClockLayout.horizontalPadding,
+                                                     bottom: RootFloatingClockLayout.verticalPadding,
+                                                     trailing: RootFloatingClockLayout.horizontalPadding))
+            .byTitleAdjustsFontSizeToFitWidth(false)
+            .byNumberOfLines(0)
+            .byLineBreakMode(.byWordWrapping)
+            .byTitleAlignment(.center)
             .byTitleColor(JobsCor.white,
                           for: .normal)
-            .byBackgroundColor(JobsCor.systemBlue,
+            .byBackgroundColor(UIColor(r: 21, g: 101, b: 192, a: 1),
                                for: .normal)
             .byCornerRadius(10)
             .byMasksToBounds(true)
-            .onLongPress(minimumPressDuration: 0.8) { [weak self] _, gesture in
-                guard gesture.state == .began else {
-                    return
-                }
-                self?.showSuspendTimeButtonVisibilityAlert()
+            .onLongPress(minimumPressDuration: 0.45) { [weak self] _, gesture in
+                self?.handleSuspendTimeDrag(gesture)
             }
             .onTap { [weak self] _ in
                 guard let self else {
                     return
                 }
-                "点击了悬浮按钮".tr.toast
+                RootWorldClockVC().byPush(self)
             }
             .bySuspend { [unowned self] cfg in
                 cfg
@@ -502,8 +551,12 @@ final class RootListVC: BaseVC {
                         CGPoint(x: 15,
                                 y: max(8, gk_navigationBar.frame.maxY - container.safeAreaInsets.top + 8))
                     }
-                    .byFallbackSize(CGSize(width: 166, height: 66))
+                    .byFallbackSize(RootFloatingClockLayout.size(title: "当前时间".tr,
+                                                                 titleFont: suspendTimeTitleFont,
+                                                                 timeFont: suspendTimeValueFont,
+                                                                 availableSize: view.bounds.inset(by: view.safeAreaInsets).size))
                     .byDocking(.nearestEdge)
+                    .byDraggable(false)
                     .byConfineInContainer(true)
                     .byHapticOnDock(true)
             }
@@ -650,7 +703,7 @@ final class RootListVC: BaseVC {
     // ================================== TableView（一级目录） ==================================
     private lazy var demoNavigationTitleLabel: UILabel = {
         UILabel.jobsMake { _ in }
-            .tr_setText("演武堂".tr)
+            .tr_setText("功能实验室".tr)
             .byTextColor(RootListPreferences.primaryTextColor)
             .byFont(JobsFont.systemFont(ofSize: 17,
                                         weight: .medium))
@@ -719,34 +772,59 @@ final class RootListVC: BaseVC {
     }()
 
     private weak var loadedFunctionMenuTableView: UITableView?
+    private weak var loadedFunctionMenuSurface: UIView?
+
+    private var functionMenuBackgroundColor: UIColor {
+        RootListPreferences.darkModeEnabled
+            ? UIColor(r: 35, g: 44, b: 40, a: 1)
+            : UIColor(r: 232, g: 239, b: 235, a: 1)
+    }
+
+    private lazy var functionMenuSurface: UIView = {
+        let surface = UIView.jobsMake { _ in }
+            .byAccessibilityIdentifier("jobs.root.functionMenu.surface")
+            .byBackgroundColor(functionMenuBackgroundColor)
+            .byCornerRadius(8)
+            .byClipsToBounds(false)
+            .byShadowColor(JobsCor.black)
+            .byShadowOpacity(RootListPreferences.darkModeEnabled ? 0.42 : 0.18)
+            .byShadowOffset(CGSize(width: 0, height: 4))
+            .byShadowRadius(8)
+            .byBorderWidth(0.5)
+            .byBorderColor(JobsCor.white.withAlphaComponent(0.6))
+            .byVisible(false)
+            .byAddTo(view) { make in
+                make.top.right.equalToSuperview()
+                make.width.equalTo(112)
+                make.height.equalTo(160)
+            }
+        loadedFunctionMenuSurface = surface
+        return surface
+    }()
 
     private lazy var functionMenuTableView: UITableView = {
-        let tableView = UITableView(frame: .zero,
-                                    style: .plain)
+        let tableView = UITableView.jobsMake { _ in }
             .byAccessibilityIdentifier("jobs.root.functionMenu.panel")
             .byDataSource(self)
             .byDelegate(self)
             .byRegisterCell(UITableViewCell.self)
-            .byBackgroundColor(RootListPreferences.foldCardBackgroundColor)
-            .byRowHeight(44)
+            .byBackgroundColor(functionMenuBackgroundColor)
+            .byRowHeight(48)
             .byEstimatedRowHeight(0)
             .byEstimatedSectionHeaderHeight(0)
             .byEstimatedSectionFooterHeight(0)
             .byScrollEnabled(false)
-            .bySeparatorStyle(.singleLine)
+            .bySeparatorStyle(.none)
             .byNoSectionHeaderTopPadding()
-            .byContentInset(.zero)
+            .byContentInset(UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0))
             .byScrollIndicatorInsets(.zero)
             .byNoContentInsetAdjustment()
             .byCornerRadius(8)
             .byShadowOpacity(0)
             .byMasksToBounds(true)
             .byVisible(NO)
-            .byAddTo(view) { [unowned self] make in
-                make.top.equalTo(self.gk_navigationBar.snp.bottom).offset(6)
-                make.right.equalToSuperview().inset(12)
-                make.width.equalTo(210)
-                make.height.equalTo(FunctionMenuAction.allCases.count * 44)
+            .byAddTo(functionMenuSurface) { make in
+                make.edges.equalToSuperview()
             }
         loadedFunctionMenuTableView = tableView
         return tableView
@@ -843,7 +921,7 @@ final class RootListVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.byBackgroundColor(RootListPreferences.pageBackgroundColor)
-        jobsSetupGKNav(title: "演武堂".tr,
+        jobsSetupGKNav(title: "功能实验室".tr,
                        leftButton: UIButton.sys()
                            .byAccessibilityIdentifier("jobs.root.navigationMenu")
                            .byFrame(CGRect(x: 0,
@@ -860,8 +938,9 @@ final class RootListVC: BaseVC {
                 guard let self else {
                     return
                 }
-                sender.byToggleSelected()
-                self.jobsSideDrawer?.toggleDrawer()
+                let drawer = self.demoSideDrawer ?? self.jobsSideDrawer
+                drawer?.toggleDrawer()
+                sender.bySelected(drawer?.isOpen == true)
                 print("")
             }
                            .onTapAppend { _ in
@@ -940,11 +1019,41 @@ final class RootListVC: BaseVC {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        homeInteractive = false
+        refreshSuspendTimeButtonVisibility()
+        toggleFunctionMenu(false)
         progressIndicatorTimer?.pause()
+        suspendBtnTimer?.pause()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        layoutFunctionMenuIfVisible()
+        layoutSuspendTimeButton()
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory {
+            layoutSuspendTimeButton()
+        }
     }
 }
 
 extension RootListVC {
+
+    func setHomeSplashVisible(_ visible: Bool) {
+        homeSplashVisible = visible
+        if isViewLoaded {
+            refreshSuspendTimeButtonVisibility()
+        }
+    }
+
+    private func prepareForDemoDeparture() {
+        pendingDemoReturn = true
+        demoDepartureExpandedGroups = expandedGroups
+        demoDepartureContentOffset = tableView.contentOffset
+    }
 
     /// 侧滑容器首次装配时，子控制器可能先收到 viewDidAppear，再真正进入 Window。
     private func performDemoListAppearanceUpdate() {
@@ -955,10 +1064,26 @@ extension RootListVC {
         tableView.beginUpdates()
         tableView.endUpdates()
         updateFooterAvailability()
-        if !demoSearchEnabled && demoListHasAppeared && RootListPreferences.returnToTopAndRefreshEnabled {
-            reloadDemoListToTopAndRefresh()
+        homeInteractive = true
+        if pendingDemoReturn && !demoSearchEnabled {
+            pendingDemoReturn = false
+            if RootListPreferences.collapseOnDemoReturn {
+                if RootListPreferences.returnToTopAndRefreshEnabled {
+                    reloadDemoListToTopAndRefresh()
+                }
+                expandedGroups.removeAll()
+                tableView.reloadData()
+            } else {
+                expandedGroups = demoDepartureExpandedGroups
+                tableView.reloadData()
+                tableView.layoutIfNeeded()
+                tableView.setContentOffset(demoDepartureContentOffset, animated: false)
+            }
         }
         demoListHasAppeared = true
+        if demoSearchEnabled {
+            pendingDemoReturn = false
+        }
         refreshSuspendTimeButtonVisibility()
         if suspendSpinBtn.jobs_isSpinning {
             suspendSpinBtnTimer?.resume()
@@ -1003,21 +1128,41 @@ extension RootListVC {
             }
     }
 
-    private func showSuspendTimeButtonVisibilityAlert() {
-        UIAlertController
-            .makeAlert("隐藏悬浮时间？".tr,
-                       "隐藏后可在“设置”中重新开启。".tr)
-            .byView { $0.byAccessibilityIdentifier("jobs.root.hideTime.alert") }
-            .byAddCancel("取消".tr)
-            .byAddDestructive("隐藏".tr) { [weak self] _ in
-                guard let self else {
-                    return
-                }
-                RootListPreferences.showsSuspendTimeButton = false
-                refreshSuspendTimeButtonVisibility()
+    private func handleSuspendTimeDrag(_ gesture: UILongPressGestureRecognizer) {
+        let point = gesture.location(in: view)
+        let area = view.bounds.inset(by: view.safeAreaInsets)
+        switch gesture.state {
+        case .began:
+            suspendTimeDragOffset = CGPoint(x: point.x - suspendBtn.frame.minX,
+                                             y: point.y - suspendBtn.frame.minY)
+        case .changed:
+            guard let offset = suspendTimeDragOffset else {
+                return
             }
-            .byTintColor(RootListPreferences.selectedTintColor)
-            .byPresent(self)
+            let proposed = CGRect(origin: CGPoint(x: point.x - offset.x,
+                                                   y: point.y - offset.y),
+                                  size: suspendBtn.bounds.size)
+            suspendBtn.byFrame(RootFloatingClockLayout.frame(size: proposed.size,
+                                                             currentFrame: proposed,
+                                                             previousArea: nil,
+                                                             availableArea: area))
+        case .ended, .cancelled, .failed:
+            guard suspendTimeDragOffset != nil else {
+                return
+            }
+            suspendTimeDragOffset = nil
+            let target = RootFloatingClockLayout.dockedFrame(suspendBtn.frame,
+                                                             availableArea: area)
+            UIView.jobsAnimateWithOptions(0.25,
+                                           options: [.curveEaseOut, .beginFromCurrentState],
+                                           animations: { [weak self] in
+                self?.suspendBtn.byFrame(target)
+            })
+            suspendBtn.playTapBounce(scale: 1,
+                                      haptic: .light)
+        default:
+            break
+        }
     }
 
     private func refreshSuspendTimeButtonVisibility() {
@@ -1027,7 +1172,7 @@ extension RootListVC {
             visible = true
         }
         #endif
-        visible = visible && !demoSearchEnabled
+        visible = visible && !demoSearchEnabled && !homeSplashVisible && homeInteractive
         suspendBtn.byVisible(visible)
         if visible {
             suspendBtnTimer?.resume()
@@ -1052,8 +1197,9 @@ extension RootListVC {
 
     // ================================== 运行时语言刷新 ==================================
     private func refreshLocalizedContent() {
-        demoNavigationTitleLabel.byText("演武堂".tr)
+        demoNavigationTitleLabel.byText("功能实验室".tr)
         suspendBtn.tr_setTitle("当前时间".tr, for: .normal)
+        layoutSuspendTimeButton()
         suspendFuseBtn.tr_setTitle("按".tr, for: .normal)
         if let tabBarController = view.window?.rootViewController as? UITabBarController,
            let items = tabBarController.tabBar.items,
@@ -1064,6 +1210,72 @@ extension RootListVC {
         }
     }
 
+    private func layoutSuspendTimeButton() {
+        guard isViewLoaded,
+              view.window != nil,
+              !demoSearchEnabled else {
+            return
+        }
+        // GK导航在出现时会置顶；浮钟须能在整个首页（包括导航区域）继续接收触摸。
+        view.byBringToFront(suspendBtn)
+        if let menu = loadedFunctionMenuSurface,
+           !menu.isHidden {
+            view.byBringToFront(menu)
+        }
+        let area = view.bounds.inset(by: view.safeAreaInsets)
+        guard area.width > 0,
+              area.height > 0 else {
+            return
+        }
+        let title = "当前时间".tr
+        let titleFont = suspendTimeTitleFont
+        let timeFont = suspendTimeValueFont
+        let signature = "\(title)|\(titleFont.pointSize)|\(area)"
+        guard !didPlaceSuspendTimeButton || suspendTimeLayoutSignature != signature else {
+            return
+        }
+        let size = RootFloatingClockLayout.size(title: title,
+                                                titleFont: titleFont,
+                                                timeFont: timeFont,
+                                                availableSize: area.size)
+        let frame: CGRect
+        if didPlaceSuspendTimeButton {
+            frame = RootFloatingClockLayout.frame(size: size,
+                                                   currentFrame: suspendBtn.frame,
+                                                   previousArea: suspendTimeAvailableArea,
+                                                   availableArea: area)
+        } else {
+            guard gk_navigationBar.bounds.height > 0,
+                  gk_navigationBar.frame.maxY > area.minY else {
+                return
+            }
+            frame = RootFloatingClockLayout.initialFrame(size: size,
+                                                          navigationBottom: gk_navigationBar.frame.maxY,
+                                                          availableArea: area)
+            didPlaceSuspendTimeButton = true
+        }
+        suspendTimeLayoutSignature = signature
+        suspendTimeAvailableArea = area
+        suspendBtn
+            .byTitleFont(titleFont)
+            .bySubTitleFont(timeFont)
+            .byTitleLab { label in
+                label
+                    .byNumberOfLines(0)
+                    .byLineBreakMode(.byWordWrapping)
+                    .byAdjustsFontSizeToFitWidth(false)
+                    .byTextAlignment(.center)
+            }
+            .bySubTitleLab { label in
+                label
+                    .byNumberOfLines(0)
+                    .byLineBreakMode(.byWordWrapping)
+                    .byAdjustsFontSizeToFitWidth(false)
+                    .byTextAlignment(.center)
+            }
+            .byFrame(frame)
+    }
+
     // ================================== Demo 列表主题刷新 ==================================
     private func applyDemoListThemeColors() {
         RootListPreferences.applyThemeColors(to: self,
@@ -1072,12 +1284,17 @@ extension RootListVC {
         demoNavigationTitleLabel.byTextColor(RootListPreferences.primaryTextColor)
         demoNavigationProjectLabel.byTextColor(RootListPreferences.secondaryTextColor)
         if let functionMenuTableView = loadedFunctionMenuTableView {
-            functionMenuTableView.byBackgroundColor(RootListPreferences.foldCardBackgroundColor)
+            functionMenuTableView.byBackgroundColor(functionMenuBackgroundColor)
             if functionMenuTableView.window != nil,
                !functionMenuTableView.isHidden {
                 functionMenuTableView.reloadData()
             }
         }
+        loadedFunctionMenuSurface?
+            .byBackgroundColor(functionMenuBackgroundColor)
+            .byShadowOpacity(RootListPreferences.darkModeEnabled ? 0.42 : 0.18)
+            .byBorderColor(JobsCor.white.withAlphaComponent(RootListPreferences.darkModeEnabled ? 0.1 : 0.6))
+        layoutFunctionMenuIfVisible()
         demoSearcherView
             .byActionColor(demoSearchActionColor)
             .byBackgroundColor(RootListPreferences.pageBackgroundColor)
@@ -1115,7 +1332,7 @@ extension RootListVC {
                                                   dedupPolicy: .replace) { [weak self] in
                 onMainAsync(self) { vc in
                     let btn = vc.suspendBtn
-                    if btn.title(for: .normal) != "当前时间" {
+                    if btn.title(for: .normal) != "当前时间".tr {
                         btn.tr_setTitle("当前时间".tr, for: .normal)
                     }
                     btn
@@ -1447,7 +1664,8 @@ extension RootListVC {
         }
         let buttonFrame = functionMenuButton.convert(functionMenuButton.bounds,
                                                      to: view)
-        if functionMenuTableView.frame.contains(point) || buttonFrame.contains(point) {
+        let menuFrame = functionMenuTableView.convert(functionMenuTableView.bounds, to: view)
+        if menuFrame.contains(point) || buttonFrame.contains(point) {
             return
         }
         toggleFunctionMenu(false)
@@ -1552,12 +1770,46 @@ extension RootListVC {
     private func toggleFunctionMenu(_ visible: Bool) {
         functionMenuButton.bySelected(visible)
         if visible {
+            functionMenuSurface.byVisible(true)
             functionMenuTableView.byVisible(YES)
             applyDemoListThemeChrome()
             functionMenuTableView.reloadData()
-            view.bringSubviewToFront(functionMenuTableView)
+            layoutFunctionMenuIfVisible()
+            view.byBringToFront(functionMenuSurface)
         } else {
             loadedFunctionMenuTableView?.byVisible(NO)
+            loadedFunctionMenuSurface?.byVisible(false)
+        }
+    }
+
+    /// 导航按钮与内容页可能不在同一坐标系，菜单始终以真实按钮位置锚定。
+    private func layoutFunctionMenuIfVisible() {
+        guard let surface = loadedFunctionMenuSurface,
+              !surface.isHidden,
+              functionMenuButton.window != nil else {
+            return
+        }
+        let available = view.bounds.inset(by: view.safeAreaInsets).insetBy(dx: 8, dy: 8)
+        guard available.width > 0, available.height > 0 else {
+            return
+        }
+        let font = JobsFont.systemFont(ofSize: 16)
+        let textWidth = FunctionMenuAction.allCases.map {
+            (menuTitle(for: $0) as NSString).size(withAttributes: [.font: font]).width
+        }.max() ?? 0
+        let width = min(max(112, ceil(textWidth) + 32), available.width)
+        let height = min(CGFloat(FunctionMenuAction.allCases.count) * 48 + 16, available.height)
+        let buttonFrame = functionMenuButton.convert(functionMenuButton.bounds, to: view)
+        let x = min(max(buttonFrame.maxX - width, available.minX), available.maxX - width)
+        let y = min(max(buttonFrame.maxY + 4, available.minY), available.maxY - height)
+        let nextFrame = CGRect(x: x, y: y, width: width, height: height).integral
+        guard surface.frame != nextFrame else {
+            return
+        }
+        surface.snp.remakeConstraints { make in
+            make.left.equalToSuperview().offset(nextFrame.minX)
+            make.top.equalToSuperview().offset(nextFrame.minY)
+            make.size.equalTo(nextFrame.size)
         }
     }
 
@@ -1702,9 +1954,10 @@ extension RootListVC: UITableViewDataSource,
             let action = FunctionMenuAction.allCases[indexPath.row]
             return cell
                 .byText(menuTitle(for: action))
-                .byTitleFont(JobsFont.systemFont(ofSize: 15,
-                                                 weight: .medium))
+                .byTitleFont(JobsFont.systemFont(ofSize: 16))
                 .byTitleCor(RootListPreferences.primaryTextColor)
+                .byLayoutMargins(UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16))
+                .byPreservesSuperviewLayoutMargins(false)
                 .bySelectionStyle(.default)
                 .bySelectedBackgroundView(
                 UIView
@@ -1712,9 +1965,9 @@ extension RootListVC: UITableViewDataSource,
                     .byBackgroundColor(JobsCor.tertiarySystemBackground)
             )
                 .byTintColor(RootListPreferences.selectedTintColor)
-                .byBackgroundColor(RootListPreferences.foldCardBackgroundColor)
+                .byBackgroundColor(functionMenuBackgroundColor)
                 .byContentView {
-                    $0.byBackgroundColor(RootListPreferences.foldCardBackgroundColor)
+                    $0.byBackgroundColor(functionMenuBackgroundColor)
                 }
                 .byAccessoryType(.none)
         }
@@ -1729,6 +1982,8 @@ extension RootListVC: UITableViewDataSource,
                         return
                     }
                     let item = self.pinnedDemoItems[itemIndex]
+                    Self.recordRecentDemo(item.vcType)
+                    self.prepareForDemoDeparture()
                     item.vcType.init()
                         .byTitle(item.title)
                         .byPush(self)
@@ -1756,6 +2011,8 @@ extension RootListVC: UITableViewDataSource,
                     self.demoSearcherView.saveHistory(by: self.demoSearchKeyword)
                 }
                 let item = g.items[itemIndex]
+                Self.recordRecentDemo(item.vcType)
+                self.prepareForDemoDeparture()
             /// 这里推入控制器
                 item.vcType.init()
                     .byTitle(item.title)
@@ -1771,7 +2028,7 @@ extension RootListVC: UITableViewDataSource,
     func tableView(_ tableView: UITableView,
                    heightForRowAt indexPath: IndexPath) -> CGFloat {
         if tableView === loadedFunctionMenuTableView {
-            return 44
+            return 48
         }
         if hasPinnedDemoSection && indexPath.section == 0 {
             return RootFoldTableCell.expandedHeight(itemCount: pinnedDemoItems.count,

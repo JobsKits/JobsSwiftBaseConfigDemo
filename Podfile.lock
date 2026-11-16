@@ -473,6 +473,11 @@ PODS:
     - JobsSwiftDSL
     - JobsSwiftTimer
     - SnapKit
+  - JobsRustOCR (0.1.0):
+    - JobsRustOCR/Support (= 0.1.0)
+  - JobsRustOCR/Support (0.1.0):
+    - JobsRustOCR/Support/JobsRustOCRPrivate (= 0.1.0)
+  - JobsRustOCR/Support/JobsRustOCRPrivate (0.1.0)
   - JobsScale (0.1.14):
     - JobsGetWindow
   - JobsScale/Stability (0.1.14):
@@ -1059,6 +1064,7 @@ DEPENDENCIES:
   - "JobsNetworking/Stability (from `JobsByPods/JobsNetworking@Pods`)"
   - "JobsProgressBar (from `JobsByPods/JobsProgressBar@Pods`)"
   - "JobsProgressBar/Stability (from `JobsByPods/JobsProgressBar@Pods`)"
+  - "JobsRustOCR (from `JobsByPods/JobsRustOCR@Pods`)"
   - "JobsScale (from `JobsByPods/JobsScale@Pods`)"
   - "JobsScale/Stability (from `JobsByPods/JobsScale@Pods`)"
   - "JobsScreenCapture (from `JobsByPods/JobsScreenCapture@Pods`)"
@@ -1308,6 +1314,8 @@ EXTERNAL SOURCES:
     :path: "JobsByPods/JobsNetworking@Pods"
   JobsProgressBar:
     :path: "JobsByPods/JobsProgressBar@Pods"
+  JobsRustOCR:
+    :path: "JobsByPods/JobsRustOCR@Pods"
   JobsScale:
     :path: "JobsByPods/JobsScale@Pods"
   JobsScreenCapture:
@@ -1404,7 +1412,7 @@ SPEC CHECKSUMS:
   Differentiator: e8497ceab83c1b10ca233716d547b9af21b9344d
   ESPullToRefresh: 0d68daa602b343c81753a1b95e09fd0bfcddfd40
   FingerprintJS: afb6185cf6951b60adc334f41d63e2e0a520bcf4
-  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
   FlutterPluginRegistrant: 1bf2b93dcc6a731089dfe77f7a867be153c5008f
   FSPopoverView: 632d6e3dcd1ba41f941e81a5a0601e51003d01c3
   GKLivePhotoManager: 7fba1ae3eebbbd9323320e137a88a231bc5af5fa
@@ -1450,6 +1458,7 @@ SPEC CHECKSUMS:
   JobsNavBar: 861b1018460a8fd3138cb28c39ab5ff1888a85fd
   JobsNetworking: 83591d6ee63f1a16138ec392a5efe4fae2a2c9c9
   JobsProgressBar: 0616b25aaf01fbeab89c12af27cd1d7d1d9f4f40
+  JobsRustOCR: 255b2491d6c4c7ae651cbc0a65655103271f3342
   JobsScale: 567a4bbb9bd49508083335fe459eb45456f88402
   JobsScreenCapture: 807482e3c4b386abe115bdb3a39817166af8877c
   JobsSwiftAppTools: b789da6ff90cfa963e31ed0e635bb2a01e77ab9e

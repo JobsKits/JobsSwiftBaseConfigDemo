@@ -2251,3 +2251,72 @@
 "仅内存" = "Mémoire seule";
 "历史记录按账号独立保存。" = "L’historique de recherche est enregistré séparément pour chaque compte.";
 "临时搜索仅保留在当前页面内，不写入本地存储。" = "Les recherches temporaires restent sur cet écran et ne sont pas enregistrées dans le stockage local.";
+
+"最近使用" = "Utilisés récemment";
+"尚无最近使用" = "Aucune démo récente";
+"打开一个 Demo 后会显示在这里，点击重新加载" = "Ouvrez une démo pour la retrouver ici. Touchez pour recharger.";
+
+// Core Data 用户模型与本地数据库 Demo。
+"Core Data 用户数据库" = "Base d’utilisateurs Core Data";
+"User 模型定义姓名与年龄，SQLite 文件保存实际记录。本页仅演示本地持久化。" = "Le modèle User définit un nom et un âge. Un fichier SQLite stocke les enregistrements réels. Cette démo présente uniquement la persistance locale.";
+"添加用户" = "Ajouter un utilisateur";
+"编辑用户" = "Modifier l’utilisateur";
+"姓名" = "Nom";
+"姓名不能为空。" = "Le nom ne peut pas être vide.";
+"年龄须为 0～150 的整数。" = "L’âge doit être un nombre entier compris entre 0 et 150.";
+"尚无用户记录" = "Aucun utilisateur enregistré";
+"输入姓名和年龄，添加第一位用户" = "Saisissez un nom et un âge pour ajouter le premier utilisateur.";
+"点击记录编辑姓名与年龄，左滑删除。所有操作立即保存，重启后仍可读取。" = "Touchez un enregistrement pour modifier le nom et l’âge, ou balayez vers la gauche pour le supprimer. Les modifications sont enregistrées immédiatement et conservées après le redémarrage de l’app.";
+"确定删除本 Demo 的全部用户？此操作无法撤销。" = "Supprimer tous les utilisateurs de cette démo ? Cette action est irréversible.";
+"重试" = "Réessayer";
+"Core Data 本地数据库" = "Base locale Core Data";
+"添加记录" = "Ajouter un enregistrement";
+"保存修改" = "Enregistrer les modifications";
+"删除记录" = "Supprimer l’enregistrement";
+"清空数据库" = "Vider la base";
+"数据库操作失败" = "Échec de l’opération sur la base";
+"重试数据库加载" = "Réessayer de charger la base";
+"记录数量：%@" = "Enregistrements : %@";
+"数据库尚未就绪。" = "La base n’est pas encore prête.";
+"不能读取数据库模型。" = "Impossible de lire le modèle de la base.";
+"重新加载" = "Recharger";
+"数据库记录缺少必要字段。" = "Des champs obligatoires manquent dans un enregistrement.";
+"功能实验室" = "Laboratoire de fonctions";
+"世界时钟" = "Horloge mondiale";
+"当前时区" = "Fuseau horaire actuel";
+"世界时区" = "Fuseaux horaires du monde";
+"暂无时区" = "Aucun fuseau horaire";
+"点击重新加载" = "Touchez pour recharger";
+"12小时制" = "Format 12 heures";
+"24小时制" = "Format 24 heures";
+"贝克岛（无人常住）" = "Île Baker (inhabitée)";
+
+"返回首页时收缩分组" = "Replier les groupes au retour à l’accueil";
+
+// Rust OCR
+"Rust OCR 离线识别" = "Rust OCR · Reconnaissance hors ligne";
+"同一 Rust 核心，图片识别完全离线" = "Un même cœur Rust, reconnaissance entièrement hors ligne";
+"选择图片后开始离线识别" = "Choisissez une image pour lancer la reconnaissance hors ligne";
+"使用内置样例" = "Utiliser l’exemple intégré";
+"选择照片" = "Choisir une photo";
+"开始离线识别" = "Lancer la reconnaissance hors ligne";
+"取消识别" = "Annuler la reconnaissance";
+"正在本机识别，请稍候" = "Reconnaissance sur cet appareil…";
+"尚无识别结果" = "Aucun résultat pour le moment";
+"选择样例或照片，点击开始识别；结果仅在本机处理。" = "Choisissez un exemple ou une photo, puis lancez la reconnaissance. Tout est traité sur cet appareil.";
+"无法读取所选图片" = "Impossible de lire l’image sélectionnée";
+"识别失败，请重试" = "Échec de la reconnaissance. Réessayez.";
+"未发现可识别文字" = "Aucun texte reconnaissable trouvé";
+"离线识别完成" = "Reconnaissance hors ligne terminée";
+"已取消识别" = "Reconnaissance annulée";
+"待识别图片" = "Image à reconnaître";
+"识别结果" = "Résultats de reconnaissance";
+"OCR 核心尚未安装" = "Le cœur OCR n’est pas installé";
+
+// OCR camera and result actions.
+"相机不可用" = "Caméra indisponible";
+"此设备没有可用相机。" = "Cet appareil ne dispose pas de caméra disponible.";
+"请在系统设置中允许相机访问。" = "Autorisez la caméra dans les réglages du système.";
+"打开设置" = "Ouvrir les réglages";
+"复制结果" = "Copier le résultat";
+"已复制识别结果" = "Résultat copié";

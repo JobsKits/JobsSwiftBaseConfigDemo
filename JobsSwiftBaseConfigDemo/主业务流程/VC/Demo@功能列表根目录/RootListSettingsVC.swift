@@ -57,6 +57,7 @@ enum RootListCellTextDisplayStrategy: Int,
 enum RootListPreferences {
 
     private static let returnToTopAndRefreshKey = "RootList.returnToTopAndRefresh"
+    static let collapseOnDemoReturnKey = "RootList.collapseOnDemoReturn"
     private static let sideDrawerContentModeKey = "RootList.sideDrawerContentMode"
     private static let usesTabBarEntryKey = "RootList.usesTabBarEntry"
     private static let showsSuspendTimeButtonKey = "com.jobs.demoList.showsSuspendTimeButton"
@@ -106,6 +107,24 @@ enum RootListPreferences {
             UserDefaults.standard.set(newValue,
                                       forKey: returnToTopAndRefreshKey)
             UserDefaults.standard.synchronize()
+        }
+    }
+
+    static var collapseOnDemoReturn: Bool {
+        get {
+            UserDefaults.standard.object(forKey: collapseOnDemoReturnKey) as? Bool ?? true
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: collapseOnDemoReturnKey)
+        }
+    }
+
+    static func setHomeSplashVisible(_ visible: Bool, in controller: UIViewController) {
+        if let home = controller as? RootListVC {
+            home.setHomeSplashVisible(visible)
+        }
+        controller.children.forEach {
+            setHomeSplashVisible(visible, in: $0)
         }
     }
 
@@ -186,7 +205,7 @@ enum RootListPreferences {
         let mainNavigationController = rootListViewController.jobsNav.jobsNavContainer
             .byNavBarHidden(true)
             .byGKNavBarHidden(true)
-        return JobsSideDrawerVC(drawerViewController: JobsMeCenterVC()
+        let drawer = JobsSideDrawerVC(drawerViewController: JobsMeCenterVC()
             .jobsNav.jobsNavContainer,
                                 mainViewController: mainNavigationController,
                                 configuration: JobsSideDrawerConfiguration(direction: .left,
@@ -201,6 +220,8 @@ enum RootListPreferences {
                                                    in: mainNavigationController)
         }))
             .byGKNavBarHidden(true)
+        rootListViewController.demoSideDrawer = drawer
+        return drawer
     }
 
     private static func isDemoListCurrentViewController(_ rootListViewController: RootListVC,
@@ -462,6 +483,7 @@ final class RootListSettingsVC: BaseVC {
         case sideDrawerContentMode
         case appEntry
         case deinitTips
+        case collapseOnDemoReturn
     }
 
     private enum LanguageSettingItem: String,
@@ -574,6 +596,8 @@ private extension RootListSettingsVC {
 
     private func generalTitle(for item: GeneralSettingItem) -> String {
         switch item {
+        case .collapseOnDemoReturn:
+            return "返回首页时收缩分组".tr
         /// 处理 .splash 分支
         case .splash:
             return JobsSplashPreferences.isEnabledForNextLaunch ? "下次开屏：开".tr : "下次开屏：关".tr
@@ -675,6 +699,8 @@ private extension RootListSettingsVC {
 
     private func handleGeneralItem(_ item: GeneralSettingItem) {
         switch item {
+        case .collapseOnDemoReturn:
+            RootListPreferences.collapseOnDemoReturn.toggle()
         /// 处理 .splash 分支
         case .splash:
             let enabled = JobsSplashPreferences.toggleForNextLaunch()
@@ -793,6 +819,18 @@ extension RootListSettingsVC: UITableViewDataSource,
                 .byAccessibilityIdentifier("jobs.settings.general.\(item.rawValue)")
                 .byText(generalTitle(for: item))
                 .byAccessoryType(.disclosureIndicator)
+            if item == .collapseOnDemoReturn {
+                cell.byAccessoryType(.none)
+                    .bySelectionStyle(.none)
+                    .byAccessoryView(UISwitch.jobsMake { toggle in
+                        toggle
+                            .byOn(RootListPreferences.collapseOnDemoReturn)
+                            .byAccessibilityIdentifier("jobs.settings.collapseOnDemoReturn")
+                            .byAddAction(for: .valueChanged) { (sender: UISwitch) in
+                                RootListPreferences.collapseOnDemoReturn = sender.isOn
+                            }
+                    })
+            }
         /// 处理 .splashContent 分支
         case .splashContent:
             if indexPath.row == 0 {

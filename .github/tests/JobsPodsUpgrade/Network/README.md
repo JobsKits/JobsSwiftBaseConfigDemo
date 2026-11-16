@@ -47,7 +47,7 @@ ruby .github/tests/JobsPodsUpgrade/Network/run_regressions.rb \
 
 ## <span id="jobs-toc-heading-3" data-jobs-toc="v2">三、编译门禁 <a href="#前言">🔼</a> <a href="#🔚">🔽</a></span><!-- jobs-toc:heading-end -->
 
-整个自建 Pod 门禁使用 `.github/tests/JobsPodsUpgrade/validate_builds.rb`。默认请求 2 个 Xcode 构建任务，并向 Swift 传递 `-j1`（Xcode SwiftDriver 仍可生成其它任务参数），支持 `--jobs` / `--swift-jobs`，减少多个工程同时构建时的内存压力。完整升级结果与运行限制见工程根目录 [升级与编译验收报告](../../../../JobsByPods升级与编译验收报告.md)。
+整个自建 Pod 门禁使用 `.github/tests/JobsPodsUpgrade/validate_builds.rb`。默认请求 2 个 Xcode 构建任务，并向 Swift 传递 `-j1`（Xcode SwiftDriver 仍可生成其它任务参数），支持 `--jobs` / `--swift-jobs`，减少多个工程同时构建时的内存压力。完整升级结果与运行限制见工程根目录 [升级与编译验收报告](../../../../项目相关报告/JobsByPods升级与编译验收报告.md)。
 
 <!-- jobs-language-terminal-style-v1 -->
 

@@ -105,6 +105,7 @@ class SceneDelegate: UIResponder,
             .byCompletion { success in
                 print("开屏链接打开结果：\(success)")
             }
+        RootListPreferences.setHomeSplashVisible(true, in: homeViewController)
         JobsSplashPresenter.show(over: homeViewController,
                                  configuration: JobsSplashConfiguration(
                 content: splashContentForNextLaunch()
@@ -126,8 +127,16 @@ class SceneDelegate: UIResponder,
             //            })
             .byShakeAction(.open(openConfiguration))
             //            .byShakeAction(.none)
-            .bySkip { splashVC in
+            .bySkip { [weak homeViewController] splashVC in
                 print("开屏已结束：\(splashVC)")
+                DispatchQueue.main.async {
+                    guard let homeViewController,
+                          splashVC.parent == nil,
+                          splashVC.presentingViewController == nil else {
+                        return
+                    }
+                    RootListPreferences.setHomeSplashVisible(false, in: homeViewController)
+                }
             })
     }
 
