@@ -100,12 +100,7 @@ extension UIViewController {
                 guard let self else {
                     return
                 }
-                if jobsDemoBusinessButtons.isEmpty {
-                    JobsThemeCenter.shared.toggle()
-                    jobsUpdateDemoTriggerPresentation()
-                } else {
-                    jobsShowDemoActionMenu(jobsDemoActionMenuOverlay == nil)
-                }
+                jobsShowDemoActionMenu(jobsDemoActionMenuOverlay == nil)
             }
         objc_setAssociatedObject(self,
                                  &jobsDemoThemeButtonAssociatedKey,
@@ -161,44 +156,25 @@ extension UIViewController {
                                                     &jobsDemoThemeButtonAssociatedKey) as? UIButton else {
             return
         }
-        let opensMenu = !jobsDemoBusinessButtons.isEmpty
         objc_setAssociatedObject(button,
                                  &jobsDemoThemeButtonOpensMenuAssociatedKey,
-                                 opensMenu,
+                                 true,
                                  .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        if opensMenu {
-            JobsThemeCenter.shared.unbind(button,
-                                          slot: "JobsByUIKit.themeButton.presentation")
-            let expanded = jobsDemoActionMenuOverlay != nil
-            let image = (
-                expanded ? "ellipsis.circle.fill" : "ellipsis.circle"
-            ).sysImg.withRenderingMode(.alwaysTemplate)
-            button
-                .byImage(image,
-                         for: .normal)
-                .byImage(image,
-                         for: .selected)
-                .bySelected(NO)
-            button.accessibilityLabel = expanded
-                ? "收起主题与页面操作".tr
-                : "展开主题与页面操作".tr
-            return
-        }
+        JobsThemeCenter.shared.unbind(button,
+                                      slot: "JobsByUIKit.themeButton.presentation")
+        let expanded = jobsDemoActionMenuOverlay != nil
+        let image = (
+            expanded ? "ellipsis.circle.fill" : "ellipsis.circle"
+        ).sysImg.withRenderingMode(.alwaysTemplate)
         button
-            .byThemeImage(.themeToggle,
-                          for: .normal)
-            .byThemeImage(.themeToggle,
-                          for: .selected)
-        JobsThemeCenter.shared.bind(button,
-                                    slot: "JobsByUIKit.themeButton.presentation") { object, center in
-            guard let button = object as? UIButton else {
-                return
-            }
-            button.bySelected(center.isDarkMode)
-            button.accessibilityLabel = center.isDarkMode
-                ? "切换为白天".tr
-                : "切换为黑夜".tr
-        }
+            .byImage(image,
+                     for: .normal)
+            .byImage(image,
+                     for: .selected)
+            .bySelected(NO)
+        button.accessibilityLabel = expanded
+            ? "收起主题与页面操作".tr
+            : "展开主题与页面操作".tr
     }
     /// 仅绑定 GK 导航栏背景色和标题色；主题切换不遍历 Scene，也不改布局层级。
     private func jobsBindGKNavigationTheme() {
@@ -493,7 +469,7 @@ extension UIViewController {
     private func jobsShowDemoActionMenu(_ visible: Bool) {
         jobsDemoActionMenuOverlay?.byRemoveFromSuperview()
         jobsDemoActionMenuOverlay = nil
-        guard visible, !jobsDemoBusinessButtons.isEmpty else {
+        guard visible else {
             return
         }
         let overlay = UIView()
@@ -507,15 +483,23 @@ extension UIViewController {
                 }
             }
         let rowHeight: CGFloat = 44
-        let rowCount = jobsDemoBusinessButtons.count + 1
-        let menuContainer = UIView()
+        let rowCount = jobsDemoBusinessButtons.count + 3
+        let menuContainer = UIScrollView.jobsMake { _ in }
             .byBackgroundColor(JobsCor.secondarySystemBackground)
             .byCornerRadius(8)
             .byClipsToBounds()
             .byAddTo(overlay) { make in
                 make.top.equalToSuperview().offset(6)
                 make.right.equalToSuperview().inset(12)
-                make.width.equalTo(210)
+                make.left.greaterThanOrEqualToSuperview().offset(12)
+                make.width.equalTo(210).priority(.high)
+                make.height.equalTo(CGFloat(rowCount) * rowHeight).priority(.high)
+                make.bottom.lessThanOrEqualTo(overlay.safeAreaLayoutGuide).inset(12)
+            }
+        let menuContent = UIView.jobsMake { _ in }
+            .byAddTo(menuContainer) { make in
+                make.edges.equalTo(menuContainer.contentLayoutGuide)
+                make.width.equalTo(menuContainer.frameLayoutGuide)
                 make.height.equalTo(CGFloat(rowCount) * rowHeight)
             }
         overlay.addTapAction(cancelsTouchesInView: false) { [weak self, weak overlay, weak menuContainer] gesture in
@@ -531,29 +515,33 @@ extension UIViewController {
             jobsShowDemoActionMenu(false)
         }
         jobsDemoActionMenuOverlay = overlay
-        let darkModeEnabled = JobsThemeCenter.shared.isDarkMode
-        jobsAddDemoActionMenuRow(to: menuContainer,
-                                 title: darkModeEnabled ? "切换为白天".tr : "切换为黑夜".tr,
-                                 identifier: "jobs.demo.menu.theme",
-                                 image: JobsThemeCenter.shared.resolvedImage(.themeToggle)?
-                                     .withRenderingMode(.alwaysTemplate),
-                                 index: 0,
-                                 rowCount: rowCount) { [weak self] in
-            guard let self else {
-                return
+        let modes: [(JobsThemeMode, String, String)] = [
+            (.light, "白天".tr, "sun.max"),
+            (.dark, "黑夜".tr, "moon"),
+            (.system, "跟随系统".tr, "circle.lefthalf.filled")
+        ]
+        for (index, option) in modes.enumerated() {
+            let selected = JobsThemeCenter.shared.currentMode == option.0
+            jobsAddDemoActionMenuRow(to: menuContent,
+                                     title: option.1,
+                                     identifier: "jobs.demo.menu.theme.\(option.0.rawValue)",
+                                     image: (selected ? "checkmark" : option.2).sysImg,
+                                     index: index,
+                                     rowCount: rowCount,
+                                     selected: selected) { [weak self] in
+                self?.jobsShowDemoActionMenu(false)
+                JobsThemeCenter.shared.setMode(option.0)
             }
-            jobsShowDemoActionMenu(false)
-            JobsThemeCenter.shared.toggle()
         }
         jobsDemoBusinessButtons.enumerated().forEach { index, sourceButton in
-            jobsAddDemoActionMenuRow(to: menuContainer,
+            jobsAddDemoActionMenuRow(to: menuContent,
                                      title: jobsDemoActionTitle(for: sourceButton,
                                                                 index: index),
                                      identifier: "jobs.demo.menu.\(sourceButton.accessibilityIdentifier ?? String(index))",
                                      image: sourceButton.jobs_foregroundImage(
                     for: sourceButton.jobs_effectiveState
                 ),
-                                     index: index + 1,
+                                     index: index + 3,
                                      rowCount: rowCount) { [weak self, weak sourceButton] in
                 self?.jobsShowDemoActionMenu(false)
                 sourceButton?.performTap()
@@ -587,6 +575,7 @@ extension UIViewController {
                                           image: UIImage?,
                                           index: Int,
                                           rowCount: Int,
+                                          selected: Bool = false,
                                           action: @escaping () -> Void) {
         let rowButton = UIButton.sys()
             .byAccessibilityIdentifier(identifier)
@@ -620,6 +609,9 @@ extension UIViewController {
                 make.left.right.equalToSuperview()
                 make.height.equalTo(44)
             }
+        if selected {
+            rowButton.accessibilityTraits.insert(.selected)
+        }
         guard index < rowCount - 1 else {
             return
         }

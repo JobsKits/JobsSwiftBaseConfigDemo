@@ -1939,6 +1939,9 @@
 "跑马灯和轮播图共用 JobsMarqueeView；连续滚动看起来像公告流，fillBounds + interval 就是轮播图。" = "Magkasalo ang marquee at carousel sa JobsMarqueeView; ang tuloy-tuloy na scroll ay mukhang notice feed, at ang fillBounds + interval ay carousel.";
 "跟随" = "Sundan";
 "跟随系统" = "Sundin ang sistema";
+"白天" = "Maliwanag";
+"黑夜" = "Madilim";
+"主题切换：跟随系统" = "Tema: sundin ang sistema";
 "跳过" = "laktawan";
 "身份证校验 Demo" = "ID check, Demo.";
 "轉賬地址" = "Paglipat ng address";

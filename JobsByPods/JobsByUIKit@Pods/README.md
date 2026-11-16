@@ -43,8 +43,8 @@
 - SDWebImage / Kingfisher 的按钮图片回调会避开 `UIButton.Configuration` 内部视图替换期间的过渡动画，不在回调中强制布局；前景 shimmer 直接作用于当前 `imageView.layer`，不再向 `UIButton` 插入 overlay 或启用 UIButton overlay 的 `layoutSubviews` swizzle。
 - `UIButton.jobs_contentEdgeInsets` 在 iOS / tvOS 15+ 读取 `Configuration.contentInsets` 并转换 RTL 方向；无 Configuration 时返回零。`jobs_imageEdgeInsets` 在新系统返回零偏移，图片布局读取 `jobs_cfgImagePadding` / `jobs_cfgImagePlacement`；旧系统才读取原边距属性。历史 `jobs_legacyContentEdgeInsets` / `jobs_legacyImageEdgeInsets` 入口转发相同规则，前景 shimmer 共用这些兼容查询，不通过 KVC 访问废弃属性。
 - `UIViewController.jobsSetupGKNav(...)` 在写入标题和左右按钮后，会强制显示并置顶 GK 导航栏、恢复真实透明度，同时隐藏系统导航栏，避免导航容器残留状态导致 Demo 子页面无导航栏。
-- 从 `RootListVC` Demo 根列表进入的每个导航 / 模态子页面，以及类名以 `DemoVC` 结尾的独立演示页，右上角最多只显示一个透明背景的主题入口；没有页面业务动作时直接切换主题，月亮 / 太阳图标与无障碍文案表达下一次点击会切换到的主题；存在业务动作时使用 Demo 总入口同款 `ellipsis.circle` 展开下拉列表，展开后切换为填充图标与“收起”语义，把主题切换与全部页面动作统一收纳。`JobsNavigationDemoVC` 使用同一规则写入系统导航栏。
-- 主题入口调用 `JobsThemeCenter.shared.toggle()`；主题状态、JSON 数据包和弱引用资源绑定由 `JobsSwiftBaseDefines` 承担。切换时只重放已标记的背景色、文字色和显式主题图片，并发布 `.JobsThemeDidChange`，不遍历 Scene / Window / 控制器树。
+- 从 `RootListVC` Demo 根列表进入的每个导航 / 模态子页面，以及类名以 `DemoVC` 结尾的独立演示页，右上角最多只显示一个透明背景 `ellipsis.circle` 主题入口；下拉列表始终清楚提供白天／黑夜／跟随系统三项并标记当前选择，再接原页面业务动作。展开后切换为填充图标与“收起”语义。`JobsNavigationDemoVC` 使用同一规则写入系统导航栏。
+- 主题入口调用 `JobsThemeCenter.shared.setMode(...)`；模式持久化、有效两态配色、JSON 数据包和弱引用资源绑定由 `JobsSwiftBaseDefines` 承担。切换时只重放已标记的背景色、文字色和显式主题图片，并发布 `.JobsThemeDidChange`，不遍历 Scene / Window / 控制器树；宿主 Scene 提供真实系统 trait，业务按钮不强制系统窗口外观。
 - `UIViewController.jobsEnsureNavigationDefaults()` 统一为导航栈子页面和模态子页面补齐 Jobs/GK 导航栏、标题与 Jobs 返回按钮，但不覆盖页面在 `viewDidLoad` 中声明的背景色；已有系统 `navigationItem.titleView` / 右侧业务按钮会迁移到 GK 导航栏，不再沿用系统导航容器。仅专门演示系统导航栏能力的 `JobsNavigationDemoVC` 保持原样。
 - `UIViewController.jobsEnsureNavigationBackButton()` 保留单独补齐 GK 返回按钮的入口；默认箭头使用 template 渲染和 `JobsCor.label`，随明暗主题自动变色。
 - `UIKitAttributes` 的 TextKit 属性封装只声明真实可用系统版本，不复制系统的未来 deprecated 标记；调用方只看到 Jobs API 的实际 availability 边界。
@@ -54,7 +54,7 @@
 
 - 页面、列表和弹框的普通承载面使用 `JobsCor.systemBackground` / `JobsCor.secondarySystemBackground`，正文、说明和占位文字使用 `JobsCor.label` / `JobsCor.secondaryLabel` / `JobsCor.placeholderText`，确保白天浅底深字、黑夜深底浅字。
 - 品牌色、媒体画布、二维码、相机、视频、手写和马赛克内容保留业务色；颜色写入 `CGColor`、`CALayer` 或自绘上下文时，需要显式绑定主题 Key，或监听 `.JobsThemeDidChange` 后重新解析和绘制。
-- 验证时从 Demo 全局主题入口分别切换白天和黑夜，检查组件的背景、文字、禁用态、占位态与弹出层对比度。
+- 验证时从 Demo 全局主题入口分别选择白天、黑夜、跟随系统，并实际改变系统外观，检查组件的背景、文字、禁用态、占位态与弹出层对比度；单测注入 style 不替代系统热切换实屏。
 
 ## <span id="jobs-toc-heading-3" data-jobs-toc="v2">Jobs DSL 调用约定 <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a></span><!-- jobs-toc:heading-end -->
 

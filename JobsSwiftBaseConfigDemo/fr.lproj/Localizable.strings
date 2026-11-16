@@ -1939,6 +1939,9 @@
 "跑马灯和轮播图共用 JobsMarqueeView；连续滚动看起来像公告流，fillBounds + interval 就是轮播图。" = "Texte défilant et carrousel partagent JobsMarqueeView : le défilement continu forme un flux d’annonces, fillBounds + interval crée un carrousel.";
 "跟随" = "Suivre";
 "跟随系统" = "Suivre le système";
+"白天" = "Clair";
+"黑夜" = "Sombre";
+"主题切换：跟随系统" = "Thème : suivre le système";
 "跳过" = "Passer";
 "身份证校验 Demo" = "Démo de validation de la carte d'identité";
 "轉賬地址" = "Adresse du virement";

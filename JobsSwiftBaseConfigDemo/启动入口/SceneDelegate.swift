@@ -53,6 +53,7 @@ class SceneDelegate: UIResponder,
         guard let windowScene = scene as? UIWindowScene else {
             return
         }
+        JobsThemeCenter.shared.updateSystemAppearance(windowScene.traitCollection.userInterfaceStyle)
         guard JobsDeviceLaunchGate.shared.allowsBusinessInitialization else {
             if let blockedViewController = JobsDeviceLaunchGate.shared.makeBlockedViewController() {
                 window = UIWindow.jobsMake(scene: windowScene,
@@ -234,6 +235,9 @@ class SceneDelegate: UIResponder,
         guard JobsDeviceLaunchGate.shared.allowsBusinessInitialization else {
             return
         }
+        if let windowScene = scene as? UIWindowScene {
+            JobsThemeCenter.shared.updateSystemAppearance(windowScene.traitCollection.userInterfaceStyle)
+        }
         #if canImport(Flutter)
         sceneLifeCycleDelegate.sceneDidBecomeActive(scene)
         #endif
@@ -253,6 +257,13 @@ class SceneDelegate: UIResponder,
         #endif
         JobsSceneCoordinator.record("willResignActive：即将暂停交互",
                                     for: scene.session)
+    }
+
+    func windowScene(_ windowScene: UIWindowScene,
+                     didUpdate previousCoordinateSpace: UICoordinateSpace,
+                     interfaceOrientation previousInterfaceOrientation: UIInterfaceOrientation,
+                     traitCollection previousTraitCollection: UITraitCollection) {
+        JobsThemeCenter.shared.updateSystemAppearance(windowScene.traitCollection.userInterfaceStyle)
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {

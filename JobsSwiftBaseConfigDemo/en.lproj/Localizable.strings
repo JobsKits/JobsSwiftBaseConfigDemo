@@ -1939,6 +1939,9 @@
 "跑马灯和轮播图共用 JobsMarqueeView；连续滚动看起来像公告流，fillBounds + interval 就是轮播图。" = "Marquee and carousel share JobsMarqueeView; continuous scrolling looks like a notice feed, and fillBounds + interval is a carousel.";
 "跟随" = "Follow";
 "跟随系统" = "Follow system";
+"白天" = "Light";
+"黑夜" = "Dark";
+"主题切换：跟随系统" = "Theme: Follow system";
 "跳过" = "skip";
 "身份证校验 Demo" = "Identity card validation demo";
 "轉賬地址" = "Transfer address";

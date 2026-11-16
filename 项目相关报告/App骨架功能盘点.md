@@ -51,7 +51,7 @@
 | SKEL-18 | Bug调试入口 | 独立overlay；56×56 Bug背景图，可拖；长按0.8秒隐藏，摇动恢复；再次点返回之前页面；搜索临时抑制 | Debug初始隐藏，摇动后显示；隐藏保留位置 | `显示与位置内存；选中环境见19` | 已核查组件；实体摇动待验 | [JobsDebugPanel.swift](<../JobsByPods/JobsDebugPanel@Pods/Core/JobsDebugPanel/JobsDebugPanel.swift>) 第 327 行（`floatingEntryHidden`） |
 | SKEL-19 | 调试环境与网络 | 注册local／httpbin／postman；选择回写JobsNetworking调试baseURL；查看当前环境等动作 | Debug默认首个有效local，优先恢复已存URL；Release不启动 | `JobsDebugPanel.Debug.SelectedEnvironmentURL` | 已实现；服务连通未验 | [AppDelegate+JobsDebugPanel.swift](<../JobsSwiftBaseConfigDemo/启动入口/AppDelegate+JobsDebugPanel.swift>) 第 19 行（`byEnvironments`） |
 | SKEL-20 | 设置基础项 | 开屏、返回行为、时间显隐、主题、侧栏模式、启动入口、销毁提示；开屏内容／语言／文字策略分区展开 | 按各Preferences；入口切换返回后生效；开屏下次启动生效 | `RootList.*；其它key见对应行` | 已实现 | [RootListSettingsVC.swift](<../JobsSwiftBaseConfigDemo/主业务流程/VC/Demo@功能列表根目录/RootListSettingsVC.swift>) 第 575 行（`GeneralSettingItem`） |
-| SKEL-21 | 主题／语言 | 语言简繁藏英日法西德俄韩Tagalog；全局主题；设置主题行切白天／黑夜 | 语言按LanguageManager；未见设置行三态主题选择器 | `LanguageManager／JobsThemeCenter底层key未逐项核定` | 语言入口实现；三态主题入口待核 | [RootListSettingsVC.swift](<../JobsSwiftBaseConfigDemo/主业务流程/VC/Demo@功能列表根目录/RootListSettingsVC.swift>) 第 467 行（`LanguageSettingItem`） |
+| SKEL-21 | 主题／语言 | 语言简繁藏英日法西德俄韩Tagalog；唯一全局主题入口与设置主题行提供白天／黑夜／跟随系统三选 | 新安装默认跟随系统；保留旧显式主题和自定义标识；Scene连接、trait变化和回前台更新system有效色；不强制Window外观；长菜单的可视区压缩到safeArea内并滚动完整内容 | `LanguageManager／JobsTheme.currentMode；旧JobsTheme.currentStyle迁移保留` | 2026-11-17源码完成；生产主题源真实iOS SDK编译与5项隔离XCTest通过；11词库检查通过；新SHA整包与系统热切换实屏待验 | [RootListSettingsVC.swift](<../JobsSwiftBaseConfigDemo/主业务流程/VC/Demo@功能列表根目录/RootListSettingsVC.swift>)、[JobsTheme.swift](<../JobsByPods/JobsSwiftBaseDefines@Pods/JobsTheme.swift>)、[SceneDelegate.swift](<../JobsSwiftBaseConfigDemo/启动入口/SceneDelegate.swift>) |
 | SKEL-22 | 文字表现策略 | 一般／省略号／缩小字体／连续跑马灯／往返，设置回写并刷新 | 未配置默认continuous | `com.jobs.demoList.cellTextDisplayStrategy` | 已实现 | [RootListSettingsVC.swift](<../JobsSwiftBaseConfigDemo/主业务流程/VC/Demo@功能列表根目录/RootListSettingsVC.swift>) 第 128 行（`cellTextDisplayStrategyKey`） |
 | SKEL-23 | 刷新／空态／手势 | Window挂载后安装上下刷新；空列表提供空态；侧缘仅首页可开；搜索抑制其手势 | 本地目录，无服务端分页承诺；空结果由Searcher处理 | `刷新内存` | 已核查接线；取消竞态／无障碍待验 | [Demo@功能列表根目录.swift](<../JobsSwiftBaseConfigDemo/主业务流程/VC/Demo@功能列表根目录/Demo@功能列表根目录.swift>)（`installTableRefreshControlsIfNeeded`） |
 | SKEL-24 | 前后台／离屏计时 | Root销毁stop并移除Timer；Scene记录前后台；首页viewWillDisappear只显式pause进度图标Timer | 时间／旋转Timer后台及离屏策略需结合公共Timer实测 | `TimerID，无新偏好` | 部分核查，不能宣称已全停 | [Demo@功能列表根目录.swift](<../JobsSwiftBaseConfigDemo/主业务流程/VC/Demo@功能列表根目录/Demo@功能列表根目录.swift>)（`override func viewWillDisappear`） |
@@ -64,7 +64,8 @@
 - 侧栏原“收藏”Toast占位已替换为真实“最近使用”；“设置／关于”仍为Toast。右上菜单设置确实进入RootListSettingsVC，两种入口不能混为一谈。
 - 组排序记忆已实现，但未找到“不记忆”开关。根Drawer默认半宽，可配置比例不等于首页已提供全宽选择。
 - 首页时间浮控必须全屏拖动，沿用最近边吸附；不得改成限制在头部的拖动范围。
-- 主题设置行只有明暗切换；三态主题可达性、所有十语文案完整性、后台Timer行为需独立验证。
+- 2026-11-17三态主题源码与5项隔离回归通过；新SHA完整App的菜单、Settings取消／选择、重启恢复与真实系统外观热切换尚待实屏，所有十语与后台Timer行为仍需各自验证。
+- 本批实际模块检查：当前15份`JobsSwiftBaseDefines`生产源已用iPhoneOS27.2 SDK重发模块，当前163份`JobsByUIKit`生产源（含三选菜单与滚动边界）消费该新模块后成功重发；当前完整Settings／Scene源再配实际宿主缓存模块、头映射与工程MainActor设置通过类型检查，没有接口桩。这里没有App链接、签名或整包运行，完整验收仍以新提交CI工件和实屏为准。隔离主题5项XCTest在专用iOS27.2模拟器执行，包含旧style迁移、自定义标识、system冷热持久化、手动模式、通知与弱绑定生命周期。证据保存在OCR仓`work/Validation/SwiftUIKitThemeMode`，首轮自动释放池夹具失败记录保留，修正夹具后第二轮全过。
 - 与OC同一SKEL编号表达同类骨架资产；开屏倒计时、TabBar个数、时间按钮尺寸及侧栏占位情况属于实际实现差异，不能据此推导两套OC需求。
 
 ## 三、<span id="verification">验证边界与复测清单</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>

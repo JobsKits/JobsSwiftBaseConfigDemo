@@ -609,6 +609,9 @@ private extension RootListSettingsVC {
             return RootListPreferences.showsSuspendTimeButton ? "悬浮时间：开".tr : "悬浮时间：关".tr
         /// 处理 .theme 分支
         case .theme:
+            if JobsThemeCenter.shared.currentMode == .system {
+                return "主题切换：跟随系统".tr
+            }
             return RootListPreferences.darkModeEnabled ? "主题切换：黑夜".tr : "主题切换：白天".tr
         /// 处理 .sideDrawerContentMode 分支
         case .sideDrawerContentMode:
@@ -715,8 +718,7 @@ private extension RootListSettingsVC {
             (RootListPreferences.showsSuspendTimeButton ? "悬浮时间按钮已显示".tr : "悬浮时间按钮已隐藏".tr).toast
         /// 处理 .theme 分支
         case .theme:
-            let dark = RootListPreferences.toggleDarkMode()
-            (dark ? "主题已切换：黑夜".tr : "主题已切换：白天".tr).toast
+            showThemeSelection()
         /// 处理 .sideDrawerContentMode 分支
         case .sideDrawerContentMode:
             RootListPreferences.sideDrawerContentMode = RootListPreferences.sideDrawerContentMode == .following ? .fixed : .following
@@ -732,6 +734,19 @@ private extension RootListSettingsVC {
             (VCDebugDeallocDebug.showsDeinitTips ? "控制器销毁提示已开启".tr : "控制器销毁提示已关闭".tr).toast
         }
         tableView.reloadData()
+    }
+
+    private func showThemeSelection() {
+        let sheet = UIAlertController.makeActionSheet(generalTitle(for: .theme))
+        for (mode, title) in [(JobsThemeMode.light, "白天".tr),
+                              (.dark, "黑夜".tr),
+                              (.system, "跟随系统".tr)] {
+            sheet.byAddAction(title: title) { _ in
+                JobsThemeCenter.shared.setMode(mode)
+            }
+        }
+        sheet.byAddCancel("取消".tr)
+            .byPresent(self)
     }
 }
 
