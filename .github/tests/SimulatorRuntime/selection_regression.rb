@@ -239,9 +239,9 @@ end
 
 require_relative 'select_simulator'
 
-# 用途：验证模拟器选择的 SDK 匹配、数字版本排序、可用性、设备类型和非法 UDID 拒绝规则。
+# 用途：验证模拟器选择、分段预算、跨步设备传递和 WebKit 探针失败传播。
 # 运行：在本文件目录执行 ruby ./selection_regression.rb，由同目录 select_simulator.rb 提供真实选择逻辑。
-# 边界：运行时和设备清单是内存夹具，不启动模拟器、不构建或安装 App；仅供选择器回归。
+# 边界：选择器用内存夹具，探针包装用隔离子进程命令夹具；不启动设备、不真实编译或安装 App。
 
 def runtime(version, **attributes)
   { 'identifier' => "com.apple.CoreSimulator.SimRuntime.iOS-#{version.tr('.', '-')}",
@@ -308,3 +308,130 @@ check.call(select.call('26.2', [current], { current_id => [iphone(10, udid: "inv
   check.call(rejected, "Missing or invalid matching runtime did not fail: #{arguments.first.inspect}")
 end
 puts "Simulator selection: #{checks} checks PASS"
+
+
+require 'fileutils'
+require 'open3'
+require 'tmpdir'
+require 'yaml'
+
+root = File.expand_path('../../..', __dir__)
+steps = YAML.load_file(File.join(root, '.github/workflows/build_simulator_app.yml')).fetch('jobs').fetch('build-simulator-app').fetch('steps')
+workflow_check_start = checks
+prepare_index = steps.index { |step| step['name'] == 'Prepare test Simulator' }
+probe_index = steps.index { |step| step['name'] == 'Verify WebKit Simulator runtime' }
+check.call(prepare_index && probe_index && prepare_index < probe_index, 'Simulator startup and WebKit verification must remain separate ordered steps')
+prepare = steps.fetch(prepare_index)
+probe = steps.fetch(probe_index)
+check.call([prepare, probe].all? { |step| step['timeout-minutes'].is_a?(Integer) && step['timeout-minutes'].positive? }, 'Both preparation phases need an explicit finite budget')
+check.call(!prepare.fetch('run').include?('swiftc'), 'A cold WebKit compile must not consume the Simulator startup budget')
+
+Dir.mktmpdir('jobs-webkit-wrapper space-') do |directory|
+  bin = File.join(directory, 'bin')
+  FileUtils.mkdir_p(bin)
+  command = File.join(bin, 'xcrun')
+  File.write(command, <<~'SHELL')
+    #!/bin/bash
+    set -eu
+    printf '%s\t' "$@" >> "$JOBS_TEST_PROBE_CALLS"
+    printf '\n' >> "$JOBS_TEST_PROBE_CALLS"
+    case "$*" in
+      '--sdk iphonesimulator --show-sdk-path')
+        printf '%s\n' '/SDK with spaces/iPhoneSimulator.sdk'
+        ;;
+      --sdk\ iphonesimulator\ swiftc\ *)
+        if [[ "$JOBS_TEST_PROBE_HANG" == 1 ]]; then
+          sleep 30
+        fi
+        source_found=0
+        output_path=''
+        while (( $# > 0 )); do
+          case "$1" in
+            *.swift) [[ -f "$1" ]] && source_found=1 ;;
+            -o) shift; output_path="$1" ;;
+          esac
+          shift
+        done
+        [[ "$source_found" == 1 && -n "$output_path" ]] || exit 90
+        if [[ "$JOBS_TEST_PROBE_COMPILE_EXIT" != 0 ]]; then
+          printf '%s\n' 'synthetic compiler error' >&2
+          exit "$JOBS_TEST_PROBE_COMPILE_EXIT"
+        fi
+        printf '%s\n' 'compiled probe fixture' > "$output_path"
+        ;;
+      otool\ -L\ *)
+        [[ -f "$3" ]] || exit 91
+        printf '%s\n' 'WebKit.framework/WebKit'
+        ;;
+      simctl\ spawn\ *)
+        [[ "$3" == "$SIMULATOR_ID" && -f "$4" ]] || exit 92
+        printf '%s\n' 'WebKitRuntimeProbe passed: fixture'
+        exit "$JOBS_TEST_PROBE_RUNTIME_EXIT"
+        ;;
+      *)
+        printf 'Unexpected probe wrapper command: %s\n' "$*" >&2
+        exit 93
+        ;;
+    esac
+  SHELL
+  FileUtils.chmod(0o700, command)
+  calls = File.join(directory, 'calls')
+  modern_runtime = runtime('27.2')
+  selected_id = select.call('27.1', [modern_runtime], { modern_runtime.fetch('identifier') => [iphone(22)] })
+  environment = {
+    'PATH' => bin + File::PATH_SEPARATOR + ENV.fetch('PATH'),
+    'RUNNER_TEMP' => directory,
+    'SIMULATOR_ID' => selected_id,
+    'JOBS_TEST_PROBE_CALLS' => calls,
+    'JOBS_TEST_PROBE_COMPILE_EXIT' => '0',
+    'JOBS_TEST_PROBE_RUNTIME_EXIT' => '0',
+    'JOBS_TEST_PROBE_HANG' => '0',
+    'BASH_ENV' => nil,
+    'ENV' => nil
+  }
+  run = lambda do |overrides|
+    File.write(calls, '')
+    input, output, errors, waiter = Open3.popen3(environment.merge(overrides), '/bin/bash', '-e', '-c', probe.fetch('run'), chdir: root, pgroup: true)
+    input.close
+    readers = [Thread.new { output.read }, Thread.new { errors.read }]
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 5
+    begin
+      while (pending = [waiter, *readers].find(&:alive?))
+        remaining = deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        raise 'Probe command fixture exceeded its five-second budget' if remaining <= 0
+        pending.join([remaining, 0.05].min)
+      end
+      [readers[0].value, readers[1].value, waiter.value]
+    ensure
+      if [waiter, *readers].any?(&:alive?)
+        begin
+          Process.kill('TERM', -waiter.pid)
+          waiter.join(0.2)
+          Process.kill('KILL', -waiter.pid)
+        rescue Errno::ESRCH
+          # 仅回收本次创建的独立进程组；完成退出时组可能已经不存在。
+        end
+      end
+      [output, errors].each { |stream| stream.close unless stream.closed? }
+      readers.each { |reader| reader.join(0.2) }
+    end
+  end
+  stdout, stderr, status = run.call({})
+  check.call(status.success? && stdout.include?('WebKitRuntimeProbe passed: fixture'), "Probe wrapper failed: #{stdout}#{stderr}")
+  check.call(File.read(calls).include?("simctl\tspawn\t#{selected_id}\t"), 'Probe did not use the exported device identity')
+  _, _, status = run.call('JOBS_TEST_PROBE_COMPILE_EXIT' => '73')
+  check.call(status.exitstatus == 73 && !File.read(calls).include?("simctl\tspawn"), 'Compiler failure must stop before spawning and retain its status')
+  _, _, status = run.call('JOBS_TEST_PROBE_RUNTIME_EXIT' => '74')
+  check.call(status.exitstatus == 74, 'Runtime failure was hidden by log capture')
+  _, _, status = run.call('SIMULATOR_ID' => nil)
+  check.call(!status.success? && File.read(calls).empty?, 'Missing device handoff must fail before any tool command')
+  started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+  timed_out = false
+  begin
+    run.call('JOBS_TEST_PROBE_HANG' => '1')
+  rescue RuntimeError => error
+    timed_out = error.message.include?('five-second budget')
+  end
+  check.call(timed_out && Process.clock_gettime(Process::CLOCK_MONOTONIC) - started < 8, 'Hanging command fixtures must fail within their independent budget')
+end
+puts "WebKit workflow preparation: #{checks - workflow_check_start} checks PASS (command fixtures, not a real Simulator run)"

@@ -515,16 +515,16 @@ extension UIViewController {
             jobsShowDemoActionMenu(false)
         }
         jobsDemoActionMenuOverlay = overlay
-        let modes: [(JobsThemeMode, String, String)] = [
-            (.light, "白天".tr, "sun.max"),
-            (.dark, "黑夜".tr, "moon"),
-            (.system, "跟随系统".tr, "circle.lefthalf.filled")
+        let modes: [(JobsThemeMode, String, String, String)] = [
+            (.light, "白天".tr, "sun.max", "light"),
+            (.dark, "黑夜".tr, "moon", "dark"),
+            (.system, "跟随系统".tr, "circle.lefthalf.filled", "system")
         ]
         for (index, option) in modes.enumerated() {
             let selected = JobsThemeCenter.shared.currentMode == option.0
             jobsAddDemoActionMenuRow(to: menuContent,
                                      title: option.1,
-                                     identifier: "jobs.demo.menu.theme.\(option.0.rawValue)",
+                                     identifier: "jobs.demo.menu.theme.\(option.3)",
                                      image: (selected ? "checkmark" : option.2).sysImg,
                                      index: index,
                                      rowCount: rowCount,

@@ -45,6 +45,7 @@
 - `UIViewController.jobsSetupGKNav(...)` 在写入标题和左右按钮后，会强制显示并置顶 GK 导航栏、恢复真实透明度，同时隐藏系统导航栏，避免导航容器残留状态导致 Demo 子页面无导航栏。
 - 从 `RootListVC` Demo 根列表进入的每个导航 / 模态子页面，以及类名以 `DemoVC` 结尾的独立演示页，右上角最多只显示一个透明背景 `ellipsis.circle` 主题入口；下拉列表始终清楚提供白天／黑夜／跟随系统三项并标记当前选择，再接原页面业务动作。展开后切换为填充图标与“收起”语义。`JobsNavigationDemoVC` 使用同一规则写入系统导航栏。
 - 主题入口调用 `JobsThemeCenter.shared.setMode(...)`；模式持久化、有效两态配色、JSON 数据包和弱引用资源绑定由 `JobsSwiftBaseDefines` 承担。切换时只重放已标记的背景色、文字色和显式主题图片，并发布 `.JobsThemeDidChange`，不遍历 Scene / Window / 控制器树；宿主 Scene 提供真实系统 trait，业务按钮不强制系统窗口外观。
+- 旧自定义主题通过有类型的 `currentMode.custom(...)` 保留；即使原标识为 `system` 也不会把菜单的跟随系统项误勾。设置行显示其原标识，原生三选只在用户明确选择后替换它。
 - `UIViewController.jobsEnsureNavigationDefaults()` 统一为导航栈子页面和模态子页面补齐 Jobs/GK 导航栏、标题与 Jobs 返回按钮，但不覆盖页面在 `viewDidLoad` 中声明的背景色；已有系统 `navigationItem.titleView` / 右侧业务按钮会迁移到 GK 导航栏，不再沿用系统导航容器。仅专门演示系统导航栏能力的 `JobsNavigationDemoVC` 保持原样。
 - `UIViewController.jobsEnsureNavigationBackButton()` 保留单独补齐 GK 返回按钮的入口；默认箭头使用 template 渲染和 `JobsCor.label`，随明暗主题自动变色。
 - `UIKitAttributes` 的 TextKit 属性封装只声明真实可用系统版本，不复制系统的未来 deprecated 标记；调用方只看到 Jobs API 的实际 availability 边界。

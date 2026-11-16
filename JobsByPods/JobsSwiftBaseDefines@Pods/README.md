@@ -10,7 +10,7 @@ JobsCor 提供 UIKit 基础色、系统色和动态语义色的 Jobs 等价入�
 
 `JobsThemeCenter` 提供主题数据包解析、状态持久化、弱引用资源绑定和 `JobsThemeDidChange` 通知。App 在主工程资源目录维护 `JobsThemeResources.json`，框架只消费 `background.*`、`text.*` 等 Key，不包含具体业务色值。切换主题只重放已登记的背景色、文字色以及显式声明的主题图片，不遍历 Scene、Window 或控制器树，也不写入 `overrideUserInterfaceStyle`。
 
-`currentMode`／`setMode` 表达白天、黑夜、跟随系统三种内建选择，独立保存到 `JobsTheme.currentMode`；`currentStyle`／`isDarkMode` 继续提供有效配色，旧 `setStyle`／`toggle` 和自定义 raw 标识保持兼容。首次加载保留旧 `JobsTheme.currentStyle` 显式偏好，新安装默认跟随系统。宿主在 Scene 连接、trait 变化及回前台时把真实 `UIWindowScene.traitCollection.userInterfaceStyle` 传给 `updateSystemAppearance`；仅 system 模式随其变化。有效 style 的写回不会覆盖 system 选择，后台调用维持异步投递并返回当前快照。
+`currentMode`／`setMode` 表达白天、黑夜、跟随系统三种内建选择，并用 `custom(JobsThemeStyle)` 保留既有自定义主题。`JobsTheme.selectionKind` 明确保存 style／system 种类，`JobsTheme.currentStyle` 原样保存具体主题 raw，`JobsTheme.currentMode` 保留可读的选择标识；不靠名称或保留前缀猜测种类。旧 `setStyle` 始终选择具体主题，即使主题原名为 `system`；只有 `setMode(.system)` 跟随系统。`currentStyle`／`isDarkMode`、旧 `toggle` 继续兼容。首次加载无损迁移旧 style 键和首个三态版本的 mode 键，新安装默认跟随系统。宿主在 Scene 连接、trait 变化及回前台时把真实 `UIWindowScene.traitCollection.userInterfaceStyle` 传给 `updateSystemAppearance`；仅 system 模式随其变化，有效 style 写回不会覆盖选择种类。后台调用维持异步投递并返回当前快照。
 
 <a id="jobs-architecture"></a>
 

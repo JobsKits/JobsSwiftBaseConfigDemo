@@ -1941,6 +1941,7 @@
 "跟随系统" = "System folgen";
 "白天" = "Hell";
 "黑夜" = "Dunkel";
+"主题切换：%@" = "Design: %@";
 "主题切换：跟随系统" = "Design: System folgen";
 "跳过" = "Überspringen";
 "身份证校验 Demo" = "Demo zur Validierung der Identitätskarte";

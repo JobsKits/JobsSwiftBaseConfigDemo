@@ -1941,6 +1941,7 @@
 "跟随系统" = "Follow system";
 "白天" = "Light";
 "黑夜" = "Dark";
+"主题切换：%@" = "Theme: %@";
 "主题切换：跟随系统" = "Theme: Follow system";
 "跳过" = "skip";
 "身份证校验 Demo" = "Identity card validation demo";

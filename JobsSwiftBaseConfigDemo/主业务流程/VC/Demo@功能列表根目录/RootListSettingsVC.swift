@@ -609,10 +609,17 @@ private extension RootListSettingsVC {
             return RootListPreferences.showsSuspendTimeButton ? "悬浮时间：开".tr : "悬浮时间：关".tr
         /// 处理 .theme 分支
         case .theme:
-            if JobsThemeCenter.shared.currentMode == .system {
+            switch JobsThemeCenter.shared.currentMode {
+            case .system:
                 return "主题切换：跟随系统".tr
+            case .light:
+                return "主题切换：白天".tr
+            case .dark:
+                return "主题切换：黑夜".tr
+            case .custom(let style):
+                return String(format: "主题切换：%@".tr,
+                              style.rawValue)
             }
-            return RootListPreferences.darkModeEnabled ? "主题切换：黑夜".tr : "主题切换：白天".tr
         /// 处理 .sideDrawerContentMode 分支
         case .sideDrawerContentMode:
             return RootListPreferences.sideDrawerContentMode == .following ? "侧滑菜单：内容跟随".tr : "侧滑菜单：内容固定".tr

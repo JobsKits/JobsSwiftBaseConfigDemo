@@ -94,6 +94,12 @@ jobs:
           simulator_id="$(sed -n 's/^SIMULATOR_ID=//p' "${RUNNER_TEMP}/simulator-selection.env")"
           xcrun simctl bootstatus "${simulator_id}" -b
 
+      - name: Verify WebKit Simulator runtime
+        timeout-minutes: 10
+        shell: bash
+        run: |
+          set -euo pipefail
+          : "${SIMULATOR_ID:?A booted Simulator must be exported by the preparation step}"
           simulator_sdk_path="$(xcrun --sdk iphonesimulator --show-sdk-path)"
           probe_path="${RUNNER_TEMP}/WebKitRuntimeProbe"
           xcrun --sdk iphonesimulator swiftc -swift-version 5 -Onone \
@@ -102,7 +108,7 @@ jobs:
             .github/tests/SimulatorRuntime/WebKitRuntimeProbe.swift -o "${probe_path}" \
             2>&1 | tee "${RUNNER_TEMP}/webkit-runtime-probe.log"
           xcrun otool -L "${probe_path}" | tee "${RUNNER_TEMP}/webkit-runtime-probe-dependencies.log"
-          xcrun simctl spawn "${simulator_id}" "${probe_path}" \
+          xcrun simctl spawn "${SIMULATOR_ID}" "${probe_path}" \
             2>&1 | tee -a "${RUNNER_TEMP}/webkit-runtime-probe.log"
 
       - name: Verify JobsSwiftBlock factory and callback regressions

@@ -91,14 +91,69 @@ final class JobsThemeModeStabilityTests: XCTestCase {
         }
         fixture.defaults.set("brand.midnight", forKey: "JobsTheme.currentStyle")
         XCTAssertEqual(try fixture.configure().rawValue, "brand.midnight")
-        XCTAssertEqual(fixture.center.currentMode.rawValue, "brand.midnight")
+        XCTAssertEqual(fixture.center.currentMode, .custom(JobsThemeStyle(rawValue: "brand.midnight")))
         XCTAssertEqual(fixture.center.toggle(), .dark)
         XCTAssertEqual(fixture.center.currentMode, .dark)
         let custom = JobsThemeStyle(rawValue: "brand.midnight")
         XCTAssertEqual(fixture.center.setStyle(custom), custom)
         XCTAssertEqual(try fixture.configure(), custom)
         XCTAssertEqual(fixture.center.setStyle(JobsThemeStyle(rawValue: "missing")), custom)
-        XCTAssertEqual(fixture.center.currentMode.rawValue, "brand.midnight")
+        XCTAssertEqual(fixture.center.currentMode, .custom(custom))
+        let target = NSObject()
+        var redirected = false
+        fixture.center.bind(target, slot: "legacyReturn") { _, center in
+            if center.currentStyle == .dark, !redirected {
+                redirected = true
+                center.setStyle(.light)
+            }
+        }
+        XCTAssertEqual(fixture.center.setStyle(.dark), .dark,
+                       "Legacy setter returns the accepted style even when a binding reenters it")
+        XCTAssertEqual(fixture.center.currentStyle, .light)
+        fixture.center.unbind(target, slot: "legacyReturn")
+    }
+
+    func testLegacySystemAndPrefixIdentifiersRemainConcreteStylesAcrossReloads() throws {
+        for identifier in ["system", "style:system", "system:dark"] {
+            let fixture = try ThemeFixture()
+            defer {
+                fixture.remove()
+            }
+            let custom = JobsThemeStyle(rawValue: identifier)
+            fixture.defaults.set(identifier, forKey: "JobsTheme.currentStyle")
+            fixture.center.updateSystemAppearance(.dark)
+            XCTAssertEqual(try fixture.configure(), custom)
+            XCTAssertEqual(fixture.center.currentMode, .custom(custom))
+            XCTAssertNotEqual(fixture.center.currentMode, .system)
+            let encoded = try JSONEncoder().encode(JobsThemeMode.custom(custom))
+            XCTAssertEqual(try JSONDecoder().decode(JobsThemeMode.self, from: encoded), .custom(custom))
+            XCTAssertEqual(fixture.defaults.string(forKey: "JobsTheme.selectionKind"), "style")
+            fixture.center.updateSystemAppearance(.light)
+            XCTAssertEqual(fixture.center.currentStyle, custom)
+
+            let relaunched = JobsThemeCenter(userDefaults: fixture.defaults)
+            relaunched.updateSystemAppearance(.dark)
+            XCTAssertEqual(try relaunched.configure(resource: "Theme", bundle: fixture.bundle), custom)
+            XCTAssertEqual(relaunched.currentMode, .custom(custom))
+            XCTAssertEqual(relaunched.setMode(.system), .system)
+            XCTAssertEqual(relaunched.currentStyle, .dark)
+            XCTAssertEqual(fixture.defaults.string(forKey: "JobsTheme.selectionKind"), "system")
+            XCTAssertEqual(relaunched.setStyle(custom), custom)
+            XCTAssertEqual(relaunched.currentMode, .custom(custom))
+            XCTAssertEqual(fixture.defaults.string(forKey: "JobsTheme.selectionKind"), "style")
+            XCTAssertEqual(try relaunched.configure(resource: "Theme", bundle: fixture.bundle), custom)
+            XCTAssertEqual(relaunched.currentMode, .custom(custom))
+        }
+        let previousThreeModeVersion = try ThemeFixture()
+        defer {
+            previousThreeModeVersion.remove()
+        }
+        previousThreeModeVersion.defaults.set("system", forKey: "JobsTheme.currentMode")
+        previousThreeModeVersion.defaults.set("light", forKey: "JobsTheme.currentStyle")
+        previousThreeModeVersion.center.updateSystemAppearance(.dark)
+        XCTAssertEqual(try previousThreeModeVersion.configure(), .dark)
+        XCTAssertEqual(previousThreeModeVersion.center.currentMode, .system)
+        XCTAssertEqual(previousThreeModeVersion.defaults.string(forKey: "JobsTheme.selectionKind"), "system")
     }
 
     func testUnboundAndReleasedViewsStopReceivingThemeChanges() throws {
@@ -154,7 +209,10 @@ private struct ThemeFixture {
         {"defaultTheme":"light","themes":{
           "light":{"colors":{"text.primary":"#000000"}},
           "dark":{"colors":{"text.primary":"#FFFFFF"}},
-          "brand.midnight":{"colors":{"text.primary":"#ABCDEF"}}
+          "brand.midnight":{"colors":{"text.primary":"#ABCDEF"}},
+          "system":{"colors":{"text.primary":"#123456"}},
+          "style:system":{"colors":{"text.primary":"#234567"}},
+          "system:dark":{"colors":{"text.primary":"#345678"}}
         }}
         """.utf8)
         try data.write(to: directory.appendingPathComponent("Theme.json"))

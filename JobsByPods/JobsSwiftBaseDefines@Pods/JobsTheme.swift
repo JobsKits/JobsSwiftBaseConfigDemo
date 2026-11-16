@@ -24,21 +24,39 @@ public struct JobsThemeStyle: RawRepresentable,
     public static let dark = JobsThemeStyle(rawValue: "dark")
 }
 
-/// 选择模式与有效配色分开；保留旧主题包自定义标识的表达能力。
-public struct JobsThemeMode: RawRepresentable,
-                             Codable,
-                             Hashable,
-                             Sendable {
+/// 选择种类独立表达，旧自定义 style 即使命名为 system 也不会变成跟随系统。
+public enum JobsThemeMode: Codable,
+                           Hashable,
+                           Sendable {
 
-    public let rawValue: String
+    case light
+    case dark
+    case system
+    case custom(JobsThemeStyle)
 
-    public init(rawValue: String) {
-        self.rawValue = rawValue
+    public init(style: JobsThemeStyle) {
+        switch style {
+        case .light:
+            self = .light
+        case .dark:
+            self = .dark
+        default:
+            self = .custom(style)
+        }
     }
 
-    public static let light = JobsThemeMode(rawValue: "light")
-    public static let dark = JobsThemeMode(rawValue: "dark")
-    public static let system = JobsThemeMode(rawValue: "system")
+    public var concreteStyle: JobsThemeStyle? {
+        switch self {
+        case .light:
+            return .light
+        case .dark:
+            return .dark
+        case .system:
+            return nil
+        case .custom(let style):
+            return style
+        }
+    }
 }
 
 public struct JobsThemeColorKey: RawRepresentable,
@@ -169,6 +187,7 @@ public final class JobsThemeCenter {
     private let stateLock = NSLock()
     private let defaultsKey = "JobsTheme.currentStyle"
     private let modeDefaultsKey = "JobsTheme.currentMode"
+    private let selectionKindDefaultsKey = "JobsTheme.selectionKind"
     private let userDefaults: UserDefaults
     private let bindings = NSMapTable<AnyObject, JobsThemeBindingStore>(keyOptions: .weakMemory,
                                                                         valueOptions: .strongMemory)
@@ -220,18 +239,32 @@ public final class JobsThemeCenter {
         let savedStyle = userDefaults.string(forKey: defaultsKey).flatMap {
             decoded.themes[$0] == nil ? nil : $0
         }
-        let savedMode = userDefaults.string(forKey: modeDefaultsKey).flatMap { value -> JobsThemeMode? in
-            guard value == JobsThemeMode.system.rawValue || decoded.themes[value] != nil else {
-                return nil
+        let savedKind = userDefaults.string(forKey: selectionKindDefaultsKey)
+        let savedModeValue = userDefaults.string(forKey: modeDefaultsKey)
+        let configuredMode: JobsThemeMode
+        if savedKind == "system" {
+            configuredMode = .system
+        } else if savedKind == "style", let savedStyle {
+            configuredMode = JobsThemeMode(style: JobsThemeStyle(rawValue: savedStyle))
+        } else if savedKind == nil, let savedModeValue {
+            // 兼容首个三态版本；有明确种类后，任何自定义 raw 都不再参与种类判定。
+            if savedModeValue == "system" {
+                configuredMode = .system
+            } else if decoded.themes[savedModeValue] != nil {
+                configuredMode = JobsThemeMode(style: JobsThemeStyle(rawValue: savedModeValue))
+            } else if let savedStyle {
+                configuredMode = JobsThemeMode(style: JobsThemeStyle(rawValue: savedStyle))
+            } else {
+                configuredMode = .system
             }
-            return JobsThemeMode(rawValue: value)
+        } else if let savedStyle {
+            // 只有旧 style 键时始终是具体主题，包括原名 system 和任何前缀。
+            configuredMode = JobsThemeMode(style: JobsThemeStyle(rawValue: savedStyle))
+        } else {
+            configuredMode = .system
         }
-        // 旧版本已选明暗或自定义主题时保留原选择；全新安装才默认跟随系统。
-        let configuredMode = savedMode ?? savedStyle.map {
-            JobsThemeMode(rawValue: $0)
-        } ?? .system
         stateLock.lock()
-        let proposedStyle = configuredMode == .system ? systemStyle.rawValue : configuredMode.rawValue
+        let proposedStyle = (configuredMode.concreteStyle ?? systemStyle).rawValue
         let configuredStyle = JobsThemeStyle(rawValue: decoded.themes[proposedStyle] != nil
                                             ? proposedStyle : decoded.defaultTheme)
         let previous = (packet, resourceBundle)
@@ -240,10 +273,8 @@ public final class JobsThemeCenter {
         style = configuredStyle
         mode = configuredMode
         stateLock.unlock()
-        userDefaults.set(configuredMode.rawValue,
-                         forKey: modeDefaultsKey)
-        userDefaults.set(configuredStyle.rawValue,
-                         forKey: defaultsKey)
+        persist(mode: configuredMode,
+                style: configuredStyle)
         // 注入 Bundle 的关联捕获或子类析构可能重入主题读取。
         withExtendedLifetime(previous) {}
         applyBindings()
@@ -252,8 +283,8 @@ public final class JobsThemeCenter {
 
     @discardableResult
     public func setStyle(_ newStyle: JobsThemeStyle) -> JobsThemeStyle {
-        setMode(JobsThemeMode(rawValue: newStyle.rawValue))
-        return currentStyle
+        let selection = setMode(JobsThemeMode(style: newStyle))
+        return selection.concreteStyle ?? currentStyle
     }
 
     @discardableResult
@@ -264,26 +295,27 @@ public final class JobsThemeCenter {
             }
             return currentMode
         }
+        let canonicalMode = newMode.concreteStyle.map {
+            JobsThemeMode(style: $0)
+        } ?? .system
         stateLock.lock()
-        let newStyle = newMode == .system ? systemStyle : JobsThemeStyle(rawValue: newMode.rawValue)
+        let newStyle = canonicalMode.concreteStyle ?? systemStyle
         guard packet?.themes[newStyle.rawValue] != nil else {
             let current = mode
             stateLock.unlock()
             return current
         }
-        let changed = style != newStyle || mode != newMode
+        let changed = style != newStyle || mode != canonicalMode
         style = newStyle
-        mode = newMode
+        mode = canonicalMode
         stateLock.unlock()
-        userDefaults.set(newMode.rawValue,
-                         forKey: modeDefaultsKey)
-        userDefaults.set(newStyle.rawValue,
-                         forKey: defaultsKey)
+        persist(mode: canonicalMode,
+                style: newStyle)
         if changed {
             publishChange(style: newStyle,
-                          mode: newMode)
+                          mode: canonicalMode)
         }
-        return newMode
+        return canonicalMode
     }
 
     /// 宿主只传入真实 UIWindowScene 的系统 trait，不读取已被窗口强制覆盖的外观。
@@ -320,7 +352,18 @@ public final class JobsThemeCenter {
         NotificationCenter.default.post(name: .JobsThemeDidChange,
                                         object: self,
                                         userInfo: ["style": style.rawValue,
-                                                   "mode": mode.rawValue])
+                                                   "mode": mode == .system ? "system" : style.rawValue,
+                                                   "selectionKind": mode == .system ? "system" : "style"])
+    }
+
+    private func persist(mode: JobsThemeMode,
+                         style: JobsThemeStyle) {
+        userDefaults.set(mode == .system ? "system" : "style",
+                         forKey: selectionKindDefaultsKey)
+        userDefaults.set(mode == .system ? "system" : style.rawValue,
+                         forKey: modeDefaultsKey)
+        userDefaults.set(style.rawValue,
+                         forKey: defaultsKey)
     }
 
     @discardableResult
