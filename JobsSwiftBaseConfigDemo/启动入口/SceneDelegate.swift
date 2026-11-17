@@ -16,6 +16,7 @@ import AVFoundation
 import ImageIO
 import JobsByUIKit
 import Jobsl10n
+import JobsSwiftBaseDefines
 import JobsSwiftDSL
 import JobsBy3rdTools
 import JobsSwiftTools
