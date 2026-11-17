@@ -315,6 +315,9 @@ require 'open3'
 require 'tmpdir'
 require 'yaml'
 
+class JobsProbeFixtureCleanupError < StandardError
+end
+
 root = File.expand_path('../../..', __dir__)
 steps = YAML.load_file(File.join(root, '.github/workflows/build_simulator_app.yml')).fetch('jobs').fetch('build-simulator-app').fetch('steps')
 workflow_check_start = checks
@@ -340,7 +343,10 @@ Dir.mktmpdir('jobs-webkit-wrapper space-') do |directory|
         printf '%s\n' '/SDK with spaces/iPhoneSimulator.sdk'
         ;;
       --sdk\ iphonesimulator\ swiftc\ *)
-        if [[ "$JOBS_TEST_PROBE_HANG" == 1 ]]; then
+        if [[ "$JOBS_TEST_PROBE_HANG" == ignore-term ]]; then
+          trap '' TERM
+          sleep 30
+        elif [[ "$JOBS_TEST_PROBE_HANG" == 1 ]]; then
           sleep 30
         fi
         source_found=0
@@ -389,9 +395,50 @@ Dir.mktmpdir('jobs-webkit-wrapper space-') do |directory|
     'BASH_ENV' => nil,
     'ENV' => nil
   }
+  cleanup_signals = []
+  last_group_id = nil
+  live_group = lambda do |group_id|
+    raise JobsProbeFixtureCleanupError, "Unsafe fixture process group: #{group_id.inspect}" unless group_id.is_a?(Integer) && group_id.positive? && group_id != Process.getpgrp
+
+    listing, error, status = Open3.capture3('/bin/ps', '-axo', 'pid=,pgid=,uid=,stat=')
+    raise JobsProbeFixtureCleanupError, "Cannot inspect fixture process group: #{error}" unless status.success?
+
+    members = listing.lines.map { |line| line.split }.select do |fields|
+      fields.length == 4 && fields[1].to_i == group_id && !fields[3].start_with?('Z')
+    end
+    unless members.all? { |fields| fields[2].to_i == Process.uid }
+      raise JobsProbeFixtureCleanupError, "Fixture group ownership changed: #{members.inspect}"
+    end
+    members
+  end
+  wait_for_group_exit = lambda do |group_id, seconds|
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + seconds
+    loop do
+      members = live_group.call(group_id)
+      break members if members.empty? || Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
+
+      sleep 0.02
+    end
+  end
+  signal_group = lambda do |signal, group_id|
+    next if live_group.call(group_id).empty?
+
+    begin
+      Process.kill("-#{signal}", group_id)
+      cleanup_signals << signal
+    rescue Errno::ESRCH, Errno::EPERM => error
+      members = live_group.call(group_id)
+      unless members.empty?
+        raise JobsProbeFixtureCleanupError, "#{signal} failed for live owned fixture group #{group_id}: #{error.class}: #{members.inspect}"
+      end
+    end
+  end
   run = lambda do |overrides|
     File.write(calls, '')
+    cleanup_signals.clear
     input, output, errors, waiter = Open3.popen3(environment.merge(overrides), '/bin/bash', '-e', '-c', probe.fetch('run'), chdir: root, pgroup: true)
+    group_id = waiter.pid
+    last_group_id = group_id
     input.close
     readers = [Thread.new { output.read }, Thread.new { errors.read }]
     deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 5
@@ -403,17 +450,23 @@ Dir.mktmpdir('jobs-webkit-wrapper space-') do |directory|
       end
       [readers[0].value, readers[1].value, waiter.value]
     ensure
-      if [waiter, *readers].any?(&:alive?)
-        begin
-          Process.kill('TERM', -waiter.pid)
-          waiter.join(0.2)
-          Process.kill('KILL', -waiter.pid)
-        rescue Errno::ESRCH
-          # 仅回收本次创建的独立进程组；完成退出时组可能已经不存在。
+      # 父 shell／管道退出不代表后代退出；只核对本次 pgroup:true 创建的同 UID 非僵尸成员。
+      begin
+        unless live_group.call(group_id).empty?
+          signal_group.call('TERM', group_id)
+          unless wait_for_group_exit.call(group_id, 0.5).empty?
+            signal_group.call('KILL', group_id)
+            remaining = wait_for_group_exit.call(group_id, 0.5)
+            unless remaining.empty?
+              raise JobsProbeFixtureCleanupError, "Fixture group #{group_id} survived KILL: #{remaining.inspect}"
+            end
+          end
         end
+        [waiter, *readers].each { |pending| pending.join(0.2) }
+      ensure
+        [output, errors].each { |stream| stream.close unless stream.closed? }
+        readers.each { |reader| reader.join(0.2) }
       end
-      [output, errors].each { |stream| stream.close unless stream.closed? }
-      readers.each { |reader| reader.join(0.2) }
     end
   end
   stdout, stderr, status = run.call({})
@@ -433,5 +486,16 @@ Dir.mktmpdir('jobs-webkit-wrapper space-') do |directory|
     timed_out = error.message.include?('five-second budget')
   end
   check.call(timed_out && Process.clock_gettime(Process::CLOCK_MONOTONIC) - started < 8, 'Hanging command fixtures must fail within their independent budget')
+  check.call(cleanup_signals == ['TERM'], 'A terminated fixture must not receive a redundant KILL')
+  check.call(live_group.call(last_group_id).empty?, 'TERM fixture left a live process group member')
+  started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+  timed_out = false
+  begin
+    run.call('JOBS_TEST_PROBE_HANG' => 'ignore-term')
+  rescue RuntimeError => error
+    timed_out = error.message.include?('five-second budget')
+  end
+  check.call(timed_out && Process.clock_gettime(Process::CLOCK_MONOTONIC) - started < 8 && cleanup_signals == %w[TERM KILL], 'A still-live TERM-resistant fixture must be killed within its budget')
+  check.call(live_group.call(last_group_id).empty?, 'TERM-resistant fixture left a live descendant after its parent and pipes exited')
 end
 puts "WebKit workflow preparation: #{checks - workflow_check_start} checks PASS (command fixtures, not a real Simulator run)"
