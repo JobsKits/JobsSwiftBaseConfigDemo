@@ -1,0 +1,226 @@
+{
+  "sourceSHA": "95cd833ca26844e027127aea3312d89f0910e4bf",
+  "runID": 44004349559,
+  "runURL": "https://github.com/JobsKits/JobsSwiftBaseConfigDemo/actions/runs/44004349559",
+  "fullWorkflowConclusion": "success",
+  "podStability": {
+    "passed": 134,
+    "failed": 0,
+    "skipped": 0,
+    "themeModeCases": 6
+  },
+  "app": {
+    "sourceSHA": "95cd833ca26844e027127aea3312d89f0910e4bf",
+    "runID": 44004349559,
+    "attempt": 1,
+    "artifactID": 14299826276,
+    "officialOuterSHA256": "a96ecb6ff6479712fa4de3c1d99f35b546b1f4cee74a8baf5e0b12ce50dc788e",
+    "innerZipSHA256": "c76e84a3b70d3fcab5e042f27ad19a10749cfa1d524c99063a25ad5aae641bab",
+    "bundleIdentifier": "com.jobs.JobsSwiftBaseConfigDemo.JobsSwiftBaseConfigDemo",
+    "executable": "JobsSwiftBaseConfigDemo",
+    "platform": "iphonesimulator",
+    "UIUserInterfaceStyle": null,
+    "cameraUsageDescription": "Camera access supports ARKit surface detection and augmented reality, photos, and video.",
+    "photoUsageDescription": "需要访问相册以选择和管理图片或视频。",
+    "machO": [
+      {
+        "file": "JobsSwiftBaseConfigDemo",
+        "bytes": 40232,
+        "sha256": "87d62985949e5985fb98dfe0557bb9b7c8359d2f008ecb25466eab5698e2665b",
+        "architectures": [
+          "arm64"
+        ]
+      },
+      {
+        "file": "JobsSwiftBaseConfigDemo.debug.dylib",
+        "bytes": 195524576,
+        "sha256": "6c800e5470a160d01978938ef29f82cd2925024e4f0fcb58b1be697e9aa6b88f",
+        "architectures": [
+          "arm64"
+        ]
+      },
+      {
+        "file": "__preview.dylib",
+        "bytes": 16768,
+        "sha256": "674e2f01f4170e79b6ba8b9a03fe4ccf0db6fe5f21c25c7e9bb5937cb6fa81bc",
+        "architectures": [
+          "arm64"
+        ]
+      }
+    ],
+    "verifiedAt": "2026-11-17T06:21:49Z",
+    "appResigned": false,
+    "minimumOS": "15.6",
+    "sdk": "27.1"
+  },
+  "ui": {
+    "sourceSHA": "95cd833ca26844e027127aea3312d89f0910e4bf",
+    "bundleIdentifier": "com.jobs.JobsSwiftBaseConfigDemo.JobsSwiftBaseConfigDemo",
+    "artifactID": 14299826276,
+    "device": "C76C5014-150B-4B02-B6A1-6D2D9657F40A",
+    "testExit": 0,
+    "textCharacters": 1326,
+    "textBytes": 2936,
+    "copiedFullTextMatches": true,
+    "systemTransitions": [
+      {
+        "time": "2026-11-17T06:25:50Z",
+        "system": "light",
+        "preferences": {
+          "JobsTheme.selectionKind": "system",
+          "JobsTheme.currentMode": "system",
+          "JobsTheme.currentStyle": "light"
+        }
+      },
+      {
+        "time": "2026-11-17T06:25:57Z",
+        "system": "dark",
+        "preferences": {
+          "JobsTheme.selectionKind": "system",
+          "JobsTheme.currentMode": "system",
+          "JobsTheme.currentStyle": "dark"
+        }
+      },
+      {
+        "time": "2026-11-17T06:26:07Z",
+        "system": "light",
+        "preferences": {
+          "JobsTheme.selectionKind": "system",
+          "JobsTheme.currentMode": "system",
+          "JobsTheme.currentStyle": "light"
+        }
+      }
+    ],
+    "success": true,
+    "clipboardSHA256": "290a01ed34c536ea7f07bb220268fa814af767c3d796856d2b9048ef83005cdc",
+    "lineCount": 35,
+    "sampleElapsedMilliseconds": 390,
+    "caseName": "JobsOCRNativeUITests/testSwiftUIKitCurrentCIArtifactOCRPage",
+    "caseSeconds": 75.392,
+    "testFailures": 0,
+    "hardwarePhotoCaptureVerified": false,
+    "productionEntry": "Existing DEBUG registry route RootListVC navigation stack -> JobsRustOCRDemoVC; actual production menu and OCR pipeline, no injected theme or OCR result",
+    "driverExit": 0,
+    "launchArguments": [
+      "-AppleLanguages",
+      "(zh-Hans)",
+      "-AppleLocale",
+      "zh_CN",
+      "--jobs-coverage-route",
+      "JobsRustOCRDemoVC"
+    ]
+  },
+  "deviceInitial": {
+    "device": {
+      "name": "JobsOCRSourceReview",
+      "udid": "C76C5014-150B-4B02-B6A1-6D2D9657F40A",
+      "state": "Booted",
+      "isAvailable": true
+    },
+    "initialAppearance": "light",
+    "globalPreferencesFileExists": true,
+    "AppleLanguages": [
+      "zh-Hans-CN",
+      "en-CN"
+    ],
+    "AppleLocale": "zh_CN",
+    "recordedAt": "2026-11-17T05:17:17Z",
+    "appInstalled": false,
+    "productionAppLaunchOverride": [
+      "-AppleLanguages",
+      "(zh-Hans)",
+      "-AppleLocale",
+      "zh_CN"
+    ],
+    "AppleLanguagesReadStatus": "read explicit plist key",
+    "AppleLocaleReadStatus": "read explicit raw plist key",
+    "languageRecordedAt": "2026-11-17T05:18:19Z"
+  },
+  "deviceRelease": {
+    "device": "C76C5014-150B-4B02-B6A1-6D2D9657F40A",
+    "appearance": "light",
+    "matchesActualInitialAppearance": true,
+    "terminatedOnlyTaskApps": [
+      {
+        "bundleIdentifier": "com.jobs.JobsSwiftBaseConfigDemo.JobsSwiftBaseConfigDemo",
+        "exit": 3,
+        "stderr": "An error was encountered processing the command (domain=NSPOSIXErrorDomain, code=3):\nSimulator device failed to terminate com.jobs.JobsSwiftBaseConfigDemo.JobsSwiftBaseConfigDemo.\nfound nothing to terminate\nUnderlying error (domain=NSPOSIXErrorDomain, code=3):\n\tThe request to terminate \"com.jobs.JobsSwiftBaseConfigDemo.JobsSwiftBaseConfigDemo\" failed. found nothing to terminate\n\tfound nothing to terminate"
+      },
+      {
+        "bundleIdentifier": "com.jobs.ocr.validation.host",
+        "exit": 3,
+        "stderr": "An error was encountered processing the command (domain=NSPOSIXErrorDomain, code=3):\nSimulator device failed to terminate com.jobs.ocr.validation.host.\nfound nothing to terminate\nUnderlying error (domain=NSPOSIXErrorDomain, code=3):\n\tThe request to terminate \"com.jobs.ocr.validation.host\" failed. found nothing to terminate\n\tfound nothing to terminate"
+      },
+      {
+        "bundleIdentifier": "com.jobs.ocr.validation.ui.xctrunner",
+        "exit": 3,
+        "stderr": "An error was encountered processing the command (domain=NSPOSIXErrorDomain, code=3):\nSimulator device failed to terminate com.jobs.ocr.validation.ui.xctrunner.\nfound nothing to terminate\nUnderlying error (domain=NSPOSIXErrorDomain, code=3):\n\tThe request to terminate \"com.jobs.ocr.validation.ui.xctrunner\" failed. found nothing to terminate\n\tfound nothing to terminate"
+      }
+    ],
+    "leaseReleasedAt": "2026-11-17T06:31:46Z",
+    "appsAlreadyExited": true,
+    "terminationObservation": "All three were already stopped; only task bundle IDs were queried"
+  },
+  "screenshots": [
+    {
+      "file": "白天识别.png",
+      "rawAttachment": "2D665033-0DA5-4FC8-8D25-9BFF6393368F.png",
+      "sha256": "76a7ffd0142b9477e445a9be8f96491e8b07e4f054ea6db010bd1b74e4413279",
+      "visuallyInspected": true
+    },
+    {
+      "file": "黑夜识别.png",
+      "rawAttachment": "E1F3F13E-B5DE-4734-9AE5-8C791B37DA64.png",
+      "sha256": "3ca2771647daa3adfe8eceb563cf1912e189a40df3fecb5bcc4b05ae10e7aca1",
+      "visuallyInspected": true
+    },
+    {
+      "file": "跟随系统-黑夜.png",
+      "rawAttachment": "F7BBFB18-60AA-40DA-A9D6-FE2D665D232D.png",
+      "sha256": "fb37b7e19c7ea547fc3d11c688869ac6a35b434d3672472c137cd95f431da634",
+      "visuallyInspected": true
+    },
+    {
+      "file": "跟随系统-白天.png",
+      "rawAttachment": "FA1236E1-9BAC-46A5-AA67-79FB8C5E8CB6.png",
+      "sha256": "235127166e2775f2a8082ba38c3fec0586ed5c15b6a382a4f45af0f93ad6230c",
+      "visuallyInspected": true
+    },
+    {
+      "file": "整页滚动.png",
+      "rawAttachment": "A9384807-5ECB-4D3B-A185-B36F4B9D8B64.png",
+      "sha256": "aecac6e812cdd8f304df1125040c51012c7d8f541c556dbde30b8106b1d6188f",
+      "visuallyInspected": true
+    },
+    {
+      "file": "系统相机.png",
+      "rawAttachment": "C05AB930-3077-49DE-90A7-DE9EFC1B8D3E.png",
+      "sha256": "d487fe2a568e45699bd658adffb5846f147a718e18b0f50cbfcd4906d1186013",
+      "visuallyInspected": true
+    },
+    {
+      "file": "系统相册.png",
+      "rawAttachment": "A5A67E77-B584-4D6F-A3D8-C7AB44BF2227.png",
+      "sha256": "a92cb132b0f235ac97f424c65b323ecef888a659c74d501a0f1711a5507819ca",
+      "visuallyInspected": true
+    },
+    {
+      "file": "取消保留结果.png",
+      "rawAttachment": "5F5AEEB4-7118-405A-BFF7-D8D5722C2916.png",
+      "sha256": "4d0bd3f31ccf2e3a78b0b94dd04e4f778690861e8720c0ad392fc1e5b58ca134",
+      "visuallyInspected": true
+    }
+  ],
+  "boundary": "Only the frozen 95cd CI App was tested; later mixed-script source changes and real-device photo capture are not covered",
+  "rawEvidenceFiles": [
+    "UIReview-1/Review.xcresult",
+    "UIReview-1/test-without-building.log",
+    "UIReview-1/observed-ui.json",
+    "UIReview-1/clipboard.txt",
+    "UIReview-1/system-theme-phases.json",
+    "../run_ci_ui_review.rb",
+    "verified-app-manifest.json",
+    "installed-app-identity.json",
+    "uikit-ui-review-driver-1.log"
+  ]
+}
